@@ -993,30 +993,10 @@ public class ApplicationConnection {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
-                // TODO implement shared state handling
-
-                // map from paintable id to its shared state instance
-                Map<String, SharedState> sharedStates = new HashMap<String, SharedState>();
-
-                // TODO Cache shared state (if any) - components might not exist
-                // TODO cleanup later: keep only used states
-                ValueMap states = json.getValueMap("state");
-                JsArrayString keyArray = states.getKeyArray();
-                for (int i = 0; i < keyArray.length(); i++) {
-                    String paintableId = keyArray.get(i);
-                    // TODO handle as a ValueMap or similar object and native
-                    // JavaScript processing?
-                    JavaScriptObject value = states
-                            .getJavaScriptObject(paintableId);
-                    // TODO implement with shared state subclasses
-                    SharedState state = GWT.create(SharedState.class);
-                    Map<String, Object> stateMap = (Map<String, Object>) JsonDecoder
-                            .convertValue(new JSONArray(value),
-                                    getPaintableMap());
-                    state.setState(stateMap);
-                    // TODO cache state to temporary stateMap
-                    sharedStates.put(paintableId, state);
-                }
+                // three phases/loops:
+                // - changes: create paintables (if necessary)
+                // - state: set shared states
+                // - changes: call updateFromUIDL() for each paintable
 
                 // Process changes
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
@@ -1026,6 +1006,52 @@ public class ApplicationConnection {
                 componentCaptionSizeChanges.clear();
 
                 int length = changes.length();
+
+                // create paintables if necessary
+                for (int i = 0; i < length; i++) {
+                    try {
+                        final UIDL change = changes.get(i).cast();
+                        final UIDL uidl = change.getChildUIDL(0);
+                        VPaintable paintable = paintableMap.getPaintable(uidl
+                                .getId());
+                        if (null == paintable
+                                && !uidl.getTag().equals(
+                                        configuration.getEncodedWindowTag())) {
+                            // create, initialize and register the paintable
+                            getPaintable(uidl);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+
+                // set states for all paintables mentioned in "state"
+                ValueMap states = json.getValueMap("state");
+                JsArrayString keyArray = states.getKeyArray();
+                for (int i = 0; i < keyArray.length(); i++) {
+                    try {
+                        String paintableId = keyArray.get(i);
+                        VPaintable paintable = paintableMap
+                                .getPaintable(paintableId);
+                        if (null != paintable) {
+                            // TODO handle as a ValueMap or similar object and
+                            // native JavaScript processing?
+                            JavaScriptObject value = states
+                                    .getJavaScriptObject(paintableId);
+                            // TODO implement with shared state subclasses
+                            SharedState state = GWT.create(SharedState.class);
+                            Map<String, Object> stateMap = (Map<String, Object>) JsonDecoder
+                                    .convertValue(new JSONArray(value),
+                                            getPaintableMap());
+                            state.setState(stateMap);
+                            paintable.updateState(state);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+
+                // update paintables
                 for (int i = 0; i < length; i++) {
                     try {
                         final UIDL change = changes.get(i).cast();
@@ -1567,12 +1593,29 @@ public class ApplicationConnection {
         return result.toString();
     }
 
-    public void updateComponentSize(VPaintableWidget paintable, UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
+    public void updateComponentSize(VPaintableWidget paintable) {
+        SharedState state = paintable.getState();
+        String w = "";
+        String h = "";
+        if (null != state) {
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            VConsole.log("Paintable state for "
+                    + getPaintableMap().getPid(paintable) + ": "
+                    + String.valueOf(state.getState()));
+            if (state.getState().containsKey(ComponentState.STATE_WIDTH)) {
+                w = String.valueOf(state.getState().get(
+                        ComponentState.STATE_WIDTH));
+            }
+            if (state.getState().containsKey(ComponentState.STATE_HEIGHT)) {
+                h = String.valueOf(state.getState().get(
+                        ComponentState.STATE_HEIGHT));
+            }
+        } else {
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            VConsole.log("No state for paintable "
+                    + getPaintableMap().getPid(paintable)
+                    + " in ApplicationConnection.updateComponentSize()");
+        }
 
         float relativeWidth = Util.parseRelativeSize(w);
         float relativeHeight = Util.parseRelativeSize(h);

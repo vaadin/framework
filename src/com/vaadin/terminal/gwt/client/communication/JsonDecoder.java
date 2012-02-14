@@ -58,7 +58,7 @@ public class JsonDecoder {
             val = convertStringArray((JSONArray) value);
             break;
         case JsonEncoder.VTYPE_STRING:
-            val = value;
+            val = ((JSONString) value).stringValue();
             break;
         case JsonEncoder.VTYPE_INTEGER:
             // TODO handle properly

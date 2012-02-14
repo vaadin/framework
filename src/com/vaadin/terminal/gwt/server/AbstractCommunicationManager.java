@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -142,11 +141,12 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
-    // TODO combine with paint queue?
+    // cannot combine with paint queue:
+    // this can contain dirty components from any Root
     private final ArrayList<Paintable> dirtyPaintables = new ArrayList<Paintable>();
 
     // queue used during painting to keep track of what still needs to be
-    // painted
+    // painted within the Root being painted
     private LinkedList<Paintable> paintQueue = new LinkedList<Paintable>();
 
     private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
@@ -747,7 +747,9 @@ public abstract class AbstractCommunicationManager implements
 
     // for internal use by JsonPaintTarget
     public void queuePaintable(Paintable paintable) {
-        paintQueue.push(paintable);
+        if (!paintQueue.contains(paintable)) {
+            paintQueue.add(paintable);
+        }
     }
 
     public void writeUidlResponce(boolean repaintAll,
@@ -835,6 +837,8 @@ public abstract class AbstractCommunicationManager implements
                     windowCache);
         }
 
+        LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
+
         if (paintables != null) {
 
             // clear and rebuild paint queue
@@ -843,6 +847,8 @@ public abstract class AbstractCommunicationManager implements
 
             while (!paintQueue.isEmpty()) {
                 final Paintable p = paintQueue.pop();
+                // for now, all painted components may need a state refresh
+                stateQueue.push(p);
 
                 // // TODO CLEAN
                 // if (p instanceof Root) {
@@ -891,7 +897,7 @@ public abstract class AbstractCommunicationManager implements
         paintTarget.close();
         outWriter.print("], "); // close changes
 
-        if (paintables != null) {
+        if (!stateQueue.isEmpty()) {
             // paint shared state
 
             // for now, send the complete state of all modified and new
@@ -904,11 +910,8 @@ public abstract class AbstractCommunicationManager implements
             // processing.
 
             JSONObject sharedStates = new JSONObject();
-            Stack<Paintable> paintablesWithModifiedState = new Stack<Paintable>();
-            paintablesWithModifiedState.addAll(paintables);
-            // TODO add all sub-components that were painted
-            while (!paintablesWithModifiedState.empty()) {
-                final Paintable p = paintablesWithModifiedState.pop();
+            while (!stateQueue.isEmpty()) {
+                final Paintable p = stateQueue.pop();
                 String paintableId = getPaintableId(p);
                 SharedState state = p.getState();
                 if (null != state) {
@@ -1869,6 +1872,7 @@ public abstract class AbstractCommunicationManager implements
         final ArrayList<Paintable> resultset = new ArrayList<Paintable>(
                 dirtyPaintables);
 
+        // TODO mostly unnecessary?
         // The following algorithm removes any components that would be painted
         // as a direct descendant of other components from the dirty components
         // list. The result is that each component should be painted exactly

@@ -13,6 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
@@ -26,6 +27,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     /* State variables */
     private boolean enabled = true;
     private boolean visible = true;
+
+    // shared state from the server to the client
+    private SharedState state;
 
     /**
      * Default constructor
@@ -87,6 +91,14 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void updateState(SharedState state) {
+        this.state = state;
+    }
+
+    public SharedState getState() {
+        return state;
     }
 
     public VPaintableWidgetContainer getParent() {
@@ -181,7 +193,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
          * taken into account
          */
 
-        getConnection().updateComponentSize(this, uidl);
+        getConnection().updateComponentSize(this);
     }
 
     /**
