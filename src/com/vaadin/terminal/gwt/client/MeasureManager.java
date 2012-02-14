@@ -87,6 +87,9 @@ public class MeasureManager {
                 if (paintable instanceof CalculatingLayout) {
                     CalculatingLayout cl = (CalculatingLayout) paintable;
                     cl.updateHorizontalSizes();
+                } else if (paintable instanceof ResizeRequired) {
+                    ResizeRequired rr = (ResizeRequired) paintable;
+                    rr.onResize();
                 }
                 updatedSet.add(pid);
             }
