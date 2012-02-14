@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComputedStyle;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
@@ -800,28 +799,6 @@ public class VTreeTable extends VScrollTable {
         // totalrows are updated on expand/collapse requests.
         int newTotalRows = uidl.getIntAttribute("totalrows");
         setTotalRows(newTotalRows);
-    }
-
-    @Override
-    public RenderSpace getAllocatedSpace(Widget child) {
-        VTreeTableRow row = (VTreeTableRow) child.getParent();
-        if (row.widgetInHierarchyColumn == child) {
-            final int hierarchyAndIconWidth = row.getHierarchyAndIconWidth();
-            final RenderSpace allocatedSpace = super.getAllocatedSpace(child);
-            return new RenderSpace() {
-                @Override
-                public int getWidth() {
-                    return allocatedSpace.getWidth() - hierarchyAndIconWidth;
-                }
-
-                @Override
-                public int getHeight() {
-                    return allocatedSpace.getHeight();
-                }
-
-            };
-        }
-        return super.getAllocatedSpace(child);
     }
 
 }
