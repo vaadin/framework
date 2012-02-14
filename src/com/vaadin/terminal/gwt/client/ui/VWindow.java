@@ -752,6 +752,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
+        client.doLayout(false);
     }
 
     @Override
