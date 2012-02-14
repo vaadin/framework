@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -865,10 +864,8 @@ public class VTabsheet extends VTabsheetBase {
 
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
-            renderSpace.setHeight(contentHeight);
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
-            renderSpace.setHeight(0);
         }
     }
 
@@ -892,10 +889,10 @@ public class VTabsheet extends VTabsheetBase {
         int minWidth = 0;
 
         if (!isDynamicHeight()) {
-            height = renderSpace.getHeight();
+            height = contentNode.getOffsetHeight();
         }
         if (!isDynamicWidth()) {
-            width = renderSpace.getWidth();
+            width = contentNode.getOffsetWidth();
         } else {
             /*
              * If the tabbar is wider than the content we need to use the tabbar
@@ -1004,8 +1001,6 @@ public class VTabsheet extends VTabsheetBase {
         }
         return borderW;
     }
-
-    private final RenderSpace renderSpace = new RenderSpace(0, 0, true);
 
     @Override
     protected int getTabCount() {
