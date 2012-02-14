@@ -94,8 +94,6 @@ public abstract class VAbstractSplitPanelPaintable extends
         getWidgetForPaintable().setStylenames();
 
         getWidgetForPaintable().position = uidl.getStringAttribute("position");
-        getWidgetForPaintable().setSplitPosition(
-                getWidgetForPaintable().position);
 
         final VPaintableWidget newFirstChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(0));

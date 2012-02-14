@@ -231,10 +231,11 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
         // Convert percentage values to pixels
         if (pos.indexOf("%") > 0) {
-            pos = Float.parseFloat(pos.substring(0, pos.length() - 1))
-                    / 100
-                    * (orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
-                            : getOffsetHeight()) + "px";
+            int size = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                    : getOffsetHeight();
+            float percentage = Float.parseFloat(pos.substring(0,
+                    pos.length() - 1));
+            pos = percentage / 100 * size + "px";
         }
 
         String attributeName;
@@ -457,6 +458,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newX + "px");
+        client.doLayout(false);
     }
 
     private void onVerticalMouseMove(int y) {
@@ -500,6 +502,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newY + "px");
+        client.doLayout(false);
     }
 
     public void onMouseUp(Event event) {
