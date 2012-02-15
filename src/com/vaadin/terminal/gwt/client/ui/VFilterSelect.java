@@ -1616,14 +1616,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              */
             int tbWidth = Util.getRequiredWidth(tb);
 
-            if (popupWidth < 0) {
-                /*
-                 * Only use the first page popup width so the textbox will not
-                 * get resized whenever the popup is resized.
-                 */
-                popupWidth = Util.getRequiredWidth(popupOpener);
-            }
-
             /*
              * Note: iconWidth is here calculated as a negative pixel value so
              * you should consider this in further calculations.
@@ -1632,7 +1624,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     .measureMarginLeft(tb.getElement())
                     - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
 
-            int w = tbWidth + popupWidth + iconWidth;
+            int w = tbWidth + getPopUpOpenerWidth() + iconWidth;
 
             /*
              * When the select has a undefined with we need to check that we are
@@ -1669,6 +1661,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     /**
+     * Only use the first page popup width so the textbox will not get resized
+     * whenever the popup is resized. This also resolves issue where toggling
+     * combo box between read only and normal state makes it grow larger.
+     * 
+     * @return Width of popup opener
+     */
+    private int getPopUpOpenerWidth() {
+        if (popupWidth < 0) {
+            popupWidth = Util.getRequiredWidth(popupOpener);
+        }
+        return popupWidth;
+    }
+
+    /**
      * Get the width of the select in pixels where the text area and icon has
      * been included.
      * 
@@ -1686,10 +1692,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      */
     private void setTextboxWidth(int componentWidth) {
         int padding = getTextboxPadding();
-        int popupOpenerWidth = Util.getRequiredWidth(popupOpener);
         int iconWidth = selectedItemIcon.isAttached() ? Util
                 .getRequiredWidth(selectedItemIcon) : 0;
-        int textboxWidth = componentWidth - padding - popupOpenerWidth
+
+        int textboxWidth = componentWidth - padding - getPopUpOpenerWidth()
                 - iconWidth;
         if (textboxWidth < 0) {
             textboxWidth = 0;

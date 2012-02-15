@@ -317,13 +317,16 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         public Tab addTab() {
+            // Must check this before insert as insert updates the tab count
+            boolean firstTab = (getTabCount() == 0);
+            
             Tab t = new Tab(this);
 
             // Logical attach
             int spacerIndex = getTabCount();
             insert(t, tr, spacerIndex, true);
 
-            if (getTabCount() == 0) {
+            if (firstTab) {
                 // Set the "first" style
                 t.setStyleNames(false, true);
             }
