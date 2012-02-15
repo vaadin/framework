@@ -66,6 +66,9 @@ public class GridLayoutTests extends AbstractLayoutTests {
         glo.replaceComponent(row1, row1 = new DateField());
         glo.replaceComponent(row2, row2 = new DateField());
         glo.replaceComponent(row3, row3 = new DateField());
+        ((DateField) row1).setResolution(DateField.RESOLUTION_SEC);
+        ((DateField) row2).setResolution(DateField.RESOLUTION_SEC);
+        ((DateField) row2).setResolution(DateField.RESOLUTION_SEC);
         glo.setComponentAlignment(col2, alignments[6]);
         glo.setComponentAlignment(col3, alignments[7]);
         glo.setComponentAlignment(col1, alignments[8]);
