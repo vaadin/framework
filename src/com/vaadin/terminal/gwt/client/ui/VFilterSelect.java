@@ -1190,6 +1190,8 @@ public class VFilterSelect extends Composite implements Paintable, Field,
                     tb.setValue("");
                 }
             }
+
+            setSelectedItemIcon(null);
             selectedOptionKey = null;
         }
 
@@ -1369,7 +1371,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
      *            The URI of the icon
      */
     private void setSelectedItemIcon(String iconUri) {
-        if (iconUri == null || iconUri == "") {
+        if (iconUri == null || iconUri.length() == 0) {
             panel.remove(selectedItemIcon);
             updateRootWidth();
         } else {
