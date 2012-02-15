@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
+import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
@@ -456,6 +457,57 @@ public class ComponentLocator {
                 String indexString = split[1];
                 int widgetPosition = Integer.parseInt(indexString.substring(0,
                         indexString.length() - 1));
+
+                /*
+                 * The new ordered layotus do not contain
+                 * ChildComponentContainer widgets. This is instead simulated by
+                 * constructing a path step that would find the desired widget
+                 * from the layout and injecting it as the next search step
+                 * (which would originally have found the widget inside the
+                 * ChildComponentContainer)
+                 */
+                if (w instanceof VMeasuringOrderedLayout
+                        && "ChildComponentContainer".equals(widgetClassName)
+                        && i + 1 < parts.length) {
+
+                    VMeasuringOrderedLayout layout = (VMeasuringOrderedLayout) w;
+
+                    String nextPart = parts[i + 1];
+                    String[] nextSplit = nextPart.split("\\[", 2);
+                    String nextWidgetClassName = nextSplit[0];
+
+                    // Find the n:th child and count the number of children with
+                    // the same type before it
+                    int nextIndex = 0;
+                    for (Widget child : layout) {
+                        // Don't count captions
+                        if (child instanceof VCaption) {
+                            continue;
+                        }
+
+                        boolean matchingType = nextWidgetClassName.equals(Util
+                                .getSimpleName(child));
+                        if (widgetPosition == 0) {
+                            // This is the n:th child
+
+                            // Error if not the expected type
+                            if (!matchingType) {
+                                return null;
+                            }
+                            break;
+                        } else if (matchingType) {
+                            // If this was another child of the expected type,
+                            // increase the count for the next step
+                            nextIndex++;
+                        }
+                        widgetPosition--;
+                    }
+
+                    // Advance to the next step, this time checking for the
+                    // actual child widget
+                    parts[i + 1] = nextWidgetClassName + '[' + nextIndex + ']';
+                    continue;
+                }
 
                 // Locate the child
                 Iterator<? extends Widget> iterator;
