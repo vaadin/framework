@@ -1157,9 +1157,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The URI of the icon
      */
     protected void setSelectedItemIcon(String iconUri) {
-        if (iconUri == null || iconUri == "") {
-            panel.remove(selectedItemIcon);
-            updateRootWidth();
+        if (iconUri == null || iconUri.length() == 0) {
+            if (selectedItemIcon.isAttached()) {
+                panel.remove(selectedItemIcon);
+                updateRootWidth();
+            }
         } else {
             panel.insert(selectedItemIcon, 0);
             selectedItemIcon.setUrl(iconUri);
