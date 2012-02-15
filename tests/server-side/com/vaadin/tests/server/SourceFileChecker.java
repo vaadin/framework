@@ -134,20 +134,37 @@ public class SourceFileChecker extends TestCase {
         }
     }
 
-    class DosNewlineDetector implements FileValidator {
-
+    abstract class FileContentsValidator implements FileValidator {
         public void validateFile(File f) throws Exception {
-            String contents = IOUtils.toString(new FileInputStream(f));
+            FileInputStream fis = new FileInputStream(f);
+            String contents = IOUtils.toString(fis);
+            fis.close();
+            validateContents(f, contents);
+        }
+
+        protected abstract void validateContents(File f, String contents)
+                throws Exception;
+
+    }
+
+    class DosNewlineDetector extends FileContentsValidator {
+
+        @Override
+        protected void validateContents(File f, String contents)
+                throws Exception {
             if (contents.contains("\r\n")) {
                 throw new IllegalArgumentException();
             }
 
         }
+
     }
 
-    class LicenseChecker implements FileValidator {
-        public void validateFile(File f) throws Exception {
-            String contents = IOUtils.toString(new FileInputStream(f));
+    class LicenseChecker extends FileContentsValidator {
+
+        @Override
+        protected void validateContents(File f, String contents)
+                throws Exception {
             if (!contents.contains("@" + "VaadinApache2LicenseForJavaFiles"
                     + "@")) {
                 throw new IllegalArgumentException();

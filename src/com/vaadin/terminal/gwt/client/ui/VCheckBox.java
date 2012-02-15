@@ -71,7 +71,10 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public void onBrowserEvent(Event event) {
         if (icon != null && (event.getTypeInt() == Event.ONCLICK)
                 && (DOM.eventGetTarget(event) == icon.getElement())) {
-            setValue(!getValue());
+            // Click on icon should do nothing if widget is disabled
+            if (isEnabled()) {
+                setValue(!getValue());
+            }
         }
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {

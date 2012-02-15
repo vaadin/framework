@@ -13,6 +13,7 @@ public class DatePopupStyleName extends TestBase {
 
         final DateField df = new DateField();
         df.setValue(new Date(1203910239L));
+        df.setResolution(DateField.RESOLUTION_SEC);
         df.setWidth("200px");
         df.setRequired(true);
         df.setComponentError(new UserError("abc"));

@@ -272,9 +272,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             int endOfFirstRange = row.getIndex() - 1;
             if (!(endOfFirstRange - startRow.getIndex() < 0)) {
                 // create range of first part unless its length is < 1
-                VScrollTableRow endOfRange = scrollBody
-                        .getRowByRowIndex(endOfFirstRange);
-                ranges.add(new SelectionRange(startRow, endOfRange));
+                ranges.add(new SelectionRange(startRow, endOfFirstRange
+                        - startRow.getIndex() + 1));
             }
             int startOfSecondRange = row.getIndex() + 1;
             if (!(getEndIndex() - startOfSecondRange < 0)) {

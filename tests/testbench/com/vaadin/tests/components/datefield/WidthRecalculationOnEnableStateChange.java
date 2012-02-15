@@ -14,6 +14,7 @@ public class WidthRecalculationOnEnableStateChange extends TestBase {
 
         final DateField df = new DateField();
         df.setValue(new Date(1203910239L));
+        df.setResolution(DateField.RESOLUTION_SEC);
         df.setWidth("200px");
         df.addStyleName("enabled-readonly-styled");
         addComponent(df);
