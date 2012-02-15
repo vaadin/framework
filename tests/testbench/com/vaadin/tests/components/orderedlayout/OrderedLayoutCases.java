@@ -190,8 +190,13 @@ public class OrderedLayoutCases extends TestBase {
                 new ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         resetState();
+                        setState(sizeBar, 2, 1);
                         // width: 350px to middle child
                         setChildState(1, 0, 2);
+                        // middle center allign to middle child
+                        setChildState(1, 4, 5);
+                        // long captions to right child
+                        setChildState(2, 2, 2);
                     }
                 }));
         caseBar.addComponent(new Button("Undefined with relative",
@@ -222,6 +227,10 @@ public class OrderedLayoutCases extends TestBase {
                         setState(sizeBar, 3, 1);
                         // width: 350px to middle child
                         setChildState(1, 0, 2);
+                        // short caption for middle child
+                        setChildState(1, 2, 1);
+                        // top center align for middle child
+                        setChildState(1, 4, 2);
                     }
                 }));
 
@@ -237,6 +246,8 @@ public class OrderedLayoutCases extends TestBase {
                         setChildState(1, 3, 1);
                         // Align bottom left to middle child
                         setChildState(1, 4, 6);
+                        // Long caption to middle child
+                        setChildState(1, 2, 2);
                     }
                 }));
 
@@ -248,6 +259,8 @@ public class OrderedLayoutCases extends TestBase {
                         setState(sizeBar, 0, 3);
                         // Layout height: 350px
                         setState(sizeBar, 1, 2);
+                        // Long caption to left child
+                        setChildState(0, 2, 2);
                         // Width 350px to middle child
                         setChildState(1, 0, 2);
                         // Apply to left and middle child
@@ -270,6 +283,8 @@ public class OrderedLayoutCases extends TestBase {
                         setChildState(0, 1, 2);
                         // Height: 100% to middle child
                         setChildState(1, 1, 4);
+                        // Short caption to middle child
+                        setChildState(1, 2, 1);
                         // Alignment: bottom left to right child
                         setChildState(2, 4, 7);
                     }
@@ -281,6 +296,8 @@ public class OrderedLayoutCases extends TestBase {
                         resetState();
                         // Height: 350px to left child
                         setChildState(0, 1, 2);
+                        // Short caption to left child
+                        setChildState(0, 2, 1);
                         // Height: 100% to middle child
                         setChildState(1, 1, 4);
                         // Alignment: bottom left to right child
