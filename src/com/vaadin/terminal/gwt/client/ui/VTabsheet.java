@@ -12,8 +12,19 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -21,8 +32,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -30,8 +43,10 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VTabsheet extends VTabsheetBase {
+public class VTabsheet extends VTabsheetBase implements Focusable,
+        FocusHandler, BlurHandler, KeyDownHandler {
 
     private static class VCloseEvent {
         private Tab tab;
@@ -54,7 +69,8 @@ public class VTabsheet extends VTabsheetBase {
      * Representation of a single "tab" shown in the TabBar
      * 
      */
-    private static class Tab extends SimplePanel {
+    private static class Tab extends SimplePanel implements HasFocusHandlers,
+            HasBlurHandlers, HasKeyDownHandlers {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
         private static final String TD_FIRST_CLASSNAME = TD_CLASSNAME
                 + "-first";
@@ -94,6 +110,9 @@ public class VTabsheet extends VTabsheetBase {
                     .getApplicationConnection());
             add(tabCaption);
 
+            addFocusHandler(getTabsheet());
+            addBlurHandler(getTabsheet());
+            addKeyDownHandler(getTabsheet());
         }
 
         public boolean isHiddenOnServer() {
@@ -136,6 +155,9 @@ public class VTabsheet extends VTabsheetBase {
          *            true if the Tab is the first visible Tab
          */
         public void setStyleNames(boolean selected, boolean first) {
+            // TODO #5100 doesn't belong here
+            td.setAttribute("tabindex", selected ? "0" : "-1");
+
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
             setStyleName(td, TD_SELECTED_FIRST_CLASSNAME, selected && first);
@@ -143,7 +165,10 @@ public class VTabsheet extends VTabsheetBase {
         }
 
         public void onClose() {
+            VConsole.log("OnClose");
+
             closeHandler.onClose(new VCloseEvent(this));
+            VConsole.log("End OnClose");
         }
 
         public VTabsheet getTabsheet() {
@@ -179,6 +204,25 @@ public class VTabsheet extends VTabsheetBase {
             tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
         }
 
+        public HandlerRegistration addFocusHandler(FocusHandler handler) {
+            return addDomHandler(handler, FocusEvent.getType());
+        }
+
+        public HandlerRegistration addBlurHandler(BlurHandler handler) {
+            return addDomHandler(handler, BlurEvent.getType());
+        }
+
+        public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+            return addDomHandler(handler, KeyDownEvent.getType());
+        }
+
+        public void focus() {
+            td.focus();
+        }
+
+        public void blur() {
+            td.blur();
+        }
     }
 
     private static class TabCaption extends VCaption {
@@ -296,7 +340,6 @@ public class VTabsheet extends VTabsheetBase {
             }
             return width;
         }
-
     }
 
     static class TabBar extends ComplexPanel implements ClickHandler,
@@ -362,6 +405,7 @@ public class VTabsheet extends VTabsheetBase {
             Widget caption = (Widget) event.getSource();
             int index = getWidgetIndex(caption.getParent());
             getTabsheet().onTabSelected(index);
+            getTabsheet().focus();
         }
 
         public VTabsheet getTabsheet() {
@@ -483,7 +527,6 @@ public class VTabsheet extends VTabsheetBase {
             currentFirst.recalculateCaptionWidth();
             return nextVisible;
         }
-
     }
 
     public static final String CLASSNAME = "v-tabsheet";
@@ -494,10 +537,14 @@ public class VTabsheet extends VTabsheetBase {
     // Can't use "style" as it's already in use
     public static final String TAB_STYLE_NAME = "tabstyle";
 
+    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
+
     private final Element tabs; // tabbar and 'scroller' container
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element
     private final Element scrollerPrev; // tab-scroller prev button element
+
+    private Tab focusedTab;
 
     /**
      * The index of the first visible tab (when scrolled)
@@ -536,6 +583,12 @@ public class VTabsheet extends VTabsheetBase {
         }
         if (client != null && activeTabIndex != tabIndex) {
             tb.selectTab(tabIndex);
+
+            if (focusedTab != null) {
+                focusedTab.blur();
+                tb.getTab(tabIndex).focus();
+            }
+
             addStyleDependentName("loading");
             // run updating variables in deferred command to bypass some FF
             // optimization issues
@@ -580,6 +633,9 @@ public class VTabsheet extends VTabsheetBase {
 
     public VTabsheet() {
         super(CLASSNAME);
+
+        addHandler(this, FocusEvent.getType());
+        addHandler(this, BlurEvent.getType());
 
         // Tab scrolling
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
@@ -694,8 +750,13 @@ public class VTabsheet extends VTabsheetBase {
             updateOpenTabSize();
         }
 
-        iLayout();
+        // If a tab was focused before, focus the new active tab
+        if (focusedTab != null && tb.getTabCount() > 0) {
+            focusedTab = tb.getTab(activeTabIndex);
+            focusedTab.focus();
+        }
 
+        iLayout();
         // Re run relative size update to ensure optimal scrollbars
         // TODO isolate to situation that visible tab has undefined height
         try {
@@ -923,9 +984,9 @@ public class VTabsheet extends VTabsheetBase {
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
-            DOM.setStyleAttribute(
-                    DOM.getParent(previousVisibleWidget.getElement()),
-                    "visibility", "");
+            // DOM.setStyleAttribute(
+            // DOM.getParent(previousVisibleWidget.getElement()),
+            // "visibility", "");
             previousVisibleWidget = null;
         }
     }
@@ -1214,4 +1275,53 @@ public class VTabsheet extends VTabsheetBase {
         }
     }
 
+    public void onBlur(BlurEvent event) {
+        focusedTab = null;
+        // TODO Auto-generated method stub
+        VConsole.log("BLUR " + event);
+    }
+
+    public void onFocus(FocusEvent event) {
+        // TODO Auto-generated method stub
+        VConsole.log("FOCUS " + event);
+        if (event.getSource() instanceof Tab) {
+            focusedTab = (Tab) event.getSource();
+        }
+    }
+
+    public void focus() {
+        if (focusedTab == null) {
+            focusedTab = tb.getTab(activeTabIndex);
+            focusedTab.focus();
+        }
+    }
+
+    public void blur() {
+        if (focusedTab != null) {
+            focusedTab.blur();
+            focusedTab = null;
+        }
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        if (event.getSource() instanceof Tab) {
+            VConsole.log("KEYDOWN");
+            int keycode = event.getNativeEvent().getKeyCode();
+            if (keycode == KeyCodes.KEY_LEFT) {
+                int newTabIndex = activeTabIndex == 0 ? tb.getTabCount() - 1
+                        : activeTabIndex - 1;
+                onTabSelected(newTabIndex);
+                activeTabIndex = newTabIndex;
+            } else if (keycode == KeyCodes.KEY_RIGHT) {
+                int newTabIndex = (activeTabIndex + 1) % tb.getTabCount();
+                onTabSelected(newTabIndex);
+                activeTabIndex = newTabIndex;
+            } else if (keycode == KeyCodes.KEY_DELETE) {
+                VConsole.log("INDEX=" + activeTabIndex);
+                focusedTab.onClose();
+                removeTab(activeTabIndex);
+            }
+            VConsole.log("tabindex -> " + activeTabIndex);
+        }
+    }
 }
