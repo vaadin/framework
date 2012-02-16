@@ -34,6 +34,9 @@
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
+}
+.v-app input.v-textfield.v-paintable,
+.v-window input.v-textfield.v-paintable {
 	height: 24px;
 }
 .v-app .v-textfield-focus,
