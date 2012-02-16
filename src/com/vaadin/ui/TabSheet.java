@@ -14,10 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -25,7 +21,6 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
-import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
@@ -60,8 +55,7 @@ import com.vaadin.ui.themes.Runo;
  */
 @SuppressWarnings("serial")
 @ClientWidget(VTabsheet.class)
-public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusListener, BlurListener {
+public class TabSheet extends AbstractComponentContainer {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,
@@ -100,8 +94,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Handler to be called when a tab is closed.
      */
     private CloseHandler closeHandler;
-
-    private int tabIndex;
 
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default, and the
@@ -369,10 +361,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         if (areTabsHidden()) {
             target.addAttribute("hidetabs", true);
-        }
-
-        if (tabIndex != 0) {
-            target.addAttribute("tabindex", tabIndex);
         }
 
         target.startTag("tabs");
@@ -1236,29 +1224,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     public int getTabPosition(Tab tab) {
         return components.indexOf(tab.getComponent());
-    }
-
-    public void blur(BlurEvent event) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void focus(FocusEvent event) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void focus() {
-        super.focus();
-    }
-
-    public int getTabIndex() {
-        return tabIndex;
-    }
-
-    public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
-        requestRepaint();
     }
 
 }
