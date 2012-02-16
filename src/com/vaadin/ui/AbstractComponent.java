@@ -768,17 +768,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
             // Only paint content of visible components.
             if (isVisible()) {
-                if (getHeight() >= 0
-                        && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                                .parentCanDefineHeight(this))) {
-                    target.addAttribute("height", "" + getCSSHeight());
-                }
+                // width and height are only in shared state
 
-                if (getWidth() >= 0
-                        && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                                .parentCanDefineWidth(this))) {
-                    target.addAttribute("width", "" + getCSSWidth());
-                }
                 if (styles != null && styles.size() > 0) {
                     target.addAttribute("style", getStyle());
                 }
@@ -901,6 +892,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                         .parentCanDefineWidth(this))) {
             state.put(ComponentState.STATE_WIDTH, "" + getCSSWidth());
         }
+
+        // TODO use the rest on the client side
 
         if (styles != null && styles.size() > 0) {
             state.put(ComponentState.STATE_STYLE, getStyle());

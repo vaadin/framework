@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
@@ -13,6 +15,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
@@ -151,8 +154,16 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             getWidgetForPaintable().layout = lo;
         }
 
-        getWidgetForPaintable().dynamicWidth = !uidl.hasAttribute("width");
-        getWidgetForPaintable().dynamicHeight = !uidl.hasAttribute("height");
+        if (null != getState()) {
+            Map<String, Object> state = getState().getState();
+            getWidgetForPaintable().dynamicWidth = !state
+                    .containsKey(ComponentState.STATE_WIDTH);
+            getWidgetForPaintable().dynamicHeight = !state
+                    .containsKey(ComponentState.STATE_HEIGHT);
+        } else {
+            getWidgetForPaintable().dynamicWidth = true;
+            getWidgetForPaintable().dynamicHeight = true;
+        }
 
         getWidgetForPaintable().layoutRelativeWidth = uidl
                 .hasAttribute("layoutRelativeWidth");

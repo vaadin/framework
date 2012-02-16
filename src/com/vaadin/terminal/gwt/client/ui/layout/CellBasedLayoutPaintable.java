@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.layout;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidgetContainer;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
@@ -31,16 +32,23 @@ public abstract class CellBasedLayoutPaintable extends
         super.updateFromUIDL(uidl, client);
 
         if (isRealUpdate(uidl)) {
-            handleDynamicDimensions(uidl);
+            handleDynamicDimensions();
         }
     }
 
-    private void handleDynamicDimensions(UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
+    private void handleDynamicDimensions() {
+        String w = "";
+        String h = "";
+        if (null != getState()) {
+            if (getState().getState().containsKey(ComponentState.STATE_WIDTH)) {
+                w = String.valueOf(getState().getState().get(
+                        ComponentState.STATE_WIDTH));
+            }
+            if (getState().getState().containsKey(ComponentState.STATE_HEIGHT)) {
+                h = String.valueOf(getState().getState().get(
+                        ComponentState.STATE_HEIGHT));
+            }
+        }
 
         if (w.equals("")) {
             getWidgetForPaintable().dynamicWidth = true;

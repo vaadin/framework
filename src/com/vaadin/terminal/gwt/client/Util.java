@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public class Util {
 
@@ -563,25 +564,30 @@ public class Util {
     }
 
     /**
-     * Parses the UIDL parameter and fetches the relative size of the component.
-     * If a dimension is not specified as relative it will return -1. If the
-     * UIDL does not contain width or height specifications this will return
+     * Parses shared state and fetches the relative size of the component. If a
+     * dimension is not specified as relative it will return -1. If the shared
+     * state does not contain width or height specifications this will return
      * null.
      * 
-     * @param uidl
+     * @param state
      * @return
      */
-    public static FloatSize parseRelativeSize(UIDL uidl) {
+    public static FloatSize parseRelativeSize(SharedState state) {
+        if (null == state) {
+            return null;
+        }
+
         boolean hasAttribute = false;
         String w = "";
         String h = "";
-        if (uidl.hasAttribute("width")) {
+        Map<String, Object> stateMap = state.getState();
+        if (stateMap.containsKey("width")) {
             hasAttribute = true;
-            w = uidl.getStringAttribute("width");
+            w = String.valueOf(stateMap.get("width"));
         }
-        if (uidl.hasAttribute("height")) {
+        if (stateMap.containsKey("height")) {
             hasAttribute = true;
-            h = uidl.getStringAttribute("height");
+            h = String.valueOf(stateMap.get("height"));
         }
 
         if (!hasAttribute) {

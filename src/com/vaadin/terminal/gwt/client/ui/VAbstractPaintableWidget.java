@@ -151,6 +151,10 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             return;
         }
 
+        if (!isRealUpdate(uidl)) {
+            return;
+        }
+
         /*
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.

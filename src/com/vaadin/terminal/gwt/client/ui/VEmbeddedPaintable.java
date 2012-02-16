@@ -20,6 +20,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -69,18 +70,23 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
 
                 // Set attributes
                 Style style = el.getStyle();
-                String w = uidl.getStringAttribute("width");
-                if (w != null) {
-                    style.setProperty("width", w);
-                } else {
-                    style.setProperty("width", "");
+                String w = "";
+                String h = "";
+                if (null != getState()) {
+                    if (getState().getState().containsKey(
+                            ComponentState.STATE_WIDTH)) {
+                        w = String.valueOf(getState().getState().get(
+                                ComponentState.STATE_WIDTH));
+                    }
+                    if (getState().getState().containsKey(
+                            ComponentState.STATE_HEIGHT)) {
+                        h = String.valueOf(getState().getState().get(
+                                ComponentState.STATE_HEIGHT));
+                    }
                 }
-                String h = uidl.getStringAttribute("height");
-                if (h != null) {
-                    style.setProperty("height", h);
-                } else {
-                    style.setProperty("height", "");
-                }
+                style.setProperty("width", w);
+                style.setProperty("height", h);
+
                 DOM.setElementProperty(el, "src", getWidgetForPaintable()
                         .getSrc(uidl, client));
 
