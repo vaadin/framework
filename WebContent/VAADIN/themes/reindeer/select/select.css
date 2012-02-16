@@ -10,7 +10,7 @@
 	background: transparent repeat-x;
 	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
 	border: none;
-	height: 16px;
+	height: 24px;
 }
 /* More specific selector to override padding */
 .v-app input.v-filterselect-input,
