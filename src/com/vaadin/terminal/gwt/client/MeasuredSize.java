@@ -196,13 +196,13 @@ public final class MeasuredSize {
         }
         this.borders = borders;
 
-        int offsetHeight = widget.getOffsetHeight();
+        int requiredHeight = Util.getRequiredHeight(widget);
         int marginHeight = sumHeights(margins);
-        setOuterHeight(offsetHeight + marginHeight);
+        setOuterHeight(requiredHeight + marginHeight);
 
-        int offsetWidth = widget.getOffsetWidth();
+        int requiredWidth = Util.getRequiredWidth(widget);
         int marginWidth = sumWidths(margins);
-        setOuterWidth(offsetWidth + marginWidth);
+        setOuterWidth(requiredWidth + marginWidth);
 
         // int i = 0;
         for (Entry<Element, int[]> entry : dependencySizes.entrySet()) {
