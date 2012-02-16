@@ -167,6 +167,7 @@
 }
 .v-table-header-drag {
 	padding-left: 6px;
+	height: 16px;
 }
 .v-table-header-drag img {
 	height: 16px;
