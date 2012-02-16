@@ -174,7 +174,7 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
         ChildComponentContainer cc = getWidgetForPaintable().widgetToComponentContainer
                 .get(widget);
         if (cc != null) {
-            cc.updateCaption(uidl, getConnection());
+            cc.updateCaption(uidl, getConnection(), getMeasuredSize());
         }
         if (!getWidgetForPaintable().rendering) {
             // ensure rel size details are updated

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -406,7 +407,8 @@ public class ChildComponentContainer extends Panel {
         return widgetSize;
     }
 
-    public void updateCaption(UIDL uidl, ApplicationConnection client) {
+    public void updateCaption(UIDL uidl, ApplicationConnection client,
+            MeasuredSize parentSize) {
         if (VCaption.isNeeded(uidl)) {
             // We need a caption
 
@@ -416,6 +418,7 @@ public class ChildComponentContainer extends Panel {
                 newCaption = new VCaption(paintable, client);
                 // Set initial height to avoid Safari flicker
                 newCaption.setHeight("18px");
+                parentSize.registerDependency(newCaption.getElement());
                 // newCaption.setHeight(newCaption.getHeight()); // This might
                 // be better... ??
                 if (BrowserInfo.get().isIE()) {
@@ -436,6 +439,7 @@ public class ChildComponentContainer extends Panel {
         } else {
             // Caption is not needed
             if (caption != null) {
+                parentSize.deRegisterDependency(caption.getElement());
                 remove(caption);
             }
 
