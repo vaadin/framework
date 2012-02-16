@@ -38,7 +38,9 @@ public abstract class VLayoutSlot {
         if (caption != null) {
             // Physical attach.
             DOM.insertBefore(wrapper, caption.getElement(), widget.getElement());
-            caption.getElement().getStyle().setPosition(Position.ABSOLUTE);
+            Style style = caption.getElement().getStyle();
+            style.setPosition(Position.ABSOLUTE);
+            style.setTop(0, Unit.PX);
         }
     }
 
@@ -70,12 +72,27 @@ public abstract class VLayoutSlot {
         Style captionStyle = caption != null ? caption.getElement().getStyle()
                 : null;
 
+        boolean captionAboveCompnent;
+        if (caption == null) {
+            captionAboveCompnent = false;
+            style.clearPaddingRight();
+        } else {
+            captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
+            if (!captionAboveCompnent) {
+                style.setPaddingRight(getCaptionWidth(), Unit.PX);
+                captionStyle.setLeft(getWidgetWidth(), Unit.PX);
+            } else {
+                style.clearPaddingRight();
+                captionStyle.setLeft(0, Unit.PX);
+            }
+        }
+
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isLeft()) {
             double usedWidth = getWidgetWidth();
             if (alignment.isHorizontalCenter()) {
                 currentLocation += (allocatedSpace - usedWidth) / 2d;
-                if (captionStyle != null) {
+                if (captionAboveCompnent) {
                     double captionWidth = getCaptionWidth();
                     captionStyle.setLeft(usedWidth / 2 - (captionWidth / 2),
                             Unit.PX);
@@ -83,13 +100,13 @@ public abstract class VLayoutSlot {
                 }
             } else {
                 currentLocation += (allocatedSpace - usedWidth);
-                if (captionStyle != null) {
+                if (captionAboveCompnent) {
                     captionStyle.clearLeft();
                     captionStyle.setRight(0, Unit.PX);
                 }
             }
         } else {
-            if (captionStyle != null) {
+            if (captionAboveCompnent) {
                 captionStyle.setLeft(0, Unit.PX);
                 captionStyle.clearRight();
             }
@@ -101,9 +118,16 @@ public abstract class VLayoutSlot {
     public void positionVertically(double currentLocation, double allocatedSpace) {
         Style style = wrapper.getStyle();
 
+        double contentHeight = allocatedSpace;
+
         VCaption caption = getCaption();
-        double captionHeight = caption != null ? getCaptionHeight() : 0;
-        double contentHeight = allocatedSpace - captionHeight;
+        if (caption == null || caption.shouldBePlacedAfterComponent()) {
+            style.clearPaddingTop();
+        } else {
+            int captionHeight = getCaptionHeight();
+            contentHeight -= captionHeight;
+            style.setPaddingTop(captionHeight, Unit.PX);
+        }
 
         if (isRelativeHeight()) {
             style.setHeight(contentHeight, Unit.PX);
@@ -111,20 +135,13 @@ public abstract class VLayoutSlot {
             style.clearHeight();
         }
 
-        if (caption != null) {
-            style.setPaddingTop(getCaptionHeight(), Unit.PX);
-            caption.getElement().getStyle().setTop(0, Unit.PX);
-        } else {
-            style.clearPaddingTop();
-        }
-
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isTop()) {
-            double actualHeight = getWidgetHeight() + captionHeight;
+            int usedHeight = getUsedHeight();
             if (alignment.isVerticalCenter()) {
-                currentLocation += (allocatedSpace - actualHeight) / 2d;
+                currentLocation += (allocatedSpace - usedHeight) / 2d;
             } else {
-                currentLocation += (allocatedSpace - actualHeight);
+                currentLocation += (allocatedSpace - usedHeight);
             }
         }
 
@@ -145,13 +162,25 @@ public abstract class VLayoutSlot {
     }
 
     public int getUsedWidth() {
-        int captionWidth = (caption != null ? getCaptionWidth() : 0);
-        return Math.max(captionWidth, getWidgetWidth());
+        int widgetWidth = getWidgetWidth();
+        if (caption == null) {
+            return widgetWidth;
+        } else if (caption.shouldBePlacedAfterComponent()) {
+            return widgetWidth + getCaptionWidth();
+        } else {
+            return Math.max(widgetWidth, getCaptionWidth());
+        }
     }
 
     public int getUsedHeight() {
-        int captionHeight = (caption != null ? getCaptionHeight() : 0);
-        return getWidgetHeight() + captionHeight;
+        int widgetHeight = getWidgetHeight();
+        if (caption == null) {
+            return widgetHeight;
+        } else if (caption.shouldBePlacedAfterComponent()) {
+            return Math.max(widgetHeight, getCaptionHeight());
+        } else {
+            return widgetHeight + getCaptionHeight();
+        }
     }
 
     public int getUsedSizeInDirection(boolean isVertical) {
