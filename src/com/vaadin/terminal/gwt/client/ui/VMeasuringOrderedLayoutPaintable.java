@@ -72,7 +72,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             VLayoutSlot slot = layout.getSlotForChild(widget);
 
             if (widget.getParent() != layout) {
-                slot = new VPaintableLayoutSlot(child);
+                slot = new VPaintableLayoutSlot(getWidgetForPaintable()
+                        .getStylePrimaryName(), child);
                 layout.addSlot(slot);
             }
 

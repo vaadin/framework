@@ -38,3 +38,8 @@
 	padding-top: 0;
 	padding-left: 0;
 }
+
+.v-horizontallayout-slot, .v-verticallayout-slot {
+	position: absolute;
+	overflow: hidden;
+}

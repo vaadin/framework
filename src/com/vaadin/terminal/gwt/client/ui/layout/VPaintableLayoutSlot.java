@@ -8,8 +8,8 @@ public class VPaintableLayoutSlot extends VLayoutSlot {
 
     final VPaintableWidget paintable;
 
-    public VPaintableLayoutSlot(VPaintableWidget paintable) {
-        super(paintable.getWidgetForPaintable());
+    public VPaintableLayoutSlot(String baseClassName, VPaintableWidget paintable) {
+        super(baseClassName, paintable.getWidgetForPaintable());
         this.paintable = paintable;
     }
 

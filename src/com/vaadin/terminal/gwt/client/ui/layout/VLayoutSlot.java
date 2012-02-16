@@ -20,10 +20,10 @@ public abstract class VLayoutSlot {
 
     private double expandRatio;
 
-    public VLayoutSlot(Widget widget) {
+    public VLayoutSlot(String baseClassName, Widget widget) {
         this.widget = widget;
 
-        wrapper.getStyle().setPosition(Position.ABSOLUTE);
+        wrapper.setClassName(baseClassName + "-slot");
     }
 
     public VCaption getCaption() {
