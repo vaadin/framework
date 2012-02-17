@@ -480,27 +480,25 @@ public class ComponentLocator {
                     // the same type before it
                     int nextIndex = 0;
                     for (Widget child : layout) {
-                        // Don't count captions
-                        if (child instanceof VCaption) {
-                            continue;
-                        }
-
                         boolean matchingType = nextWidgetClassName.equals(Util
                                 .getSimpleName(child));
-                        if (widgetPosition == 0) {
-                            // This is the n:th child
-
-                            // Error if not the expected type
-                            if (!matchingType) {
-                                return null;
-                            }
+                        if (matchingType && widgetPosition == 0) {
+                            // This is the n:th child that we looked for
                             break;
+                        } else if (widgetPosition < 0) {
+                            // Error if we're past the desired position without
+                            // a match
+                            return null;
                         } else if (matchingType) {
                             // If this was another child of the expected type,
                             // increase the count for the next step
                             nextIndex++;
                         }
-                        widgetPosition--;
+
+                        // Don't count captions
+                        if (!(child instanceof VCaption)) {
+                            widgetPosition--;
+                        }
                     }
 
                     // Advance to the next step, this time checking for the
