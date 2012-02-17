@@ -6,32 +6,18 @@
 	white-space: nowrap;
 }
 .v-errorindicator {
-	float: left;
+	display: inline-block;
 }
 .v-caption .v-icon {
-	float: left;
+	display: inline-block;
 	padding-right: 2px;
 	vertical-align: middle;
 }
 .v-caption .v-captiontext {
-	float: left;
+	display: inline-block;
 	overflow: hidden;
 	vertical-align: middle;
 }
 .v-caption .v-required-field-indicator {
-	float: left;
-}
-
-.v-caption-clearelem {
-	clear: both;
-	width: 0;
-	height: 0;
-	overflow: hidden;
-}
-
-.v-ie9 .v-gridlayout-margin>div>div>.v-caption,
-.v-ie9 .v-verticallayout>div>div>.v-caption,
-.v-ie9 .v-horizontallayout>div>div>.v-caption {
-	/* Fix possible sub pixel rounding errors that cause error indicators to drop */
-	margin-right:-0.5px;
+	display: inline-block;
 }

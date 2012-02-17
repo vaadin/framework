@@ -24,8 +24,6 @@ public class VCaption extends HTML {
 
     private Element captionText;
 
-    private Element clearElement;
-
     private final ApplicationConnection client;
 
     private boolean placedAfterComponent = false;
@@ -38,8 +36,6 @@ public class VCaption extends HTML {
     protected static final String ATTRIBUTE_REQUIRED = "required";
     protected static final String ATTRIBUTE_ERROR = "error";
     protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
-
-    private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
 
     /**
      * 
@@ -194,12 +190,6 @@ public class VCaption extends HTML {
             // Remove existing
             getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
-        }
-
-        if (clearElement == null) {
-            clearElement = DOM.createDiv();
-            clearElement.setClassName(CLASSNAME_CLEAR);
-            getElement().appendChild(clearElement);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
