@@ -12,7 +12,7 @@ input.v-textfield,
 input[type=text].v-textfield,
 textarea.v-textarea {
 	font-size: 12px;
-	height: 16px;
+	height: 22px;
 	padding: 2px;
 }
 textarea.v-textarea {
@@ -39,7 +39,7 @@ input.v-textfield-small,
 input[type=text].v-textfield-small,
 textarea.v-textarea-small {
 	font-size: 11px;
-	height: 14px;
+	height: 18px;
 	line-height: 12px;
 	padding: 1px 2px;
 }
