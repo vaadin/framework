@@ -101,7 +101,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             this.tabBar = tabBar;
             setStyleName(td, TD_CLASSNAME);
 
-            div = DOM.createDiv();
+            div = focusImpl.createFocusable();
+            focusImpl.setTabIndex(div, -1);
             setStyleName(div, DIV_CLASSNAME);
 
             DOM.appendChild(td, div);
@@ -156,7 +157,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          */
         public void setStyleNames(boolean selected, boolean first) {
             // TODO #5100 doesn't belong here
-            td.setAttribute("tabindex", selected ? "0" : "-1");
+            focusImpl.setTabIndex(div, selected ? 0 : -1);
 
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
@@ -217,11 +218,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void focus() {
-            td.focus();
+            focusImpl.focus(div);
         }
 
         public void blur() {
-            td.blur();
+            focusImpl.blur(div);
         }
     }
 
@@ -1307,21 +1308,33 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (event.getSource() instanceof Tab) {
             VConsole.log("KEYDOWN");
             int keycode = event.getNativeEvent().getKeyCode();
-            if (keycode == KeyCodes.KEY_LEFT) {
+            if (keycode == getPreviousTabKey()) {
                 int newTabIndex = activeTabIndex == 0 ? tb.getTabCount() - 1
                         : activeTabIndex - 1;
                 onTabSelected(newTabIndex);
                 activeTabIndex = newTabIndex;
-            } else if (keycode == KeyCodes.KEY_RIGHT) {
+            } else if (keycode == getNextTabKey()) {
                 int newTabIndex = (activeTabIndex + 1) % tb.getTabCount();
                 onTabSelected(newTabIndex);
                 activeTabIndex = newTabIndex;
-            } else if (keycode == KeyCodes.KEY_DELETE) {
+            } else if (keycode == getCloseTabKey()) {
                 VConsole.log("INDEX=" + activeTabIndex);
                 focusedTab.onClose();
                 removeTab(activeTabIndex);
             }
             VConsole.log("tabindex -> " + activeTabIndex);
         }
+    }
+
+    protected int getPreviousTabKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    protected int getNextTabKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
+
+    protected int getCloseTabKey() {
+        return KeyCodes.KEY_DELETE;
     }
 }
