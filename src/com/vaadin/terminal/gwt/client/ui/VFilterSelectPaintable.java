@@ -170,6 +170,7 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
                     getWidgetForPaintable().tb.setValue("");
                 }
             }
+            getWidgetForPaintable().setSelectedItemIcon(null);
             getWidgetForPaintable().selectedOptionKey = null;
         }
 

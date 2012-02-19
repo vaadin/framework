@@ -1339,13 +1339,15 @@ public abstract class AbstractCommunicationManager implements
                     try {
                         changeVariables(source, owner, m);
                     } catch (Exception e) {
+                        Component errorComponent = null;
                         if (owner instanceof Component) {
-                            handleChangeVariablesError(app, (Component) owner,
-                                    e, m);
-                        } else {
-                            // TODO DragDropService error handling
-                            throw new RuntimeException(e);
+                            errorComponent = (Component) owner;
+                        } else if (owner instanceof DragAndDropService) {
+                            if (m.get("dhowner") instanceof Component) {
+                                errorComponent = (Component) m.get("dhowner");
+                            }
                         }
+                        handleChangeVariablesError(app, errorComponent, e, m);
                     }
                 } else {
                     // TODO convert window close to a separate RPC call and

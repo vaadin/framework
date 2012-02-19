@@ -517,8 +517,10 @@ public class ListenerMethod implements EventListener, Serializable {
             } catch (final java.lang.reflect.InvocationTargetException e) {
                 // An exception was thrown by the invocation target. Throw it
                 // forwards.
-                throw new MethodException("Invocation of method " + method
-                        + " failed.", e.getTargetException());
+                throw new MethodException("Invocation of method "
+                        + method.getName() + " in "
+                        + target.getClass().getName() + " failed.",
+                        e.getTargetException());
             }
         }
     }
@@ -617,49 +619,8 @@ public class ListenerMethod implements EventListener, Serializable {
     public class MethodException extends RuntimeException implements
             Serializable {
 
-        private final Throwable cause;
-
-        private String message;
-
         private MethodException(String message, Throwable cause) {
-            super(message);
-            this.cause = cause;
-        }
-
-        /**
-         * Retrieves the cause of this throwable or <code>null</code> if the
-         * cause does not exist or not known.
-         * 
-         * @return the cause of this throwable or <code>null</code> if the cause
-         *         is nonexistent or unknown.
-         * @see java.lang.Throwable#getCause()
-         */
-        @Override
-        public Throwable getCause() {
-            return cause;
-        }
-
-        /**
-         * Returns the error message string of this throwable object.
-         * 
-         * @return the error message.
-         * @see java.lang.Throwable#getMessage()
-         */
-        @Override
-        public String getMessage() {
-            return message;
-        }
-
-        /**
-         * @see java.lang.Throwable#toString()
-         */
-        @Override
-        public String toString() {
-            String msg = super.toString();
-            if (cause != null) {
-                msg += "\nCause: " + cause.toString();
-            }
-            return msg;
+            super(message, cause);
         }
 
     }
