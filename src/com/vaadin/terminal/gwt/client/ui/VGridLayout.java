@@ -929,8 +929,11 @@ public class VGridLayout extends SimplePanel implements Container {
                 }
             }
             childUidl = c;
-            updateRelSizeStatus(client.getPaintable(c).getState(),
-                    c.getBooleanAttribute("cached"));
+            if (null != c) {
+                VPaintableWidget paintable = client.getPaintable(c);
+                updateRelSizeStatus(paintable.getState(),
+                        c.getBooleanAttribute("cached"));
+            }
         }
 
         protected void updateRelSizeStatus(SharedState state, boolean cached) {
