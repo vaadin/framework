@@ -895,27 +895,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         // TODO use the rest on the client side
 
-        if (styles != null && styles.size() > 0) {
-            state.put(ComponentState.STATE_STYLE, getStyle());
-        }
-        if (isReadOnly()) {
-            state.put(ComponentState.STATE_READONLY, true);
-        }
-
-        if (isImmediate()) {
-            state.put(ComponentState.STATE_IMMEDIATE, true);
-        }
-        if (!isEnabled()) {
-            state.put(ComponentState.STATE_DISABLED, true);
-        }
-        if (getCaption() != null) {
-            state.put(ComponentState.STATE_CAPTION, getCaption());
-        }
-        // TODO add icon (Resource)
-
-        if (getDescription() != null && getDescription().length() > 0) {
-            state.put(ComponentState.STATE_DESCRIPTION, getDescription());
-        }
+        // if (styles != null && styles.size() > 0) {
+        // state.put(ComponentState.STATE_STYLE, getStyle());
+        // }
+        // if (isReadOnly()) {
+        // state.put(ComponentState.STATE_READONLY, true);
+        // }
+        //
+        // if (isImmediate()) {
+        // state.put(ComponentState.STATE_IMMEDIATE, true);
+        // }
+        // if (!isEnabled()) {
+        // state.put(ComponentState.STATE_DISABLED, true);
+        // }
+        // if (getCaption() != null) {
+        // state.put(ComponentState.STATE_CAPTION, getCaption());
+        // }
+        // // TODO add icon (Resource)
+        //
+        // if (getDescription() != null && getDescription().length() > 0) {
+        // state.put(ComponentState.STATE_DESCRIPTION, getDescription());
+        // }
 
         sharedState.setState(state);
 
