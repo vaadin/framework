@@ -218,6 +218,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         // Set defined sizes
         Widget component = getWidgetForPaintable();
 
+        component.setStyleName("v-undefined-width", isUndefinedWidth());
+        component.setStyleName("v-undefined-height", isUndefinedHeight());
+
         component.setHeight(h);
         component.setWidth(w);
     }
