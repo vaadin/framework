@@ -75,7 +75,7 @@
 	font-style: italic;
 }
 .v-filterselect-button {
-	float: right;
+	display: inline-block;
 	cursor: pointer;
 	width: 1em;
 	height: 1em;
