@@ -14,7 +14,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.TextBox;
-import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
@@ -22,7 +21,7 @@ import com.vaadin.terminal.gwt.client.LocaleService;
 import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
-        ContainerResizedListener, Focusable, SubPartAware {
+        Focusable, SubPartAware {
 
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
@@ -30,12 +29,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     protected final TextBox text;
 
     protected String formatStr;
-
-    private String width;
-
-    private boolean needLayout;
-
-    protected int fieldExtraWidth = -1;
 
     protected boolean lenient;
 
@@ -293,72 +286,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         format = format.replaceAll("--", "-");
 
         return format.trim();
-    }
-
-    @Override
-    public void setWidth(String newWidth) {
-        if (!"".equals(newWidth)
-                && (isUndefinedWidth() || !newWidth.equals(width))) {
-            needLayout = true;
-            width = newWidth;
-            super.setWidth(width);
-            iLayout();
-            if (newWidth.indexOf("%") < 0) {
-                needLayout = false;
-            }
-        } else {
-            if ("".equals(newWidth) && !isUndefinedWidth()) {
-                super.setWidth("");
-                iLayout(true);
-                width = null;
-            }
-        }
-    }
-
-    protected boolean isUndefinedWidth() {
-        return width == null || "".equals(width);
-    }
-
-    /**
-     * Returns pixels in x-axis reserved for other than textfield content.
-     * 
-     * @return extra width in pixels
-     */
-    protected int getFieldExtraWidth() {
-        if (fieldExtraWidth < 0) {
-            text.setWidth("0");
-            fieldExtraWidth = text.getOffsetWidth();
-        }
-        return fieldExtraWidth;
-    }
-
-    /**
-     * Force an recalculation of the width of the component IF the width has
-     * been defined. Does nothing if width is undefined as the width will be
-     * automatically adjusted by the browser.
-     */
-    public void updateWidth() {
-        if (isUndefinedWidth()) {
-            return;
-        }
-        needLayout = true;
-        fieldExtraWidth = -1;
-        iLayout(true);
-    }
-
-    public void iLayout() {
-        iLayout(false);
-    }
-
-    public void iLayout(boolean force) {
-        if (needLayout || force) {
-            int textFieldWidth = getOffsetWidth() - getFieldExtraWidth();
-            if (textFieldWidth < 0) {
-                // Field can never be smaller than 0 (causes exception in IE)
-                textFieldWidth = 0;
-            }
-            text.setWidth(textFieldWidth + "px");
-        }
     }
 
     public void focus() {
