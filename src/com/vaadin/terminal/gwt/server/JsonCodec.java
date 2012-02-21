@@ -136,8 +136,8 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Encode a value to a JSON representation for transport from the client to
-     * the server.
+     * Encode a value to a JSON representation for transport from the server to
+     * the client.
      * 
      * @param value
      *            value to convert
@@ -167,6 +167,8 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(JsonEncoder.VTYPE_STRING, value);
         } else if (value instanceof Boolean) {
             return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
+        } else if (value instanceof Number) {
+            return combineTypeAndValue(getTransportType(value), value);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
             JSONArray jsonArray = encodeArrayContents(array, idMapper);

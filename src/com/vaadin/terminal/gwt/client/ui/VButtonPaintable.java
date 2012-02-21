@@ -43,8 +43,7 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().setText(
                 uidl.getStringAttribute(ATTRIBUTE_CAPTION));
 
-        getWidgetForPaintable().disableOnClick = uidl
-                .hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
+        getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
 
         // handle error
         if (uidl.hasAttribute("error")) {
@@ -81,10 +80,8 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
             }
         }
 
-        if (uidl.hasAttribute("keycode")) {
-            getWidgetForPaintable().clickShortcut = uidl
-                    .getIntAttribute("keycode");
-        }
+        getWidgetForPaintable().clickShortcut = getState()
+                .getClickShortcutKeyCode();
     }
 
     @Override
@@ -95,5 +92,10 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
     @Override
     public VButton getWidgetForPaintable() {
         return (VButton) super.getWidgetForPaintable();
+    }
+
+    @Override
+    public VButtonState getState() {
+        return (VButtonState) super.getState();
     }
 }

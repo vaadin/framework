@@ -1038,7 +1038,7 @@ public class ApplicationConnection {
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(paintableId));
 
-                            Object state = JsonDecoder.deserialize(
+                            Object state = JsonDecoder.convertValue(
                                     stateDataAndType, paintableMap);
 
                             paintable.setState((SharedState) state);

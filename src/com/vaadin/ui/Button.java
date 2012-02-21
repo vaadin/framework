@@ -4,7 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -19,11 +18,8 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VButtonPaintable;
 import com.vaadin.terminal.gwt.client.ui.VButtonState;
@@ -86,28 +82,6 @@ public class Button extends AbstractComponent implements
     public Button(String caption, ClickListener listener) {
         this(caption);
         addListener(listener);
-    }
-
-    /**
-     * Paints the content of this component.
-     * 
-     * @param event
-     *            the PaintEvent.
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        if (isDisableOnClick()) {
-            target.addAttribute(VButton.ATTR_DISABLE_ON_CLICK, true);
-        }
-        if (clickShortcut != null) {
-            target.addAttribute("keycode", clickShortcut.getKeyCode());
-        }
     }
 
     /**
@@ -404,6 +378,7 @@ public class Button extends AbstractComponent implements
         }
         clickShortcut = new ClickShortcut(this, keyCode, modifiers);
         addShortcutListener(clickShortcut);
+        getState().setClickShortcutKeyCode(clickShortcut.getKeyCode());
     }
 
     /**
@@ -414,6 +389,7 @@ public class Button extends AbstractComponent implements
         if (clickShortcut != null) {
             removeShortcutListener(clickShortcut);
             clickShortcut = null;
+            getState().setClickShortcutKeyCode(0);
         }
     }
 

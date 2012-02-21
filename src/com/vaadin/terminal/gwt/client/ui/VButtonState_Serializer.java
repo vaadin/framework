@@ -24,6 +24,11 @@ public class VButtonState_Serializer implements VaadinSerializer {
         state.setDisableOnClick((Boolean) JsonDecoder.convertValue(
                 jsonDisableOnClick, idMapper));
 
+        JSONArray jsonClickShortcutKeyCode = (JSONArray) jsonValue
+                .get("clickShortcutKeyCode");
+        state.setClickShortcutKeyCode((Integer) JsonDecoder.convertValue(
+                jsonClickShortcutKeyCode, idMapper));
+
         return state;
     }
 }

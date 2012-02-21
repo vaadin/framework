@@ -27,9 +27,7 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().disableOnClick = uidl
-                .hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
-
+        getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
         getWidgetForPaintable().focusHandlerRegistration = EventHelper
                 .updateFocusHandler(this, client,
                         getWidgetForPaintable().focusHandlerRegistration);
@@ -90,5 +88,10 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
     @Override
     public VNativeButton getWidgetForPaintable() {
         return (VNativeButton) super.getWidgetForPaintable();
+    }
+
+    @Override
+    public VButtonState getState() {
+        return (VButtonState) super.getState();
     }
 }

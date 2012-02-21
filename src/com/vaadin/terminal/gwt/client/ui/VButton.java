@@ -56,8 +56,6 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
         public void disableOnClick();
     }
 
-    public static final String ATTR_DISABLE_ON_CLICK = "dc";
-
     // mouse movement is checked before synthesizing click event on mouseout
     protected static int MOVE_THRESHOLD = 3;
     protected int mousedownX = 0;
