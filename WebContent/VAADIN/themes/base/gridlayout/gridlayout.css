@@ -1,3 +1,9 @@
+.v-gridlayout {
+	position: relative;
+}
+.v-gridlayout-slot {
+	position: absolute;
+}
 .v-gridlayout-margin-top {
 	padding-top: 12px;
 }

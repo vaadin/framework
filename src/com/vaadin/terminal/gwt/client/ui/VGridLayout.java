@@ -4,55 +4,38 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.RenderSpace;
-import com.vaadin.terminal.gwt.client.StyleConstants;
+import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
+import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
+import com.vaadin.terminal.gwt.client.ui.layout.VPaintableLayoutSlot;
 
-public class VGridLayout extends SimplePanel {
+public class VGridLayout extends ComplexPanel {
 
     public static final String CLASSNAME = "v-gridlayout";
 
-    private DivElement margin = Document.get().createDivElement();
-
-    final AbsolutePanel canvas = new AbsolutePanel();
-
     ApplicationConnection client;
-
-    protected HashMap<Widget, ChildComponentContainer> widgetToComponentContainer = new HashMap<Widget, ChildComponentContainer>();
 
     HashMap<Widget, Cell> widgetToCell = new HashMap<Widget, Cell>();
 
-    private int spacingPixelsHorizontal;
-    private int spacingPixelsVertical;
-
     int[] columnWidths;
     int[] rowHeights;
-
-    private int height;
-
-    private int width;
-
-    private boolean undefinedWidth;
-
-    private boolean undefinedHeight;
 
     int[] colExpandRatioArray;
 
@@ -62,22 +45,26 @@ public class VGridLayout extends SimplePanel {
 
     private int[] minRowHeights;
 
-    boolean rendering;
-
-    HashMap<Widget, ChildComponentContainer> nonRenderedWidgets;
-
-    boolean sizeChangedDuringRendering = false;
+    DivElement spacingMeasureElement;
 
     public VGridLayout() {
         super();
-        getElement().appendChild(margin);
+        setElement(Document.get().createDivElement());
+
+        spacingMeasureElement = Document.get().createDivElement();
+        Style spacingStyle = spacingMeasureElement.getStyle();
+        spacingStyle.setPosition(Position.ABSOLUTE);
+        getElement().appendChild(spacingMeasureElement);
+
         setStyleName(CLASSNAME);
-        setWidget(canvas);
     }
 
-    @Override
-    protected Element getContainerElement() {
-        return margin.cast();
+    private MeasuredSize getMeasuredSize() {
+        return getPaintable().getMeasuredSize();
+    }
+
+    private VPaintableWidget getPaintable() {
+        return VPaintableMap.get(client).getPaintable(this);
     }
 
     /**
@@ -104,7 +91,7 @@ public class VGridLayout extends SimplePanel {
      * @return
      */
     protected int getHorizontalSpacing() {
-        return spacingPixelsHorizontal;
+        return getMeasuredSize().getDependencyOuterWidth(spacingMeasureElement);
     }
 
     /**
@@ -113,7 +100,8 @@ public class VGridLayout extends SimplePanel {
      * @return
      */
     protected int getVerticalSpacing() {
-        return spacingPixelsVertical;
+        return getMeasuredSize()
+                .getDependencyOuterHeight(spacingMeasureElement);
     }
 
     static int[] cloneArray(int[] toBeCloned) {
@@ -127,10 +115,11 @@ public class VGridLayout extends SimplePanel {
     void expandRows() {
         if (!isUndefinedHeight()) {
             int usedSpace = minRowHeights[0];
+            int verticalSpacing = getVerticalSpacing();
             for (int i = 1; i < minRowHeights.length; i++) {
-                usedSpace += spacingPixelsVertical + minRowHeights[i];
+                usedSpace += verticalSpacing + minRowHeights[i];
             }
-            int availableSpace = getOffsetHeight() - marginTopAndBottom;
+            int availableSpace = getMeasuredSize().getInnerHeight();
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
@@ -150,125 +139,36 @@ public class VGridLayout extends SimplePanel {
         }
     }
 
-    void updateHeight(int height, boolean undefinedHeight) {
-        if (height != this.height || this.undefinedHeight != undefinedHeight) {
-            this.undefinedHeight = undefinedHeight;
-            this.height = height;
-            if (rendering) {
-                sizeChangedDuringRendering = true;
-            } else {
-                expandRows();
-                layoutCells();
-                for (Widget w : widgetToCell.keySet()) {
-                    client.handleComponentRelativeSize(w);
-                }
-            }
-        }
+    void updateHeight() {
+        // Detect minimum heights & calculate spans
+        detectRowHeights();
+
+        // Expand
+        expandRows();
+
+        // Position
+        layoutCellsVertically();
     }
 
-    void updateWidth(int width, boolean undefinedWidth) {
-        if (width != this.width || undefinedWidth != this.undefinedWidth) {
-            this.undefinedWidth = undefinedWidth;
-            this.width = width;
-            if (rendering) {
-                sizeChangedDuringRendering = true;
-            } else {
-                int[] oldWidths = cloneArray(columnWidths);
-                expandColumns();
-                boolean heightChanged = false;
-                HashSet<Integer> dirtyRows = null;
-                for (int i = 0; i < oldWidths.length; i++) {
-                    if (columnWidths[i] != oldWidths[i]) {
-                        Cell[] column = cells[i];
-                        for (int j = 0; j < column.length; j++) {
-                            Cell c = column[j];
-                            if (c != null && c.cc != null
-                                    && c.widthCanAffectHeight()) {
-                                c.cc.setContainerSize(c.getAvailableWidth(),
-                                        c.getAvailableHeight());
-                                client.handleComponentRelativeSize(c.cc
-                                        .getWidget());
-                                c.cc.updateWidgetSize();
-                                int newHeight = c.getHeight();
-                                if (columnWidths[i] < oldWidths[i]
-                                        && newHeight > minRowHeights[j]
-                                        && c.rowspan == 1) {
-                                    /*
-                                     * The width of this column was reduced and
-                                     * this affected the height. The height is
-                                     * now greater than the previously
-                                     * calculated minHeight for the row.
-                                     */
-                                    minRowHeights[j] = newHeight;
-                                    if (newHeight > rowHeights[j]) {
-                                        /*
-                                         * The new height is greater than the
-                                         * previously calculated rowHeight -> we
-                                         * need to recalculate heights later on
-                                         */
-                                        rowHeights[j] = newHeight;
-                                        heightChanged = true;
-                                    }
-                                } else if (newHeight < minRowHeights[j]) {
-                                    /*
-                                     * The new height of the component is less
-                                     * than the previously calculated min row
-                                     * height. The min row height may be
-                                     * affected and must thus be recalculated
-                                     */
-                                    if (dirtyRows == null) {
-                                        dirtyRows = new HashSet<Integer>();
-                                    }
-                                    dirtyRows.add(j);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (dirtyRows != null) {
-                    /* flag indicating that there is a potential row shrinking */
-                    boolean rowMayShrink = false;
-                    for (Integer rowIndex : dirtyRows) {
-                        int oldMinimum = minRowHeights[rowIndex];
-                        int newMinimum = 0;
-                        for (int colIndex = 0; colIndex < columnWidths.length; colIndex++) {
-                            Cell cell = cells[colIndex][rowIndex];
-                            if (cell != null && !cell.hasRelativeHeight()
-                                    && cell.getHeight() > newMinimum) {
-                                newMinimum = cell.getHeight();
-                            }
-                        }
-                        if (newMinimum < oldMinimum) {
-                            minRowHeights[rowIndex] = rowHeights[rowIndex] = newMinimum;
-                            rowMayShrink = true;
-                        }
-                    }
-                    if (rowMayShrink) {
-                        distributeRowSpanHeights();
-                        minRowHeights = cloneArray(rowHeights);
-                        heightChanged = true;
-                    }
+    void updateWidth() {
+        // Detect widths & calculate spans
+        detectColWidths();
+        // Expand
+        expandColumns();
+        // Position
+        layoutCellsHorizontally();
 
-                }
-                layoutCells();
-                for (Widget w : widgetToCell.keySet()) {
-                    client.handleComponentRelativeSize(w);
-                }
-                if (heightChanged && isUndefinedHeight()) {
-                    Util.notifyParentOfSizeChange(this, false);
-                }
-            }
-        }
     }
 
     void expandColumns() {
         if (!isUndefinedWidth()) {
             int usedSpace = minColumnWidths[0];
+            int horizontalSpacing = getHorizontalSpacing();
             for (int i = 1; i < minColumnWidths.length; i++) {
-                usedSpace += spacingPixelsHorizontal + minColumnWidths[i];
+                usedSpace += horizontalSpacing + minColumnWidths[i];
             }
-            canvas.setWidth("");
-            int availableSpace = canvas.getOffsetWidth();
+
+            int availableSpace = getMeasuredSize().getInnerWidth();
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
@@ -288,70 +188,58 @@ public class VGridLayout extends SimplePanel {
         }
     }
 
-    void layoutCells() {
-        int x = 0;
+    void layoutCellsVertically() {
+        int verticalSpacing = getVerticalSpacing();
         int y = 0;
         for (int i = 0; i < cells.length; i++) {
             y = 0;
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    cell.layout(x, y);
+                    cell.layoutVertically(y);
                 }
-                y += rowHeights[j] + spacingPixelsVertical;
+                y += rowHeights[j] + verticalSpacing;
             }
-            x += columnWidths[i] + spacingPixelsHorizontal;
+        }
+
+        if (isUndefinedHeight()) {
+            int innerHeight = y - verticalSpacing;
+            getElement().getStyle().setHeight(innerHeight, Unit.PX);
+        }
+    }
+
+    void layoutCellsHorizontally() {
+        int x = 0;
+        int horizontalSpacing = getHorizontalSpacing();
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                Cell cell = cells[i][j];
+                if (cell != null) {
+                    cell.layoutHorizontally(x);
+                }
+            }
+            x += columnWidths[i] + horizontalSpacing;
         }
 
         if (isUndefinedWidth()) {
-            canvas.setWidth((x - spacingPixelsHorizontal) + "px");
-        } else {
-            // main element defines width
-            canvas.setWidth("");
+            getElement().getStyle().setWidth((x - horizontalSpacing), Unit.PX);
         }
-
-        int canvasHeight;
-        if (isUndefinedHeight()) {
-            canvasHeight = y - spacingPixelsVertical;
-        } else {
-            canvasHeight = getOffsetHeight() - marginTopAndBottom;
-            if (canvasHeight < 0) {
-                canvasHeight = 0;
-            }
-        }
-        canvas.setHeight(canvasHeight + "px");
     }
 
     private boolean isUndefinedHeight() {
-        return undefinedHeight;
+        return getPaintable().isUndefinedHeight();
     }
 
     private boolean isUndefinedWidth() {
-        return undefinedWidth;
+        return getPaintable().isUndefinedWidth();
     }
 
-    void renderRemainingComponents(LinkedList<Cell> pendingCells) {
-        for (Cell cell : pendingCells) {
-            cell.render();
-        }
-    }
-
-    void detectRowHeights() {
-
+    private void detectRowHeights() {
         // collect min rowheight from non-rowspanned cells
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    /*
-                     * Setting fixing container width may in some situations
-                     * affect height. Example: Label with wrapping text without
-                     * or with relative width.
-                     */
-                    if (cell.cc != null && cell.widthCanAffectHeight()) {
-                        cell.cc.setWidth(cell.getAvailableWidth() + "px");
-                        cell.cc.updateWidgetSize();
-                    }
                     if (cell.rowspan == 1) {
                         if (!cell.hasRelativeHeight()
                                 && rowHeights[j] < cell.getHeight()) {
@@ -367,6 +255,29 @@ public class VGridLayout extends SimplePanel {
         distributeRowSpanHeights();
 
         minRowHeights = cloneArray(rowHeights);
+    }
+
+    private void detectColWidths() {
+        // collect min colwidths from non-colspanned cells
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                Cell cell = cells[i][j];
+                if (cell != null) {
+                    if (cell.colspan == 1) {
+                        if (!cell.hasRelativeWidth()
+                                && columnWidths[i] < cell.getWidth()) {
+                            columnWidths[i] = cell.getWidth();
+                        }
+                    } else {
+                        storeColSpannedCell(cell);
+                    }
+                }
+            }
+        }
+
+        distributeColSpanWidths();
+
+        minColumnWidths = cloneArray(columnWidths);
     }
 
     private void storeRowSpannedCell(Cell cell) {
@@ -391,20 +302,6 @@ public class VGridLayout extends SimplePanel {
         l.cells.add(cell);
     }
 
-    void renderRemainingComponentsWithNoRelativeHeight(
-            LinkedList<Cell> pendingCells) {
-
-        for (Iterator<Cell> iterator = pendingCells.iterator(); iterator
-                .hasNext();) {
-            Cell cell = iterator.next();
-            if (!cell.hasRelativeHeight()) {
-                cell.render();
-                iterator.remove();
-            }
-        }
-
-    }
-
     /**
      * Iterates colspanned cells, ensures cols have enough space to accommodate
      * them
@@ -416,7 +313,7 @@ public class VGridLayout extends SimplePanel {
                 // subsequent renders
                 int width = cell.hasRelativeWidth() ? 0 : cell.getWidth();
                 distributeSpanSize(columnWidths, cell.col, cell.colspan,
-                        spacingPixelsHorizontal, width, colExpandRatioArray);
+                        getHorizontalSpacing(), width, colExpandRatioArray);
             }
         }
     }
@@ -432,7 +329,7 @@ public class VGridLayout extends SimplePanel {
                 // subsequent renders
                 int height = cell.hasRelativeHeight() ? 0 : cell.getHeight();
                 distributeSpanSize(rowHeights, cell.row, cell.rowspan,
-                        spacingPixelsVertical, height, rowExpandRatioArray);
+                        getVerticalSpacing(), height, rowExpandRatioArray);
             }
         }
     }
@@ -492,8 +389,6 @@ public class VGridLayout extends SimplePanel {
     private LinkedList<SpanList> colSpans = new LinkedList<SpanList>();
     private LinkedList<SpanList> rowSpans = new LinkedList<SpanList>();
 
-    private int marginTopAndBottom;
-
     private class SpanList {
         final int span;
         List<Cell> cells = new LinkedList<Cell>();
@@ -526,226 +421,28 @@ public class VGridLayout extends SimplePanel {
         l.cells.add(cell);
     }
 
-    void detectSpacing(UIDL uidl) {
-        DivElement spacingmeter = Document.get().createDivElement();
-        spacingmeter.setClassName(CLASSNAME + "-" + "spacing-"
-                + (uidl.getBooleanAttribute("spacing") ? "on" : "off"));
-        spacingmeter.getStyle().setProperty("width", "0");
-        spacingmeter.getStyle().setProperty("height", "0");
-        canvas.getElement().appendChild(spacingmeter);
-        spacingPixelsHorizontal = spacingmeter.getOffsetWidth();
-        spacingPixelsVertical = spacingmeter.getOffsetHeight();
-        canvas.getElement().removeChild(spacingmeter);
-    }
-
-    void handleMargins(UIDL uidl) {
-        final VMarginInfo margins = new VMarginInfo(
-                uidl.getIntAttribute("margins"));
-
-        String styles = CLASSNAME + "-margin";
-        if (margins.hasTop()) {
-            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_TOP;
-        }
-        if (margins.hasRight()) {
-            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT;
-        }
-        if (margins.hasBottom()) {
-            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM;
-        }
-        if (margins.hasLeft()) {
-            styles += " " + CLASSNAME + "-" + StyleConstants.MARGIN_LEFT;
-        }
-        margin.setClassName(styles);
-
-        marginTopAndBottom = margin.getOffsetHeight()
-                - canvas.getOffsetHeight();
-    }
-
-    public boolean requestLayout(final Set<Widget> changedChildren) {
-        boolean needsLayout = false;
-        boolean reDistributeColSpanWidths = false;
-        boolean reDistributeRowSpanHeights = false;
-        int offsetHeight = canvas.getOffsetHeight();
-        int offsetWidth = canvas.getOffsetWidth();
-        if (isUndefinedWidth() || isUndefinedHeight()) {
-            needsLayout = true;
-        }
-        ArrayList<Integer> dirtyColumns = new ArrayList<Integer>();
-        ArrayList<Integer> dirtyRows = new ArrayList<Integer>();
-        for (Widget widget : changedChildren) {
-
-            Cell cell = widgetToCell.get(widget);
-            if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
-                // cell sizes will only stay still if only relatively
-                // sized components
-                // check if changed child affects min col widths
-                assert cell.cc != null;
-                cell.cc.setWidth("");
-                cell.cc.setHeight("");
-
-                cell.cc.updateWidgetSize();
-
-                /*
-                 * If this is the result of an caption icon onload event the
-                 * caption size may have changed
-                 */
-                cell.cc.updateCaptionSize();
-
-                int width = cell.getWidth();
-                int allocated = columnWidths[cell.col];
-                for (int i = 1; i < cell.colspan; i++) {
-                    allocated += spacingPixelsHorizontal
-                            + columnWidths[cell.col + i];
-                }
-                if (allocated < width) {
-                    needsLayout = true;
-                    if (cell.colspan == 1) {
-                        // do simple column width expansion
-                        columnWidths[cell.col] = minColumnWidths[cell.col] = width;
-                    } else {
-                        // mark that col span expansion is needed
-                        reDistributeColSpanWidths = true;
-                    }
-                } else if (allocated != width) {
-                    // size is smaller thant allocated, column might
-                    // shrink
-                    dirtyColumns.add(cell.col);
-                }
-
-                int height = cell.getHeight();
-
-                allocated = rowHeights[cell.row];
-                for (int i = 1; i < cell.rowspan; i++) {
-                    allocated += spacingPixelsVertical
-                            + rowHeights[cell.row + i];
-                }
-                if (allocated < height) {
-                    needsLayout = true;
-                    if (cell.rowspan == 1) {
-                        // do simple row expansion
-                        rowHeights[cell.row] = minRowHeights[cell.row] = height;
-                    } else {
-                        // mark that row span expansion is needed
-                        reDistributeRowSpanHeights = true;
-                    }
-                } else if (allocated != height) {
-                    // size is smaller than allocated, row might shrink
-                    dirtyRows.add(cell.row);
-                }
-            }
-        }
-
-        if (dirtyColumns.size() > 0) {
-            for (Integer colIndex : dirtyColumns) {
-                int colW = 0;
-                for (int i = 0; i < rowHeights.length; i++) {
-                    Cell cell = cells[colIndex][i];
-                    if (cell != null && cell.getChildUIDL() != null
-                            && !cell.hasRelativeWidth() && cell.colspan == 1) {
-                        int width = cell.getWidth();
-                        if (width > colW) {
-                            colW = width;
-                        }
-                    }
-                }
-                minColumnWidths[colIndex] = colW;
-            }
-            needsLayout = true;
-            // ensure colspanned columns have enough space
-            columnWidths = cloneArray(minColumnWidths);
-            distributeColSpanWidths();
-            reDistributeColSpanWidths = false;
-        }
-
-        if (reDistributeColSpanWidths) {
-            distributeColSpanWidths();
-        }
-
-        if (dirtyRows.size() > 0) {
-            needsLayout = true;
-            for (Integer rowIndex : dirtyRows) {
-                // recalculate min row height
-                int rowH = minRowHeights[rowIndex] = 0;
-                // loop all columns on row rowIndex
-                for (int i = 0; i < columnWidths.length; i++) {
-                    Cell cell = cells[i][rowIndex];
-                    if (cell != null && cell.getChildUIDL() != null
-                            && !cell.hasRelativeHeight() && cell.rowspan == 1) {
-                        int h = cell.getHeight();
-                        if (h > rowH) {
-                            rowH = h;
-                        }
-                    }
-                }
-                minRowHeights[rowIndex] = rowH;
-            }
-            // TODO could check only some row spans
-            rowHeights = cloneArray(minRowHeights);
-            distributeRowSpanHeights();
-            reDistributeRowSpanHeights = false;
-        }
-
-        if (reDistributeRowSpanHeights) {
-            distributeRowSpanHeights();
-        }
-
-        if (needsLayout) {
-            expandColumns();
-            expandRows();
-            layoutCells();
-            // loop all relative sized components and update their size
-            for (int i = 0; i < cells.length; i++) {
-                for (int j = 0; j < cells[i].length; j++) {
-                    Cell cell = cells[i][j];
-                    if (cell != null
-                            && cell.cc != null
-                            && (cell.hasRelativeHeight() || cell
-                                    .hasRelativeWidth())) {
-                        client.handleComponentRelativeSize(cell.cc.getWidget());
-                    }
-                }
-            }
-        }
-        if (canvas.getOffsetHeight() != offsetHeight
-                || canvas.getOffsetWidth() != offsetWidth) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     Cell[][] cells;
 
     /**
      * Private helper class.
      */
     class Cell {
-        private boolean relHeight = false;
-        private boolean relWidth = false;
-        private boolean widthCanAffectHeight = false;
-
         public Cell(UIDL c) {
             row = c.getIntAttribute("y");
             col = c.getIntAttribute("x");
-            setUidl(c);
-        }
-
-        public boolean widthCanAffectHeight() {
-            return widthCanAffectHeight;
-        }
-
-        public boolean hasRelativeHeight() {
-            return relHeight;
-        }
-
-        public RenderSpace getAllocatedSpace() {
-            return new RenderSpace(getAvailableWidth()
-                    - cc.getCaptionWidthAfterComponent(), getAvailableHeight()
-                    - cc.getCaptionHeightAboveComponent());
+            updateFromUidl(c);
         }
 
         public boolean hasContent() {
-            return childUidl != null;
+            return hasContent;
+        }
+
+        public boolean hasRelativeHeight() {
+            if (slot != null) {
+                return slot.getPaintable().isRelativeHeight();
+            } else {
+                return true;
+            }
         }
 
         /**
@@ -754,7 +451,7 @@ public class VGridLayout extends SimplePanel {
         private int getAvailableWidth() {
             int width = columnWidths[col];
             for (int i = 1; i < colspan; i++) {
-                width += spacingPixelsHorizontal + columnWidths[col + i];
+                width += getHorizontalSpacing() + columnWidths[col + i];
             }
             return width;
         }
@@ -765,110 +462,65 @@ public class VGridLayout extends SimplePanel {
         private int getAvailableHeight() {
             int height = rowHeights[row];
             for (int i = 1; i < rowspan; i++) {
-                height += spacingPixelsVertical + rowHeights[row + i];
+                height += getVerticalSpacing() + rowHeights[row + i];
             }
             return height;
         }
 
-        public void layout(int x, int y) {
-            if (cc != null && cc.isAttached()) {
-                canvas.setWidgetPosition(cc, x, y);
-                cc.setContainerSize(getAvailableWidth(), getAvailableHeight());
-                cc.setAlignment(new AlignmentInfo(alignment));
-                cc.updateAlignments(getAvailableWidth(), getAvailableHeight());
+        public void layoutHorizontally(int x) {
+            if (slot != null) {
+                slot.positionHorizontally(x, getAvailableWidth());
+            }
+        }
+
+        public void layoutVertically(int y) {
+            if (slot != null) {
+                slot.positionVertically(y, getAvailableHeight());
             }
         }
 
         public int getWidth() {
-            if (cc != null) {
-                int w = cc.getWidgetSize().getWidth()
-                        + cc.getCaptionWidthAfterComponent();
-                return w;
+            if (slot != null) {
+                return slot.getUsedWidth();
             } else {
                 return 0;
             }
         }
 
         public int getHeight() {
-            if (cc != null) {
-                return cc.getWidgetSize().getHeight()
-                        + cc.getCaptionHeightAboveComponent();
+            if (slot != null) {
+                return slot.getUsedHeight();
             } else {
                 return 0;
             }
         }
 
-        public boolean renderIfNoRelativeWidth() {
-            if (childUidl == null) {
-                return false;
-            }
-            if (!hasRelativeWidth()) {
-                render();
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         protected boolean hasRelativeWidth() {
-            return relWidth;
-        }
-
-        protected void render() {
-            assert childUidl != null;
-
-            VPaintableWidget paintable = client.getPaintable(childUidl);
-            Widget w = paintable.getWidgetForPaintable();
-            assert paintable != null;
-            if (cc == null || cc.getWidget() != w) {
-                if (widgetToComponentContainer.containsKey(w)) {
-                    // Component moving from one place to another
-                    cc = widgetToComponentContainer.get(w);
-                    cc.setWidth("");
-                    cc.setHeight("");
-                    /*
-                     * Widget might not be set if moving from another component
-                     * and this layout has been hidden when moving out, see
-                     * #5372
-                     */
-                    cc.setPaintable(paintable);
-                } else {
-                    // A new component
-                    cc = new ChildComponentContainer(paintable,
-                            ChildComponentContainer.ORIENTATION_VERTICAL);
-                    widgetToComponentContainer.put(w, cc);
-                    cc.setWidth("");
-                    canvas.add(cc, 0, 0);
-                }
-                widgetToCell.put(w, this);
+            if (slot != null) {
+                return slot.getPaintable().isRelativeWidth();
+            } else {
+                return true;
             }
-            cc.renderChild(childUidl, client, -1);
-            if (sizeChangedDuringRendering && Util.isCached(childUidl)) {
-                client.handleComponentRelativeSize(cc.getWidget());
-            }
-            cc.updateWidgetSize();
-            nonRenderedWidgets.remove(w);
-        }
-
-        public UIDL getChildUIDL() {
-            return childUidl;
         }
 
         final int row;
         final int col;
         int colspan = 1;
         int rowspan = 1;
-        UIDL childUidl;
-        int alignment;
-        // may be null after setUidl() if content has vanished or changed, set
-        // in render()
-        ChildComponentContainer cc;
 
-        public void setUidl(UIDL c) {
+        private boolean hasContent;
+
+        private AlignmentInfo alignment;
+
+        VPaintableLayoutSlot slot;
+
+        public void updateFromUidl(UIDL cellUidl) {
             // Set cell width
-            colspan = c.hasAttribute("w") ? c.getIntAttribute("w") : 1;
+            colspan = cellUidl.hasAttribute("w") ? cellUidl
+                    .getIntAttribute("w") : 1;
             // Set cell height
-            rowspan = c.hasAttribute("h") ? c.getIntAttribute("h") : 1;
+            rowspan = cellUidl.hasAttribute("h") ? cellUidl
+                    .getIntAttribute("h") : 1;
             // ensure we will lose reference to old cells, now overlapped by
             // this cell
             for (int i = 0; i < colspan; i++) {
@@ -879,52 +531,32 @@ public class VGridLayout extends SimplePanel {
                 }
             }
 
-            c = c.getChildUIDL(0); // we are interested about childUidl
-            if (childUidl != null) {
-                if (c == null) {
-                    // content has vanished, old content will be removed from
-                    // canvas later during the render phase
-                    cc = null;
-                } else if (cc != null
-                        && cc.getWidget() != client.getPaintable(c)
-                                .getWidgetForPaintable()) {
-                    // content has changed
-                    cc = null;
-                    VPaintableWidget paintable = client.getPaintable(c);
-                    Widget w = paintable.getWidgetForPaintable();
-                    if (widgetToComponentContainer.containsKey(w)) {
-                        // cc exist for this component (moved) use that for this
-                        // cell
-                        cc = widgetToComponentContainer.get(w);
-                        cc.setWidth("");
-                        cc.setHeight("");
-                        widgetToCell.put(w, this);
+            UIDL childUidl = cellUidl.getChildUIDL(0); // we are interested
+                                                       // about childUidl
+            hasContent = childUidl != null;
+            if (hasContent) {
+                VPaintableWidget paintable = client.getPaintable(childUidl);
+
+                if (slot == null || slot.getPaintable() != paintable) {
+                    slot = new VPaintableLayoutSlot(CLASSNAME, paintable);
+                    Element slotWrapper = slot.getWrapperElement();
+                    getElement().appendChild(slotWrapper);
+
+                    Widget widget = paintable.getWidgetForPaintable();
+                    insert(widget, slotWrapper, getWidgetCount(), false);
+                    Cell oldCell = widgetToCell.put(widget, this);
+                    if (oldCell != null) {
+                        oldCell.slot.getWrapperElement().removeFromParent();
+                        oldCell.slot = null;
                     }
                 }
+
+                paintable.updateFromUIDL(childUidl, client);
             }
-            childUidl = c;
-            updateRelSizeStatus(c);
         }
 
-        protected void updateRelSizeStatus(UIDL uidl) {
-            if (uidl != null && !uidl.getBooleanAttribute("cached")) {
-                if (uidl.hasAttribute("height")
-                        && uidl.getStringAttribute("height").contains("%")) {
-                    relHeight = true;
-                } else {
-                    relHeight = false;
-                }
-                if (uidl.hasAttribute("width")) {
-                    widthCanAffectHeight = relWidth = uidl.getStringAttribute(
-                            "width").contains("%");
-                    if (uidl.hasAttribute("height")) {
-                        widthCanAffectHeight = false;
-                    }
-                } else {
-                    widthCanAffectHeight = !uidl.hasAttribute("height");
-                    relWidth = false;
-                }
-            }
+        public void setAlignment(AlignmentInfo alignmentInfo) {
+            slot.setAlignment(alignmentInfo);
         }
     }
 
@@ -936,7 +568,7 @@ public class VGridLayout extends SimplePanel {
             cell = new Cell(c);
             cells[col][row] = cell;
         } else {
-            cell.setUidl(c);
+            cell.updateFromUidl(c);
         }
         return cell;
     }
@@ -953,6 +585,49 @@ public class VGridLayout extends SimplePanel {
      */
     VPaintableWidget getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
+    }
+
+    void setCaption(Widget widget, VCaption caption) {
+        VLayoutSlot slot = widgetToCell.get(widget).slot;
+
+        if (caption != null) {
+            // Logical attach.
+            getChildren().add(caption);
+        }
+
+        // Physical attach if not null, also removes old caption
+        slot.setCaption(caption);
+
+        if (caption != null) {
+            // Adopt.
+            adopt(caption);
+        }
+    }
+
+    private void togglePrefixedStyleName(String name, boolean enabled) {
+        if (enabled) {
+            addStyleDependentName(name);
+        } else {
+            removeStyleDependentName(name);
+        }
+    }
+
+    void updateMarginStyleNames(VMarginInfo marginInfo) {
+        togglePrefixedStyleName("margin-top", marginInfo.hasTop());
+        togglePrefixedStyleName("margin-right", marginInfo.hasRight());
+        togglePrefixedStyleName("margin-bottom", marginInfo.hasBottom());
+        togglePrefixedStyleName("margin-left", marginInfo.hasLeft());
+    }
+
+    void updateSpacingStyleName(boolean spacingEnabled) {
+        String styleName = getStylePrimaryName();
+        if (spacingEnabled) {
+            spacingMeasureElement.addClassName(styleName + "-spacing-on");
+            spacingMeasureElement.removeClassName(styleName + "-spacing-off");
+        } else {
+            spacingMeasureElement.removeClassName(styleName + "-spacing-on");
+            spacingMeasureElement.addClassName(styleName + "-spacing-off");
+        }
     }
 
 }
