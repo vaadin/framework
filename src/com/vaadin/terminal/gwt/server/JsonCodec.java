@@ -26,6 +26,27 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
  */
 public class JsonCodec implements Serializable {
 
+    private static Map<Class<?>, String> typeToTransportType = new HashMap<Class<?>, String>();
+
+    static {
+        registerType(String.class, JsonEncoder.VTYPE_STRING);
+        registerType(Paintable.class, JsonEncoder.VTYPE_PAINTABLE);
+        registerType(Boolean.class, JsonEncoder.VTYPE_BOOLEAN);
+        registerType(Integer.class, JsonEncoder.VTYPE_INTEGER);
+        registerType(Float.class, JsonEncoder.VTYPE_FLOAT);
+        registerType(Double.class, JsonEncoder.VTYPE_DOUBLE);
+        registerType(Long.class, JsonEncoder.VTYPE_LONG);
+        // transported as string representation
+        registerType(Enum.class, JsonEncoder.VTYPE_STRING);
+        registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
+        registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
+        registerType(Map.class, JsonEncoder.VTYPE_MAP);
+    }
+
+    private static void registerType(Class<?> type, String transportType) {
+        typeToTransportType.put(type, transportType);
+    }
+
     /**
      * Convert a JSON array with two elements (type and value) into a
      * server-side type, recursively if necessary.
@@ -40,51 +61,39 @@ public class JsonCodec implements Serializable {
      */
     public static Object convertVariableValue(JSONArray value,
             PaintableIdMapper idMapper) throws JSONException {
-        return convertVariableValue(value.getString(0).charAt(0), value.get(1),
-                idMapper);
+        return convertVariableValue(value.getString(0), value.get(1), idMapper);
     }
 
-    private static Object convertVariableValue(char variableType, Object value,
-            PaintableIdMapper idMapper) throws JSONException {
+    private static Object convertVariableValue(String variableType,
+            Object value, PaintableIdMapper idMapper) throws JSONException {
         Object val = null;
         // TODO type checks etc.
-        switch (variableType) {
-        case JsonEncoder.VTYPE_ARRAY:
+        if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
             val = convertArray((JSONArray) value, idMapper);
-            break;
-        case JsonEncoder.VTYPE_MAP:
+        } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = convertMap((JSONObject) value, idMapper);
-            break;
-        case JsonEncoder.VTYPE_STRINGARRAY:
+        } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = convertStringArray((JSONArray) value);
-            break;
-        case JsonEncoder.VTYPE_STRING:
+        } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
             val = value;
-            break;
-        case JsonEncoder.VTYPE_INTEGER:
+        } else if (JsonEncoder.VTYPE_INTEGER.equals(variableType)) {
             // TODO handle properly
             val = Integer.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_LONG:
+        } else if (JsonEncoder.VTYPE_LONG.equals(variableType)) {
             // TODO handle properly
             val = Long.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_FLOAT:
+        } else if (JsonEncoder.VTYPE_FLOAT.equals(variableType)) {
             // TODO handle properly
             val = Float.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_DOUBLE:
+        } else if (JsonEncoder.VTYPE_DOUBLE.equals(variableType)) {
             // TODO handle properly
             val = Double.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_BOOLEAN:
+        } else if (JsonEncoder.VTYPE_BOOLEAN.equals(variableType)) {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_PAINTABLE:
+        } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
-            break;
         }
 
         return val;
@@ -196,37 +205,20 @@ public class JsonCodec implements Serializable {
         return jsonMap;
     }
 
-    private static JSONArray combineTypeAndValue(char type, Object value) {
+    private static JSONArray combineTypeAndValue(String type, Object value) {
         JSONArray outerArray = new JSONArray();
-        outerArray.put(String.valueOf(type));
+        outerArray.put(type);
         outerArray.put(value);
         return outerArray;
     }
 
-    private static char getTransportType(Object value) {
-        if (value instanceof String) {
-            return JsonEncoder.VTYPE_STRING;
-        } else if (value instanceof Paintable) {
-            return JsonEncoder.VTYPE_PAINTABLE;
-        } else if (value instanceof Boolean) {
-            return JsonEncoder.VTYPE_BOOLEAN;
-        } else if (value instanceof Integer) {
-            return JsonEncoder.VTYPE_INTEGER;
-        } else if (value instanceof Float) {
-            return JsonEncoder.VTYPE_FLOAT;
-        } else if (value instanceof Double) {
-            return JsonEncoder.VTYPE_DOUBLE;
-        } else if (value instanceof Long) {
-            return JsonEncoder.VTYPE_LONG;
-        } else if (value instanceof Enum) {
-            // transported as string representation
-            return JsonEncoder.VTYPE_STRING;
-        } else if (value instanceof String[]) {
-            return JsonEncoder.VTYPE_STRINGARRAY;
-        } else if (value instanceof Object[]) {
-            return JsonEncoder.VTYPE_ARRAY;
-        } else if (value instanceof Map) {
-            return JsonEncoder.VTYPE_MAP;
+    private static String getTransportType(Object value) {
+        if (null == value) {
+            return JsonEncoder.VTYPE_UNDEFINED;
+        }
+        String transportType = typeToTransportType.get(value.getClass());
+        if (null != transportType) {
+            return transportType;
         }
         // TODO throw exception?
         return JsonEncoder.VTYPE_UNDEFINED;

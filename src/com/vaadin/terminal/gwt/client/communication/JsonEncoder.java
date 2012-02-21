@@ -28,21 +28,21 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
  */
 public class JsonEncoder {
 
-    public static final char VTYPE_PAINTABLE = 'p';
-    public static final char VTYPE_BOOLEAN = 'b';
-    public static final char VTYPE_DOUBLE = 'd';
-    public static final char VTYPE_FLOAT = 'f';
-    public static final char VTYPE_LONG = 'l';
-    public static final char VTYPE_INTEGER = 'i';
-    public static final char VTYPE_STRING = 's';
-    public static final char VTYPE_ARRAY = 'a';
-    public static final char VTYPE_STRINGARRAY = 'c';
-    public static final char VTYPE_MAP = 'm';
+    public static final String VTYPE_PAINTABLE = "p";
+    public static final String VTYPE_BOOLEAN = "b";
+    public static final String VTYPE_DOUBLE = "d";
+    public static final String VTYPE_FLOAT = "f";
+    public static final String VTYPE_LONG = "l";
+    public static final String VTYPE_INTEGER = "i";
+    public static final String VTYPE_STRING = "s";
+    public static final String VTYPE_ARRAY = "a";
+    public static final String VTYPE_STRINGARRAY = "c";
+    public static final String VTYPE_MAP = "m";
     // TODO this will be replaced by the shared state class name
-    public static final char VTYPE_SHAREDSTATE = 't';
+    public static final String VTYPE_SHAREDSTATE = "t";
 
     // TODO is this needed?
-    public static final char VTYPE_UNDEFINED = 'u';
+    public static final String VTYPE_UNDEFINED = "u";
 
     /**
      * Encode a value to a JSON representation for transport from the client to
@@ -98,14 +98,14 @@ public class JsonEncoder {
         }
     }
 
-    private static JSONValue combineTypeAndValue(char type, JSONValue value) {
+    private static JSONValue combineTypeAndValue(String type, JSONValue value) {
         JSONArray outerArray = new JSONArray();
-        outerArray.set(0, new JSONString(String.valueOf(type)));
+        outerArray.set(0, new JSONString(type));
         outerArray.set(1, value);
         return outerArray;
     }
 
-    private static char getTransportType(Object value) {
+    private static String getTransportType(Object value) {
         if (value instanceof String) {
             return VTYPE_STRING;
         } else if (value instanceof VPaintable) {

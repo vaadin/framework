@@ -38,56 +38,43 @@ public class JsonDecoder {
      * @return converted value (does not contain JSON types)
      */
     public static Object convertValue(JSONArray value, VPaintableMap idMapper) {
-        return convertValue(
-                ((JSONString) value.get(0)).stringValue().charAt(0),
+        return convertValue(((JSONString) value.get(0)).stringValue(),
                 value.get(1), idMapper);
     }
 
-    private static Object convertValue(char variableType, Object value,
+    private static Object convertValue(String variableType, Object value,
             VPaintableMap idMapper) {
         Object val = null;
         // TODO type checks etc.
-        switch (variableType) {
-        case JsonEncoder.VTYPE_ARRAY:
+        if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
             val = convertArray((JSONArray) value, idMapper);
-            break;
-        case JsonEncoder.VTYPE_MAP:
+        } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = convertMap((JSONObject) value, idMapper);
-            break;
-        case JsonEncoder.VTYPE_STRINGARRAY:
+        } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = convertStringArray((JSONArray) value);
-            break;
-        case JsonEncoder.VTYPE_STRING:
+        } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
             val = ((JSONString) value).stringValue();
-            break;
-        case JsonEncoder.VTYPE_INTEGER:
+        } else if (JsonEncoder.VTYPE_INTEGER.equals(variableType)) {
             // TODO handle properly
             val = Integer.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_LONG:
+        } else if (JsonEncoder.VTYPE_LONG.equals(variableType)) {
             // TODO handle properly
             val = Long.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_FLOAT:
+        } else if (JsonEncoder.VTYPE_FLOAT.equals(variableType)) {
             // TODO handle properly
             val = Float.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_DOUBLE:
+        } else if (JsonEncoder.VTYPE_DOUBLE.equals(variableType)) {
             // TODO handle properly
             val = Double.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_BOOLEAN:
+        } else if (JsonEncoder.VTYPE_BOOLEAN.equals(variableType)) {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_PAINTABLE:
+        } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
-            break;
-        case JsonEncoder.VTYPE_SHAREDSTATE:
+        } else if (JsonEncoder.VTYPE_SHAREDSTATE.equals(variableType)) {
             val = convertMap((JSONObject) value, idMapper);
             // TODO convert to a SharedState instance
-            break;
         }
 
         return val;
