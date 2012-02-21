@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
@@ -32,12 +33,22 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
         this.isVertical = isVertical;
     }
 
-    public void addSlot(VLayoutSlot layoutSlot) {
+    public void addOrMove(VLayoutSlot layoutSlot, int index) {
         Widget widget = layoutSlot.getWidget();
         Element wrapperElement = layoutSlot.getWrapperElement();
 
-        getElement().appendChild(wrapperElement);
-        add(widget, wrapperElement);
+        Element containerElement = getElement();
+        Node childAtIndex = containerElement.getChild(index);
+        boolean alreadyAttached;
+        if (childAtIndex != wrapperElement) {
+            alreadyAttached = wrapperElement.getParentElement() == containerElement;
+            containerElement.insertBefore(wrapperElement, childAtIndex);
+        } else {
+            alreadyAttached = true;
+        }
+        if (!alreadyAttached) {
+            insert(widget, wrapperElement, index, false);
+        }
 
         widget.setLayoutData(layoutSlot);
     }

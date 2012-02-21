@@ -63,6 +63,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         ValueMap expandRatios = uidl.getMapAttribute("expandRatios");
         ValueMap alignments = uidl.getMapAttribute("alignments");
 
+        int currentIndex = 0;
         // TODO Support reordering elements!
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
@@ -74,8 +75,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             if (widget.getParent() != layout) {
                 slot = new VPaintableLayoutSlot(getWidgetForPaintable()
                         .getStylePrimaryName(), child);
-                layout.addSlot(slot);
             }
+            layout.addOrMove(slot, currentIndex++);
 
             String pid = child.getId();
 
