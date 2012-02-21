@@ -1594,6 +1594,15 @@ public class ApplicationConnection {
     public void forceLayout() {
         Duration duration = new Duration();
 
+        VPaintableMap paintableMap = getPaintableMap();
+        VPaintableWidget[] paintableWidgets = paintableMap
+                .getRegisteredPaintableWidgets();
+        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
+            MeasuredSize measuredSize = vPaintableWidget.getMeasuredSize();
+            measuredSize.setHeightNeedsUpdate();
+            measuredSize.setWidthNeedsUpdate();
+        }
+
         doLayout(false);
 
         VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
