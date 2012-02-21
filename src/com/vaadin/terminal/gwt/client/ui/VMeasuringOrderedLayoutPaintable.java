@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -105,10 +106,35 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
         for (VPaintableWidget child : previousChildren) {
             Widget widget = child.getWidgetForPaintable();
-            layout.removeSlot(layout.getSlotForChild(widget));
 
-            VPaintableMap vPaintableMap = VPaintableMap.get(client);
-            vPaintableMap.unregisterPaintable(child);
+            // Don't remove and unregister if it has been moved to a different
+            // parent. Slot element will be left behind, but that is taken care
+            // of later
+            if (widget.getParent() == getWidgetForPaintable()) {
+                layout.removeSlot(layout.getSlotForChild(widget));
+
+                VPaintableMap vPaintableMap = VPaintableMap.get(client);
+                vPaintableMap.unregisterPaintable(child);
+            }
+        }
+
+        // Remove empty layout slots left behind after children have moved to
+        // other paintables
+        while (true) {
+            int childCount = layout.getElement().getChildCount();
+            if (childCount <= 1) {
+                // Stop if no more slots (spacing element is always present)
+                break;
+            }
+
+            Node lastSlot = layout.getElement().getChild(childCount - 2);
+            if (lastSlot.getChildCount() == 0) {
+                // Remove if empty
+                lastSlot.removeFromParent();
+            } else {
+                // Stop searching when last slot is not empty
+                break;
+            }
         }
 
         int bitMask = uidl.getIntAttribute("margins");
