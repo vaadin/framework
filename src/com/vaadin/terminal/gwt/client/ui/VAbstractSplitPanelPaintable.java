@@ -122,6 +122,9 @@ public abstract class VAbstractSplitPanelPaintable extends
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
         client.runDescendentsLayout(getWidgetForPaintable());
+
+        getMeasuredSize().setHeightNeedsUpdate();
+        getMeasuredSize().setWidthNeedsUpdate();
     }
 
     public void onResize() {
