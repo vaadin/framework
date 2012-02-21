@@ -62,11 +62,11 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
                     "none");
         }
 
-        if (uidl.hasAttribute("readonly")) {
+        if (uidl.hasAttribute(ATTRIBUTE_READONLY)) {
             getWidgetForPaintable().setEnabled(false);
         }
 
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidgetForPaintable().icon == null) {
                 getWidgetForPaintable().icon = new Icon(client);
                 DOM.insertChild(getWidgetForPaintable().getElement(),
@@ -75,8 +75,8 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
                         .sinkEvents(VTooltip.TOOLTIP_EVENTS);
                 getWidgetForPaintable().icon.sinkEvents(Event.ONCLICK);
             }
-            getWidgetForPaintable().icon
-                    .setUri(uidl.getStringAttribute("icon"));
+            getWidgetForPaintable().icon.setUri(uidl
+                    .getStringAttribute(ATTRIBUTE_ICON));
         } else if (getWidgetForPaintable().icon != null) {
             // detach icon
             DOM.removeChild(getWidgetForPaintable().getElement(),
@@ -85,12 +85,13 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
         }
 
         // Set text
-        getWidgetForPaintable().setText(uidl.getStringAttribute("caption"));
+        getWidgetForPaintable().setText(
+                uidl.getStringAttribute(ATTRIBUTE_CAPTION));
         getWidgetForPaintable()
                 .setValue(
                         uidl.getBooleanVariable(getWidgetForPaintable().VARIABLE_STATE));
         getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
+                .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_IMMEDIATE);
     }
 
     @Override

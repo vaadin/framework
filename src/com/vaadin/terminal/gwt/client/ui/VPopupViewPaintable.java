@@ -53,9 +53,9 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
             // showPopupOnTop(popup, hostReference);
             getWidgetForPaintable().preparePopup(getWidgetForPaintable().popup);
             getWidgetForPaintable().popup.updateFromUIDL(popupUIDL, client);
-            if (uidl.hasAttribute("style")) {
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
+            if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
+                final String[] styles = uidl
+                        .getStringAttribute(ATTRIBUTE_STYLE).split(" ");
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidgetForPaintable().popup
                         .getStylePrimaryName();

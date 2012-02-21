@@ -31,21 +31,21 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
         }
 
         boolean legendEmpty = true;
-        if (uidl.hasAttribute("caption")) {
+        if (uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
             getWidgetForPaintable().caption.setInnerText(uidl
-                    .getStringAttribute("caption"));
+                    .getStringAttribute(ATTRIBUTE_CAPTION));
             legendEmpty = false;
         } else {
             getWidgetForPaintable().caption.setInnerText("");
         }
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidgetForPaintable().icon == null) {
                 getWidgetForPaintable().icon = new Icon(client);
                 getWidgetForPaintable().legend
                         .insertFirst(getWidgetForPaintable().icon.getElement());
             }
-            getWidgetForPaintable().icon
-                    .setUri(uidl.getStringAttribute("icon"));
+            getWidgetForPaintable().icon.setUri(uidl
+                    .getStringAttribute(ATTRIBUTE_ICON));
             legendEmpty = false;
         } else {
             if (getWidgetForPaintable().icon != null) {
@@ -67,9 +67,9 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
             getWidgetForPaintable().errorMessage.setVisible(false);
         }
 
-        if (uidl.hasAttribute("description")) {
+        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
             getWidgetForPaintable().desc.setInnerHTML(uidl
-                    .getStringAttribute("description"));
+                    .getStringAttribute(ATTRIBUTE_DESCRIPTION));
             if (getWidgetForPaintable().desc.getParentElement() == null) {
                 getWidgetForPaintable().fieldSet.insertAfter(
                         getWidgetForPaintable().desc,

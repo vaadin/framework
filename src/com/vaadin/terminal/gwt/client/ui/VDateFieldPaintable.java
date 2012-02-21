@@ -26,10 +26,12 @@ public class VDateFieldPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getId();
         getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
+                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
 
-        getWidgetForPaintable().readonly = uidl.getBooleanAttribute("readonly");
-        getWidgetForPaintable().enabled = !uidl.getBooleanAttribute("disabled");
+        getWidgetForPaintable().readonly = uidl
+                .getBooleanAttribute(ATTRIBUTE_READONLY);
+        getWidgetForPaintable().enabled = !uidl
+                .getBooleanAttribute(ATTRIBUTE_DISABLED);
 
         if (uidl.hasAttribute("locale")) {
             final String locale = uidl.getStringAttribute("locale");

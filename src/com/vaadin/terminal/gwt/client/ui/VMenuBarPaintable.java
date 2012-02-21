@@ -38,7 +38,8 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().openRootOnHover = uidl
                 .getBooleanAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER);
 
-        getWidgetForPaintable().enabled = !uidl.getBooleanAttribute("disabled");
+        getWidgetForPaintable().enabled = !uidl
+                .getBooleanAttribute(ATTRIBUTE_DISABLED);
 
         // For future connections
         getWidgetForPaintable().client = client;

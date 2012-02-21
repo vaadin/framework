@@ -31,6 +31,7 @@ import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.RpcManager;
 import com.vaadin.terminal.gwt.server.RpcTarget;
@@ -771,27 +772,37 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 // width and height are only in shared state
 
                 if (styles != null && styles.size() > 0) {
-                    target.addAttribute("style", getStyle());
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_STYLE,
+                            getStyle());
                 }
                 if (isReadOnly()) {
-                    target.addAttribute("readonly", true);
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_READONLY, true);
                 }
 
                 if (isImmediate()) {
-                    target.addAttribute("immediate", true);
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_IMMEDIATE, true);
                 }
                 if (!isEnabled()) {
-                    target.addAttribute("disabled", true);
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_DISABLED, true);
                 }
                 if (getCaption() != null) {
-                    target.addAttribute("caption", getCaption());
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_CAPTION,
+                            getCaption());
                 }
                 if (getIcon() != null) {
-                    target.addAttribute("icon", getIcon());
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_ICON, getIcon());
                 }
 
                 if (getDescription() != null && getDescription().length() > 0) {
-                    target.addAttribute("description", getDescription());
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION,
+                            getDescription());
                 }
 
                 if (eventIdentifiers != null) {
@@ -893,6 +904,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             state.put(ComponentState.STATE_WIDTH, "" + getCSSWidth());
         }
 
+        // if (getCaption() != null) {
+        // state.put(ComponentState.STATE_CAPTION, getCaption());
+        // }
+
         // TODO use the rest on the client side
 
         // if (styles != null && styles.size() > 0) {
@@ -908,11 +923,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         // if (!isEnabled()) {
         // state.put(ComponentState.STATE_DISABLED, true);
         // }
-        // if (getCaption() != null) {
-        // state.put(ComponentState.STATE_CAPTION, getCaption());
-        // }
         // // TODO add icon (Resource)
-        //
         // if (getDescription() != null && getDescription().length() > 0) {
         // state.put(ComponentState.STATE_DESCRIPTION, getDescription());
         // }

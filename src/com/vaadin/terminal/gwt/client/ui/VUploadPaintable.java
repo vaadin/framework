@@ -26,7 +26,7 @@ public class VUploadPaintable extends VAbstractPaintableWidget {
             return;
         }
         getWidgetForPaintable().setImmediate(
-                uidl.getBooleanAttribute("immediate"));
+                uidl.getBooleanAttribute(ATTRIBUTE_IMMEDIATE));
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getId();
         getWidgetForPaintable().nextUploadId = uidl.getIntAttribute("nextid");
@@ -43,7 +43,8 @@ public class VUploadPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().fu.setName(getWidgetForPaintable().paintableId
                 + "_file");
 
-        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
+        if (uidl.hasAttribute(ATTRIBUTE_DISABLED)
+                || uidl.hasAttribute(ATTRIBUTE_READONLY)) {
             getWidgetForPaintable().disableUpload();
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress

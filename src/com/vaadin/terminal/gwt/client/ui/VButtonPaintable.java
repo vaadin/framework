@@ -40,7 +40,8 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(uidl.getStringAttribute("caption"));
+        getWidgetForPaintable().setText(
+                uidl.getStringAttribute(ATTRIBUTE_CAPTION));
 
         getWidgetForPaintable().disableOnClick = uidl
                 .hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
@@ -63,15 +64,15 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
             getWidgetForPaintable().errorIndicatorElement = null;
         }
 
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidgetForPaintable().icon == null) {
                 getWidgetForPaintable().icon = new Icon(client);
                 getWidgetForPaintable().wrapper.insertBefore(
                         getWidgetForPaintable().icon.getElement(),
                         getWidgetForPaintable().captionElement);
             }
-            getWidgetForPaintable().icon
-                    .setUri(uidl.getStringAttribute("icon"));
+            getWidgetForPaintable().icon.setUri(uidl
+                    .getStringAttribute(ATTRIBUTE_ICON));
         } else {
             if (getWidgetForPaintable().icon != null) {
                 getWidgetForPaintable().wrapper

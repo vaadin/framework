@@ -979,7 +979,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .getBooleanAttribute("nsa") : true;
 
         if (uidl.hasAttribute("selectmode")) {
-            if (uidl.getBooleanAttribute("readonly")) {
+            if (uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_READONLY)) {
                 selectMode = SelectMode.NONE;
             } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
                 selectMode = SelectMode.MULTI;

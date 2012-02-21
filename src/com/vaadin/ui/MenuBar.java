@@ -101,16 +101,17 @@ public class MenuBar extends AbstractComponent {
 
             Resource icon = item.getIcon();
             if (icon != null) {
-                target.addAttribute("icon", icon);
+                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_ICON, icon);
             }
 
             if (!item.isEnabled()) {
-                target.addAttribute("disabled", true);
+                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_DISABLED, true);
             }
 
             String description = item.getDescription();
             if (description != null && description.length() > 0) {
-                target.addAttribute("description", description);
+                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_DESCRIPTION,
+                        description);
             }
             if (item.isCheckable()) {
                 // if the "checked" attribute is present (either true or false),

@@ -34,10 +34,13 @@ public class VTreePaintable extends VAbstractPaintableWidget {
 
         getWidgetForPaintable().paintableId = uidl.getId();
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = uidl
+                .hasAttribute(ATTRIBUTE_IMMEDIATE);
 
-        getWidgetForPaintable().disabled = uidl.getBooleanAttribute("disabled");
-        getWidgetForPaintable().readonly = uidl.getBooleanAttribute("readonly");
+        getWidgetForPaintable().disabled = uidl
+                .getBooleanAttribute(ATTRIBUTE_DISABLED);
+        getWidgetForPaintable().readonly = uidl
+                .getBooleanAttribute(ATTRIBUTE_READONLY);
 
         getWidgetForPaintable().dragMode = uidl.hasAttribute("dragMode") ? uidl
                 .getIntAttribute("dragMode") : 0;

@@ -198,12 +198,13 @@ public class VTabsheet extends VTabsheetBase {
 
         @Override
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)
-                    || uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION)
+                    || uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
-                tooltipInfo.setTitle(uidl
-                        .getStringAttribute(ATTRIBUTE_DESCRIPTION));
-                if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+                tooltipInfo
+                        .setTitle(uidl
+                                .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION));
+                if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
                 client.registerWidgetTooltip(getTabsheet(), getElement(),
@@ -637,8 +638,9 @@ public class VTabsheet extends VTabsheetBase {
     void handleStyleNames(UIDL uidl) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
-        if (uidl.hasAttribute("style")) {
-            final String style = uidl.getStringAttribute("style");
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
+            final String style = uidl
+                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE);
             if (currentStyle != style) {
                 currentStyle = style;
                 final String[] styles = style.split(" ");

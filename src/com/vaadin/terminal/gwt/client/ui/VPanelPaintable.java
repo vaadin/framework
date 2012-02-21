@@ -47,10 +47,10 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
             getWidgetForPaintable().captionNode.setClassName(VPanel.CLASSNAME
                     + "-caption");
             boolean hasCaption = false;
-            if (uidl.hasAttribute("caption")
-                    && !uidl.getStringAttribute("caption").equals("")) {
+            if (uidl.hasAttribute(ATTRIBUTE_CAPTION)
+                    && !uidl.getStringAttribute(ATTRIBUTE_CAPTION).equals("")) {
                 getWidgetForPaintable().setCaption(
-                        uidl.getStringAttribute("caption"));
+                        uidl.getStringAttribute(ATTRIBUTE_CAPTION));
                 hasCaption = true;
             } else {
                 getWidgetForPaintable().setCaption("");
@@ -60,9 +60,9 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
 
             // Add proper stylenames for all elements. This way we can prevent
             // unwanted CSS selector inheritance.
-            if (uidl.hasAttribute("style")) {
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
+            if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
+                final String[] styles = uidl
+                        .getStringAttribute(ATTRIBUTE_STYLE).split(" ");
                 final String captionBaseClass = VPanel.CLASSNAME
                         + (hasCaption ? "-caption" : "-nocaption");
                 final String contentBaseClass = VPanel.CLASSNAME + "-content";

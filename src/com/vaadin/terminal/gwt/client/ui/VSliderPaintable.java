@@ -25,15 +25,17 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
         }
 
         getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
-        getWidgetForPaintable().disabled = uidl.getBooleanAttribute("disabled");
-        getWidgetForPaintable().readonly = uidl.getBooleanAttribute("readonly");
+                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().disabled = uidl
+                .getBooleanAttribute(ATTRIBUTE_DISABLED);
+        getWidgetForPaintable().readonly = uidl
+                .getBooleanAttribute(ATTRIBUTE_READONLY);
 
         getWidgetForPaintable().vertical = uidl.hasAttribute("vertical");
 
         String style = "";
-        if (uidl.hasAttribute("style")) {
-            style = uidl.getStringAttribute("style");
+        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
+            style = uidl.getStringAttribute(ATTRIBUTE_STYLE);
         }
 
         if (getWidgetForPaintable().vertical) {

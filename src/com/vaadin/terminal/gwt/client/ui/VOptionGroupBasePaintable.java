@@ -25,12 +25,14 @@ public abstract class VOptionGroupBasePaintable extends
         getWidgetForPaintable().selectedKeys = uidl
                 .getStringArrayVariableAsSet("selected");
 
-        getWidgetForPaintable().readonly = uidl.getBooleanAttribute("readonly");
-        getWidgetForPaintable().disabled = uidl.getBooleanAttribute("disabled");
+        getWidgetForPaintable().readonly = uidl
+                .getBooleanAttribute(ATTRIBUTE_READONLY);
+        getWidgetForPaintable().disabled = uidl
+                .getBooleanAttribute(ATTRIBUTE_DISABLED);
         getWidgetForPaintable().multiselect = "multi".equals(uidl
                 .getStringAttribute("selectmode"));
         getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
+                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
         getWidgetForPaintable().nullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
         getWidgetForPaintable().nullSelectionItemAvailable = uidl

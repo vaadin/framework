@@ -70,7 +70,8 @@ public abstract class VAbstractSplitPanelPaintable extends
         getWidgetForPaintable().id = uidl.getId();
         getWidgetForPaintable().rendering = true;
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = uidl
+                .hasAttribute(ATTRIBUTE_IMMEDIATE);
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
@@ -78,12 +79,12 @@ public abstract class VAbstractSplitPanelPaintable extends
             return;
         }
         getWidgetForPaintable().setEnabled(
-                !uidl.getBooleanAttribute("disabled"));
+                !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED));
 
         clickEventHandler.handleEventHandlerRegistration(client);
-        if (uidl.hasAttribute("style")) {
+        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
             getWidgetForPaintable().componentStyleNames = uidl
-                    .getStringAttribute("style").split(" ");
+                    .getStringAttribute(ATTRIBUTE_STYLE).split(" ");
         } else {
             getWidgetForPaintable().componentStyleNames = new String[0];
         }

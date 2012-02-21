@@ -15,6 +15,9 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 public abstract class VTabsheetBasePaintable extends
         VAbstractPaintableWidgetContainer {
 
+    // this needs to match ATTRIBUTE_DISABLED as it is used in building captions
+    public static final String ATTRIBUTE_TAB_DISABLED = VAbstractPaintableWidget.ATTRIBUTE_DISABLED;
+
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
@@ -27,7 +30,8 @@ public abstract class VTabsheetBasePaintable extends
 
         // Update member references
         getWidgetForPaintable().id = uidl.getId();
-        getWidgetForPaintable().disabled = uidl.hasAttribute("disabled");
+        getWidgetForPaintable().disabled = uidl
+                .hasAttribute(ATTRIBUTE_DISABLED);
 
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);
@@ -50,7 +54,7 @@ public abstract class VTabsheetBasePaintable extends
             final boolean selected = tab.getBooleanAttribute("selected");
             final boolean hidden = tab.getBooleanAttribute("hidden");
 
-            if (tab.getBooleanAttribute("disabled")) {
+            if (tab.getBooleanAttribute(ATTRIBUTE_TAB_DISABLED)) {
                 getWidgetForPaintable().disabledTabKeys.add(key);
             }
 

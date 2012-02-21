@@ -92,10 +92,11 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = uidl
+                .hasAttribute(ATTRIBUTE_IMMEDIATE);
 
         getWidgetForPaintable().setClosable(
-                !uidl.getBooleanAttribute("readonly"));
+                !uidl.getBooleanAttribute(ATTRIBUTE_READONLY));
 
         // Initialize the position form UIDL
         int positionx = uidl.getIntVariable("positionx");

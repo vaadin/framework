@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.Icon;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 
 public class VCaption extends HTML {
 
@@ -31,13 +32,6 @@ public class VCaption extends HTML {
     private boolean placedAfterComponent = false;
 
     private int maxWidth = -1;
-
-    protected static final String ATTRIBUTE_ICON = "icon";
-    protected static final String ATTRIBUTE_CAPTION = "caption";
-    protected static final String ATTRIBUTE_DESCRIPTION = "description";
-    protected static final String ATTRIBUTE_REQUIRED = "required";
-    protected static final String ATTRIBUTE_ERROR = "error";
-    protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
 
@@ -79,25 +73,31 @@ public class VCaption extends HTML {
         placedAfterComponent = true;
 
         String style = CLASSNAME;
-        if (uidl.hasAttribute("style")) {
-            final String[] styles = uidl.getStringAttribute("style").split(" ");
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
+            final String[] styles = uidl.getStringAttribute(
+                    VAbstractPaintableWidget.ATTRIBUTE_STYLE).split(" ");
             for (int i = 0; i < styles.length; i++) {
                 style += " " + CLASSNAME + "-" + styles[i];
             }
         }
 
-        if (uidl.hasAttribute("disabled")) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
             style += " " + ApplicationConnection.DISABLED_CLASSNAME;
         }
 
         setStyleName(style);
 
-        boolean hasIcon = uidl.hasAttribute(ATTRIBUTE_ICON);
-        boolean hasText = uidl.hasAttribute(ATTRIBUTE_CAPTION);
-        boolean hasDescription = uidl.hasAttribute(ATTRIBUTE_DESCRIPTION);
-        boolean showRequired = uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED);
-        boolean showError = uidl.hasAttribute(ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS);
+        boolean hasIcon = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
+        boolean hasText = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION);
+        boolean hasDescription = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION);
+        boolean showRequired = uidl
+                .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED);
+        boolean showError = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
             if (icon == null) {
@@ -105,13 +105,16 @@ public class VCaption extends HTML {
                 icon.setWidth("0");
                 icon.setHeight("0");
 
-                DOM.insertChild(getElement(), icon.getElement(),
-                        getInsertPosition(ATTRIBUTE_ICON));
+                DOM.insertChild(
+                        getElement(),
+                        icon.getElement(),
+                        getInsertPosition(VAbstractPaintableWidget.ATTRIBUTE_ICON));
             }
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            icon.setUri(uidl
+                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
 
         } else if (icon != null) {
             // Remove existing
@@ -128,12 +131,15 @@ public class VCaption extends HTML {
                 captionText = DOM.createDiv();
                 captionText.setClassName("v-captiontext");
 
-                DOM.insertChild(getElement(), captionText,
-                        getInsertPosition(ATTRIBUTE_CAPTION));
+                DOM.insertChild(
+                        getElement(),
+                        captionText,
+                        getInsertPosition(VAbstractPaintableWidget.ATTRIBUTE_CAPTION));
             }
 
             // Update caption text
-            String c = uidl.getStringAttribute(ATTRIBUTE_CAPTION);
+            String c = uidl
+                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION);
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
             if (c == null || c.trim().equals("")) {
@@ -171,8 +177,10 @@ public class VCaption extends HTML {
                         .setClassName("v-required-field-indicator");
                 DOM.setInnerText(requiredFieldIndicator, "*");
 
-                DOM.insertChild(getElement(), requiredFieldIndicator,
-                        getInsertPosition(ATTRIBUTE_REQUIRED));
+                DOM.insertChild(
+                        getElement(),
+                        requiredFieldIndicator,
+                        getInsertPosition(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED));
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
@@ -187,8 +195,10 @@ public class VCaption extends HTML {
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "v-errorindicator");
 
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(ATTRIBUTE_ERROR));
+                DOM.insertChild(
+                        getElement(),
+                        errorIndicatorElement,
+                        getInsertPosition(VAbstractPaintableWidget.ATTRIBUTE_ERROR));
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
@@ -207,14 +217,14 @@ public class VCaption extends HTML {
 
     private int getInsertPosition(String element) {
         int pos = 0;
-        if (element.equals(ATTRIBUTE_ICON)) {
+        if (element.equals(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
             return pos;
         }
         if (icon != null) {
             pos++;
         }
 
-        if (element.equals(ATTRIBUTE_CAPTION)) {
+        if (element.equals(VAbstractPaintableWidget.ATTRIBUTE_CAPTION)) {
             return pos;
         }
 
@@ -222,7 +232,7 @@ public class VCaption extends HTML {
             pos++;
         }
 
-        if (element.equals(ATTRIBUTE_REQUIRED)) {
+        if (element.equals(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
             return pos;
         }
         if (requiredFieldIndicator != null) {
@@ -273,16 +283,16 @@ public class VCaption extends HTML {
     }
 
     public static boolean isNeeded(UIDL uidl) {
-        if (uidl.getStringAttribute(ATTRIBUTE_CAPTION) != null) {
+        if (uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION) != null) {
             return true;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
             return true;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
             return true;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_REQUIRED)) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
             return true;
         }
 
