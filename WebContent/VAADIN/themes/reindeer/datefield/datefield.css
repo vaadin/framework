@@ -226,7 +226,10 @@ td.v-datefield-calendarpanel-nextyear {
 	background: rgba(255,255,255,.95);
 }
 .v-datefield-textfield {
-	display: block; /* Fill full width */
+	width: 100%;
+}
+.v-datefield-textfield.v-undefined-width {
+	width: auto;
 }
 .v-datefield-year.v-undefined-width > .v-datefield-textfield {
 	width: 4em;
