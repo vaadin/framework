@@ -5,8 +5,6 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
@@ -55,15 +53,4 @@ import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
  * @since 7.0
  */
 public class SharedState implements Serializable {
-    private Map<String, Object> state = new HashMap<String, Object>();
-
-    // TODO temporary until reflection based serialization is implemented
-    public Map<String, Object> getState() {
-        return state;
-    }
-
-    // TODO temporary until generator based deserialization is implemented
-    public void setState(Map<String, Object> stateMap) {
-        state = stateMap;
-    }
 }

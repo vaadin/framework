@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -26,7 +27,6 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
@@ -936,20 +936,18 @@ public class VGridLayout extends SimplePanel implements Container {
             }
         }
 
-        protected void updateRelSizeStatus(SharedState state, boolean cached) {
+        protected void updateRelSizeStatus(ComponentState state, boolean cached) {
             if (state != null && !cached) {
-                boolean widthDefined = state.getState().containsKey("width");
-                boolean heightDefined = state.getState().containsKey("height");
-                if (heightDefined
-                        && String.valueOf(state.getState().get("height"))
-                                .contains("%")) {
+                boolean widthDefined = !state.isUndefinedWidth();
+                boolean heightDefined = !state.isUndefinedHeight();
+                if (heightDefined && state.getHeight().contains("%")) {
                     relHeight = true;
                 } else {
                     relHeight = false;
                 }
                 if (widthDefined) {
-                    widthCanAffectHeight = relWidth = String.valueOf(
-                            state.getState().get("width")).contains("%");
+                    widthCanAffectHeight = relWidth = state.getWidth()
+                            .contains("%");
                     if (heightDefined) {
                         widthCanAffectHeight = false;
                     }

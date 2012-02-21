@@ -4,7 +4,10 @@
 
 package com.vaadin.terminal.gwt.server;
 
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -151,10 +154,8 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(JsonEncoder.VTYPE_UNDEFINED,
                     JSONObject.NULL);
         } else if (value instanceof SharedState) {
-            // TODO implement by encoding the bean
-            Map<String, Object> map = ((SharedState) value).getState();
-            return combineTypeAndValue(JsonEncoder.VTYPE_SHAREDSTATE,
-                    encodeMapContents(map, idMapper));
+            return combineTypeAndValue(value.getClass().getName(),
+                    encodeObject(value, idMapper));
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -182,6 +183,28 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
         }
+    }
+
+    private static Object encodeObject(Object value, PaintableIdMapper idMapper)
+            throws JSONException {
+        JSONObject jsonMap = new JSONObject();
+
+        try {
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(
+                    value.getClass()).getPropertyDescriptors()) {
+                String fieldName = pd.getName();
+                if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+                    continue;
+                }
+                Method getterMethod = pd.getReadMethod();
+                Object fieldValue = getterMethod.invoke(value, null);
+                jsonMap.put(fieldName, encode(fieldValue, idMapper));
+            }
+        } catch (Exception e) {
+            // TODO: Should exceptions be handled in a different way?
+            throw new JSONException(e);
+        }
+        return jsonMap;
     }
 
     private static JSONArray encodeArrayContents(Object[] array,

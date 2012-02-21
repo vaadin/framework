@@ -14,11 +14,42 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
  * @since 7.0
  */
 public class ComponentState extends SharedState {
+    private String height = "";
+    private String width = "";
+
     // TODO more javadoc
 
+    public String getHeight() {
+        if (height == null) {
+            return "";
+        }
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public boolean isUndefinedHeight() {
+        return "".equals(getHeight());
+    }
+
+    public String getWidth() {
+        if (width == null) {
+            return "";
+        }
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public boolean isUndefinedWidth() {
+        return "".equals(getWidth());
+    }
+
     // TODO constants for the state attributes for now
-    public static final String STATE_HEIGHT = "height";
-    public static final String STATE_WIDTH = "width";
     public static final String STATE_STYLE = "style";
     public static final String STATE_READONLY = "readonly";
     public static final String STATE_IMMEDIATE = "immediate";

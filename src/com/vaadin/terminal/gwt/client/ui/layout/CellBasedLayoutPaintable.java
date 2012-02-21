@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.client.ui.layout;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidgetContainer;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
@@ -37,31 +36,8 @@ public abstract class CellBasedLayoutPaintable extends
     }
 
     private void handleDynamicDimensions() {
-        String w = "";
-        String h = "";
-        if (null != getState()) {
-            if (getState().getState().containsKey(ComponentState.STATE_WIDTH)) {
-                w = String.valueOf(getState().getState().get(
-                        ComponentState.STATE_WIDTH));
-            }
-            if (getState().getState().containsKey(ComponentState.STATE_HEIGHT)) {
-                h = String.valueOf(getState().getState().get(
-                        ComponentState.STATE_HEIGHT));
-            }
-        }
-
-        if (w.equals("")) {
-            getWidgetForPaintable().dynamicWidth = true;
-        } else {
-            getWidgetForPaintable().dynamicWidth = false;
-        }
-
-        if (h.equals("")) {
-            getWidgetForPaintable().dynamicHeight = true;
-        } else {
-            getWidgetForPaintable().dynamicHeight = false;
-        }
-
+        getWidgetForPaintable().dynamicWidth = getState().isUndefinedWidth();
+        getWidgetForPaintable().dynamicHeight = getState().isUndefinedHeight();
     }
 
     void updateMarginAndSpacingInfo(UIDL uidl) {

@@ -24,18 +24,20 @@ public interface VPaintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client);
 
     /**
-     * Sets the shared state for the paintable.
-     * 
-     * @param state
-     */
-    public void updateState(SharedState state);
-
-    /**
      * Gets the current shared state of the paintable.
      * 
      * @return state
      */
     public SharedState getState();
+
+    /**
+     * Sets a new state for the paintable.
+     * 
+     * @param state
+     *            The new state
+     * 
+     */
+    public void setState(SharedState state);
 
     /**
      * Returns the id for this VPaintable. This must always be what has been set

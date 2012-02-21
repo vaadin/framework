@@ -1034,17 +1034,14 @@ public class ApplicationConnection {
                         VPaintable paintable = paintableMap
                                 .getPaintable(paintableId);
                         if (null != paintable) {
-                            // TODO handle as a ValueMap or similar object and
-                            // native JavaScript processing?
-                            JavaScriptObject value = states
-                                    .getJavaScriptObject(paintableId);
-                            // TODO implement with shared state subclasses
-                            SharedState state = GWT.create(SharedState.class);
-                            Map<String, Object> stateMap = (Map<String, Object>) JsonDecoder
-                                    .convertValue(new JSONArray(value),
-                                            getPaintableMap());
-                            state.setState(stateMap);
-                            paintable.updateState(state);
+
+                            JSONArray stateDataAndType = new JSONArray(
+                                    states.getJavaScriptObject(paintableId));
+
+                            Object state = JsonDecoder.deserialize(
+                                    stateDataAndType, paintableMap);
+
+                            paintable.setState((SharedState) state);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1597,19 +1594,14 @@ public class ApplicationConnection {
         SharedState state = paintable.getState();
         String w = "";
         String h = "";
-        if (null != state) {
+        if (null != state || !(state instanceof ComponentState)) {
+            ComponentState componentState = (ComponentState) state;
             // TODO move logging to VUIDLBrowser and VDebugConsole
-            VConsole.log("Paintable state for "
-                    + getPaintableMap().getPid(paintable) + ": "
-                    + String.valueOf(state.getState()));
-            if (state.getState().containsKey(ComponentState.STATE_WIDTH)) {
-                w = String.valueOf(state.getState().get(
-                        ComponentState.STATE_WIDTH));
-            }
-            if (state.getState().containsKey(ComponentState.STATE_HEIGHT)) {
-                h = String.valueOf(state.getState().get(
-                        ComponentState.STATE_HEIGHT));
-            }
+            // VConsole.log("Paintable state for "
+            // + getPaintableMap().getPid(paintable) + ": "
+            // + String.valueOf(state.getState()));
+            h = componentState.getHeight();
+            w = componentState.getWidth();
         } else {
             // TODO move logging to VUIDLBrowser and VDebugConsole
             VConsole.log("No state for paintable "

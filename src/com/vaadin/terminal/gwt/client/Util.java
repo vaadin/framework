@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public class Util {
 
@@ -572,30 +571,13 @@ public class Util {
      * @param state
      * @return
      */
-    public static FloatSize parseRelativeSize(SharedState state) {
-        if (null == state) {
+    public static FloatSize parseRelativeSize(ComponentState state) {
+        if (state.isUndefinedHeight() && state.isUndefinedWidth()) {
             return null;
         }
 
-        boolean hasAttribute = false;
-        String w = "";
-        String h = "";
-        Map<String, Object> stateMap = state.getState();
-        if (stateMap.containsKey("width")) {
-            hasAttribute = true;
-            w = String.valueOf(stateMap.get("width"));
-        }
-        if (stateMap.containsKey("height")) {
-            hasAttribute = true;
-            h = String.valueOf(stateMap.get("height"));
-        }
-
-        if (!hasAttribute) {
-            return null;
-        }
-
-        float relativeWidth = Util.parseRelativeSize(w);
-        float relativeHeight = Util.parseRelativeSize(h);
+        float relativeWidth = Util.parseRelativeSize(state.getWidth());
+        float relativeHeight = Util.parseRelativeSize(state.getHeight());
 
         FloatSize relativeSize = new FloatSize(relativeWidth, relativeHeight);
         return relativeSize;

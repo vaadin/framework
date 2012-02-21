@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.vaadin.terminal.gwt.client.ComponentState_Serializer;
 import com.vaadin.terminal.gwt.client.VPaintable;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 
@@ -72,15 +75,19 @@ public class JsonDecoder {
         } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_SHAREDSTATE.equals(variableType)) {
-            val = convertMap((JSONObject) value, idMapper);
-            // TODO convert to a SharedState instance
+        } else {
+            // object, class name as type
+            VaadinSerializer serializer = getSerializer(variableType);
+            Object object = serializer
+                    .deserialize((JSONObject) value, idMapper);
+            return object;
         }
 
         return val;
     }
 
-    private static Object convertMap(JSONObject jsonMap, VPaintableMap idMapper) {
+    public static Map<String, Object> convertMap(JSONObject jsonMap,
+            VPaintableMap idMapper) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
@@ -99,7 +106,7 @@ public class JsonDecoder {
         return tokens.toArray(new String[tokens.size()]);
     }
 
-    private static Object convertArray(JSONArray jsonArray,
+    private static Object[] convertArray(JSONArray jsonArray,
             VPaintableMap idMapper) {
         List<Object> tokens = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.size(); ++i) {
@@ -110,4 +117,20 @@ public class JsonDecoder {
         return tokens.toArray(new Object[tokens.size()]);
     }
 
+    public static Object deserialize(JSONArray jsonArray, VPaintableMap idMapper) {
+        // jsonArray always contains two items
+        // 1. type (String)
+        // 2. data (Serialized)
+        String type = ((JSONString) jsonArray.get(0)).stringValue();
+        VaadinSerializer serializer = getSerializer(type);
+        Object object = serializer.deserialize((JSONObject) jsonArray.get(1),
+                idMapper);
+        return object;
+    }
+
+    private static VaadinSerializer getSerializer(String type) {
+        // TODO This should be in a separate class and constructed by a
+        // generator
+        return GWT.create(ComponentState_Serializer.class);
+    }
 }

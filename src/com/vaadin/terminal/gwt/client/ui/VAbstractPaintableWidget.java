@@ -3,11 +3,13 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -44,7 +46,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private boolean visible = true;
 
     // shared state from the server to the client
-    private SharedState state;
+    private ComponentState state;
 
     /**
      * Default constructor
@@ -108,12 +110,16 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.id = id;
     }
 
-    public void updateState(SharedState state) {
-        this.state = state;
+    public ComponentState getState() {
+        if (state == null) {
+            state = createState();
+        }
+
+        return state;
     }
 
-    public SharedState getState() {
-        return state;
+    protected ComponentState createState() {
+        return GWT.create(ComponentState.class);
     }
 
     public VPaintableWidgetContainer getParent() {
@@ -343,4 +349,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return styleBuf.toString();
     }
 
+    public final void setState(SharedState state) {
+        this.state = (ComponentState) state;
+    }
 }

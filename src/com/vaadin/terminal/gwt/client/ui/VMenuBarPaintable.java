@@ -10,7 +10,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
@@ -52,9 +51,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
 
         UIDL options = uidl.getChildUIDL(0);
 
-        if (null != getState()
-                && getState().getState()
-                        .containsKey(ComponentState.STATE_WIDTH)) {
+        if (null != getState() && !getState().isUndefinedWidth()) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
 

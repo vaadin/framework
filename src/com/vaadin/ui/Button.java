@@ -21,10 +21,12 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton;
 import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VButtonPaintable;
+import com.vaadin.terminal.gwt.client.ui.VButtonState;
 import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
@@ -43,10 +45,6 @@ import com.vaadin.ui.Component.Focusable;
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
         Action.ShortcutNotifier, RpcTarget {
-
-    /* Private members */
-
-    boolean disableOnClick = false;
 
     /**
      * Creates a new push button.
@@ -485,7 +483,7 @@ public class Button extends AbstractComponent implements
      * @return true if the button is disabled when clicked, false otherwise
      */
     public boolean isDisableOnClick() {
-        return disableOnClick;
+        return getState().isDisableOnClick();
     }
 
     /**
@@ -497,7 +495,7 @@ public class Button extends AbstractComponent implements
      *            true to disable button when it is clicked, false otherwise
      */
     public void setDisableOnClick(boolean disableOnClick) {
-        this.disableOnClick = disableOnClick;
+        getState().setDisableOnClick(disableOnClick);
         requestRepaint();
     }
 
@@ -514,5 +512,15 @@ public class Button extends AbstractComponent implements
     public void focus() {
         // Overridden only to make public
         super.focus();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return new VButtonState();
+    }
+
+    @Override
+    public VButtonState getState() {
+        return (VButtonState) super.getState();
     }
 }
