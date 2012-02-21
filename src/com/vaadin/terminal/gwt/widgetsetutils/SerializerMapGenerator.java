@@ -34,8 +34,17 @@ public class SerializerMapGenerator extends Generator {
             className = classType.getSimpleSourceName() + "Impl";
             // Generate class source code
             generateClass(logger, context);
+
+            JClassType serializerType = typeOracle.findType(SharedState.class
+                    .getName());
+            JClassType[] serializerSubtypes = serializerType.getSubtypes();
+            SerializerGenerator sg = new SerializerGenerator();
+            for (JClassType type : serializerSubtypes) {
+                sg.generate(logger, context, type.getQualifiedSourceName());
+            }
         } catch (Exception e) {
-            logger.log(TreeLogger.ERROR, "WidgetMap creation failed", e);
+            logger.log(TreeLogger.ERROR,
+                    "SerializerMapGenerator creation failed", e);
         }
         // return the fully qualifed name of the class generated
         return packageName + "." + className;
