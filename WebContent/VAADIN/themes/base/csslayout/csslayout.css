@@ -7,6 +7,12 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
+.v-undefined-width > .v-csslayout-margin, .v-undefined-width > .v-csslayout-margin > .v-csslayout-container {
+	width: auto;
+}
+.v-undefined-height > .v-csslayout-margin, .v-undefined-height > .v-csslayout-margin > .v-csslayout-container {
+	height: auto;
+}
 .v-csslayout-margin-top {
 	padding-top: 12px;	
 }
