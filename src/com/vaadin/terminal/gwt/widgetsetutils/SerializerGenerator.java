@@ -115,43 +115,50 @@ public class SerializerGenerator extends Generator {
         sourceWriter.println(beanTypeName + " state = GWT.create("
                 + beanTypeName + ".class);");
         JClassType beanType = typeOracle.findType(beanTypeName);
-        for (JMethod method : beanType.getMethods()) {
-            // Process all setters that have corresponding fields
-            if (!method.isPublic() || method.isStatic()
-                    || !method.getName().startsWith("set")
-                    || method.getParameterTypes().length != 1) {
-                // Not setter, skip to next method
-                continue;
+        JClassType objectType = typeOracle.findType("java.lang.Object");
+        while (!objectType.equals(beanType)) {
+            for (JMethod method : beanType.getMethods()) {
+                // Process all setters that have corresponding fields
+                if (!method.isPublic() || method.isStatic()
+                        || !method.getName().startsWith("set")
+                        || method.getParameterTypes().length != 1) {
+                    // Not setter, skip to next method
+                    continue;
 
+                }
+                String setterName = method.getName();
+                String capitalizedFieldName = setterName.substring(3);
+                String fieldName = decapitalize(capitalizedFieldName);
+                JType setterParameterType = method.getParameterTypes()[0];
+
+                logger.log(Type.DEBUG, "* Processing field " + fieldName
+                        + " in " + beanTypeName + " (" + beanType.getName()
+                        + ")");
+
+                String jsonFieldName = "json" + capitalizedFieldName;
+                // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
+                sourceWriter.println("JSONArray " + jsonFieldName
+                        + " = (JSONArray) jsonValue.get(\"" + fieldName
+                        + "\");");
+
+                // state.setHeight((String)
+                // JsonDecoder.convertValue(jsonFieldValue,idMapper));
+
+                String fieldType;
+                JPrimitiveType primitiveType = setterParameterType
+                        .isPrimitive();
+                if (primitiveType != null) {
+                    // This is a primitive type -> must used the boxed type
+                    fieldType = primitiveType.getQualifiedBoxedSourceName();
+                } else {
+                    fieldType = setterParameterType.getQualifiedSourceName();
+                }
+
+                sourceWriter.println("state." + setterName + "((" + fieldType
+                        + ") JsonDecoder.convertValue(" + jsonFieldName
+                        + ", idMapper));");
             }
-            String setterName = method.getName();
-            String capitalizedFieldName = setterName.substring(3);
-            String fieldName = decapitalize(capitalizedFieldName);
-            JType setterParameterType = method.getParameterTypes()[0];
-
-            logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
-                    + beanTypeName);
-
-            String jsonFieldName = "json" + capitalizedFieldName;
-            // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
-            sourceWriter.println("JSONArray " + jsonFieldName
-                    + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
-
-            // state.setHeight((String)
-            // JsonDecoder.convertValue(jsonFieldValue,idMapper));
-
-            String fieldType;
-            JPrimitiveType primitiveType = setterParameterType.isPrimitive();
-            if (primitiveType != null) {
-                // This is a primitive type -> must used the boxed type
-                fieldType = primitiveType.getQualifiedBoxedSourceName();
-            } else {
-                fieldType = setterParameterType.getQualifiedSourceName();
-            }
-
-            sourceWriter.println("state." + setterName + "((" + fieldType
-                    + ") JsonDecoder.convertValue(" + jsonFieldName
-                    + ", idMapper));");
+            beanType = beanType.getSuperclass();
         }
 
         // return state;
