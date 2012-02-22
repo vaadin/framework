@@ -890,7 +890,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         // TODO for now, this superclass always recreates the state from
         // scratch, whereas subclasses should only modify it
-        // Map<String, Object> state = new HashMap<String, Object>();
 
         if (getHeight() >= 0
                 && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
@@ -927,8 +926,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         // if (getDescription() != null && getDescription().length() > 0) {
         // state.put(ComponentState.STATE_DESCRIPTION, getDescription());
         // }
-        //
-        // sharedState.setState(state);
 
         return sharedState;
     }

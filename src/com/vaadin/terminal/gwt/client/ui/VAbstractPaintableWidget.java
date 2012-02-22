@@ -110,6 +110,17 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.id = id;
     }
 
+    /**
+     * Returns the shared state object for a paintable widget.
+     * 
+     * A new state instance is created using {@link #createState()} if none has
+     * been set by the server.
+     * 
+     * If overriding this method to return a more specific type, also
+     * {@link #createState()} must be overridden.
+     * 
+     * @return current shared state (not null)
+     */
     public ComponentState getState() {
         if (state == null) {
             state = createState();
@@ -118,6 +129,17 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return state;
     }
 
+    /**
+     * Creates a new instance of a shared state object for the widget. Normally,
+     * the state instance is created by the server and sent to the client before
+     * being used - this method is used if no shared state has been sent by the
+     * server.
+     * 
+     * When overriding {@link #getState()}, also {@link #createState()} should
+     * be overridden to match it.
+     * 
+     * @return newly created component shared state instance
+     */
     protected ComponentState createState() {
         return GWT.create(ComponentState.class);
     }
@@ -349,6 +371,13 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return styleBuf.toString();
     }
 
+    /**
+     * Sets the shared state for the paintable widget.
+     * 
+     * @param new shared state (must be compatible with the return value of
+     *        {@link #getState()} - {@link ComponentState} if
+     *        {@link #getState()} is not overridden
+     */
     public final void setState(SharedState state) {
         this.state = (ComponentState) state;
     }

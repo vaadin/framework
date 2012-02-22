@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
@@ -22,6 +26,14 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
+/**
+ * GWT generator for creating serializer classes for custom classes sent from
+ * server to client.
+ * 
+ * Only fields with a correspondingly named setter are deserialized.
+ * 
+ * @since 7.0
+ */
 public class SerializerGenerator extends Generator {
 
     private String packageName;
@@ -50,13 +62,16 @@ public class SerializerGenerator extends Generator {
     }
 
     /**
-     * Generate source code for WidgetMapImpl
+     * Generate source code for a VaadinSerializer implementation.
      * 
      * @param logger
      *            Logger object
      * @param context
      *            Generator context
-     * @param typeName
+     * @param beanTypeName
+     *            bean type for which the serializer is to be generated
+     * @param beanSerializerTypeName
+     *            name of the serializer class to generate
      */
     private void generateClass(TreeLogger logger, GeneratorContext context,
             String beanTypeName, String beanSerializerTypeName) {
@@ -121,6 +136,7 @@ public class SerializerGenerator extends Generator {
             // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
             sourceWriter.println("JSONArray " + jsonFieldName
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
+
             // state.setHeight((String)
             // JsonDecoder.convertValue(jsonFieldValue,idMapper));
 

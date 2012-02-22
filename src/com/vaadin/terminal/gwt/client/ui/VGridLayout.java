@@ -940,20 +940,13 @@ public class VGridLayout extends SimplePanel implements Container {
             if (state != null && !cached) {
                 boolean widthDefined = !state.isUndefinedWidth();
                 boolean heightDefined = !state.isUndefinedHeight();
-                if (heightDefined && state.getHeight().contains("%")) {
-                    relHeight = true;
-                } else {
-                    relHeight = false;
-                }
+
+                relHeight = state.getHeight().contains("%");
+                relWidth = state.getWidth().contains("%");
                 if (widthDefined) {
-                    widthCanAffectHeight = relWidth = state.getWidth()
-                            .contains("%");
-                    if (heightDefined) {
-                        widthCanAffectHeight = false;
-                    }
+                    widthCanAffectHeight = (relWidth && !heightDefined);
                 } else {
                     widthCanAffectHeight = !heightDefined;
-                    relWidth = false;
                 }
             }
         }

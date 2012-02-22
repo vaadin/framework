@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
@@ -16,6 +20,13 @@ import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
+/**
+ * GWT generator that creates a {@link SerializerMap} implementation (mapper
+ * from type string to serializer instance) and serializer classes for all
+ * subclasses of {@link SharedState}.
+ * 
+ * @since 7.0
+ */
 public class SerializerMapGenerator extends Generator {
 
     private String packageName;
@@ -32,9 +43,10 @@ public class SerializerMapGenerator extends Generator {
             JClassType classType = typeOracle.getType(typeName);
             packageName = classType.getPackage().getName();
             className = classType.getSimpleSourceName() + "Impl";
-            // Generate class source code
+            // Generate class source code for SerializerMapImpl
             generateClass(logger, context);
 
+            // Generate serializer classes for each subclass of SharedState
             JClassType serializerType = typeOracle.findType(SharedState.class
                     .getName());
             JClassType[] serializerSubtypes = serializerType.getSubtypes();
@@ -87,6 +99,7 @@ public class SerializerMapGenerator extends Generator {
                 + " getSerializer(String type) {");
         sourceWriter.indent();
 
+        // TODO cache serializer instances in a map
         for (JClassType type : serializerSubtypes) {
             sourceWriter.println("if (type.equals(\""
                     + type.getQualifiedSourceName() + "\")) {");

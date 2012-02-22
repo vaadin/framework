@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.communication;
 
 import java.io.Serializable;
 
-import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 
 /**
@@ -29,19 +28,14 @@ import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
  * necessary (changed or missing on the client side) parts are re-sent to the
  * client, but the client will have access to the whole state.
  * 
- * TODO the rest of the javadoc corresponds to the design that is not yet
- * implemented
- * 
  * A shared state class should be a bean with getters and setters for each
  * field, and should only contain simple data types, or arrays or maps of
  * supported data types.
  * 
- * On the client side, SharedState instances must be created using
- * {@link GWT#create(Class)} to let a generator create custom deserialization
- * support for them. For most widgets,
- * {@link VAbstractPaintableWidget#createSharedState()} method should be
- * overridden to create a shared state instance of the correct type using
- * {@link GWT#create(Class)}.
+ * On the client side, for most widgets,
+ * {@link VAbstractPaintableWidget#createState()} and
+ * {@link VAbstractPaintableWidget#getState()} methods should be overridden to
+ * create and use a shared state instance of the correct type.
  * 
  * Subclasses of a paintable using shared state should also provide a subclass
  * of the shared state class of the parent class to extend the state - a single

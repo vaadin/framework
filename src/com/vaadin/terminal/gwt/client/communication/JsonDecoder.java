@@ -82,6 +82,7 @@ public class JsonDecoder {
             // object, class name as type
             VaadinSerializer serializer = serializerMap
                     .getSerializer(variableType);
+            // TODO handle case with no serializer found
             Object object = serializer
                     .deserialize((JSONObject) value, idMapper);
             return object;
