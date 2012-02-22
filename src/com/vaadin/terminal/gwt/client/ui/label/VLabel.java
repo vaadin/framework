@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.label;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -17,6 +18,7 @@ public class VLabel extends HTML {
 
     private int verticalPaddingBorder = 0;
     private int horizontalPaddingBorder = 0;
+    private ApplicationConnection connection;
 
     public VLabel() {
         super();
@@ -37,6 +39,9 @@ public class VLabel extends HTML {
             Util.notifyParentOfSizeChange(this, true);
             event.stopPropagation();
             return;
+        }
+        if (connection != null) {
+            connection.handleWidgetTooltipEvent(event, this);
         }
     }
 
@@ -66,5 +71,9 @@ public class VLabel extends HTML {
         } else {
             super.setText(text);
         }
+    }
+
+    void setConnection(ApplicationConnection client) {
+        connection = client;
     }
 }
