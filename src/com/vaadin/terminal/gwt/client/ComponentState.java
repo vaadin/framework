@@ -16,6 +16,8 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 public class ComponentState extends SharedState {
     private String height = "";
     private String width = "";
+    private boolean readOnly = false;
+    private boolean immediate = false;
 
     /**
      * Returns the component height as set by the server.
@@ -93,7 +95,22 @@ public class ComponentState extends SharedState {
         return "".equals(getWidth());
     }
 
-    // TODO more fields to move here: style, readonly, immediate, disabled,
-    // caption and description
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    public boolean isImmediate() {
+        return immediate;
+    }
+
+    public void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    // TODO more fields to move here: style, disabled, caption and description
 
 }

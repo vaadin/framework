@@ -41,8 +41,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         boolean firstPaint = getWidgetForPaintable().connection == null;
         getWidgetForPaintable().connection = client;
 
-        getWidgetForPaintable().immediate = uidl
-                .hasAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
         getWidgetForPaintable().resizeLazy = uidl
                 .hasAttribute(VView.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");

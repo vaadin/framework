@@ -28,8 +28,7 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getId();
 
-        getWidgetForPaintable().readonly = uidl
-                .hasAttribute(ATTRIBUTE_READONLY);
+        getWidgetForPaintable().readonly = getState().isReadOnly();
         getWidgetForPaintable().enabled = !uidl
                 .hasAttribute(ATTRIBUTE_DISABLED);
 
@@ -59,8 +58,7 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
                     .getIntAttribute("filteringmode");
         }
 
-        getWidgetForPaintable().immediate = uidl
-                .hasAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         getWidgetForPaintable().nullSelectionAllowed = uidl
                 .hasAttribute("nullselect");

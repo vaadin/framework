@@ -27,11 +27,7 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
             return;
         }
 
-        if (uidl.getBooleanAttribute(ATTRIBUTE_READONLY)) {
-            getWidgetForPaintable().setReadOnly(true);
-        } else {
-            getWidgetForPaintable().setReadOnly(false);
-        }
+        getWidgetForPaintable().setReadOnly(getState().isReadOnly());
 
         getWidgetForPaintable().inputPrompt = uidl
                 .getStringAttribute(VTextField.ATTR_INPUTPROMPT);
@@ -40,8 +36,7 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
                 uidl.hasAttribute("maxLength") ? uidl
                         .getIntAttribute("maxLength") : -1);
 
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         getWidgetForPaintable().listenTextChangeEvents = client
                 .hasEventListeners(this, "ie");

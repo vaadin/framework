@@ -40,10 +40,8 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
             return;
         }
 
-        getWidgetForPaintable().setReadOnly(
-                uidl.getBooleanAttribute(ATTRIBUTE_READONLY));
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().setReadOnly(getState().isReadOnly());
+        getWidgetForPaintable().immediate = getState().isImmediate();
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {

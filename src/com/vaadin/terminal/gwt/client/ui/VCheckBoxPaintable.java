@@ -62,7 +62,7 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
                     "none");
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_READONLY)) {
+        if (getState().isReadOnly()) {
             getWidgetForPaintable().setEnabled(false);
         }
 
@@ -90,8 +90,7 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable()
                 .setValue(
                         uidl.getBooleanVariable(getWidgetForPaintable().VARIABLE_STATE));
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
     }
 
     @Override

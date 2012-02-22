@@ -776,15 +776,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                             VAbstractPaintableWidget.ATTRIBUTE_STYLE,
                             getStyle());
                 }
-                if (isReadOnly()) {
-                    target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_READONLY, true);
-                }
-
-                if (isImmediate()) {
-                    target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_IMMEDIATE, true);
-                }
                 if (!isEnabled()) {
                     target.addAttribute(
                             VAbstractPaintableWidget.ATTRIBUTE_DISABLED, true);
@@ -903,6 +894,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             sharedState.setWidth("" + getCSSWidth());
         }
 
+        sharedState.setImmediate(isImmediate());
+        sharedState.setReadOnly(isReadOnly());
+
         // if (getCaption() != null) {
         // state.put(ComponentState.STATE_CAPTION, getCaption());
         // }
@@ -911,13 +905,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         // if (styles != null && styles.size() > 0) {
         // state.put(ComponentState.STATE_STYLE, getStyle());
-        // }
-        // if (isReadOnly()) {
-        // state.put(ComponentState.STATE_READONLY, true);
-        // }
-        //
-        // if (isImmediate()) {
-        // state.put(ComponentState.STATE_IMMEDIATE, true);
         // }
         // if (!isEnabled()) {
         // state.put(ComponentState.STATE_DISABLED, true);

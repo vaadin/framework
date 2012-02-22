@@ -32,8 +32,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     public static final String ATTRIBUTE_REQUIRED = "required";
     public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
-    public static final String ATTRIBUTE_READONLY = "readonly";
-    public static final String ATTRIBUTE_IMMEDIATE = "immediate";
     public static final String ATTRIBUTE_DISABLED = "disabled";
     public static final String ATTRIBUTE_STYLE = "style";
 
@@ -211,7 +209,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         // Style names
         String styleName = getStyleNameFromUIDL(getWidgetForPaintable()
-                .getStylePrimaryName(), uidl,
+                .getStylePrimaryName(), uidl, getState(),
                 getWidgetForPaintable() instanceof Field);
         getWidgetForPaintable().setStyleName(styleName);
 
@@ -308,17 +306,19 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     /**
      * Generates the style name for the widget based on the given primary style
-     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL.
-     * An additional "modified" style name can be added if the field parameter
-     * is set to true.
+     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL
+     * and shared state of the component. An additional "modified" style name
+     * can be added if the field parameter is set to true.
      * 
      * @param primaryStyleName
      * @param uidl
-     * @param isField
+     * @param state
+     *            component shared state
+     * @param field
      * @return
      */
     protected static String getStyleNameFromUIDL(String primaryStyleName,
-            UIDL uidl, boolean field) {
+            UIDL uidl, ComponentState state, boolean field) {
         boolean enabled = !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED);
 
         StringBuffer styleBuf = new StringBuffer();
@@ -329,7 +329,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             styleBuf.append(" ");
             styleBuf.append(ApplicationConnection.DISABLED_CLASSNAME);
         }
-        if (uidl.getBooleanAttribute(ATTRIBUTE_READONLY)) {
+        if (state.isReadOnly()) {
             styleBuf.append(" ");
             styleBuf.append("v-readonly");
         }

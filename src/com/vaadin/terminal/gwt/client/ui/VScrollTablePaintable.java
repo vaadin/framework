@@ -72,8 +72,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
 
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getStringAttribute("id");
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         int previousTotalRows = getWidgetForPaintable().totalRows;
         getWidgetForPaintable().updateTotalRows(uidl);
@@ -81,7 +80,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
 
         getWidgetForPaintable().updateDragMode(uidl);
 
-        getWidgetForPaintable().updateSelectionProperties(uidl);
+        getWidgetForPaintable().updateSelectionProperties(uidl, getState());
 
         if (uidl.hasAttribute("alb")) {
             getWidgetForPaintable().bodyActionKeys = uidl

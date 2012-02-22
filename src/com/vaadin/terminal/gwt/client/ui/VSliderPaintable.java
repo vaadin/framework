@@ -24,15 +24,14 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
         getWidgetForPaintable().disabled = uidl
                 .getBooleanAttribute(ATTRIBUTE_DISABLED);
-        getWidgetForPaintable().readonly = uidl
-                .getBooleanAttribute(ATTRIBUTE_READONLY);
+        getWidgetForPaintable().readonly = getState().isReadOnly();
 
         getWidgetForPaintable().vertical = uidl.hasAttribute("vertical");
 
+        // TODO should these style names be used?
         String style = "";
         if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
             style = uidl.getStringAttribute(ATTRIBUTE_STYLE);

@@ -70,8 +70,7 @@ public abstract class VAbstractSplitPanelPaintable extends
         getWidgetForPaintable().id = uidl.getId();
         getWidgetForPaintable().rendering = true;
 
-        getWidgetForPaintable().immediate = uidl
-                .hasAttribute(ATTRIBUTE_IMMEDIATE);
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
