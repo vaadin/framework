@@ -541,10 +541,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * Updates style names in suggestion popup to help theme building.
          */
         public void updateStyleNames(UIDL uidl) {
-            if (uidl.hasAttribute("style")) {
+            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
                 setStyleName(CLASSNAME + "-suggestpopup");
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
+                final String[] styles = uidl.getStringAttribute(
+                        VAbstractPaintableWidget.ATTRIBUTE_STYLE).split(" ");
                 for (int i = 0; i < styles.length; i++) {
                     addStyleDependentName(styles[i]);
                 }

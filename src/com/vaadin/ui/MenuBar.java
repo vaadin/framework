@@ -86,7 +86,8 @@ public class MenuBar extends AbstractComponent {
         target.addAttribute("id", item.getId());
 
         if (item.getStyleName() != null) {
-            target.addAttribute("style", item.getStyleName());
+            target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_STYLE,
+                    item.getStyleName());
         }
 
         if (item.isSeparator()) {

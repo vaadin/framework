@@ -121,9 +121,13 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
                 currentMenu = new VMenuBar(true, currentMenu);
-                if (uidl.hasAttribute("style")) {
-                    for (String style : uidl.getStringAttribute("style").split(
-                            " ")) {
+                // this is the top-level style that also propagates to items -
+                // any item specific styles are set above in
+                // currentItem.updateFromUIDL(item, client)
+                if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
+                    for (String style : uidl.getStringAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_STYLE)
+                            .split(" ")) {
                         currentMenu.addStyleDependentName(style);
                     }
                 }

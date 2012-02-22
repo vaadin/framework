@@ -390,6 +390,8 @@ public class TabSheet extends AbstractComponentContainer {
                 target.addAttribute("closable", true);
             }
 
+            // tab icon, caption and description, but used via
+            // VCaption.updateCaption(uidl)
             final Resource icon = tab.getIcon();
             if (icon != null) {
                 target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON,

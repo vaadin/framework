@@ -75,9 +75,10 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
-            getWidgetForPaintable().setCaption(
-                    uidl.getStringAttribute("caption"),
-                    uidl.getStringAttribute("icon"));
+            getWidgetForPaintable()
+                    .setCaption(
+                            uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION),
+                            uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
         }
 
         getWidgetForPaintable().visibilityChangesDisabled = true;

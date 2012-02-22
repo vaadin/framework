@@ -610,7 +610,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (itemStyleGenerator != null) {
                     String stylename = itemStyleGenerator.getStyle(itemId);
                     if (stylename != null) {
-                        target.addAttribute("style", stylename);
+                        target.addAttribute(
+                                VTreePaintable.ATTRIBUTE_NODE_STYLE, stylename);
                     }
                 }
 
@@ -623,10 +624,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
 
                 // Adds the attributes
-                target.addAttribute("caption", getItemCaption(itemId));
+                target.addAttribute(VTreePaintable.ATTRIBUTE_NODE_CAPTION,
+                        getItemCaption(itemId));
                 final Resource icon = getItemIcon(itemId);
                 if (icon != null) {
-                    target.addAttribute("icon", getItemIcon(itemId));
+                    target.addAttribute(VTreePaintable.ATTRIBUTE_NODE_ICON,
+                            getItemIcon(itemId));
                 }
                 final String key = itemIdMapper.key(itemId);
                 target.addAttribute("key", key);
@@ -683,10 +686,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Action a = i.next();
                 target.startTag("action");
                 if (a.getCaption() != null) {
-                    target.addAttribute("caption", a.getCaption());
+                    target.addAttribute(
+                            VTreePaintable.ATTRIBUTE_ACTION_CAPTION,
+                            a.getCaption());
                 }
                 if (a.getIcon() != null) {
-                    target.addAttribute("icon", a.getIcon());
+                    target.addAttribute(VTreePaintable.ATTRIBUTE_ACTION_ICON,
+                            a.getIcon());
                 }
                 target.addAttribute("key", actionMapper.key(a));
                 target.endTag("action");
