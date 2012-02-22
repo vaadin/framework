@@ -3,6 +3,7 @@
 	background-repeat: no-repeat;
 	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	padding-left: 2px;
+	padding-right: 25px; /* Space for the button */
 }
 .v-app .v-filterselect-input,
 .v-window .v-filterselect-input,
@@ -17,7 +18,6 @@
 .v-window input.v-filterselect-input,
 .v-popupview-popup input.v-filterselect-input {
 	padding: 4px 0 4px 2px;
-	width: 128px;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
@@ -39,6 +39,7 @@
 	height: 24px;
 	background-image: url(img/right.png); /** sprite-ref: verticals ; sprite-margin-bottom: 1px */
 	cursor: default;
+	margin-right: -25px;
 }
 .v-filterselect-button:hover {
 	background-image: url(img/right-hover.png); /** sprite-ref: verticals */

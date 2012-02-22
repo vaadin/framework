@@ -46,7 +46,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -1564,14 +1563,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
                 this);
         if (paintable.isUndefinedWidth()) {
-            /*
-             * When the width is not specified we must specify width for root
-             * div so the popupopener won't wrap to the next line and also so
-             * the size of the combobox won't change over time.
-             */
-            int tbWidth = Util.getRequiredWidth(tb);
-
-            int w = tbWidth + getNonTextboxSpace();
 
             /*
              * When the select has a undefined with we need to check that we are
@@ -1580,33 +1571,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * when the popup is used to view longer items than the text box is
              * wide.
              */
+            int w = Util.getRequiredWidth(this);
             if ((!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
-                setTextboxWidth(suggestionPopupMinWidth);
+                setWidth(suggestionPopupMinWidth + "px");
             }
-
-        } else {
-            /*
-             * When the width is specified we also want to explicitly specify
-             * width for textbox
-             */
-            setTextboxWidth(getMainWidth());
-
         }
-    }
-
-    /**
-     * Only use the first page popup width so the textbox will not get resized
-     * whenever the popup is resized. This also resolves issue where toggling
-     * combo box between read only and normal state makes it grow larger.
-     * 
-     * @return Width of popup opener
-     */
-    private int getPopUpOpenerWidth() {
-        if (popupWidth < 0) {
-            popupWidth = Util.getRequiredWidth(popupOpener);
-        }
-        return popupWidth;
     }
 
     /**
@@ -1619,27 +1589,14 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         return getOffsetWidth();
     }
 
-    /**
-     * Sets the text box width in pixels.
-     * 
-     * @param componentWidth
-     *            The width of the combo box in pixels
-     */
-    private void setTextboxWidth(int componentWidth) {
-        int extraSpace = getNonTextboxSpace();
-        int textboxWidth = componentWidth - extraSpace;
-        if (textboxWidth < 0) {
-            textboxWidth = 0;
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+        if (width.length() == 0) {
+            tb.setWidth("");
+        } else {
+            tb.setWidth("100%");
         }
-        tb.setWidth(textboxWidth + "px");
-    }
-
-    private int getNonTextboxSpace() {
-        MeasuredSize measuredSize = VPaintableMap.get(client)
-                .getPaintable(this).getMeasuredSize();
-        int extraSpace = getPopUpOpenerWidth() + measuredSize.getPaddingWidth()
-                + measuredSize.getBorderWidth();
-        return extraSpace;
     }
 
     /**
