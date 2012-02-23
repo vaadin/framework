@@ -1576,6 +1576,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     && suggestionPopupMinWidth > w) {
                 setWidth(suggestionPopupMinWidth + "px");
             }
+
+            /*
+             * Lock the textbox width to its current value if it's not already
+             * locked
+             */
+            if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
+                tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
+                        .getOffsetWidth()) + "px");
+            }
         }
     }
 
@@ -1592,9 +1601,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (width.length() == 0) {
-            tb.setWidth("");
-        } else {
+        if (width.length() != 0) {
             tb.setWidth("100%");
         }
     }
