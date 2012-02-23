@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -22,8 +21,7 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
-import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
-import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.VButtonPaintable.ButtonClientToServerRpc;
 
 public class VNativeButton extends Button implements ClickHandler,
         FocusHandler, BlurHandler {
@@ -36,7 +34,7 @@ public class VNativeButton extends Button implements ClickHandler,
 
     protected ApplicationConnection client;
 
-    private ButtonClientToServerRpc buttonRpcProxy;
+    ButtonClientToServerRpc buttonRpcProxy;
 
     protected Element errorIndicatorElement;
 
@@ -121,24 +119,15 @@ public class VNativeButton extends Button implements ClickHandler,
         }
         if (disableOnClick) {
             setEnabled(false);
-            getButtonRpcProxy().disableOnClick();
+            buttonRpcProxy.disableOnClick();
         }
 
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        getButtonRpcProxy().click(details.serialize());
+        buttonRpcProxy.click(details.serialize());
 
         clickPending = false;
-    }
-
-    protected ButtonClientToServerRpc getButtonRpcProxy() {
-        if (null == buttonRpcProxy) {
-            buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
-            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(
-                    paintableId, client);
-        }
-        return buttonRpcProxy;
     }
 
     public void onFocus(FocusEvent arg0) {

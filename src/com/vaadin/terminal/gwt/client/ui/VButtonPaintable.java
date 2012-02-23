@@ -11,12 +11,42 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
 
 public class VButtonPaintable extends VAbstractPaintableWidget {
+
+    /**
+     * RPC interface for calls from client to server.
+     * 
+     * @since 7.0
+     */
+    public interface ButtonClientToServerRpc extends ClientToServerRpc {
+        /**
+         * Button click event.
+         * 
+         * @param mouseEventDetails
+         *            serialized mouse event details
+         */
+        public void click(String mouseEventDetails);
+
+        /**
+         * Indicate to the server that the client has disabled the button as a
+         * result of a click.
+         */
+        public void disableOnClick();
+    }
 
     @Override
     protected boolean delegateCaptionHandling() {
         return false;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        ButtonClientToServerRpc rpcProxy = GWT
+                .create(ButtonClientToServerRpc.class);
+        getWidgetForPaintable().buttonRpcProxy = initRPC(rpcProxy);
     }
 
     @Override

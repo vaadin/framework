@@ -15,6 +15,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
@@ -374,5 +376,19 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
      */
     public final void setState(SharedState state) {
         this.state = (ComponentState) state;
+    }
+
+    /**
+     * Initialize the given RPC proxy object so it is connected to this
+     * paintable.
+     * 
+     * @param clientToServerRpc
+     *            The RPC instance to initialize. Must have been created using
+     *            GWT.create().
+     */
+    protected <T extends ClientToServerRpc> T initRPC(T clientToServerRpc) {
+        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getId(),
+                getConnection());
+        return clientToServerRpc;
     }
 }

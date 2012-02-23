@@ -10,8 +10,18 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VButtonPaintable.ButtonClientToServerRpc;
 
 public class VNativeButtonPaintable extends VAbstractPaintableWidget {
+
+    @Override
+    public void init() {
+        super.init();
+
+        ButtonClientToServerRpc rpcProxy = GWT
+                .create(ButtonClientToServerRpc.class);
+        getWidgetForPaintable().buttonRpcProxy = initRPC(rpcProxy);
+    }
 
     @Override
     protected boolean delegateCaptionHandling() {
