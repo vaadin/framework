@@ -60,17 +60,12 @@ public abstract class VLayoutSlot {
             double allocatedSpace) {
         Style style = wrapper.getStyle();
 
-        if (isRelativeWidth()) {
-            style.setPropertyPx("width", (int) allocatedSpace);
-            style.clearProperty("minWidth");
-        } else {
-            style.clearProperty("width");
-            style.setPropertyPx("minWidth", getCaptionWidth());
-        }
+        double availableWidth = allocatedSpace;
 
         VCaption caption = getCaption();
         Style captionStyle = caption != null ? caption.getElement().getStyle()
                 : null;
+        int captionWidth = getCaptionWidth();
 
         boolean captionAboveCompnent;
         if (caption == null) {
@@ -79,12 +74,29 @@ public abstract class VLayoutSlot {
         } else {
             captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
             if (!captionAboveCompnent) {
-                style.setPaddingRight(getCaptionWidth(), Unit.PX);
-                captionStyle.setLeft(getWidgetWidth(), Unit.PX);
+                style.setPaddingRight(captionWidth, Unit.PX);
+                availableWidth -= captionWidth;
+                captionStyle.clearLeft();
+                captionStyle.setRight(0, Unit.PX);
             } else {
                 style.clearPaddingRight();
                 captionStyle.setLeft(0, Unit.PX);
+                captionStyle.clearRight();
             }
+        }
+
+        if (isRelativeWidth()) {
+            style.setPropertyPx("width", (int) availableWidth);
+            style.clearProperty("minWidth");
+            style.clearProperty("maxWidth");
+        } else {
+            style.clearProperty("width");
+            if (caption != null && captionAboveCompnent) {
+                style.setPropertyPx("minWidth", captionWidth);
+            } else {
+                style.clearProperty("minWidth");
+            }
+            style.setPropertyPx("maxWidth", (int) availableWidth);
         }
 
         AlignmentInfo alignment = getAlignment();
@@ -93,8 +105,7 @@ public abstract class VLayoutSlot {
             if (alignment.isHorizontalCenter()) {
                 currentLocation += (allocatedSpace - usedWidth) / 2d;
                 if (captionAboveCompnent) {
-                    double captionWidth = getCaptionWidth();
-                    captionStyle.setLeft(usedWidth / 2 - (captionWidth / 2),
+                    captionStyle.setLeft(usedWidth / 2 - (captionWidth / 2d),
                             Unit.PX);
                     captionStyle.clearRight();
                 }
