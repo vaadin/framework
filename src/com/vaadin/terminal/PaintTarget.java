@@ -37,6 +37,31 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
+     * Result of starting to paint a Paintable (
+     * {@link PaintTarget#startPaintable(Paintable, String)}).
+     * 
+     * @since 7.0
+     */
+    public enum PaintStatus {
+        /**
+         * Painting started, addVariable() and addAttribute() etc. methods may
+         * be called.
+         */
+        PAINTING,
+        /**
+         * Paintable is cached on the client side and unmodified - only an
+         * indication of that should be painted.
+         */
+        CACHED,
+        /**
+         * A previously unpainted or painted {@link Paintable} has been queued
+         * be created/update later in a separate change in the same set of
+         * changes.
+         */
+        DEFER
+    };
+
+    /**
      * Prints element start tag of a paintable section. Starts a paintable
      * section using the given tag. The PaintTarget may implement a caching
      * scheme, that checks the paintable has actually changed or can a cached
@@ -46,43 +71,44 @@ public interface PaintTarget extends Serializable {
      * omit the content and close the tag, in which case cached content should
      * be used.
      * </p>
+     * <p>
+     * This method may also add only a reference to the paintable and queue the
+     * paintable to be painted separately.
+     * </p>
+     * <p>
+     * Each paintable being painted should be closed by a matching
+     * {@link #endPaintable(Paintable)} regardless of the {@link PaintStatus}
+     * returned.
+     * </p>
      * 
      * @param paintable
      *            the paintable to start.
      * @param tag
      *            the name of the start tag.
-     * @return <code>true</code> if paintable found in cache, <code>false</code>
-     *         otherwise.
+     * @return {@link PaintStatus} - ready to paint, already cached on the
+     *         client or defer painting to another change
      * @throws PaintException
      *             if the paint operation failed.
      * @see #startTag(String)
-     * @since 3.1
+     * @since 7.0 (previously using startTag(Paintable, String))
      */
-    public boolean startTag(Paintable paintable, String tag)
+    public PaintStatus startPaintable(Paintable paintable, String tag)
             throws PaintException;
 
     /**
-     * Paints a component reference as an attribute to current tag. This method
-     * is meant to enable component interactions on client side. With reference
-     * the client side component can communicate directly to other component.
+     * Prints paintable element end tag.
      * 
-     * Note! This was experimental api and got replaced by
-     * {@link #addAttribute(String, Paintable)} and
-     * {@link #addVariable(VariableOwner, String, Paintable)}.
+     * Calls to {@link #startPaintable(Paintable, String)} should be matched by
+     * {@link #endPaintable(Paintable)}. If the parent tag is closed before
+     * every child tag is closed a PaintException is raised.
      * 
      * @param paintable
-     *            the Paintable to reference
-     * @param referenceName
+     *            the paintable to close.
      * @throws PaintException
-     * 
-     * @since 5.2
-     * @deprecated use {@link #addAttribute(String, Paintable)} or
-     *             {@link #addVariable(VariableOwner, String, Paintable)}
-     *             instead
+     *             if the paint operation failed.
+     * @since 7.0 (previously using engTag(String))
      */
-    @Deprecated
-    public void paintReference(Paintable paintable, String referenceName)
-            throws PaintException;
+    public void endPaintable(Paintable paintable) throws PaintException;
 
     /**
      * Prints element start tag.

@@ -9,6 +9,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.Icon;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
 
 public class VCaption extends HTML {
 
@@ -32,21 +34,40 @@ public class VCaption extends HTML {
 
     private int maxWidth = -1;
 
-    protected static final String ATTRIBUTE_ICON = "icon";
-    protected static final String ATTRIBUTE_CAPTION = "caption";
-    protected static final String ATTRIBUTE_DESCRIPTION = "description";
-    protected static final String ATTRIBUTE_REQUIRED = "required";
-    protected static final String ATTRIBUTE_ERROR = "error";
-    protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
-
     private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
 
+    private enum InsertPosition {
+        ICON, CAPTION, REQUIRED, ERROR
+    }
+
     /**
+     * Creates a caption that is not linked to a {@link VPaintableWidget}.
+     * 
+     * When using this constructor, {@link #getOwner()} returns null.
+     * 
+     * @param client
+     *            ApplicationConnection
+     * @deprecated all captions should be associated with a paintable widget and
+     *             be updated from shared state, not UIDL
+     */
+    @Deprecated
+    public VCaption(ApplicationConnection client) {
+        super();
+        this.client = client;
+        owner = null;
+
+        setStyleName(CLASSNAME);
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
+
+    }
+
+    /**
+     * Creates a caption for a {@link VPaintableWidget}.
      * 
      * @param component
-     *            optional owner of caption. If not set, getOwner will return
-     *            null
+     *            owner of caption, not null
      * @param client
+     *            ApplicationConnection
      */
     public VCaption(VPaintableWidget component, ApplicationConnection client) {
         super();
@@ -65,6 +86,9 @@ public class VCaption extends HTML {
     /**
      * Updates the caption from UIDL.
      * 
+     * This method may only be called when the caption has an owner - otherwise,
+     * use {@link #updateCaptionWithoutOwner(UIDL, String, boolean, boolean)}.
+     * 
      * @param uidl
      * @return true if the position where the caption should be placed has
      *         changed
@@ -79,25 +103,24 @@ public class VCaption extends HTML {
         placedAfterComponent = true;
 
         String style = CLASSNAME;
-        if (uidl.hasAttribute("style")) {
-            final String[] styles = uidl.getStringAttribute("style").split(" ");
+        if (owner.getState().hasStyles()) {
+            final String[] styles = owner.getState().getStyle().split(" ");
             for (int i = 0; i < styles.length; i++) {
                 style += " " + CLASSNAME + "-" + styles[i];
             }
         }
-
-        if (uidl.hasAttribute("disabled")) {
+        if (owner.getState().isDisabled()) {
             style += " " + ApplicationConnection.DISABLED_CLASSNAME;
         }
-
         setStyleName(style);
 
-        boolean hasIcon = uidl.hasAttribute(ATTRIBUTE_ICON);
-        boolean hasText = uidl.hasAttribute(ATTRIBUTE_CAPTION);
-        boolean hasDescription = uidl.hasAttribute(ATTRIBUTE_DESCRIPTION);
-        boolean showRequired = uidl.getBooleanAttribute(ATTRIBUTE_REQUIRED);
-        boolean showError = uidl.hasAttribute(ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(ATTRIBUTE_HIDEERRORS);
+        boolean hasIcon = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
+        boolean showRequired = uidl
+                .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED);
+        boolean showError = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
             if (icon == null) {
@@ -106,12 +129,13 @@ public class VCaption extends HTML {
                 icon.setHeight("0");
 
                 DOM.insertChild(getElement(), icon.getElement(),
-                        getInsertPosition(ATTRIBUTE_ICON));
+                        getInsertPosition(InsertPosition.ICON));
             }
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            icon.setUri(uidl
+                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
 
         } else if (icon != null) {
             // Remove existing
@@ -119,7 +143,7 @@ public class VCaption extends HTML {
             icon = null;
         }
 
-        if (hasText) {
+        if (owner.getState().getCaption() != null) {
             // A caption text should be shown if the attribute is set
             // If the caption is null the ATTRIBUTE_CAPTION should not be set to
             // avoid ending up here.
@@ -129,11 +153,11 @@ public class VCaption extends HTML {
                 captionText.setClassName("v-captiontext");
 
                 DOM.insertChild(getElement(), captionText,
-                        getInsertPosition(ATTRIBUTE_CAPTION));
+                        getInsertPosition(InsertPosition.CAPTION));
             }
 
             // Update caption text
-            String c = uidl.getStringAttribute(ATTRIBUTE_CAPTION);
+            String c = owner.getState().getCaption();
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
             if (c == null || c.trim().equals("")) {
@@ -156,12 +180,10 @@ public class VCaption extends HTML {
             captionText = null;
         }
 
-        if (hasDescription) {
-            if (captionText != null) {
-                addStyleDependentName("hasdescription");
-            } else {
-                removeStyleDependentName("hasdescription");
-            }
+        if (owner.getState().hasDescription() && captionText != null) {
+            addStyleDependentName("hasdescription");
+        } else {
+            removeStyleDependentName("hasdescription");
         }
 
         if (showRequired) {
@@ -172,7 +194,7 @@ public class VCaption extends HTML {
                 DOM.setInnerText(requiredFieldIndicator, "*");
 
                 DOM.insertChild(getElement(), requiredFieldIndicator,
-                        getInsertPosition(ATTRIBUTE_REQUIRED));
+                        getInsertPosition(InsertPosition.REQUIRED));
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
@@ -188,7 +210,7 @@ public class VCaption extends HTML {
                         "v-errorindicator");
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(ATTRIBUTE_ERROR));
+                        getInsertPosition(InsertPosition.ERROR));
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
@@ -205,16 +227,16 @@ public class VCaption extends HTML {
         return (wasPlacedAfterComponent != placedAfterComponent);
     }
 
-    private int getInsertPosition(String element) {
+    private int getInsertPosition(InsertPosition element) {
         int pos = 0;
-        if (element.equals(ATTRIBUTE_ICON)) {
+        if (InsertPosition.ICON.equals(element)) {
             return pos;
         }
         if (icon != null) {
             pos++;
         }
 
-        if (element.equals(ATTRIBUTE_CAPTION)) {
+        if (InsertPosition.CAPTION.equals(element)) {
             return pos;
         }
 
@@ -222,17 +244,129 @@ public class VCaption extends HTML {
             pos++;
         }
 
-        if (element.equals(ATTRIBUTE_REQUIRED)) {
+        if (InsertPosition.REQUIRED.equals(element)) {
             return pos;
         }
         if (requiredFieldIndicator != null) {
             pos++;
         }
 
-        // if (element.equals(ATTRIBUTE_ERROR)) {
+        // if (InsertPosition.ERROR.equals(element)) {
         // }
         return pos;
 
+    }
+
+    @Deprecated
+    public boolean updateCaptionWithoutOwner(UIDL uidl, String caption,
+            boolean disabled, boolean hasDescription) {
+        // TODO temporary method, needed because some tabsheet and accordion
+        // internal captions do not have an owner or shared state. Simplified to
+        // only support those cases
+        setVisible(!uidl.getBooleanAttribute("invisible"));
+
+        boolean wasPlacedAfterComponent = placedAfterComponent;
+
+        // Caption is placed after component unless there is some part which
+        // moves it above.
+        placedAfterComponent = true;
+
+        String style = VCaption.CLASSNAME;
+        if (disabled) {
+            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+        }
+        setStyleName(style);
+        if (hasDescription) {
+            if (captionText != null) {
+                addStyleDependentName("hasdescription");
+            } else {
+                removeStyleDependentName("hasdescription");
+            }
+        }
+        boolean hasIcon = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
+        boolean showError = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS);
+
+        if (hasIcon) {
+            if (icon == null) {
+                icon = new Icon(client);
+                icon.setWidth("0");
+                icon.setHeight("0");
+
+                DOM.insertChild(getElement(), icon.getElement(),
+                        getInsertPosition(InsertPosition.ICON));
+            }
+            // Icon forces the caption to be above the component
+            placedAfterComponent = false;
+
+            icon.setUri(uidl
+                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
+
+        } else if (icon != null) {
+            // Remove existing
+            DOM.removeChild(getElement(), icon.getElement());
+            icon = null;
+        }
+
+        if (caption != null) {
+            // A caption text should be shown if the attribute is set
+            // If the caption is null the ATTRIBUTE_CAPTION should not be set to
+            // avoid ending up here.
+
+            if (captionText == null) {
+                captionText = DOM.createDiv();
+                captionText.setClassName("v-captiontext");
+
+                DOM.insertChild(getElement(), captionText,
+                        getInsertPosition(InsertPosition.CAPTION));
+            }
+
+            // Update caption text
+            // A text forces the caption to be above the component.
+            placedAfterComponent = false;
+            if (caption.trim().equals("")) {
+                // This is required to ensure that the caption uses space in all
+                // browsers when it is set to the empty string. If there is an
+                // icon, error indicator or required indicator they will ensure
+                // that space is reserved.
+                if (!hasIcon && !showError) {
+                    captionText.setInnerHTML("&nbsp;");
+                }
+            } else {
+                DOM.setInnerText(captionText, caption);
+            }
+
+        } else if (captionText != null) {
+            // Remove existing
+            DOM.removeChild(getElement(), captionText);
+            captionText = null;
+        }
+
+        if (showError) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = DOM.createDiv();
+                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
+                DOM.setElementProperty(errorIndicatorElement, "className",
+                        "v-errorindicator");
+
+                DOM.insertChild(getElement(), errorIndicatorElement,
+                        getInsertPosition(InsertPosition.ERROR));
+            }
+        } else if (errorIndicatorElement != null) {
+            // Remove existing
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+
+        if (clearElement == null) {
+            clearElement = DOM.createDiv();
+            clearElement.setClassName(CLASSNAME_CLEAR);
+            getElement().appendChild(clearElement);
+        }
+
+        return (wasPlacedAfterComponent != placedAfterComponent);
     }
 
     @Override
@@ -272,17 +406,25 @@ public class VCaption extends HTML {
         }
     }
 
-    public static boolean isNeeded(UIDL uidl) {
-        if (uidl.getStringAttribute(ATTRIBUTE_CAPTION) != null) {
+    public static boolean isNeeded(UIDL uidl, ComponentState state) {
+        if (state != null) {
+            if (state.getCaption() != null) {
+                return true;
+            }
+        } else {
+            // TODO fallback for cases where the caption has no owner (Tabsheet,
+            // Accordion)
+            if (uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION) != null) {
+                return true;
+            }
+        }
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
             return true;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
             return true;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            return true;
-        }
-        if (uidl.hasAttribute(ATTRIBUTE_REQUIRED)) {
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
             return true;
         }
 

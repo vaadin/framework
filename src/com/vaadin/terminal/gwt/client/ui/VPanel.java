@@ -174,8 +174,10 @@ public class VPanel extends SimplePanel implements Container,
     }
 
     void setIconUri(UIDL uidl, ApplicationConnection client) {
-        final String iconUri = uidl.hasAttribute("icon") ? uidl
-                .getStringAttribute("icon") : null;
+        final String iconUri = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON) ? uidl
+                .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)
+                : null;
         if (iconUri == null) {
             if (icon != null) {
                 DOM.removeChild(captionNode, icon.getElement());

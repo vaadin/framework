@@ -61,7 +61,7 @@ public class OptionGroup extends AbstractSelect implements
             throws PaintException {
         super.paintItem(target, itemId);
         if (!isItemEnabled(itemId)) {
-            target.addAttribute("disabled", true);
+            target.addAttribute(VOptionGroup.ATTRIBUTE_OPTION_DISABLED, true);
         }
     }
 

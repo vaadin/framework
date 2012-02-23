@@ -70,20 +70,19 @@ public abstract class VAbstractSplitPanelPaintable extends
         getWidgetForPaintable().id = uidl.getId();
         getWidgetForPaintable().rendering = true;
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             getWidgetForPaintable().rendering = false;
             return;
         }
-        getWidgetForPaintable().setEnabled(
-                !uidl.getBooleanAttribute("disabled"));
+        getWidgetForPaintable().setEnabled(!getState().isDisabled());
 
         clickEventHandler.handleEventHandlerRegistration(client);
-        if (uidl.hasAttribute("style")) {
-            getWidgetForPaintable().componentStyleNames = uidl
-                    .getStringAttribute("style").split(" ");
+        if (getState().hasStyles()) {
+            getWidgetForPaintable().componentStyleNames = getState().getStyle()
+                    .split(" ");
         } else {
             getWidgetForPaintable().componentStyleNames = new String[0];
         }

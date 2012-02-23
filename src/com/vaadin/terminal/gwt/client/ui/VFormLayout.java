@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -54,22 +55,22 @@ public class VFormLayout extends SimplePanel implements Container {
     }
 
     /**
-     * Parses the stylenames from an uidl
+     * Parses the stylenames from shared state
      * 
-     * @param uidl
-     *            The uidl to get the stylenames from
+     * @param state
+     *            shared state of the component
      * @return An array of stylenames
      */
-    private String[] getStylesFromUIDL(UIDL uidl) {
+    private String[] getStylesFromState(ComponentState state) {
         List<String> styles = new ArrayList<String>();
-        if (uidl.hasAttribute("style")) {
-            String[] stylesnames = uidl.getStringAttribute("style").split(" ");
+        if (state.hasStyles()) {
+            String[] stylesnames = state.getStyle().split(" ");
             for (String name : stylesnames) {
                 styles.add(name);
             }
         }
 
-        if (uidl.hasAttribute("disabled")) {
+        if (state.isDisabled()) {
             styles.add(ApplicationConnection.DISABLED_CLASSNAME);
         }
 
@@ -234,7 +235,7 @@ public class VFormLayout extends SimplePanel implements Container {
             final Caption c = widgetToCaption.get(paintable
                     .getWidgetForPaintable());
             if (c != null) {
-                c.updateCaption(uidl);
+                c.updateCaption(uidl, paintable.getState());
             }
             final ErrorFlag e = widgetToError.get(paintable
                     .getWidgetForPaintable());
@@ -291,6 +292,7 @@ public class VFormLayout extends SimplePanel implements Container {
         table.replaceChildComponent(oldComponent, newComponent);
     }
 
+    // TODO why duplicated here?
     public class Caption extends HTML {
 
         public static final String CLASSNAME = "v-caption";
@@ -338,21 +340,22 @@ public class VFormLayout extends SimplePanel implements Container {
             setStyleName(styleName);
         }
 
-        public void updateCaption(UIDL uidl) {
+        public void updateCaption(UIDL uidl, ComponentState state) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
             // Update styles as they might have changed when the caption changed
-            setStyles(getStylesFromUIDL(uidl));
+            setStyles(getStylesFromState(state));
 
             boolean isEmpty = true;
 
-            if (uidl.hasAttribute("icon")) {
+            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
                 if (icon == null) {
                     icon = new Icon(client);
 
                     DOM.insertChild(getElement(), icon.getElement(), 0);
                 }
-                icon.setUri(uidl.getStringAttribute("icon"));
+                icon.setUri(uidl
+                        .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
                 isEmpty = false;
             } else {
                 if (icon != null) {
@@ -362,13 +365,13 @@ public class VFormLayout extends SimplePanel implements Container {
 
             }
 
-            if (uidl.hasAttribute("caption")) {
+            if (state.getCaption() != null) {
                 if (captionText == null) {
                     captionText = DOM.createSpan();
                     DOM.insertChild(getElement(), captionText, icon == null ? 0
                             : 1);
                 }
-                String c = uidl.getStringAttribute("caption");
+                String c = state.getCaption();
                 if (c == null) {
                     c = "";
                 } else {
@@ -379,15 +382,13 @@ public class VFormLayout extends SimplePanel implements Container {
                 // TODO should span also be removed
             }
 
-            if (uidl.hasAttribute("description")) {
-                if (captionText != null) {
-                    addStyleDependentName("hasdescription");
-                } else {
-                    removeStyleDependentName("hasdescription");
-                }
+            if (state.hasDescription() && captionText != null) {
+                addStyleDependentName("hasdescription");
+            } else {
+                removeStyleDependentName("hasdescription");
             }
 
-            if (uidl.getBooleanAttribute("required")) {
+            if (uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
                 if (requiredFieldIndicator == null) {
                     requiredFieldIndicator = DOM.createSpan();
                     DOM.setInnerText(requiredFieldIndicator, "*");
@@ -451,7 +452,7 @@ public class VFormLayout extends SimplePanel implements Container {
         public void updateFromUIDL(UIDL uidl, VPaintableWidget component) {
             owner = component;
             if (uidl.hasAttribute("error")
-                    && !uidl.getBooleanAttribute("hideErrors")) {
+                    && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS)) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");

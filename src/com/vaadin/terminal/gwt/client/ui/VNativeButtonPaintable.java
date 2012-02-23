@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 
@@ -27,9 +28,7 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().disableOnClick = uidl
-                .hasAttribute(VButton.ATTR_DISABLE_ON_CLICK);
-
+        getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
         getWidgetForPaintable().focusHandlerRegistration = EventHelper
                 .updateFocusHandler(this, client,
                         getWidgetForPaintable().focusHandlerRegistration);
@@ -42,7 +41,7 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(uidl.getStringAttribute("caption"));
+        getWidgetForPaintable().setText(getState().getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {
@@ -62,15 +61,15 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
             getWidgetForPaintable().errorIndicatorElement = null;
         }
 
-        if (uidl.hasAttribute("icon")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidgetForPaintable().icon == null) {
                 getWidgetForPaintable().icon = new Icon(client);
                 getWidgetForPaintable().getElement().insertBefore(
                         getWidgetForPaintable().icon.getElement(),
                         getWidgetForPaintable().captionElement);
             }
-            getWidgetForPaintable().icon
-                    .setUri(uidl.getStringAttribute("icon"));
+            getWidgetForPaintable().icon.setUri(uidl
+                    .getStringAttribute(ATTRIBUTE_ICON));
         } else {
             if (getWidgetForPaintable().icon != null) {
                 getWidgetForPaintable().getElement().removeChild(
@@ -89,5 +88,15 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
     @Override
     public VNativeButton getWidgetForPaintable() {
         return (VNativeButton) super.getWidgetForPaintable();
+    }
+
+    @Override
+    public ButtonState getState() {
+        return (ButtonState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return GWT.create(ButtonState.class);
     }
 }

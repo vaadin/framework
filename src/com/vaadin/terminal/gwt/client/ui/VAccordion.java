@@ -392,7 +392,7 @@ public class VAccordion extends VTabsheetBase implements
 
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
-            caption = new VCaption(null, client);
+            caption = new VCaption(client);
             caption.addClickHandler(this);
             super.add(caption, captionNode);
             DOM.appendChild(captionNode, caption.getElement());
@@ -490,7 +490,12 @@ public class VAccordion extends VTabsheetBase implements
         }
 
         public void updateCaption(UIDL uidl) {
-            caption.updateCaption(uidl);
+            // TODO need to call this because the caption does not have an owner
+            caption.updateCaptionWithoutOwner(
+                    uidl,
+                    uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
         }
 
         public int getWidgetWidth() {

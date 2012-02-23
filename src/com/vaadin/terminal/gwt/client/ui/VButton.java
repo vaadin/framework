@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -25,6 +26,8 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 
 public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
         BlurHandler {
@@ -32,7 +35,26 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
 
-    public static final String ATTR_DISABLE_ON_CLICK = "dc";
+    /**
+     * RPC interface for calls from client to server.
+     * 
+     * @since 7.0
+     */
+    public interface ButtonClientToServerRpc extends ClientToServerRpc {
+        /**
+         * Button click event.
+         * 
+         * @param mouseEventDetails
+         *            serialized mouse event details
+         */
+        public void click(String mouseEventDetails);
+
+        /**
+         * Indicate to the server that the client has disabled the button as a
+         * result of a click.
+         */
+        public void disableOnClick();
+    }
 
     // mouse movement is checked before synthesizing click event on mouseout
     protected static int MOVE_THRESHOLD = 3;
@@ -89,6 +111,7 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
     protected HandlerRegistration blurHandlerRegistration;
 
     protected int clickShortcut = 0;
+    private ButtonClientToServerRpc buttonRpcProxy;
 
     public VButton() {
         super(DOM.createDiv());
@@ -300,18 +323,24 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
         }
         if (disableOnClick) {
             setEnabled(false);
-            client.updateVariable(paintableId, "disabledOnClick", true, false);
+            getButtonRpcProxy().disableOnClick();
         }
-
-        client.updateVariable(paintableId, "state", true, false);
 
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        client.updateVariable(paintableId, "mousedetails", details.serialize(),
-                true);
+        getButtonRpcProxy().click(details.serialize());
 
         clickPending = false;
+    }
+
+    protected ButtonClientToServerRpc getButtonRpcProxy() {
+        if (null == buttonRpcProxy) {
+            buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
+            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(
+                    paintableId, client);
+        }
+        return buttonRpcProxy;
     }
 
     /*

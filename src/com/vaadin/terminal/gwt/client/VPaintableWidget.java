@@ -16,6 +16,13 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface VPaintableWidget extends VPaintable {
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.VPaintable#getState()
+     */
+    public ComponentState getState();
+
     /**
      * TODO: Rename to getWidget
      */

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -64,6 +65,10 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final Stack<JsonTag> openJsonTags;
 
+    // these match each other element-wise
+    private final Stack<Paintable> openPaintables;
+    private final Stack<String> openPaintableTags;
+
     private final PrintWriter uidlBuffer;
 
     private boolean closed = false;
@@ -86,12 +91,13 @@ public class JsonPaintTarget implements PaintTarget {
 
     private Collection<Paintable> identifiersCreatedDueRefPaint;
 
+    private Collection<Paintable> deferredPaintables;
+
     private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
-     * Creates a new XMLPrintWriter, without automatic line flushing.
+     * Creates a new JsonPaintTarget.
      * 
-     * @param variableMap
      * @param manager
      * @param outWriter
      *            A character-output stream.
@@ -113,6 +119,12 @@ public class JsonPaintTarget implements PaintTarget {
         // Initialize tag-writing
         mOpenTags = new Stack<String>();
         openJsonTags = new Stack<JsonTag>();
+
+        openPaintables = new Stack<Paintable>();
+        openPaintableTags = new Stack<String>();
+
+        deferredPaintables = new ArrayList<Paintable>();
+
         cacheEnabled = cachingRequired;
     }
 
@@ -670,31 +682,59 @@ public class JsonPaintTarget implements PaintTarget {
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.PaintTarget#startTag(com.vaadin.terminal
+     * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
-    public boolean startTag(Paintable paintable, String tagName)
+    public PaintStatus startPaintable(Paintable paintable, String tagName)
             throws PaintException {
         startTag(tagName, true);
         final boolean isPreviouslyPainted = manager.hasPaintableId(paintable)
                 && (identifiersCreatedDueRefPaint == null || !identifiersCreatedDueRefPaint
-                        .contains(paintable));
+                        .contains(paintable))
+                && !deferredPaintables.contains(paintable);
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
-        paintedComponents.add(paintable);
 
-        if (paintable instanceof CustomLayout) {
-            customLayoutArgumentsOpen = true;
+        // queue for painting later if already painting a paintable
+        boolean topLevelPaintableTag = openPaintables.isEmpty();
+
+        openPaintables.push(paintable);
+        openPaintableTags.push(tagName);
+
+        if (cacheEnabled && isPreviouslyPainted) {
+            // cached (unmodified) paintable, paint the it now
+            paintedComponents.add(paintable);
+            deferredPaintables.remove(paintable);
+            return PaintStatus.CACHED;
+        } else if (!topLevelPaintableTag) {
+            // notify manager: add to paint queue instead of painting now
+            manager.queuePaintable(paintable);
+            deferredPaintables.add(paintable);
+            return PaintStatus.DEFER;
+        } else {
+            // not a nested paintable, paint the it now
+            paintedComponents.add(paintable);
+            deferredPaintables.remove(paintable);
+
+            if (paintable instanceof CustomLayout) {
+                customLayoutArgumentsOpen = true;
+            }
+            return PaintStatus.PAINTING;
         }
-
-        return cacheEnabled && isPreviouslyPainted;
     }
 
-    @Deprecated
-    public void paintReference(Paintable paintable, String referenceName)
-            throws PaintException {
-        addAttribute(referenceName, paintable);
+    public void endPaintable(Paintable paintable) throws PaintException {
+        Paintable openPaintable = openPaintables.peek();
+        if (paintable != openPaintable) {
+            throw new PaintException("Invalid UIDL: closing wrong paintable: '"
+                    + getPaintIdentifier(paintable) + "' expected: '"
+                    + getPaintIdentifier(openPaintable) + "'.");
+        }
+        // remove paintable from the stack
+        openPaintables.pop();
+        String openTag = openPaintableTags.pop();
+        endTag(openTag);
     }
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {

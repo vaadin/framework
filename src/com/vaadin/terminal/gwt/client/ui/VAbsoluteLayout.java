@@ -195,7 +195,8 @@ public class VAbsoluteLayout extends ComplexPanel implements Container {
 
         public void updateCaption(UIDL uidl) {
 
-            boolean captionIsNeeded = VCaption.isNeeded(uidl);
+            boolean captionIsNeeded = VCaption.isNeeded(uidl,
+                    paintable.getState());
             if (captionIsNeeded) {
                 if (caption == null) {
                     caption = new VCaption(paintable, client);

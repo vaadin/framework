@@ -11,6 +11,7 @@ import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.SystemError;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
  * <p>
@@ -330,6 +331,11 @@ public interface Buffered extends Serializable {
 
             target.endTag("error");
 
+        }
+
+        public SharedState getState() {
+            // TODO implement: move relevant parts from paint() to getState()
+            return null;
         }
 
         /* Documented in super interface */

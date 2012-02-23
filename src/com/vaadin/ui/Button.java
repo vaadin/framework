@@ -4,7 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -19,11 +18,12 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VButton;
+import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VButtonPaintable;
+import com.vaadin.terminal.gwt.client.ui.ButtonState;
+import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Component.Focusable;
@@ -40,16 +40,24 @@ import com.vaadin.ui.Component.Focusable;
 @ClientWidget(value = VButtonPaintable.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
-        Action.ShortcutNotifier {
-
-    /* Private members */
-
-    boolean disableOnClick = false;
+        Action.ShortcutNotifier, RpcTarget {
 
     /**
      * Creates a new push button.
      */
     public Button() {
+        // TODO take the implementation out of an anonymous class?
+        registerRpcImplementation(new ButtonClientToServerRpc() {
+            public void click(String mouseEventDetails) {
+                fireClick(MouseEventDetails.deSerialize(mouseEventDetails));
+            }
+
+            public void disableOnClick() {
+                // Could be optimized so the button is not repainted because of
+                // this (client side has already disabled the button)
+                setEnabled(false);
+            }
+        }, ButtonClientToServerRpc.class);
     }
 
     /**
@@ -77,28 +85,6 @@ public class Button extends AbstractComponent implements
     }
 
     /**
-     * Paints the content of this component.
-     * 
-     * @param event
-     *            the PaintEvent.
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        if (isDisableOnClick()) {
-            target.addAttribute(VButton.ATTR_DISABLE_ON_CLICK, true);
-        }
-        if (clickShortcut != null) {
-            target.addAttribute("keycode", clickShortcut.getKeyCode());
-        }
-    }
-
-    /**
      * Invoked when the value of a variable has changed. Button listeners are
      * notified if the button is clicked.
      * 
@@ -108,24 +94,6 @@ public class Button extends AbstractComponent implements
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
-
-        if (variables.containsKey("disabledOnClick")) {
-            // Could be optimized so the button is not repainted because of this
-            // (client side has already disabled the button)
-            setEnabled(false);
-        }
-
-        if (!isReadOnly() && variables.containsKey("state")) {
-            // Send click events when the button is pushed
-            if (variables.containsKey("mousedetails")) {
-                fireClick(MouseEventDetails.deSerialize((String) variables
-                        .get("mousedetails")));
-            } else {
-                // for compatibility with custom implementations which
-                // don't send mouse details
-                fireClick();
-            }
-        }
 
         if (variables.containsKey(FocusEvent.EVENT_ID)) {
             fireEvent(new FocusEvent(this));
@@ -410,6 +378,7 @@ public class Button extends AbstractComponent implements
         }
         clickShortcut = new ClickShortcut(this, keyCode, modifiers);
         addShortcutListener(clickShortcut);
+        getState().setClickShortcutKeyCode(clickShortcut.getKeyCode());
     }
 
     /**
@@ -420,6 +389,7 @@ public class Button extends AbstractComponent implements
         if (clickShortcut != null) {
             removeShortcutListener(clickShortcut);
             clickShortcut = null;
+            getState().setClickShortcutKeyCode(0);
         }
     }
 
@@ -489,7 +459,7 @@ public class Button extends AbstractComponent implements
      * @return true if the button is disabled when clicked, false otherwise
      */
     public boolean isDisableOnClick() {
-        return disableOnClick;
+        return getState().isDisableOnClick();
     }
 
     /**
@@ -501,7 +471,7 @@ public class Button extends AbstractComponent implements
      *            true to disable button when it is clicked, false otherwise
      */
     public void setDisableOnClick(boolean disableOnClick) {
-        this.disableOnClick = disableOnClick;
+        getState().setDisableOnClick(disableOnClick);
         requestRepaint();
     }
 
@@ -518,5 +488,15 @@ public class Button extends AbstractComponent implements
     public void focus() {
         // Overridden only to make public
         super.focus();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return new ButtonState();
+    }
+
+    @Override
+    public ButtonState getState() {
+        return (ButtonState) super.getState();
     }
 }

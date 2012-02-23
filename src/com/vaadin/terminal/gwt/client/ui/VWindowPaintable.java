@@ -75,9 +75,10 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
-            getWidgetForPaintable().setCaption(
-                    uidl.getStringAttribute("caption"),
-                    uidl.getStringAttribute("icon"));
+            getWidgetForPaintable()
+                    .setCaption(
+                            getState().getCaption(),
+                            uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
         }
 
         getWidgetForPaintable().visibilityChangesDisabled = true;
@@ -89,10 +90,9 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().setClosable(
-                !uidl.getBooleanAttribute("readonly"));
+        getWidgetForPaintable().setClosable(!getState().isReadOnly());
 
         // Initialize the position form UIDL
         int positionx = uidl.getIntVariable("positionx");
@@ -151,8 +151,8 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             getWidgetForPaintable().layout = lo;
         }
 
-        getWidgetForPaintable().dynamicWidth = !uidl.hasAttribute("width");
-        getWidgetForPaintable().dynamicHeight = !uidl.hasAttribute("height");
+        getWidgetForPaintable().dynamicWidth = getState().isUndefinedWidth();
+        getWidgetForPaintable().dynamicHeight = getState().isUndefinedHeight();
 
         getWidgetForPaintable().layoutRelativeWidth = uidl
                 .hasAttribute("layoutRelativeWidth");

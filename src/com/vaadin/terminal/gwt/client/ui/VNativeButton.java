@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -21,6 +22,8 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 
 public class VNativeButton extends Button implements ClickHandler,
         FocusHandler, BlurHandler {
@@ -32,6 +35,8 @@ public class VNativeButton extends Button implements ClickHandler,
     protected String paintableId;
 
     protected ApplicationConnection client;
+
+    private ButtonClientToServerRpc buttonRpcProxy;
 
     protected Element errorIndicatorElement;
 
@@ -116,17 +121,24 @@ public class VNativeButton extends Button implements ClickHandler,
         }
         if (disableOnClick) {
             setEnabled(false);
-            client.updateVariable(paintableId, "disabledOnClick", true, false);
+            getButtonRpcProxy().disableOnClick();
         }
 
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        client.updateVariable(paintableId, "mousedetails", details.serialize(),
-                false);
+        getButtonRpcProxy().click(details.serialize());
 
-        client.updateVariable(paintableId, "state", true, true);
         clickPending = false;
+    }
+
+    protected ButtonClientToServerRpc getButtonRpcProxy() {
+        if (null == buttonRpcProxy) {
+            buttonRpcProxy = GWT.create(ButtonClientToServerRpc.class);
+            ((InitializableClientToServerRpc) buttonRpcProxy).initRpc(
+                    paintableId, client);
+        }
+        return buttonRpcProxy;
     }
 
     public void onFocus(FocusEvent arg0) {

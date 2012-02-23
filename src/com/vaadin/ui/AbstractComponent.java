@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,9 +27,15 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
+import com.vaadin.terminal.gwt.server.RpcManager;
+import com.vaadin.terminal.gwt.server.RpcTarget;
+import com.vaadin.terminal.gwt.server.ServerRpcManager;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -152,6 +159,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * handling/notifying is delegated, usually to the containing window.
      */
     private ActionManager actionManager;
+
+    /**
+     * A map from RPC interface class to the RPC call manager that handles
+     * incoming RPC calls for that interface.
+     */
+    private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
+
+    /**
+     * Shared state object to be communicated from the server to the client when
+     * modified.
+     */
+    private ComponentState sharedState;
 
     /* Constructor */
 
@@ -736,45 +755,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paint(PaintTarget target) throws PaintException {
         final String tag = target.getTag(this);
-        if (!target.startTag(this, tag) || repaintRequestListenersNotified) {
-
+        final PaintStatus status = target.startPaintable(this, tag);
+        if (PaintStatus.DEFER == status) {
+            // nothing to do but flag as deferred and close the paintable tag
+            // paint() will be called again later to paint the contents
+            target.addAttribute("deferred", true);
+        } else if (PaintStatus.CACHED == status
+                && !repaintRequestListenersNotified) {
+            // Contents have not changed, only cached presentation can be used
+            target.addAttribute("cached", true);
+        } else {
             // Paint the contents of the component
 
             // Only paint content of visible components.
             if (isVisible()) {
-                if (getHeight() >= 0
-                        && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                                .parentCanDefineHeight(this))) {
-                    target.addAttribute("height", "" + getCSSHeight());
-                }
+                // width and height are only in shared state
 
-                if (getWidth() >= 0
-                        && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
-                                .parentCanDefineWidth(this))) {
-                    target.addAttribute("width", "" + getCSSWidth());
-                }
-                if (styles != null && styles.size() > 0) {
-                    target.addAttribute("style", getStyle());
-                }
-                if (isReadOnly()) {
-                    target.addAttribute("readonly", true);
-                }
-
-                if (isImmediate()) {
-                    target.addAttribute("immediate", true);
-                }
-                if (!isEnabled()) {
-                    target.addAttribute("disabled", true);
-                }
-                if (getCaption() != null) {
-                    target.addAttribute("caption", getCaption());
-                }
+                // TODO probably can remove also icon once all the VCaption
+                // related code has been updated
                 if (getIcon() != null) {
-                    target.addAttribute("icon", getIcon());
-                }
-
-                if (getDescription() != null && getDescription().length() > 0) {
-                    target.addAttribute("description", getDescription());
+                    target.addAttribute(
+                            VAbstractPaintableWidget.ATTRIBUTE_ICON, getIcon());
                 }
 
                 if (eventIdentifiers != null) {
@@ -791,12 +792,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             } else {
                 target.addAttribute("invisible", true);
             }
-        } else {
-
-            // Contents have not changed, only cached presentation can be used
-            target.addAttribute("cached", true);
         }
-        target.endTag(tag);
+        target.endPaintable(this);
 
         repaintRequestListenersNotified = false;
     }
@@ -841,6 +838,74 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
+    }
+
+    /**
+     * Returns the shared state bean with information to be sent from the server
+     * to the client.
+     * 
+     * Subclasses should override this method and set any relevant fields of the
+     * state returned by super.getState().
+     * 
+     * @since 7.0
+     * 
+     * @return updated component shared state
+     */
+    public ComponentState getState() {
+        if (null == sharedState) {
+            sharedState = createState();
+        }
+        // basic state: caption, size, enabled, ...
+
+        if (!isVisible()) {
+            return null;
+        }
+
+        // TODO for now, this superclass always recreates the state from
+        // scratch, whereas subclasses should only modify it
+
+        if (getHeight() >= 0
+                && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
+                        .parentCanDefineHeight(this))) {
+            sharedState.setHeight("" + getCSSHeight());
+        }
+
+        if (getWidth() >= 0
+                && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
+                        .parentCanDefineWidth(this))) {
+            sharedState.setWidth("" + getCSSWidth());
+        }
+
+        sharedState.setImmediate(isImmediate());
+        sharedState.setReadOnly(isReadOnly());
+        sharedState.setDisabled(!isEnabled());
+
+        sharedState.setStyle(getStyleName());
+
+        sharedState.setCaption(getCaption());
+        sharedState.setDescription(getDescription());
+
+        // TODO icon also in shared state - how to convert Resource?
+
+        return sharedState;
+    }
+
+    /**
+     * Creates the shared state bean to be used in server to client
+     * communication.
+     * 
+     * Subclasses should implement this method and return a new instance of the
+     * correct state class.
+     * 
+     * All configuration of the values of the state should be performed in
+     * {@link #getState()}, not in {@link #createState()}.
+     * 
+     * @since 7.0
+     * 
+     * @return new shared state object
+     */
+    protected ComponentState createState() {
+        return new ComponentState();
     }
 
     /* Documentation copied from interface */
@@ -1534,6 +1599,35 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
+    }
+
+    /**
+     * Registers an RPC interface implementation for this component.
+     * 
+     * A component can listen to multiple RPC interfaces, and subclasses can
+     * register additional implementations.
+     * 
+     * @since 7.0
+     * 
+     * @param implementation
+     *            RPC interface implementation
+     * @param rpcInterfaceType
+     *            RPC interface class for which the implementation should be
+     *            registered
+     */
+    protected <T> void registerRpcImplementation(T implementation,
+            Class<T> rpcInterfaceType) {
+        if (this instanceof RpcTarget) {
+            rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
+                    (RpcTarget) this, implementation, rpcInterfaceType));
+        } else {
+            throw new RuntimeException(
+                    "Cannot register an RPC implementation for a component that is not an RpcTarget");
+        }
+    }
+
+    public RpcManager getRpcManager(Class<?> rpcInterface) {
+        return rpcManagerMap.get(rpcInterface);
     }
 
 }

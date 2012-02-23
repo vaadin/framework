@@ -37,7 +37,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().openRootOnHover = uidl
                 .getBooleanAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER);
 
-        getWidgetForPaintable().enabled = !uidl.getBooleanAttribute("disabled");
+        getWidgetForPaintable().enabled = !getState().isDisabled();
 
         // For future connections
         getWidgetForPaintable().client = client;
@@ -50,7 +50,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
 
         UIDL options = uidl.getChildUIDL(0);
 
-        if (uidl.hasAttribute("width")) {
+        if (null != getState() && !getState().isUndefinedWidth()) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
 
@@ -120,9 +120,11 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
                 currentMenu = new VMenuBar(true, currentMenu);
-                if (uidl.hasAttribute("style")) {
-                    for (String style : uidl.getStringAttribute("style").split(
-                            " ")) {
+                // this is the top-level style that also propagates to items -
+                // any item specific styles are set above in
+                // currentItem.updateFromUIDL(item, client)
+                if (getState().hasStyles()) {
+                    for (String style : getState().getStyle().split(" ")) {
                         currentMenu.addStyleDependentName(style);
                     }
                 }

@@ -208,7 +208,7 @@ public class VCssLayout extends SimplePanel implements Container {
         public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
             Widget widget = paintable.getWidgetForPaintable();
             VCaption caption = widgetToCaption.get(widget);
-            if (VCaption.isNeeded(uidl)) {
+            if (VCaption.isNeeded(uidl, paintable.getState())) {
                 if (caption == null) {
                     caption = new VCaption(paintable, client);
                     widgetToCaption.put(widget, caption);

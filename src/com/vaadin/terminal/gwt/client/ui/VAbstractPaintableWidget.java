@@ -3,21 +3,33 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
-    public static final String ATTRIBUTE_DESCRIPTION = "description";
+    // Generic UIDL parameter names, to be moved to shared state.
+    // Attributes are here mainly if they apply to all paintable widgets or
+    // affect captions - otherwise, they are in the relevant subclasses.
+    // For e.g. item or context specific attributes, subclasses may use separate
+    // constants, which may refer to these.
+    // Not all references to the string literals have been converted to use
+    // these!
+    public static final String ATTRIBUTE_ICON = "icon";
+    public static final String ATTRIBUTE_REQUIRED = "required";
     public static final String ATTRIBUTE_ERROR = "error";
+    public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private Widget widget;
     private ApplicationConnection connection;
@@ -26,6 +38,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     /* State variables */
     private boolean enabled = true;
     private boolean visible = true;
+
+    // shared state from the server to the client
+    private ComponentState state;
 
     /**
      * Default constructor
@@ -89,6 +104,40 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         this.id = id;
     }
 
+    /**
+     * Returns the shared state object for a paintable widget.
+     * 
+     * A new state instance is created using {@link #createState()} if none has
+     * been set by the server.
+     * 
+     * If overriding this method to return a more specific type, also
+     * {@link #createState()} must be overridden.
+     * 
+     * @return current shared state (not null)
+     */
+    public ComponentState getState() {
+        if (state == null) {
+            state = createState();
+        }
+
+        return state;
+    }
+
+    /**
+     * Creates a new instance of a shared state object for the widget. Normally,
+     * the state instance is created by the server and sent to the client before
+     * being used - this method is used if no shared state has been sent by the
+     * server.
+     * 
+     * When overriding {@link #getState()}, also {@link #createState()} should
+     * be overridden to match it.
+     * 
+     * @return newly created component shared state instance
+     */
+    protected ComponentState createState() {
+        return GWT.create(ComponentState.class);
+    }
+
     public VPaintableWidgetContainer getParent() {
         // FIXME: Hierarchy should be set by framework instead of looked up here
         VPaintableMap paintableMap = VPaintableMap.get(getConnection());
@@ -106,7 +155,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     }
 
     protected static boolean isRealUpdate(UIDL uidl) {
-        return !isCachedUpdate(uidl) && !uidl.getBooleanAttribute("invisible");
+        return !isCachedUpdate(uidl) && !uidl.getBooleanAttribute("invisible")
+                && !uidl.hasAttribute("deferred");
     }
 
     protected static boolean isCachedUpdate(UIDL uidl) {
@@ -138,6 +188,10 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             return;
         }
 
+        if (!isRealUpdate(uidl)) {
+            return;
+        }
+
         /*
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
@@ -147,19 +201,18 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             ((Focusable) getWidgetForPaintable()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
-        setEnabled(!uidl.getBooleanAttribute("disabled"));
+        setEnabled(!getState().isDisabled());
 
         // Style names
         String styleName = getStyleNameFromUIDL(getWidgetForPaintable()
-                .getStylePrimaryName(), uidl,
+                .getStylePrimaryName(), uidl, getState(),
                 getWidgetForPaintable() instanceof Field);
         getWidgetForPaintable().setStyleName(styleName);
 
         // Update tooltip
         TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-            tooltipInfo
-                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
+        if (getState().hasDescription()) {
+            tooltipInfo.setTitle(getState().getDescription());
         } else {
             tooltipInfo.setTitle(null);
         }
@@ -180,7 +233,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
          * taken into account
          */
 
-        getConnection().updateComponentSize(this, uidl);
+        getConnection().updateComponentSize(this);
     }
 
     /**
@@ -248,18 +301,20 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     /**
      * Generates the style name for the widget based on the given primary style
-     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL.
-     * An additional "modified" style name can be added if the field parameter
-     * is set to true.
+     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL
+     * and shared state of the component. An additional "modified" style name
+     * can be added if the field parameter is set to true.
      * 
      * @param primaryStyleName
      * @param uidl
-     * @param isField
+     * @param state
+     *            component shared state
+     * @param field
      * @return
      */
     protected static String getStyleNameFromUIDL(String primaryStyleName,
-            UIDL uidl, boolean field) {
-        boolean enabled = !uidl.getBooleanAttribute("disabled");
+            UIDL uidl, ComponentState state, boolean field) {
+        boolean enabled = !state.isDisabled();
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
@@ -269,15 +324,15 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             styleBuf.append(" ");
             styleBuf.append(ApplicationConnection.DISABLED_CLASSNAME);
         }
-        if (uidl.getBooleanAttribute("readonly")) {
+        if (state.isReadOnly()) {
             styleBuf.append(" ");
             styleBuf.append("v-readonly");
         }
 
         // add additional styles as css classes, prefixed with component default
         // stylename
-        if (uidl.hasAttribute("style")) {
-            final String[] styles = uidl.getStringAttribute("style").split(" ");
+        if (state.hasStyles()) {
+            final String[] styles = state.getStyle().split(" ");
             for (int i = 0; i < styles.length; i++) {
                 styleBuf.append(" ");
                 styleBuf.append(primaryStyleName);
@@ -301,7 +356,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);
         }
         // add required style to required components
-        if (uidl.hasAttribute("required")) {
+        if (uidl.hasAttribute(ATTRIBUTE_REQUIRED)) {
             styleBuf.append(" ");
             styleBuf.append(primaryStyleName);
             styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
@@ -310,4 +365,14 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return styleBuf.toString();
     }
 
+    /**
+     * Sets the shared state for the paintable widget.
+     * 
+     * @param new shared state (must be compatible with the return value of
+     *        {@link #getState()} - {@link ComponentState} if
+     *        {@link #getState()} is not overridden
+     */
+    public final void setState(SharedState state) {
+        this.state = (ComponentState) state;
+    }
 }

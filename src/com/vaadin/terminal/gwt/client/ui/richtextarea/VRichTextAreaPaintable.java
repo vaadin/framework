@@ -31,8 +31,7 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
             }
         }
         if (isRealUpdate(uidl)) {
-            getWidgetForPaintable().setEnabled(
-                    !uidl.getBooleanAttribute("disabled"));
+            getWidgetForPaintable().setEnabled(!getState().isDisabled());
         }
 
         super.updateFromUIDL(uidl, client);
@@ -40,10 +39,8 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
             return;
         }
 
-        getWidgetForPaintable().setReadOnly(
-                uidl.getBooleanAttribute("readonly"));
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
+        getWidgetForPaintable().setReadOnly(getState().isReadOnly());
+        getWidgetForPaintable().immediate = getState().isImmediate();
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {

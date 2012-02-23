@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
@@ -928,26 +929,24 @@ public class VGridLayout extends SimplePanel implements Container {
                 }
             }
             childUidl = c;
-            updateRelSizeStatus(c);
+            if (null != c) {
+                VPaintableWidget paintable = client.getPaintable(c);
+                updateRelSizeStatus(paintable.getState(),
+                        c.getBooleanAttribute("cached"));
+            }
         }
 
-        protected void updateRelSizeStatus(UIDL uidl) {
-            if (uidl != null && !uidl.getBooleanAttribute("cached")) {
-                if (uidl.hasAttribute("height")
-                        && uidl.getStringAttribute("height").contains("%")) {
-                    relHeight = true;
+        protected void updateRelSizeStatus(ComponentState state, boolean cached) {
+            if (state != null && !cached) {
+                boolean widthDefined = !state.isUndefinedWidth();
+                boolean heightDefined = !state.isUndefinedHeight();
+
+                relHeight = state.getHeight().contains("%");
+                relWidth = state.getWidth().contains("%");
+                if (widthDefined) {
+                    widthCanAffectHeight = (relWidth && !heightDefined);
                 } else {
-                    relHeight = false;
-                }
-                if (uidl.hasAttribute("width")) {
-                    widthCanAffectHeight = relWidth = uidl.getStringAttribute(
-                            "width").contains("%");
-                    if (uidl.hasAttribute("height")) {
-                        widthCanAffectHeight = false;
-                    }
-                } else {
-                    widthCanAffectHeight = !uidl.hasAttribute("height");
-                    relWidth = false;
+                    widthCanAffectHeight = !heightDefined;
                 }
             }
         }

@@ -53,9 +53,8 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
             // showPopupOnTop(popup, hostReference);
             getWidgetForPaintable().preparePopup(getWidgetForPaintable().popup);
             getWidgetForPaintable().popup.updateFromUIDL(popupUIDL, client);
-            if (uidl.hasAttribute("style")) {
-                final String[] styles = uidl.getStringAttribute("style").split(
-                        " ");
+            if (getState().hasStyles()) {
+                final String[] styles = getState().getStyle().split(" ");
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidgetForPaintable().popup
                         .getStylePrimaryName();
@@ -81,7 +80,7 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
     }// updateFromUIDL
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        if (VCaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl, component.getState())) {
             if (getWidgetForPaintable().popup.captionWrapper != null) {
                 getWidgetForPaintable().popup.captionWrapper
                         .updateCaption(uidl);

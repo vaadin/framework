@@ -211,6 +211,7 @@ public class VPaintableMap {
     void purgeUnregistryBag(boolean unregisterPaintables) {
         if (unregisterPaintables) {
             for (String pid : unregistryBag) {
+                // TODO purge shared state for pid
                 VPaintable paintable = getPaintable(pid);
                 if (paintable == null) {
                     /*

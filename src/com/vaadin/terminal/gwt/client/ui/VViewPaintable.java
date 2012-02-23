@@ -41,7 +41,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         boolean firstPaint = getWidgetForPaintable().connection == null;
         getWidgetForPaintable().connection = client;
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = getState().isImmediate();
         getWidgetForPaintable().resizeLazy = uidl
                 .hasAttribute(VView.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
@@ -53,19 +53,17 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         } else {
             getWidgetForPaintable().theme = newTheme;
         }
-        if (uidl.hasAttribute("style")) {
-            getWidgetForPaintable().setStyleName(
-                    getWidgetForPaintable().getStylePrimaryName() + " "
-                            + uidl.getStringAttribute("style"));
-        }
+        // this also implicitly removes old styles
+        getWidgetForPaintable().setStyleName(
+                getWidgetForPaintable().getStylePrimaryName() + " "
+                        + getState().getStyle());
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (!getWidgetForPaintable().isEmbedded()
-                && uidl.hasAttribute("caption")) {
+                && getState().getCaption() != null) {
             // only change window title if we're in charge of the whole page
-            com.google.gwt.user.client.Window.setTitle(uidl
-                    .getStringAttribute("caption"));
+            com.google.gwt.user.client.Window.setTitle(getState().getCaption());
         }
 
         // Process children

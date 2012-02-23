@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +44,7 @@ import java.util.logging.Logger;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.CombinedRequest;
@@ -62,6 +62,8 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -78,16 +80,16 @@ import com.vaadin.ui.Root;
  * A server side component sends its state to the client in a paint request (see
  * {@link Paintable} and {@link PaintTarget} on the server side). The client
  * widget receives these paint requests as calls to
- * {@link com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL()}. The client
- * component communicates back to the server by sending a list of variable
- * changes (see {@link ApplicationConnection#updateVariable()} and
+ * {@link com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL()}. The
+ * client component communicates back to the server by sending a list of
+ * variable changes (see {@link ApplicationConnection#updateVariable()} and
  * {@link VariableOwner#changeVariables(Object, Map)}).
  * 
  * TODO Document better!
  */
 @SuppressWarnings("serial")
 public abstract class AbstractCommunicationManager implements
-        Paintable.RepaintRequestListener, Serializable {
+        Paintable.RepaintRequestListener, PaintableIdMapper, Serializable {
 
     private static final String DASHDASH = "--";
 
@@ -123,29 +125,10 @@ public abstract class AbstractCommunicationManager implements
     private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
     /* Variable records indexes */
-    private static final int VAR_PID = 1;
-    private static final int VAR_NAME = 2;
-    private static final int VAR_TYPE = 3;
-    private static final int VAR_VALUE = 0;
-
-    private static final char VTYPE_PAINTABLE = 'p';
-    private static final char VTYPE_BOOLEAN = 'b';
-    private static final char VTYPE_DOUBLE = 'd';
-    private static final char VTYPE_FLOAT = 'f';
-    private static final char VTYPE_LONG = 'l';
-    private static final char VTYPE_INTEGER = 'i';
-    private static final char VTYPE_STRING = 's';
-    private static final char VTYPE_ARRAY = 'a';
-    private static final char VTYPE_STRINGARRAY = 'c';
-    private static final char VTYPE_MAP = 'm';
-
-    private static final char VAR_RECORD_SEPARATOR = '\u001e';
-
-    private static final char VAR_FIELD_SEPARATOR = '\u001f';
+    private static final int VAR_PID = 0;
+    private static final int VAR_METHOD = 1;
 
     public static final char VAR_BURST_SEPARATOR = '\u001d';
-
-    public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
@@ -158,7 +141,13 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
+    // cannot combine with paint queue:
+    // this can contain dirty components from any Root
     private final ArrayList<Paintable> dirtyPaintables = new ArrayList<Paintable>();
+
+    // queue used during painting to keep track of what still needs to be
+    // painted within the Root being painted
+    private LinkedList<Paintable> paintQueue = new LinkedList<Paintable>();
 
     private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
 
@@ -756,24 +745,17 @@ public abstract class AbstractCommunicationManager implements
         return seckey;
     }
 
+    // for internal use by JsonPaintTarget
+    public void queuePaintable(Paintable paintable) {
+        if (!paintQueue.contains(paintable)) {
+            paintQueue.add(paintable);
+        }
+    }
+
     public void writeUidlResponce(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
-        outWriter.print("\"changes\":[");
-
         ArrayList<Paintable> paintables = null;
-
-        List<InvalidLayout> invalidComponentRelativeSizes = null;
-
-        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                !repaintAll);
-        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
-                .valueOf(root.getRootId()));
-        if (windowCache == null) {
-            windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
-                    windowCache);
-        }
 
         // Paints components
         if (repaintAll) {
@@ -790,7 +772,7 @@ public abstract class AbstractCommunicationManager implements
             /*
              * TODO figure out if we could move this beyond the painting phase,
              * "respond as fast as possible, then do the cleanup". Beware of
-             * painting the dirty detatched components.
+             * painting the dirty detached components.
              */
             for (Iterator<Paintable> it = paintableIdMap.keySet().iterator(); it
                     .hasNext();) {
@@ -808,10 +790,11 @@ public abstract class AbstractCommunicationManager implements
                     dirtyPaintables.remove(p);
                 }
             }
+            // TODO second list/stack for those whose state needs to be sent?
             paintables = getDirtyVisibleComponents(root);
         }
-        if (paintables != null) {
 
+        if (paintables != null) {
             // We need to avoid painting children before parent.
             // This is ensured by ordering list by depth in component
             // tree
@@ -838,10 +821,34 @@ public abstract class AbstractCommunicationManager implements
                     return 0;
                 }
             });
+        }
 
-            for (final Iterator<Paintable> i = paintables.iterator(); i
-                    .hasNext();) {
-                final Paintable p = i.next();
+        outWriter.print("\"changes\":[");
+
+        List<InvalidLayout> invalidComponentRelativeSizes = null;
+
+        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                !repaintAll);
+        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
+                .valueOf(root.getRootId()));
+        if (windowCache == null) {
+            windowCache = new OpenWindowCache();
+            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
+                    windowCache);
+        }
+
+        LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
+
+        if (paintables != null) {
+
+            // clear and rebuild paint queue
+            paintQueue.clear();
+            paintQueue.addAll(paintables);
+
+            while (!paintQueue.isEmpty()) {
+                final Paintable p = paintQueue.pop();
+                // for now, all painted components may need a state refresh
+                stateQueue.push(p);
 
                 // // TODO CLEAN
                 // if (p instanceof Root) {
@@ -850,22 +857,18 @@ public abstract class AbstractCommunicationManager implements
                 // r.setTerminal(application.getRoot().getTerminal());
                 // }
                 // }
-                /*
-                 * This does not seem to happen in tk5, but remember this case:
-                 * else if (p instanceof Component) { if (((Component)
-                 * p).getParent() == null || ((Component) p).getApplication() ==
-                 * null) { // Component requested repaint, but is no // longer
-                 * attached: skip paintablePainted(p); continue; } }
-                 */
 
                 // TODO we may still get changes that have been
                 // rendered already (changes with only cached flag)
                 if (paintTarget.needsToBePainted(p)) {
                     paintTarget.startTag("change");
-                    paintTarget.addAttribute("format", "uidl");
                     final String pid = getPaintableId(p);
                     paintTarget.addAttribute("pid", pid);
 
+                    // paints subcomponents as references (via
+                    // JsonPaintTarget.startPaintable()) and defers painting
+                    // their contents to another top-level change (via
+                    // queuePaintable())
                     p.paint(paintTarget);
 
                     paintTarget.endTag("change");
@@ -892,9 +895,46 @@ public abstract class AbstractCommunicationManager implements
         }
 
         paintTarget.close();
-        outWriter.print("]"); // close changes
+        outWriter.print("], "); // close changes
 
-        outWriter.print(", \"meta\" : {");
+        if (!stateQueue.isEmpty()) {
+            // paint shared state
+
+            // for now, send the complete state of all modified and new
+            // components
+
+            // Ideally, all this would be sent before "changes", but that causes
+            // complications with legacy components that create sub-components
+            // in their paint phase. Nevertheless, this will be processed on the
+            // client after component creation but before legacy UIDL
+            // processing.
+
+            JSONObject sharedStates = new JSONObject();
+            while (!stateQueue.isEmpty()) {
+                final Paintable p = stateQueue.pop();
+                String paintableId = getPaintableId(p);
+                SharedState state = p.getState();
+                if (null != state) {
+                    // encode and send shared state
+                    try {
+                        JSONArray stateJsonArray = JsonCodec
+                                .encode(state, this);
+                        sharedStates.put(paintableId, stateJsonArray);
+                    } catch (JSONException e) {
+                        throw new PaintException(
+                                "Failed to serialize shared state for paintable "
+                                        + paintableId + ": " + e.getMessage());
+                    }
+                }
+            }
+            outWriter.print("\"state\":");
+            outWriter.append(sharedStates.toString());
+            outWriter.print(", "); // close changes
+        }
+
+        // TODO send server to client RPC calls in call order here
+
+        outWriter.print("\"meta\" : {");
         boolean metaOpen = false;
 
         if (repaintAll) {
@@ -1150,9 +1190,9 @@ public abstract class AbstractCommunicationManager implements
             }
 
             for (int bi = 1; bi < bursts.length; bi++) {
-                final String burst = bursts[bi];
-                success = handleVariableBurst(request, application2, success,
-                        burst);
+                // unescape any encoded separator characters in the burst
+                final String burst = unescapeBurst(bursts[bi]);
+                success &= handleBurst(request, application2, burst);
 
                 // In case that there were multiple bursts, we know that this is
                 // a special synchronous case for closing window. Thus we are
@@ -1182,98 +1222,226 @@ public abstract class AbstractCommunicationManager implements
         return success;
     }
 
-    public boolean handleVariableBurst(Object source, Application app,
-            boolean success, final String burst) {
-        // extract variables to two dim string array
-        final String[] tmp = burst.split(String.valueOf(VAR_RECORD_SEPARATOR));
-        final String[][] variableRecords = new String[tmp.length][4];
-        for (int i = 0; i < tmp.length; i++) {
-            variableRecords[i] = tmp[i].split(String
-                    .valueOf(VAR_FIELD_SEPARATOR));
+    /**
+     * Helper class for parsing variable change RPC calls.
+     * 
+     * Note that variable changes still only support the old data types and
+     * partly use Vaadin 6 way of encoding of values. Other RPC method calls
+     * support more data types.
+     * 
+     * @since 7.0
+     */
+    private class VariableChange {
+        private final String name;
+        private final Object value;
+
+        public VariableChange(MethodInvocation invocation) throws JSONException {
+            name = (String) invocation.getParameters()[0];
+            value = invocation.getParameters()[1];
         }
 
-        for (int i = 0; i < variableRecords.length; i++) {
-            String[] variable = variableRecords[i];
-            String[] nextVariable = null;
-            if (i + 1 < variableRecords.length) {
-                nextVariable = variableRecords[i + 1];
-            }
-            final VariableOwner owner = getVariableOwner(variable[VAR_PID]);
-            if (owner != null && owner.isEnabled()) {
-                Map<String, Object> m;
-                if (nextVariable != null
-                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                    // we have more than one value changes in row for
-                    // one variable owner, collect them in HashMap
-                    m = new HashMap<String, Object>();
-                    m.put(variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
-                } else {
-                    // use optimized single value map
-                    m = Collections.singletonMap(
-                            variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+        /**
+         * Returns the variable name for the modification.
+         * 
+         * @return variable name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Returns the (parsed and converted) value of the updated variable.
+         * 
+         * @return variable value
+         */
+        public Object getValue() {
+            return value;
+        }
+    }
+
+    /**
+     * Processes a message burst received from the client.
+     * 
+     * A burst can contain any number of RPC calls, including legacy variable
+     * change calls that are processed separately.
+     * 
+     * Consecutive changes to the value of the same variable are combined and
+     * changeVariables() is only called once for them. This preserves the Vaadin
+     * 6 semantics for components and add-ons that do not use Vaadin 7 RPC
+     * directly.
+     * 
+     * @param source
+     * @param app
+     *            application receiving the burst
+     * @param burst
+     *            the content of the burst as a String to be parsed
+     * @return true if the processing of the burst was successful and there were
+     *         no messages to non-existent components
+     */
+    public boolean handleBurst(Object source, Application app,
+            final String burst) {
+        boolean success = true;
+        try {
+            List<MethodInvocation> invocations = parseInvocations(burst);
+
+            // Perform the method invocations, grouping consecutive variable
+            // changes for the same Paintable.
+
+            // Combining of variable changes is currently needed to preserve the
+            // old semantics for any component that relies on them. If the
+            // support for legacy variable change events is removed, each call
+            // can be performed separately and thelogic here simplified.
+
+            for (int i = 0; i < invocations.size(); i++) {
+                MethodInvocation invocation = invocations.get(i);
+
+                MethodInvocation nextInvocation = null;
+                if (i + 1 < invocations.size()) {
+                    nextInvocation = invocations.get(i + 1);
                 }
 
-                // collect following variable changes for this owner
-                while (nextVariable != null
-                        && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                    i++;
-                    variable = nextVariable;
-                    if (i + 1 < variableRecords.length) {
-                        nextVariable = variableRecords[i + 1];
-                    } else {
-                        nextVariable = null;
-                    }
-                    m.put(variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
-                }
-                try {
-                    changeVariables(source, owner, m);
-                } catch (Exception e) {
-                    Component errorComponent = null;
-                    if (owner instanceof Component) {
-                        errorComponent = (Component) owner;
-                    } else if (owner instanceof DragAndDropService) {
-                        if (m.get("dhowner") instanceof Component) {
-                            errorComponent = (Component) m.get("dhowner");
-                        }
-                    }
+                final String interfaceName = invocation.getInterfaceName();
 
-                    handleChangeVariablesError(app, errorComponent, e, m);
-                }
-            } else {
-
-                // Handle special case where window-close is called
-                // after the window has been removed from the
-                // application or the application has closed
-                if ("close".equals(variable[VAR_NAME])
-                        && "true".equals(variable[VAR_VALUE])) {
-                    // Silently ignore this
+                if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
+                        .equals(interfaceName)) {
+                    // handle other RPC calls than variable changes
+                    applyInvocation(invocation);
                     continue;
                 }
 
-                // Ignore variable change
-                String msg = "Warning: Ignoring variable change for ";
-                if (owner != null) {
-                    msg += "disabled component " + owner.getClass();
-                    String caption = ((Component) owner).getCaption();
-                    if (caption != null) {
-                        msg += ", caption=" + caption;
+                final VariableOwner owner = getVariableOwner(invocation
+                        .getPaintableId());
+
+                if (owner != null && owner.isEnabled()) {
+                    VariableChange change = new VariableChange(invocation);
+
+                    // TODO could optimize with a single value map if only one
+                    // change for a paintable
+
+                    Map<String, Object> m = new HashMap<String, Object>();
+                    m.put(change.getName(), change.getValue());
+                    while (nextInvocation != null
+                            && invocation.getPaintableId().equals(
+                                    nextInvocation.getPaintableId())
+                            && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                                    .equals(nextInvocation.getMethodName())) {
+                        i++;
+                        invocation = nextInvocation;
+                        change = new VariableChange(invocation);
+                        m.put(change.getName(), change.getValue());
+                        if (i + 1 < invocations.size()) {
+                            nextInvocation = invocations.get(i + 1);
+                        } else {
+                            nextInvocation = null;
+                        }
+                    }
+
+                    try {
+                        changeVariables(source, owner, m);
+                    } catch (Exception e) {
+                        Component errorComponent = null;
+                        if (owner instanceof Component) {
+                            errorComponent = (Component) owner;
+                        } else if (owner instanceof DragAndDropService) {
+                            if (m.get("dhowner") instanceof Component) {
+                                errorComponent = (Component) m.get("dhowner");
+                            }
+                        }
+                        handleChangeVariablesError(app, errorComponent, e, m);
                     }
                 } else {
-                    msg += "non-existent component, VAR_PID="
-                            + variable[VAR_PID];
-                    success = false;
+                    // TODO convert window close to a separate RPC call and
+                    // handle above - not a variable change
+
+                    VariableChange change = new VariableChange(invocation);
+
+                    // Handle special case where window-close is called
+                    // after the window has been removed from the
+                    // application or the application has closed
+                    if ("close".equals(change.getName())
+                            && Boolean.TRUE.equals(change.getValue())) {
+                        // Silently ignore this
+                        continue;
+                    }
+
+                    // Ignore variable change
+                    String msg = "Warning: Ignoring RPC call for ";
+                    if (owner != null) {
+                        msg += "disabled component " + owner.getClass();
+                        String caption = ((Component) owner).getCaption();
+                        if (caption != null) {
+                            msg += ", caption=" + caption;
+                        }
+                    } else {
+                        msg += "non-existent component, VAR_PID="
+                                + invocation.getPaintableId();
+                        // TODO should this cause the message to be ignored?
+                        success = false;
+                    }
+                    logger.warning(msg);
+                    continue;
                 }
-                logger.warning(msg);
-                continue;
             }
+
+        } catch (JSONException e) {
+            logger.warning("Unable to parse RPC call from the client: "
+                    + e.getMessage());
+            // TODO or return success = false?
+            throw new RuntimeException(e);
         }
+
         return success;
+    }
+
+    /**
+     * Execute an RPC call from the client by finding its target and letting the
+     * RPC mechanism call the correct method for it.
+     * 
+     * @param invocation
+     */
+    protected void applyInvocation(MethodInvocation invocation) {
+        final RpcTarget target = getRpcTarget(invocation.getPaintableId());
+        if (null != target) {
+            ServerRpcManager.applyInvocation(target, invocation);
+        } else {
+            // TODO better exception?
+            throw new RuntimeException("No RPC target for paintable "
+                    + invocation.getPaintableId());
+        }
+    }
+
+    /**
+     * Parse a message burst from the client into a list of MethodInvocation
+     * instances.
+     * 
+     * @param burst
+     *            message string (JSON)
+     * @return list of MethodInvocation to perform
+     * @throws JSONException
+     */
+    private List<MethodInvocation> parseInvocations(final String burst)
+            throws JSONException {
+        JSONArray invocationsJson = new JSONArray(burst);
+
+        ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
+
+        // parse JSON to MethodInvocations
+        for (int i = 0; i < invocationsJson.length(); ++i) {
+            JSONArray invocationJson = invocationsJson.getJSONArray(i);
+            String paintableId = invocationJson.getString(0);
+            String interfaceName = invocationJson.getString(1);
+            String methodName = invocationJson.getString(2);
+            JSONArray parametersJson = invocationJson.getJSONArray(3);
+            Object[] parameters = new Object[parametersJson.length()];
+            for (int j = 0; j < parametersJson.length(); ++j) {
+                parameters[j] = JsonCodec.convertVariableValue(
+                        parametersJson.getJSONArray(j), this);
+            }
+            MethodInvocation invocation = new MethodInvocation(paintableId,
+                    interfaceName, methodName, parameters);
+            invocations.add(invocation);
+        }
+        return invocations;
     }
 
     protected void changeVariables(Object source, final VariableOwner owner,
@@ -1287,6 +1455,25 @@ public abstract class AbstractCommunicationManager implements
             return getDragAndDropService();
         }
         return owner;
+    }
+
+    /**
+     * Returns the RPC call target for a paintable ID.
+     * 
+     * @since 7.0
+     * 
+     * @param string
+     *            paintable ID
+     * @return RPC call target or null if none found
+     */
+    protected RpcTarget getRpcTarget(String string) {
+        // TODO improve this - VariableOwner and RpcManager separate?
+        VariableOwner owner = getVariableOwner(string);
+        if (owner instanceof RpcTarget) {
+            return (RpcTarget) owner;
+        } else {
+            return null;
+        }
     }
 
     private VariableOwner getDragAndDropService() {
@@ -1388,111 +1575,15 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    private Object convertVariableValue(char variableType, String strValue) {
-        Object val = null;
-        switch (variableType) {
-        case VTYPE_ARRAY:
-            val = convertArray(strValue);
-            break;
-        case VTYPE_MAP:
-            val = convertMap(strValue);
-            break;
-        case VTYPE_STRINGARRAY:
-            val = convertStringArray(strValue);
-            break;
-        case VTYPE_STRING:
-            // decode encoded separators
-            val = decodeVariableValue(strValue);
-            break;
-        case VTYPE_INTEGER:
-            val = Integer.valueOf(strValue);
-            break;
-        case VTYPE_LONG:
-            val = Long.valueOf(strValue);
-            break;
-        case VTYPE_FLOAT:
-            val = Float.valueOf(strValue);
-            break;
-        case VTYPE_DOUBLE:
-            val = Double.valueOf(strValue);
-            break;
-        case VTYPE_BOOLEAN:
-            val = Boolean.valueOf(strValue);
-            break;
-        case VTYPE_PAINTABLE:
-            val = idPaintableMap.get(strValue);
-            break;
-        }
-
-        return val;
-    }
-
-    private Object convertMap(String strValue) {
-        String[] parts = strValue
-                .split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        for (int i = 0; i < parts.length; i += 2) {
-            String key = parts[i];
-            if (key.length() > 0) {
-                char variabletype = key.charAt(0);
-                // decode encoded separators
-                String decodedValue = decodeVariableValue(parts[i + 1]);
-                String decodedKey = decodeVariableValue(key.substring(1));
-                Object value = convertVariableValue(variabletype, decodedValue);
-                map.put(decodedKey, value);
-            }
-        }
-        return map;
-    }
-
-    private String[] convertStringArray(String strValue) {
-        // need to return delimiters and filter them out; otherwise empty
-        // strings are lost
-        // an extra empty delimiter at the end is automatically eliminated
-        final String arrayItemSeparator = String
-                .valueOf(VAR_ARRAYITEM_SEPARATOR);
-        StringTokenizer tokenizer = new StringTokenizer(strValue,
-                arrayItemSeparator, true);
-        List<String> tokens = new ArrayList<String>();
-        String prevToken = arrayItemSeparator;
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (!arrayItemSeparator.equals(token)) {
-                // decode encoded separators
-                tokens.add(decodeVariableValue(token));
-            } else if (arrayItemSeparator.equals(prevToken)) {
-                tokens.add("");
-            }
-            prevToken = token;
-        }
-        return tokens.toArray(new String[tokens.size()]);
-    }
-
-    private Object convertArray(String strValue) {
-        String[] val = strValue.split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
-        if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
-            return new Object[0];
-        }
-        Object[] values = new Object[val.length];
-        for (int i = 0; i < values.length; i++) {
-            String string = val[i];
-            // first char of string is type
-            char variableType = string.charAt(0);
-            values[i] = convertVariableValue(variableType, string.substring(1));
-        }
-        return values;
-    }
-
     /**
-     * Decode encoded burst, record, field and array item separator characters
-     * in a variable value String received from the client. This protects from
-     * separator injection attacks.
+     * Unescape encoded burst separator characters in a burst received from the
+     * client. This protects from separator injection attacks.
      * 
      * @param encodedValue
      *            to decode
      * @return decoded value
      */
-    protected String decodeVariableValue(String encodedValue) {
+    protected String unescapeBurst(String encodedValue) {
         final StringBuilder result = new StringBuilder();
         final StringCharacterIterator iterator = new StringCharacterIterator(
                 encodedValue);
@@ -1506,9 +1597,6 @@ public abstract class AbstractCommunicationManager implements
                     result.append(VAR_ESCAPE_CHARACTER);
                     break;
                 case VAR_BURST_SEPARATOR + 0x30:
-                case VAR_RECORD_SEPARATOR + 0x30:
-                case VAR_FIELD_SEPARATOR + 0x30:
-                case VAR_ARRAYITEM_SEPARATOR + 0x30:
                     // +0x30 makes these letters for easier reading
                     result.append((char) (character - 0x30));
                     break;
@@ -1724,6 +1812,10 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print("for(;;);[{");
     }
 
+    public Paintable getPaintable(String paintableId) {
+        return idPaintableMap.get(paintableId);
+    }
+
     /**
      * Gets the Paintable Id. If Paintable has debug id set it will be used
      * prefixed with "PID_S". Otherwise a sequenced ID is created.
@@ -1782,6 +1874,7 @@ public abstract class AbstractCommunicationManager implements
         final ArrayList<Paintable> resultset = new ArrayList<Paintable>(
                 dirtyPaintables);
 
+        // TODO mostly unnecessary?
         // The following algorithm removes any components that would be painted
         // as a direct descendant of other components from the dirty components
         // list. The result is that each component should be painted exactly

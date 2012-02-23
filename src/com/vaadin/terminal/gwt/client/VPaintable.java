@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import com.vaadin.terminal.gwt.client.communication.SharedState;
+
 /**
  * Interface implemented by all client side classes that can be communicate with
  * the server. Classes implementing this interface are initialized by the
@@ -20,6 +22,22 @@ public interface VPaintable {
      * @param client
      */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client);
+
+    /**
+     * Gets the current shared state of the paintable.
+     * 
+     * @return state
+     */
+    public SharedState getState();
+
+    /**
+     * Sets a new state for the paintable.
+     * 
+     * @param state
+     *            The new state
+     * 
+     */
+    public void setState(SharedState state);
 
     /**
      * Returns the id for this VPaintable. This must always be what has been set
@@ -73,7 +91,9 @@ public interface VPaintable {
 
     /**
      * 
-     * Called once when the connection and id has been set
+     * Called once when the connection and id has been set.
+     * 
+     * Note that the shared state is not yet available during init().
      */
     public void init();
 

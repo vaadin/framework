@@ -19,7 +19,9 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
+import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
 import com.vaadin.terminal.gwt.client.ui.VTabsheetPaintable;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
 import com.vaadin.ui.themes.Reindeer;
@@ -376,7 +378,8 @@ public class TabSheet extends AbstractComponentContainer {
 
             target.startTag("tab");
             if (!tab.isEnabled() && tab.isVisible()) {
-                target.addAttribute("disabled", true);
+                target.addAttribute(
+                        VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED, true);
             }
 
             if (!tab.isVisible()) {
@@ -387,18 +390,24 @@ public class TabSheet extends AbstractComponentContainer {
                 target.addAttribute("closable", true);
             }
 
+            // tab icon, caption and description, but used via
+            // VCaption.updateCaption(uidl)
             final Resource icon = tab.getIcon();
             if (icon != null) {
-                target.addAttribute("icon", icon);
+                target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON,
+                        icon);
             }
             final String caption = tab.getCaption();
             if (caption != null && caption.length() > 0) {
-                target.addAttribute("caption", caption);
+                target.addAttribute(
+                        VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION, caption);
             }
 
             final String description = tab.getDescription();
             if (description != null) {
-                target.addAttribute("description", description);
+                target.addAttribute(
+                        VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION,
+                        description);
             }
 
             final ErrorMessage componentError = tab.getComponentError();

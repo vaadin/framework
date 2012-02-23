@@ -56,6 +56,13 @@ public class VNotification extends VOverlay {
     private ArrayList<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
+    public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
+    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
+    public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
+    public static final String ATTRIBUTE_NOTIFICATION_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
+    public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
+
     /**
      * Default constructor. You should use GWT.create instead.
      */
@@ -359,21 +366,23 @@ public class VNotification extends VOverlay {
         boolean onlyPlainText = notification
                 .hasAttribute(VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
-        if (notification.hasAttribute("icon")) {
+        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_ICON)) {
             final String parsedUri = client.translateVaadinUri(notification
-                    .getStringAttribute("icon"));
+                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_ICON));
             html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
         }
-        if (notification.hasAttribute("caption")) {
-            String caption = notification.getStringAttribute("caption");
+        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_CAPTION)) {
+            String caption = notification
+                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
                 caption = Util.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
             html += "<h1>" + caption + "</h1>";
         }
-        if (notification.hasAttribute("message")) {
-            String message = notification.getStringAttribute("message");
+        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_MESSAGE)) {
+            String message = notification
+                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
                 message = Util.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
@@ -381,10 +390,13 @@ public class VNotification extends VOverlay {
             html += "<p>" + message + "</p>";
         }
 
-        final String style = notification.hasAttribute("style") ? notification
-                .getStringAttribute("style") : null;
-        final int position = notification.getIntAttribute("position");
-        final int delay = notification.getIntAttribute("delay");
+        final String style = notification
+                .hasAttribute(ATTRIBUTE_NOTIFICATION_STYLE) ? notification
+                .getStringAttribute(ATTRIBUTE_NOTIFICATION_STYLE) : null;
+        final int position = notification
+                .getIntAttribute(ATTRIBUTE_NOTIFICATION_POSITION);
+        final int delay = notification
+                .getIntAttribute(ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay).show(html, position, style);
     }
 

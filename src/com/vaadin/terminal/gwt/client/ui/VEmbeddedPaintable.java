@@ -69,18 +69,9 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
 
                 // Set attributes
                 Style style = el.getStyle();
-                String w = uidl.getStringAttribute("width");
-                if (w != null) {
-                    style.setProperty("width", w);
-                } else {
-                    style.setProperty("width", "");
-                }
-                String h = uidl.getStringAttribute("height");
-                if (h != null) {
-                    style.setProperty("height", h);
-                } else {
-                    style.setProperty("height", "");
-                }
+                style.setProperty("width", getState().getWidth());
+                style.setProperty("height", getState().getHeight());
+
                 DOM.setElementProperty(el, "src", getWidgetForPaintable()
                         .getSrc(uidl, client));
 
@@ -197,4 +188,5 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
         }
 
     };
+
 }

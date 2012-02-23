@@ -55,7 +55,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
             return;
         }
 
-        getWidgetForPaintable().enabled = !uidl.hasAttribute("disabled");
+        getWidgetForPaintable().enabled = !getState().isDisabled();
 
         if (BrowserInfo.get().isIE8() && !getWidgetForPaintable().enabled) {
             /*
@@ -71,8 +71,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
 
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().paintableId = uidl.getStringAttribute("id");
-        getWidgetForPaintable().immediate = uidl
-                .getBooleanAttribute("immediate");
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
         int previousTotalRows = getWidgetForPaintable().totalRows;
         getWidgetForPaintable().updateTotalRows(uidl);
@@ -80,7 +79,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
 
         getWidgetForPaintable().updateDragMode(uidl);
 
-        getWidgetForPaintable().updateSelectionProperties(uidl);
+        getWidgetForPaintable().updateSelectionProperties(uidl, getState());
 
         if (uidl.hasAttribute("alb")) {
             getWidgetForPaintable().bodyActionKeys = uidl

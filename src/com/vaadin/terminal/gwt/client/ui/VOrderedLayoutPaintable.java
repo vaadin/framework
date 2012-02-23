@@ -105,8 +105,9 @@ public abstract class VOrderedLayoutPaintable extends CellBasedLayoutPaintable {
              * the layout are rendered later when it is clear how much space
              * they can use
              */
-            if (isRealUpdate(childUIDL)) {
-                FloatSize relativeSize = Util.parseRelativeSize(childUIDL);
+            if (null != childPaintable.getState()) {
+                FloatSize relativeSize = Util.parseRelativeSize(childPaintable
+                        .getState());
                 childComponentContainer.setRelativeSize(relativeSize);
             }
 

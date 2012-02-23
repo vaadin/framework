@@ -17,11 +17,14 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
@@ -35,6 +38,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
+import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
+import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
@@ -71,13 +78,10 @@ public class ApplicationConnection {
 
     public static final String ERROR_CLASSNAME_EXT = "-error";
 
-    public static final char VAR_RECORD_SEPARATOR = '\u001e';
-
-    public static final char VAR_FIELD_SEPARATOR = '\u001f';
+    public static final String UPDATE_VARIABLE_INTERFACE = "v";
+    public static final String UPDATE_VARIABLE_METHOD = "v";
 
     public static final char VAR_BURST_SEPARATOR = '\u001d';
-
-    public static final char VAR_ARRAYITEM_SEPARATOR = '\u001c';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
@@ -122,7 +126,7 @@ public class ApplicationConnection {
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
-    private final ArrayList<String> pendingVariables = new ArrayList<String>();
+    private ArrayList<MethodInvocation> pendingInvocations = new ArrayList<MethodInvocation>();
 
     private WidgetSet widgetSet;
 
@@ -145,7 +149,7 @@ public class ApplicationConnection {
     private ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
-    private final ArrayList<ArrayList<String>> pendingVariableBursts = new ArrayList<ArrayList<String>>();
+    private final ArrayList<ArrayList<MethodInvocation>> pendingBursts = new ArrayList<ArrayList<MethodInvocation>>();
 
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
@@ -786,14 +790,14 @@ public class ApplicationConnection {
      * change set if it exists.
      */
     private void checkForPendingVariableBursts() {
-        cleanVariableBurst(pendingVariables);
-        if (pendingVariableBursts.size() > 0) {
-            for (Iterator<ArrayList<String>> iterator = pendingVariableBursts
+        cleanVariableBurst(pendingInvocations);
+        if (pendingBursts.size() > 0) {
+            for (Iterator<ArrayList<MethodInvocation>> iterator = pendingBursts
                     .iterator(); iterator.hasNext();) {
                 cleanVariableBurst(iterator.next());
             }
-            ArrayList<String> nextBurst = pendingVariableBursts.get(0);
-            pendingVariableBursts.remove(0);
+            ArrayList<MethodInvocation> nextBurst = pendingBursts.get(0);
+            pendingBursts.remove(0);
             buildAndSendVariableBurst(nextBurst, false);
         }
     }
@@ -804,16 +808,13 @@ public class ApplicationConnection {
      * 
      * @param variableBurst
      */
-    private void cleanVariableBurst(ArrayList<String> variableBurst) {
-        for (int i = 1; i < variableBurst.size(); i += 2) {
-            String id = variableBurst.get(i);
-            id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
+    private void cleanVariableBurst(ArrayList<MethodInvocation> variableBurst) {
+        for (int i = 1; i < variableBurst.size(); i++) {
+            String id = variableBurst.get(i).getPaintableId();
             if (!getPaintableMap().hasPaintable(id)
                     && !getPaintableMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
-                variableBurst.remove(i - 1);
-                variableBurst.remove(i - 1);
-                i -= 2;
+                variableBurst.remove(i);
                 VConsole.log("Removed variable from removed component: " + id);
             }
         }
@@ -992,6 +993,11 @@ public class ApplicationConnection {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
+                // three phases/loops:
+                // - changes: create paintables (if necessary)
+                // - state: set shared states
+                // - changes: call updateFromUIDL() for each paintable
+
                 // Process changes
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
 
@@ -1000,6 +1006,49 @@ public class ApplicationConnection {
                 componentCaptionSizeChanges.clear();
 
                 int length = changes.length();
+
+                // create paintables if necessary
+                for (int i = 0; i < length; i++) {
+                    try {
+                        final UIDL change = changes.get(i).cast();
+                        final UIDL uidl = change.getChildUIDL(0);
+                        VPaintable paintable = paintableMap.getPaintable(uidl
+                                .getId());
+                        if (null == paintable
+                                && !uidl.getTag().equals(
+                                        configuration.getEncodedWindowTag())) {
+                            // create, initialize and register the paintable
+                            getPaintable(uidl);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+
+                // set states for all paintables mentioned in "state"
+                ValueMap states = json.getValueMap("state");
+                JsArrayString keyArray = states.getKeyArray();
+                for (int i = 0; i < keyArray.length(); i++) {
+                    try {
+                        String paintableId = keyArray.get(i);
+                        VPaintable paintable = paintableMap
+                                .getPaintable(paintableId);
+                        if (null != paintable) {
+
+                            JSONArray stateDataAndType = new JSONArray(
+                                    states.getJavaScriptObject(paintableId));
+
+                            Object state = JsonDecoder.convertValue(
+                                    stateDataAndType, paintableMap);
+
+                            paintable.setState((SharedState) state);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+
+                // update paintables
                 for (int i = 0; i < length; i++) {
                     try {
                         final UIDL change = changes.get(i).cast();
@@ -1144,18 +1193,30 @@ public class ApplicationConnection {
     }-*/;
 
     private void addVariableToQueue(String paintableId, String variableName,
-            String encodedValue, boolean immediate, char type) {
-        final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
-                + VAR_FIELD_SEPARATOR + type;
-        for (int i = 1; i < pendingVariables.size(); i += 2) {
-            if ((pendingVariables.get(i)).equals(id)) {
-                pendingVariables.remove(i - 1);
-                pendingVariables.remove(i - 1);
-                break;
-            }
-        }
-        pendingVariables.add(encodedValue);
-        pendingVariables.add(id);
+            Object value, boolean immediate) {
+        // note that type is now deduced from value
+        // TODO could eliminate invocations of same shared variable setter
+        addMethodInvocationToQueue(new MethodInvocation(paintableId,
+                UPDATE_VARIABLE_INTERFACE, UPDATE_VARIABLE_METHOD,
+                new Object[] { variableName, value }), immediate);
+    }
+
+    /**
+     * Adds an explicit RPC method invocation to the send queue.
+     * 
+     * @since 7.0
+     * 
+     * @param invocation
+     *            RPC method invocation
+     * @param immediate
+     *            true to trigger sending within a short time window (possibly
+     *            combining subsequent calls to a single request), false to let
+     *            the framework delay sending of RPC calls and variable changes
+     *            until the next immediate change
+     */
+    public void addMethodInvocationToQueue(MethodInvocation invocation,
+            boolean immediate) {
+        pendingInvocations.add(invocation);
         if (immediate) {
             sendPendingVariableChanges();
         }
@@ -1171,20 +1232,32 @@ public class ApplicationConnection {
      * "burst" to queue that will be purged after current request is handled.
      * 
      */
-    @SuppressWarnings("unchecked")
     public void sendPendingVariableChanges() {
+        if (!deferedSendPending) {
+            deferedSendPending = true;
+            Scheduler.get().scheduleDeferred(sendPendingCommand);
+        }
+    }
+
+    private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
+        public void execute() {
+            deferedSendPending = false;
+            doSendPendingVariableChanges();
+        }
+    };
+    private boolean deferedSendPending = false;
+
+    @SuppressWarnings("unchecked")
+    private void doSendPendingVariableChanges() {
         if (applicationRunning) {
             if (hasActiveRequest()) {
                 // skip empty queues if there are pending bursts to be sent
-                if (pendingVariables.size() > 0
-                        || pendingVariableBursts.size() == 0) {
-                    ArrayList<String> burst = (ArrayList<String>) pendingVariables
-                            .clone();
-                    pendingVariableBursts.add(burst);
-                    pendingVariables.clear();
+                if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
+                    pendingBursts.add(pendingInvocations);
+                    pendingInvocations = new ArrayList<MethodInvocation>();
                 }
             } else {
-                buildAndSendVariableBurst(pendingVariables, false);
+                buildAndSendVariableBurst(pendingInvocations, false);
             }
         }
     }
@@ -1196,35 +1269,48 @@ public class ApplicationConnection {
      * at the same time. This is ok as we can assume that DOM will never be
      * updated after this.
      * 
-     * @param pendingVariables
-     *            Vector of variable changes to send
+     * @param pendingInvocations
+     *            List of RPC method invocations to send
      * @param forceSync
      *            Should we use synchronous request?
      */
-    private void buildAndSendVariableBurst(ArrayList<String> pendingVariables,
-            boolean forceSync) {
+    private void buildAndSendVariableBurst(
+            ArrayList<MethodInvocation> pendingInvocations, boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
-        while (!pendingVariables.isEmpty()) {
+        while (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
-                Util.logVariableBurst(this, pendingVariables);
-            }
-            for (int i = 0; i < pendingVariables.size(); i++) {
-                if (i > 0) {
-                    if (i % 2 == 0) {
-                        req.append(VAR_RECORD_SEPARATOR);
-                    } else {
-                        req.append(VAR_FIELD_SEPARATOR);
-                    }
-                }
-                req.append(pendingVariables.get(i));
+                Util.logVariableBurst(this, pendingInvocations);
             }
 
-            pendingVariables.clear();
-            // Append all the busts to this synchronous request
-            if (forceSync && !pendingVariableBursts.isEmpty()) {
-                pendingVariables = pendingVariableBursts.get(0);
-                pendingVariableBursts.remove(0);
+            JSONArray reqJson = new JSONArray();
+
+            for (MethodInvocation invocation : pendingInvocations) {
+                JSONArray invocationJson = new JSONArray();
+                invocationJson.set(0,
+                        new JSONString(invocation.getPaintableId()));
+                invocationJson.set(1,
+                        new JSONString(invocation.getInterfaceName()));
+                invocationJson.set(2,
+                        new JSONString(invocation.getMethodName()));
+                JSONArray paramJson = new JSONArray();
+                for (int i = 0; i < invocation.getParameters().length; ++i) {
+                    // TODO non-static encoder? type registration?
+                    paramJson.set(i, JsonEncoder.encode(
+                            invocation.getParameters()[i], getPaintableMap()));
+                }
+                invocationJson.set(3, paramJson);
+                reqJson.set(reqJson.size(), invocationJson);
+            }
+
+            // escape burst separators (if any)
+            req.append(escapeBurstContents(reqJson.toString()));
+
+            pendingInvocations.clear();
+            // Append all the bursts to this synchronous request
+            if (forceSync && !pendingBursts.isEmpty()) {
+                pendingInvocations = pendingBursts.get(0);
+                pendingBursts.remove(0);
                 req.append(VAR_BURST_SEPARATOR);
             }
         }
@@ -1265,8 +1351,7 @@ public class ApplicationConnection {
      */
     public void updateVariable(String paintableId, String variableName,
             VPaintable newValue, boolean immediate) {
-        String pid = paintableMap.getPid(newValue);
-        addVariableToQueue(paintableId, variableName, pid, immediate, 'p');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1289,8 +1374,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             String newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName,
-                escapeVariableValue(newValue), immediate, 's');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1313,8 +1397,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             int newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
-                'i');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1337,8 +1420,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             long newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
-                'l');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1361,8 +1443,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             float newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
-                'f');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1385,8 +1466,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             double newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
-                'd');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1409,8 +1489,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             boolean newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, newValue ? "true"
-                : "false", immediate, 'b');
+        addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
     /**
@@ -1426,55 +1505,13 @@ public class ApplicationConnection {
      * @param variableName
      *            the name of the variable
      * @param map
-     *            the new value to be sent
+     *            the new values to be sent
      * @param immediate
      *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             Map<String, Object> map, boolean immediate) {
-        final StringBuffer buf = new StringBuffer();
-        Iterator<String> iterator = map.keySet().iterator();
-        while (iterator.hasNext()) {
-            String key = iterator.next();
-            Object value = map.get(key);
-            char transportType = getTransportType(value);
-            buf.append(transportType);
-            buf.append(escapeVariableValue(key));
-            buf.append(VAR_ARRAYITEM_SEPARATOR);
-            if (transportType == 'p') {
-                buf.append(paintableMap.getPid((VPaintable) value));
-            } else {
-                buf.append(escapeVariableValue(String.valueOf(value)));
-            }
-
-            if (iterator.hasNext()) {
-                buf.append(VAR_ARRAYITEM_SEPARATOR);
-            }
-        }
-
-        addVariableToQueue(paintableId, variableName, buf.toString(),
-                immediate, 'm');
-    }
-
-    private char getTransportType(Object value) {
-        if (value instanceof String) {
-            return 's';
-        } else if (value instanceof VPaintableWidget) {
-            return 'p';
-        } else if (value instanceof Boolean) {
-            return 'b';
-        } else if (value instanceof Integer) {
-            return 'i';
-        } else if (value instanceof Float) {
-            return 'f';
-        } else if (value instanceof Double) {
-            return 'd';
-        } else if (value instanceof Long) {
-            return 'l';
-        } else if (value instanceof Enum) {
-            return 's'; // transported as string representation
-        }
-        return 'u';
+        addVariableToQueue(paintableId, variableName, map, immediate);
     }
 
     /**
@@ -1490,25 +1527,14 @@ public class ApplicationConnection {
      *            the id of the paintable that owns the variable
      * @param variableName
      *            the name of the variable
-     * @param newValue
+     * @param values
      *            the new value to be sent
      * @param immediate
      *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             String[] values, boolean immediate) {
-        final StringBuffer buf = new StringBuffer();
-        if (values != null) {
-            for (int i = 0; i < values.length; i++) {
-                buf.append(escapeVariableValue(values[i]));
-                // there will be an extra separator at the end to differentiate
-                // between an empty array and one containing an empty string
-                // only
-                buf.append(VAR_ARRAYITEM_SEPARATOR);
-            }
-        }
-        addVariableToQueue(paintableId, variableName, buf.toString(),
-                immediate, 'c');
+        addVariableToQueue(paintableId, variableName, values, immediate);
     }
 
     /**
@@ -1525,44 +1551,25 @@ public class ApplicationConnection {
      *            the id of the paintable that owns the variable
      * @param variableName
      *            the name of the variable
-     * @param newValue
+     * @param values
      *            the new value to be sent
      * @param immediate
      *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
-        final StringBuffer buf = new StringBuffer();
-        if (values != null) {
-            for (int i = 0; i < values.length; i++) {
-                if (i > 0) {
-                    buf.append(VAR_ARRAYITEM_SEPARATOR);
-                }
-                Object value = values[i];
-                char transportType = getTransportType(value);
-                // first char tells the type in array
-                buf.append(transportType);
-                if (transportType == 'p') {
-                    buf.append(paintableMap.getPid((VPaintable) value));
-                } else {
-                    buf.append(escapeVariableValue(String.valueOf(value)));
-                }
-            }
-        }
-        addVariableToQueue(paintableId, variableName, buf.toString(),
-                immediate, 'a');
+        addVariableToQueue(paintableId, variableName, values, immediate);
     }
 
     /**
-     * Encode burst, record, field and array item separator characters in a
-     * String for transport over the network. This protects from separator
-     * injection attacks.
+     * Encode burst separator characters in a String for transport over the
+     * network. This protects from separator injection attacks.
      * 
      * @param value
      *            to encode
      * @return encoded value
      */
-    protected String escapeVariableValue(String value) {
+    protected String escapeBurstContents(String value) {
         final StringBuilder result = new StringBuilder();
         for (int i = 0; i < value.length(); ++i) {
             char character = value.charAt(i);
@@ -1570,9 +1577,6 @@ public class ApplicationConnection {
             case VAR_ESCAPE_CHARACTER:
                 // fall-through - escape character is duplicated
             case VAR_BURST_SEPARATOR:
-            case VAR_RECORD_SEPARATOR:
-            case VAR_FIELD_SEPARATOR:
-            case VAR_ARRAYITEM_SEPARATOR:
                 result.append(VAR_ESCAPE_CHARACTER);
                 // encode as letters for easier reading
                 result.append(((char) (character + 0x30)));
@@ -1586,12 +1590,24 @@ public class ApplicationConnection {
         return result.toString();
     }
 
-    public void updateComponentSize(VPaintableWidget paintable, UIDL uidl) {
-        String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "";
-
-        String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "";
+    public void updateComponentSize(VPaintableWidget paintable) {
+        SharedState state = paintable.getState();
+        String w = "";
+        String h = "";
+        if (null != state || !(state instanceof ComponentState)) {
+            ComponentState componentState = (ComponentState) state;
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            // VConsole.log("Paintable state for "
+            // + getPaintableMap().getPid(paintable) + ": "
+            // + String.valueOf(state.getState()));
+            h = componentState.getHeight();
+            w = componentState.getWidth();
+        } else {
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            VConsole.log("No state for paintable "
+                    + getPaintableMap().getPid(paintable)
+                    + " in ApplicationConnection.updateComponentSize()");
+        }
 
         float relativeWidth = Util.parseRelativeSize(w);
         float relativeHeight = Util.parseRelativeSize(h);
@@ -1884,6 +1900,8 @@ public class ApplicationConnection {
      */
     public VPaintableWidget getPaintable(UIDL uidl) {
         final String pid = uidl.getId();
+        // the actual content UIDL may be deferred, but it always contains
+        // enough information to create a paintable instance
         if (!paintableMap.hasPaintable(pid)) {
             // Create and register a new paintable if no old was found
             VPaintableWidget p = widgetSet.createWidget(uidl.getTag(),

@@ -30,6 +30,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Window.CloseListener;
@@ -512,22 +513,33 @@ public abstract class Root extends AbstractComponentContainer implements
                 final Notification n = it.next();
                 target.startTag("notification");
                 if (n.getCaption() != null) {
-                    target.addAttribute("caption", n.getCaption());
+                    target.addAttribute(
+                            VNotification.ATTRIBUTE_NOTIFICATION_CAPTION,
+                            n.getCaption());
                 }
                 if (n.getDescription() != null) {
-                    target.addAttribute("message", n.getDescription());
+                    target.addAttribute(
+                            VNotification.ATTRIBUTE_NOTIFICATION_MESSAGE,
+                            n.getDescription());
                 }
                 if (n.getIcon() != null) {
-                    target.addAttribute("icon", n.getIcon());
+                    target.addAttribute(
+                            VNotification.ATTRIBUTE_NOTIFICATION_ICON,
+                            n.getIcon());
                 }
                 if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
                             VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
                 }
-                target.addAttribute("position", n.getPosition());
-                target.addAttribute("delay", n.getDelayMsec());
+                target.addAttribute(
+                        VNotification.ATTRIBUTE_NOTIFICATION_POSITION,
+                        n.getPosition());
+                target.addAttribute(VNotification.ATTRIBUTE_NOTIFICATION_DELAY,
+                        n.getDelayMsec());
                 if (n.getStyleName() != null) {
-                    target.addAttribute("style", n.getStyleName());
+                    target.addAttribute(
+                            VNotification.ATTRIBUTE_NOTIFICATION_STYLE,
+                            n.getStyleName());
                 }
                 target.endTag("notification");
             }

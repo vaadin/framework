@@ -46,7 +46,9 @@ public class VUIDLBrowser extends SimpleTree {
         }
         Set<String> keySet = u.getKeySet();
         for (String key : keySet) {
-            if (key.equals("changes")) {
+            if (key.equals("state")) {
+                // TODO print updated shared states
+            } else if (key.equals("changes")) {
                 JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray("changes")
                         .cast();
                 for (int i = 0; i < jsValueMapArray.length(); i++) {

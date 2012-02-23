@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal;
 
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
@@ -141,6 +142,11 @@ public class UserError implements ErrorMessage {
             break;
         }
         target.endTag("error");
+    }
+
+    public SharedState getState() {
+        // TODO implement: move relevant parts from paint() to getState()
+        return null;
     }
 
     /* Documented in interface */

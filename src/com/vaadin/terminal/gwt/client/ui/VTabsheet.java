@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
@@ -191,19 +192,20 @@ public class VTabsheet extends VTabsheetBase {
         private ApplicationConnection client;
 
         TabCaption(Tab tab, ApplicationConnection client) {
-            super(null, client);
+            super(client);
             this.client = client;
             this.tab = tab;
         }
 
         @Override
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)
-                    || uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+            if (uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION)
+                    || uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
-                tooltipInfo.setTitle(uidl
-                        .getStringAttribute(ATTRIBUTE_DESCRIPTION));
-                if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+                tooltipInfo
+                        .setTitle(uidl
+                                .getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
+                if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
                 client.registerWidgetTooltip(getTabsheet(), getElement(),
@@ -212,7 +214,13 @@ public class VTabsheet extends VTabsheetBase {
                 client.registerWidgetTooltip(getTabsheet(), getElement(), null);
             }
 
-            boolean ret = super.updateCaption(uidl);
+            // TODO need to call this instead of super because the caption does
+            // not have an owner
+            boolean ret = updateCaptionWithoutOwner(
+                    uidl,
+                    uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
 
             setClosable(uidl.hasAttribute("closable"));
 
@@ -634,11 +642,11 @@ public class VTabsheet extends VTabsheetBase {
         return scrollerIndex > index;
     }
 
-    void handleStyleNames(UIDL uidl) {
+    void handleStyleNames(UIDL uidl, ComponentState state) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
-        if (uidl.hasAttribute("style")) {
-            final String style = uidl.getStringAttribute("style");
+        if (state.hasStyles()) {
+            final String style = state.getStyle();
             if (currentStyle != style) {
                 currentStyle = style;
                 final String[] styles = style.split(" ");

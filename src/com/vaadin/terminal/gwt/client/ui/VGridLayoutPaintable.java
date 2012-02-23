@@ -38,7 +38,6 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
     };
 
     @Override
-    @SuppressWarnings("unchecked")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().rendering = true;
         getWidgetForPaintable().client = client;
@@ -175,8 +174,9 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
         }
         if (!getWidgetForPaintable().rendering) {
             // ensure rel size details are updated
+            boolean cached = uidl.getBooleanAttribute("cached");
             getWidgetForPaintable().widgetToCell.get(widget)
-                    .updateRelSizeStatus(uidl);
+                    .updateRelSizeStatus(paintable.getState(), cached);
             /*
              * This was a component-only update and the possible size change
              * must be propagated to the layout

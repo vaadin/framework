@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
+import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
 public class Util {
 
@@ -561,33 +563,21 @@ public class Util {
     }
 
     /**
-     * Parses the UIDL parameter and fetches the relative size of the component.
-     * If a dimension is not specified as relative it will return -1. If the
-     * UIDL does not contain width or height specifications this will return
+     * Parses shared state and fetches the relative size of the component. If a
+     * dimension is not specified as relative it will return -1. If the shared
+     * state does not contain width or height specifications this will return
      * null.
      * 
-     * @param uidl
+     * @param state
      * @return
      */
-    public static FloatSize parseRelativeSize(UIDL uidl) {
-        boolean hasAttribute = false;
-        String w = "";
-        String h = "";
-        if (uidl.hasAttribute("width")) {
-            hasAttribute = true;
-            w = uidl.getStringAttribute("width");
-        }
-        if (uidl.hasAttribute("height")) {
-            hasAttribute = true;
-            h = uidl.getStringAttribute("height");
-        }
-
-        if (!hasAttribute) {
+    public static FloatSize parseRelativeSize(ComponentState state) {
+        if (state.isUndefinedHeight() && state.isUndefinedWidth()) {
             return null;
         }
 
-        float relativeWidth = Util.parseRelativeSize(w);
-        float relativeHeight = Util.parseRelativeSize(h);
+        float relativeWidth = Util.parseRelativeSize(state.getWidth());
+        float relativeHeight = Util.parseRelativeSize(state.getHeight());
 
         FloatSize relativeSize = new FloatSize(relativeWidth, relativeHeight);
         return relativeSize;
@@ -955,15 +945,35 @@ public class Util {
         return idx;
     }
 
-    private static void printPaintablesVariables(ArrayList<String[]> vars,
-            String id, ApplicationConnection c) {
+    private static void printPaintablesInvocations(
+            ArrayList<MethodInvocation> invocations, String id,
+            ApplicationConnection c) {
         VPaintableWidget paintable = (VPaintableWidget) VPaintableMap.get(c)
                 .getPaintable(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
-            for (String[] var : vars) {
-                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
-                        + var[0]);
+            for (MethodInvocation invocation : invocations) {
+                Object[] parameters = invocation.getParameters();
+                String formattedParams = null;
+                if (ApplicationConnection.UPDATE_VARIABLE_METHOD
+                        .equals(invocation.getMethodName())
+                        && parameters.length == 2) {
+                    // name, value
+                    Object value = parameters[1];
+                    // TODO paintables inside lists/maps get rendered as
+                    // components in the debug console
+                    String formattedValue = value instanceof VPaintable ? c
+                            .getPaintableMap().getPid((VPaintable) value)
+                            : String.valueOf(value);
+                    formattedParams = parameters[0] + " : " + formattedValue;
+                }
+                if (null == formattedParams) {
+                    formattedParams = (null != parameters) ? Arrays
+                            .toString(parameters) : null;
+                }
+                VConsole.log("\t\t" + invocation.getInterfaceName() + "."
+                        + invocation.getMethodName() + "(" + formattedParams
+                        + ")");
             }
         } else {
             VConsole.log("\t" + id + ": Warning: no corresponding paintable!");
@@ -971,31 +981,25 @@ public class Util {
     }
 
     static void logVariableBurst(ApplicationConnection c,
-            ArrayList<String> loggedBurst) {
+            ArrayList<MethodInvocation> loggedBurst) {
         try {
             VConsole.log("Variable burst to be sent to server:");
             String curId = null;
-            ArrayList<String[]> vars = new ArrayList<String[]>();
+            ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
             for (int i = 0; i < loggedBurst.size(); i++) {
-                String value = loggedBurst.get(i++);
-                String[] split = loggedBurst
-                        .get(i)
-                        .split(String
-                                .valueOf(ApplicationConnection.VAR_FIELD_SEPARATOR));
-                String id = split[0];
+                String id = loggedBurst.get(i).getPaintableId();
 
                 if (curId == null) {
                     curId = id;
                 } else if (!curId.equals(id)) {
-                    printPaintablesVariables(vars, curId, c);
-                    vars.clear();
+                    printPaintablesInvocations(invocations, curId, c);
+                    invocations.clear();
                     curId = id;
                 }
-                split[0] = value;
-                vars.add(split);
+                invocations.add(loggedBurst.get(i));
             }
-            if (!vars.isEmpty()) {
-                printPaintablesVariables(vars, curId, c);
+            if (!invocations.isEmpty()) {
+                printPaintablesInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
             VConsole.error(e);

@@ -37,6 +37,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
+    public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
+
     protected final Panel panel;
 
     private final Map<CheckBox, String> optionsToKeys;
@@ -106,7 +108,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             op.addStyleName(CLASSNAME_OPTION);
             op.setValue(opUidl.getBooleanAttribute("selected"));
-            boolean enabled = !opUidl.getBooleanAttribute("disabled")
+            boolean enabled = !opUidl
+                    .getBooleanAttribute(ATTRIBUTE_OPTION_DISABLED)
                     && !isReadonly() && !isDisabled();
             op.setEnabled(enabled);
             setStyleName(op.getElement(),

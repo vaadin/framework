@@ -31,7 +31,7 @@ public class VProgressIndicatorPaintable extends VAbstractPaintableWidget {
         if (getWidgetForPaintable().indeterminate) {
             String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
             getWidgetForPaintable().addStyleName(basename);
-            if (uidl.getBooleanAttribute("disabled")) {
+            if (getState().isDisabled()) {
                 getWidgetForPaintable().addStyleName(basename + "-disabled");
             } else {
                 getWidgetForPaintable().removeStyleName(basename + "-disabled");
@@ -47,7 +47,7 @@ public class VProgressIndicatorPaintable extends VAbstractPaintableWidget {
             }
         }
 
-        if (!uidl.getBooleanAttribute("disabled")) {
+        if (!getState().isDisabled()) {
             getWidgetForPaintable().interval = uidl
                     .getIntAttribute("pollinginterval");
             getWidgetForPaintable().poller

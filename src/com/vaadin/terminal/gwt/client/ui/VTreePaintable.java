@@ -14,6 +14,13 @@ import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 
 public class VTreePaintable extends VAbstractPaintableWidget {
 
+    public static final String ATTRIBUTE_NODE_STYLE = "style";
+    public static final String ATTRIBUTE_NODE_CAPTION = "caption";
+    public static final String ATTRIBUTE_NODE_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+
+    public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
+    public static final String ATTRIBUTE_ACTION_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation and let container manage caption
@@ -34,10 +41,10 @@ public class VTreePaintable extends VAbstractPaintableWidget {
 
         getWidgetForPaintable().paintableId = uidl.getId();
 
-        getWidgetForPaintable().immediate = uidl.hasAttribute("immediate");
+        getWidgetForPaintable().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().disabled = uidl.getBooleanAttribute("disabled");
-        getWidgetForPaintable().readonly = uidl.getBooleanAttribute("readonly");
+        getWidgetForPaintable().disabled = getState().isDisabled();
+        getWidgetForPaintable().readonly = getState().isReadOnly();
 
         getWidgetForPaintable().dragMode = uidl.hasAttribute("dragMode") ? uidl
                 .getIntAttribute("dragMode") : 0;
@@ -147,11 +154,12 @@ public class VTreePaintable extends VAbstractPaintableWidget {
         while (it.hasNext()) {
             final UIDL action = (UIDL) it.next();
             final String key = action.getStringAttribute("key");
-            final String caption = action.getStringAttribute("caption");
+            final String caption = action
+                    .getStringAttribute(ATTRIBUTE_ACTION_CAPTION);
             String iconUrl = null;
-            if (action.hasAttribute("icon")) {
+            if (action.hasAttribute(ATTRIBUTE_ACTION_ICON)) {
                 iconUrl = getConnection().translateVaadinUri(
-                        action.getStringAttribute("icon"));
+                        action.getStringAttribute(ATTRIBUTE_ACTION_ICON));
             }
             getWidgetForPaintable().registerAction(key, caption, iconUrl);
         }
@@ -160,7 +168,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
 
     public void updateNodeFromUIDL(TreeNode treeNode, UIDL uidl) {
         String nodeKey = uidl.getStringAttribute("key");
-        treeNode.setText(uidl.getStringAttribute("caption"));
+        treeNode.setText(uidl.getStringAttribute(ATTRIBUTE_NODE_CAPTION));
         treeNode.key = nodeKey;
 
         getWidgetForPaintable().registerNode(treeNode);
@@ -179,8 +187,9 @@ public class VTreePaintable extends VAbstractPaintableWidget {
         } else {
             treeNode.addStyleName(TreeNode.CLASSNAME + "-leaf");
         }
-        if (uidl.hasAttribute("style")) {
-            treeNode.setNodeStyleName(uidl.getStringAttribute("style"));
+        if (uidl.hasAttribute(ATTRIBUTE_NODE_STYLE)) {
+            treeNode.setNodeStyleName(uidl
+                    .getStringAttribute(ATTRIBUTE_NODE_STYLE));
         }
 
         String description = uidl.getStringAttribute("descr");
@@ -204,7 +213,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
             getWidgetForPaintable().selectedIds.add(nodeKey);
         }
 
-        treeNode.setIcon(uidl.getStringAttribute("icon"));
+        treeNode.setIcon(uidl.getStringAttribute(ATTRIBUTE_NODE_ICON));
     }
 
     void renderChildNodes(TreeNode containerNode, Iterator<UIDL> i) {

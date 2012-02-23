@@ -403,7 +403,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void updateCaption(UIDL uidl, ApplicationConnection client) {
-        if (VCaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl, paintable.getState())) {
             // We need a caption
 
             VCaption newCaption = caption;
@@ -438,18 +438,6 @@ public class ChildComponentContainer extends Panel {
         }
 
         updateCaptionSize();
-
-        if (relativeSize == null) {
-            /*
-             * relativeSize may be null if component is updated via independent
-             * update, after it has initially been hidden. See #4608
-             * 
-             * It might also change in which case there would be similar issues.
-             * 
-             * Yes, it is an ugly hack. Don't come telling me about it.
-             */
-            setRelativeSize(Util.parseRelativeSize(uidl));
-        }
     }
 
     public void updateCaptionSize() {

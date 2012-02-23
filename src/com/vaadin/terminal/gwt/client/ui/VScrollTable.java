@@ -59,6 +59,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -971,7 +972,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
-    void updateSelectionProperties(UIDL uidl) {
+    void updateSelectionProperties(UIDL uidl, ComponentState state) {
         setMultiSelectMode(uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT);
 
@@ -979,7 +980,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .getBooleanAttribute("nsa") : true;
 
         if (uidl.hasAttribute("selectmode")) {
-            if (uidl.getBooleanAttribute("readonly")) {
+            if (state.isReadOnly()) {
                 selectMode = SelectMode.NONE;
             } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
                 selectMode = SelectMode.MULTI;

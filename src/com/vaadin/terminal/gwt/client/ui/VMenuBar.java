@@ -65,6 +65,10 @@ public class VMenuBar extends SimpleFocusablePanel implements
     public static final String OPEN_ROOT_MENU_ON_HOWER = "ormoh";
 
     public static final String ATTRIBUTE_CHECKED = "checked";
+    public static final String ATTRIBUTE_ITEM_DESCRIPTION = "description";
+    public static final String ATTRIBUTE_ITEM_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_ITEM_DISABLED = "disabled";
+    public static final String ATTRIBUTE_ITEM_STYLE = "style";
 
     public static final String HTML_CONTENT_ALLOWED = "usehtml";
 
@@ -899,7 +903,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
             this.client = client;
             setSeparator(uidl.hasAttribute("separator"));
-            setEnabled(!uidl.hasAttribute("disabled"));
+            setEnabled(!uidl.hasAttribute(ATTRIBUTE_ITEM_DISABLED));
 
             if (!isSeparator() && uidl.hasAttribute(ATTRIBUTE_CHECKED)) {
                 // if the selected attribute is present (either true or false),
@@ -910,13 +914,15 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 setCheckable(false);
             }
 
-            if (uidl.hasAttribute("style")) {
-                String itemStyle = uidl.getStringAttribute("style");
+            if (uidl.hasAttribute(ATTRIBUTE_ITEM_STYLE)) {
+                String itemStyle = uidl
+                        .getStringAttribute(ATTRIBUTE_ITEM_STYLE);
                 addStyleDependentName(itemStyle);
             }
 
-            if (uidl.hasAttribute("description")) {
-                String description = uidl.getStringAttribute("description");
+            if (uidl.hasAttribute(ATTRIBUTE_ITEM_DESCRIPTION)) {
+                String description = uidl
+                        .getStringAttribute(ATTRIBUTE_ITEM_DESCRIPTION);
                 TooltipInfo info = new TooltipInfo(description);
 
                 VMenuBar root = findRootMenu();

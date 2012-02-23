@@ -7,6 +7,8 @@ package com.vaadin.terminal;
 import java.io.Serializable;
 import java.util.EventObject;
 
+import com.vaadin.terminal.gwt.client.communication.SharedState;
+
 /**
  * Interface implemented by all classes that can be painted. Classes
  * implementing this interface know how to output themselves to a UIDL stream
@@ -38,6 +40,19 @@ public interface Paintable extends java.util.EventListener, Serializable {
      *             if the paint operation failed.
      */
     public void paint(PaintTarget target) throws PaintException;
+
+    /**
+     * Returns the current shared state bean for the paintable. The state (or
+     * changes to it) is communicated from the server to the client when
+     * components are painted.
+     * 
+     * Subclasses can use a more specific return type for this method.
+     * 
+     * @return shared state instance or null
+     * 
+     * @since 7.0
+     */
+    public SharedState getState();
 
     /**
      * Requests that the paintable should be repainted as soon as possible.
