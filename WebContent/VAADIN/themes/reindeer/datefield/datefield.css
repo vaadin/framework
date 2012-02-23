@@ -228,7 +228,7 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-textfield {
 	width: 100%;
 }
-.v-undefined-width .v-datefield-textfield {
+.v-undefined-width > .v-datefield-textfield {
 	width: auto;
 }
 .v-datefield-year.v-undefined-width > .v-datefield-textfield {
