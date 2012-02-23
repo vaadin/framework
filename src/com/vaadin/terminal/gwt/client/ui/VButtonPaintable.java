@@ -41,8 +41,7 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(
-                uidl.getStringAttribute(ATTRIBUTE_CAPTION));
+        getWidgetForPaintable().setText(getState().getCaption());
 
         getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
 

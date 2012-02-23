@@ -214,10 +214,11 @@ public class VTabsheet extends VTabsheetBase {
                 client.registerWidgetTooltip(getTabsheet(), getElement(), null);
             }
 
-            boolean ret = super.updateCaption(uidl);
-
-            // TODO required because the caption does not have an owner
-            updateCaptionWithoutOwner(
+            // TODO need to call this instead of super because the caption does
+            // not have an owner
+            boolean ret = updateCaptionWithoutOwner(
+                    uidl,
+                    uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION),
                     uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
 

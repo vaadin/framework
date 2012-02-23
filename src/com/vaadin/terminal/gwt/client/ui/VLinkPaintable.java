@@ -61,8 +61,8 @@ public class VLinkPaintable extends VAbstractPaintableWidget {
                 .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
-        getWidgetForPaintable().captionElement.setInnerText(uidl
-                .getStringAttribute(ATTRIBUTE_CAPTION));
+        getWidgetForPaintable().captionElement.setInnerText(getState()
+                .getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {

@@ -17,6 +17,7 @@ public abstract class VTabsheetBasePaintable extends
 
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
     public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
+    public static final String ATTRIBUTE_TAB_CAPTION = "caption";
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

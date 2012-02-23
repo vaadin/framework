@@ -399,7 +399,8 @@ public class TabSheet extends AbstractComponentContainer {
             }
             final String caption = tab.getCaption();
             if (caption != null && caption.length() > 0) {
-                target.addAttribute("caption", caption);
+                target.addAttribute(
+                        VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION, caption);
             }
 
             final String description = tab.getDescription();

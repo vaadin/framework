@@ -332,7 +332,7 @@ public class VCustomLayout extends ComplexPanel implements Container,
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
         VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
         Widget widget = paintable.getWidgetForPaintable();
-        if (VCaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl, paintable.getState())) {
             if (wrapper == null) {
                 // Add a wrapper between the layout and the child widget
                 final String loc = getLocation(widget);

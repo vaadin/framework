@@ -771,13 +771,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             if (isVisible()) {
                 // width and height are only in shared state
 
-                // TODO probably can remove some of these (caption, icon, ...)
-                // once all the VCaption related code has been updated
-                if (getCaption() != null) {
-                    target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_CAPTION,
-                            getCaption());
-                }
+                // TODO probably can remove also icon once all the VCaption
+                // related code has been updated
                 if (getIcon() != null) {
                     target.addAttribute(
                             VAbstractPaintableWidget.ATTRIBUTE_ICON, getIcon());
@@ -887,9 +882,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         sharedState.setStyle(getStyleName());
 
+        sharedState.setCaption(getCaption());
         sharedState.setDescription(getDescription());
 
-        // TODO sharedState.setCaption(getCaption());
         // TODO icon also in shared state - how to convert Resource?
 
         return sharedState;

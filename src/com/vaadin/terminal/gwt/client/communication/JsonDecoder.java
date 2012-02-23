@@ -52,7 +52,9 @@ public class JsonDecoder {
             VPaintableMap idMapper) {
         Object val = null;
         // TODO type checks etc.
-        if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
+        if (JsonEncoder.VTYPE_UNDEFINED.equals(variableType)) {
+            val = null;
+        } else if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
             val = convertArray((JSONArray) value, idMapper);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = convertMap((JSONObject) value, idMapper);

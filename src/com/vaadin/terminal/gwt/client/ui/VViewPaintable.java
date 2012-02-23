@@ -61,10 +61,9 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (!getWidgetForPaintable().isEmbedded()
-                && uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
+                && getState().getCaption() != null) {
             // only change window title if we're in charge of the whole page
-            com.google.gwt.user.client.Window.setTitle(uidl
-                    .getStringAttribute(ATTRIBUTE_CAPTION));
+            com.google.gwt.user.client.Window.setTitle(getState().getCaption());
         }
 
         // Process children

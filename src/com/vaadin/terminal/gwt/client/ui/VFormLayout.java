@@ -365,14 +365,13 @@ public class VFormLayout extends SimplePanel implements Container {
 
             }
 
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION)) {
+            if (state.getCaption() != null) {
                 if (captionText == null) {
                     captionText = DOM.createSpan();
                     DOM.insertChild(getElement(), captionText, icon == null ? 0
                             : 1);
                 }
-                String c = uidl
-                        .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION);
+                String c = state.getCaption();
                 if (c == null) {
                     c = "";
                 } else {

@@ -85,8 +85,7 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
         }
 
         // Set text
-        getWidgetForPaintable().setText(
-                uidl.getStringAttribute(ATTRIBUTE_CAPTION));
+        getWidgetForPaintable().setText(getState().getCaption());
         getWidgetForPaintable()
                 .setValue(
                         uidl.getBooleanVariable(getWidgetForPaintable().VARIABLE_STATE));

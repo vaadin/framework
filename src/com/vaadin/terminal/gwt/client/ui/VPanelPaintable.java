@@ -47,10 +47,9 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
             getWidgetForPaintable().captionNode.setClassName(VPanel.CLASSNAME
                     + "-caption");
             boolean hasCaption = false;
-            if (uidl.hasAttribute(ATTRIBUTE_CAPTION)
-                    && !uidl.getStringAttribute(ATTRIBUTE_CAPTION).equals("")) {
-                getWidgetForPaintable().setCaption(
-                        uidl.getStringAttribute(ATTRIBUTE_CAPTION));
+            if (getState().getCaption() != null
+                    && !"".equals(getState().getCaption())) {
+                getWidgetForPaintable().setCaption(getState().getCaption());
                 hasCaption = true;
             } else {
                 getWidgetForPaintable().setCaption("");

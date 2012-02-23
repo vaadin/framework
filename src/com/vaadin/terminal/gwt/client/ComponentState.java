@@ -21,8 +21,9 @@ public class ComponentState extends SharedState {
     private String style = "";
     private boolean disabled = false;
     private String description = "";
-
-    // TODO more fields to move here: caption
+    // Note: for the caption, there is a difference between null and an empty
+    // string!
+    private String caption = null;
 
     /**
      * Returns the component height as set by the server.
@@ -234,6 +235,33 @@ public class ComponentState extends SharedState {
      */
     public boolean hasDescription() {
         return !"".equals(getDescription());
+    }
+
+    /**
+     * Gets the caption of the component (typically shown by the containing
+     * layout).
+     * 
+     * @see com.vaadin.ui.Component#getCaption()
+     * 
+     * @return component caption - can be null (no caption) or empty string
+     *         (reserve space for an empty caption)
+     */
+    public String getCaption() {
+        return caption;
+    }
+
+    /**
+     * Sets the caption of the component (typically shown by the containing
+     * layout).
+     * 
+     * @see com.vaadin.ui.Component#setCaption(String)
+     * 
+     * @param caption
+     *            new component caption - can be null (no caption) or empty
+     *            string (reserve space for an empty caption)
+     */
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
 }

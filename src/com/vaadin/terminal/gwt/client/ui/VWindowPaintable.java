@@ -77,7 +77,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             // the caption attribute is missing the caption should be cleared.
             getWidgetForPaintable()
                     .setCaption(
-                            uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION),
+                            getState().getCaption(),
                             uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
         }
 

@@ -31,9 +31,9 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
         }
 
         boolean legendEmpty = true;
-        if (uidl.hasAttribute(ATTRIBUTE_CAPTION)) {
-            getWidgetForPaintable().caption.setInnerText(uidl
-                    .getStringAttribute(ATTRIBUTE_CAPTION));
+        if (getState().getCaption() != null) {
+            getWidgetForPaintable().caption.setInnerText(getState()
+                    .getCaption());
             legendEmpty = false;
         } else {
             getWidgetForPaintable().caption.setInnerText("");

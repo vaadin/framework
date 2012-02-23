@@ -57,7 +57,7 @@ public class VNotification extends VOverlay {
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
-    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = VAbstractPaintableWidget.ATTRIBUTE_CAPTION;
+    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
     public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
     public static final String ATTRIBUTE_NOTIFICATION_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
     public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";

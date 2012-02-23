@@ -41,8 +41,7 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(
-                uidl.getStringAttribute(ATTRIBUTE_CAPTION));
+        getWidgetForPaintable().setText(getState().getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {

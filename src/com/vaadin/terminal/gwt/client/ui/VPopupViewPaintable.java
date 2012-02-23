@@ -80,7 +80,7 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
     }// updateFromUIDL
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        if (VCaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl, component.getState())) {
             if (getWidgetForPaintable().popup.captionWrapper != null) {
                 getWidgetForPaintable().popup.captionWrapper
                         .updateCaption(uidl);

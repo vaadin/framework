@@ -403,7 +403,7 @@ public class ChildComponentContainer extends Panel {
     }
 
     public void updateCaption(UIDL uidl, ApplicationConnection client) {
-        if (VCaption.isNeeded(uidl)) {
+        if (VCaption.isNeeded(uidl, paintable.getState())) {
             // We need a caption
 
             VCaption newCaption = caption;
