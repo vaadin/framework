@@ -19,6 +19,7 @@ public class VLabelPaintable extends VAbstractPaintableWidget {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
+        getWidgetForPaintable().setConnection(client);
         if (!isRealUpdate(uidl)) {
             return;
         }
