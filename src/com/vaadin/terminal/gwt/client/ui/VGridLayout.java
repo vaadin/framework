@@ -235,6 +235,10 @@ public class VGridLayout extends ComplexPanel {
     }
 
     private void detectRowHeights() {
+        for (int i = 0; i < rowHeights.length; i++) {
+            rowHeights[i] = 0;
+        }
+
         // collect min rowheight from non-rowspanned cells
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
@@ -259,6 +263,10 @@ public class VGridLayout extends ComplexPanel {
 
     private void detectColWidths() {
         // collect min colwidths from non-colspanned cells
+        for (int i = 0; i < columnWidths.length; i++) {
+            columnWidths[i] = 0;
+        }
+
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
