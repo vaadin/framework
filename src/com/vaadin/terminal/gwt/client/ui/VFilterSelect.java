@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -1574,7 +1576,23 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             int w = Util.getRequiredWidth(this);
             if ((!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
-                setWidth(suggestionPopupMinWidth + "px");
+                /*
+                 * We want to compensate for the paddings just to preserve the
+                 * exact size as in Vaadin 6.x, but we get here before
+                 * MeasuredSize has been initialized.
+                 * Util.measureHorizontalPaddingAndBorder does not work with
+                 * border-box, so we must do this the hard way.
+                 */
+                Style style = getElement().getStyle();
+                String originalPadding = style.getPadding();
+                String originalBorder = style.getBorderWidth();
+                style.setPaddingLeft(0, Unit.PX);
+                style.setBorderWidth(0, Unit.PX);
+                int offset = w - Util.getRequiredWidth(this);
+                style.setProperty("padding", originalPadding);
+                style.setProperty("borderWidth", originalBorder);
+
+                setWidth(suggestionPopupMinWidth + offset + "px");
             }
 
             /*
