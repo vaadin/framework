@@ -39,14 +39,9 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
 
         Element containerElement = getElement();
         Node childAtIndex = containerElement.getChild(index);
-        boolean alreadyAttached;
         if (childAtIndex != wrapperElement) {
-            alreadyAttached = wrapperElement.getParentElement() == containerElement;
+            // Insert at correct location not attached or at wrong location
             containerElement.insertBefore(wrapperElement, childAtIndex);
-        } else {
-            alreadyAttached = true;
-        }
-        if (!alreadyAttached) {
             insert(widget, wrapperElement, index, false);
         }
 
