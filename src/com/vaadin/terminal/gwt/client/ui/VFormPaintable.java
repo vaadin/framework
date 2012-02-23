@@ -67,9 +67,9 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer {
             getWidgetForPaintable().errorMessage.setVisible(false);
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-            getWidgetForPaintable().desc.setInnerHTML(uidl
-                    .getStringAttribute(ATTRIBUTE_DESCRIPTION));
+        if (getState().hasDescription()) {
+            getWidgetForPaintable().desc.setInnerHTML(getState()
+                    .getDescription());
             if (getWidgetForPaintable().desc.getParentElement() == null) {
                 getWidgetForPaintable().fieldSet.insertAfter(
                         getWidgetForPaintable().desc,

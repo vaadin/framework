@@ -113,8 +113,6 @@ public class VCaption extends HTML {
                 .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
         boolean hasText = uidl
                 .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_CAPTION);
-        boolean hasDescription = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION);
         boolean showRequired = uidl
                 .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED);
         boolean showError = uidl
@@ -185,7 +183,7 @@ public class VCaption extends HTML {
         }
 
         if (null != owner) {
-            if (hasDescription && captionText != null) {
+            if (owner.getState().hasDescription() && captionText != null) {
                 addStyleDependentName("hasdescription");
             } else {
                 removeStyleDependentName("hasdescription");

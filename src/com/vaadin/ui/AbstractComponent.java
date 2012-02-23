@@ -783,12 +783,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                             VAbstractPaintableWidget.ATTRIBUTE_ICON, getIcon());
                 }
 
-                if (getDescription() != null && getDescription().length() > 0) {
-                    target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION,
-                            getDescription());
-                }
-
                 if (eventIdentifiers != null) {
                     target.addAttribute("eventListeners",
                             eventIdentifiers.toArray());
@@ -893,13 +887,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         sharedState.setStyle(getStyleName());
 
-        // TODO use the rest on the client side
+        sharedState.setDescription(getDescription());
 
-        // sharedState.setCaption(getCaption());
-        // // TODO icon also in shared state - how to convert Resource?
-        // if (getDescription() != null && getDescription().length() > 0) {
-        // state.put(ComponentState.STATE_DESCRIPTION, getDescription());
-        // }
+        // TODO sharedState.setCaption(getCaption());
+        // TODO icon also in shared state - how to convert Resource?
 
         return sharedState;
     }

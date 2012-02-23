@@ -20,8 +20,9 @@ public class ComponentState extends SharedState {
     private boolean immediate = false;
     private String style = "";
     private boolean disabled = false;
+    private String description = "";
 
-    // TODO more fields to move here: caption and description
+    // TODO more fields to move here: caption
 
     /**
      * Returns the component height as set by the server.
@@ -198,6 +199,41 @@ public class ComponentState extends SharedState {
      */
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    /**
+     * Gets the description of the component (typically shown as tooltip).
+     * 
+     * @see com.vaadin.ui.AbstractComponent#getDescription()
+     * 
+     * @return component description (not null, can be empty string)
+     */
+    public String getDescription() {
+        if (description == null) {
+            return "";
+        }
+        return description;
+    }
+
+    /**
+     * Sets the description of the component (typically shown as tooltip).
+     * 
+     * @see com.vaadin.ui.AbstractComponent#setDescription(String)
+     * 
+     * @param description
+     *            new component description (can be null)
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Returns true if the component has a description.
+     * 
+     * @return true if the component has a description
+     */
+    public boolean hasDescription() {
+        return !"".equals(getDescription());
     }
 
 }

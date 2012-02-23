@@ -28,7 +28,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     // these!
     public static final String ATTRIBUTE_ICON = "icon";
     public static final String ATTRIBUTE_CAPTION = "caption";
-    public static final String ATTRIBUTE_DESCRIPTION = "description";
     public static final String ATTRIBUTE_REQUIRED = "required";
     public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
@@ -213,9 +212,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         // Update tooltip
         TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
-        if (uidl.hasAttribute(ATTRIBUTE_DESCRIPTION)) {
-            tooltipInfo
-                    .setTitle(uidl.getStringAttribute(ATTRIBUTE_DESCRIPTION));
+        if (getState().hasDescription()) {
+            tooltipInfo.setTitle(getState().getDescription());
         } else {
             tooltipInfo.setTitle(null);
         }

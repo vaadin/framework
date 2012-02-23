@@ -199,12 +199,12 @@ public class VTabsheet extends VTabsheetBase {
 
         @Override
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION)
+            if (uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION)
                     || uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
                 tooltipInfo
                         .setTitle(uidl
-                                .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION));
+                                .getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
                 if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }

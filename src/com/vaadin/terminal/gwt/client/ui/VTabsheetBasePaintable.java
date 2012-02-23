@@ -16,9 +16,7 @@ public abstract class VTabsheetBasePaintable extends
         VAbstractPaintableWidgetContainer {
 
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
-    // TODO currently, this needs to match ATTRIBUTE_DESCRIPTION as also used in
-    // captions
-    public static final String ATTRIBUTE_TAB_DESCRIPTION = VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION;
+    public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

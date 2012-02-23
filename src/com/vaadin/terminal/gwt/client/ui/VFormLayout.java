@@ -292,6 +292,7 @@ public class VFormLayout extends SimplePanel implements Container {
         table.replaceChildComponent(oldComponent, newComponent);
     }
 
+    // TODO why duplicated here?
     public class Caption extends HTML {
 
         public static final String CLASSNAME = "v-caption";
@@ -382,12 +383,10 @@ public class VFormLayout extends SimplePanel implements Container {
                 // TODO should span also be removed
             }
 
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION)) {
-                if (captionText != null) {
-                    addStyleDependentName("hasdescription");
-                } else {
-                    removeStyleDependentName("hasdescription");
-                }
+            if (state.hasDescription() && captionText != null) {
+                addStyleDependentName("hasdescription");
+            } else {
+                removeStyleDependentName("hasdescription");
             }
 
             if (uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
