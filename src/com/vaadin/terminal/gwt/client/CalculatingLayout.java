@@ -1,3 +1,6 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client;
 
 public interface CalculatingLayout extends VPaintableWidgetContainer {
