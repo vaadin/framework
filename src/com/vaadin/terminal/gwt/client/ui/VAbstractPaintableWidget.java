@@ -30,8 +30,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private boolean enabled = true;
     private boolean visible = true;
 
-    private String definedWidth = "";
-    private String definedHeight = "";
+    private String declaredWidth = "";
+    private String declaredHeight = "";
 
     /**
      * Default constructor
@@ -198,22 +198,22 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         // Parent should be updated if either dimension changed between relative
         // and non-relative
-        if (w.endsWith("%") != definedWidth.endsWith("%")) {
+        if (w.endsWith("%") != declaredWidth.endsWith("%")) {
             VPaintableWidgetContainer parent = getParent();
             if (parent != null) {
                 parent.getMeasuredSize().setWidthNeedsUpdate();
             }
         }
 
-        if (h.endsWith("%") != definedHeight.endsWith("%")) {
+        if (h.endsWith("%") != declaredHeight.endsWith("%")) {
             VPaintableWidgetContainer parent = getParent();
             if (parent != null) {
                 parent.getMeasuredSize().setHeightNeedsUpdate();
             }
         }
 
-        definedWidth = w;
-        definedHeight = h;
+        declaredWidth = w;
+        declaredHeight = h;
 
         // Set defined sizes
         Widget component = getWidgetForPaintable();
@@ -226,27 +226,27 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     }
 
     public boolean isRelativeHeight() {
-        return definedHeight.endsWith("%");
+        return declaredHeight.endsWith("%");
     }
 
     public boolean isRelativeWidth() {
-        return definedWidth.endsWith("%");
+        return declaredWidth.endsWith("%");
     }
 
     public boolean isUndefinedHeight() {
-        return definedHeight.length() == 0;
+        return declaredHeight.length() == 0;
     }
 
     public boolean isUndefinedWidth() {
-        return definedWidth.length() == 0;
+        return declaredWidth.length() == 0;
     }
 
-    public String getDefinedHeight() {
-        return definedHeight;
+    public String getDeclaredHeight() {
+        return declaredHeight;
     }
 
-    public String getDefinedWidth() {
-        return definedWidth;
+    public String getDeclaredWidth() {
+        return declaredWidth;
     }
 
     /**

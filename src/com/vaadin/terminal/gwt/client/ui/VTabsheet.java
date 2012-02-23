@@ -912,7 +912,7 @@ public class VTabsheet extends VTabsheetBase {
         if (!isDynamicWidth()) {
             VPaintableWidget paintable = VPaintableMap.get(client)
                     .getPaintable(this);
-            DOM.setStyleAttribute(tabs, "width", paintable.getDefinedWidth());
+            DOM.setStyleAttribute(tabs, "width", paintable.getDeclaredWidth());
         }
 
         // Make sure scrollerIndex is valid

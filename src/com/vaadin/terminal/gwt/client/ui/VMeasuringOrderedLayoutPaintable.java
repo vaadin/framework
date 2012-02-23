@@ -251,9 +251,9 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private String getDefinedSize(boolean isVertical) {
         if (isVertical) {
-            return getDefinedHeight();
+            return getDeclaredHeight();
         } else {
-            return getDefinedWidth();
+            return getDeclaredWidth();
         }
     }
 

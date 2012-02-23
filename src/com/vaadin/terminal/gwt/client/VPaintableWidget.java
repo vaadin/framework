@@ -76,12 +76,12 @@ public interface VPaintableWidget extends VPaintable {
      * 
      * @return the server side width definition
      */
-    public String getDefinedWidth();
+    public String getDeclaredWidth();
 
     /**
      * Gets the height of this paintable as defined on the server.
      * 
      * @return the server side height definition
      */
-    public String getDefinedHeight();
+    public String getDeclaredHeight();
 }
