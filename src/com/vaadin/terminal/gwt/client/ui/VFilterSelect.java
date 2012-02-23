@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -539,13 +540,17 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         /**
          * Updates style names in suggestion popup to help theme building.
+         * 
+         * @param uidl
+         *            UIDL for the whole combo box
+         * @param componentState
+         *            shared state of the combo box
          */
-        public void updateStyleNames(UIDL uidl) {
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
-                setStyleName(CLASSNAME + "-suggestpopup");
-                final String[] styles = uidl.getStringAttribute(
-                        VAbstractPaintableWidget.ATTRIBUTE_STYLE).split(" ");
-                for (int i = 0; i < styles.length; i++) {
+        public void updateStyleNames(UIDL uidl, ComponentState componentState) {
+            setStyleName(CLASSNAME + "-suggestpopup");
+            final String[] styles = componentState.getStyle().split(" ");
+            for (int i = 0; i < styles.length; i++) {
+                if (!"".equals(styles[i])) {
                     addStyleDependentName(styles[i]);
                 }
             }

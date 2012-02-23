@@ -33,7 +33,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
     public static final String ATTRIBUTE_DISABLED = "disabled";
-    public static final String ATTRIBUTE_STYLE = "style";
 
     private Widget widget;
     private ApplicationConnection connection;
@@ -336,9 +335,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         // add additional styles as css classes, prefixed with component default
         // stylename
-        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
-            final String[] styles = uidl.getStringAttribute(ATTRIBUTE_STYLE)
-                    .split(" ");
+        if (state.hasStyles()) {
+            final String[] styles = state.getStyle().split(" ");
             for (int i = 0; i < styles.length; i++) {
                 styleBuf.append(" ");
                 styleBuf.append(primaryStyleName);

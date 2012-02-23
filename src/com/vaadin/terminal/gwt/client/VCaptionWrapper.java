@@ -12,6 +12,14 @@ public class VCaptionWrapper extends FlowPanel {
     VCaption caption;
     VPaintableWidget paintable;
 
+    /**
+     * Creates a new caption wrapper panel.
+     * 
+     * @param toBeWrapped
+     *            paintable that the caption is associated with, not null
+     * @param client
+     *            ApplicationConnection
+     */
     public VCaptionWrapper(VPaintableWidget toBeWrapped,
             ApplicationConnection client) {
         caption = new VCaption(toBeWrapped, client);

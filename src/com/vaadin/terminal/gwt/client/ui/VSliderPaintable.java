@@ -32,10 +32,7 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().vertical = uidl.hasAttribute("vertical");
 
         // TODO should these style names be used?
-        String style = "";
-        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
-            style = uidl.getStringAttribute(ATTRIBUTE_STYLE);
-        }
+        String style = getState().getStyle();
 
         if (getWidgetForPaintable().vertical) {
             getWidgetForPaintable().addStyleName(

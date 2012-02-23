@@ -60,27 +60,24 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
 
             // Add proper stylenames for all elements. This way we can prevent
             // unwanted CSS selector inheritance.
-            if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
-                final String[] styles = uidl
-                        .getStringAttribute(ATTRIBUTE_STYLE).split(" ");
-                final String captionBaseClass = VPanel.CLASSNAME
-                        + (hasCaption ? "-caption" : "-nocaption");
-                final String contentBaseClass = VPanel.CLASSNAME + "-content";
-                final String decoBaseClass = VPanel.CLASSNAME + "-deco";
-                String captionClass = captionBaseClass;
-                String contentClass = contentBaseClass;
-                String decoClass = decoBaseClass;
+            final String captionBaseClass = VPanel.CLASSNAME
+                    + (hasCaption ? "-caption" : "-nocaption");
+            final String contentBaseClass = VPanel.CLASSNAME + "-content";
+            final String decoBaseClass = VPanel.CLASSNAME + "-deco";
+            String captionClass = captionBaseClass;
+            String contentClass = contentBaseClass;
+            String decoClass = decoBaseClass;
+            if (getState().hasStyles()) {
+                final String[] styles = getState().getStyle().split(" ");
                 for (int i = 0; i < styles.length; i++) {
                     captionClass += " " + captionBaseClass + "-" + styles[i];
                     contentClass += " " + contentBaseClass + "-" + styles[i];
                     decoClass += " " + decoBaseClass + "-" + styles[i];
                 }
-                getWidgetForPaintable().captionNode.setClassName(captionClass);
-                getWidgetForPaintable().contentNode.setClassName(contentClass);
-                getWidgetForPaintable().bottomDecoration
-                        .setClassName(decoClass);
-
             }
+            getWidgetForPaintable().captionNode.setClassName(captionClass);
+            getWidgetForPaintable().contentNode.setClassName(contentClass);
+            getWidgetForPaintable().bottomDecoration.setClassName(decoClass);
         }
         // Ensure correct implementation
         super.updateFromUIDL(uidl, client);

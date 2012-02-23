@@ -81,9 +81,9 @@ public abstract class VAbstractSplitPanelPaintable extends
                 !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED));
 
         clickEventHandler.handleEventHandlerRegistration(client);
-        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
-            getWidgetForPaintable().componentStyleNames = uidl
-                    .getStringAttribute(ATTRIBUTE_STYLE).split(" ");
+        if (getState().hasStyles()) {
+            getWidgetForPaintable().componentStyleNames = getState().getStyle()
+                    .split(" ");
         } else {
             getWidgetForPaintable().componentStyleNames = new String[0];
         }

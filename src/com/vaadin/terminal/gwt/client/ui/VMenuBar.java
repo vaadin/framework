@@ -68,7 +68,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     public static final String ATTRIBUTE_ITEM_DESCRIPTION = VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION;
     public static final String ATTRIBUTE_ITEM_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
     public static final String ATTRIBUTE_ITEM_DISABLED = VAbstractPaintableWidget.ATTRIBUTE_DISABLED;
-    public static final String ATTRIBUTE_ITEM_STYLE = VAbstractPaintableWidget.ATTRIBUTE_STYLE;
+    public static final String ATTRIBUTE_ITEM_STYLE = "style";
 
     public static final String HTML_CONTENT_ALLOWED = "usehtml";
 

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
@@ -191,7 +192,7 @@ public class VTabsheet extends VTabsheetBase {
         private ApplicationConnection client;
 
         TabCaption(Tab tab, ApplicationConnection client) {
-            super(null, client);
+            super(client);
             this.client = client;
             this.tab = tab;
         }
@@ -214,6 +215,9 @@ public class VTabsheet extends VTabsheetBase {
             }
 
             boolean ret = super.updateCaption(uidl);
+
+            // TODO required because the caption does not have an owner
+            updateCaptionWithoutOwner(uidl);
 
             setClosable(uidl.hasAttribute("closable"));
 
@@ -635,12 +639,11 @@ public class VTabsheet extends VTabsheetBase {
         return scrollerIndex > index;
     }
 
-    void handleStyleNames(UIDL uidl) {
+    void handleStyleNames(UIDL uidl, ComponentState state) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
-            final String style = uidl
-                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE);
+        if (state.hasStyles()) {
+            final String style = state.getStyle();
             if (currentStyle != style) {
                 currentStyle = style;
                 final String[] styles = style.split(" ");

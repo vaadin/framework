@@ -36,11 +36,33 @@ public class VCaption extends HTML {
     private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
 
     /**
+     * Creates a caption that is not linked to a {@link VPaintableWidget}.
+     * 
+     * When using this constructor, {@link #getOwner()} returns null.
+     * 
+     * @param client
+     *            ApplicationConnection
+     * @deprecated all captions should be associated with a paintable widget and
+     *             be updated from shared state, not UIDL
+     */
+    @Deprecated
+    public VCaption(ApplicationConnection client) {
+        super();
+        this.client = client;
+        owner = null;
+
+        setStyleName(CLASSNAME);
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
+
+    }
+
+    /**
+     * Creates a caption for a {@link VPaintableWidget}.
      * 
      * @param component
-     *            optional owner of caption. If not set, getOwner will return
-     *            null
+     *            owner of caption, not null
      * @param client
+     *            ApplicationConnection
      */
     public VCaption(VPaintableWidget component, ApplicationConnection client) {
         super();
@@ -72,20 +94,20 @@ public class VCaption extends HTML {
         // moves it above.
         placedAfterComponent = true;
 
-        String style = CLASSNAME;
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
-            final String[] styles = uidl.getStringAttribute(
-                    VAbstractPaintableWidget.ATTRIBUTE_STYLE).split(" ");
-            for (int i = 0; i < styles.length; i++) {
-                style += " " + CLASSNAME + "-" + styles[i];
+        // TODO otherwise, the user should also call updateCaptionWithoutOwner()
+        if (null != owner) {
+            String style = CLASSNAME;
+            if (owner.getState().hasStyles()) {
+                final String[] styles = owner.getState().getStyle().split(" ");
+                for (int i = 0; i < styles.length; i++) {
+                    style += " " + CLASSNAME + "-" + styles[i];
+                }
             }
+            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
+                style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+            }
+            setStyleName(style);
         }
-
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
-            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
-        }
-
-        setStyleName(style);
 
         boolean hasIcon = uidl
                 .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
@@ -162,8 +184,8 @@ public class VCaption extends HTML {
             captionText = null;
         }
 
-        if (hasDescription) {
-            if (captionText != null) {
+        if (null != owner) {
+            if (hasDescription && captionText != null) {
                 addStyleDependentName("hasdescription");
             } else {
                 removeStyleDependentName("hasdescription");
@@ -243,6 +265,28 @@ public class VCaption extends HTML {
         // }
         return pos;
 
+    }
+
+    @Deprecated
+    public void updateCaptionWithoutOwner(UIDL uidl) {
+        // TODO temporary method, needed because some tabsheet and accordion
+        // internal captions do not have an owner or shared state.
+        // Remaining such cases do not use the "style" attribute - see
+        // Tabsheet.paintContent().
+        String style = VCaption.CLASSNAME;
+        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
+            style += " " + ApplicationConnection.DISABLED_CLASSNAME;
+        }
+        setStyleName(style);
+        boolean hasDescription = uidl
+                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION);
+        if (hasDescription) {
+            if (captionText != null) {
+                addStyleDependentName("hasdescription");
+            } else {
+                removeStyleDependentName("hasdescription");
+            }
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.RenderSpace;
@@ -58,13 +59,14 @@ public class VFormLayout extends SimplePanel implements Container {
      * 
      * @param uidl
      *            The uidl to get the stylenames from
+     * @param state
+     *            shared state of the component
      * @return An array of stylenames
      */
-    private String[] getStylesFromUIDL(UIDL uidl) {
+    private String[] getStylesFromUIDL(UIDL uidl, ComponentState state) {
         List<String> styles = new ArrayList<String>();
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_STYLE)) {
-            String[] stylesnames = uidl.getStringAttribute(
-                    VAbstractPaintableWidget.ATTRIBUTE_STYLE).split(" ");
+        if (state.hasStyles()) {
+            String[] stylesnames = state.getStyle().split(" ");
             for (String name : stylesnames) {
                 styles.add(name);
             }
@@ -235,7 +237,7 @@ public class VFormLayout extends SimplePanel implements Container {
             final Caption c = widgetToCaption.get(paintable
                     .getWidgetForPaintable());
             if (c != null) {
-                c.updateCaption(uidl);
+                c.updateCaption(uidl, paintable.getState());
             }
             final ErrorFlag e = widgetToError.get(paintable
                     .getWidgetForPaintable());
@@ -339,11 +341,11 @@ public class VFormLayout extends SimplePanel implements Container {
             setStyleName(styleName);
         }
 
-        public void updateCaption(UIDL uidl) {
+        public void updateCaption(UIDL uidl, ComponentState state) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
             // Update styles as they might have changed when the caption changed
-            setStyles(getStylesFromUIDL(uidl));
+            setStyles(getStylesFromUIDL(uidl, state));
 
             boolean isEmpty = true;
 

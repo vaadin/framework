@@ -19,7 +19,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable {
         if (isRealUpdate(uidl)) {
             // Handle stylename changes before generics (might affect size
             // calculations)
-            getWidgetForPaintable().handleStyleNames(uidl);
+            getWidgetForPaintable().handleStyleNames(uidl, getState());
         }
 
         super.updateFromUIDL(uidl, client);

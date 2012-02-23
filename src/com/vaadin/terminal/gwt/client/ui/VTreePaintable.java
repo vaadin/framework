@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 
 public class VTreePaintable extends VAbstractPaintableWidget {
 
-    public static final String ATTRIBUTE_NODE_STYLE = VAbstractPaintableWidget.ATTRIBUTE_STYLE;
+    public static final String ATTRIBUTE_NODE_STYLE = "style";
     public static final String ATTRIBUTE_NODE_CAPTION = VAbstractPaintableWidget.ATTRIBUTE_CAPTION;
     public static final String ATTRIBUTE_NODE_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
 

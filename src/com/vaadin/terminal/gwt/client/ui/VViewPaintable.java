@@ -53,11 +53,10 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         } else {
             getWidgetForPaintable().theme = newTheme;
         }
-        if (uidl.hasAttribute(ATTRIBUTE_STYLE)) {
-            getWidgetForPaintable().setStyleName(
-                    getWidgetForPaintable().getStylePrimaryName() + " "
-                            + uidl.getStringAttribute(ATTRIBUTE_STYLE));
-        }
+        // this also implicitly removes old styles
+        getWidgetForPaintable().setStyleName(
+                getWidgetForPaintable().getStylePrimaryName() + " "
+                        + getState().getStyle());
 
         clickEventHandler.handleEventHandlerRegistration(client);
 

@@ -18,6 +18,9 @@ public class ComponentState extends SharedState {
     private String width = "";
     private boolean readOnly = false;
     private boolean immediate = false;
+    private String style = "";
+
+    // TODO more fields to move here: disabled, caption and description
 
     /**
      * Returns the component height as set by the server.
@@ -95,22 +98,82 @@ public class ComponentState extends SharedState {
         return "".equals(getWidth());
     }
 
+    /**
+     * Returns true if the component is in read-only mode.
+     * 
+     * @see Component.isReadOnly()
+     * 
+     * @return true if the component is in read-only mode
+     */
     public boolean isReadOnly() {
         return readOnly;
     }
 
+    /**
+     * Sets or resets the read-only mode for a component.
+     * 
+     * @see Component.setReadOnly()
+     * 
+     * @param readOnly
+     *            new mode for the component
+     */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
 
+    /**
+     * Returns true if the component is in immediate mode.
+     * 
+     * @see VariableOwner.isImmediate()
+     * 
+     * @return true if the component is in immediate mode
+     */
     public boolean isImmediate() {
         return immediate;
     }
 
+    /**
+     * Sets or resets the immediate mode for a component.
+     * 
+     * @see VariableOwner.setImmediate()
+     * 
+     * @param immediate
+     *            new mode for the component
+     */
     public void setImmediate(boolean immediate) {
         this.immediate = immediate;
     }
 
-    // TODO more fields to move here: style, disabled, caption and description
+    /**
+     * Returns the component styles as set by the server, as a space separated
+     * string.
+     * 
+     * @return component styles as defined by the server, not null
+     */
+    public String getStyle() {
+        if (style == null) {
+            return "";
+        }
+        return style;
+    }
+
+    /**
+     * Sets the component styles as a space separated string.
+     * 
+     * @param style
+     *            component styles as a space separated string, not null
+     */
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    /**
+     * Returns true if the component has user-defined styles.
+     * 
+     * @return true if the component has user-defined styles
+     */
+    public boolean hasStyles() {
+        return !"".equals(getStyle());
+    }
 
 }

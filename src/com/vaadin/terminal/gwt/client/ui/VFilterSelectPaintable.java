@@ -82,7 +82,8 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
             getWidgetForPaintable().inputPrompt = "";
         }
 
-        getWidgetForPaintable().suggestionPopup.updateStyleNames(uidl);
+        getWidgetForPaintable().suggestionPopup.updateStyleNames(uidl,
+                getState());
 
         getWidgetForPaintable().allowNewItem = uidl
                 .hasAttribute("allownewitem");
