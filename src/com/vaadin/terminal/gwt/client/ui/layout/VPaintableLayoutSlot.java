@@ -42,7 +42,7 @@ public class VPaintableLayoutSlot extends VLayoutSlot {
     public void setCaption(VCaption caption) {
         VCaption oldCaption = getCaption();
         if (oldCaption != null) {
-            getParentSize().deRegisterDependency(oldCaption.getElement());
+            getParentSize().unregisterDependency(oldCaption.getElement());
         }
         super.setCaption(caption);
         if (caption != null) {

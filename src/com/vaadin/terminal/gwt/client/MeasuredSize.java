@@ -75,7 +75,7 @@ public final class MeasuredSize {
         }
     }
 
-    public void deRegisterDependency(Element element) {
+    public void unregisterDependency(Element element) {
         dependencySizes.remove(element);
     }
 
