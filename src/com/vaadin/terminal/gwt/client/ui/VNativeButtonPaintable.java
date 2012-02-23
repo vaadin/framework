@@ -92,12 +92,12 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VButtonState getState() {
-        return (VButtonState) super.getState();
+    public ButtonState getState() {
+        return (ButtonState) super.getState();
     }
 
     @Override
     protected ComponentState createState() {
-        return GWT.create(VButtonState.class);
+        return GWT.create(ButtonState.class);
     }
 }

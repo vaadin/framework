@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VButton.ButtonClientToServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VButtonPaintable;
-import com.vaadin.terminal.gwt.client.ui.VButtonState;
+import com.vaadin.terminal.gwt.client.ui.ButtonState;
 import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
@@ -492,11 +492,11 @@ public class Button extends AbstractComponent implements
 
     @Override
     protected ComponentState createState() {
-        return new VButtonState();
+        return new ButtonState();
     }
 
     @Override
-    public VButtonState getState() {
-        return (VButtonState) super.getState();
+    public ButtonState getState() {
+        return (ButtonState) super.getState();
     }
 }

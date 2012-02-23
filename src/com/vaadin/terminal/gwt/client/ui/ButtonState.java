@@ -14,7 +14,7 @@ import com.vaadin.ui.Button;
  * 
  * @since 7.0
  */
-public class VButtonState extends ComponentState {
+public class ButtonState extends ComponentState {
     private boolean disableOnClick = false;
     private int clickShortcutKeyCode = 0;
 
