@@ -33,6 +33,5 @@ public interface VPaintableWidget extends VPaintable {
      * 
      * @return
      */
-    // FIXME: Rename to getParent()
     public VPaintableWidgetContainer getParent();
 }
