@@ -217,7 +217,9 @@ public class VTabsheet extends VTabsheetBase {
             boolean ret = super.updateCaption(uidl);
 
             // TODO required because the caption does not have an owner
-            updateCaptionWithoutOwner(uidl);
+            updateCaptionWithoutOwner(
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
 
             setClosable(uidl.hasAttribute("closable"));
 

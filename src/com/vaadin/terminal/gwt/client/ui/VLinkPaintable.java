@@ -29,8 +29,7 @@ public class VLinkPaintable extends VAbstractPaintableWidget {
 
         getWidgetForPaintable().client = client;
 
-        getWidgetForPaintable().enabled = uidl.hasAttribute(ATTRIBUTE_DISABLED) ? false
-                : true;
+        getWidgetForPaintable().enabled = !getState().isDisabled();
         getWidgetForPaintable().readonly = getState().isReadOnly();
 
         if (uidl.hasAttribute("name")) {

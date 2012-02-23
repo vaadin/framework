@@ -37,7 +37,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
-    public static final String ATTRIBUTE_OPTION_DISABLED = VAbstractPaintableWidget.ATTRIBUTE_DISABLED;
+    public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
 
     protected final Panel panel;
 

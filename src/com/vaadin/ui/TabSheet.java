@@ -404,7 +404,9 @@ public class TabSheet extends AbstractComponentContainer {
 
             final String description = tab.getDescription();
             if (description != null) {
-                target.addAttribute("description", description);
+                target.addAttribute(
+                        VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION,
+                        description);
             }
 
             final ErrorMessage componentError = tab.getComponentError();

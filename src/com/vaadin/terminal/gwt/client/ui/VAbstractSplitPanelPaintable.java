@@ -77,8 +77,7 @@ public abstract class VAbstractSplitPanelPaintable extends
             getWidgetForPaintable().rendering = false;
             return;
         }
-        getWidgetForPaintable().setEnabled(
-                !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED));
+        getWidgetForPaintable().setEnabled(!getState().isDisabled());
 
         clickEventHandler.handleEventHandlerRegistration(client);
         if (getState().hasStyles()) {

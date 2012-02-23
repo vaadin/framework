@@ -103,7 +103,7 @@ public class VCaption extends HTML {
                     style += " " + CLASSNAME + "-" + styles[i];
                 }
             }
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
+            if (owner.getState().isDisabled()) {
                 style += " " + ApplicationConnection.DISABLED_CLASSNAME;
             }
             setStyleName(style);
@@ -268,18 +268,17 @@ public class VCaption extends HTML {
     }
 
     @Deprecated
-    public void updateCaptionWithoutOwner(UIDL uidl) {
+    public void updateCaptionWithoutOwner(boolean disabled,
+            boolean hasDescription) {
         // TODO temporary method, needed because some tabsheet and accordion
         // internal captions do not have an owner or shared state.
         // Remaining such cases do not use the "style" attribute - see
         // Tabsheet.paintContent().
         String style = VCaption.CLASSNAME;
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
+        if (disabled) {
             style += " " + ApplicationConnection.DISABLED_CLASSNAME;
         }
         setStyleName(style);
-        boolean hasDescription = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DESCRIPTION);
         if (hasDescription) {
             if (captionText != null) {
                 addStyleDependentName("hasdescription");

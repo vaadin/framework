@@ -42,7 +42,7 @@ public class VUploadPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().fu.setName(getWidgetForPaintable().paintableId
                 + "_file");
 
-        if (uidl.hasAttribute(ATTRIBUTE_DISABLED) || getState().isReadOnly()) {
+        if (getState().isDisabled() || getState().isReadOnly()) {
             getWidgetForPaintable().disableUpload();
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress

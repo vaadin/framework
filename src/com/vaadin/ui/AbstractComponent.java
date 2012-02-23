@@ -773,10 +773,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
                 // TODO probably can remove some of these (caption, icon, ...)
                 // once all the VCaption related code has been updated
-                if (!isEnabled()) {
-                    target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_DISABLED, true);
-                }
                 if (getCaption() != null) {
                     target.addAttribute(
                             VAbstractPaintableWidget.ATTRIBUTE_CAPTION,
@@ -893,17 +889,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         sharedState.setImmediate(isImmediate());
         sharedState.setReadOnly(isReadOnly());
+        sharedState.setDisabled(!isEnabled());
 
         sharedState.setStyle(getStyleName());
 
         // TODO use the rest on the client side
-        // TODO icon also in shared state - how to convert Resource?
 
         // sharedState.setCaption(getCaption());
-        // if (!isEnabled()) {
-        // state.put(ComponentState.STATE_DISABLED, true);
-        // }
-        // // TODO add icon (Resource)
+        // // TODO icon also in shared state - how to convert Resource?
         // if (getDescription() != null && getDescription().length() > 0) {
         // state.put(ComponentState.STATE_DESCRIPTION, getDescription());
         // }

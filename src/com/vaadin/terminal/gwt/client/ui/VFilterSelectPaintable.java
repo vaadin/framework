@@ -29,8 +29,7 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
         getWidgetForPaintable().paintableId = uidl.getId();
 
         getWidgetForPaintable().readonly = getState().isReadOnly();
-        getWidgetForPaintable().enabled = !uidl
-                .hasAttribute(ATTRIBUTE_DISABLED);
+        getWidgetForPaintable().enabled = !getState().isDisabled();
 
         getWidgetForPaintable().tb.setEnabled(getWidgetForPaintable().enabled);
         getWidgetForPaintable().updateReadOnly();

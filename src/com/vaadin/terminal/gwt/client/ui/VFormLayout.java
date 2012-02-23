@@ -55,15 +55,13 @@ public class VFormLayout extends SimplePanel implements Container {
     }
 
     /**
-     * Parses the stylenames from an uidl
+     * Parses the stylenames from shared state
      * 
-     * @param uidl
-     *            The uidl to get the stylenames from
      * @param state
      *            shared state of the component
      * @return An array of stylenames
      */
-    private String[] getStylesFromUIDL(UIDL uidl, ComponentState state) {
+    private String[] getStylesFromState(ComponentState state) {
         List<String> styles = new ArrayList<String>();
         if (state.hasStyles()) {
             String[] stylesnames = state.getStyle().split(" ");
@@ -72,7 +70,7 @@ public class VFormLayout extends SimplePanel implements Container {
             }
         }
 
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_DISABLED)) {
+        if (state.isDisabled()) {
             styles.add(ApplicationConnection.DISABLED_CLASSNAME);
         }
 
@@ -345,7 +343,7 @@ public class VFormLayout extends SimplePanel implements Container {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
             // Update styles as they might have changed when the caption changed
-            setStyles(getStylesFromUIDL(uidl, state));
+            setStyles(getStylesFromState(state));
 
             boolean isEmpty = true;
 

@@ -55,8 +55,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
             return;
         }
 
-        getWidgetForPaintable().enabled = !uidl
-                .hasAttribute(ATTRIBUTE_DISABLED);
+        getWidgetForPaintable().enabled = !getState().isDisabled();
 
         if (BrowserInfo.get().isIE8() && !getWidgetForPaintable().enabled) {
             /*

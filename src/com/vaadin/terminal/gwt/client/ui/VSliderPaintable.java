@@ -25,8 +25,7 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
         }
 
         getWidgetForPaintable().immediate = getState().isImmediate();
-        getWidgetForPaintable().disabled = uidl
-                .getBooleanAttribute(ATTRIBUTE_DISABLED);
+        getWidgetForPaintable().disabled = getState().isDisabled();
         getWidgetForPaintable().readonly = getState().isReadOnly();
 
         getWidgetForPaintable().vertical = uidl.hasAttribute("vertical");

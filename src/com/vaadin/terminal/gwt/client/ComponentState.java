@@ -19,8 +19,9 @@ public class ComponentState extends SharedState {
     private boolean readOnly = false;
     private boolean immediate = false;
     private String style = "";
+    private boolean disabled = false;
 
-    // TODO more fields to move here: disabled, caption and description
+    // TODO more fields to move here: caption and description
 
     /**
      * Returns the component height as set by the server.
@@ -101,7 +102,7 @@ public class ComponentState extends SharedState {
     /**
      * Returns true if the component is in read-only mode.
      * 
-     * @see Component.isReadOnly()
+     * @see com.vaadin.ui.Component#isReadOnly()
      * 
      * @return true if the component is in read-only mode
      */
@@ -112,7 +113,7 @@ public class ComponentState extends SharedState {
     /**
      * Sets or resets the read-only mode for a component.
      * 
-     * @see Component.setReadOnly()
+     * @see com.vaadin.ui.Component#setReadOnly()
      * 
      * @param readOnly
      *            new mode for the component
@@ -124,7 +125,7 @@ public class ComponentState extends SharedState {
     /**
      * Returns true if the component is in immediate mode.
      * 
-     * @see VariableOwner.isImmediate()
+     * @see com.vaadin.terminal.VariableOwner#isImmediate()
      * 
      * @return true if the component is in immediate mode
      */
@@ -135,7 +136,7 @@ public class ComponentState extends SharedState {
     /**
      * Sets or resets the immediate mode for a component.
      * 
-     * @see VariableOwner.setImmediate()
+     * @see com.vaadin.terminal.VariableOwner#setImmediate()
      * 
      * @param immediate
      *            new mode for the component
@@ -174,6 +175,29 @@ public class ComponentState extends SharedState {
      */
     public boolean hasStyles() {
         return !"".equals(getStyle());
+    }
+
+    /**
+     * Returns true if the component is disabled.
+     * 
+     * @see com.vaadin.ui.Component#isEnabled()
+     * 
+     * @return true if the component is disabled
+     */
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    /**
+     * Disables or enables the component.
+     * 
+     * @see com.vaadin.ui.Component#setEnabled(boolean)
+     * 
+     * @param disabled
+     *            new mode for the component
+     */
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
 }

@@ -32,7 +32,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     public static final String ATTRIBUTE_REQUIRED = "required";
     public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
-    public static final String ATTRIBUTE_DISABLED = "disabled";
 
     private Widget widget;
     private ApplicationConnection connection;
@@ -204,7 +203,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             ((Focusable) getWidgetForPaintable()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
-        setEnabled(!uidl.getBooleanAttribute(ATTRIBUTE_DISABLED));
+        setEnabled(!getState().isDisabled());
 
         // Style names
         String styleName = getStyleNameFromUIDL(getWidgetForPaintable()
@@ -318,7 +317,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
      */
     protected static String getStyleNameFromUIDL(String primaryStyleName,
             UIDL uidl, ComponentState state, boolean field) {
-        boolean enabled = !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED);
+        boolean enabled = !state.isDisabled();
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);

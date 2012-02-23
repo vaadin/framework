@@ -31,8 +31,7 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
             }
         }
         if (isRealUpdate(uidl)) {
-            getWidgetForPaintable().setEnabled(
-                    !uidl.getBooleanAttribute(ATTRIBUTE_DISABLED));
+            getWidgetForPaintable().setEnabled(!getState().isDisabled());
         }
 
         super.updateFromUIDL(uidl, client);
