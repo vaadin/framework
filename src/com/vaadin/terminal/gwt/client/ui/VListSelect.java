@@ -136,7 +136,7 @@ class TooltipListBox extends ListBox {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, widget);
+            client.handleTooltipEvent(event, widget);
         }
     }
 

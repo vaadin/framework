@@ -817,7 +817,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleWidgetTooltipEvent(event, VFilterSelect.this);
+                client.handleTooltipEvent(event, VFilterSelect.this);
             }
         }
 
@@ -850,7 +850,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleWidgetTooltipEvent(event, VFilterSelect.this);
+                client.handleTooltipEvent(event, VFilterSelect.this);
             }
 
             /*
@@ -1429,7 +1429,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 // request immediately; otherwise queue in the same burst as the
                 // focus event. Fixes #8321.
                 boolean immediate = focused
-                        || !client.hasWidgetEventListeners(this, EventId.FOCUS);
+                        || !client.hasEventListeners(this, EventId.FOCUS);
                 filterOptions(-1, "", immediate);
                 popupOpenerClicked = true;
                 lastFilter = "";
@@ -1495,7 +1495,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         addStyleDependentName("focus");
 
-        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
     }
@@ -1560,7 +1560,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
         removeStyleDependentName("focus");
 
-        if (client.hasWidgetEventListeners(this, EventId.BLUR)) {
+        if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(paintableId, EventId.BLUR, "", true);
         }
     }

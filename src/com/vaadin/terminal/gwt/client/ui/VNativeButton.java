@@ -92,7 +92,7 @@ public class VNativeButton extends Button implements ClickHandler,
         }
 
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
     }
 

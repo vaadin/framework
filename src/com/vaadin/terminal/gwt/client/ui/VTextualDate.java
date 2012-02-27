@@ -62,7 +62,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     setPrompting(false);
                 }
                 if (getClient() != null
-                        && getClient().hasWidgetEventListeners(
+                        && getClient().hasEventListeners(
                                 VTextualDate.this, EventId.FOCUS)) {
                     getClient()
                             .updateVariable(getId(), EventId.FOCUS, "", true);
@@ -80,7 +80,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     text.setText(readonly ? "" : inputPrompt);
                 }
                 if (getClient() != null
-                        && getClient().hasWidgetEventListeners(
+                        && getClient().hasEventListeners(
                                 VTextualDate.this, EventId.BLUR)) {
                     getClient().updateVariable(getId(), EventId.BLUR, "", true);
                 }

@@ -1579,7 +1579,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
         client.updateVariable(paintableId, "columnorder", columnOrder, false);
-        if (client.hasWidgetEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
+        if (client.hasEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
             client.sendPendingVariableChanges();
         }
     }
@@ -2270,7 +2270,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     handleCaptionEvent(event);
                     boolean stopPropagation = true;
                     if (event.getTypeInt() == Event.ONCONTEXTMENU
-                            && !client.hasWidgetEventListeners(
+                            && !client.hasEventListeners(
                                     VScrollTable.this, HEADER_CLICK_EVENT_ID)) {
                         // Prevent showing the browser's context menu only when
                         // there is a header click listener.
@@ -2323,7 +2323,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          *            The click event
          */
         private void fireHeaderClickedEvent(Event event) {
-            if (client.hasWidgetEventListeners(VScrollTable.this,
+            if (client.hasEventListeners(VScrollTable.this,
                     HEADER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent",
@@ -3346,7 +3346,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
                 boolean stopPropagation = true;
                 if (event.getTypeInt() == Event.ONCONTEXTMENU
-                        && !client.hasWidgetEventListeners(VScrollTable.this,
+                        && !client.hasEventListeners(VScrollTable.this,
                                 FOOTER_CLICK_EVENT_ID)) {
                     // Show browser context menu if a footer click listener is
                     // not present
@@ -3380,7 +3380,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          *            The click event
          */
         private void fireFooterClickedEvent(Event event) {
-            if (client.hasWidgetEventListeners(VScrollTable.this,
+            if (client.hasEventListeners(VScrollTable.this,
                     FOOTER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = new MouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent",
@@ -4132,12 +4132,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
                     .get(index);
             // Unregister row tooltip
-            client.registerWidgetTooltip(VScrollTable.this,
+            client.registerTooltip(VScrollTable.this,
                     toBeRemoved.getElement(), null);
             for (int i = 0; i < toBeRemoved.getElement().getChildCount(); i++) {
                 // Unregister cell tooltips
                 Element td = toBeRemoved.getElement().getChild(i).cast();
-                client.registerWidgetTooltip(VScrollTable.this, td, null);
+                client.registerTooltip(VScrollTable.this, td, null);
             }
             lazyUnregistryBag.add(toBeRemoved);
             tBodyElement.removeChild(toBeRemoved.getElement());
@@ -4395,11 +4395,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
                     TooltipInfo info = new TooltipInfo(rowDescription);
-                    client.registerWidgetTooltip(VScrollTable.this, rowElement,
+                    client.registerTooltip(VScrollTable.this, rowElement,
                             info);
                 } else {
                     // Remove possibly previously set tooltip
-                    client.registerWidgetTooltip(VScrollTable.this, rowElement,
+                    client.registerTooltip(VScrollTable.this, rowElement,
                             null);
                 }
 
@@ -4636,10 +4636,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (description != null && !description.equals("")) {
                     TooltipInfo info = new TooltipInfo(description);
-                    client.registerWidgetTooltip(VScrollTable.this, td, info);
+                    client.registerTooltip(VScrollTable.this, td, info);
                 } else {
                     // Remove possibly previously set tooltip
-                    client.registerWidgetTooltip(VScrollTable.this, td, null);
+                    client.registerTooltip(VScrollTable.this, td, null);
                 }
 
                 td.appendChild(container);
@@ -4718,7 +4718,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             private boolean handleClickEvent(Event event, Element targetTdOrTr,
                     boolean immediate) {
-                if (!client.hasWidgetEventListeners(VScrollTable.this,
+                if (!client.hasEventListeners(VScrollTable.this,
                         ITEM_CLICK_EVENT_ID)) {
                     // Don't send an event if nobody is listening
                     return false;
@@ -4765,12 +4765,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         if (VPaintableMap.get(client).getWidgetTooltipInfo(
                                 VScrollTable.this, target) != null) {
                             // Cell has description, use it
-                            client.handleWidgetTooltipEvent(event,
+                            client.handleTooltipEvent(event,
                                     VScrollTable.this, target);
                         } else {
                             // Cell might have row description, use row
                             // description
-                            client.handleWidgetTooltipEvent(event,
+                            client.handleTooltipEvent(event,
                                     VScrollTable.this,
                                     target.getParentElement());
                         }
@@ -4778,7 +4778,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 } else {
                     // Table row (tr)
-                    client.handleWidgetTooltipEvent(event, VScrollTable.this,
+                    client.handleTooltipEvent(event, VScrollTable.this,
                             target);
                 }
             }
@@ -4795,7 +4795,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         showContextMenu(event);
                         if (enabled
                                 && (actionKeys != null || client
-                                        .hasWidgetEventListeners(
+                                        .hasEventListeners(
                                                 VScrollTable.this,
                                                 ITEM_CLICK_EVENT_ID))) {
                             /*

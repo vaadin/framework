@@ -112,7 +112,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
 
         if (listenTextChangeEvents
@@ -302,7 +302,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             boolean sendBlurEvent = false;
             boolean sendValueChange = false;
 
-            if (blurred && client.hasWidgetEventListeners(this, EventId.BLUR)) {
+            if (blurred && client.hasEventListeners(this, EventId.BLUR)) {
                 sendBlurEvent = true;
                 client.updateVariable(paintableId, EventId.BLUR, "", false);
             }
@@ -368,7 +368,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             setPrompting(false);
         }
         focusedTextField = this;
-        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
     }

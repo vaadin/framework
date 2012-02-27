@@ -131,7 +131,7 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
      */
     public void onBrowserEvent(Event event) {
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);

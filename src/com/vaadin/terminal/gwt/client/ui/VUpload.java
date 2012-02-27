@@ -134,7 +134,7 @@ public class VUpload extends SimplePanel {
     @Override
     public void onBrowserEvent(Event event) {
         if ((event.getTypeInt() & VTooltip.TOOLTIP_EVENTS) > 0) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
         super.onBrowserEvent(event);
     }

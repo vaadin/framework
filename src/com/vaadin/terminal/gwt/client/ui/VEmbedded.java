@@ -253,7 +253,7 @@ public class VEmbedded extends HTML {
             Util.notifyParentOfSizeChange(this, true);
         }
 
-        client.handleWidgetTooltipEvent(event, this);
+        client.handleTooltipEvent(event, this);
     }
 
     /**

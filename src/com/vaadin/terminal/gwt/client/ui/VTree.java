@@ -642,13 +642,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             }
 
             if (target == nodeCaptionSpan) {
-                client.handleWidgetTooltipEvent(event, VTree.this, key);
+                client.handleTooltipEvent(event, VTree.this, key);
             }
 
             final boolean inCaption = target == nodeCaptionSpan
                     || (icon != null && target == icon.getElement());
             if (inCaption
-                    && client.hasWidgetEventListeners(VTree.this,
+                    && client.hasEventListeners(VTree.this,
                             ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {

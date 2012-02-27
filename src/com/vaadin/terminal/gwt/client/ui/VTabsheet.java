@@ -208,10 +208,10 @@ public class VTabsheet extends VTabsheetBase {
                 if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
-                client.registerWidgetTooltip(getTabsheet(), getElement(),
+                client.registerTooltip(getTabsheet(), getElement(),
                         tooltipInfo);
             } else {
-                client.registerWidgetTooltip(getTabsheet(), getElement(), null);
+                client.registerTooltip(getTabsheet(), getElement(), null);
             }
 
             // TODO need to call this instead of super because the caption does
@@ -245,7 +245,7 @@ public class VTabsheet extends VTabsheetBase {
             if (event.getTypeInt() == Event.ONLOAD) {
                 getTabsheet().tabSizeMightHaveChanged(getTab());
             }
-            client.handleWidgetTooltipEvent(event, getTabsheet(), getElement());
+            client.handleTooltipEvent(event, getTabsheet(), getElement());
         }
 
         public Tab getTab() {

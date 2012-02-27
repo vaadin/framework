@@ -2215,24 +2215,24 @@ public class ApplicationConnection {
     }
 
     @Deprecated
-    public void handleWidgetTooltipEvent(Event event, Widget owner, Object key) {
+    public void handleTooltipEvent(Event event, Widget owner, Object key) {
         handleTooltipEvent(event, getPaintableMap().getPaintable(owner), key);
 
     }
 
     @Deprecated
-    public void handleWidgetTooltipEvent(Event event, Widget owner) {
+    public void handleTooltipEvent(Event event, Widget owner) {
         handleTooltipEvent(event, getPaintableMap().getPaintable(owner));
 
     }
 
     @Deprecated
-    public void registerWidgetTooltip(Widget owner, Object key, TooltipInfo info) {
+    public void registerTooltip(Widget owner, Object key, TooltipInfo info) {
         registerTooltip(getPaintableMap().getPaintable(owner), key, info);
     }
 
     @Deprecated
-    public boolean hasWidgetEventListeners(Widget widget, String eventIdentifier) {
+    public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getPaintableMap().getPaintable(widget),
                 eventIdentifier);
     }

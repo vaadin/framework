@@ -103,7 +103,7 @@ public class VLink extends HTML implements ClickHandler {
             Util.notifyParentOfSizeChange(this, true);
         }
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
         if (target == captionElement || target == anchor
                 || (icon != null && target == icon.getElement())) {

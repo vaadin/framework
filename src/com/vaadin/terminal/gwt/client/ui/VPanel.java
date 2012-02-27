@@ -264,7 +264,7 @@ public class VPanel extends SimplePanel implements Container,
             }
         } else if (captionNode.isOrHasChild(target)) {
             if (client != null) {
-                client.handleWidgetTooltipEvent(event, this);
+                client.handleTooltipEvent(event, this);
             }
         }
     }

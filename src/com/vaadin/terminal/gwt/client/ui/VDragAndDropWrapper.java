@@ -94,7 +94,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         super.onBrowserEvent(event);
 
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
     }
 

@@ -81,7 +81,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             Util.notifyParentOfSizeChange(this, true);
         }
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
     }
 

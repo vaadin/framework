@@ -72,7 +72,7 @@ public class VDateField extends FlowPanel implements Field {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
     }
 

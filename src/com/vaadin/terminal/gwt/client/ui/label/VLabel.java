@@ -41,7 +41,7 @@ public class VLabel extends HTML {
             return;
         }
         if (connection != null) {
-            connection.handleWidgetTooltipEvent(event, this);
+            connection.handleTooltipEvent(event, this);
         }
     }
 

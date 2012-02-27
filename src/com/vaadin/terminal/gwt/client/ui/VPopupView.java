@@ -394,7 +394,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
     }
 

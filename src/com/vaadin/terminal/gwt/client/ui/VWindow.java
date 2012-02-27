@@ -598,7 +598,7 @@ public class VWindow extends VOverlay implements Container,
 
         if (client != null && header.isOrHasChild(target)) {
             // Handle window caption tooltips
-            client.handleWidgetTooltipEvent(event, this);
+            client.handleTooltipEvent(event, this);
         }
 
         if (resizing || resizeBox == target) {
@@ -1029,13 +1029,13 @@ public class VWindow extends VOverlay implements Container,
     }
 
     public void onBlur(BlurEvent event) {
-        if (client.hasWidgetEventListeners(this, EventId.BLUR)) {
+        if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
     }
 
     public void onFocus(FocusEvent event) {
-        if (client.hasWidgetEventListeners(this, EventId.FOCUS)) {
+        if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
     }

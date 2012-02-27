@@ -346,7 +346,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         // Handle tooltips
         if (targetItem == null && client != null) {
             // Handle root menubar tooltips
-            client.handleWidgetTooltipEvent(e, this);
+            client.handleTooltipEvent(e, this);
         } else if (targetItem != null) {
             // Handle item tooltips
             targetItem.onBrowserEvent(e);
@@ -926,7 +926,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 TooltipInfo info = new TooltipInfo(description);
 
                 VMenuBar root = findRootMenu();
-                client.registerWidgetTooltip(root, this, info);
+                client.registerTooltip(root, this, info);
             }
         }
 
@@ -934,7 +934,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (client != null) {
-                client.handleWidgetTooltipEvent(event, findRootMenu(), this);
+                client.handleTooltipEvent(event, findRootMenu(), this);
             }
         }
 
