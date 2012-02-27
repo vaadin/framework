@@ -26,8 +26,6 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -702,7 +700,7 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print(getSecurityKeyUIDL(request));
         }
 
-        writeUidlResponce(repaintAll, outWriter, root, analyzeLayouts);
+        writeUidlResponse(repaintAll, outWriter, root, analyzeLayouts);
 
         closeJsonMessage(outWriter);
 
@@ -752,7 +750,7 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    public void writeUidlResponce(boolean repaintAll,
+    public void writeUidlResponse(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
         ArrayList<Paintable> paintables = null;
@@ -792,35 +790,6 @@ public abstract class AbstractCommunicationManager implements
             }
             // TODO second list/stack for those whose state needs to be sent?
             paintables = getDirtyVisibleComponents(root);
-        }
-
-        if (paintables != null) {
-            // We need to avoid painting children before parent.
-            // This is ensured by ordering list by depth in component
-            // tree
-            Collections.sort(paintables, new Comparator<Paintable>() {
-                public int compare(Paintable o1, Paintable o2) {
-                    Component c1 = (Component) o1;
-                    Component c2 = (Component) o2;
-                    int d1 = 0;
-                    while (c1.getParent() != null) {
-                        d1++;
-                        c1 = c1.getParent();
-                    }
-                    int d2 = 0;
-                    while (c2.getParent() != null) {
-                        d2++;
-                        c2 = c2.getParent();
-                    }
-                    if (d1 < d2) {
-                        return -1;
-                    }
-                    if (d1 > d2) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            });
         }
 
         outWriter.print("\"changes\":[");
@@ -2135,7 +2104,7 @@ public abstract class AbstractCommunicationManager implements
      */
     protected String getInitialUIDL(WrappedRequest request, Root root)
             throws PaintException {
-        // TODO maybe unify writeUidlResponCe()?
+        // TODO maybe unify writeUidlResponse()?
         makeAllPaintablesDirty(root);
         StringWriter sWriter = new StringWriter();
         PrintWriter pWriter = new PrintWriter(sWriter);
@@ -2143,7 +2112,7 @@ public abstract class AbstractCommunicationManager implements
         if (isXSRFEnabled(root.getApplication())) {
             pWriter.print(getSecurityKeyUIDL(request));
         }
-        writeUidlResponce(true, pWriter, root, false);
+        writeUidlResponse(true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
         return initialUIDL;
