@@ -242,8 +242,8 @@ public class VUIDLBrowser extends SimpleTree {
     }
 
     static void highlight(VPaintableWidget paintable) {
-        Widget w = paintable.getWidgetForPaintable();
-        if (w != null) {
+        if (paintable != null) {
+            Widget w = paintable.getWidgetForPaintable();
             Style style = highlight.getStyle();
             style.setTop(w.getAbsoluteTop(), Unit.PX);
             style.setLeft(w.getAbsoluteLeft(), Unit.PX);
