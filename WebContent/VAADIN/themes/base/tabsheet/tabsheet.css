@@ -13,6 +13,9 @@
 	width: 100%;
 	overflow:hidden;
 }
+.v-tabsheet-tabitemcell:focus {
+	outline: none;
+}
 .v-tabsheet-tabitemcell,
 .v-tabsheet-spacertd {
 	margin: 0;

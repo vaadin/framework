@@ -16,8 +16,10 @@ import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -61,7 +63,7 @@ import com.vaadin.ui.themes.Runo;
 @SuppressWarnings("serial")
 @ClientWidget(VTabsheet.class)
 public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusListener, BlurListener {
+        FocusNotifier, BlurNotifier {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,
@@ -663,6 +665,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 closeHandler.onTabClose(this, tab);
             }
         }
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
+        }
     }
 
     /**
@@ -1238,15 +1246,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         return components.indexOf(tab.getComponent());
     }
 
-    public void blur(BlurEvent event) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void focus(FocusEvent event) {
-        // TODO Auto-generated method stub
-    }
-
     @Override
     public void focus() {
         super.focus();
@@ -1261,4 +1260,22 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         requestRepaint();
     }
 
+    public void addListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+
+    }
 }

@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation;
@@ -43,7 +44,6 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VTabsheet extends VTabsheetBase implements Focusable,
         FocusHandler, BlurHandler, KeyDownHandler {
@@ -101,8 +101,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             this.tabBar = tabBar;
             setStyleName(td, TD_CLASSNAME);
 
-            div = focusImpl.createFocusable();
-            focusImpl.setTabIndex(div, -1);
+            div = DOM.createDiv();
+            focusImpl.setTabIndex(td, -1);
             setStyleName(div, DIV_CLASSNAME);
 
             DOM.appendChild(td, div);
@@ -137,6 +137,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         public void setEnabledOnServer(boolean enabled) {
             enabledOnServer = enabled;
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
+            if (!enabled) {
+                focusImpl.setTabIndex(td, -1);
+            }
         }
 
         public void addClickHandler(ClickHandler handler) {
@@ -157,7 +160,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          */
         public void setStyleNames(boolean selected, boolean first) {
             // TODO #5100 doesn't belong here
-            focusImpl.setTabIndex(div, selected ? 0 : -1);
+            focusImpl.setTabIndex(td, selected ? getTabsheet().tabulatorIndex
+                    : -1);
 
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
@@ -165,11 +169,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             setStyleName(div, DIV_SELECTED_CLASSNAME, selected);
         }
 
-        public void onClose() {
-            VConsole.log("OnClose");
+        public boolean isClosable() {
+            return tabCaption.isClosable();
+        }
 
+        public void onClose() {
             closeHandler.onClose(new VCloseEvent(this));
-            VConsole.log("End OnClose");
         }
 
         public VTabsheet getTabsheet() {
@@ -218,11 +223,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void focus() {
-            focusImpl.focus(div);
+            focusImpl.focus(td);
         }
 
         public void blur() {
-            focusImpl.blur(div);
+            focusImpl.blur(td);
         }
     }
 
@@ -333,6 +338,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
         }
 
+        public boolean isClosable() {
+            return closable;
+        }
+
         @Override
         public int getRequiredWidth() {
             int width = super.getRequiredWidth();
@@ -406,7 +415,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             Widget caption = (Widget) event.getSource();
             int index = getWidgetIndex(caption.getParent());
             getTabsheet().onTabSelected(index);
-            getTabsheet().focus();
         }
 
         public VTabsheet getTabsheet() {
@@ -547,6 +555,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private Tab focusedTab;
 
+    private int tabulatorIndex = 0;
+
     /**
      * The index of the first visible tab (when scrolled)
      */
@@ -574,20 +584,22 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private String currentStyle;
 
-    private void onTabSelected(final int tabIndex) {
+    /**
+     * @return Whether the tab could be selected or not.
+     */
+    private boolean onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
-            return;
+            return false;
         }
         final Object tabKey = tabKeys.get(tabIndex);
         if (disabledTabKeys.contains(tabKey)) {
-            return;
+            return false;
         }
         if (client != null && activeTabIndex != tabIndex) {
             tb.selectTab(tabIndex);
 
             if (focusedTab != null) {
-                focusedTab.blur();
-                tb.getTab(tabIndex).focus();
+                focusedTab = tb.getTab(tabIndex);
             }
 
             addStyleDependentName("loading");
@@ -604,7 +616,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 }
             });
             waitingForResponse = true;
+
+            return true;
         }
+        return false;
     }
 
     public ApplicationConnection getApplicationConnection() {
@@ -751,10 +766,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             updateOpenTabSize();
         }
 
+        if (uidl.hasAttribute("tabindex")) {
+            tabulatorIndex = uidl.getIntAttribute("tabindex");
+            if (tabulatorIndex == -1) {
+                blur();
+            }
+        }
+
         // If a tab was focused before, focus the new active tab
-        if (focusedTab != null && tb.getTabCount() > 0) {
-            focusedTab = tb.getTab(activeTabIndex);
-            focusedTab.focus();
+        if (focusedTab != null && tb.getTabCount() > 0 && tabulatorIndex != -1) {
+            focus();
         }
 
         iLayout();
@@ -985,9 +1006,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
         if (previousVisibleWidget != null) {
-            // DOM.setStyleAttribute(
-            // DOM.getParent(previousVisibleWidget.getElement()),
-            // "visibility", "");
+            DOM.setStyleAttribute(
+                    DOM.getParent(previousVisibleWidget.getElement()),
+                    "visibility", "");
             previousVisibleWidget = null;
         }
     }
@@ -1277,52 +1298,78 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     public void onBlur(BlurEvent event) {
-        focusedTab = null;
-        // TODO Auto-generated method stub
-        VConsole.log("BLUR " + event);
+        if (focusedTab != null && event.getSource() instanceof Tab) {
+            focusedTab = null;
+            if (client.hasEventListeners(this, EventId.BLUR)) {
+                client.updateVariable(id, EventId.BLUR, "", true);
+            }
+        }
     }
 
     public void onFocus(FocusEvent event) {
-        // TODO Auto-generated method stub
-        VConsole.log("FOCUS " + event);
-        if (event.getSource() instanceof Tab) {
+        if (focusedTab == null && event.getSource() instanceof Tab) {
             focusedTab = (Tab) event.getSource();
+            if (client.hasEventListeners(this, EventId.FOCUS)) {
+                client.updateVariable(id, EventId.FOCUS, "", true);
+            }
         }
     }
 
     public void focus() {
-        if (focusedTab == null) {
-            focusedTab = tb.getTab(activeTabIndex);
-            focusedTab.focus();
-        }
+        tb.getTab(activeTabIndex).focus();
     }
 
     public void blur() {
-        if (focusedTab != null) {
-            focusedTab.blur();
-            focusedTab = null;
-        }
+        tb.getTab(activeTabIndex).blur();
     }
 
     public void onKeyDown(KeyDownEvent event) {
         if (event.getSource() instanceof Tab) {
-            VConsole.log("KEYDOWN");
             int keycode = event.getNativeEvent().getKeyCode();
+
             if (keycode == getPreviousTabKey()) {
-                int newTabIndex = activeTabIndex == 0 ? tb.getTabCount() - 1
-                        : activeTabIndex - 1;
-                onTabSelected(newTabIndex);
+                int newTabIndex = activeTabIndex;
+                // Find the previous non-disabled tab with wraparound.
+                do {
+                    newTabIndex = (newTabIndex != 0) ? newTabIndex - 1 : tb
+                            .getTabCount() - 1;
+                } while (newTabIndex != activeTabIndex
+                        && !onTabSelected(newTabIndex));
                 activeTabIndex = newTabIndex;
+
+                // Tab scrolling
+                if (isScrolledTabs()) {
+                    int newFirstIndex = tb.scrollLeft(scrollerIndex);
+                    if (newFirstIndex != -1) {
+                        scrollerIndex = newFirstIndex;
+                        updateTabScroller();
+                    }
+                }
+
             } else if (keycode == getNextTabKey()) {
-                int newTabIndex = (activeTabIndex + 1) % tb.getTabCount();
-                onTabSelected(newTabIndex);
+                int newTabIndex = activeTabIndex;
+                // Find the next non-disabled tab with wraparound.
+                do {
+                    newTabIndex = (newTabIndex + 1) % tb.getTabCount();
+                } while (newTabIndex != activeTabIndex
+                        && !onTabSelected(newTabIndex));
                 activeTabIndex = newTabIndex;
+
+                if (isClippedTabs()) {
+                    int newFirstIndex = tb.scrollRight(scrollerIndex);
+                    if (newFirstIndex != -1) {
+                        scrollerIndex = newFirstIndex;
+                        updateTabScroller();
+                    }
+                }
+
             } else if (keycode == getCloseTabKey()) {
-                VConsole.log("INDEX=" + activeTabIndex);
-                focusedTab.onClose();
-                removeTab(activeTabIndex);
+                Tab tab = tb.getTab(activeTabIndex);
+                if (tab.isClosable()) {
+                    tab.onClose();
+                    removeTab(activeTabIndex);
+                }
             }
-            VConsole.log("tabindex -> " + activeTabIndex);
         }
     }
 
