@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class VAbstractSplitPanelPaintable extends
-        VAbstractPaintableWidgetContainer implements ResizeRequired {
+        VAbstractPaintableWidgetContainer implements SimpleManagedLayout {
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
@@ -123,11 +123,10 @@ public abstract class VAbstractSplitPanelPaintable extends
         // appearing/disappearing scrollbars into account.
         client.runDescendentsLayout(getWidgetForPaintable());
 
-        getMeasuredSize().setHeightNeedsUpdate();
-        getMeasuredSize().setWidthNeedsUpdate();
+        getLayoutManager().setNeedsUpdate(this);
     }
 
-    public void onResize() {
+    public void layout() {
         VAbstractSplitPanel splitPanel = getWidgetForPaintable();
         splitPanel.setSplitPosition(splitPanel.position);
         splitPanel.updateSizes();

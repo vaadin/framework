@@ -8,18 +8,17 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
-        ResizeRequired {
+        SimpleManagedLayout {
 
-    public VFormPaintable() {
+    @Override
+    public void init() {
         VForm form = getWidgetForPaintable();
-        MeasuredSize measuredSize = getMeasuredSize();
-        measuredSize.registerDependency(form.footerContainer);
+        getLayoutManager().registerDependency(this, form.footerContainer);
     }
 
     @Override
@@ -178,12 +177,12 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
         return GWT.create(VForm.class);
     }
 
-    public void onResize() {
-        MeasuredSize measuredSize = getMeasuredSize();
+    public void layout() {
         VForm form = getWidgetForPaintable();
 
-        int footerHeight = measuredSize
-                .getDependencyOuterHeight(form.footerContainer);
+        int footerHeight = getLayoutManager().getOuterHeight(
+                form.footerContainer);
+
         form.fieldContainer.getStyle().setPaddingBottom(footerHeight, Unit.PX);
         form.footerContainer.getStyle().setMarginTop(-footerHeight, Unit.PX);
     }

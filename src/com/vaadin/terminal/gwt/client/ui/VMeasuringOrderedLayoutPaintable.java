@@ -8,10 +8,11 @@ import java.util.Iterator;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.CalculatingLayout;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -21,10 +22,11 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VPaintableLayoutSlot;
 
 public abstract class VMeasuringOrderedLayoutPaintable extends
-        VAbstractPaintableWidgetContainer implements CalculatingLayout {
+        VAbstractPaintableWidgetContainer implements DirectionalManagedLayout {
 
-    public VMeasuringOrderedLayoutPaintable() {
-        getMeasuredSize().registerDependency(
+    @Override
+    public void init() {
+        getLayoutManager().registerDependency(this,
                 getWidgetForPaintable().spacingMeasureElement);
     }
 
@@ -145,18 +147,18 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
         layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
 
-        getMeasuredSize().setHeightNeedsUpdate();
-        getMeasuredSize().setWidthNeedsUpdate();
+        getLayoutManager().setNeedsUpdate(this);
     }
 
     private int getSizeForInnerSize(int size, boolean isVertical) {
-        MeasuredSize measuredSize = getMeasuredSize();
+        LayoutManager layoutManager = getLayoutManager();
+        Element element = getWidgetForPaintable().getElement();
         if (isVertical) {
-            return size + measuredSize.getBorderHeight()
-                    + measuredSize.getPaddingHeight();
+            return size + layoutManager.getBorderHeight(element)
+                    + layoutManager.getPaddingHeight(element);
         } else {
-            return size + measuredSize.getBorderWidth()
-                    + measuredSize.getPaddingWidth();
+            return size + layoutManager.getBorderWidth(element)
+                    + layoutManager.getPaddingWidth(element);
         }
     }
 
@@ -174,9 +176,11 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private int getInnerSizeInDirection(boolean isVertical) {
         if (isVertical) {
-            return getMeasuredSize().getInnerHeight();
+            return getLayoutManager().getInnerHeight(
+                    getWidgetForPaintable().getElement());
         } else {
-            return getMeasuredSize().getInnerWidth();
+            return getLayoutManager().getInnerWidth(
+                    getWidgetForPaintable().getElement());
         }
     }
 
@@ -210,10 +214,10 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private int getSpacingInDirection(boolean isVertical) {
         if (isVertical) {
-            return getMeasuredSize().getDependencyOuterHeight(
+            return getLayoutManager().getOuterHeight(
                     getWidgetForPaintable().spacingMeasureElement);
         } else {
-            return getMeasuredSize().getDependencyOuterWidth(
+            return getLayoutManager().getOuterWidth(
                     getWidgetForPaintable().spacingMeasureElement);
         }
     }
@@ -259,13 +263,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private int getStartPadding(boolean isVertical) {
         if (isVertical) {
-            return getMeasuredSize().getPaddingTop();
+            return getLayoutManager().getPaddingTop(
+                    getWidgetForPaintable().getElement());
         } else {
-            return getMeasuredSize().getPaddingLeft();
+            return getLayoutManager().getPaddingLeft(
+                    getWidgetForPaintable().getElement());
         }
     }
 
-    public void updateHorizontalSizes() {
+    public void layoutHorizontally() {
         if (getWidgetForPaintable().isVertical) {
             layoutSecondaryDirection();
         } else {
@@ -273,7 +279,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         }
     }
 
-    public void updateVerticalSizes() {
+    public void layoutVertically() {
         if (getWidgetForPaintable().isVertical) {
             layoutPrimaryDirection();
         } else {

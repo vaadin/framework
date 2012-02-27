@@ -32,7 +32,9 @@ public final class FastStringSet extends JavaScriptObject {
     /*-{
         var array = [];
         for(var string in this) {
-            array.push(string);
+            if (this.hasOwnProperty(string)) {
+                array.push(string);
+            }
         }
         return array;
     }-*/;
@@ -40,6 +42,16 @@ public final class FastStringSet extends JavaScriptObject {
     public native void remove(String string)
     /*-{
         delete this[string];
+    }-*/;
+
+    public native boolean isEmpty()
+    /*-{
+        for(var string in this) {
+            if (this.hasOwnProperty(string)) {
+                return false;
+            }
+        }
+        return true;
     }-*/;
 
     public static FastStringSet create() {

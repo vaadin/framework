@@ -162,7 +162,7 @@ public class ApplicationConnection {
 
     private Set<VPaintableWidget> zeroHeightComponents = null;
 
-    private final MeasureManager measureManager = new MeasureManager();
+    private final LayoutManager layoutManager = new LayoutManager(this);
 
     public ApplicationConnection() {
         view = GWT.create(VViewPaintable.class);
@@ -1594,16 +1594,7 @@ public class ApplicationConnection {
     public void forceLayout() {
         Duration duration = new Duration();
 
-        VPaintableMap paintableMap = getPaintableMap();
-        VPaintableWidget[] paintableWidgets = paintableMap
-                .getRegisteredPaintableWidgets();
-        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
-            MeasuredSize measuredSize = vPaintableWidget.getMeasuredSize();
-            measuredSize.setHeightNeedsUpdate();
-            measuredSize.setWidthNeedsUpdate();
-        }
-
-        doLayout(false);
+        layoutManager.foceLayout();
 
         VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }
@@ -2015,7 +2006,7 @@ public class ApplicationConnection {
         public void execute() {
             layoutScheduled = false;
 
-            measureManager.doLayout(ApplicationConnection.this);
+            layoutManager.doLayout();
         }
     };
 
@@ -2026,5 +2017,9 @@ public class ApplicationConnection {
             layoutScheduled = true;
             Scheduler.get().scheduleDeferred(layoutCommand);
         }
+    }
+
+    LayoutManager getLayoutManager() {
+        return layoutManager;
     }
 }

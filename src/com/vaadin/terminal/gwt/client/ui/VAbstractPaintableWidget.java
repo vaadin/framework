@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
@@ -23,8 +23,6 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     private Widget widget;
     private ApplicationConnection connection;
     private String id;
-
-    private final MeasuredSize measuredSize = new MeasuredSize(this);
 
     /* State variables */
     private boolean enabled = true;
@@ -200,15 +198,15 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         // and non-relative
         if (w.endsWith("%") != declaredWidth.endsWith("%")) {
             VPaintableWidgetContainer parent = getParent();
-            if (parent != null) {
-                parent.getMeasuredSize().setWidthNeedsUpdate();
+            if (parent instanceof ManagedLayout) {
+                getLayoutManager().setWidthNeedsUpdate((ManagedLayout) parent);
             }
         }
 
         if (h.endsWith("%") != declaredHeight.endsWith("%")) {
             VPaintableWidgetContainer parent = getParent();
-            if (parent != null) {
-                parent.getMeasuredSize().setHeightNeedsUpdate();
+            if (parent instanceof ManagedLayout) {
+                getLayoutManager().setHeightNeedsUpdate((ManagedLayout) parent);
             }
         }
 
@@ -377,7 +375,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return styleBuf.toString();
     }
 
-    public MeasuredSize getMeasuredSize() {
-        return measuredSize;
+    public LayoutManager getLayoutManager() {
+        return LayoutManager.get(connection);
     }
 }

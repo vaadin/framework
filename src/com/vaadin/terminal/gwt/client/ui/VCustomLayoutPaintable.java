@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
-        implements ResizeRequired {
+        implements SimpleManagedLayout {
 
     /** Update the layout from UIDL */
     @Override
@@ -90,7 +90,7 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
 
     }
 
-    public void onResize() {
+    public void layout() {
         getWidgetForPaintable().iLayoutJS(
                 DOM.getFirstChild(getWidgetForPaintable().getElement()));
     }

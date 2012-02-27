@@ -11,12 +11,12 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VPanelPaintable extends VAbstractPaintableWidgetContainer
-        implements ResizeRequired, LayoutPhaseListener {
+        implements SimpleManagedLayout, PostLayoutListener {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
 
@@ -34,13 +34,14 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
 
     private Integer uidlScrollLeft;
 
-    public VPanelPaintable() {
+    @Override
+    public void init() {
         VPanel panel = getWidgetForPaintable();
-        MeasuredSize measuredSize = getMeasuredSize();
+        LayoutManager layoutManager = getLayoutManager();
 
-        measuredSize.registerDependency(panel.captionNode);
-        measuredSize.registerDependency(panel.bottomDecoration);
-        measuredSize.registerDependency(panel.contentNode);
+        layoutManager.registerDependency(this, panel.captionNode);
+        layoutManager.registerDependency(this, panel.bottomDecoration);
+        layoutManager.registerDependency(this, panel.contentNode);
     }
 
     @Override
@@ -178,12 +179,11 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
         return GWT.create(VPanel.class);
     }
 
-    public void onResize() {
+    public void layout() {
         updateSizes();
     }
 
     void updateSizes() {
-        MeasuredSize measuredSize = getMeasuredSize();
         VPanel panel = getWidgetForPaintable();
 
         Style contentStyle = panel.contentNode.getStyle();
@@ -199,9 +199,9 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
             contentStyle.setWidth(100, Unit.PCT);
         }
 
-        int top = measuredSize.getDependencyOuterHeight(panel.captionNode);
-        int bottom = measuredSize
-                .getDependencyOuterHeight(panel.bottomDecoration);
+        LayoutManager layoutManager = getLayoutManager();
+        int top = layoutManager.getOuterHeight(panel.captionNode);
+        int bottom = layoutManager.getOuterHeight(panel.bottomDecoration);
 
         Style style = panel.getElement().getStyle();
         panel.captionNode.getStyle().setMarginTop(-top, Unit.PX);
@@ -217,11 +217,7 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
         panel.scrollLeft = panel.contentNode.getScrollLeft();
     }
 
-    public void beforeLayout() {
-        // Nothing to do
-    }
-
-    public void afterLayout() {
+    public void postLayout() {
         VPanel panel = getWidgetForPaintable();
         if (uidlScrollTop != null) {
             panel.contentNode.setScrollTop(uidlScrollTop.intValue());

@@ -3,17 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client.ui.layout;
 
-import com.vaadin.terminal.gwt.client.MeasuredSize;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class VPaintableLayoutSlot extends VLayoutSlot {
 
     final VPaintableWidget paintable;
+    private LayoutManager layoutManager;
 
     public VPaintableLayoutSlot(String baseClassName, VPaintableWidget paintable) {
         super(baseClassName, paintable.getWidgetForPaintable());
         this.paintable = paintable;
+        layoutManager = paintable.getLayoutManager();
     }
 
     public VPaintableWidget getPaintable() {
@@ -23,41 +26,43 @@ public class VPaintableLayoutSlot extends VLayoutSlot {
     @Override
     protected int getCaptionHeight() {
         VCaption caption = getCaption();
-        return caption != null ? getParentSize().getDependencyOuterHeight(
-                caption.getElement()) : 0;
-    }
-
-    private MeasuredSize getParentSize() {
-        return paintable.getParent().getMeasuredSize();
+        return caption != null ? layoutManager.getOuterHeight(caption
+                .getElement()) : 0;
     }
 
     @Override
     protected int getCaptionWidth() {
         VCaption caption = getCaption();
-        return caption != null ? getParentSize().getDependencyOuterWidth(
-                caption.getElement()) : 0;
+        return caption != null ? layoutManager.getOuterWidth(caption
+                .getElement()) : 0;
     }
 
     @Override
     public void setCaption(VCaption caption) {
         VCaption oldCaption = getCaption();
         if (oldCaption != null) {
-            getParentSize().unregisterDependency(oldCaption.getElement());
+            layoutManager.unregisterDependency(
+                    (ManagedLayout) paintable.getParent(),
+                    oldCaption.getElement());
         }
         super.setCaption(caption);
         if (caption != null) {
-            getParentSize().registerDependency(caption.getElement());
+            layoutManager
+                    .registerDependency((ManagedLayout) paintable.getParent(),
+                            caption.getElement());
         }
     }
 
     @Override
     public int getWidgetHeight() {
-        return paintable.getMeasuredSize().getOuterHeight();
+        return layoutManager.getOuterHeight(paintable.getWidgetForPaintable()
+                .getElement());
     }
 
     @Override
     public int getWidgetWidth() {
-        return paintable.getMeasuredSize().getOuterWidth();
+        return layoutManager.getOuterWidth(paintable.getWidgetForPaintable()
+                .getElement());
     }
 
     @Override

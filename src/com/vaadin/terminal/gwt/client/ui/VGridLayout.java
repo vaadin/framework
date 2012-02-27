@@ -17,7 +17,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MeasuredSize;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -59,10 +59,6 @@ public class VGridLayout extends ComplexPanel {
         setStyleName(CLASSNAME);
     }
 
-    private MeasuredSize getMeasuredSize() {
-        return getPaintable().getMeasuredSize();
-    }
-
     private VPaintableWidget getPaintable() {
         return VPaintableMap.get(client).getPaintable(this);
     }
@@ -91,7 +87,7 @@ public class VGridLayout extends ComplexPanel {
      * @return
      */
     protected int getHorizontalSpacing() {
-        return getMeasuredSize().getDependencyOuterWidth(spacingMeasureElement);
+        return LayoutManager.get(client).getOuterWidth(spacingMeasureElement);
     }
 
     /**
@@ -100,8 +96,7 @@ public class VGridLayout extends ComplexPanel {
      * @return
      */
     protected int getVerticalSpacing() {
-        return getMeasuredSize()
-                .getDependencyOuterHeight(spacingMeasureElement);
+        return LayoutManager.get(client).getOuterHeight(spacingMeasureElement);
     }
 
     static int[] cloneArray(int[] toBeCloned) {
@@ -119,7 +114,8 @@ public class VGridLayout extends ComplexPanel {
             for (int i = 1; i < minRowHeights.length; i++) {
                 usedSpace += verticalSpacing + minRowHeights[i];
             }
-            int availableSpace = getMeasuredSize().getInnerHeight();
+            int availableSpace = LayoutManager.get(client).getInnerHeight(
+                    getElement());
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {
@@ -168,7 +164,8 @@ public class VGridLayout extends ComplexPanel {
                 usedSpace += horizontalSpacing + minColumnWidths[i];
             }
 
-            int availableSpace = getMeasuredSize().getInnerWidth();
+            int availableSpace = LayoutManager.get(client).getInnerWidth(
+                    getElement());
             int excessSpace = availableSpace - usedSpace;
             int distributed = 0;
             if (excessSpace > 0) {

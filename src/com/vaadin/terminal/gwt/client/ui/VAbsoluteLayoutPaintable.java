@@ -15,14 +15,14 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.CalculatingLayout;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 
 public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
-        implements CalculatingLayout {
+        implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
@@ -88,7 +88,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
         return (VAbsoluteLayout) super.getWidgetForPaintable();
     }
 
-    public void updateVerticalSizes() {
+    public void layoutVertically() {
         VAbsoluteLayout layout = getWidgetForPaintable();
         for (VPaintableWidget paintable : getChildren()) {
             Widget widget = paintable.getWidgetForPaintable();
@@ -119,7 +119,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
         }
     }
 
-    public void updateHorizontalSizes() {
+    public void layoutHorizontally() {
         VAbsoluteLayout layout = getWidgetForPaintable();
         for (VPaintableWidget paintable : getChildren()) {
             Widget widget = paintable.getWidgetForPaintable();

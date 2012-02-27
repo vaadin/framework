@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
 
 public class VMenuBarPaintable extends VAbstractPaintableWidget implements
-        ResizeRequired {
+        SimpleManagedLayout {
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
@@ -161,7 +161,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
         return (VMenuBar) super.getWidgetForPaintable();
     }
 
-    public void onResize() {
+    public void layout() {
         getWidgetForPaintable().iLayout();
     }
 }

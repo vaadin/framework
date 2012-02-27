@@ -11,7 +11,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VTabsheetPaintable extends VTabsheetBasePaintable implements
-        ResizeRequired {
+        SimpleManagedLayout {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -77,7 +77,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable implements
         /* Tabsheet does not render its children's captions */
     }
 
-    public void onResize() {
+    public void layout() {
         VTabsheet tabsheet = getWidgetForPaintable();
 
         tabsheet.updateContentNodeHeight();

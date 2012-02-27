@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VAccordion.StackItem;
 
 public class VAccordionPaintable extends VTabsheetBasePaintable implements
-        ResizeRequired {
+        SimpleManagedLayout {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -66,7 +66,7 @@ public class VAccordionPaintable extends VTabsheetBasePaintable implements
         /* Accordion does not render its children's captions */
     }
 
-    public void onResize() {
+    public void layout() {
         VAccordion accordion = getWidgetForPaintable();
 
         accordion.updateOpenTabSize();

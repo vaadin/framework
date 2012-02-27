@@ -19,8 +19,8 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 public class VWindowPaintable extends VAbstractPaintableWidgetContainer
-        implements BeforeShortcutActionListener, ResizeRequired,
-        LayoutPhaseListener {
+        implements BeforeShortcutActionListener, SimpleManagedLayout,
+        PostLayoutListener {
 
     private static final String CLICK_EVENT_IDENTIFIER = VPanelPaintable.CLICK_EVENT_IDENTIFIER;
 
@@ -304,15 +304,11 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         return GWT.create(VWindow.class);
     }
 
-    public void onResize() {
+    public void layout() {
         getWidgetForPaintable().requestLayout();
     }
 
-    public void beforeLayout() {
-
-    }
-
-    public void afterLayout() {
+    public void postLayout() {
         VWindow window = getWidgetForPaintable();
         if (window.centered) {
             window.center();

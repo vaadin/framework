@@ -13,7 +13,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.CalculatingLayout;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -23,7 +23,7 @@ import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
-        implements CalculatingLayout {
+        implements DirectionalManagedLayout {
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
@@ -39,8 +39,9 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
         }
     };
 
-    public VGridLayoutPaintable() {
-        getMeasuredSize().registerDependency(
+    @Override
+    public void init() {
+        getLayoutManager().registerDependency(this,
                 getWidgetForPaintable().spacingMeasureElement);
     }
 
@@ -120,8 +121,7 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
 
         layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
 
-        getMeasuredSize().setHeightNeedsUpdate();
-        getMeasuredSize().setWidthNeedsUpdate();
+        getLayoutManager().setNeedsUpdate(this);
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
@@ -154,11 +154,11 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
         return GWT.create(VGridLayout.class);
     }
 
-    public void updateVerticalSizes() {
+    public void layoutVertically() {
         getWidgetForPaintable().updateHeight();
     }
 
-    public void updateHorizontalSizes() {
+    public void layoutHorizontally() {
         getWidgetForPaintable().updateWidth();
     }
 }

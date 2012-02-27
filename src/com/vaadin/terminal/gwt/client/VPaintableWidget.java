@@ -29,7 +29,7 @@ public interface VPaintableWidget extends VPaintable {
     // FIXME: Rename to getParent()
     public VPaintableWidgetContainer getParent();
 
-    public MeasuredSize getMeasuredSize();
+    public LayoutManager getLayoutManager();
 
     /**
      * Returns <code>true</code> if the width of this paintable is currently

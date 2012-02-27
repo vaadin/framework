@@ -3,14 +3,10 @@
  */
 package com.vaadin.terminal.gwt.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Widget;
 
-public final class MeasuredSize {
+public class MeasuredSize {
     private int width = -1;
     private int height = -1;
 
@@ -18,16 +14,10 @@ public final class MeasuredSize {
     private int[] borders = new int[4];
     private int[] margins = new int[4];
 
-    private final VPaintableWidget paintable;
-
     private boolean heightChanged = true;
     private boolean widthChanged = true;
 
-    private final Map<Element, int[]> dependencySizes = new HashMap<Element, int[]>();
-
-    public MeasuredSize(VPaintableWidget paintable) {
-        this.paintable = paintable;
-    }
+    private FastStringSet dependents = FastStringSet.create();
 
     public int getOuterHeight() {
         return height;
@@ -35,6 +25,22 @@ public final class MeasuredSize {
 
     public int getOuterWidth() {
         return width;
+    }
+
+    public void addDependent(String pid) {
+        dependents.add(pid);
+    }
+
+    public void removeDependent(String pid) {
+        dependents.remove(pid);
+    }
+
+    public boolean hasDependents() {
+        return !dependents.isEmpty();
+    }
+
+    public JsArrayString getDependents() {
+        return dependents.dump();
     }
 
     private static int sumWidths(int[] sizes) {
@@ -66,33 +72,6 @@ public final class MeasuredSize {
         if (this.width != width) {
             widthChanged = true;
             this.width = width;
-        }
-    }
-
-    public void registerDependency(Element element) {
-        if (!dependencySizes.containsKey(element)) {
-            dependencySizes.put(element, new int[] { -1, -1 });
-        }
-    }
-
-    public void unregisterDependency(Element element) {
-        dependencySizes.remove(element);
-    }
-
-    public int getDependencyOuterWidth(Element e) {
-        return getDependencySize(e, 0);
-    }
-
-    public int getDependencyOuterHeight(Element e) {
-        return getDependencySize(e, 1);
-    }
-
-    private int getDependencySize(Element e, int index) {
-        int[] sizes = dependencySizes.get(e);
-        if (sizes == null) {
-            return -1;
-        } else {
-            return sizes[index];
         }
     }
 
@@ -168,9 +147,11 @@ public final class MeasuredSize {
         return paddings[3];
     }
 
-    void measure() {
-        Widget widget = paintable.getWidgetForPaintable();
-        ComputedStyle computedStyle = new ComputedStyle(widget.getElement());
+    boolean measure(Element element) {
+        boolean wasHeightChanged = heightChanged;
+        boolean wasWidthChanged = widthChanged;
+
+        ComputedStyle computedStyle = new ComputedStyle(element);
 
         int[] paddings = computedStyle.getPadding();
         if (!heightChanged && hasHeightChanged(this.paddings, paddings)) {
@@ -199,43 +180,16 @@ public final class MeasuredSize {
         }
         this.borders = borders;
 
-        int requiredHeight = Util.getRequiredHeight(widget);
+        int requiredHeight = Util.getRequiredHeight(element);
         int marginHeight = sumHeights(margins);
         setOuterHeight(requiredHeight + marginHeight);
 
-        int requiredWidth = Util.getRequiredWidth(widget);
+        int requiredWidth = Util.getRequiredWidth(element);
         int marginWidth = sumWidths(margins);
         setOuterWidth(requiredWidth + marginWidth);
 
-        // int i = 0;
-        for (Entry<Element, int[]> entry : dependencySizes.entrySet()) {
-            Element element = entry.getKey();
-            // int[] elementMargin = new ComputedStyle(element).getMargin();
-            int[] sizes = entry.getValue();
-
-            int elementWidth = element.getOffsetWidth();
-            // elementWidth += elementMargin[1] + elementMargin[3];
-            if (elementWidth != sizes[0]) {
-                // System.out.println(paintable.getId() + " dependency " + i
-                // + " width changed from " + sizes[0] + " to "
-                // + elementWidth);
-                sizes[0] = elementWidth;
-                widthChanged = true;
-            }
-
-            int elementHeight = element.getOffsetHeight();
-            // Causes infinite loops as a negative margin based on the
-            // measured height is currently used for captions
-            // elementHeight += elementMargin[0] + elementMargin[1];
-            if (elementHeight != sizes[1]) {
-                // System.out.println(paintable.getId() + " dependency " + i
-                // + " height changed from " + sizes[1] + " to "
-                // + elementHeight);
-                sizes[1] = elementHeight;
-                heightChanged = true;
-            }
-            // i++;
-        }
+        return wasHeightChanged != heightChanged
+                || wasWidthChanged != widthChanged;
     }
 
     void clearDirtyState() {
