@@ -91,7 +91,6 @@ public abstract class VLayoutSlot {
         if (isRelativeWidth()) {
             style.setPropertyPx("width", (int) availableWidth);
             style.clearProperty("minWidth");
-            style.clearProperty("maxWidth");
         } else {
             style.clearProperty("width");
             if (caption != null && captionAboveCompnent) {
@@ -99,7 +98,6 @@ public abstract class VLayoutSlot {
             } else {
                 style.clearProperty("minWidth");
             }
-            style.setPropertyPx("maxWidth", (int) availableWidth);
         }
 
         AlignmentInfo alignment = getAlignment();
