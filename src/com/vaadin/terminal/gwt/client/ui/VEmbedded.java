@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -17,12 +16,13 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
 
-    protected String height;
-    protected String width;
     protected Element browserElement;
 
     protected String type;
@@ -83,6 +83,11 @@ public class VEmbedded extends HTML {
         } else {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
+
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        String height = paintable.getDeclaredHeight();
+        String width = paintable.getDeclaredWidth();
 
         // Add width and height
         html.append("width=\"" + Util.escapeAttribute(width) + "\" ");
@@ -197,40 +202,6 @@ public class VEmbedded extends HTML {
     }
 
     @Override
-    public void setWidth(String width) {
-        this.width = width;
-        if (isDynamicHeight()) {
-            int oldHeight = getOffsetHeight();
-            super.setWidth(width);
-            int newHeight = getOffsetHeight();
-            /*
-             * Must notify parent if the height changes as a result of a width
-             * change
-             */
-            if (oldHeight != newHeight) {
-                Util.notifyParentOfSizeChange(this, false);
-            }
-        } else {
-            super.setWidth(width);
-        }
-
-    }
-
-    private boolean isDynamicWidth() {
-        return width == null || width.equals("");
-    }
-
-    private boolean isDynamicHeight() {
-        return height == null || height.equals("");
-    }
-
-    @Override
-    public void setHeight(String height) {
-        this.height = height;
-        super.setHeight(height);
-    }
-
-    @Override
     protected void onDetach() {
         if (BrowserInfo.get().isIE()) {
             // Force browser to fire unload event when component is detached
@@ -247,30 +218,11 @@ public class VEmbedded extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
-            if ("image".equals(type)) {
-                updateElementDynamicSizeFromImage();
-            }
+            VConsole.log("Embeddable onload");
             Util.notifyParentOfSizeChange(this, true);
         }
 
         client.handleTooltipEvent(event, this);
     }
 
-    /**
-     * Updates the size of the embedded component's element if size is
-     * undefined. Without this embeddeds containing images will remain the wrong
-     * size in certain cases (e.g. #6304).
-     */
-    private void updateElementDynamicSizeFromImage() {
-        if (isDynamicWidth()) {
-            getElement().getStyle().setWidth(
-                    getElement().getFirstChildElement().getOffsetWidth(),
-                    Unit.PX);
-        }
-        if (isDynamicHeight()) {
-            getElement().getStyle().setHeight(
-                    getElement().getFirstChildElement().getOffsetHeight(),
-                    Unit.PX);
-        }
-    }
 }

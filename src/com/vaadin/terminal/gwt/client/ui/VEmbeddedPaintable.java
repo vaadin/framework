@@ -128,10 +128,10 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
                 ObjectElement obj = Document.get().createObjectElement();
                 obj.setType(mime);
                 obj.setData(data);
-                if (getWidgetForPaintable().width != null) {
+                if (!isUndefinedWidth()) {
                     obj.getStyle().setProperty("width", "100%");
                 }
-                if (getWidgetForPaintable().height != null) {
+                if (!isUndefinedHeight()) {
                     obj.getStyle().setProperty("height", "100%");
                 }
                 if (uidl.hasAttribute("classid")) {
