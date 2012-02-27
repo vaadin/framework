@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 /**
@@ -333,7 +333,7 @@ public class VDragAndDropManager {
             }
 
             private void addActiveDragSourceStyleName() {
-                VPaintableWidget dragSource = currentDrag.getTransferable()
+                ComponentConnector dragSource = currentDrag.getTransferable()
                         .getDragSource();
                 dragSource.getWidget().addStyleName(
                         ACTIVE_DRAG_SOURCE_STYLENAME);
@@ -499,7 +499,7 @@ public class VDragAndDropManager {
                      * handled. E.g. hidden on start, removed in drophandler ->
                      * would flicker in case removed eagerly.
                      */
-                    final VPaintableWidget dragSource = currentDrag
+                    final ComponentConnector dragSource = currentDrag
                             .getTransferable().getDragSource();
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
@@ -543,7 +543,7 @@ public class VDragAndDropManager {
 
     }
 
-    private void removeActiveDragSourceStyleName(VPaintableWidget dragSource) {
+    private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {
         dragSource.getWidget().removeStyleName(
                 ACTIVE_DRAG_SOURCE_STYLENAME);
     }
@@ -579,7 +579,7 @@ public class VDragAndDropManager {
         if (currentDropHandler == null) {
             return;
         }
-        VPaintableWidget paintable = currentDropHandler.getPaintable();
+        ComponentConnector paintable = currentDropHandler.getPaintable();
         ApplicationConnection client = currentDropHandler
                 .getApplicationConnection();
         /*

@@ -9,14 +9,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
 
 public class VCaption extends HTML {
 
     public static final String CLASSNAME = "v-caption";
 
-    private final VPaintableWidget owner;
+    private final ComponentConnector owner;
 
     private Element errorIndicatorElement;
 
@@ -44,7 +44,7 @@ public class VCaption extends HTML {
     }
 
     /**
-     * Creates a caption that is not linked to a {@link VPaintableWidget}.
+     * Creates a caption that is not linked to a {@link ComponentConnector}.
      * 
      * When using this constructor, {@link #getOwner()} returns null.
      * 
@@ -65,20 +65,20 @@ public class VCaption extends HTML {
     }
 
     /**
-     * Creates a caption for a {@link VPaintableWidget}.
+     * Creates a caption for a {@link ComponentConnector}.
      * 
      * @param component
      *            owner of caption, not null
      * @param client
      *            ApplicationConnection
      */
-    public VCaption(VPaintableWidget component, ApplicationConnection client) {
+    public VCaption(ComponentConnector component, ApplicationConnection client) {
         super();
         this.client = client;
         owner = component;
 
         if (client != null && owner != null) {
-            setOwnerPid(getElement(), VPaintableMap.get(client).getPid(owner));
+            setOwnerPid(getElement(), ConnectorMap.get(client).getConnectorId(owner));
         }
 
         setStyleName(CLASSNAME);
@@ -118,12 +118,12 @@ public class VCaption extends HTML {
         setStyleName(style);
 
         boolean hasIcon = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
+                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON);
         boolean showRequired = uidl
-                .getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED);
+                .getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED);
         boolean showError = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS);
+                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
             if (icon == null) {
@@ -138,7 +138,7 @@ public class VCaption extends HTML {
             placedAfterComponent = false;
 
             icon.setUri(uidl
-                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
+                    .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
 
         } else if (icon != null) {
             // Remove existing
@@ -281,10 +281,10 @@ public class VCaption extends HTML {
             }
         }
         boolean hasIcon = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON);
+                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON);
         boolean showError = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS);
+                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
+                && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
             if (icon == null) {
@@ -299,7 +299,7 @@ public class VCaption extends HTML {
             placedAfterComponent = false;
 
             icon.setUri(uidl
-                    .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
+                    .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
 
         } else if (icon != null) {
             // Remove existing
@@ -408,13 +408,13 @@ public class VCaption extends HTML {
                 return true;
             }
         }
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
+        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
             return true;
         }
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
+        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)) {
             return true;
         }
-        if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
+        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
             return true;
         }
 
@@ -426,7 +426,7 @@ public class VCaption extends HTML {
      * 
      * @return owner Widget
      */
-    public VPaintableWidget getOwner() {
+    public ComponentConnector getOwner() {
         return owner;
     }
 

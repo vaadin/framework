@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
  * Updates can be sent back to the server using the
  * {@link ApplicationConnection#updateVariable()} methods.
  */
-public interface VPaintableWidget extends VPaintable {
+public interface ComponentConnector extends Connector {
 
     /*
      * (non-Javadoc)
@@ -29,11 +29,11 @@ public interface VPaintableWidget extends VPaintable {
     public Widget getWidget();
 
     /**
-     * Returns the parent {@link VPaintableWidgetContainer}
+     * Returns the parent {@link ComponentContainerConnector}
      * 
      * @return
      */
-    public VPaintableWidgetContainer getParent();
+    public ComponentContainerConnector getParent();
 
     public LayoutManager getLayoutManager();
 

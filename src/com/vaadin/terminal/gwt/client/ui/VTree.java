@@ -42,8 +42,8 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
@@ -358,8 +358,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 }
 
                 @Override
-                public VPaintableWidget getPaintable() {
-                    return VPaintableMap.get(client).getPaintable(VTree.this);
+                public ComponentConnector getPaintable() {
+                    return ConnectorMap.get(client).getConnector(VTree.this);
                 }
 
                 public ApplicationConnection getApplicationConnection() {
@@ -710,7 +710,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     if (mouseDownEvent != null) {
                         // start actual drag on slight move when mouse is down
                         VTransferable t = new VTransferable();
-                        t.setDragSource(VPaintableMap.get(client).getPaintable(
+                        t.setDragSource(ConnectorMap.get(client).getConnector(
                                 VTree.this));
                         t.setData("itemId", key);
                         VDragEvent drag = VDragAndDropManager.get().startDrag(

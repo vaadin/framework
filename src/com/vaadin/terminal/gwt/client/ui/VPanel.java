@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
@@ -39,7 +39,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
 
     private Element errorIndicatorElement;
 
-    VPaintableWidget layout;
+    ComponentConnector layout;
 
     ShortcutActionHandler shortcutHandler;
 
@@ -136,8 +136,8 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
 
     void setIconUri(UIDL uidl, ApplicationConnection client) {
         final String iconUri = uidl
-                .hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON) ? uidl
-                .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)
+                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON) ? uidl
+                .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)
                 : null;
         if (iconUri == null) {
             if (icon != null) {

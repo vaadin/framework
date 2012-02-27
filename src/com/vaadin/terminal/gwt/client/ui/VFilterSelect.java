@@ -52,8 +52,8 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -1567,7 +1567,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * Should be called when the width changes or when the icon changes.
      */
     protected void updateRootWidth() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         if (paintable.isUndefinedWidth()) {
 

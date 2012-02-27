@@ -23,7 +23,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
 
 /**
@@ -150,7 +150,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
         // Adds the required attribute
         if (!isReadOnly() && isRequired()) {
-            target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED,
+            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED,
                     true);
         }
 
@@ -276,7 +276,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
         // Hide the error indicator if needed
         if (shouldHideErrors()) {
-            target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS,
+            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS,
                     true);
         }
     }

@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
@@ -174,7 +174,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
      */
     protected class CustomPopup extends VOverlay {
 
-        private VPaintableWidget popupComponentPaintable = null;
+        private ComponentConnector popupComponentPaintable = null;
         Widget popupComponentWidget = null;
         VCaptionWrapper captionWrapper = null;
 
@@ -290,7 +290,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-            VPaintableWidget newPopupComponent = client.getPaintable(uidl
+            ComponentConnector newPopupComponent = client.getPaintable(uidl
                     .getChildUIDL(0));
 
             if (newPopupComponent != popupComponentPaintable) {

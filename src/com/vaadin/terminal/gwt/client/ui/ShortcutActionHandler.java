@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
@@ -49,12 +49,12 @@ public class ShortcutActionHandler {
     }
 
     /**
-     * A focusable {@link VPaintableWidget} implementing this interface will be
+     * A focusable {@link ComponentConnector} implementing this interface will be
      * notified before shortcut actions are handled if it will be the target of
      * the action (most commonly means it is the focused component during the
      * keyboard combination is triggered by the user).
      */
-    public interface BeforeShortcutActionListener extends VPaintableWidget {
+    public interface BeforeShortcutActionListener extends ComponentConnector {
         /**
          * This method is called by ShortcutActionHandler before firing the
          * shortcut if the Paintable is currently focused (aka the target of the
@@ -108,7 +108,7 @@ public class ShortcutActionHandler {
         }
     }
 
-    public void handleKeyboardEvent(final Event event, VPaintableWidget target) {
+    public void handleKeyboardEvent(final Event event, ComponentConnector target) {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
@@ -130,12 +130,12 @@ public class ShortcutActionHandler {
     }
 
     private void fireAction(final Event event, final ShortcutAction a,
-            VPaintableWidget target) {
+            ComponentConnector target) {
         final Element et = DOM.eventGetTarget(event);
         if (target == null) {
             target = Util.findPaintable(client, et);
         }
-        final VPaintableWidget finalTarget = target;
+        final ComponentConnector finalTarget = target;
 
         event.preventDefault();
 

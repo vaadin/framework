@@ -18,17 +18,17 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 
-public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
+public class VAbsoluteLayoutPaintable extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected VPaintableWidget getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(Element element) {
             return getWidget().getComponent(element);
         }
 
@@ -72,7 +72,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
         }
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
                 .getWidget()).getParent();
         parent2.updateCaption(uidl);
@@ -90,7 +90,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
 
     public void layoutVertically() {
         VAbsoluteLayout layout = getWidget();
-        for (VPaintableWidget paintable : getChildren()) {
+        for (ComponentConnector paintable : getChildren()) {
             Widget widget = paintable.getWidget();
             AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
             Style wrapperStyle = wrapper.getElement().getStyle();
@@ -121,7 +121,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
 
     public void layoutHorizontally() {
         VAbsoluteLayout layout = getWidget();
-        for (VPaintableWidget paintable : getChildren()) {
+        for (ComponentConnector paintable : getChildren()) {
             Widget widget = paintable.getWidget();
             AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
             Style wrapperStyle = wrapper.getElement().getStyle();

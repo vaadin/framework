@@ -7,7 +7,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
-public abstract class VMediaBasePaintable extends VAbstractPaintableWidget {
+public abstract class VMediaBasePaintable extends AbstractComponentConnector {
 
     public static final String TAG_SOURCE = "src";
 

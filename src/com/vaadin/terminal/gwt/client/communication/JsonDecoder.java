@@ -14,8 +14,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.vaadin.terminal.gwt.client.VPaintable;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
  * Client side decoder for converting shared state and other values from JSON
@@ -39,17 +39,17 @@ public class JsonDecoder {
      * @param jsonArray
      *            JSON array with two elements
      * @param idMapper
-     *            mapper between paintable ID and {@link VPaintable} objects
+     *            mapper between connector ID and {@link Connector} objects
      * @return converted value (does not contain JSON types)
      */
     public static Object convertValue(JSONArray jsonArray,
-            VPaintableMap idMapper) {
+            ConnectorMap idMapper) {
         String type = ((JSONString) jsonArray.get(0)).stringValue();
         return convertValue(type, jsonArray.get(1), idMapper);
     }
 
     private static Object convertValue(String variableType, Object value,
-            VPaintableMap idMapper) {
+            ConnectorMap idMapper) {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_UNDEFINED.equals(variableType)) {
@@ -79,7 +79,7 @@ public class JsonDecoder {
             val = Boolean.valueOf(String.valueOf(value));
         } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
-            val = idMapper.getPaintable(String.valueOf(value));
+            val = idMapper.getConnector(String.valueOf(value));
         } else {
             // object, class name as type
             VaadinSerializer serializer = serializerMap
@@ -94,7 +94,7 @@ public class JsonDecoder {
     }
 
     private static Map<String, Object> convertMap(JSONObject jsonMap,
-            VPaintableMap idMapper) {
+            ConnectorMap idMapper) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
@@ -114,7 +114,7 @@ public class JsonDecoder {
     }
 
     private static Object[] convertArray(JSONArray jsonArray,
-            VPaintableMap idMapper) {
+            ConnectorMap idMapper) {
         List<Object> tokens = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value

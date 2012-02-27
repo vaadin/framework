@@ -13,9 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VPanelPaintable extends VAbstractPaintableWidgetContainer
+public class VPanelPaintable extends AbstractComponentContainerConnector
         implements SimpleManagedLayout, PostLayoutListener {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
@@ -113,7 +113,7 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
-        final VPaintableWidget newLayout = client.getPaintable(layoutUidl);
+        final ComponentConnector newLayout = client.getPaintable(layoutUidl);
         if (newLayout != getWidget().layout) {
             if (getWidget().layout != null) {
                 client.unregisterPaintable(getWidget().layout);
@@ -161,7 +161,7 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer
         }
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // NOP: layouts caption, errors etc not rendered in Panel
     }
 

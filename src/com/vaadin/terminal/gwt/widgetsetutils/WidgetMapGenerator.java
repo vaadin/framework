@@ -23,7 +23,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
@@ -71,7 +71,7 @@ import com.vaadin.ui.Root;
  */
 public class WidgetMapGenerator extends Generator {
 
-    private static String paintableClassName = VPaintableWidget.class.getName();
+    private static String paintableClassName = ComponentConnector.class.getName();
 
     private String packageName;
     private String className;
@@ -165,7 +165,7 @@ public class WidgetMapGenerator extends Generator {
                 .iterator(); iterator.hasNext();) {
             Class<? extends Paintable> class1 = iterator.next();
 
-            Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass = getClientClass(class1);
+            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
             if (typeOracle.findType(clientClass.getName()) == null) {
                 // GWT widget not inherited
                 logger.log(Type.WARN, "Widget class " + clientClass.getName()
@@ -251,10 +251,10 @@ public class WidgetMapGenerator extends Generator {
 
         ArrayList<Class<? extends Paintable>> lazyLoadedWidgets = new ArrayList<Class<? extends Paintable>>();
 
-        HashSet<Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget>> widgetsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget>>();
+        HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>> widgetsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>>();
 
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass = getClientClass(class1);
+            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
             if (widgetsWithInstantiator.contains(clientClass)) {
                 continue;
             }
@@ -317,7 +317,7 @@ public class WidgetMapGenerator extends Generator {
             }
             first = false;
             ClientWidget annotation = class2.getAnnotation(ClientWidget.class);
-            Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> value = annotation
+            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> value = annotation
                     .value();
             sourceWriter.print(value.getName() + ".class");
         }
@@ -364,7 +364,7 @@ public class WidgetMapGenerator extends Generator {
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
 
         for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass = getClientClass(class1);
+            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(class1.getName());
             sourceWriter.print("\" ) { ensureInstantiator("
@@ -380,9 +380,9 @@ public class WidgetMapGenerator extends Generator {
 
     }
 
-    private static Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> getClientClass(
+    private static Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> getClientClass(
             Class<? extends Paintable> class1) {
-        Class<? extends com.vaadin.terminal.gwt.client.VPaintableWidget> clientClass;
+        Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass;
         if (Root.class == class1) {
             clientClass = VViewPaintable.class;
         } else {

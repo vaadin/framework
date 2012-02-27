@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -44,7 +44,7 @@ public class VView extends SimplePanel implements ResizeHandler,
 
     String theme;
 
-    VPaintableWidget layout;
+    ComponentConnector layout;
 
     final LinkedHashSet<VWindow> subWindows = new LinkedHashSet<VWindow>();
 
@@ -225,7 +225,7 @@ public class VView extends SimplePanel implements ResizeHandler,
         if (uidl.hasAttribute("scrollTo")) {
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    final VPaintableWidget paintable = (VPaintableWidget) uidl
+                    final ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("scrollTo", connection);
                     paintable.getWidget().getElement()
                             .scrollIntoView();

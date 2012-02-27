@@ -24,7 +24,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VEmbeddedPaintable extends VAbstractPaintableWidget {
+public class VEmbeddedPaintable extends AbstractComponentConnector {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
 

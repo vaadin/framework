@@ -66,8 +66,8 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -1112,8 +1112,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     void purgeUnregistryBag() {
         for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
-            VPaintableMap.get(client)
-                    .unregisterChildPaintables(iterator.next());
+            ConnectorMap.get(client)
+                    .unregisterChildConnectors(iterator.next());
         }
         lazyUnregistryBag.clear();
     }
@@ -4474,7 +4474,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         addCell(uidl, cell.toString(), aligns[col++], style,
                                 isRenderHtmlInCells(), sorted, description);
                     } else {
-                        final VPaintableWidget cellContent = client
+                        final ComponentConnector cellContent = client
                                 .getPaintable((UIDL) cell);
 
                         addCell(uidl, cellContent.getWidget(),
@@ -4552,7 +4552,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return index;
             }
 
-            protected void paintComponent(VPaintableWidget p, UIDL uidl) {
+            protected void paintComponent(ComponentConnector p, UIDL uidl) {
                 if (isAttached()) {
                     p.updateFromUIDL(uidl, client);
                 } else {
@@ -4568,8 +4568,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 super.onAttach();
                 if (pendingComponentPaints != null) {
                     for (UIDL uidl : pendingComponentPaints) {
-                        VPaintableWidget paintable = (VPaintableWidget) VPaintableMap
-                                .get(client).getPaintable(uidl.getId());
+                        ComponentConnector paintable = (ComponentConnector) ConnectorMap
+                                .get(client).getConnector(uidl.getId());
                         paintable.updateFromUIDL(uidl, client);
                     }
                     pendingComponentPaints.clear();
@@ -4758,7 +4758,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                     if (!containsWidget) {
                         // Only text nodes has tooltips
-                        if (VPaintableMap.get(client).getWidgetTooltipInfo(
+                        if (ConnectorMap.get(client).getWidgetTooltipInfo(
                                 VScrollTable.this, target) != null) {
                             // Cell has description, use it
                             client.handleTooltipEvent(event,
@@ -5081,8 +5081,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     Element targetTdOrTr) {
                 mDown = true;
                 VTransferable transferable = new VTransferable();
-                transferable.setDragSource(VPaintableMap.get(client)
-                        .getPaintable(VScrollTable.this));
+                transferable.setDragSource(ConnectorMap.get(client)
+                        .getConnector(VScrollTable.this));
                 transferable.setData("itemId", "" + rowKey);
                 NodeList<TableCellElement> cells = rowElement.getCells();
                 for (int i = 0; i < cells.getLength(); i++) {
@@ -6093,8 +6093,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         @Override
-        public VPaintableWidget getPaintable() {
-            return VPaintableMap.get(client).getPaintable(VScrollTable.this);
+        public ComponentConnector getPaintable() {
+            return ConnectorMap.get(client).getConnector(VScrollTable.this);
         }
 
         public ApplicationConnection getApplicationConnection() {
@@ -6650,13 +6650,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     private boolean isDynamicWidth() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedWidth();
     }
 
     private boolean isDynamicHeight() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedHeight();
     }

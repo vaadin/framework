@@ -78,7 +78,7 @@ import com.vaadin.ui.Root;
  * A server side component sends its state to the client in a paint request (see
  * {@link Paintable} and {@link PaintTarget} on the server side). The client
  * widget receives these paint requests as calls to
- * {@link com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL()}. The
+ * {@link com.vaadin.terminal.gwt.client.ComponentConnector#updateFromUIDL()}. The
  * client component communicates back to the server by sending a list of
  * variable changes (see {@link ApplicationConnection#updateVariable()} and
  * {@link VariableOwner#changeVariables(Object, Map)}).

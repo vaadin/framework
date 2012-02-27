@@ -3,8 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public interface ManagedLayout extends VPaintableWidget {
+public interface ManagedLayout extends ComponentConnector {
 
 }

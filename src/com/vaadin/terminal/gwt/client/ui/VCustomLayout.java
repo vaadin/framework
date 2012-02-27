@@ -20,8 +20,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -40,7 +40,7 @@ public class VCustomLayout extends ComplexPanel {
     final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<VPaintableWidget, VCaptionWrapper> paintableToCaptionWrapper = new HashMap<VPaintableWidget, VCaptionWrapper>();
+    private final HashMap<ComponentConnector, VCaptionWrapper> paintableToCaptionWrapper = new HashMap<ComponentConnector, VCaptionWrapper>();
 
     /** Name of the currently rendered style */
     String currentTemplateName;
@@ -300,7 +300,7 @@ public class VCustomLayout extends ComplexPanel {
     }
 
     /** Update caption for given widget */
-    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+    public void updateCaption(ComponentConnector paintable, UIDL uidl) {
         VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
         Widget widget = paintable.getWidget();
         if (VCaption.isNeeded(uidl, paintable.getState())) {
@@ -339,7 +339,7 @@ public class VCustomLayout extends ComplexPanel {
     /** Removes given widget from the layout */
     @Override
     public boolean remove(Widget w) {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(w);
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(w);
         client.unregisterPaintable(paintable);
         final String location = getLocation(w);
         if (location != null) {

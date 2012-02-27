@@ -97,15 +97,15 @@ public class Util {
         List<ApplicationConnection> runningApplications = ApplicationConfiguration
                 .getRunningApplications();
         for (ApplicationConnection applicationConnection : runningApplications) {
-            VPaintableMap paintableMap = applicationConnection
-                    .getPaintableMap();
-            VPaintableWidget paintable = paintableMap.getPaintable(widget);
+            ConnectorMap paintableMap = applicationConnection
+                    .getConnectorMap();
+            ComponentConnector paintable = paintableMap.getConnector(widget);
             if (paintable == null) {
                 continue;
             }
-            String pid = paintableMap.getPid(paintable);
+            String pid = paintableMap.getConnectorId(paintable);
             if (pid != null) {
-                VPaintable otherPaintable = paintableMap.getPaintable(pid);
+                Connector otherPaintable = paintableMap.getConnector(pid);
                 if (otherPaintable == paintable) {
                     return applicationConnection;
                 }
@@ -644,17 +644,17 @@ public class Util {
      * @return The VPaintableWidget which the element is a part of. Null if the
      *         element does not belong to a child.
      */
-    public static VPaintableWidget getPaintableForElement(
+    public static ComponentConnector getPaintableForElement(
             ApplicationConnection client, Widget parent, Element element) {
         Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
-            VPaintableWidget paintable = VPaintableMap.get(client)
-                    .getPaintable(element);
+            ComponentConnector paintable = ConnectorMap.get(client)
+                    .getConnector(element);
             if (paintable == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = (VPaintableWidget) VPaintableMap.get(client)
-                            .getPaintable(ownerPid);
+                    paintable = (ComponentConnector) ConnectorMap.get(client)
+                            .getConnector(ownerPid);
                 }
             }
 
@@ -698,14 +698,14 @@ public class Util {
      * @param element
      *            the element to start from
      */
-    public static VPaintableWidget findPaintable(ApplicationConnection client,
+    public static ComponentConnector findPaintable(ApplicationConnection client,
             Element element) {
         Widget widget = Util.findWidget(element, null);
-        VPaintableMap vPaintableMap = VPaintableMap.get(client);
-        while (widget != null && !vPaintableMap.isPaintable(widget)) {
+        ConnectorMap vPaintableMap = ConnectorMap.get(client);
+        while (widget != null && !vPaintableMap.isConnector(widget)) {
             widget = widget.getParent();
         }
-        return vPaintableMap.getPaintable(widget);
+        return vPaintableMap.getConnector(widget);
 
     }
 
@@ -819,8 +819,8 @@ public class Util {
     private static void printPaintablesInvocations(
             ArrayList<MethodInvocation> invocations, String id,
             ApplicationConnection c) {
-        VPaintableWidget paintable = (VPaintableWidget) VPaintableMap.get(c)
-                .getPaintable(id);
+        ComponentConnector paintable = (ComponentConnector) ConnectorMap.get(c)
+                .getConnector(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
             for (MethodInvocation invocation : invocations) {
@@ -833,8 +833,8 @@ public class Util {
                     Object value = parameters[1];
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
-                    String formattedValue = value instanceof VPaintable ? c
-                            .getPaintableMap().getPid((VPaintable) value)
+                    String formattedValue = value instanceof Connector ? c
+                            .getConnectorMap().getConnectorId((Connector) value)
                             : String.valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }

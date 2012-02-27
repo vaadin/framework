@@ -40,7 +40,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class EventHelper {
 
-    public static HandlerRegistration updateFocusHandler(VPaintableWidget paintable,
+    public static HandlerRegistration updateFocusHandler(ComponentConnector paintable,
             ApplicationConnection client,
             HandlerRegistration handlerRegistration) {
         if (client.hasEventListeners(paintable, FOCUS)) {
@@ -57,7 +57,7 @@ public class EventHelper {
         return null;
     }
 
-    public static HandlerRegistration updateBlurHandler(VPaintableWidget paintable,
+    public static HandlerRegistration updateBlurHandler(ComponentConnector paintable,
             ApplicationConnection client,
             HandlerRegistration handlerRegistration) {
         if (client.hasEventListeners(paintable, BLUR)) {

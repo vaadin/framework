@@ -17,18 +17,18 @@ import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
-public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
+public class VGridLayoutPaintable extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected VPaintableWidget getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(Element element) {
             return getWidget().getComponent(element);
         }
 
@@ -110,8 +110,8 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
 
             if (w.getParent() == layout) {
                 w.removeFromParent();
-                VPaintableMap paintableMap = VPaintableMap.get(client);
-                paintableMap.unregisterPaintable(paintableMap.getPaintable(w));
+                ConnectorMap paintableMap = ConnectorMap.get(client);
+                paintableMap.unregisterConnector(paintableMap.getConnector(w));
             }
             cell.slot.getWrapperElement().removeFromParent();
         }
@@ -124,7 +124,7 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
         getLayoutManager().setNeedsUpdate(this);
     }
 
-    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+    public void updateCaption(ComponentConnector paintable, UIDL uidl) {
         VGridLayout layout = getWidget();
         if (VCaption.isNeeded(uidl, paintable.getState())) {
             Cell cell = layout.widgetToCell.get(paintable

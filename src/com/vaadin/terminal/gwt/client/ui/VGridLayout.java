@@ -21,8 +21,8 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VPaintableLayoutSlot;
 
@@ -59,8 +59,8 @@ public class VGridLayout extends ComplexPanel {
         setStyleName(CLASSNAME);
     }
 
-    private VPaintableWidget getPaintable() {
-        return VPaintableMap.get(client).getPaintable(this);
+    private ComponentConnector getPaintable() {
+        return ConnectorMap.get(client).getConnector(this);
     }
 
     /**
@@ -551,7 +551,7 @@ public class VGridLayout extends ComplexPanel {
                                                        // about childUidl
             hasContent = childUidl != null;
             if (hasContent) {
-                VPaintableWidget paintable = client.getPaintable(childUidl);
+                ComponentConnector paintable = client.getPaintable(childUidl);
 
                 if (slot == null || slot.getPaintable() != paintable) {
                     slot = new VPaintableLayoutSlot(CLASSNAME, paintable);
@@ -599,7 +599,7 @@ public class VGridLayout extends ComplexPanel {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    VPaintableWidget getComponent(Element element) {
+    ComponentConnector getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
     }
 

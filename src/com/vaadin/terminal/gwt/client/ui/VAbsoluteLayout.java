@@ -18,8 +18,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class VAbsoluteLayout extends ComplexPanel {
 
@@ -90,10 +90,10 @@ public class VAbsoluteLayout extends ComplexPanel {
         String bottom;
         private String zIndex;
 
-        private VPaintableWidget paintable;
+        private ComponentConnector paintable;
         private VCaption caption;
 
-        public AbsoluteWrapper(VPaintableWidget paintable) {
+        public AbsoluteWrapper(ComponentConnector paintable) {
             this.paintable = paintable;
             setStyleName(CLASSNAME + "-wrapper");
         }
@@ -120,7 +120,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         @Override
         public void setWidget(Widget w) {
             // this fixes #5457 (Widget implementation can change on-the-fly)
-            paintable = VPaintableMap.get(client).getPaintable(w);
+            paintable = ConnectorMap.get(client).getConnector(w);
             super.setWidget(w);
         }
 
@@ -211,7 +211,7 @@ public class VAbsoluteLayout extends ComplexPanel {
      * @return The Paintable which the element is a part of. Null if the element
      *         belongs to the layout and not to a child.
      */
-    VPaintableWidget getComponent(Element element) {
+    ComponentConnector getComponent(Element element) {
         return Util.getPaintableForElement(client, this, element);
     }
 

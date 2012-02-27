@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class VCheckBoxPaintable extends VAbstractPaintableWidget {
+public class VCheckBoxPaintable extends AbstractComponentConnector {
 
     @Override
     protected boolean delegateCaptionHandling() {

@@ -31,7 +31,7 @@ import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.RpcManager;
 import com.vaadin.terminal.gwt.server.RpcTarget;
@@ -775,7 +775,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 // related code has been updated
                 if (getIcon() != null) {
                     target.addAttribute(
-                            VAbstractPaintableWidget.ATTRIBUTE_ICON, getIcon());
+                            AbstractComponentConnector.ATTRIBUTE_ICON, getIcon());
                 }
 
                 if (eventIdentifiers != null) {

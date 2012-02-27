@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 abstract class VTabsheetBase extends ComplexPanel {
 
@@ -69,7 +69,7 @@ abstract class VTabsheetBase extends ComplexPanel {
      * Implement in extending classes. This method should return the Paintable
      * corresponding to the given index.
      */
-    protected abstract VPaintableWidget getTab(int index);
+    protected abstract ComponentConnector getTab(int index);
 
     /**
      * Implement in extending classes. This method should remove the rendered

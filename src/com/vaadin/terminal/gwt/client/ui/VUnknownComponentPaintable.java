@@ -10,7 +10,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VUIDLBrowser;
 
-public class VUnknownComponentPaintable extends VAbstractPaintableWidget {
+public class VUnknownComponentPaintable extends AbstractComponentConnector {
 
     @Override
     protected boolean delegateCaptionHandling() {

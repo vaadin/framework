@@ -29,6 +29,6 @@ public interface ClientToServerRpc extends Serializable {
      * @since 7.0
      */
     public interface InitializableClientToServerRpc extends ClientToServerRpc {
-        public void initRpc(String paintableId, ApplicationConnection client);
+        public void initRpc(String connectorId, ApplicationConnection client);
     }
 }

@@ -19,8 +19,8 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class VAccordion extends VTabsheetBase {
 
@@ -86,7 +86,7 @@ public class VAccordion extends VTabsheetBase {
     private StackItem moveStackItemIfNeeded(StackItem item, int newIndex,
             UIDL tabUidl) {
         UIDL tabContentUIDL = null;
-        VPaintableWidget tabContent = null;
+        ComponentConnector tabContent = null;
         if (tabUidl.getChildCount() > 0) {
             tabContentUIDL = tabUidl.getChildUIDL(0);
             tabContent = client.getPaintable(tabContentUIDL);
@@ -374,9 +374,9 @@ public class VAccordion extends VTabsheetBase {
         public void replaceWidget(Widget newWidget) {
             if (getWidgetCount() > 1) {
                 Widget oldWidget = getWidget(1);
-                VPaintableWidget oldPaintable = VPaintableMap.get(client)
-                        .getPaintable(oldWidget);
-                VPaintableMap.get(client).unregisterPaintable(oldPaintable);
+                ComponentConnector oldPaintable = ConnectorMap.get(client)
+                        .getConnector(oldWidget);
+                ConnectorMap.get(client).unregisterConnector(oldPaintable);
                 widgets.remove(oldWidget);
                 remove(1);
             }
@@ -411,7 +411,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public void setContent(UIDL contentUidl) {
-            final VPaintableWidget newPntbl = client.getPaintable(contentUidl);
+            final ComponentConnector newPntbl = client.getPaintable(contentUidl);
             Widget newWidget = newPntbl.getWidget();
             if (getChildWidget() == null) {
                 add(newWidget, content);
@@ -450,7 +450,7 @@ public class VAccordion extends VTabsheetBase {
             return DOM.getFirstChild(content).getOffsetWidth();
         }
 
-        public boolean contains(VPaintableWidget p) {
+        public boolean contains(ComponentConnector p) {
             return (getChildWidget() == p.getWidget());
         }
 
@@ -466,13 +466,13 @@ public class VAccordion extends VTabsheetBase {
     }
 
     boolean isDynamicWidth() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedWidth();
     }
 
     boolean isDynamicHeight() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedHeight();
     }
@@ -495,10 +495,10 @@ public class VAccordion extends VTabsheetBase {
     }
 
     @Override
-    protected VPaintableWidget getTab(int index) {
+    protected ComponentConnector getTab(int index) {
         if (index < getWidgetCount()) {
             Widget w = getStackItem(index);
-            return VPaintableMap.get(client).getPaintable(w);
+            return ConnectorMap.get(client).getConnector(w);
         }
 
         return null;

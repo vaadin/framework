@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
-public class VWindowPaintable extends VAbstractPaintableWidgetContainer
+public class VWindowPaintable extends AbstractComponentContainerConnector
         implements BeforeShortcutActionListener, SimpleManagedLayout,
         PostLayoutListener {
 
@@ -79,7 +79,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             getWidget()
                     .setCaption(
                             getState().getCaption(),
-                            uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
+                            uidl.getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
         }
 
         getWidget().visibilityChangesDisabled = true;
@@ -131,7 +131,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             childUidl = uidl.getChildUIDL(childIndex++);
         }
 
-        final VPaintableWidget lo = client.getPaintable(childUidl);
+        final ComponentConnector lo = client.getPaintable(childUidl);
         if (getWidget().layout != null) {
             if (getWidget().layout != lo) {
                 // remove old
@@ -285,7 +285,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         }
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // NOP, window has own caption, layout captio not rendered
     }
 

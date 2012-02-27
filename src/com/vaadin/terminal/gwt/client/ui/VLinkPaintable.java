@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VLinkPaintable extends VAbstractPaintableWidget {
+public class VLinkPaintable extends AbstractComponentConnector {
 
     @Override
     protected boolean delegateCaptionHandling() {

@@ -28,9 +28,9 @@ import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintable;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -108,10 +108,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private boolean startDrag(NativeEvent event) {
         if (dragStartMode == WRAPPER || dragStartMode == COMPONENT) {
             VTransferable transferable = new VTransferable();
-            transferable.setDragSource(VPaintableMap.get(client).getPaintable(
+            transferable.setDragSource(ConnectorMap.get(client).getConnector(
                     VDragAndDropWrapper.this));
 
-            VPaintableWidget paintable = Util.findPaintable(client,
+            ComponentConnector paintable = Util.findPaintable(client,
                     (Element) event.getEventTarget().cast());
             Widget widget = paintable.getWidget();
             transferable.setData("component", paintable);
@@ -242,8 +242,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
             if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
                 VTransferable transferable = new VTransferable();
-                transferable.setDragSource(VPaintableMap.get(client)
-                        .getPaintable(this));
+                transferable.setDragSource(ConnectorMap.get(client)
+                        .getConnector(this));
 
                 vaadinDragEvent = VDragAndDropManager.get().startDrag(
                         transferable, event, false);
@@ -420,7 +420,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     private String getPid() {
-        return VPaintableMap.get(client).getPid((VPaintable) this);
+        return ConnectorMap.get(client).getConnectorId((Connector) this);
     }
 
     public VDropHandler getDropHandler() {
@@ -499,8 +499,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         @Override
-        public VPaintableWidget getPaintable() {
-            return VPaintableMap.get(client).getPaintable(
+        public ComponentConnector getPaintable() {
+            return ConnectorMap.get(client).getConnector(
                     VDragAndDropWrapper.this);
         }
 

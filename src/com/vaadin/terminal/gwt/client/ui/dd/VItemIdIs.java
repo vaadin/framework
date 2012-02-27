@@ -6,9 +6,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 final public class VItemIdIs extends VAcceptCriterion {
 
@@ -16,12 +16,12 @@ final public class VItemIdIs extends VAcceptCriterion {
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         try {
             String pid = configuration.getStringAttribute("s");
-            VPaintableWidget dragSource = drag.getTransferable()
+            ComponentConnector dragSource = drag.getTransferable()
                     .getDragSource();
             VDropHandler currentDropHandler = VDragAndDropManager.get()
                     .getCurrentDropHandler();
-            String pid2 = VPaintableMap.get(
-                    currentDropHandler.getApplicationConnection()).getPid(
+            String pid2 = ConnectorMap.get(
+                    currentDropHandler.getApplicationConnection()).getConnectorId(
                     dragSource);
             if (pid2.equals(pid)) {
                 Object searchedId = drag.getTransferable().getData("itemId");

@@ -8,7 +8,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public abstract class VOptionGroupBasePaintable extends
-        VAbstractPaintableWidget {
+        AbstractComponentConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

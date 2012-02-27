@@ -17,8 +17,8 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
@@ -84,7 +84,7 @@ public class VEmbedded extends HTML {
             html.append("codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         String height = paintable.getDeclaredHeight();
         String width = paintable.getDeclaredWidth();

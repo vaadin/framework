@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VDateFieldPaintable extends VAbstractPaintableWidget {
+public class VDateFieldPaintable extends AbstractComponentConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

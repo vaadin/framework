@@ -12,15 +12,15 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public abstract class VAbstractSplitPanelPaintable extends
-        VAbstractPaintableWidgetContainer implements SimpleManagedLayout {
+        AbstractComponentContainerConnector implements SimpleManagedLayout {
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // TODO Implement caption handling
     }
 
@@ -94,24 +94,24 @@ public abstract class VAbstractSplitPanelPaintable extends
 
         getWidget().position = uidl.getStringAttribute("position");
 
-        final VPaintableWidget newFirstChildPaintable = client
+        final ComponentConnector newFirstChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(0));
-        final VPaintableWidget newSecondChildPaintable = client
+        final ComponentConnector newSecondChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(1));
         Widget newFirstChild = newFirstChildPaintable.getWidget();
         Widget newSecondChild = newSecondChildPaintable.getWidget();
 
         if (getWidget().firstChild != newFirstChild) {
             if (getWidget().firstChild != null) {
-                client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(getWidget().firstChild));
+                client.unregisterPaintable(ConnectorMap.get(client)
+                        .getConnector(getWidget().firstChild));
             }
             getWidget().setFirstWidget(newFirstChild);
         }
         if (getWidget().secondChild != newSecondChild) {
             if (getWidget().secondChild != null) {
-                client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(getWidget().secondChild));
+                client.unregisterPaintable(ConnectorMap.get(client)
+                        .getConnector(getWidget().secondChild));
             }
             getWidget().setSecondWidget(newSecondChild);
         }

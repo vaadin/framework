@@ -4,7 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 /**
  * Vaadin Widgets that want to receive something via drag and drop implement
@@ -61,7 +61,7 @@ public interface VDropHandler {
     /**
      * Returns the Paintable into which this DragHandler is associated
      */
-    public VPaintableWidget getPaintable();
+    public ComponentConnector getPaintable();
 
     /**
      * Returns the application connection to which this {@link VDropHandler}

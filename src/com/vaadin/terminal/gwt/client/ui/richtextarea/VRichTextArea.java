@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -302,7 +302,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
             shortcutHandler
                     .handleKeyboardEvent(com.google.gwt.user.client.Event
                             .as(event.getNativeEvent()),
-                            VPaintableMap.get(client).getPaintable(this));
+                            ConnectorMap.get(client).getConnector(this));
         }
     }
 

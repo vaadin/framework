@@ -24,8 +24,8 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -104,7 +104,7 @@ public class VFormLayout extends SimplePanel {
             for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext(); i++) {
                 prepareCell(i, 1);
                 final UIDL childUidl = (UIDL) it.next();
-                final VPaintableWidget childPaintable = client
+                final ComponentConnector childPaintable = client
                         .getPaintable(childUidl);
                 Widget childWidget = childPaintable.getWidget();
                 Caption caption = widgetToCaption.get(childWidget);
@@ -124,8 +124,8 @@ public class VFormLayout extends SimplePanel {
                 if (oldWidget == null) {
                     setWidget(i, COLUMN_WIDGET, childWidget);
                 } else if (oldWidget != childWidget) {
-                    final VPaintableWidget oldPaintable = VPaintableMap.get(
-                            client).getPaintable(oldWidget);
+                    final ComponentConnector oldPaintable = ConnectorMap.get(
+                            client).getConnector(oldWidget);
                     client.unregisterPaintable(oldPaintable);
                     setWidget(i, COLUMN_WIDGET, childWidget);
                 }
@@ -162,8 +162,8 @@ public class VFormLayout extends SimplePanel {
 
             while (getRowCount() > i) {
                 Widget w = getWidget(i, COLUMN_WIDGET);
-                final VPaintableWidget p = VPaintableMap.get(client)
-                        .getPaintable(w);
+                final ComponentConnector p = ConnectorMap.get(client)
+                        .getConnector(w);
                 client.unregisterPaintable(p);
                 widgetToCaption.remove(w);
                 removeRow(i);
@@ -178,7 +178,7 @@ public class VFormLayout extends SimplePanel {
             }
         }
 
-        public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        public void updateCaption(ComponentConnector paintable, UIDL uidl) {
             final Caption c = widgetToCaption.get(paintable
                     .getWidget());
             if (c != null) {
@@ -217,7 +217,7 @@ public class VFormLayout extends SimplePanel {
 
         public static final String CLASSNAME = "v-caption";
 
-        private final VPaintableWidget owner;
+        private final ComponentConnector owner;
 
         private Element requiredFieldIndicator;
 
@@ -234,7 +234,7 @@ public class VFormLayout extends SimplePanel {
          *            return null
          * @param client
          */
-        public Caption(VPaintableWidget component, ApplicationConnection client) {
+        public Caption(ComponentConnector component, ApplicationConnection client) {
             super();
             this.client = client;
             owner = component;
@@ -268,14 +268,14 @@ public class VFormLayout extends SimplePanel {
 
             boolean isEmpty = true;
 
-            if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON)) {
+            if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)) {
                 if (icon == null) {
                     icon = new Icon(client);
 
                     DOM.insertChild(getElement(), icon.getElement(), 0);
                 }
                 icon.setUri(uidl
-                        .getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
+                        .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
                 isEmpty = false;
             } else {
                 if (icon != null) {
@@ -308,7 +308,7 @@ public class VFormLayout extends SimplePanel {
                 removeStyleDependentName("hasdescription");
             }
 
-            if (uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED)) {
+            if (uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
                 if (requiredFieldIndicator == null) {
                     requiredFieldIndicator = DOM.createSpan();
                     DOM.setInnerText(requiredFieldIndicator, "*");
@@ -345,7 +345,7 @@ public class VFormLayout extends SimplePanel {
          * 
          * @return owner Widget
          */
-        public VPaintableWidget getOwner() {
+        public ComponentConnector getOwner() {
             return owner;
         }
 
@@ -362,17 +362,17 @@ public class VFormLayout extends SimplePanel {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;
-        private VPaintableWidget owner;
+        private ComponentConnector owner;
 
         public ErrorFlag() {
             setStyleName(CLASSNAME);
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
-        public void updateFromUIDL(UIDL uidl, VPaintableWidget component) {
+        public void updateFromUIDL(UIDL uidl, ComponentConnector component) {
             owner = component;
             if (uidl.hasAttribute("error")
-                    && !uidl.getBooleanAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS)) {
+                    && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS)) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");

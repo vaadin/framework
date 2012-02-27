@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class VUploadPaintable extends VAbstractPaintableWidget {
+public class VUploadPaintable extends AbstractComponentConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

@@ -9,9 +9,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
-public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
+public class VRichTextAreaPaintable extends AbstractComponentConnector implements
         BeforeShortcutActionListener {
 
     @Override

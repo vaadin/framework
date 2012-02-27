@@ -24,10 +24,10 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VViewPaintable extends VAbstractPaintableWidgetContainer {
+public class VViewPaintable extends AbstractComponentContainerConnector {
 
     private static final String CLICK_EVENT_IDENTIFIER = VPanelPaintable.CLICK_EVENT_IDENTIFIER;
 
@@ -126,7 +126,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
 
         // Draw this application level window
         UIDL childUidl = uidl.getChildUIDL(childIndex);
-        final VPaintableWidget lo = client.getPaintable(childUidl);
+        final ComponentConnector lo = client.getPaintable(childUidl);
 
         if (getWidget().layout != null) {
             if (getWidget().layout != lo) {
@@ -184,8 +184,8 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
                 .hasNext();) {
             final VWindow w = rem.next();
-            client.unregisterPaintable(VPaintableMap.get(getConnection())
-                    .getPaintable(w));
+            client.unregisterPaintable(ConnectorMap.get(getConnection())
+                    .getConnector(w));
             getWidget().subWindows.remove(w);
             w.hide();
         }
@@ -194,7 +194,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    VPaintableWidget paintable = (VPaintableWidget) uidl
+                    ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
 
                     final Widget toBeFocused = paintable
@@ -315,7 +315,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         }
     };
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // NOP The main view never draws caption for its layout
     }
 

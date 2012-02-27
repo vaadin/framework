@@ -32,8 +32,8 @@ public class NullConsole implements Console {
 
     public void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
-            Set<VPaintableWidget> zeroHeightComponents,
-            Set<VPaintableWidget> zeroWidthComponents) {
+            Set<ComponentConnector> zeroHeightComponents,
+            Set<ComponentConnector> zeroWidthComponents) {
     }
 
     public void log(Throwable e) {

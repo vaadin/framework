@@ -14,14 +14,14 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
-public abstract class VAbstractPaintableWidget implements VPaintableWidget {
+public abstract class AbstractComponentConnector implements ComponentConnector {
 
     // Generic UIDL parameter names, to be moved to shared state.
     // Attributes are here mainly if they apply to all paintable widgets or
@@ -52,7 +52,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     /**
      * Default constructor
      */
-    public VAbstractPaintableWidget() {
+    public AbstractComponentConnector() {
     }
 
     /**
@@ -145,9 +145,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         return GWT.create(ComponentState.class);
     }
 
-    public VPaintableWidgetContainer getParent() {
+    public ComponentContainerConnector getParent() {
         // FIXME: Hierarchy should be set by framework instead of looked up here
-        VPaintableMap paintableMap = VPaintableMap.get(getConnection());
+        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
         Widget w = getWidget();
         while (true) {
@@ -155,8 +155,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             if (w == null) {
                 return null;
             }
-            if (paintableMap.isPaintable(w)) {
-                return (VPaintableWidgetContainer) paintableMap.getPaintable(w);
+            if (paintableMap.isConnector(w)) {
+                return (ComponentContainerConnector) paintableMap.getConnector(w);
             }
         }
     }
@@ -175,7 +175,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
             return;
         }
 
-        VPaintableMap paintableMap = VPaintableMap.get(getConnection());
+        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         // register the listened events by the server-side to the event-handler
         // of the component
         paintableMap.registerEventListenersFromUIDL(getId(), uidl);
@@ -265,14 +265,14 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         // Parent should be updated if either dimension changed between relative
         // and non-relative
         if (w.endsWith("%") != declaredWidth.endsWith("%")) {
-            VPaintableWidgetContainer parent = getParent();
+            ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setWidthNeedsUpdate((ManagedLayout) parent);
             }
         }
 
         if (h.endsWith("%") != declaredHeight.endsWith("%")) {
-            VPaintableWidgetContainer parent = getParent();
+            ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setHeightNeedsUpdate((ManagedLayout) parent);
             }

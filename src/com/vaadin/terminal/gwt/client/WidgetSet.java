@@ -20,7 +20,7 @@ public class WidgetSet {
     /**
      * Create an uninitialized component that best matches given UIDL. The
      * component must be a {@link Widget} that implements
-     * {@link VPaintableWidget}.
+     * {@link ComponentConnector}.
      * 
      * @param tag
      *            component type tag for the component to create
@@ -30,7 +30,7 @@ public class WidgetSet {
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public VPaintableWidget createWidget(String tag,
+    public ComponentConnector createWidget(String tag,
             ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
@@ -40,7 +40,7 @@ public class WidgetSet {
          * has no "native" counterpart on client side.
          */
 
-        Class<? extends VPaintableWidget> classType = resolveWidgetType(tag,
+        Class<? extends ComponentConnector> classType = resolveWidgetType(tag,
                 conf);
 
         if (classType == null || classType == VUnknownComponentPaintable.class) {
@@ -59,9 +59,9 @@ public class WidgetSet {
 
     }
 
-    protected Class<? extends VPaintableWidget> resolveWidgetType(String tag,
+    protected Class<? extends ComponentConnector> resolveWidgetType(String tag,
             ApplicationConfiguration conf) {
-        Class<? extends VPaintableWidget> widgetClass = conf
+        Class<? extends ComponentConnector> widgetClass = conf
                 .getWidgetClassByEncodedTag(tag);
 
         return widgetClass;
@@ -77,23 +77,23 @@ public class WidgetSet {
      * @param applicationConfiguration
      * @return
      */
-    public Class<? extends VPaintableWidget> getImplementationByClassName(
+    public Class<? extends ComponentConnector> getImplementationByClassName(
             String fullyqualifiedName) {
         if (fullyqualifiedName == null) {
             return VUnknownComponentPaintable.class;
         }
-        Class<? extends VPaintableWidget> implementationByServerSideClassName = widgetMap
+        Class<? extends ComponentConnector> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);
 
         return implementationByServerSideClassName;
 
     }
 
-    public Class<? extends VPaintableWidget>[] getDeferredLoadedWidgets() {
+    public Class<? extends ComponentConnector>[] getDeferredLoadedWidgets() {
         return widgetMap.getDeferredLoadedWidgets();
     }
 
-    public void loadImplementation(Class<? extends VPaintableWidget> nextType) {
+    public void loadImplementation(Class<? extends ComponentConnector> nextType) {
         widgetMap.ensureInstantiator(nextType);
     }
 

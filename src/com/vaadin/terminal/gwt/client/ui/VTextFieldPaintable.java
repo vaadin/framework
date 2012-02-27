@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
-public class VTextFieldPaintable extends VAbstractPaintableWidget implements
+public class VTextFieldPaintable extends AbstractComponentConnector implements
         BeforeShortcutActionListener {
 
     @Override

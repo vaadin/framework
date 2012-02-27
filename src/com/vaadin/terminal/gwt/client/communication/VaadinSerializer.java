@@ -5,7 +5,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.json.client.JSONObject;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
  * Serializer that can deserialize custom objects received from the server.
@@ -28,6 +28,6 @@ public interface VaadinSerializer {
      * @return deserialized object
      */
     // TODO Object -> something
-    Object deserialize(JSONObject jsonValue, VPaintableMap idMapper);
+    Object deserialize(JSONObject jsonValue, ConnectorMap idMapper);
 
 }

@@ -80,7 +80,7 @@ public class ComponentLocator {
         Element e = targetElement;
 
         while (true) {
-            pid = VPaintableMap.get(client).getPid(e);
+            pid = ConnectorMap.get(client).getConnectorId(e);
             if (pid != null) {
                 break;
             }
@@ -96,7 +96,7 @@ public class ComponentLocator {
             // If we found a Paintable then we use that as reference. We should
             // find the Paintable for all but very special cases (like
             // overlays).
-            w = ((VPaintableWidget) VPaintableMap.get(client).getPaintable(pid))
+            w = ((ComponentConnector) ConnectorMap.get(client).getConnector(pid))
                     .getWidget();
 
             /*
@@ -367,7 +367,7 @@ public class ComponentLocator {
             return null;
         }
 
-        String pid = VPaintableMap.get(client).getPid(w.getElement());
+        String pid = ConnectorMap.get(client).getConnectorId(w.getElement());
         if (isStaticPid(pid)) {
             return pid;
         }
@@ -440,7 +440,7 @@ public class ComponentLocator {
                 w = client.getView().getWidget();
             } else if (w == null) {
                 // Must be static pid (PID_S*)
-                w = ((VPaintableWidget) VPaintableMap.get(client).getPaintable(
+                w = ((ComponentConnector) ConnectorMap.get(client).getConnector(
                         part)).getWidget();
             } else if (part.startsWith("domChild[")) {
                 // The target widget has been found and the rest identifies the

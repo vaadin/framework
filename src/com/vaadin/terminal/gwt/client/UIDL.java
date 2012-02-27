@@ -16,7 +16,7 @@ import com.vaadin.ui.Component;
 
 /**
  * When a component is updated, it's client side widget's
- * {@link VPaintableWidget#updateFromUIDL(UIDL, ApplicationConnection)
+ * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)
  * updateFromUIDL()} will be called with the updated ("changes") UIDL received
  * from the server.
  * <p>
@@ -55,7 +55,7 @@ public final class UIDL extends JavaScriptObject {
      * AbstractComponent.paintContent()}. Note that if the UIDL corresponds to a
      * Paintable, a component identifier will be returned instead - this is used
      * internally and is not needed within
-     * {@link VPaintableWidget#updateFromUIDL(UIDL, ApplicationConnection)
+     * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)
      * updateFromUIDL()}.
      * 
      * @return the name for this section
@@ -516,9 +516,9 @@ public final class UIDL extends JavaScriptObject {
      *            the name of the attribute
      * @return the Paintable referenced by the attribute, if it exists
      */
-    public VPaintable getPaintableAttribute(String name,
+    public Connector getPaintableAttribute(String name,
             ApplicationConnection connection) {
-        return VPaintableMap.get(connection).getPaintable(
+        return ConnectorMap.get(connection).getConnector(
                 getStringAttribute(name));
     }
 
@@ -529,9 +529,9 @@ public final class UIDL extends JavaScriptObject {
      *            the name of the variable
      * @return the Paintable referenced by the variable, if it exists
      */
-    public VPaintable getPaintableVariable(String name,
+    public Connector getPaintableVariable(String name,
             ApplicationConnection connection) {
-        return VPaintableMap.get(connection).getPaintable(
+        return ConnectorMap.get(connection).getConnector(
                 getStringVariable(name));
     }
 

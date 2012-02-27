@@ -32,7 +32,7 @@ import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -78,7 +78,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     public static final int Z_INDEX = 10000;
 
-    VPaintableWidget layout;
+    ComponentConnector layout;
 
     Element contents;
 
@@ -931,7 +931,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 while (w != null) {
                     if (w instanceof Console) {
                         return true; // allow debug-window clicks
-                    } else if (w instanceof VPaintableWidget) {
+                    } else if (w instanceof ComponentConnector) {
                         return false;
                     }
                     w = w.getParent();

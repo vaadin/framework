@@ -44,7 +44,7 @@ public class LayoutManager {
         if (measuredSize == null) {
             measuredSize = new MeasuredSize();
 
-            if (VPaintableMap.get(connection).getPaintable(element) == null) {
+            if (ConnectorMap.get(connection).getConnector(element) == null) {
                 nonPaintableElements.add(element);
             }
             setMeasuredSize(element, measuredSize);
@@ -53,7 +53,7 @@ public class LayoutManager {
     }
 
     private boolean needsMeasure(Element e) {
-        if (connection.getPaintableMap().getPid(e) != null) {
+        if (connection.getConnectorMap().getConnectorId(e) != null) {
             return true;
         } else if (getMeasuredSize(e, nullSize).hasDependents()) {
             return true;
@@ -78,7 +78,7 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private static final MeasuredSize getMeasuredSize(VPaintableWidget paintable) {
+    private static final MeasuredSize getMeasuredSize(ComponentConnector paintable) {
         Element element = paintable.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
@@ -101,9 +101,9 @@ public class LayoutManager {
     }
 
     public void doLayout() {
-        VPaintableMap paintableMap = connection.getPaintableMap();
-        VPaintableWidget[] paintableWidgets = paintableMap
-                .getRegisteredPaintableWidgets();
+        ConnectorMap paintableMap = connection.getConnectorMap();
+        ComponentConnector[] paintableWidgets = paintableMap
+                .getRegisteredComponentConnectors();
 
         int passes = 0;
         Duration totalDuration = new Duration();
@@ -116,11 +116,11 @@ public class LayoutManager {
             FastStringSet needsHeightUpdate = FastStringSet.create();
             FastStringSet needsWidthUpdate = FastStringSet.create();
 
-            for (VPaintableWidget paintable : paintableWidgets) {
+            for (ComponentConnector paintable : paintableWidgets) {
                 MeasuredSize measuredSize = getMeasuredSize(paintable);
                 boolean managed = isManagedLayout(paintable);
 
-                VPaintableWidgetContainer parent = paintable.getParent();
+                ComponentContainerConnector parent = paintable.getParent();
                 boolean managedParent = parent != null
                         && isManagedLayout(parent);
 
@@ -153,7 +153,7 @@ public class LayoutManager {
             for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
                 String pid = needsWidthUpdateArray.get(i);
 
-                VPaintable paintable = paintableMap.getPaintable(pid);
+                Connector paintable = paintableMap.getConnector(pid);
                 if (paintable instanceof DirectionalManagedLayout) {
                     DirectionalManagedLayout cl = (DirectionalManagedLayout) paintable;
                     cl.layoutHorizontally();
@@ -169,8 +169,8 @@ public class LayoutManager {
             for (int i = 0; i < needsHeightUpdateArray.length(); i++) {
                 String pid = needsHeightUpdateArray.get(i);
 
-                VPaintableWidget paintable = (VPaintableWidget) paintableMap
-                        .getPaintable(pid);
+                ComponentConnector paintable = (ComponentConnector) paintableMap
+                        .getConnector(pid);
                 if (paintable instanceof DirectionalManagedLayout) {
                     DirectionalManagedLayout cl = (DirectionalManagedLayout) paintable;
                     cl.layoutVertically();
@@ -213,7 +213,7 @@ public class LayoutManager {
             }
         }
 
-        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
+        for (ComponentConnector vPaintableWidget : paintableWidgets) {
             if (vPaintableWidget instanceof PostLayoutListener) {
                 ((PostLayoutListener) vPaintableWidget).postLayout();
             }
@@ -223,9 +223,9 @@ public class LayoutManager {
                 + "ms");
     }
 
-    private void measureElements(VPaintableWidget[] paintableWidgets) {
+    private void measureElements(ComponentConnector[] paintableWidgets) {
 
-        for (VPaintableWidget paintableWidget : paintableWidgets) {
+        for (ComponentConnector paintableWidget : paintableWidgets) {
             Element element = paintableWidget.getWidget()
                     .getElement();
             MeasuredSize measuredSize = getMeasuredSize(paintableWidget);
@@ -243,8 +243,8 @@ public class LayoutManager {
             JsArrayString dependents = measuredSize.getDependents();
             for (int i = 0; i < dependents.length(); i++) {
                 String pid = dependents.get(i);
-                VPaintableWidget dependent = (VPaintableWidget) connection
-                        .getPaintableMap().getPaintable(pid);
+                ComponentConnector dependent = (ComponentConnector) connection
+                        .getConnectorMap().getConnector(pid);
                 if (dependent != null) {
                     MeasuredSize dependentSize = getMeasuredSize(dependent);
                     if (measuredSize.isHeightNeedsUpdate()) {
@@ -258,15 +258,15 @@ public class LayoutManager {
         }
     }
 
-    private static boolean isManagedLayout(VPaintableWidget paintable) {
+    private static boolean isManagedLayout(ComponentConnector paintable) {
         return paintable instanceof ManagedLayout;
     }
 
     public void foceLayout() {
-        VPaintableMap paintableMap = connection.getPaintableMap();
-        VPaintableWidget[] paintableWidgets = paintableMap
-                .getRegisteredPaintableWidgets();
-        for (VPaintableWidget vPaintableWidget : paintableWidgets) {
+        ConnectorMap paintableMap = connection.getConnectorMap();
+        ComponentConnector[] paintableWidgets = paintableMap
+                .getRegisteredComponentConnectors();
+        for (ComponentConnector vPaintableWidget : paintableWidgets) {
             MeasuredSize measuredSize = getMeasuredSize(vPaintableWidget);
             measuredSize.setHeightNeedsUpdate();
             measuredSize.setWidthNeedsUpdate();

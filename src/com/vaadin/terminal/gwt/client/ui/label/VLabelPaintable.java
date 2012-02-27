@@ -10,9 +10,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
-public class VLabelPaintable extends VAbstractPaintableWidget {
+public class VLabelPaintable extends AbstractComponentConnector {
     public VLabelPaintable() {
     }
 

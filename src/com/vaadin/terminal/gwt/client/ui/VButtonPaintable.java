@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
 
-public class VButtonPaintable extends VAbstractPaintableWidget {
+public class VButtonPaintable extends AbstractComponentConnector {
 
     /**
      * RPC interface for calls from client to server.

@@ -13,9 +13,9 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
+public class VScrollTablePaintable extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
 
     /*
@@ -256,7 +256,7 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
         return (VScrollTable) super.getWidget();
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // NOP, not rendered
     }
 

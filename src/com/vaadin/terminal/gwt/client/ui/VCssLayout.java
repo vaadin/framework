@@ -22,8 +22,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 public class VCssLayout extends SimplePanel {
@@ -78,7 +78,7 @@ public class VCssLayout extends SimplePanel {
             for (final Iterator<Object> i = uidl.getChildIterator(); i
                     .hasNext();) {
                 final UIDL r = (UIDL) i.next();
-                final VPaintableWidget child = client.getPaintable(r);
+                final ComponentConnector child = client.getPaintable(r);
                 final Widget widget = child.getWidget();
                 if (widget.getParent() == this) {
                     oldWidgets.remove(widget);
@@ -121,10 +121,10 @@ public class VCssLayout extends SimplePanel {
             // them
             for (Widget w : oldWidgets) {
                 remove(w);
-                VPaintableMap paintableMap = VPaintableMap.get(client);
-                if (paintableMap.isPaintable(w)) {
-                    final VPaintableWidget p = VPaintableMap.get(client)
-                            .getPaintable(w);
+                ConnectorMap paintableMap = ConnectorMap.get(client);
+                if (paintableMap.isConnector(w)) {
+                    final ComponentConnector p = ConnectorMap.get(client)
+                            .getConnector(w);
                     client.unregisterPaintable(p);
                 }
                 VCaption vCaption = widgetToCaption.remove(w);
@@ -144,7 +144,7 @@ public class VCssLayout extends SimplePanel {
             insert(child, index);
         }
 
-        public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+        public void updateCaption(ComponentConnector paintable, UIDL uidl) {
             Widget widget = paintable.getWidget();
             VCaption caption = widgetToCaption.get(widget);
             if (VCaption.isNeeded(uidl, paintable.getState())) {
@@ -164,7 +164,7 @@ public class VCssLayout extends SimplePanel {
             }
         }
 
-        VPaintableWidget getComponent(Element element) {
+        ComponentConnector getComponent(Element element) {
             return Util
                     .getPaintableForElement(client, VCssLayout.this, element);
         }

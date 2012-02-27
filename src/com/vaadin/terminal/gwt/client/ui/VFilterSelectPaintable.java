@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect.FilterSelectSuggestion;
 
-public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
+public class VFilterSelectPaintable extends AbstractComponentConnector implements
         SimpleManagedLayout {
 
     /*

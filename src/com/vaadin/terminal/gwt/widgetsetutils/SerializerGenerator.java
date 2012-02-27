@@ -22,7 +22,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
@@ -108,7 +108,7 @@ public class SerializerGenerator extends Generator {
 
         sourceWriter.println("public " + beanTypeName + " deserialize("
                 + JSONObject.class.getName() + " jsonValue, "
-                + VPaintableMap.class.getName() + " idMapper) {");
+                + ConnectorMap.class.getName() + " idMapper) {");
         sourceWriter.indent();
 
         // VButtonState state = GWT.create(VButtonState.class);

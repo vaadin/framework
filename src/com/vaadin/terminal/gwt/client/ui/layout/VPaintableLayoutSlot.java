@@ -5,21 +5,21 @@ package com.vaadin.terminal.gwt.client.ui.layout;
 
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class VPaintableLayoutSlot extends VLayoutSlot {
 
-    final VPaintableWidget paintable;
+    final ComponentConnector paintable;
     private LayoutManager layoutManager;
 
-    public VPaintableLayoutSlot(String baseClassName, VPaintableWidget paintable) {
+    public VPaintableLayoutSlot(String baseClassName, ComponentConnector paintable) {
         super(baseClassName, paintable.getWidget());
         this.paintable = paintable;
         layoutManager = paintable.getLayoutManager();
     }
 
-    public VPaintableWidget getPaintable() {
+    public ComponentConnector getPaintable() {
         return paintable;
     }
 

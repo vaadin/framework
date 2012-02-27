@@ -30,7 +30,7 @@ import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
  * <p>
@@ -173,13 +173,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Adds the required attribute
         if (!isReadOnly() && isRequired()) {
-            target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_REQUIRED,
+            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED,
                     true);
         }
 
         // Hide the error indicator if needed
         if (shouldHideErrors()) {
-            target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_HIDEERRORS,
+            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS,
                     true);
         }
     }

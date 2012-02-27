@@ -15,14 +15,14 @@ import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VPaintableLayoutSlot;
 
 public abstract class VMeasuringOrderedLayoutPaintable extends
-        VAbstractPaintableWidgetContainer implements DirectionalManagedLayout {
+        AbstractComponentContainerConnector implements DirectionalManagedLayout {
 
     @Override
     public void init() {
@@ -30,7 +30,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
                 getWidget().spacingMeasureElement);
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         VMeasuringOrderedLayout layout = getWidget();
         if (VCaption.isNeeded(uidl, component.getState())) {
             VLayoutSlot layoutSlot = layout.getSlotForChild(component
@@ -61,7 +61,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             return;
         }
 
-        HashSet<VPaintableWidget> previousChildren = new HashSet<VPaintableWidget>(
+        HashSet<ComponentConnector> previousChildren = new HashSet<ComponentConnector>(
                 getChildren());
 
         VMeasuringOrderedLayout layout = getWidget();
@@ -73,7 +73,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         // TODO Support reordering elements!
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
-            final VPaintableWidget child = client.getPaintable(childUIDL);
+            final ComponentConnector child = client.getPaintable(childUIDL);
             Widget widget = child.getWidget();
 
             VLayoutSlot slot = layout.getSlotForChild(widget);
@@ -109,7 +109,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             previousChildren.remove(child);
         }
 
-        for (VPaintableWidget child : previousChildren) {
+        for (ComponentConnector child : previousChildren) {
             Widget widget = child.getWidget();
 
             // Don't remove and unregister if it has been moved to a different
@@ -118,8 +118,8 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
             if (widget.getParent() == getWidget()) {
                 layout.removeSlot(layout.getSlotForChild(widget));
 
-                VPaintableMap vPaintableMap = VPaintableMap.get(client);
-                vPaintableMap.unregisterPaintable(child);
+                ConnectorMap vPaintableMap = ConnectorMap.get(client);
+                vPaintableMap.unregisterConnector(child);
             }
         }
 

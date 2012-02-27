@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VButtonPaintable.ButtonClientToServerRpc;
 
-public class VNativeButtonPaintable extends VAbstractPaintableWidget {
+public class VNativeButtonPaintable extends AbstractComponentConnector {
 
     @Override
     public void init() {

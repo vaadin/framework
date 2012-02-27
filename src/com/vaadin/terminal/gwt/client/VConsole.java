@@ -82,8 +82,8 @@ public class VConsole {
 
     public static void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
-            Set<VPaintableWidget> zeroHeightComponents,
-            Set<VPaintableWidget> zeroWidthComponents) {
+            Set<ComponentConnector> zeroHeightComponents,
+            Set<ComponentConnector> zeroWidthComponents) {
         impl.printLayoutProblems(meta, applicationConnection,
                 zeroHeightComponents, zeroWidthComponents);
     }

@@ -27,8 +27,8 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.label.VLabel;
 
 public class VTabsheet extends VTabsheetBase {
@@ -197,12 +197,12 @@ public class VTabsheet extends VTabsheetBase {
         @Override
         public boolean updateCaption(UIDL uidl) {
             if (uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION)
-                    || uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
+                    || uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
                 tooltipInfo
                         .setTitle(uidl
                                 .getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
-                if (uidl.hasAttribute(VAbstractPaintableWidget.ATTRIBUTE_ERROR)) {
+                if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
                 client.registerTooltip(getTabsheet(), getElement(),
@@ -547,13 +547,13 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     boolean isDynamicWidth() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedWidth();
     }
 
     boolean isDynamicHeight() {
-        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+        ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
         return paintable.isUndefinedHeight();
     }
@@ -757,7 +757,7 @@ public class VTabsheet extends VTabsheetBase {
         tab.recalculateCaptionWidth();
 
         UIDL tabContentUIDL = null;
-        VPaintableWidget tabContentPaintable = null;
+        ComponentConnector tabContentPaintable = null;
         Widget tabContentWidget = null;
         if (tabUidl.getChildCount() > 0) {
             tabContentUIDL = tabUidl.getChildUIDL(0);
@@ -824,15 +824,15 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     private void renderContent(final UIDL contentUIDL) {
-        final VPaintableWidget content = client.getPaintable(contentUIDL);
+        final ComponentConnector content = client.getPaintable(contentUIDL);
         if (tp.getWidgetCount() > activeTabIndex) {
             Widget old = tp.getWidget(activeTabIndex);
             if (old != content) {
                 tp.remove(activeTabIndex);
-                VPaintableMap paintableMap = VPaintableMap.get(client);
-                if (paintableMap.isPaintable(old)) {
-                    paintableMap.unregisterPaintable(paintableMap
-                            .getPaintable(old));
+                ConnectorMap paintableMap = ConnectorMap.get(client);
+                if (paintableMap.isConnector(old)) {
+                    paintableMap.unregisterConnector(paintableMap
+                            .getConnector(old));
                 }
                 tp.insert(content.getWidget(), activeTabIndex);
             }
@@ -918,8 +918,8 @@ public class VTabsheet extends VTabsheetBase {
      */
     private void updateTabScroller() {
         if (!isDynamicWidth()) {
-            VPaintableWidget paintable = VPaintableMap.get(client)
-                    .getPaintable(this);
+            ComponentConnector paintable = ConnectorMap.get(client)
+                    .getConnector(this);
             DOM.setStyleAttribute(tabs, "width", paintable.getDeclaredWidth());
         }
 
@@ -1016,10 +1016,10 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     @Override
-    protected VPaintableWidget getTab(int index) {
+    protected ComponentConnector getTab(int index) {
         if (tp.getWidgetCount() > index) {
             Widget widget = tp.getWidget(index);
-            return VPaintableMap.get(client).getPaintable(widget);
+            return ConnectorMap.get(client).getConnector(widget);
         }
         return null;
     }

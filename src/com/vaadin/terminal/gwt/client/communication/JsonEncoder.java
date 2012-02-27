@@ -12,8 +12,8 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.vaadin.terminal.gwt.client.VPaintable;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -50,11 +50,11 @@ public class JsonEncoder {
      * 
      * @param value
      *            value to convert
-     * @param paintableMap
-     *            mapper from paintables to paintable IDs
+     * @param connectorMap
+     *            mapper from connectors to connector IDs
      * @return JSON representation of the value
      */
-    public static JSONValue encode(Object value, VPaintableMap paintableMap) {
+    public static JSONValue encode(Object value, ConnectorMap connectorMap) {
         if (null == value) {
             // TODO as undefined type?
             return combineTypeAndValue(VTYPE_UNDEFINED, JSONNull.getInstance());
@@ -76,7 +76,7 @@ public class JsonEncoder {
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < array.length; ++i) {
                 // TODO handle object graph loops?
-                jsonArray.set(i, encode(array[i], paintableMap));
+                jsonArray.set(i, encode(array[i], connectorMap));
             }
             return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
@@ -85,13 +85,13 @@ public class JsonEncoder {
             for (String mapKey : map.keySet()) {
                 // TODO handle object graph loops?
                 Object mapValue = map.get(mapKey);
-                jsonMap.put(mapKey, encode(mapValue, paintableMap));
+                jsonMap.put(mapKey, encode(mapValue, connectorMap));
             }
             return combineTypeAndValue(VTYPE_MAP, jsonMap);
-        } else if (value instanceof VPaintable) {
-            VPaintable paintable = (VPaintable) value;
+        } else if (value instanceof Connector) {
+            Connector paintable = (Connector) value;
             return combineTypeAndValue(VTYPE_PAINTABLE, new JSONString(
-                    paintableMap.getPid(paintable)));
+                    connectorMap.getConnectorId(paintable)));
         } else {
             return combineTypeAndValue(getTransportType(value), new JSONString(
                     String.valueOf(value)));
@@ -108,7 +108,7 @@ public class JsonEncoder {
     private static String getTransportType(Object value) {
         if (value instanceof String) {
             return VTYPE_STRING;
-        } else if (value instanceof VPaintable) {
+        } else if (value instanceof Connector) {
             return VTYPE_PAINTABLE;
         } else if (value instanceof Boolean) {
             return VTYPE_BOOLEAN;

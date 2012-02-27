@@ -9,9 +9,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
+public class VPopupViewPaintable extends AbstractComponentContainerConnector {
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -21,7 +21,7 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
     /**
      * 
      * 
-     * @see com.vaadin.terminal.gwt.client.VPaintableWidget#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
+     * @see com.vaadin.terminal.gwt.client.ComponentConnector#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
     @Override
@@ -79,7 +79,7 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
         }
     }// updateFromUIDL
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         if (VCaption.isNeeded(uidl, component.getState())) {
             if (getWidget().popup.captionWrapper != null) {
                 getWidget().popup.captionWrapper

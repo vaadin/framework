@@ -12,14 +12,14 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 
-public class VTreePaintable extends VAbstractPaintableWidget {
+public class VTreePaintable extends AbstractComponentConnector {
 
     public static final String ATTRIBUTE_NODE_STYLE = "style";
     public static final String ATTRIBUTE_NODE_CAPTION = "caption";
-    public static final String ATTRIBUTE_NODE_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_NODE_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
 
     public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
-    public static final String ATTRIBUTE_ACTION_ICON = VAbstractPaintableWidget.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_ACTION_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

@@ -27,7 +27,7 @@ public class VTooltip extends VOverlay {
     private static final int QUICK_OPEN_DELAY = 100;
     VErrorMessage em = new VErrorMessage();
     Element description = DOM.createDiv();
-    private VPaintableWidget tooltipOwner;
+    private ComponentConnector tooltipOwner;
 
     private boolean closing = false;
     private boolean opening = false;
@@ -110,7 +110,7 @@ public class VTooltip extends VOverlay {
         }
     }
 
-    public void showTooltip(VPaintableWidget owner, Event event, Object key) {
+    public void showTooltip(ComponentConnector owner, Event event, Object key) {
         if (closing && tooltipOwner == owner && tooltipKey == key) {
             // return to same tooltip, cancel closing
             closeTimer.cancel();
@@ -207,7 +207,7 @@ public class VTooltip extends VOverlay {
 
     }
 
-    public void handleTooltipEvent(Event event, VPaintableWidget owner, Object key) {
+    public void handleTooltipEvent(Event event, ComponentConnector owner, Object key) {
         final int type = DOM.eventGetType(event);
         if ((VTooltip.TOOLTIP_EVENTS & type) == type) {
             if (type == Event.ONMOUSEOVER) {

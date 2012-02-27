@@ -99,7 +99,7 @@ public class VUIDLBrowser extends SimpleTree {
 
         private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
                 String name) {
-            Class<? extends VPaintableWidget> widgetClassByDecodedTag = conf
+            Class<? extends ComponentConnector> widgetClassByDecodedTag = conf
                     .getWidgetClassByEncodedTag(name);
             if (widgetClassByDecodedTag == VUnknownComponentPaintable.class) {
                 return conf.getUnknownServerClassNameByEncodedTagName(name)
@@ -128,8 +128,8 @@ public class VUIDLBrowser extends SimpleTree {
             // same
             // host page
             for (ApplicationConnection applicationConnection : runningApplications) {
-                VPaintableWidget paintable = (VPaintableWidget) VPaintableMap
-                        .get(applicationConnection).getPaintable(uidl.getId());
+                ComponentConnector paintable = (ComponentConnector) ConnectorMap
+                        .get(applicationConnection).getConnector(uidl.getId());
                 highlight(paintable);
                 if (event != null && event.getNativeEvent().getShiftKey()) {
                     applicationConnection.highlightComponent(paintable);
@@ -241,7 +241,7 @@ public class VUIDLBrowser extends SimpleTree {
         }
     }
 
-    static void highlight(VPaintableWidget paintable) {
+    static void highlight(ComponentConnector paintable) {
         if (paintable != null) {
             Widget w = paintable.getWidget();
             Style style = highlight.getStyle();

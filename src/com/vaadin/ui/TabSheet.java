@@ -19,7 +19,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
 import com.vaadin.terminal.gwt.client.ui.VTabsheetPaintable;
@@ -394,7 +394,7 @@ public class TabSheet extends AbstractComponentContainer {
             // VCaption.updateCaption(uidl)
             final Resource icon = tab.getIcon();
             if (icon != null) {
-                target.addAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON,
+                target.addAttribute(AbstractComponentConnector.ATTRIBUTE_ICON,
                         icon);
             }
             final String caption = tab.getCaption();

@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.communication;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
  * Interface to be implemented by all shared state classes used to communicate
@@ -33,8 +33,8 @@ import com.vaadin.terminal.gwt.client.ui.VAbstractPaintableWidget;
  * supported data types.
  * 
  * On the client side, for most widgets,
- * {@link VAbstractPaintableWidget#createState()} and
- * {@link VAbstractPaintableWidget#getState()} methods should be overridden to
+ * {@link AbstractComponentConnector#createState()} and
+ * {@link AbstractComponentConnector#getState()} methods should be overridden to
  * create and use a shared state instance of the correct type.
  * 
  * Subclasses of a paintable using shared state should also provide a subclass

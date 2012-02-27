@@ -7,9 +7,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VFormLayoutPaintable extends VAbstractPaintableWidgetContainer {
+public class VFormLayoutPaintable extends AbstractComponentContainerConnector {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
@@ -22,7 +22,7 @@ public class VFormLayoutPaintable extends VAbstractPaintableWidgetContainer {
         getWidget().table.updateFromUIDL(uidl, client);
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         getWidget().table.updateCaption(component, uidl);
     }
 

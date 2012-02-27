@@ -12,15 +12,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
+public class VCssLayoutPaintable extends AbstractComponentContainerConnector {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
         @Override
-        protected VPaintableWidget getChildComponent(Element element) {
+        protected ComponentConnector getChildComponent(Element element) {
             return getWidget().panel.getComponent(element);
         }
 
@@ -56,7 +56,7 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
         return GWT.create(VCssLayout.class);
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         getWidget().panel.updateCaption(component, uidl);
     }
 

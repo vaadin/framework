@@ -206,7 +206,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<String, String> unknownComponents;
 
-    private Class<? extends VPaintableWidget>[] classes = new Class[1024];
+    private Class<? extends ComponentConnector>[] classes = new Class[1024];
 
     private String windowId;
 
@@ -381,7 +381,7 @@ public class ApplicationConfiguration implements EntryPoint {
         return useDebugIdInDom;
     }
 
-    public Class<? extends VPaintableWidget> getWidgetClassByEncodedTag(
+    public Class<? extends ComponentConnector> getWidgetClassByEncodedTag(
             String tag) {
         try {
             int parseInt = Integer.parseInt(tag);
@@ -484,7 +484,7 @@ public class ApplicationConfiguration implements EntryPoint {
         public void run() {
             pending = false;
             if (!isBusy()) {
-                Class<? extends VPaintableWidget> nextType = getNextType();
+                Class<? extends ComponentConnector> nextType = getNextType();
                 if (nextType == null) {
                     // ensured that all widgets are loaded
                     deferredWidgetLoader = null;
@@ -497,8 +497,8 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         }
 
-        private Class<? extends VPaintableWidget> getNextType() {
-            Class<? extends VPaintableWidget>[] deferredLoadedWidgets = widgetSet
+        private Class<? extends ComponentConnector> getNextType() {
+            Class<? extends ComponentConnector>[] deferredLoadedWidgets = widgetSet
                     .getDeferredLoadedWidgets();
             if (deferredLoadedWidgets.length <= nextWidgetIndex) {
                 return null;

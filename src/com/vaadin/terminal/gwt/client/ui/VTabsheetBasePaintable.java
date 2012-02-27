@@ -9,11 +9,11 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public abstract class VTabsheetBasePaintable extends
-        VAbstractPaintableWidgetContainer {
+        AbstractComponentContainerConnector {
 
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
     public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
@@ -73,7 +73,7 @@ public abstract class VTabsheetBasePaintable extends
         }
 
         for (int i = 0; i < getWidget().getTabCount(); i++) {
-            VPaintableWidget p = getWidget().getTab(i);
+            ComponentConnector p = getWidget().getTab(i);
             // During the initial rendering the paintable might be null (this is
             // weird...)
             if (p != null) {
@@ -85,12 +85,12 @@ public abstract class VTabsheetBasePaintable extends
         for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
                 .hasNext();) {
             Widget oldWidget = iterator.next();
-            VPaintableWidget oldPaintable = VPaintableMap.get(client)
-                    .getPaintable(oldWidget);
+            ComponentConnector oldPaintable = ConnectorMap.get(client)
+                    .getConnector(oldWidget);
             if (oldWidget.isAttached()) {
                 oldWidget.removeFromParent();
             }
-            VPaintableMap.get(client).unregisterPaintable(oldPaintable);
+            ConnectorMap.get(client).unregisterConnector(oldPaintable);
         }
 
     }

@@ -9,30 +9,30 @@ import java.util.Collection;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
-import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 
-public abstract class VAbstractPaintableWidgetContainer extends
-        VAbstractPaintableWidget implements VPaintableWidgetContainer {
+public abstract class AbstractComponentContainerConnector extends
+        AbstractComponentConnector implements ComponentContainerConnector {
 
     /**
      * Default constructor
      */
-    public VAbstractPaintableWidgetContainer() {
+    public AbstractComponentContainerConnector() {
     }
 
-    public Collection<VPaintableWidget> getChildren() {
-        Collection<VPaintableWidget> children = new ArrayList<VPaintableWidget>();
+    public Collection<ComponentConnector> getChildren() {
+        Collection<ComponentConnector> children = new ArrayList<ComponentConnector>();
 
         addDescendantPaintables(getWidget(), children,
-                VPaintableMap.get(getConnection()));
+                ConnectorMap.get(getConnection()));
 
         return children;
     }
 
     private static void addDescendantPaintables(Widget widget,
-            Collection<VPaintableWidget> paintables, VPaintableMap paintableMap) {
+            Collection<ComponentConnector> paintables, ConnectorMap paintableMap) {
         // FIXME: Store hierarchy instead of doing lookup every time
 
         if (widget instanceof HasWidgets) {
@@ -46,8 +46,8 @@ public abstract class VAbstractPaintableWidgetContainer extends
     }
 
     private static void addIfPaintable(Widget widget,
-            Collection<VPaintableWidget> paintables, VPaintableMap paintableMap) {
-        VPaintableWidget paintable = paintableMap.getPaintable(widget);
+            Collection<ComponentConnector> paintables, ConnectorMap paintableMap) {
+        ComponentConnector paintable = paintableMap.getConnector(widget);
         if (paintable != null) {
             // If widget is a paintable, add it to the collection
             paintables.add(paintable);

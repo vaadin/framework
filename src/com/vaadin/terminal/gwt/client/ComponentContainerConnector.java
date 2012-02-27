@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
  * An interface used by client-side paintables whose widget is a component
  * container (implements {@link HasWidgets}).
  */
-public interface VPaintableWidgetContainer extends VPaintableWidget {
+public interface ComponentContainerConnector extends ComponentConnector {
 
     /**
      * Update child components caption, description and error message.
@@ -29,19 +29,19 @@ public interface VPaintableWidgetContainer extends VPaintableWidget {
      * @param uidl
      *            UIDL of the child component.
      */
-    void updateCaption(VPaintableWidget paintable, UIDL uidl);
+    void updateCaption(ComponentConnector paintable, UIDL uidl);
 
     /**
      * Returns the children for this paintable.
      * <p>
      * The children for this paintable are defined as all
-     * {@link VPaintableWidget}s whose parent is this
-     * {@link VPaintableWidgetContainer}.
+     * {@link ComponentConnector}s whose parent is this
+     * {@link ComponentContainerConnector}.
      * </p>
      * 
      * @return A collection of children for this paintable. An empty collection
      *         if there are no children.
      */
-    public Collection<VPaintableWidget> getChildren();
+    public Collection<ComponentConnector> getChildren();
 
 }

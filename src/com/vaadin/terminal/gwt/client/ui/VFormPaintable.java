@@ -9,10 +9,10 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableMap;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
+public class VFormPaintable extends AbstractComponentContainerConnector implements
         SimpleManagedLayout {
 
     @Override
@@ -94,7 +94,7 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
         if (uidl.getChildCount() > 1
                 && !uidl.getChildUIDL(1).getTag().equals("actions")) {
             // render footer
-            VPaintableWidget newFooter = client.getPaintable(uidl
+            ComponentConnector newFooter = client.getPaintable(uidl
                     .getChildUIDL(1));
             Widget newFooterWidget = newFooter.getWidget();
             if (getWidget().footer == null) {
@@ -103,8 +103,8 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
                 getWidget().footer = newFooterWidget;
             } else if (newFooter != getWidget().footer) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(VPaintableMap.get(getConnection())
-                        .getPaintable(getWidget().footer));
+                client.unregisterPaintable(ConnectorMap.get(getConnection())
+                        .getConnector(getWidget().footer));
                 getWidget().add(newFooter.getWidget(),
                         getWidget().footerContainer);
             }
@@ -113,13 +113,13 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
         } else {
             if (getWidget().footer != null) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(VPaintableMap.get(getConnection())
-                        .getPaintable(getWidget().footer));
+                client.unregisterPaintable(ConnectorMap.get(getConnection())
+                        .getConnector(getWidget().footer));
             }
         }
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
-        VPaintableWidget newLayout = client.getPaintable(layoutUidl);
+        ComponentConnector newLayout = client.getPaintable(layoutUidl);
         Widget newLayoutWidget = newLayout.getWidget();
         if (getWidget().lo == null) {
             // Layout not rendered before
@@ -128,8 +128,8 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
                     getWidget().fieldContainer);
         } else if (getWidget().lo != newLayoutWidget) {
             // Layout has changed
-            client.unregisterPaintable(VPaintableMap.get(getConnection())
-                    .getPaintable(getWidget().lo));
+            client.unregisterPaintable(ConnectorMap.get(getConnection())
+                    .getConnector(getWidget().lo));
             getWidget().remove(getWidget().lo);
             getWidget().lo = newLayoutWidget;
             getWidget().add(newLayoutWidget,
@@ -162,7 +162,7 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
         }
     }
 
-    public void updateCaption(VPaintableWidget component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component, UIDL uidl) {
         // NOP form don't render caption for neither field layout nor footer
         // layout
     }

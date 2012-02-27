@@ -56,7 +56,7 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * 
  * Client-side widgets receive updates from the corresponding server-side
  * components as calls to
- * {@link VPaintableWidget#updateFromUIDL(UIDL, ApplicationConnection)} (not to
+ * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not to
  * be confused with the server side interface
  * {@link com.vaadin.terminal.Paintable} ). Any client-side changes (typically
  * resulting from user actions) are sent back to the server as variable changes
@@ -163,9 +163,9 @@ public class ApplicationConnection {
 
     private boolean validatingLayouts = false;
 
-    private Set<VPaintableWidget> zeroWidthComponents = null;
+    private Set<ComponentConnector> zeroWidthComponents = null;
 
-    private Set<VPaintableWidget> zeroHeightComponents = null;
+    private Set<ComponentConnector> zeroHeightComponents = null;
 
     private final LayoutManager layoutManager = new LayoutManager(this);
 
@@ -435,9 +435,9 @@ public class ApplicationConnection {
      * 
      * @param paintable
      */
-    void highlightComponent(VPaintableWidget paintable) {
+    void highlightComponent(ComponentConnector paintable) {
         String params = getRepaintAllParameters() + "&highlightComponent="
-                + paintableMap.getPid(paintable);
+                + connectorMap.getConnectorId(paintable);
         makeUidlRequest("", params, false);
     }
 
@@ -812,8 +812,8 @@ public class ApplicationConnection {
     private void cleanVariableBurst(ArrayList<MethodInvocation> variableBurst) {
         for (int i = 1; i < variableBurst.size(); i++) {
             String id = variableBurst.get(i).getPaintableId();
-            if (!getPaintableMap().hasPaintable(id)
-                    && !getPaintableMap().isDragAndDropPaintable(id)) {
+            if (!getConnectorMap().hasConnector(id)
+                    && !getConnectorMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
                 variableBurst.remove(i);
                 VConsole.log("Removed variable from removed component: " + id);
@@ -969,11 +969,11 @@ public class ApplicationConnection {
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
                         view.getWidget().clear();
-                        getPaintableMap().clear();
+                        getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
-                            zeroWidthComponents = new HashSet<VPaintableWidget>();
-                            zeroHeightComponents = new HashSet<VPaintableWidget>();
+                            zeroWidthComponents = new HashSet<ComponentConnector>();
+                            zeroHeightComponents = new HashSet<ComponentConnector>();
                         }
                     }
                     if (meta.containsKey("timedRedirect")) {
@@ -1002,7 +1002,7 @@ public class ApplicationConnection {
                 // Process changes
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
 
-                ArrayList<VPaintableWidget> updatedVPaintableWidgets = new ArrayList<VPaintableWidget>();
+                ArrayList<ComponentConnector> updatedVPaintableWidgets = new ArrayList<ComponentConnector>();
                 componentCaptionSizeChanges.clear();
 
                 Duration updateDuration = new Duration();
@@ -1014,7 +1014,7 @@ public class ApplicationConnection {
                     try {
                         final UIDL change = changes.get(i).cast();
                         final UIDL uidl = change.getChildUIDL(0);
-                        VPaintable paintable = paintableMap.getPaintable(uidl
+                        Connector paintable = connectorMap.getConnector(uidl
                                 .getId());
                         if (null == paintable
                                 && !uidl.getTag().equals(
@@ -1033,15 +1033,15 @@ public class ApplicationConnection {
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String paintableId = keyArray.get(i);
-                        VPaintable paintable = paintableMap
-                                .getPaintable(paintableId);
+                        Connector paintable = connectorMap
+                                .getConnector(paintableId);
                         if (null != paintable) {
 
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(paintableId));
 
                             Object state = JsonDecoder.convertValue(
-                                    stateDataAndType, paintableMap);
+                                    stateDataAndType, connectorMap);
 
                             paintable.setState((SharedState) state);
                         }
@@ -1056,8 +1056,8 @@ public class ApplicationConnection {
                         final UIDL change = changes.get(i).cast();
                         final UIDL uidl = change.getChildUIDL(0);
                         // TODO optimize
-                        final VPaintableWidget paintable = (VPaintableWidget) paintableMap
-                                .getPaintable(uidl.getId());
+                        final ComponentConnector paintable = (ComponentConnector) connectorMap
+                                .getConnector(uidl.getId());
                         if (paintable != null) {
                             paintable.updateFromUIDL(uidl,
                                     ApplicationConnection.this);
@@ -1071,12 +1071,12 @@ public class ApplicationConnection {
                                         + uidl.getId() + ") rendered.");
                             } else {
                                 String pid = uidl.getId();
-                                if (!paintableMap.hasPaintable(pid)) {
-                                    paintableMap.registerPaintable(pid, view);
+                                if (!connectorMap.hasConnector(pid)) {
+                                    connectorMap.registerConnector(pid, view);
                                 }
                                 // VView does not call updateComponent so we
                                 // register any event listeners here
-                                paintableMap.registerEventListenersFromUIDL(
+                                connectorMap.registerEventListenersFromUIDL(
                                         pid, uidl);
 
                                 // Finally allow VView to update itself
@@ -1147,9 +1147,9 @@ public class ApplicationConnection {
                      * idToPaintableDetail is already cleanded at the start of
                      * the changeset handling, bypass cleanup.
                      */
-                    paintableMap.purgeUnregistryBag(false);
+                    connectorMap.purgeUnregistryBag(false);
                 } else {
-                    paintableMap.purgeUnregistryBag(true);
+                    connectorMap.purgeUnregistryBag(true);
                 }
 
                 // TODO build profiling for widget impl loading time
@@ -1159,7 +1159,7 @@ public class ApplicationConnection {
                 VConsole.log(" Processing time was "
                         + String.valueOf(prosessingTime) + "ms for "
                         + jsonText.length() + " characters of JSON");
-                VConsole.log("Referenced paintables: " + paintableMap.size());
+                VConsole.log("Referenced paintables: " + connectorMap.size());
 
                 endRequest();
 
@@ -1283,7 +1283,7 @@ public class ApplicationConnection {
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
-                            invocation.getParameters()[i], getPaintableMap()));
+                            invocation.getParameters()[i], getConnectorMap()));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);
@@ -1336,7 +1336,7 @@ public class ApplicationConnection {
      *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
-            VPaintable newValue, boolean immediate) {
+            Connector newValue, boolean immediate) {
         addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
@@ -1611,7 +1611,7 @@ public class ApplicationConnection {
         while (childWidgets.hasNext()) {
             final Widget child = childWidgets.next();
 
-            if (getPaintableMap().isPaintable(child)) {
+            if (getConnectorMap().isConnector(child)) {
 
                 if (handleComponentRelativeSize(child)) {
                     /*
@@ -1642,7 +1642,7 @@ public class ApplicationConnection {
      * @param child
      * @return true if the child has a relative size
      */
-    private boolean handleComponentRelativeSize(VPaintableWidget paintable) {
+    private boolean handleComponentRelativeSize(ComponentConnector paintable) {
         return false;
     }
 
@@ -1653,7 +1653,7 @@ public class ApplicationConnection {
      * @return true if the child has a relative size
      */
     public boolean handleComponentRelativeSize(Widget widget) {
-        return handleComponentRelativeSize(paintableMap.getPaintable(widget));
+        return handleComponentRelativeSize(connectorMap.getConnector(widget));
 
     }
 
@@ -1669,20 +1669,20 @@ public class ApplicationConnection {
      *            UIDL to create Paintable from.
      * @return Either existing or new Paintable corresponding to UIDL.
      */
-    public VPaintableWidget getPaintable(UIDL uidl) {
+    public ComponentConnector getPaintable(UIDL uidl) {
         final String pid = uidl.getId();
         // the actual content UIDL may be deferred, but it always contains
         // enough information to create a paintable instance
-        if (!paintableMap.hasPaintable(pid)) {
+        if (!connectorMap.hasConnector(pid)) {
             // Create and register a new paintable if no old was found
-            VPaintableWidget p = widgetSet.createWidget(uidl.getTag(),
+            ComponentConnector p = widgetSet.createWidget(uidl.getTag(),
                     configuration);
             p.setConnection(this);
             p.setId(pid);
             p.init();
-            paintableMap.registerPaintable(pid, p);
+            connectorMap.registerConnector(pid, p);
         }
-        return (VPaintableWidget) paintableMap.getPaintable(pid);
+        return (ComponentConnector) connectorMap.getConnector(pid);
     }
 
     /**
@@ -1775,12 +1775,12 @@ public class ApplicationConnection {
      * Updating TooltipInfo is done in updateComponent method.
      * 
      */
-    public TooltipInfo getTooltipTitleInfo(VPaintableWidget titleOwner,
+    public TooltipInfo getTooltipTitleInfo(ComponentConnector titleOwner,
             Object key) {
         if (null == titleOwner) {
             return null;
         }
-        return paintableMap.getTooltipInfo(titleOwner, key);
+        return connectorMap.getTooltipInfo(titleOwner, key);
     }
 
     private final VTooltip tooltip = new VTooltip(this);
@@ -1795,7 +1795,7 @@ public class ApplicationConnection {
      * @param event
      * @param owner
      */
-    public void handleTooltipEvent(Event event, VPaintableWidget owner) {
+    public void handleTooltipEvent(Event event, ComponentConnector owner) {
         tooltip.handleTooltipEvent(event, owner, null);
 
     }
@@ -1813,7 +1813,7 @@ public class ApplicationConnection {
      *            the key for tooltip if this is "additional" tooltip, null for
      *            components "main tooltip"
      */
-    public void handleTooltipEvent(Event event, VPaintableWidget owner,
+    public void handleTooltipEvent(Event event, ComponentConnector owner,
             Object key) {
         tooltip.handleTooltipEvent(event, owner, key);
 
@@ -1843,7 +1843,7 @@ public class ApplicationConnection {
         }
     };
 
-    private VPaintableMap paintableMap = GWT.create(VPaintableMap.class);
+    private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
     /**
      * Components can call this function to run all layout functions. This is
@@ -1883,7 +1883,7 @@ public class ApplicationConnection {
      * this method.
      * <p>
      * Component must also pipe events to
-     * {@link #handleTooltipEvent(Event, VPaintableWidget, Object)} method.
+     * {@link #handleTooltipEvent(Event, ComponentConnector, Object)} method.
      * <p>
      * This method can also be used to deregister tooltips by using null as
      * tooltip
@@ -1893,16 +1893,16 @@ public class ApplicationConnection {
      * @param key
      *            key assosiated with given tooltip. Can be any object. For
      *            example a related dom element. Same key must be given for
-     *            {@link #handleTooltipEvent(Event, VPaintableWidget, Object)}
+     *            {@link #handleTooltipEvent(Event, ComponentConnector, Object)}
      *            method.
      * 
      * @param tooltip
      *            the TooltipInfo object containing details shown in tooltip,
      *            null if deregistering tooltip
      */
-    public void registerTooltip(VPaintableWidget paintable, Object key,
+    public void registerTooltip(ComponentConnector paintable, Object key,
             TooltipInfo tooltip) {
-        paintableMap.registerTooltip(paintable, key, tooltip);
+        connectorMap.registerTooltip(paintable, key, tooltip);
     }
 
     /**
@@ -1926,9 +1926,9 @@ public class ApplicationConnection {
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
      */
-    public boolean hasEventListeners(VPaintableWidget paintable,
+    public boolean hasEventListeners(ComponentConnector paintable,
             String eventIdentifier) {
-        return paintableMap.hasEventListeners(paintable, eventIdentifier);
+        return connectorMap.hasEventListeners(paintable, eventIdentifier);
     }
 
     /**
@@ -1972,13 +1972,13 @@ public class ApplicationConnection {
         return uri;
     }
 
-    VPaintableMap getPaintableMap() {
-        return paintableMap;
+    ConnectorMap getConnectorMap() {
+        return connectorMap;
     }
 
     @Deprecated
-    public void unregisterPaintable(VPaintable p) {
-        paintableMap.unregisterPaintable(p);
+    public void unregisterPaintable(Connector p) {
+        connectorMap.unregisterConnector(p);
     }
 
     public VTooltip getVTooltip() {
@@ -1987,24 +1987,24 @@ public class ApplicationConnection {
 
     @Deprecated
     public void handleTooltipEvent(Event event, Widget owner, Object key) {
-        handleTooltipEvent(event, getPaintableMap().getPaintable(owner), key);
+        handleTooltipEvent(event, getConnectorMap().getConnector(owner), key);
 
     }
 
     @Deprecated
     public void handleTooltipEvent(Event event, Widget owner) {
-        handleTooltipEvent(event, getPaintableMap().getPaintable(owner));
+        handleTooltipEvent(event, getConnectorMap().getConnector(owner));
 
     }
 
     @Deprecated
     public void registerTooltip(Widget owner, Object key, TooltipInfo info) {
-        registerTooltip(getPaintableMap().getPaintable(owner), key, info);
+        registerTooltip(getConnectorMap().getConnector(owner), key, info);
     }
 
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
-        return hasEventListeners(getPaintableMap().getPaintable(widget),
+        return hasEventListeners(getConnectorMap().getConnector(widget),
                 eventIdentifier);
     }
 

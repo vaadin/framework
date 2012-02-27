@@ -12,9 +12,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VPaintableWidget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 
-public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
+public class VCustomLayoutPaintable extends AbstractComponentContainerConnector
         implements SimpleManagedLayout {
 
     /** Update the layout from UIDL */
@@ -49,7 +49,7 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
             if (uidlForChild.getTag().equals("location")) {
                 final String location = uidlForChild.getStringAttribute("name");
                 UIDL childUIDL = uidlForChild.getChildUIDL(0);
-                final VPaintableWidget childPaintable = client
+                final ComponentConnector childPaintable = client
                         .getPaintable(childUIDL);
                 Widget childWidget = childPaintable.getWidget();
                 try {
@@ -85,7 +85,7 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
         return GWT.create(VCustomLayout.class);
     }
 
-    public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
+    public void updateCaption(ComponentConnector paintable, UIDL uidl) {
         getWidget().updateCaption(paintable, uidl);
 
     }
