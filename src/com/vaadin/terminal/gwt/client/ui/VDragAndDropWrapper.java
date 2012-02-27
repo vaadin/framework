@@ -563,11 +563,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     protected void deEmphasis(boolean doLayout) {
-        Size size = null;
-        if (doLayout) {
-            size = new RenderInformation.Size(getOffsetWidth(),
-                    getOffsetHeight());
-        }
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
@@ -576,7 +571,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     + emphasizedHDrop.toString().toLowerCase(), false);
         }
         if (doLayout) {
-            handleVaadinRelatedSizeChange(size);
+            client.doLayout(false);
         }
     }
 
@@ -594,20 +589,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         // TODO build (to be an example) an emphasis mode where drag image
         // is fitted before or after the content
-        handleVaadinRelatedSizeChange(size);
-
-    }
-
-    protected void handleVaadinRelatedSizeChange(Size originalSize) {
-        if (isDynamicHeight() || isDynamicWidth()) {
-            if (!originalSize.equals(new RenderInformation.Size(
-                    getOffsetWidth(), getOffsetHeight()))) {
-                Util.notifyParentOfSizeChange(VDragAndDropWrapper.this, false);
-            }
-        }
-        client.handleComponentRelativeSize(VDragAndDropWrapper.this);
-        Util.notifyParentOfSizeChange(this, false);
-
+        client.doLayout(false);
     }
 
 }

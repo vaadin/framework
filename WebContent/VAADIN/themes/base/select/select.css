@@ -56,6 +56,7 @@
 .v-filterselect {
 	white-space: nowrap;
 	text-align: left;
+	display: inline-block;
 }
 .v-filterselect .v-icon {
 	float: left;
@@ -63,15 +64,18 @@
 .v-app .v-filterselect-input,
 .v-window .v-filterselect-input,
 .v-popupview-popup .v-filterselect-input {
+	margin: 0;
 	float: left;
 	-webkit-border-radius: 0px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 .v-filterselect-prompt .v-filterselect-input {
 	color: #999;
 	font-style: italic;
 }
 .v-filterselect-button {
-	float: right;
+	display: inline-block;
 	cursor: pointer;
 	width: 1em;
 	height: 1em;

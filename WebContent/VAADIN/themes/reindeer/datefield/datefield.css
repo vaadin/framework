@@ -45,6 +45,7 @@ span.v-datefield-calendarpanel-month {
 }
 .v-datefield-popupcalendar {
 	min-width: 0;
+	padding-right: 24px;
 }
 .v-datefield-year .v-datefield-calendarpanel {
 	width: 100px;
@@ -224,17 +225,23 @@ td.v-datefield-calendarpanel-nextyear {
 .v-op .v-datefield-popup {
 	background: rgba(255,255,255,.95);
 }
-.v-datefield-year .v-datefield-textfield {
-	width: 4em;
+.v-datefield-textfield {
+	width: 100%;
 }
-.v-datefield-month .v-datefield-textfield {
-	width: 5em;
+.v-undefined-width > .v-datefield-textfield {
+	width: auto;
 }
-.v-datefield-day .v-datefield-textfield {
+.v-datefield-year.v-undefined-width > .v-datefield-textfield {
+	width: 4.5em;
+}
+.v-datefield-month.v-undefined-width > .v-datefield-textfield {
 	width: 5.5em;
 }
-.v-datefield-full .v-datefield-textfield {
-	width: 12em;
+.v-datefield-day.v-undefined-width > .v-datefield-textfield {
+	width: 6em;
+}
+.v-datefield-full.v-undefined-width  >.v-datefield-textfield {
+	width: 12.5em;
 }
 .v-datefield-popupcalendar input.v-datefield-textfield {
 	border-right-width: 0;
@@ -242,7 +249,9 @@ td.v-datefield-calendarpanel-nextyear {
 	-moz-border-radius-bottomright: 0;
 	-webkit-border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
-	height: 14px;
+	height: 23px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 .v-datefield.v-readonly input.v-datefield-textfield {
 	border-right-width: 1px;
@@ -256,6 +265,7 @@ td.v-datefield-calendarpanel-nextyear {
 }
 .v-datefield-popupcalendar .v-datefield-button {
 	width: 24px;
+	margin-right: -24px;
 	height: 23px;
 	background: transparent;
 	border: none;

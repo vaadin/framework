@@ -20,7 +20,7 @@
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	margin: 0;
-	height: 15px;
+	height: 23px;
 	line-height: normal;
 }
 .v-textarea,
@@ -34,6 +34,10 @@
 .v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
+}
+.v-app input.v-textfield.v-paintable,
+.v-window input.v-textfield.v-paintable {
+	height: 24px;
 }
 .v-app .v-textfield-focus,
 .v-window .v-textfield-focus,
@@ -62,7 +66,8 @@ textarea.v-textarea-prompt {
 .v-app textarea.v-textarea-small {
 	font-size: 11px;
 }
-.v-table input.v-textfield {
+.v-app .v-table  input.v-textfield.v-paintable,
+.v-window .v-table input.v-textfield.v-paintable {
 	padding: 1px 2px;
 	height: auto;
 	line-height: normal;

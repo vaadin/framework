@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -50,6 +52,8 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VPaintableMap;
+import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -919,9 +923,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     // This handles the special case where are not filtering yet and the
     // selected value has changed on the server-side. See #2119
     protected boolean popupOpenerClicked;
-    private String width = null;
-    private int textboxPadding = -1;
-    private int componentPadding = -1;
     protected int suggestionPopupMinWidth = 0;
     private int popupWidth = -1;
     /*
@@ -930,7 +931,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      */
     protected String lastNewItemString;
     protected boolean focused = false;
-    private int horizPaddingAndBorder = 2;
 
     /**
      * If set to false, the component should not allow entering text to the
@@ -1074,22 +1074,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      */
     protected void setTextboxText(final String text) {
         tb.setText(text);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onAttach()
-     */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-
-        /*
-         * We need to recalculate the root width when the select is attached, so
-         * #2974 won't happen.
-         */
-        updateRootWidth();
     }
 
     /**
@@ -1578,60 +1562,14 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         tb.setFocus(true);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.UIObject#setWidth(java.lang.String)
-     */
-    @Override
-    public void setWidth(String width) {
-        if (width == null || width.equals("")) {
-            this.width = null;
-        } else {
-            this.width = width;
-        }
-
-        horizPaddingAndBorder = Util.setWidthExcludingPaddingAndBorder(this,
-                width, horizPaddingAndBorder);
-
-        if (initDone) {
-            updateRootWidth();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
-     */
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        Util.setHeightExcludingPaddingAndBorder(tb, height, 3);
-    }
-
     /**
      * Calculates the width of the select if the select has undefined width.
      * Should be called when the width changes or when the icon changes.
      */
     protected void updateRootWidth() {
-        if (width == null) {
-            /*
-             * When the width is not specified we must specify width for root
-             * div so the popupopener won't wrap to the next line and also so
-             * the size of the combobox won't change over time.
-             */
-            int tbWidth = Util.getRequiredWidth(tb);
-
-            /*
-             * Note: iconWidth is here calculated as a negative pixel value so
-             * you should consider this in further calculations.
-             */
-            int iconWidth = selectedItemIcon.isAttached() ? Util
-                    .measureMarginLeft(tb.getElement())
-                    - Util.measureMarginLeft(selectedItemIcon.getElement()) : 0;
-
-            int w = tbWidth + getPopUpOpenerWidth() + iconWidth;
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        if (paintable.isUndefinedWidth()) {
 
             /*
              * When the select has a undefined with we need to check that we are
@@ -1640,45 +1578,37 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * when the popup is used to view longer items than the text box is
              * wide.
              */
+            int w = Util.getRequiredWidth(this);
             if ((!initDone || currentPage + 1 < 0)
                     && suggestionPopupMinWidth > w) {
-                setTextboxWidth(suggestionPopupMinWidth);
-                w = suggestionPopupMinWidth;
-            } else {
                 /*
-                 * Firefox3 has its own way of doing rendering so we need to
-                 * specify the width for the TextField to make sure it actually
-                 * is rendered as wide as FF3 says it is
+                 * We want to compensate for the paddings just to preserve the
+                 * exact size as in Vaadin 6.x, but we get here before
+                 * MeasuredSize has been initialized.
+                 * Util.measureHorizontalPaddingAndBorder does not work with
+                 * border-box, so we must do this the hard way.
                  */
-                tb.setWidth((tbWidth - getTextboxPadding()) + "px");
+                Style style = getElement().getStyle();
+                String originalPadding = style.getPadding();
+                String originalBorder = style.getBorderWidth();
+                style.setPaddingLeft(0, Unit.PX);
+                style.setBorderWidth(0, Unit.PX);
+                int offset = w - Util.getRequiredWidth(this);
+                style.setProperty("padding", originalPadding);
+                style.setProperty("borderWidth", originalBorder);
+
+                setWidth(suggestionPopupMinWidth + offset + "px");
             }
-            super.setWidth((w) + "px");
-            // Freeze the initial width, so that it won't change even if the
-            // icon size changes
-            width = w + "px";
 
-        } else {
             /*
-             * When the width is specified we also want to explicitly specify
-             * widths for textbox and popupopener
+             * Lock the textbox width to its current value if it's not already
+             * locked
              */
-            setTextboxWidth(getMainWidth() - getComponentPadding());
-
+            if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
+                tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
+                        .getOffsetWidth()) + "px");
+            }
         }
-    }
-
-    /**
-     * Only use the first page popup width so the textbox will not get resized
-     * whenever the popup is resized. This also resolves issue where toggling
-     * combo box between read only and normal state makes it grow larger.
-     * 
-     * @return Width of popup opener
-     */
-    private int getPopUpOpenerWidth() {
-        if (popupWidth < 0) {
-            popupWidth = Util.getRequiredWidth(popupOpener);
-        }
-        return popupWidth;
     }
 
     /**
@@ -1691,51 +1621,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         return getOffsetWidth();
     }
 
-    /**
-     * Sets the text box width in pixels.
-     * 
-     * @param componentWidth
-     *            The width of the text box in pixels
-     */
-    private void setTextboxWidth(int componentWidth) {
-        int padding = getTextboxPadding();
-        int iconWidth = selectedItemIcon.isAttached() ? Util
-                .getRequiredWidth(selectedItemIcon) : 0;
-
-        int textboxWidth = componentWidth - padding - getPopUpOpenerWidth()
-                - iconWidth;
-        if (textboxWidth < 0) {
-            textboxWidth = 0;
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
+        if (width.length() != 0) {
+            tb.setWidth("100%");
         }
-        tb.setWidth(textboxWidth + "px");
-    }
-
-    /**
-     * Gets the horizontal padding of the text box in pixels. The measurement
-     * includes the border width.
-     * 
-     * @return The padding in pixels
-     */
-    private int getTextboxPadding() {
-        if (textboxPadding < 0) {
-            textboxPadding = Util.measureHorizontalPaddingAndBorder(
-                    tb.getElement(), 4);
-        }
-        return textboxPadding;
-    }
-
-    /**
-     * Gets the horizontal padding of the select. The measurement includes the
-     * border width.
-     * 
-     * @return The padding in pixels
-     */
-    private int getComponentPadding() {
-        if (componentPadding < 0) {
-            componentPadding = Util.measureHorizontalPaddingAndBorder(
-                    getElement(), 3);
-        }
-        return componentPadding;
     }
 
     /**

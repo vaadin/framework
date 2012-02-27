@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,12 +21,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -35,17 +31,12 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 /**
  * Two col Layout that places caption on left col and field on right col
  */
-public class VFormLayout extends SimplePanel implements Container {
+public class VFormLayout extends SimplePanel {
 
     private final static String CLASSNAME = "v-formlayout";
 
     ApplicationConnection client;
     VFormLayoutTable table;
-
-    private String width = "";
-    private String height = "";
-
-    boolean rendering = false;
 
     public VFormLayout() {
         super();
@@ -144,13 +135,18 @@ public class VFormLayout extends SimplePanel implements Container {
                         CLASSNAME + "-captioncell");
                 setWidget(i, COLUMN_CAPTION, caption);
 
-                setContentWidth(i);
-
                 getCellFormatter().setStyleName(i, COLUMN_ERRORFLAG,
                         CLASSNAME + "-errorcell");
                 setWidget(i, COLUMN_ERRORFLAG, error);
 
                 childPaintable.updateFromUIDL(childUidl, client);
+
+                // Update cell width when isRelativeWidth has been udpated
+                if (childPaintable.isRelativeWidth()) {
+                    getCellFormatter().setWidth(i, COLUMN_WIDGET, "100%");
+                } else {
+                    getCellFormatter().setWidth(i, COLUMN_WIDGET, null);
+                }
 
                 String rowstyles = CLASSNAME + "-row";
                 if (i == 0) {
@@ -182,55 +178,6 @@ public class VFormLayout extends SimplePanel implements Container {
             }
         }
 
-        public void setContentWidths() {
-            for (int row = 0; row < getRowCount(); row++) {
-                setContentWidth(row);
-            }
-        }
-
-        private void setContentWidth(int row) {
-            String width = "";
-            if (!isDynamicWidth()) {
-                width = "100%";
-            }
-            getCellFormatter().setWidth(row, COLUMN_WIDGET, width);
-        }
-
-        public void replaceChildComponent(Widget oldComponent,
-                Widget newComponent) {
-            int i;
-            for (i = 0; i < getRowCount(); i++) {
-                Widget candidate = getWidget(i, COLUMN_WIDGET);
-                if (oldComponent == candidate) {
-                    VPaintableMap paintableMap = VPaintableMap.get(client);
-                    VPaintableWidget oldPaintable = paintableMap
-                            .getPaintable(oldComponent);
-                    VPaintableWidget newPaintable = paintableMap
-                            .getPaintable(newComponent);
-                    Caption oldCap = widgetToCaption.get(oldComponent);
-                    final Caption newCap = new Caption(newPaintable, client);
-                    newCap.addClickHandler(this);
-                    newCap.setStyleName(oldCap.getStyleName());
-                    widgetToCaption.put(newComponent, newCap);
-                    ErrorFlag error = widgetToError.get(newComponent);
-                    if (error == null) {
-                        error = new ErrorFlag();
-                        widgetToError.put(newComponent, error);
-                    }
-
-                    setWidget(i, COLUMN_CAPTION, newCap);
-                    setWidget(i, COLUMN_ERRORFLAG, error);
-                    setWidget(i, COLUMN_WIDGET, newComponent);
-                    break;
-                }
-            }
-
-        }
-
-        public boolean hasChildComponent(Widget component) {
-            return widgetToCaption.containsKey(component);
-        }
-
         public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
             final Caption c = widgetToCaption.get(paintable
                     .getWidgetForPaintable());
@@ -243,21 +190,6 @@ public class VFormLayout extends SimplePanel implements Container {
                 e.updateFromUIDL(uidl, paintable);
             }
 
-        }
-
-        public int getAllocatedWidth(Widget child, int availableWidth) {
-            Caption caption = widgetToCaption.get(child);
-            ErrorFlag error = widgetToError.get(child);
-            int width = availableWidth;
-
-            if (caption != null) {
-                width -= DOM.getParent(caption.getElement()).getOffsetWidth();
-            }
-            if (error != null) {
-                width -= DOM.getParent(error.getElement()).getOffsetWidth();
-            }
-
-            return width;
         }
 
         /*
@@ -278,18 +210,6 @@ public class VFormLayout extends SimplePanel implements Container {
                 }
             }
         }
-    }
-
-    public boolean isDynamicWidth() {
-        return width.equals("");
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        return table.hasChildComponent(component);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        table.replaceChildComponent(oldComponent, newComponent);
     }
 
     // TODO why duplicated here?
@@ -476,55 +396,4 @@ public class VFormLayout extends SimplePanel implements Container {
         }
 
     }
-
-    public boolean requestLayout(Set<Widget> children) {
-        if (height.equals("") || width.equals("")) {
-            // A dynamic size might change due to children changes
-            return false;
-        }
-
-        return true;
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        int width = 0;
-        int height = 0;
-
-        if (!this.width.equals("")) {
-            int availableWidth = getOffsetWidth();
-            width = table.getAllocatedWidth(child, availableWidth);
-        }
-
-        return new RenderSpace(width, height, false);
-    }
-
-    @Override
-    public void setHeight(String height) {
-        if (this.height.equals(height)) {
-            return;
-        }
-
-        this.height = height;
-        super.setHeight(height);
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if (this.width.equals(width)) {
-            return;
-        }
-
-        this.width = width;
-        super.setWidth(width);
-
-        if (!rendering) {
-            table.setContentWidths();
-            if (height.equals("")) {
-                // Width might affect height
-                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, this,
-                        this);
-            }
-        }
-    }
-
 }

@@ -3,9 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -14,14 +13,17 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
-import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
+import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
-public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
+public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
+        implements DirectionalManagedLayout {
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
 
@@ -38,52 +40,48 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
     };
 
     @Override
+    public void init() {
+        getLayoutManager().registerDependency(this,
+                getWidgetForPaintable().spacingMeasureElement);
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
-        getWidgetForPaintable().client = client;
+        VGridLayout layout = getWidgetForPaintable();
+        layout.client = client;
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        getWidgetForPaintable().canvas.setWidth("0px");
-
-        getWidgetForPaintable().handleMargins(uidl);
-        getWidgetForPaintable().detectSpacing(uidl);
-
         int cols = uidl.getIntAttribute("w");
         int rows = uidl.getIntAttribute("h");
 
-        getWidgetForPaintable().columnWidths = new int[cols];
-        getWidgetForPaintable().rowHeights = new int[rows];
+        layout.columnWidths = new int[cols];
+        layout.rowHeights = new int[rows];
 
-        if (getWidgetForPaintable().cells == null) {
-            getWidgetForPaintable().cells = new Cell[cols][rows];
-        } else if (getWidgetForPaintable().cells.length != cols
-                || getWidgetForPaintable().cells[0].length != rows) {
+        if (layout.cells == null) {
+            layout.cells = new Cell[cols][rows];
+        } else if (layout.cells.length != cols
+                || layout.cells[0].length != rows) {
             Cell[][] newCells = new Cell[cols][rows];
-            for (int i = 0; i < getWidgetForPaintable().cells.length; i++) {
-                for (int j = 0; j < getWidgetForPaintable().cells[i].length; j++) {
+            for (int i = 0; i < layout.cells.length; i++) {
+                for (int j = 0; j < layout.cells[i].length; j++) {
                     if (i < cols && j < rows) {
-                        newCells[i][j] = getWidgetForPaintable().cells[i][j];
+                        newCells[i][j] = layout.cells[i][j];
                     }
                 }
             }
-            getWidgetForPaintable().cells = newCells;
+            layout.cells = newCells;
         }
-
-        getWidgetForPaintable().nonRenderedWidgets = (HashMap<Widget, ChildComponentContainer>) getWidgetForPaintable().widgetToComponentContainer
-                .clone();
 
         final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
 
-        LinkedList<Cell> pendingCells = new LinkedList<Cell>();
-
-        LinkedList<Cell> relativeHeighted = new LinkedList<Cell>();
+        HashSet<Widget> nonRenderedWidgets = new HashSet<Widget>(
+                layout.widgetToCell.keySet());
 
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL r = (UIDL) i.next();
@@ -91,97 +89,58 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
                 for (final Iterator<?> j = r.getChildIterator(); j.hasNext();) {
                     final UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
-                        Cell cell = getWidgetForPaintable().getCell(c);
+                        Cell cell = layout.getCell(c);
                         if (cell.hasContent()) {
-                            boolean rendered = cell.renderIfNoRelativeWidth();
-                            cell.alignment = alignments[alignmentIndex++];
-                            if (!rendered) {
-                                pendingCells.add(cell);
-                            }
-
-                            if (cell.colspan > 1) {
-                                getWidgetForPaintable().storeColSpannedCell(
-                                        cell);
-                            } else if (rendered) {
-                                // strore non-colspanned widths to columnWidth
-                                // array
-                                if (getWidgetForPaintable().columnWidths[cell.col] < cell
-                                        .getWidth()) {
-                                    getWidgetForPaintable().columnWidths[cell.col] = cell
-                                            .getWidth();
-                                }
-                            }
-                            if (cell.hasRelativeHeight()) {
-                                relativeHeighted.add(cell);
-                            }
+                            cell.setAlignment(new AlignmentInfo(
+                                    alignments[alignmentIndex++]));
+                            nonRenderedWidgets.remove(cell.slot.getWidget());
                         }
                     }
                 }
             }
         }
 
-        getWidgetForPaintable().colExpandRatioArray = uidl
-                .getIntArrayAttribute("colExpand");
-        getWidgetForPaintable().rowExpandRatioArray = uidl
-                .getIntArrayAttribute("rowExpand");
-        getWidgetForPaintable().distributeColSpanWidths();
-
-        getWidgetForPaintable().minColumnWidths = VGridLayout
-                .cloneArray(getWidgetForPaintable().columnWidths);
-        getWidgetForPaintable().expandColumns();
-
-        getWidgetForPaintable().renderRemainingComponentsWithNoRelativeHeight(
-                pendingCells);
-
-        getWidgetForPaintable().detectRowHeights();
-
-        getWidgetForPaintable().expandRows();
-
-        getWidgetForPaintable().renderRemainingComponents(pendingCells);
-
-        for (Cell cell : relativeHeighted) {
-            // rendering done above so cell.cc should not be null
-            Widget widget2 = cell.cc.getWidget();
-            client.handleComponentRelativeSize(widget2);
-            cell.cc.updateWidgetSize();
-        }
-
-        getWidgetForPaintable().layoutCells();
+        layout.colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
+        layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
 
         // clean non rendered components
-        for (Widget w : getWidgetForPaintable().nonRenderedWidgets.keySet()) {
-            ChildComponentContainer childComponentContainer = getWidgetForPaintable().widgetToComponentContainer
-                    .get(w);
-            getWidgetForPaintable().widgetToCell.remove(w);
-            getWidgetForPaintable().widgetToComponentContainer.remove(w);
-            childComponentContainer.removeFromParent();
-            VPaintableMap paintableMap = VPaintableMap.get(client);
-            paintableMap.unregisterPaintable(paintableMap.getPaintable(w));
+        for (Widget w : nonRenderedWidgets) {
+            Cell cell = layout.widgetToCell.remove(w);
+            cell.slot.setCaption(null);
+
+            if (w.getParent() == layout) {
+                w.removeFromParent();
+                VPaintableMap paintableMap = VPaintableMap.get(client);
+                paintableMap.unregisterPaintable(paintableMap.getPaintable(w));
+            }
+            cell.slot.getWrapperElement().removeFromParent();
         }
-        getWidgetForPaintable().nonRenderedWidgets = null;
 
-        getWidgetForPaintable().rendering = false;
-        getWidgetForPaintable().sizeChangedDuringRendering = false;
+        int bitMask = uidl.getIntAttribute("margins");
+        layout.updateMarginStyleNames(new VMarginInfo(bitMask));
 
+        layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
+
+        getLayoutManager().setNeedsUpdate(this);
     }
 
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        Widget widget = paintable.getWidgetForPaintable();
-        ChildComponentContainer cc = getWidgetForPaintable().widgetToComponentContainer
-                .get(widget);
-        if (cc != null) {
-            cc.updateCaption(uidl, getConnection());
-        }
-        if (!getWidgetForPaintable().rendering) {
-            // ensure rel size details are updated
-            boolean cached = uidl.getBooleanAttribute("cached");
-            getWidgetForPaintable().widgetToCell.get(widget)
-                    .updateRelSizeStatus(paintable.getState(), cached);
-            /*
-             * This was a component-only update and the possible size change
-             * must be propagated to the layout
-             */
-            getConnection().captionSizeUpdated(widget);
+        VGridLayout layout = getWidgetForPaintable();
+        if (VCaption.isNeeded(uidl, paintable.getState())) {
+            Cell cell = layout.widgetToCell.get(paintable
+                    .getWidgetForPaintable());
+            VLayoutSlot layoutSlot = cell.slot;
+            VCaption caption = layoutSlot.getCaption();
+            if (caption == null) {
+                caption = new VCaption(paintable, getConnection());
+
+                Widget widget = paintable.getWidgetForPaintable();
+
+                layout.setCaption(widget, caption);
+            }
+            caption.updateCaption(uidl);
+        } else {
+            layout.setCaption(paintable.getWidgetForPaintable(), null);
         }
     }
 
@@ -195,4 +154,11 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer {
         return GWT.create(VGridLayout.class);
     }
 
+    public void layoutVertically() {
+        getWidgetForPaintable().updateHeight();
+    }
+
+    public void layoutHorizontally() {
+        getWidgetForPaintable().updateWidth();
+    }
 }

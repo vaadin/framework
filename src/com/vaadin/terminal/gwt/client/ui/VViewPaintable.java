@@ -142,9 +142,6 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         }
 
         getWidgetForPaintable().layout.updateFromUIDL(childUidl, client);
-        if (isRealUpdate(childUidl)) {
-            getWidgetForPaintable().updateParentFrameSize();
-        }
 
         // Save currently open subwindows to track which will need to be closed
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
@@ -306,8 +303,6 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
             // side-effects from focusing (scrollIntoView).
             getWidgetForPaintable().getElement().focus();
         }
-
-        getWidgetForPaintable().parentFrame = VView.getParentFrame();
     }
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,

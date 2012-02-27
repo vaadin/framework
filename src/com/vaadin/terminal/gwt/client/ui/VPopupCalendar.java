@@ -277,20 +277,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.gwt.client.ui.VTextualDate#getFieldExtraWidth()
-     */
-    @Override
-    protected int getFieldExtraWidth() {
-        if (fieldExtraWidth < 0) {
-            fieldExtraWidth = super.getFieldExtraWidth();
-            fieldExtraWidth += calendarToggle.getOffsetWidth();
-        }
-        return fieldExtraWidth;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see com.vaadin.terminal.gwt.client.ui.VTextualDate#buildDate()
      */
     @Override

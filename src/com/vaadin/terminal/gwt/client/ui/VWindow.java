@@ -7,7 +7,6 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -30,10 +29,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Console;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -43,9 +40,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
  * 
  * @author Vaadin Ltd
  */
-public class VWindow extends VOverlay implements Container,
-        ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
-        FocusHandler, BlurHandler, Focusable {
+public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
+        ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
     /**
      * Minimum allowed height of a window. This refers to the content area, not
@@ -149,9 +145,6 @@ public class VWindow extends VOverlay implements Container,
     // until a position is received from the server, or the user moves or
     // resizes the window.
     boolean centered = false;
-
-    private RenderSpace renderSpace = new RenderSpace(MIN_CONTENT_AREA_WIDTH,
-            MIN_CONTENT_AREA_HEIGHT, true);
 
     private String width;
 
@@ -759,6 +752,7 @@ public class VWindow extends VOverlay implements Container,
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
+        client.doLayout(false);
     }
 
     @Override
@@ -804,8 +798,6 @@ public class VWindow extends VOverlay implements Container,
                 DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
             }
 
-            renderSpace.setWidth(contentAreaInnerWidth);
-
             updateShadowSizeAndPosition();
         }
     }
@@ -830,10 +822,6 @@ public class VWindow extends VOverlay implements Container,
         if (height == null || "".equals(height)) {
             getElement().getStyle().clearHeight();
             contentPanel.getElement().getStyle().clearHeight();
-            // Reset to default, the exact value does not actually
-            // matter as an undefined-height parent should not have
-            // a relative-height child anyway.
-            renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
         } else {
             getElement().getStyle().setProperty("height", height);
             int contentHeight = getElement().getOffsetHeight()
@@ -844,7 +832,6 @@ public class VWindow extends VOverlay implements Container,
                 getElement().getStyle()
                         .setProperty("height", rootHeight + "px");
             }
-            renderSpace.setHeight(contentHeight);
             contentPanel.getElement().getStyle()
                     .setProperty("height", contentHeight + "px");
         }
@@ -852,11 +839,8 @@ public class VWindow extends VOverlay implements Container,
         updateShadowSizeAndPosition();
     }
 
-    private int extraH = 0;
-
     int getExtraHeight() {
-        extraH = header.getOffsetHeight() + footer.getOffsetHeight();
-        return extraH;
+        return header.getOffsetHeight() + footer.getOffsetHeight();
     }
 
     private void onDragEvent(Event event) {
@@ -974,38 +958,12 @@ public class VWindow extends VOverlay implements Container,
         setHeight(height);
     }
 
-    public RenderSpace getAllocatedSpace(Widget child) {
-        if (child == layout.getWidgetForPaintable()) {
-            return renderSpace;
-        } else {
-            // Exception ??
-            return null;
-        }
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        if (component == layout.getWidgetForPaintable()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        contentPanel.setWidget(newComponent);
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
+    void requestLayout() {
         if (dynamicWidth && !layoutRelativeWidth) {
             setNaturalWidth();
         }
-        if (centered) {
-            center();
-        }
-        updateShadowSizeAndPosition();
         // layout size change may affect its available space (scrollbars)
         client.handleComponentRelativeSize(layout.getWidgetForPaintable());
-        return true;
     }
 
     public ShortcutActionHandler getShortcutActionHandler() {

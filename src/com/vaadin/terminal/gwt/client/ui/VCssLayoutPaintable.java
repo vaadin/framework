@@ -33,11 +33,9 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
         clickEventHandler.handleEventHandlerRegistration(client);
@@ -46,7 +44,6 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
                 new VMarginInfo(uidl.getIntAttribute("margins")),
                 uidl.hasAttribute("spacing"));
         getWidgetForPaintable().panel.updateFromUIDL(uidl, client);
-        getWidgetForPaintable().rendering = false;
     }
 
     @Override

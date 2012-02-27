@@ -10,11 +10,13 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
+public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
+        implements DirectionalManagedLayout {
 
     /*
      * (non-Javadoc)
@@ -258,4 +260,11 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer {
         // NOP, not rendered
     }
 
+    public void layoutVertically() {
+        getWidgetForPaintable().updateHeight();
+    }
+
+    public void layoutHorizontally() {
+        getWidgetForPaintable().updateWidth();
+    }
 }

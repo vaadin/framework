@@ -12,19 +12,14 @@ import com.vaadin.terminal.gwt.client.VPaintableWidget;
 public class VFormLayoutPaintable extends VAbstractPaintableWidgetContainer {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
-
         getWidgetForPaintable().client = client;
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
 
         getWidgetForPaintable().table.updateFromUIDL(uidl, client);
-
-        getWidgetForPaintable().rendering = false;
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {

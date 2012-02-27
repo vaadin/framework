@@ -26,15 +26,18 @@ public class VCaption extends HTML {
 
     private Element captionText;
 
-    private Element clearElement;
-
     private final ApplicationConnection client;
 
     private boolean placedAfterComponent = false;
 
     private int maxWidth = -1;
 
-    private static final String CLASSNAME_CLEAR = CLASSNAME + "-clearelem";
+    protected static final String ATTRIBUTE_ICON = "icon";
+    protected static final String ATTRIBUTE_CAPTION = "caption";
+    protected static final String ATTRIBUTE_DESCRIPTION = "description";
+    protected static final String ATTRIBUTE_REQUIRED = "required";
+    protected static final String ATTRIBUTE_ERROR = "error";
+    protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private enum InsertPosition {
         ICON, CAPTION, REQUIRED, ERROR
@@ -218,12 +221,6 @@ public class VCaption extends HTML {
             errorIndicatorElement = null;
         }
 
-        if (clearElement == null) {
-            clearElement = DOM.createDiv();
-            clearElement.setClassName(CLASSNAME_CLEAR);
-            getElement().appendChild(clearElement);
-        }
-
         return (wasPlacedAfterComponent != placedAfterComponent);
     }
 
@@ -358,12 +355,6 @@ public class VCaption extends HTML {
             // Remove existing
             getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
-        }
-
-        if (clearElement == null) {
-            clearElement = DOM.createDiv();
-            clearElement.setClassName(CLASSNAME_CLEAR);
-            getElement().appendChild(clearElement);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);

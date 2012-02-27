@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
@@ -32,7 +33,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
@@ -157,7 +157,6 @@ public class ApplicationConnection {
     /** redirectTimer scheduling interval in seconds */
     private int sessionExpirationInterval;
 
-    private ArrayList<VPaintableWidget> relativeSizeChanges = new ArrayList<VPaintableWidget>();
     private ArrayList<Widget> componentCaptionSizeChanges = new ArrayList<Widget>();
 
     private Date requestStartTime;
@@ -167,6 +166,8 @@ public class ApplicationConnection {
     private Set<VPaintableWidget> zeroWidthComponents = null;
 
     private Set<VPaintableWidget> zeroHeightComponents = null;
+
+    private final LayoutManager layoutManager = new LayoutManager(this);
 
     public ApplicationConnection() {
         view = GWT.create(VViewPaintable.class);
@@ -1002,8 +1003,9 @@ public class ApplicationConnection {
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
 
                 ArrayList<VPaintableWidget> updatedVPaintableWidgets = new ArrayList<VPaintableWidget>();
-                relativeSizeChanges.clear();
                 componentCaptionSizeChanges.clear();
+
+                Duration updateDuration = new Duration();
 
                 int length = changes.length();
 
@@ -1093,26 +1095,10 @@ public class ApplicationConnection {
                             json.getValueMap("dd"));
                 }
 
-                // Check which widgets' size has been updated
-                Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+                VConsole.log("updateFromUidl: "
+                        + updateDuration.elapsedMillis() + " ms");
 
-                updatedVPaintableWidgets.addAll(relativeSizeChanges);
-                sizeUpdatedWidgets.addAll(componentCaptionSizeChanges);
-
-                for (VPaintableWidget paintable : updatedVPaintableWidgets) {
-                    Widget widget = paintable.getWidgetForPaintable();
-                    Size oldSize = paintableMap.getOffsetSize(paintable);
-                    Size newSize = new Size(widget.getOffsetWidth(),
-                            widget.getOffsetHeight());
-
-                    if (oldSize == null || !oldSize.equals(newSize)) {
-                        sizeUpdatedWidgets.add(widget);
-                        paintableMap.setOffsetSize(paintable, newSize);
-                    }
-
-                }
-
-                Util.componentSizeUpdated(sizeUpdatedWidgets);
+                doLayout(false);
 
                 if (meta != null) {
                     if (meta.containsKey("appError")) {
@@ -1590,71 +1576,6 @@ public class ApplicationConnection {
         return result.toString();
     }
 
-    public void updateComponentSize(VPaintableWidget paintable) {
-        SharedState state = paintable.getState();
-        String w = "";
-        String h = "";
-        if (null != state || !(state instanceof ComponentState)) {
-            ComponentState componentState = (ComponentState) state;
-            // TODO move logging to VUIDLBrowser and VDebugConsole
-            // VConsole.log("Paintable state for "
-            // + getPaintableMap().getPid(paintable) + ": "
-            // + String.valueOf(state.getState()));
-            h = componentState.getHeight();
-            w = componentState.getWidth();
-        } else {
-            // TODO move logging to VUIDLBrowser and VDebugConsole
-            VConsole.log("No state for paintable "
-                    + getPaintableMap().getPid(paintable)
-                    + " in ApplicationConnection.updateComponentSize()");
-        }
-
-        float relativeWidth = Util.parseRelativeSize(w);
-        float relativeHeight = Util.parseRelativeSize(h);
-
-        // First update maps so they are correct in the setHeight/setWidth calls
-        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
-            // One or both is relative
-            FloatSize relativeSize = new FloatSize(relativeWidth,
-                    relativeHeight);
-
-            if (paintableMap.getRelativeSize(paintable) == null
-                    && paintableMap.getOffsetSize(paintable) != null) {
-                // The component has changed from absolute size to relative size
-                relativeSizeChanges.add(paintable);
-            }
-            paintableMap.setRelativeSize(paintable, relativeSize);
-        } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
-            if (paintableMap.getRelativeSize(paintable) != null) {
-                // The component has changed from relative size to absolute size
-                relativeSizeChanges.add(paintable);
-            }
-            paintableMap.setRelativeSize(paintable, null);
-        }
-
-        Widget component = paintableMap.getWidget(paintable);
-        // Set absolute sizes
-        if (relativeHeight < 0.0) {
-            component.setHeight(h);
-        }
-        if (relativeWidth < 0.0) {
-            component.setWidth(w);
-        }
-
-        // Set relative sizes
-        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
-            // One or both is relative
-            handleComponentRelativeSize(paintable);
-        }
-
-    }
-
-    /**
-     * Traverses recursively child widgets until ContainerResizedListener child
-     * widget is found. They will delegate it further if needed.
-     * 
-     * @param container
-     */
     private boolean runningLayout = false;
 
     /**
@@ -1676,13 +1597,11 @@ public class ApplicationConnection {
      * development. Published to JavaScript.
      */
     public void forceLayout() {
-        Set<Widget> set = new HashSet<Widget>();
-        for (VPaintable paintable : paintableMap.getPaintables()) {
-            if (paintable instanceof VPaintableWidget) {
-                set.add(((VPaintableWidget) paintable).getWidgetForPaintable());
-            }
-        }
-        Util.componentSizeUpdated(set);
+        Duration duration = new Duration();
+
+        layoutManager.foceLayout();
+
+        VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }
 
     private void internalRunDescendentsLayout(HasWidgets container) {
@@ -1724,144 +1643,7 @@ public class ApplicationConnection {
      * @return true if the child has a relative size
      */
     private boolean handleComponentRelativeSize(VPaintableWidget paintable) {
-        if (paintable == null) {
-            return false;
-        }
-        boolean debugSizes = true;
-
-        FloatSize relativeSize = paintableMap.getRelativeSize(paintable);
-        if (relativeSize == null) {
-            return false;
-        }
-        Widget widget = paintableMap.getWidget(paintable);
-
-        boolean horizontalScrollBar = false;
-        boolean verticalScrollBar = false;
-
-        VPaintableWidgetContainer parentPaintable = paintable.getParent();
-        RenderSpace renderSpace;
-
-        // Parent-less components (like sub-windows) are relative to browser
-        // window.
-        if (parentPaintable == null) {
-            renderSpace = new RenderSpace(Window.getClientWidth(),
-                    Window.getClientHeight());
-        } else {
-            renderSpace = ((Container) parentPaintable.getWidgetForPaintable())
-                    .getAllocatedSpace(widget);
-        }
-
-        if (relativeSize.getHeight() >= 0) {
-            if (renderSpace != null) {
-
-                if (renderSpace.getScrollbarSize() > 0) {
-                    if (relativeSize.getWidth() > 100) {
-                        horizontalScrollBar = true;
-                    } else if (relativeSize.getWidth() < 0
-                            && renderSpace.getWidth() > 0) {
-                        int offsetWidth = widget.getOffsetWidth();
-                        int width = renderSpace.getWidth();
-                        if (offsetWidth > width) {
-                            horizontalScrollBar = true;
-                        }
-                    }
-                }
-
-                int height = renderSpace.getHeight();
-                if (horizontalScrollBar) {
-                    height -= renderSpace.getScrollbarSize();
-                }
-                if (validatingLayouts && height <= 0) {
-                    zeroHeightComponents.add(paintable);
-                }
-
-                height = (int) (height * relativeSize.getHeight() / 100.0);
-
-                if (height < 0) {
-                    height = 0;
-                }
-
-                if (debugSizes) {
-                    VConsole.log("Widget "
-                            + Util.getSimpleName(widget)
-                            + "/"
-                            + paintableMap.getPid(paintable)
-                            + " relative height "
-                            + relativeSize.getHeight()
-                            + "% of "
-                            + renderSpace.getHeight()
-                            + "px (reported by "
-
-                            + Util.getSimpleName(parentPaintable)
-                            + "/"
-                            + (parentPaintable == null ? "?" : parentPaintable
-                                    .hashCode()) + ") : " + height + "px");
-                }
-                widget.setHeight(height + "px");
-            } else {
-                widget.setHeight(relativeSize.getHeight() + "%");
-                VConsole.error(Util.getLayout(widget).getClass().getName()
-                        + " did not produce allocatedSpace for "
-                        + widget.getClass().getName());
-            }
-        }
-
-        if (relativeSize.getWidth() >= 0) {
-
-            if (renderSpace != null) {
-
-                int width = renderSpace.getWidth();
-
-                if (renderSpace.getScrollbarSize() > 0) {
-                    if (relativeSize.getHeight() > 100) {
-                        verticalScrollBar = true;
-                    } else if (relativeSize.getHeight() < 0
-                            && renderSpace.getHeight() > 0
-                            && widget.getOffsetHeight() > renderSpace
-                                    .getHeight()) {
-                        verticalScrollBar = true;
-                    }
-                }
-
-                if (verticalScrollBar) {
-                    width -= renderSpace.getScrollbarSize();
-                }
-                if (validatingLayouts && width <= 0) {
-                    zeroWidthComponents.add(paintable);
-                }
-
-                width = (int) (width * relativeSize.getWidth() / 100.0);
-
-                if (width < 0) {
-                    width = 0;
-                }
-
-                if (debugSizes) {
-                    VConsole.log("Widget "
-                            + Util.getSimpleName(widget)
-                            + "/"
-                            + paintableMap.getPid(paintable)
-                            + " relative width "
-                            + relativeSize.getWidth()
-                            + "% of "
-                            + renderSpace.getWidth()
-                            + "px (reported by "
-                            + Util.getSimpleName(parentPaintable)
-                            + "/"
-                            + (parentPaintable == null ? "?" : paintableMap
-                                    .getPid(parentPaintable)) + ") : " + width
-                            + "px");
-                }
-                widget.setWidth(width + "px");
-            } else {
-                widget.setWidth(relativeSize.getWidth() + "%");
-                VConsole.error(Util.getLayout(widget).getClass().getName()
-                        + " did not produce allocatedSpace for "
-                        + widget.getClass().getName());
-            }
-        }
-
-        return true;
+        return false;
     }
 
     /**
@@ -1873,17 +1655,6 @@ public class ApplicationConnection {
     public boolean handleComponentRelativeSize(Widget widget) {
         return handleComponentRelativeSize(paintableMap.getPaintable(widget));
 
-    }
-
-    /**
-     * Gets the specified Paintables relative size (percent).
-     * 
-     * @param widget
-     *            the paintable whose size is needed
-     * @return the the size if the paintable is relatively sized, -1 otherwise
-     */
-    public FloatSize getRelativeSize(Widget widget) {
-        return paintableMap.getRelativeSize(paintableMap.getPaintable(widget));
     }
 
     /**
@@ -2237,4 +2008,25 @@ public class ApplicationConnection {
                 eventIdentifier);
     }
 
+    private boolean layoutScheduled = false;
+    private ScheduledCommand layoutCommand = new ScheduledCommand() {
+        public void execute() {
+            layoutScheduled = false;
+
+            layoutManager.doLayout();
+        }
+    };
+
+    public void doLayout(boolean lazy) {
+        if (!lazy) {
+            layoutCommand.execute();
+        } else if (!layoutScheduled) {
+            layoutScheduled = true;
+            Scheduler.get().scheduleDeferred(layoutCommand);
+        }
+    }
+
+    LayoutManager getLayoutManager() {
+        return layoutManager;
+    }
 }

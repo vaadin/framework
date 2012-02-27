@@ -4,9 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.Set;
-
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
 import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -22,15 +21,10 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.ContainerResizedListener;
-import com.vaadin.terminal.gwt.client.RenderInformation;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class VAbstractSplitPanel extends ComplexPanel implements Container,
-        ContainerResizedListener {
+public class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean enabled = false;
 
@@ -78,20 +72,9 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
 
     ApplicationConnection client;
 
-    private String width = "";
-
-    private String height = "";
-
-    private RenderSpace firstRenderSpace = new RenderSpace(0, 0, true);
-    private RenderSpace secondRenderSpace = new RenderSpace(0, 0, true);
-
-    RenderInformation renderInformation = new RenderInformation();
-
     String id;
 
     boolean immediate;
-
-    boolean rendering = false;
 
     /* The current position of the split handle in either percentages or pixels */
     String position;
@@ -248,41 +231,39 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
 
         // Convert percentage values to pixels
         if (pos.indexOf("%") > 0) {
-            pos = Float.parseFloat(pos.substring(0, pos.length() - 1))
-                    / 100
-                    * (orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
-                            : getOffsetHeight()) + "px";
+            int size = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                    : getOffsetHeight();
+            float percentage = Float.parseFloat(pos.substring(0,
+                    pos.length() - 1));
+            pos = percentage / 100 * size + "px";
         }
 
+        String attributeName;
         if (orientation == ORIENTATION_HORIZONTAL) {
             if (positionReversed) {
-                DOM.setStyleAttribute(splitter, "right", pos);
+                attributeName = "right";
             } else {
-                DOM.setStyleAttribute(splitter, "left", pos);
+                attributeName = "left";
             }
         } else {
             if (positionReversed) {
-                DOM.setStyleAttribute(splitter, "bottom", pos);
+                attributeName = "bottom";
             } else {
-                DOM.setStyleAttribute(splitter, "top", pos);
+                attributeName = "top";
             }
         }
 
-        iLayout();
-        client.runDescendentsLayout(this);
+        Style style = splitter.getStyle();
+        if (!pos.equals(style.getProperty(attributeName))) {
+            style.setProperty(attributeName, pos);
+            updateSizes();
+        }
     }
 
-    /*
-     * Calculates absolutely positioned container places/sizes (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.NeedsLayout#layout()
-     */
-    public void iLayout() {
+    void updateSizes() {
         if (!isAttached()) {
             return;
         }
-
-        renderInformation.updateSize(getElement());
 
         int wholeSize;
         int pixelPosition;
@@ -313,12 +294,6 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(secondContainer, "left",
                     (pixelPosition + getSplitterSize()) + "px");
 
-            int contentHeight = renderInformation.getRenderedSize().getHeight();
-            firstRenderSpace.setHeight(contentHeight);
-            firstRenderSpace.setWidth(pixelPosition);
-            secondRenderSpace.setHeight(contentHeight);
-            secondRenderSpace.setWidth(secondContainerWidth);
-
             break;
         case ORIENTATION_VERTICAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
@@ -345,12 +320,6 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
                     secondContainerHeight + "px");
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
-
-            int contentWidth = renderInformation.getRenderedSize().getWidth();
-            firstRenderSpace.setHeight(pixelPosition);
-            firstRenderSpace.setWidth(contentWidth);
-            secondRenderSpace.setHeight(secondContainerHeight);
-            secondRenderSpace.setWidth(contentWidth);
 
             break;
         }
@@ -489,6 +458,7 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
         }
 
         setSplitPosition(newX + "px");
+        client.doLayout(false);
     }
 
     private void onVerticalMouseMove(int y) {
@@ -532,6 +502,7 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
         }
 
         setSplitPosition(newY + "px");
+        client.doLayout(false);
     }
 
     public void onMouseUp(Event event) {
@@ -604,79 +575,6 @@ public class VAbstractSplitPanel extends ComplexPanel implements Container,
             }
         }
         return splitterSize;
-    }
-
-    @Override
-    public void setHeight(String height) {
-        if (this.height.equals(height)) {
-            return;
-        }
-
-        this.height = height;
-        super.setHeight(height);
-
-        if (!rendering && client != null) {
-            setSplitPosition(position);
-        }
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if (this.width.equals(width)) {
-            return;
-        }
-
-        this.width = width;
-        super.setWidth(width);
-
-        if (!rendering && client != null) {
-            setSplitPosition(position);
-        }
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        if (child == firstChild) {
-            return firstRenderSpace;
-        } else if (child == secondChild) {
-            return secondRenderSpace;
-        }
-
-        return null;
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        return (component != null && (component == firstChild || component == secondChild));
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        if (oldComponent == firstChild) {
-            setFirstWidget(newComponent);
-        } else if (oldComponent == secondChild) {
-            setSecondWidget(newComponent);
-        }
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        // content size change might cause change to its available space
-        // (scrollbars)
-        for (Widget widget : children) {
-            client.handleComponentRelativeSize(widget);
-        }
-        if (height != null && width != null) {
-            /*
-             * If the height and width has been specified the child components
-             * cannot make the size of the layout change
-             */
-
-            return true;
-        }
-
-        if (renderInformation.updateSize(getElement())) {
-            return false;
-        } else {
-            return true;
-        }
-
     }
 
     /**

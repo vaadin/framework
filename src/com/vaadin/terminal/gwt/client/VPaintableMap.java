@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,11 +13,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class VPaintableMap {
@@ -208,6 +208,21 @@ public class VPaintableMap {
 
     }
 
+    public VPaintableWidget[] getRegisteredPaintableWidgets() {
+        ArrayList<VPaintableWidget> result = new ArrayList<VPaintableWidget>();
+
+        for (VPaintable paintable : getPaintables()) {
+            if (paintable instanceof VPaintableWidget) {
+                VPaintableWidget paintableWidget = (VPaintableWidget) paintable;
+                if (!unregistryBag.contains(getPid(paintable))) {
+                    result.add(paintableWidget);
+                }
+            }
+        }
+
+        return result.toArray(new VPaintableWidget[result.size()]);
+    }
+
     void purgeUnregistryBag(boolean unregisterPaintables) {
         if (unregisterPaintables) {
             for (String pid : unregistryBag) {
@@ -306,32 +321,8 @@ public class VPaintableMap {
      * @return
      */
     @Deprecated
-    public FloatSize getRelativeSize(VPaintableWidget paintable) {
-        return getComponentDetail(paintable).getRelativeSize();
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
     public void setOffsetSize(VPaintableWidget paintable, Size newSize) {
         getComponentDetail(paintable).setOffsetSize(newSize);
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
-    public void setRelativeSize(VPaintableWidget paintable,
-            FloatSize relativeSize) {
-        getComponentDetail(paintable).setRelativeSize(relativeSize);
-
     }
 
     private ComponentDetail getComponentDetail(VPaintableWidget paintable) {

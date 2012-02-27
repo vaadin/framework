@@ -114,9 +114,9 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 .injectCSS(
                         getRoot(),
                         ".sampleChild, .theLayout {border: 1px solid black;}"
-                                + ".theLayout > div > div:first-child {background: aqua;}"
-                                + ".theLayout > div > div:first-child + div {background: yellow;}"
-                                + ".theLayout > div > div:first-child + div + div {background: lightgrey;}");
+                                + ".theLayout > div:first-child {background: aqua;}"
+                                + ".theLayout > div:first-child + div {background: yellow;}"
+                                + ".theLayout > div:first-child + div + div {background: lightgrey;}");
 
         currentLayout = new HorizontalLayout();
         for (int i = 0; i < 3; i++) {

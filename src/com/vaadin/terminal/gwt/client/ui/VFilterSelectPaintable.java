@@ -12,7 +12,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect.FilterSelectSuggestion;
 
-public class VFilterSelectPaintable extends VAbstractPaintableWidget {
+public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
+        SimpleManagedLayout {
 
     /*
      * (non-Javadoc)
@@ -244,5 +245,12 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget {
     @Override
     public VFilterSelect getWidgetForPaintable() {
         return (VFilterSelect) super.getWidgetForPaintable();
+    }
+
+    public void layout() {
+        VFilterSelect widget = getWidgetForPaintable();
+        if (widget.initDone) {
+            widget.updateRootWidth();
+        }
     }
 }

@@ -5,7 +5,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 
-public class VHorizontalLayoutPaintable extends VOrderedLayoutPaintable {
+public class VHorizontalLayoutPaintable extends
+        VMeasuringOrderedLayoutPaintable {
 
     @Override
     public VHorizontalLayout getWidgetForPaintable() {

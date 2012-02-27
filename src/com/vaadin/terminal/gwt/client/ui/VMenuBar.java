@@ -32,15 +32,14 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VMenuBar extends SimpleFocusablePanel implements
-        CloseHandler<PopupPanel>, ContainerResizedListener, KeyPressHandler,
-        KeyDownHandler, FocusHandler, SubPartAware {
+        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
+        FocusHandler, SubPartAware {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -149,16 +148,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
     }
 
-    @Override
-    public void setWidth(String width) {
-        if (Util.equals(this.width, width)) {
-            return;
-        }
-
-        this.width = width;
-
-        Util.setWidthExcludingPaddingAndBorder(this, width, 0);
-
+    void updateSize() {
+        // Take from setWidth
         if (!subMenu) {
             // Only needed for root level menu
             hideChildren();
@@ -958,6 +949,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     public void iLayout() {
         iLayout(false);
+        updateSize();
     }
 
     public void iLayout(boolean iconLoadEvent) {

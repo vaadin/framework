@@ -8,12 +8,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer {
+public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
+        implements SimpleManagedLayout {
 
     /** Update the layout from UIDL */
     @Override
@@ -35,7 +37,6 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer {
         VCustomLayout.eval(getWidgetForPaintable().scripts);
         getWidgetForPaintable().scripts = null;
 
-        getWidgetForPaintable().iLayout();
         // TODO Check if this is needed
         client.runDescendentsLayout(getWidgetForPaintable());
 
@@ -69,7 +70,6 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer {
             }
         }
 
-        getWidgetForPaintable().iLayout();
         // TODO Check if this is needed
         client.runDescendentsLayout(getWidgetForPaintable());
 
@@ -88,5 +88,10 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer {
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
         getWidgetForPaintable().updateCaption(paintable, uidl);
 
+    }
+
+    public void layout() {
+        getWidgetForPaintable().iLayoutJS(
+                DOM.getFirstChild(getWidgetForPaintable().getElement()));
     }
 }

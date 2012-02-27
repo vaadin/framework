@@ -115,15 +115,6 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
                             + "-button-readonly");
         }
 
-        if (lastReadOnlyState != getWidgetForPaintable().readonly
-                || lastEnabledState != getWidgetForPaintable().isEnabled()) {
-            // Enabled or readonly state changed. Differences in theming might
-            // affect the width (for instance if the popup button is hidden) so
-            // we have to recalculate the width (IF the width of the field is
-            // fixed)
-            getWidgetForPaintable().updateWidth();
-        }
-
         getWidgetForPaintable().calendarToggle.setEnabled(true);
     }
 

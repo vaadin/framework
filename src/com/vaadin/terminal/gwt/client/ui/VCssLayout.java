@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
@@ -18,8 +17,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -29,17 +26,13 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
-public class VCssLayout extends SimplePanel implements Container {
+public class VCssLayout extends SimplePanel {
     public static final String TAGNAME = "csslayout";
     public static final String CLASSNAME = "v-" + TAGNAME;
 
     FlowPane panel = new FlowPane();
 
     Element margin = DOM.createDiv();
-
-    private boolean hasHeight;
-    private boolean hasWidth;
-    boolean rendering;
 
     public VCssLayout() {
         super();
@@ -54,34 +47,6 @@ public class VCssLayout extends SimplePanel implements Container {
         return margin;
     }
 
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        // panel.setWidth(width);
-        hasWidth = width != null && !width.equals("");
-        if (!rendering) {
-            panel.updateRelativeSizes();
-        }
-    }
-
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        // panel.setHeight(height);
-        hasHeight = height != null && !height.equals("");
-        if (!rendering) {
-            panel.updateRelativeSizes();
-        }
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        return panel.hasChildComponent(component);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        panel.replaceChildComponent(oldComponent, newComponent);
-    }
-
     public class FlowPane extends FlowPanel {
 
         private final HashMap<Widget, VCaption> widgetToCaption = new HashMap<Widget, VCaption>();
@@ -91,14 +56,6 @@ public class VCssLayout extends SimplePanel implements Container {
         public FlowPane() {
             super();
             setStyleName(CLASSNAME + "-container");
-        }
-
-        public void updateRelativeSizes() {
-            for (Widget w : getChildren()) {
-                if (w instanceof VPaintableWidget) {
-                    client.handleComponentRelativeSize(w);
-                }
-            }
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -187,24 +144,6 @@ public class VCssLayout extends SimplePanel implements Container {
             insert(child, index);
         }
 
-        public boolean hasChildComponent(Widget component) {
-            return component.getParent() == this;
-        }
-
-        public void replaceChildComponent(Widget oldComponent,
-                Widget newComponent) {
-            VCaption caption = widgetToCaption.get(oldComponent);
-            if (caption != null) {
-                remove(caption);
-                widgetToCaption.remove(oldComponent);
-            }
-            int index = getWidgetIndex(oldComponent);
-            if (index >= 0) {
-                remove(oldComponent);
-                insert(newComponent, index);
-            }
-        }
-
         public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
             Widget widget = paintable.getWidgetForPaintable();
             VCaption caption = widgetToCaption.get(widget);
@@ -230,50 +169,6 @@ public class VCssLayout extends SimplePanel implements Container {
                     .getPaintableForElement(client, VCssLayout.this, element);
         }
 
-    }
-
-    private RenderSpace space;
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        if (space == null) {
-            space = new RenderSpace(-1, -1) {
-                @Override
-                public int getWidth() {
-                    if (BrowserInfo.get().isIE()) {
-                        int width = getOffsetWidth();
-                        int margins = margin.getOffsetWidth()
-                                - panel.getOffsetWidth();
-                        return width - margins;
-                    } else {
-                        return panel.getOffsetWidth();
-                    }
-                }
-
-                @Override
-                public int getHeight() {
-                    int height = getOffsetHeight();
-                    int margins = margin.getOffsetHeight()
-                            - panel.getOffsetHeight();
-                    return height - margins;
-                }
-            };
-        }
-        return space;
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        if (hasSize()) {
-            return true;
-        } else {
-            // Size may have changed
-            // TODO optimize this: cache size if not fixed, handle both width
-            // and height separately
-            return false;
-        }
-    }
-
-    private boolean hasSize() {
-        return hasWidth && hasHeight;
     }
 
     private static final String makeCamelCase(String cssProperty) {

@@ -35,6 +35,7 @@
 .v-panel-content > div {
 	background: #fff;
 	min-height: 100%;
+	overflow: visible; /* min-height causes problems with borders and paddings if overflow is e.g. hidden */
 }
 .blue .v-panel-deco {
 	border-color: #92a3ac;

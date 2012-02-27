@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Iterator;
-import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
@@ -24,8 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.RenderInformation;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -490,14 +487,11 @@ public class VTabsheet extends VTabsheetBase {
 
     private final TabBar tb = new TabBar(this);
     final VTabsheetPanel tp = new VTabsheetPanel();
-    private final Element contentNode, deco;
+    final Element contentNode;
 
-    private String height;
-    private String width;
+    private final Element deco;
 
     boolean waitingForResponse;
-
-    final RenderInformation renderInformation = new RenderInformation();
 
     /**
      * Previous visible widget is set invisible with CSS (not display: none, but
@@ -505,8 +499,6 @@ public class VTabsheet extends VTabsheetBase {
      * visibility must be returned later when new widget is rendered.
      */
     private Widget previousVisibleWidget;
-
-    boolean rendering = false;
 
     private String currentStyle;
 
@@ -555,11 +547,15 @@ public class VTabsheet extends VTabsheetBase {
     }
 
     boolean isDynamicWidth() {
-        return width == null || width.equals("");
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedWidth();
     }
 
     boolean isDynamicHeight() {
-        return height == null || height.equals("");
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedHeight();
     }
 
     public VTabsheet() {
@@ -865,22 +861,8 @@ public class VTabsheet extends VTabsheetBase {
         }
     }
 
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        this.height = height;
-        updateContentNodeHeight();
-
-        if (!rendering) {
-            updateOpenTabSize();
-            iLayout();
-            // TODO Check if this is needed
-            client.runDescendentsLayout(this);
-        }
-    }
-
     void updateContentNodeHeight() {
-        if (height != null && !"".equals(height)) {
+        if (!isDynamicHeight()) {
             int contentHeight = getOffsetHeight();
             contentHeight -= DOM.getElementPropertyInt(deco, "offsetHeight");
             contentHeight -= tb.getOffsetHeight();
@@ -890,50 +872,9 @@ public class VTabsheet extends VTabsheetBase {
 
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
-            renderSpace.setHeight(contentHeight);
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
-            renderSpace.setHeight(0);
         }
-    }
-
-    @Override
-    public void setWidth(String width) {
-        if ((this.width == null && width.equals(""))
-                || (this.width != null && this.width.equals(width))) {
-            return;
-        }
-
-        super.setWidth(width);
-        if (width.equals("")) {
-            width = null;
-        }
-        this.width = width;
-        if (width == null) {
-            renderSpace.setWidth(0);
-            contentNode.getStyle().setProperty("width", "");
-        } else {
-            int contentWidth = getOffsetWidth() - getContentAreaBorderWidth();
-            if (contentWidth < 0) {
-                contentWidth = 0;
-            }
-            contentNode.getStyle().setProperty("width", contentWidth + "px");
-            renderSpace.setWidth(contentWidth);
-        }
-
-        if (!rendering) {
-            if (isDynamicHeight()) {
-                Util.updateRelativeChildrenAndSendSizeUpdateEvent(client, tp,
-                        this);
-            }
-
-            updateOpenTabSize();
-            iLayout();
-            // TODO Check if this is needed
-            client.runDescendentsLayout(this);
-
-        }
-
     }
 
     public void iLayout() {
@@ -956,10 +897,10 @@ public class VTabsheet extends VTabsheetBase {
         int minWidth = 0;
 
         if (!isDynamicHeight()) {
-            height = renderSpace.getHeight();
+            height = contentNode.getOffsetHeight();
         }
         if (!isDynamicWidth()) {
-            width = renderSpace.getWidth();
+            width = contentNode.getOffsetWidth();
         } else {
             /*
              * If the tabbar is wider than the content we need to use the tabbar
@@ -976,8 +917,10 @@ public class VTabsheet extends VTabsheetBase {
      * Layouts the tab-scroller elements, and applies styles.
      */
     private void updateTabScroller() {
-        if (width != null) {
-            DOM.setStyleAttribute(tabs, "width", width);
+        if (!isDynamicWidth()) {
+            VPaintableWidget paintable = VPaintableMap.get(client)
+                    .getPaintable(this);
+            DOM.setStyleAttribute(tabs, "width", paintable.getDeclaredWidth());
         }
 
         // Make sure scrollerIndex is valid
@@ -1058,66 +1001,13 @@ public class VTabsheet extends VTabsheetBase {
         return tp.iterator();
     }
 
-    public boolean hasChildComponent(Widget component) {
-        if (tp.getWidgetIndex(component) < 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        tp.replaceComponent(oldComponent, newComponent);
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        if (!isDynamicHeight() && !isDynamicWidth()) {
-            /*
-             * If the height and width has been specified for this container the
-             * child components cannot make the size of the layout change
-             */
-            // layout size change may affect its available space (scrollbars)
-            for (Widget widget : children) {
-                client.handleComponentRelativeSize(widget);
-            }
-            return true;
-        }
-
-        updateOpenTabSize();
-
-        if (renderInformation.updateSize(getElement())) {
-            /*
-             * Size has changed so we let the child components know about the
-             * new size.
-             */
-            iLayout();
-            client.runDescendentsLayout(this);
-
-            return false;
-        } else {
-            /*
-             * Size has not changed so we do not need to propagate the event
-             * further
-             */
-            return true;
-        }
-
-    }
-
     private int borderW = -1;
 
-    private int getContentAreaBorderWidth() {
+    int getContentAreaBorderWidth() {
         if (borderW < 0) {
             borderW = Util.measureHorizontalBorder(contentNode);
         }
         return borderW;
-    }
-
-    private final RenderSpace renderSpace = new RenderSpace(0, 0, true);
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        // All tabs have equal amount of space allocated
-        return renderSpace;
     }
 
     @Override

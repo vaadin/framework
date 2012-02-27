@@ -14,7 +14,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
 
-public class VMenuBarPaintable extends VAbstractPaintableWidget {
+public class VMenuBarPaintable extends VAbstractPaintableWidget implements
+        SimpleManagedLayout {
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
@@ -162,4 +163,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget {
         return (VMenuBar) super.getWidgetForPaintable();
     }
 
+    public void layout() {
+        getWidgetForPaintable().iLayout();
+    }
 }

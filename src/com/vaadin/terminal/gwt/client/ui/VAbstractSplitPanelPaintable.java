@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
 public abstract class VAbstractSplitPanelPaintable extends
-        VAbstractPaintableWidgetContainer {
+        VAbstractPaintableWidgetContainer implements SimpleManagedLayout {
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
@@ -68,13 +68,11 @@ public abstract class VAbstractSplitPanelPaintable extends
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidgetForPaintable().client = client;
         getWidgetForPaintable().id = uidl.getId();
-        getWidgetForPaintable().rendering = true;
 
         getWidgetForPaintable().immediate = getState().isImmediate();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
         getWidgetForPaintable().setEnabled(!getState().isDisabled());
@@ -95,8 +93,6 @@ public abstract class VAbstractSplitPanelPaintable extends
         getWidgetForPaintable().setStylenames();
 
         getWidgetForPaintable().position = uidl.getStringAttribute("position");
-        getWidgetForPaintable().setSplitPosition(
-                getWidgetForPaintable().position);
 
         final VPaintableWidget newFirstChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(0));
@@ -122,15 +118,17 @@ public abstract class VAbstractSplitPanelPaintable extends
         newFirstChildPaintable.updateFromUIDL(uidl.getChildUIDL(0), client);
         newSecondChildPaintable.updateFromUIDL(uidl.getChildUIDL(1), client);
 
-        getWidgetForPaintable().renderInformation
-                .updateSize(getWidgetForPaintable().getElement());
-
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
         client.runDescendentsLayout(getWidgetForPaintable());
 
-        getWidgetForPaintable().rendering = false;
+        getLayoutManager().setNeedsUpdate(this);
+    }
 
+    public void layout() {
+        VAbstractSplitPanel splitPanel = getWidgetForPaintable();
+        splitPanel.setSplitPosition(splitPanel.position);
+        splitPanel.updateSizes();
     }
 
     @Override

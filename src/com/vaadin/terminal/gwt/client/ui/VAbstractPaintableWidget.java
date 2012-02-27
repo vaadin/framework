@@ -10,8 +10,10 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VPaintableMap;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 import com.vaadin.terminal.gwt.client.VPaintableWidgetContainer;
@@ -43,6 +45,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
     // shared state from the server to the client
     private ComponentState state;
+
+    private String declaredWidth = "";
+    private String declaredHeight = "";
 
     /**
      * Default constructor
@@ -235,7 +240,79 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
          * taken into account
          */
 
-        getConnection().updateComponentSize(this);
+        updateComponentSize();
+    }
+
+    private void updateComponentSize() {
+        SharedState state = getState();
+
+        String w = "";
+        String h = "";
+        if (null != state || !(state instanceof ComponentState)) {
+            ComponentState componentState = (ComponentState) state;
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            // VConsole.log("Paintable state for "
+            // + getPaintableMap().getPid(paintable) + ": "
+            // + String.valueOf(state.getState()));
+            h = componentState.getHeight();
+            w = componentState.getWidth();
+        } else {
+            // TODO move logging to VUIDLBrowser and VDebugConsole
+            VConsole.log("No state for paintable " + getId()
+                    + " in VAbstractPaintableWidget.updateComponentSize()");
+        }
+
+        // Parent should be updated if either dimension changed between relative
+        // and non-relative
+        if (w.endsWith("%") != declaredWidth.endsWith("%")) {
+            VPaintableWidgetContainer parent = getParent();
+            if (parent instanceof ManagedLayout) {
+                getLayoutManager().setWidthNeedsUpdate((ManagedLayout) parent);
+            }
+        }
+
+        if (h.endsWith("%") != declaredHeight.endsWith("%")) {
+            VPaintableWidgetContainer parent = getParent();
+            if (parent instanceof ManagedLayout) {
+                getLayoutManager().setHeightNeedsUpdate((ManagedLayout) parent);
+            }
+        }
+
+        declaredWidth = w;
+        declaredHeight = h;
+
+        // Set defined sizes
+        Widget component = getWidgetForPaintable();
+
+        component.setStyleName("v-undefined-width", isUndefinedWidth());
+        component.setStyleName("v-undefined-height", isUndefinedHeight());
+
+        component.setHeight(h);
+        component.setWidth(w);
+    }
+
+    public boolean isRelativeHeight() {
+        return declaredHeight.endsWith("%");
+    }
+
+    public boolean isRelativeWidth() {
+        return declaredWidth.endsWith("%");
+    }
+
+    public boolean isUndefinedHeight() {
+        return declaredHeight.length() == 0;
+    }
+
+    public boolean isUndefinedWidth() {
+        return declaredWidth.length() == 0;
+    }
+
+    public String getDeclaredHeight() {
+        return declaredHeight;
+    }
+
+    public String getDeclaredWidth() {
+        return declaredWidth;
     }
 
     /**
@@ -320,6 +397,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
+        styleBuf.append(" v-paintable");
 
         // first disabling and read-only status
         if (!enabled) {
@@ -390,5 +468,9 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getId(),
                 getConnection());
         return clientToServerRpc;
+    }
+
+    public LayoutManager getLayoutManager() {
+        return LayoutManager.get(connection);
     }
 }

@@ -523,8 +523,7 @@ public class VDebugConsole extends VOverlay implements Console {
     private void printClientSideDetectedIssues(
             Set<VPaintableWidget> zeroHeightComponents, ApplicationConnection ac) {
         for (final VPaintableWidget paintable : zeroHeightComponents) {
-            final Container layout = Util.getLayout(paintable
-                    .getWidgetForPaintable());
+            final Widget layout = paintable.getParent().getWidgetForPaintable();
 
             VerticalPanel errorDetails = new VerticalPanel();
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
@@ -534,7 +533,7 @@ public class VDebugConsole extends VOverlay implements Console {
             emphasisInUi.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {
                     if (paintable != null) {
-                        Element element2 = ((Widget) layout).getElement();
+                        Element element2 = layout.getElement();
                         Widget.setStyleName(element2, "invalidlayout",
                                 emphasisInUi.getValue());
                     }

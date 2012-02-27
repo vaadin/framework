@@ -4,17 +4,23 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VPaintableWidget;
 
-public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
+public class VPanelPaintable extends VAbstractPaintableWidgetContainer
+        implements SimpleManagedLayout, PostLayoutListener {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
+
+    private Integer uidlScrollTop;
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             CLICK_EVENT_IDENTIFIER) {
@@ -26,14 +32,25 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
         }
     };
 
+    private Integer uidlScrollLeft;
+
+    @Override
+    public void init() {
+        VPanel panel = getWidgetForPaintable();
+        LayoutManager layoutManager = getLayoutManager();
+
+        layoutManager.registerDependency(this, panel.captionNode);
+        layoutManager.registerDependency(this, panel.bottomDecoration);
+        layoutManager.registerDependency(this, panel.contentNode);
+    }
+
     @Override
     protected boolean delegateCaptionHandling() {
         return false;
-    };
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
         if (isRealUpdate(uidl)) {
 
             // Handle caption displaying and style names, prior generics.
@@ -82,7 +99,6 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
         super.updateFromUIDL(uidl, client);
 
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
             return;
         }
 
@@ -126,42 +142,23 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
 
         if (uidl.hasVariable("scrollTop")
                 && uidl.getIntVariable("scrollTop") != getWidgetForPaintable().scrollTop) {
-            getWidgetForPaintable().scrollTop = uidl
-                    .getIntVariable("scrollTop");
-            getWidgetForPaintable().contentNode
-                    .setScrollTop(getWidgetForPaintable().scrollTop);
-            // re-read the actual scrollTop in case invalid value was set
-            // (scrollTop != 0 when no scrollbar exists, other values would be
-            // caught by scroll listener), see #3784
-            getWidgetForPaintable().scrollTop = getWidgetForPaintable().contentNode
-                    .getScrollTop();
+            // Sizes are not yet up to date, so changing the scroll position
+            // is deferred to after the layout phase
+            uidlScrollTop = new Integer(uidl.getIntVariable("scrollTop"));
         }
 
         if (uidl.hasVariable("scrollLeft")
                 && uidl.getIntVariable("scrollLeft") != getWidgetForPaintable().scrollLeft) {
-            getWidgetForPaintable().scrollLeft = uidl
-                    .getIntVariable("scrollLeft");
-            getWidgetForPaintable().contentNode
-                    .setScrollLeft(getWidgetForPaintable().scrollLeft);
-            // re-read the actual scrollTop in case invalid value was set
-            // (scrollTop != 0 when no scrollbar exists, other values would be
-            // caught by scroll listener), see #3784
-            getWidgetForPaintable().scrollLeft = getWidgetForPaintable().contentNode
-                    .getScrollLeft();
+            // Sizes are not yet up to date, so changing the scroll position
+            // is deferred to after the layout phase
+            uidlScrollLeft = new Integer(uidl.getIntVariable("scrollLeft"));
         }
-
-        // Must be run after scrollTop is set as Webkit overflow fix re-sets the
-        // scrollTop
-        getWidgetForPaintable().runHacks(false);
 
         // And apply tab index
         if (uidl.hasVariable("tabindex")) {
             getWidgetForPaintable().contentNode.setTabIndex(uidl
                     .getIntVariable("tabindex"));
         }
-
-        getWidgetForPaintable().rendering = false;
-
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
@@ -176,6 +173,63 @@ public class VPanelPaintable extends VAbstractPaintableWidgetContainer {
     @Override
     protected Widget createWidget() {
         return GWT.create(VPanel.class);
+    }
+
+    public void layout() {
+        updateSizes();
+    }
+
+    void updateSizes() {
+        VPanel panel = getWidgetForPaintable();
+
+        Style contentStyle = panel.contentNode.getStyle();
+        if (isUndefinedHeight()) {
+            contentStyle.clearHeight();
+        } else {
+            contentStyle.setHeight(100, Unit.PCT);
+        }
+
+        if (isUndefinedWidth()) {
+            contentStyle.clearWidth();
+        } else {
+            contentStyle.setWidth(100, Unit.PCT);
+        }
+
+        LayoutManager layoutManager = getLayoutManager();
+        int top = layoutManager.getOuterHeight(panel.captionNode);
+        int bottom = layoutManager.getOuterHeight(panel.bottomDecoration);
+
+        Style style = panel.getElement().getStyle();
+        panel.captionNode.getStyle().setMarginTop(-top, Unit.PX);
+        panel.bottomDecoration.getStyle().setMarginBottom(-bottom, Unit.PX);
+        style.setPaddingTop(top, Unit.PX);
+        style.setPaddingBottom(bottom, Unit.PX);
+
+        // Update scroll positions
+        panel.contentNode.setScrollTop(panel.scrollTop);
+        panel.contentNode.setScrollLeft(panel.scrollLeft);
+        // Read actual value back to ensure update logic is correct
+        panel.scrollTop = panel.contentNode.getScrollTop();
+        panel.scrollLeft = panel.contentNode.getScrollLeft();
+    }
+
+    public void postLayout() {
+        VPanel panel = getWidgetForPaintable();
+        if (uidlScrollTop != null) {
+            panel.contentNode.setScrollTop(uidlScrollTop.intValue());
+            // Read actual value back to ensure update logic is correct
+            // TODO Does this trigger reflows?
+            panel.scrollTop = panel.contentNode.getScrollTop();
+            uidlScrollTop = null;
+        }
+
+        if (uidlScrollLeft != null) {
+            panel.contentNode.setScrollLeft(uidlScrollLeft.intValue());
+            // Read actual value back to ensure update logic is correct
+            // TODO Does this trigger reflows?
+            panel.scrollLeft = panel.contentNode.getScrollLeft();
+            uidlScrollLeft = null;
+        }
     }
 
 }

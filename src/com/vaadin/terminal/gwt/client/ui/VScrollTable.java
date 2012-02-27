@@ -60,10 +60,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -107,7 +105,7 @@ import com.vaadin.terminal.gwt.client.ui.label.VLabel;
  */
 public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
-        ActionOwner, Container {
+        ActionOwner {
 
     public enum SelectMode {
         NONE(0), SINGLE(1), MULTI(2);
@@ -432,8 +430,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     boolean recalcWidths = false;
 
     private final ArrayList<Panel> lazyUnregistryBag = new ArrayList<Panel>();
-    private String height;
-    private String width = "";
     boolean rendering = false;
     private boolean hasFocus = false;
     private int dragmode;
@@ -1670,7 +1666,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         boolean willHaveScrollbarz = willHaveScrollbars();
 
         // fix "natural" width if width not set
-        if (width == null || "".equals(width)) {
+        if (isDynamicWidth()) {
             int w = total;
             w += scrollBody.getCellExtraWidth() * visibleColOrder.length;
             if (willHaveScrollbarz) {
@@ -1798,7 +1794,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Fix "natural" height if height is not set. This must be after width
          * fixing so the components' widths have been adjusted.
          */
-        if (height == null || "".equals(height)) {
+        if (isDynamicHeight()) {
             /*
              * We must force an update of the row height as this point as it
              * might have been (incorrectly) calculated earlier
@@ -1879,7 +1875,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * @return true if content area will have scrollbars visible.
      */
     protected boolean willHaveScrollbars() {
-        if (!(height != null && !height.equals(""))) {
+        if (isDynamicHeight()) {
             if (pageLength < totalRows) {
                 return true;
             }
@@ -5316,29 +5312,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return -1;
             }
 
-            public boolean hasChildComponent(Widget component) {
-                return childWidgets.contains(component);
-            }
-
-            public void replaceChildComponent(Widget oldComponent,
-                    Widget newComponent) {
-                com.google.gwt.dom.client.Element parentElement = oldComponent
-                        .getElement().getParentElement();
-                int index = childWidgets.indexOf(oldComponent);
-                oldComponent.removeFromParent();
-
-                parentElement.appendChild(newComponent.getElement());
-                childWidgets.add(index, newComponent);
-                adopt(newComponent);
-
-            }
-
-            public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-                // Should never be called,
-                // Component container interface faked here to get layouts
-                // render properly
-            }
-
             public Widget getWidgetForPaintable() {
                 return this;
             }
@@ -5519,7 +5492,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return;
         }
 
-        if (height == null || height.equals("")) {
+        if (isDynamicHeight()) {
             return;
         }
 
@@ -5543,16 +5516,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     scrollBodyPanel.setScrollPosition(scrollTop + 1);
                     scrollBodyPanel.setScrollPosition(scrollTop - 1);
                 }
+
+                sizeInit();
             }
         }
 
     }
 
-    @Override
-    public void setWidth(String width) {
-        if (this.width.equals(width)) {
-            return;
-        }
+    void updateWidth() {
         if (!isVisible()) {
             /*
              * Do not update size when the table is hidden as all column widths
@@ -5562,9 +5533,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return;
         }
 
-        this.width = width;
-        if (width != null && !"".equals(width)) {
-            super.setWidth(width);
+        if (!isDynamicWidth()) {
             int innerPixels = getOffsetWidth() - getBorderWidth();
             if (innerPixels < 0) {
                 innerPixels = 0;
@@ -5575,9 +5544,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             triggerLazyColumnAdjustment(false);
 
         } else {
-
-            // Undefined width
-            super.setWidth("");
 
             // Readjust size of table
             sizeInit();
@@ -5694,8 +5660,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
             }
 
-            if ((height == null || "".equals(height))
-                    && totalRows == pageLength) {
+            if (isDynamicHeight() && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
                 // scrollbar appears/disappears)
                 int bodyHeight = scrollBody.getRequiredHeight();
@@ -5767,7 +5732,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private int containerHeight;
 
     private void setContainerHeight() {
-        if (height != null && !"".equals(height)) {
+        if (!isDynamicHeight()) {
             containerHeight = getOffsetHeight();
             containerHeight -= showColHeaders ? tHead.getOffsetHeight() : 0;
             containerHeight -= tFoot.getOffsetHeight();
@@ -5804,15 +5769,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return contentAreaBorderHeight;
     }
 
-    @Override
-    public void setHeight(String height) {
-        this.height = height;
-        super.setHeight(height);
+    void updateHeight() {
         setContainerHeight();
 
-        if (initializedAndAttached) {
-            updatePageLength();
-        }
+        updatePageLength();
+
         if (!rendering) {
             // Webkit may sometimes get an odd rendering bug (white space
             // between header and body), see bug #3875. Running
@@ -6688,6 +6649,18 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
+    private boolean isDynamicWidth() {
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedWidth();
+    }
+
+    private boolean isDynamicHeight() {
+        VPaintableWidget paintable = VPaintableMap.get(client).getPaintable(
+                this);
+        return paintable.isUndefinedHeight();
+    }
+
     private void debug(String msg) {
         if (enableDebug) {
             VConsole.error(msg);
@@ -6696,47 +6669,5 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     public Widget getWidgetForPaintable() {
         return this;
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        VScrollTableRow row = (VScrollTableRow) oldComponent.getParent();
-        row.replaceChildComponent(oldComponent, newComponent);
-
-    }
-
-    public boolean hasChildComponent(Widget child) {
-        VScrollTableRow row = (VScrollTableRow) child.getParent();
-        return row.hasChildComponent(child);
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        // row size should never change
-        return true;
-    }
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        // Called by widgets attached to a row
-        VScrollTableRow row = (VScrollTableRow) child.getParent();
-        int w = 0;
-        int i = row.getColIndexOf(child);
-        HeaderCell headerCell = tHead.getHeaderCell(i);
-        if (headerCell != null) {
-            if (initializedAndAttached) {
-                w = headerCell.getWidth();
-            } else {
-                // header offset width is not absolutely correct value,
-                // but a best guess (expecting similar content in all
-                // columns ->
-                // if one component is relative width so are others)
-                w = headerCell.getOffsetWidth()
-                        - scrollBody.getCellExtraWidth();
-            }
-        }
-        return new RenderSpace(w, 0) {
-            @Override
-            public int getHeight() {
-                return (int) scrollBody.getRowHeight();
-            }
-        };
     }
 }
