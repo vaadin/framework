@@ -17,9 +17,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.RenderSpace;
-import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -190,9 +187,13 @@ public class VGridLayout extends ComplexPanel {
 
     void layoutCellsVertically() {
         int verticalSpacing = getVerticalSpacing();
-        int y = 0;
+        LayoutManager layoutManager = LayoutManager.get(client);
+        Element element = getElement();
+        int paddingTop = layoutManager.getPaddingTop(element);
+        int y = paddingTop;
+
         for (int i = 0; i < cells.length; i++) {
-            y = 0;
+            y = paddingTop;
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
@@ -203,13 +204,17 @@ public class VGridLayout extends ComplexPanel {
         }
 
         if (isUndefinedHeight()) {
-            int innerHeight = y - verticalSpacing;
-            getElement().getStyle().setHeight(innerHeight, Unit.PX);
+            int outerHeight = y - verticalSpacing
+                    + layoutManager.getPaddingBottom(element)
+                    + layoutManager.getBorderHeight(element);
+            element.getStyle().setHeight(outerHeight, Unit.PX);
         }
     }
 
     void layoutCellsHorizontally() {
-        int x = 0;
+        LayoutManager layoutManager = LayoutManager.get(client);
+        Element element = getElement();
+        int x = layoutManager.getPaddingLeft(element);
         int horizontalSpacing = getHorizontalSpacing();
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
@@ -222,7 +227,10 @@ public class VGridLayout extends ComplexPanel {
         }
 
         if (isUndefinedWidth()) {
-            getElement().getStyle().setWidth((x - horizontalSpacing), Unit.PX);
+            int outerWidth = x - horizontalSpacing
+                    + layoutManager.getPaddingRight(element)
+                    + layoutManager.getBorderWidth(element);
+            element.getStyle().setWidth(outerWidth, Unit.PX);
         }
     }
 

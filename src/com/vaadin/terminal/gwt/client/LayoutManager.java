@@ -330,4 +330,12 @@ public class LayoutManager {
     public int getPaddingLeft(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingLeft();
     }
+
+    public int getPaddingBottom(Element element) {
+        return getMeasuredSize(element, nullSize).getPaddingBottom();
+    }
+
+    public int getPaddingRight(Element element) {
+        return getMeasuredSize(element, null).getPaddingRight();
+    }
 }
