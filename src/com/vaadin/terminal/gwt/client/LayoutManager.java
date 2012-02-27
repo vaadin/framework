@@ -118,25 +118,25 @@ public class LayoutManager {
 
             for (VPaintableWidget paintable : paintableWidgets) {
                 MeasuredSize measuredSize = getMeasuredSize(paintable);
-                boolean notifiableType = isNotifiableType(paintable);
+                boolean managed = isManagedLayout(paintable);
 
                 VPaintableWidgetContainer parent = paintable.getParent();
-                boolean parentNotifiable = parent != null
-                        && isNotifiableType(parent);
+                boolean managedParent = parent != null
+                        && isManagedLayout(parent);
 
                 if (measuredSize.isHeightNeedsUpdate()) {
-                    if (notifiableType) {
+                    if (managed) {
                         needsHeightUpdate.add(paintable.getId());
                     }
-                    if (!paintable.isRelativeHeight() && parentNotifiable) {
+                    if (!paintable.isRelativeHeight() && managedParent) {
                         needsHeightUpdate.add(parent.getId());
                     }
                 }
                 if (measuredSize.isWidthNeedsUpdate()) {
-                    if (notifiableType) {
+                    if (managed) {
                         needsWidthUpdate.add(paintable.getId());
                     }
-                    if (!paintable.isRelativeWidth() && parentNotifiable) {
+                    if (!paintable.isRelativeWidth() && managedParent) {
                         needsWidthUpdate.add(parent.getId());
                     }
                 }
@@ -258,9 +258,8 @@ public class LayoutManager {
         }
     }
 
-    private static boolean isNotifiableType(VPaintableWidget paintable) {
-        return paintable instanceof SimpleManagedLayout
-                || paintable instanceof DirectionalManagedLayout;
+    private static boolean isManagedLayout(VPaintableWidget paintable) {
+        return paintable instanceof ManagedLayout;
     }
 
     public void foceLayout() {
