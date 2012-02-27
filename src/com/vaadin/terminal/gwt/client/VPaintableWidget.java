@@ -26,7 +26,7 @@ public interface VPaintableWidget extends VPaintable {
     /**
      * TODO: Rename to getWidget
      */
-    public Widget getWidgetForPaintable();
+    public Widget getWidget();
 
     /**
      * Returns the parent {@link VPaintableWidgetContainer}

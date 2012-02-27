@@ -389,8 +389,7 @@ public class VCaption extends HTML {
              * the responsibility of reacting to ONLOAD from VCaption to layouts
              */
             if (owner != null) {
-                Util.notifyParentOfSizeChange(owner.getWidgetForPaintable(),
-                        true);
+                Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
                 VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }

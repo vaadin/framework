@@ -294,7 +294,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
                     .getChildUIDL(0));
 
             if (newPopupComponent != popupComponentPaintable) {
-                Widget newWidget = newPopupComponent.getWidgetForPaintable();
+                Widget newWidget = newPopupComponent.getWidget();
                 setWidget(newWidget);
                 popupComponentWidget = newWidget;
                 popupComponentPaintable = newPopupComponent;

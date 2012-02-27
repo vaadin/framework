@@ -25,7 +25,7 @@ public class VCaptionWrapper extends FlowPanel {
         caption = new VCaption(toBeWrapped, client);
         add(caption);
         paintable = toBeWrapped;
-        add(paintable.getWidgetForPaintable());
+        add(paintable.getWidget());
         setStyleName(CLASSNAME);
     }
 

@@ -29,19 +29,19 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
 
         @Override
         protected VPaintableWidget getChildComponent(Element element) {
-            return getWidgetForPaintable().getComponent(element);
+            return getWidget().getComponent(element);
         }
 
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
     };
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
         // TODO margin handling
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
@@ -51,7 +51,7 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
         clickEventHandler.handleEventHandlerRegistration(client);
 
         HashSet<String> unrenderedPids = new HashSet<String>(
-                getWidgetForPaintable().pidToComponentWrappper.keySet());
+                getWidget().pidToComponentWrappper.keySet());
 
         for (Iterator<Object> childIterator = uidl.getChildIterator(); childIterator
                 .hasNext();) {
@@ -59,22 +59,22 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
             if (cc.getTag().equals("cc")) {
                 UIDL componentUIDL = cc.getChildUIDL(0);
                 unrenderedPids.remove(componentUIDL.getId());
-                getWidgetForPaintable().getWrapper(client, componentUIDL)
+                getWidget().getWrapper(client, componentUIDL)
                         .updateFromUIDL(cc);
             }
         }
 
         for (String pid : unrenderedPids) {
-            AbsoluteWrapper absoluteWrapper = getWidgetForPaintable().pidToComponentWrappper
+            AbsoluteWrapper absoluteWrapper = getWidget().pidToComponentWrappper
                     .get(pid);
-            getWidgetForPaintable().pidToComponentWrappper.remove(pid);
+            getWidget().pidToComponentWrappper.remove(pid);
             absoluteWrapper.destroy();
         }
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
         AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
-                .getWidgetForPaintable()).getParent();
+                .getWidget()).getParent();
         parent2.updateCaption(uidl);
     }
 
@@ -84,14 +84,14 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
     }
 
     @Override
-    public VAbsoluteLayout getWidgetForPaintable() {
-        return (VAbsoluteLayout) super.getWidgetForPaintable();
+    public VAbsoluteLayout getWidget() {
+        return (VAbsoluteLayout) super.getWidget();
     }
 
     public void layoutVertically() {
-        VAbsoluteLayout layout = getWidgetForPaintable();
+        VAbsoluteLayout layout = getWidget();
         for (VPaintableWidget paintable : getChildren()) {
-            Widget widget = paintable.getWidgetForPaintable();
+            Widget widget = paintable.getWidget();
             AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
             Style wrapperStyle = wrapper.getElement().getStyle();
 
@@ -120,9 +120,9 @@ public class VAbsoluteLayoutPaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void layoutHorizontally() {
-        VAbsoluteLayout layout = getWidgetForPaintable();
+        VAbsoluteLayout layout = getWidget();
         for (VPaintableWidget paintable : getChildren()) {
-            Widget widget = paintable.getWidgetForPaintable();
+            Widget widget = paintable.getWidget();
             AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
             Style wrapperStyle = wrapper.getElement().getStyle();
 

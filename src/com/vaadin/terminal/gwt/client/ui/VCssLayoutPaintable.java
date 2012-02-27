@@ -21,13 +21,13 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
 
         @Override
         protected VPaintableWidget getChildComponent(Element element) {
-            return getWidgetForPaintable().panel.getComponent(element);
+            return getWidget().panel.getComponent(element);
         }
 
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
     };
 
@@ -40,15 +40,15 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
         }
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        getWidgetForPaintable().setMarginAndSpacingStyles(
+        getWidget().setMarginAndSpacingStyles(
                 new VMarginInfo(uidl.getIntAttribute("margins")),
                 uidl.hasAttribute("spacing"));
-        getWidgetForPaintable().panel.updateFromUIDL(uidl, client);
+        getWidget().panel.updateFromUIDL(uidl, client);
     }
 
     @Override
-    public VCssLayout getWidgetForPaintable() {
-        return (VCssLayout) super.getWidgetForPaintable();
+    public VCssLayout getWidget() {
+        return (VCssLayout) super.getWidget();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class VCssLayoutPaintable extends VAbstractPaintableWidgetContainer {
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        getWidgetForPaintable().panel.updateCaption(component, uidl);
+        getWidget().panel.updateCaption(component, uidl);
     }
 
 }

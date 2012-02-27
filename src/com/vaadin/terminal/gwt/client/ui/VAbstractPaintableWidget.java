@@ -75,7 +75,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
      * 
      * @return The widget associated with this paintable
      */
-    public Widget getWidgetForPaintable() {
+    public Widget getWidget() {
         if (widget == null) {
             widget = createWidget();
         }
@@ -149,7 +149,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         // FIXME: Hierarchy should be set by framework instead of looked up here
         VPaintableMap paintableMap = VPaintableMap.get(getConnection());
 
-        Widget w = getWidgetForPaintable();
+        Widget w = getWidget();
         while (true) {
             w = w.getParent();
             if (w == null) {
@@ -184,7 +184,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
 
         if (uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(getWidgetForPaintable().getElement(), "id",
+            DOM.setElementProperty(getWidget().getElement(), "id",
                     uidl.getId().substring(5));
         }
 
@@ -204,17 +204,17 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
          * first setting tabindex, then enabled state.
          */
         if (uidl.hasAttribute("tabindex")
-                && getWidgetForPaintable() instanceof Focusable) {
-            ((Focusable) getWidgetForPaintable()).setTabIndex(uidl
+                && getWidget() instanceof Focusable) {
+            ((Focusable) getWidget()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
         setEnabled(!getState().isDisabled());
 
         // Style names
-        String styleName = getStyleNameFromUIDL(getWidgetForPaintable()
+        String styleName = getStyleNameFromUIDL(getWidget()
                 .getStylePrimaryName(), uidl, getState(),
-                getWidgetForPaintable() instanceof Field);
-        getWidgetForPaintable().setStyleName(styleName);
+                getWidget() instanceof Field);
+        getWidget().setStyleName(styleName);
 
         // Update tooltip
         TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
@@ -282,7 +282,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         declaredHeight = h;
 
         // Set defined sizes
-        Widget component = getWidgetForPaintable();
+        Widget component = getWidget();
 
         component.setStyleName("v-undefined-width", isUndefinedWidth());
         component.setStyleName("v-undefined-height", isUndefinedHeight());
@@ -324,8 +324,8 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
     protected void setEnabled(boolean enabled) {
         this.enabled = enabled;
 
-        if (getWidgetForPaintable() instanceof FocusWidget) {
-            FocusWidget fw = (FocusWidget) getWidgetForPaintable();
+        if (getWidget() instanceof FocusWidget) {
+            FocusWidget fw = (FocusWidget) getWidget();
             fw.setEnabled(enabled);
         }
 
@@ -364,7 +364,7 @@ public abstract class VAbstractPaintableWidget implements VPaintableWidget {
         boolean wasVisible = this.visible;
         this.visible = visible;
 
-        getWidgetForPaintable().setVisible(visible);
+        getWidget().setVisible(visible);
         if (wasVisible != visible) {
             // Changed invisibile <-> visible
             if (wasVisible && delegateCaptionHandling()) {

@@ -29,25 +29,25 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
 
         @Override
         protected VPaintableWidget getChildComponent(Element element) {
-            return getWidgetForPaintable().getComponent(element);
+            return getWidget().getComponent(element);
         }
 
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
     };
 
     @Override
     public void init() {
         getLayoutManager().registerDependency(this,
-                getWidgetForPaintable().spacingMeasureElement);
+                getWidget().spacingMeasureElement);
     }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        VGridLayout layout = getWidgetForPaintable();
+        VGridLayout layout = getWidget();
         layout.client = client;
 
         super.updateFromUIDL(uidl, client);
@@ -125,28 +125,28 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        VGridLayout layout = getWidgetForPaintable();
+        VGridLayout layout = getWidget();
         if (VCaption.isNeeded(uidl, paintable.getState())) {
             Cell cell = layout.widgetToCell.get(paintable
-                    .getWidgetForPaintable());
+                    .getWidget());
             VLayoutSlot layoutSlot = cell.slot;
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {
                 caption = new VCaption(paintable, getConnection());
 
-                Widget widget = paintable.getWidgetForPaintable();
+                Widget widget = paintable.getWidget();
 
                 layout.setCaption(widget, caption);
             }
             caption.updateCaption(uidl);
         } else {
-            layout.setCaption(paintable.getWidgetForPaintable(), null);
+            layout.setCaption(paintable.getWidget(), null);
         }
     }
 
     @Override
-    public VGridLayout getWidgetForPaintable() {
-        return (VGridLayout) super.getWidgetForPaintable();
+    public VGridLayout getWidget() {
+        return (VGridLayout) super.getWidget();
     }
 
     @Override
@@ -155,10 +155,10 @@ public class VGridLayoutPaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void layoutVertically() {
-        getWidgetForPaintable().updateHeight();
+        getWidget().updateHeight();
     }
 
     public void layoutHorizontally() {
-        getWidgetForPaintable().updateWidth();
+        getWidget().updateWidth();
     }
 }

@@ -23,15 +23,15 @@ public class VVideoPaintable extends VMediaBasePaintable {
 
     private void setPosterFromUIDL(UIDL uidl) {
         if (uidl.hasAttribute(ATTR_POSTER)) {
-            getWidgetForPaintable().setPoster(
+            getWidget().setPoster(
                     getConnection().translateVaadinUri(
                             uidl.getStringAttribute(ATTR_POSTER)));
         }
     }
 
     @Override
-    public VVideo getWidgetForPaintable() {
-        return (VVideo) super.getWidgetForPaintable();
+    public VVideo getWidget() {
+        return (VVideo) super.getWidget();
     }
 
     @Override

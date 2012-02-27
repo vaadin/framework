@@ -15,17 +15,17 @@ public class VDragAndDropWrapperPaintable extends VCustomComponentPaintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
         super.updateFromUIDL(uidl, client);
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {
-                getWidgetForPaintable().dropHandler = null;
+                getWidget().dropHandler = null;
             } else {
-                if (getWidgetForPaintable().dropHandler == null) {
-                    getWidgetForPaintable().dropHandler = getWidgetForPaintable().new CustomDropHandler();
+                if (getWidget().dropHandler == null) {
+                    getWidget().dropHandler = getWidget().new CustomDropHandler();
                 }
-                getWidgetForPaintable().dropHandler
+                getWidget().dropHandler
                         .updateAcceptRules(acceptCrit);
             }
 
@@ -34,29 +34,29 @@ public class VDragAndDropWrapperPaintable extends VCustomComponentPaintable {
                 if (fileId.startsWith("rec-")) {
                     String receiverUrl = uidl.getStringVariable(fileId);
                     fileId = fileId.substring(4);
-                    if (getWidgetForPaintable().fileIdToReceiver == null) {
-                        getWidgetForPaintable().fileIdToReceiver = new HashMap<String, String>();
+                    if (getWidget().fileIdToReceiver == null) {
+                        getWidget().fileIdToReceiver = new HashMap<String, String>();
                     }
                     if ("".equals(receiverUrl)) {
                         Integer id = Integer.parseInt(fileId);
-                        int indexOf = getWidgetForPaintable().fileIds
+                        int indexOf = getWidget().fileIds
                                 .indexOf(id);
                         if (indexOf != -1) {
-                            getWidgetForPaintable().files.remove(indexOf);
-                            getWidgetForPaintable().fileIds.remove(indexOf);
+                            getWidget().files.remove(indexOf);
+                            getWidget().fileIds.remove(indexOf);
                         }
                     } else {
-                        getWidgetForPaintable().fileIdToReceiver.put(fileId,
+                        getWidget().fileIdToReceiver.put(fileId,
                                 receiverUrl);
                     }
                 }
             }
-            getWidgetForPaintable().startNextUpload();
+            getWidget().startNextUpload();
 
-            getWidgetForPaintable().dragStartMode = uidl
+            getWidget().dragStartMode = uidl
                     .getIntAttribute(VDragAndDropWrapper.DRAG_START_MODE);
-            getWidgetForPaintable().initDragStartMode();
-            getWidgetForPaintable().html5DataFlavors = uidl
+            getWidget().initDragStartMode();
+            getWidget().html5DataFlavors = uidl
                     .getMapAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS);
         }
     }
@@ -67,8 +67,8 @@ public class VDragAndDropWrapperPaintable extends VCustomComponentPaintable {
     }
 
     @Override
-    public VDragAndDropWrapper getWidgetForPaintable() {
-        return (VDragAndDropWrapper) super.getWidgetForPaintable();
+    public VDragAndDropWrapper getWidget() {
+        return (VDragAndDropWrapper) super.getWidget();
     }
 
 }

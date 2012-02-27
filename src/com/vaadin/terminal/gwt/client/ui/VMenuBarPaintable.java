@@ -32,21 +32,21 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
             return;
         }
 
-        getWidgetForPaintable().htmlContentAllowed = uidl
+        getWidget().htmlContentAllowed = uidl
                 .hasAttribute(VMenuBar.HTML_CONTENT_ALLOWED);
 
-        getWidgetForPaintable().openRootOnHover = uidl
+        getWidget().openRootOnHover = uidl
                 .getBooleanAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER);
 
-        getWidgetForPaintable().enabled = !getState().isDisabled();
+        getWidget().enabled = !getState().isDisabled();
 
         // For future connections
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().uidlId = uidl.getId();
+        getWidget().client = client;
+        getWidget().uidlId = uidl.getId();
 
         // Empty the menu every time it receives new information
-        if (!getWidgetForPaintable().getItems().isEmpty()) {
-            getWidgetForPaintable().clearItems();
+        if (!getWidget().getItems().isEmpty()) {
+            getWidget().clearItems();
         }
 
         UIDL options = uidl.getChildUIDL(0);
@@ -69,15 +69,15 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
             }
             itemHTML.append(moreItemText);
 
-            getWidgetForPaintable().moreItem = GWT.create(CustomMenuItem.class);
-            getWidgetForPaintable().moreItem.setHTML(itemHTML.toString());
-            getWidgetForPaintable().moreItem.setCommand(VMenuBar.emptyCommand);
+            getWidget().moreItem = GWT.create(CustomMenuItem.class);
+            getWidget().moreItem.setHTML(itemHTML.toString());
+            getWidget().moreItem.setCommand(VMenuBar.emptyCommand);
 
-            getWidgetForPaintable().collapsedRootItems = new VMenuBar(true,
-                    getWidgetForPaintable());
-            getWidgetForPaintable().moreItem
-                    .setSubMenu(getWidgetForPaintable().collapsedRootItems);
-            getWidgetForPaintable().moreItem.addStyleName(VMenuBar.CLASSNAME
+            getWidget().collapsedRootItems = new VMenuBar(true,
+                    getWidget());
+            getWidget().moreItem
+                    .setSubMenu(getWidget().collapsedRootItems);
+            getWidget().moreItem.addStyleName(VMenuBar.CLASSNAME
                     + "-more-menuitem");
         }
 
@@ -85,7 +85,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
         Iterator<Object> itr = uidlItems.getChildIterator();
         Stack<Iterator<Object>> iteratorStack = new Stack<Iterator<Object>>();
         Stack<VMenuBar> menuStack = new Stack<VMenuBar>();
-        VMenuBar currentMenu = getWidgetForPaintable();
+        VMenuBar currentMenu = getWidget();
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
@@ -97,7 +97,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
             boolean itemIsCheckable = item
                     .hasAttribute(VMenuBar.ATTRIBUTE_CHECKED);
 
-            String itemHTML = getWidgetForPaintable().buildItemHTML(item);
+            String itemHTML = getWidget().buildItemHTML(item);
 
             Command cmd = null;
             if (!item.hasAttribute("separator")) {
@@ -106,7 +106,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
                     // item's id-number
                     cmd = new Command() {
                         public void execute() {
-                            getWidgetForPaintable().hostReference
+                            getWidget().hostReference
                                     .onMenuClick(itemId);
                         }
                     };
@@ -149,7 +149,7 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
             }
         }// while
 
-        getWidgetForPaintable().iLayout(false);
+        getWidget().iLayout(false);
 
     }// updateFromUIDL
 
@@ -159,11 +159,11 @@ public class VMenuBarPaintable extends VAbstractPaintableWidget implements
     }
 
     @Override
-    public VMenuBar getWidgetForPaintable() {
-        return (VMenuBar) super.getWidgetForPaintable();
+    public VMenuBar getWidget() {
+        return (VMenuBar) super.getWidget();
     }
 
     public void layout() {
-        getWidgetForPaintable().iLayout();
+        getWidget().iLayout();
     }
 }

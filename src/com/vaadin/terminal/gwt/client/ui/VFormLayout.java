@@ -106,7 +106,7 @@ public class VFormLayout extends SimplePanel {
                 final UIDL childUidl = (UIDL) it.next();
                 final VPaintableWidget childPaintable = client
                         .getPaintable(childUidl);
-                Widget childWidget = childPaintable.getWidgetForPaintable();
+                Widget childWidget = childPaintable.getWidget();
                 Caption caption = widgetToCaption.get(childWidget);
                 if (caption == null) {
                     caption = new Caption(childPaintable, client);
@@ -180,12 +180,12 @@ public class VFormLayout extends SimplePanel {
 
         public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
             final Caption c = widgetToCaption.get(paintable
-                    .getWidgetForPaintable());
+                    .getWidget());
             if (c != null) {
                 c.updateCaption(uidl, paintable.getState());
             }
             final ErrorFlag e = widgetToError.get(paintable
-                    .getWidgetForPaintable());
+                    .getWidget());
             if (e != null) {
                 e.updateFromUIDL(uidl, paintable);
             }

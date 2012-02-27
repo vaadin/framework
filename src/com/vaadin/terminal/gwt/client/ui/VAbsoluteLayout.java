@@ -134,8 +134,8 @@ public class VAbsoluteLayout extends ComplexPanel {
 
         public void updateFromUIDL(UIDL componentUIDL) {
             setPosition(componentUIDL.getStringAttribute("css"));
-            if (getWidget() != paintable.getWidgetForPaintable()) {
-                setWidget(paintable.getWidgetForPaintable());
+            if (getWidget() != paintable.getWidget()) {
+                setWidget(paintable.getWidget());
             }
             UIDL childUIDL = componentUIDL.getChildUIDL(0);
             paintable.updateFromUIDL(childUIDL, client);
@@ -144,7 +144,7 @@ public class VAbsoluteLayout extends ComplexPanel {
                 // have changed this could be optimized (check if wrapper size
                 // has changed)
                 client.handleComponentRelativeSize(paintable
-                        .getWidgetForPaintable());
+                        .getWidget());
             }
         }
 

@@ -15,7 +15,7 @@ public class VListSelectPaintable extends VOptionGroupBasePaintable {
     }
 
     @Override
-    public VListSelect getWidgetForPaintable() {
-        return (VListSelect) super.getWidgetForPaintable();
+    public VListSelect getWidget() {
+        return (VListSelect) super.getWidget();
     }
 }

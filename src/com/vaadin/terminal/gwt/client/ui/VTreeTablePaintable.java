@@ -17,27 +17,27 @@ public class VTreeTablePaintable extends VScrollTablePaintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         FocusableScrollPanel widget = null;
         int scrollPosition = 0;
-        if (getWidgetForPaintable().collapseRequest) {
-            widget = (FocusableScrollPanel) getWidgetForPaintable()
+        if (getWidget().collapseRequest) {
+            widget = (FocusableScrollPanel) getWidget()
                     .getWidget(1);
             scrollPosition = widget.getScrollPosition();
         }
-        getWidgetForPaintable().animationsEnabled = uidl
+        getWidget().animationsEnabled = uidl
                 .getBooleanAttribute("animate");
-        getWidgetForPaintable().colIndexOfHierarchy = uidl
+        getWidget().colIndexOfHierarchy = uidl
                 .hasAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
                 .getIntAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) : 0;
-        int oldTotalRows = getWidgetForPaintable().getTotalRows();
+        int oldTotalRows = getWidget().getTotalRows();
         super.updateFromUIDL(uidl, client);
-        if (getWidgetForPaintable().collapseRequest) {
-            if (getWidgetForPaintable().collapsedRowKey != null
-                    && getWidgetForPaintable().scrollBody != null) {
-                VScrollTableRow row = getWidgetForPaintable()
+        if (getWidget().collapseRequest) {
+            if (getWidget().collapsedRowKey != null
+                    && getWidget().scrollBody != null) {
+                VScrollTableRow row = getWidget()
                         .getRenderedRowByKey(
-                                getWidgetForPaintable().collapsedRowKey);
+                                getWidget().collapsedRowKey);
                 if (row != null) {
-                    getWidgetForPaintable().setRowFocus(row);
-                    getWidgetForPaintable().focus();
+                    getWidget().setRowFocus(row);
+                    getWidget().focus();
                 }
             }
 
@@ -48,12 +48,12 @@ public class VTreeTablePaintable extends VScrollTablePaintable {
 
             // check which rows are needed from the server and initiate a
             // deferred fetch
-            getWidgetForPaintable().onScroll(null);
+            getWidget().onScroll(null);
         }
         // Recalculate table size if collapse request, or if page length is zero
         // (not sent by server) and row count changes (#7908).
-        if (getWidgetForPaintable().collapseRequest
-                || (!uidl.hasAttribute("pagelength") && getWidgetForPaintable()
+        if (getWidget().collapseRequest
+                || (!uidl.hasAttribute("pagelength") && getWidget()
                         .getTotalRows() != oldTotalRows)) {
             /*
              * Ensure that possibly removed/added scrollbars are considered.
@@ -61,30 +61,30 @@ public class VTreeTablePaintable extends VScrollTablePaintable {
              * cleans up state. Be careful if touching this, you will break
              * pageLength=0 if you remove this.
              */
-            getWidgetForPaintable().triggerLazyColumnAdjustment(true);
+            getWidget().triggerLazyColumnAdjustment(true);
 
-            getWidgetForPaintable().collapseRequest = false;
+            getWidget().collapseRequest = false;
         }
         if (uidl.hasAttribute("focusedRow")) {
             String key = uidl.getStringAttribute("focusedRow");
-            getWidgetForPaintable().setRowFocus(
-                    getWidgetForPaintable().getRenderedRowByKey(key));
-            getWidgetForPaintable().focusParentResponsePending = false;
+            getWidget().setRowFocus(
+                    getWidget().getRenderedRowByKey(key));
+            getWidget().focusParentResponsePending = false;
         } else if (uidl.hasAttribute("clearFocusPending")) {
             // Special case to detect a response to a focusParent request that
             // does not return any focusedRow because the selected node has no
             // parent
-            getWidgetForPaintable().focusParentResponsePending = false;
+            getWidget().focusParentResponsePending = false;
         }
 
-        while (!getWidgetForPaintable().collapseRequest
-                && !getWidgetForPaintable().focusParentResponsePending
-                && !getWidgetForPaintable().pendingNavigationEvents.isEmpty()) {
+        while (!getWidget().collapseRequest
+                && !getWidget().focusParentResponsePending
+                && !getWidget().pendingNavigationEvents.isEmpty()) {
             // Keep replaying any queued events as long as we don't have any
             // potential content changes pending
-            PendingNavigationEvent event = getWidgetForPaintable().pendingNavigationEvents
+            PendingNavigationEvent event = getWidget().pendingNavigationEvents
                     .removeFirst();
-            getWidgetForPaintable().handleNavigation(event.keycode, event.ctrl,
+            getWidget().handleNavigation(event.keycode, event.ctrl,
                     event.shift);
         }
     }
@@ -95,7 +95,7 @@ public class VTreeTablePaintable extends VScrollTablePaintable {
     }
 
     @Override
-    public VTreeTable getWidgetForPaintable() {
-        return (VTreeTable) super.getWidgetForPaintable();
+    public VTreeTable getWidget() {
+        return (VTreeTable) super.getWidget();
     }
 }

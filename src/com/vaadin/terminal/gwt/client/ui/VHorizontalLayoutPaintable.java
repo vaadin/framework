@@ -9,8 +9,8 @@ public class VHorizontalLayoutPaintable extends
         VMeasuringOrderedLayoutPaintable {
 
     @Override
-    public VHorizontalLayout getWidgetForPaintable() {
-        return (VHorizontalLayout) super.getWidgetForPaintable();
+    public VHorizontalLayout getWidget() {
+        return (VHorizontalLayout) super.getWidget();
     }
 
     @Override

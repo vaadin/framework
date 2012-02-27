@@ -97,7 +97,7 @@ public class ComponentLocator {
             // find the Paintable for all but very special cases (like
             // overlays).
             w = ((VPaintableWidget) VPaintableMap.get(client).getPaintable(pid))
-                    .getWidgetForPaintable();
+                    .getWidget();
 
             /*
              * Still if the Paintable contains a widget that implements
@@ -377,7 +377,7 @@ public class ComponentLocator {
         } else if (w instanceof VWindow) {
             VWindow win = (VWindow) w;
             ArrayList<VWindow> subWindowList = client.getView()
-                    .getWidgetForPaintable().getSubWindowList();
+                    .getWidget().getSubWindowList();
             int indexOfSubWindow = subWindowList.indexOf(win);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         } else if (w instanceof RootPanel) {
@@ -437,11 +437,11 @@ public class ComponentLocator {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = client.getView().getWidgetForPaintable();
+                w = client.getView().getWidget();
             } else if (w == null) {
                 // Must be static pid (PID_S*)
                 w = ((VPaintableWidget) VPaintableMap.get(client).getPaintable(
-                        part)).getWidgetForPaintable();
+                        part)).getWidget();
             } else if (part.startsWith("domChild[")) {
                 // The target widget has been found and the rest identifies the
                 // element
@@ -522,7 +522,7 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    iterator = client.getView().getWidgetForPaintable()
+                    iterator = client.getView().getWidget()
                             .getSubWindowList().iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();

@@ -16,22 +16,22 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
+        getWidget().client = client;
+        getWidget().id = uidl.getId();
 
         if (uidl.hasVariable("text")) {
-            getWidgetForPaintable().currentValue = uidl
+            getWidget().currentValue = uidl
                     .getStringVariable("text");
-            if (getWidgetForPaintable().rta.isAttached()) {
-                getWidgetForPaintable().rta
-                        .setHTML(getWidgetForPaintable().currentValue);
+            if (getWidget().rta.isAttached()) {
+                getWidget().rta
+                        .setHTML(getWidget().currentValue);
             } else {
-                getWidgetForPaintable().html
-                        .setHTML(getWidgetForPaintable().currentValue);
+                getWidget().html
+                        .setHTML(getWidget().currentValue);
             }
         }
         if (isRealUpdate(uidl)) {
-            getWidgetForPaintable().setEnabled(!getState().isDisabled());
+            getWidget().setEnabled(!getState().isDisabled());
         }
 
         super.updateFromUIDL(uidl, client);
@@ -39,35 +39,35 @@ public class VRichTextAreaPaintable extends VAbstractPaintableWidget implements
             return;
         }
 
-        getWidgetForPaintable().setReadOnly(getState().isReadOnly());
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().setReadOnly(getState().isReadOnly());
+        getWidget().immediate = getState().isImmediate();
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {
-            if (getWidgetForPaintable().maxLength == -1) {
-                getWidgetForPaintable().keyPressHandler = getWidgetForPaintable().rta
-                        .addKeyPressHandler(getWidgetForPaintable());
+            if (getWidget().maxLength == -1) {
+                getWidget().keyPressHandler = getWidget().rta
+                        .addKeyPressHandler(getWidget());
             }
-            getWidgetForPaintable().maxLength = newMaxLength;
-        } else if (getWidgetForPaintable().maxLength != -1) {
-            getWidgetForPaintable().getElement().setAttribute("maxlength", "");
-            getWidgetForPaintable().maxLength = -1;
-            getWidgetForPaintable().keyPressHandler.removeHandler();
+            getWidget().maxLength = newMaxLength;
+        } else if (getWidget().maxLength != -1) {
+            getWidget().getElement().setAttribute("maxlength", "");
+            getWidget().maxLength = -1;
+            getWidget().keyPressHandler.removeHandler();
         }
 
         if (uidl.hasAttribute("selectAll")) {
-            getWidgetForPaintable().selectAll();
+            getWidget().selectAll();
         }
 
     }
 
     public void onBeforeShortcutAction(Event e) {
-        getWidgetForPaintable().synchronizeContentToServer();
+        getWidget().synchronizeContentToServer();
     }
 
     @Override
-    public VRichTextArea getWidgetForPaintable() {
-        return (VRichTextArea) super.getWidgetForPaintable();
+    public VRichTextArea getWidget() {
+        return (VRichTextArea) super.getWidget();
     };
 
     @Override

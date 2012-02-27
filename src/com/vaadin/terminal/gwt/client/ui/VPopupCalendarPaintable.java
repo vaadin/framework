@@ -27,10 +27,10 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
     @Override
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        boolean lastReadOnlyState = getWidgetForPaintable().readonly;
-        boolean lastEnabledState = getWidgetForPaintable().isEnabled();
+        boolean lastReadOnlyState = getWidget().readonly;
+        boolean lastEnabledState = getWidget().isEnabled();
 
-        getWidgetForPaintable().parsable = uidl.getBooleanAttribute("parsable");
+        getWidget().parsable = uidl.getBooleanAttribute("parsable");
 
         super.updateFromUIDL(uidl, client);
 
@@ -41,55 +41,55 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
                 + VDateField.CLASSNAME
                 + "-"
                 + VPopupCalendar
-                        .resolutionToString(getWidgetForPaintable().currentResolution);
-        getWidgetForPaintable().popup.setStyleName(popupStyleNames);
+                        .resolutionToString(getWidget().currentResolution);
+        getWidget().popup.setStyleName(popupStyleNames);
 
-        getWidgetForPaintable().calendar
-                .setDateTimeService(getWidgetForPaintable()
+        getWidget().calendar
+                .setDateTimeService(getWidget()
                         .getDateTimeService());
-        getWidgetForPaintable().calendar
-                .setShowISOWeekNumbers(getWidgetForPaintable()
+        getWidget().calendar
+                .setShowISOWeekNumbers(getWidget()
                         .isShowISOWeekNumbers());
-        if (getWidgetForPaintable().calendar.getResolution() != getWidgetForPaintable().currentResolution) {
-            getWidgetForPaintable().calendar
-                    .setResolution(getWidgetForPaintable().currentResolution);
-            if (getWidgetForPaintable().calendar.getDate() != null) {
-                getWidgetForPaintable().calendar
-                        .setDate((Date) getWidgetForPaintable()
+        if (getWidget().calendar.getResolution() != getWidget().currentResolution) {
+            getWidget().calendar
+                    .setResolution(getWidget().currentResolution);
+            if (getWidget().calendar.getDate() != null) {
+                getWidget().calendar
+                        .setDate((Date) getWidget()
                                 .getCurrentDate().clone());
                 // force re-render when changing resolution only
-                getWidgetForPaintable().calendar.renderCalendar();
+                getWidget().calendar.renderCalendar();
             }
         }
-        getWidgetForPaintable().calendarToggle
-                .setEnabled(getWidgetForPaintable().enabled);
+        getWidget().calendarToggle
+                .setEnabled(getWidget().enabled);
 
-        if (getWidgetForPaintable().currentResolution <= VPopupCalendar.RESOLUTION_MONTH) {
-            getWidgetForPaintable().calendar
+        if (getWidget().currentResolution <= VPopupCalendar.RESOLUTION_MONTH) {
+            getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         public void focusChanged(Date date) {
-                            getWidgetForPaintable().updateValue(date);
-                            getWidgetForPaintable().buildDate();
-                            Date date2 = getWidgetForPaintable().calendar
+                            getWidget().updateValue(date);
+                            getWidget().buildDate();
+                            Date date2 = getWidget().calendar
                                     .getDate();
                             date2.setYear(date.getYear());
                             date2.setMonth(date.getMonth());
                         }
                     });
         } else {
-            getWidgetForPaintable().calendar.setFocusChangeListener(null);
+            getWidget().calendar.setFocusChangeListener(null);
         }
 
-        if (getWidgetForPaintable().currentResolution > VPopupCalendar.RESOLUTION_DAY) {
-            getWidgetForPaintable().calendar
+        if (getWidget().currentResolution > VPopupCalendar.RESOLUTION_DAY) {
+            getWidget().calendar
                     .setTimeChangeListener(new TimeChangeListener() {
                         public void changed(int hour, int min, int sec, int msec) {
-                            Date d = getWidgetForPaintable().getDate();
+                            Date d = getWidget().getDate();
                             if (d == null) {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidgetForPaintable().calendar
+                                d = (Date) getWidget().calendar
                                         .getDate().clone();
                             }
                             d.setHours(hour);
@@ -98,24 +98,24 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
                             DateTimeService.setMilliseconds(d, msec);
 
                             // Always update time changes to the server
-                            getWidgetForPaintable().updateValue(d);
+                            getWidget().updateValue(d);
 
                             // Update text field
-                            getWidgetForPaintable().buildDate();
+                            getWidget().buildDate();
                         }
                     });
         }
 
-        if (getWidgetForPaintable().readonly) {
-            getWidgetForPaintable().calendarToggle
+        if (getWidget().readonly) {
+            getWidget().calendarToggle
                     .addStyleName(VPopupCalendar.CLASSNAME + "-button-readonly");
         } else {
-            getWidgetForPaintable().calendarToggle
+            getWidget().calendarToggle
                     .removeStyleName(VPopupCalendar.CLASSNAME
                             + "-button-readonly");
         }
 
-        getWidgetForPaintable().calendarToggle.setEnabled(true);
+        getWidget().calendarToggle.setEnabled(true);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class VPopupCalendarPaintable extends VTextualDatePaintable {
     }
 
     @Override
-    public VPopupCalendar getWidgetForPaintable() {
-        return (VPopupCalendar) super.getWidgetForPaintable();
+    public VPopupCalendar getWidget() {
+        return (VPopupCalendar) super.getWidget();
     }
 }

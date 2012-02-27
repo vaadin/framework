@@ -227,7 +227,7 @@ public class VView extends SimplePanel implements ResizeHandler,
                 public void execute() {
                     final VPaintableWidget paintable = (VPaintableWidget) uidl
                             .getPaintableAttribute("scrollTo", connection);
-                    paintable.getWidgetForPaintable().getElement()
+                    paintable.getWidget().getElement()
                             .scrollIntoView();
                 }
             });

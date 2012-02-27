@@ -30,13 +30,13 @@ public abstract class VAbstractSplitPanelPaintable extends
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            if ((Event.getEventsSunk(getWidgetForPaintable().splitter) & Event
+            if ((Event.getEventsSunk(getWidget().splitter) & Event
                     .getTypeInt(type.getName())) != 0) {
                 // If we are already sinking the event for the splitter we do
                 // not want to additionally sink it for the root element
-                return getWidgetForPaintable().addHandler(handler, type);
+                return getWidget().addHandler(handler, type);
             } else {
-                return getWidgetForPaintable().addDomHandler(handler, type);
+                return getWidget().addDomHandler(handler, type);
             }
         }
 
@@ -44,7 +44,7 @@ public abstract class VAbstractSplitPanelPaintable extends
         public void onContextMenu(
                 com.google.gwt.event.dom.client.ContextMenuEvent event) {
             Element target = event.getNativeEvent().getEventTarget().cast();
-            if (getWidgetForPaintable().splitter.isOrHasChild(target)) {
+            if (getWidget().splitter.isOrHasChild(target)) {
                 super.onContextMenu(event);
             }
         };
@@ -52,7 +52,7 @@ public abstract class VAbstractSplitPanelPaintable extends
         @Override
         protected void fireClick(NativeEvent event) {
             Element target = event.getEventTarget().cast();
-            if (getWidgetForPaintable().splitter.isOrHasChild(target)) {
+            if (getWidget().splitter.isOrHasChild(target)) {
                 super.fireClick(event);
             }
         }
@@ -66,74 +66,74 @@ public abstract class VAbstractSplitPanelPaintable extends
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
+        getWidget().client = client;
+        getWidget().id = uidl.getId();
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().immediate = getState().isImmediate();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidgetForPaintable().setEnabled(!getState().isDisabled());
+        getWidget().setEnabled(!getState().isDisabled());
 
         clickEventHandler.handleEventHandlerRegistration(client);
         if (getState().hasStyles()) {
-            getWidgetForPaintable().componentStyleNames = getState().getStyle()
+            getWidget().componentStyleNames = getState().getStyle()
                     .split(" ");
         } else {
-            getWidgetForPaintable().componentStyleNames = new String[0];
+            getWidget().componentStyleNames = new String[0];
         }
 
-        getWidgetForPaintable().setLocked(uidl.getBooleanAttribute("locked"));
+        getWidget().setLocked(uidl.getBooleanAttribute("locked"));
 
-        getWidgetForPaintable().setPositionReversed(
+        getWidget().setPositionReversed(
                 uidl.getBooleanAttribute("reversed"));
 
-        getWidgetForPaintable().setStylenames();
+        getWidget().setStylenames();
 
-        getWidgetForPaintable().position = uidl.getStringAttribute("position");
+        getWidget().position = uidl.getStringAttribute("position");
 
         final VPaintableWidget newFirstChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(0));
         final VPaintableWidget newSecondChildPaintable = client
                 .getPaintable(uidl.getChildUIDL(1));
-        Widget newFirstChild = newFirstChildPaintable.getWidgetForPaintable();
-        Widget newSecondChild = newSecondChildPaintable.getWidgetForPaintable();
+        Widget newFirstChild = newFirstChildPaintable.getWidget();
+        Widget newSecondChild = newSecondChildPaintable.getWidget();
 
-        if (getWidgetForPaintable().firstChild != newFirstChild) {
-            if (getWidgetForPaintable().firstChild != null) {
+        if (getWidget().firstChild != newFirstChild) {
+            if (getWidget().firstChild != null) {
                 client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(getWidgetForPaintable().firstChild));
+                        .getPaintable(getWidget().firstChild));
             }
-            getWidgetForPaintable().setFirstWidget(newFirstChild);
+            getWidget().setFirstWidget(newFirstChild);
         }
-        if (getWidgetForPaintable().secondChild != newSecondChild) {
-            if (getWidgetForPaintable().secondChild != null) {
+        if (getWidget().secondChild != newSecondChild) {
+            if (getWidget().secondChild != null) {
                 client.unregisterPaintable(VPaintableMap.get(client)
-                        .getPaintable(getWidgetForPaintable().secondChild));
+                        .getPaintable(getWidget().secondChild));
             }
-            getWidgetForPaintable().setSecondWidget(newSecondChild);
+            getWidget().setSecondWidget(newSecondChild);
         }
         newFirstChildPaintable.updateFromUIDL(uidl.getChildUIDL(0), client);
         newSecondChildPaintable.updateFromUIDL(uidl.getChildUIDL(1), client);
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
-        client.runDescendentsLayout(getWidgetForPaintable());
+        client.runDescendentsLayout(getWidget());
 
         getLayoutManager().setNeedsUpdate(this);
     }
 
     public void layout() {
-        VAbstractSplitPanel splitPanel = getWidgetForPaintable();
+        VAbstractSplitPanel splitPanel = getWidget();
         splitPanel.setSplitPosition(splitPanel.position);
         splitPanel.updateSizes();
     }
 
     @Override
-    public VAbstractSplitPanel getWidgetForPaintable() {
-        return (VAbstractSplitPanel) super.getWidgetForPaintable();
+    public VAbstractSplitPanel getWidget() {
+        return (VAbstractSplitPanel) super.getWidget();
     }
 
     @Override

@@ -14,91 +14,91 @@ public abstract class VOptionGroupBasePaintable extends
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
 
-        getWidgetForPaintable().selectedKeys = uidl
+        getWidget().selectedKeys = uidl
                 .getStringArrayVariableAsSet("selected");
 
-        getWidgetForPaintable().readonly = getState().isReadOnly();
-        getWidgetForPaintable().disabled = getState().isDisabled();
-        getWidgetForPaintable().multiselect = "multi".equals(uidl
+        getWidget().readonly = getState().isReadOnly();
+        getWidget().disabled = getState().isDisabled();
+        getWidget().multiselect = "multi".equals(uidl
                 .getStringAttribute("selectmode"));
-        getWidgetForPaintable().immediate = getState().isImmediate();
-        getWidgetForPaintable().nullSelectionAllowed = uidl
+        getWidget().immediate = getState().isImmediate();
+        getWidget().nullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
-        getWidgetForPaintable().nullSelectionItemAvailable = uidl
+        getWidget().nullSelectionItemAvailable = uidl
                 .getBooleanAttribute("nullselectitem");
 
         if (uidl.hasAttribute("cols")) {
-            getWidgetForPaintable().cols = uidl.getIntAttribute("cols");
+            getWidget().cols = uidl.getIntAttribute("cols");
         }
         if (uidl.hasAttribute("rows")) {
-            getWidgetForPaintable().rows = uidl.getIntAttribute("rows");
+            getWidget().rows = uidl.getIntAttribute("rows");
         }
 
         final UIDL ops = uidl.getChildUIDL(0);
 
-        if (getWidgetForPaintable().getColumns() > 0) {
-            getWidgetForPaintable().container.setWidth(getWidgetForPaintable()
+        if (getWidget().getColumns() > 0) {
+            getWidget().container.setWidth(getWidget()
                     .getColumns() + "em");
-            if (getWidgetForPaintable().container != getWidgetForPaintable().optionsContainer) {
-                getWidgetForPaintable().optionsContainer.setWidth("100%");
+            if (getWidget().container != getWidget().optionsContainer) {
+                getWidget().optionsContainer.setWidth("100%");
             }
         }
 
-        getWidgetForPaintable().buildOptions(ops);
+        getWidget().buildOptions(ops);
 
         if (uidl.getBooleanAttribute("allownewitem")) {
-            if (getWidgetForPaintable().newItemField == null) {
-                getWidgetForPaintable().newItemButton = new VNativeButton();
-                getWidgetForPaintable().newItemButton.setText("+");
-                getWidgetForPaintable().newItemButton
-                        .addClickHandler(getWidgetForPaintable());
-                getWidgetForPaintable().newItemField = new VTextField();
-                getWidgetForPaintable().newItemField
-                        .addKeyPressHandler(getWidgetForPaintable());
+            if (getWidget().newItemField == null) {
+                getWidget().newItemButton = new VNativeButton();
+                getWidget().newItemButton.setText("+");
+                getWidget().newItemButton
+                        .addClickHandler(getWidget());
+                getWidget().newItemField = new VTextField();
+                getWidget().newItemField
+                        .addKeyPressHandler(getWidget());
             }
-            getWidgetForPaintable().newItemField
-                    .setEnabled(!getWidgetForPaintable().disabled
-                            && !getWidgetForPaintable().readonly);
-            getWidgetForPaintable().newItemButton
-                    .setEnabled(!getWidgetForPaintable().disabled
-                            && !getWidgetForPaintable().readonly);
+            getWidget().newItemField
+                    .setEnabled(!getWidget().disabled
+                            && !getWidget().readonly);
+            getWidget().newItemButton
+                    .setEnabled(!getWidget().disabled
+                            && !getWidget().readonly);
 
-            if (getWidgetForPaintable().newItemField == null
-                    || getWidgetForPaintable().newItemField.getParent() != getWidgetForPaintable().container) {
-                getWidgetForPaintable().container
-                        .add(getWidgetForPaintable().newItemField);
-                getWidgetForPaintable().container
-                        .add(getWidgetForPaintable().newItemButton);
-                final int w = getWidgetForPaintable().container
+            if (getWidget().newItemField == null
+                    || getWidget().newItemField.getParent() != getWidget().container) {
+                getWidget().container
+                        .add(getWidget().newItemField);
+                getWidget().container
+                        .add(getWidget().newItemButton);
+                final int w = getWidget().container
                         .getOffsetWidth()
-                        - getWidgetForPaintable().newItemButton
+                        - getWidget().newItemButton
                                 .getOffsetWidth();
-                getWidgetForPaintable().newItemField.setWidth(Math.max(w, 0)
+                getWidget().newItemField.setWidth(Math.max(w, 0)
                         + "px");
             }
-        } else if (getWidgetForPaintable().newItemField != null) {
-            getWidgetForPaintable().container
-                    .remove(getWidgetForPaintable().newItemField);
-            getWidgetForPaintable().container
-                    .remove(getWidgetForPaintable().newItemButton);
+        } else if (getWidget().newItemField != null) {
+            getWidget().container
+                    .remove(getWidget().newItemField);
+            getWidget().container
+                    .remove(getWidget().newItemButton);
         }
 
-        getWidgetForPaintable().setTabIndex(
+        getWidget().setTabIndex(
                 uidl.hasAttribute("tabindex") ? uidl
                         .getIntAttribute("tabindex") : 0);
 
     }
 
     @Override
-    public VOptionGroupBase getWidgetForPaintable() {
-        return (VOptionGroupBase) super.getWidgetForPaintable();
+    public VOptionGroupBase getWidget() {
+        return (VOptionGroupBase) super.getWidget();
     }
 }

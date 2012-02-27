@@ -20,7 +20,7 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
 
         ButtonClientToServerRpc rpcProxy = GWT
                 .create(ButtonClientToServerRpc.class);
-        getWidgetForPaintable().buttonRpcProxy = initRPC(rpcProxy);
+        getWidget().buttonRpcProxy = initRPC(rpcProxy);
     }
 
     @Override
@@ -38,53 +38,53 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
-        getWidgetForPaintable().focusHandlerRegistration = EventHelper
+        getWidget().disableOnClick = getState().isDisableOnClick();
+        getWidget().focusHandlerRegistration = EventHelper
                 .updateFocusHandler(this, client,
-                        getWidgetForPaintable().focusHandlerRegistration);
-        getWidgetForPaintable().blurHandlerRegistration = EventHelper
+                        getWidget().focusHandlerRegistration);
+        getWidget().blurHandlerRegistration = EventHelper
                 .updateBlurHandler(this, client,
-                        getWidgetForPaintable().blurHandlerRegistration);
+                        getWidget().blurHandlerRegistration);
 
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(getState().getCaption());
+        getWidget().setText(getState().getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            if (getWidgetForPaintable().errorIndicatorElement == null) {
-                getWidgetForPaintable().errorIndicatorElement = DOM
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM
                         .createSpan();
-                getWidgetForPaintable().errorIndicatorElement
+                getWidget().errorIndicatorElement
                         .setClassName("v-errorindicator");
             }
-            getWidgetForPaintable().getElement().insertBefore(
-                    getWidgetForPaintable().errorIndicatorElement,
-                    getWidgetForPaintable().captionElement);
+            getWidget().getElement().insertBefore(
+                    getWidget().errorIndicatorElement,
+                    getWidget().captionElement);
 
-        } else if (getWidgetForPaintable().errorIndicatorElement != null) {
-            getWidgetForPaintable().getElement().removeChild(
-                    getWidgetForPaintable().errorIndicatorElement);
-            getWidgetForPaintable().errorIndicatorElement = null;
+        } else if (getWidget().errorIndicatorElement != null) {
+            getWidget().getElement().removeChild(
+                    getWidget().errorIndicatorElement);
+            getWidget().errorIndicatorElement = null;
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            if (getWidgetForPaintable().icon == null) {
-                getWidgetForPaintable().icon = new Icon(client);
-                getWidgetForPaintable().getElement().insertBefore(
-                        getWidgetForPaintable().icon.getElement(),
-                        getWidgetForPaintable().captionElement);
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                getWidget().getElement().insertBefore(
+                        getWidget().icon.getElement(),
+                        getWidget().captionElement);
             }
-            getWidgetForPaintable().icon.setUri(uidl
+            getWidget().icon.setUri(uidl
                     .getStringAttribute(ATTRIBUTE_ICON));
         } else {
-            if (getWidgetForPaintable().icon != null) {
-                getWidgetForPaintable().getElement().removeChild(
-                        getWidgetForPaintable().icon.getElement());
-                getWidgetForPaintable().icon = null;
+            if (getWidget().icon != null) {
+                getWidget().getElement().removeChild(
+                        getWidget().icon.getElement());
+                getWidget().icon = null;
             }
         }
 
@@ -96,8 +96,8 @@ public class VNativeButtonPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VNativeButton getWidgetForPaintable() {
-        return (VNativeButton) super.getWidgetForPaintable();
+    public VNativeButton getWidget() {
+        return (VNativeButton) super.getWidget();
     }
 
     @Override

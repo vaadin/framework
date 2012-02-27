@@ -46,7 +46,7 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
         super.init();
         ButtonClientToServerRpc rpcProxy = GWT
                 .create(ButtonClientToServerRpc.class);
-        getWidgetForPaintable().buttonRpcProxy = initRPC(rpcProxy);
+        getWidget().buttonRpcProxy = initRPC(rpcProxy);
     }
 
     @Override
@@ -59,58 +59,58 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().focusHandlerRegistration = EventHelper
+        getWidget().focusHandlerRegistration = EventHelper
                 .updateFocusHandler(this, client,
-                        getWidgetForPaintable().focusHandlerRegistration);
-        getWidgetForPaintable().blurHandlerRegistration = EventHelper
+                        getWidget().focusHandlerRegistration);
+        getWidget().blurHandlerRegistration = EventHelper
                 .updateBlurHandler(this, client,
-                        getWidgetForPaintable().blurHandlerRegistration);
+                        getWidget().blurHandlerRegistration);
 
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
 
         // Set text
-        getWidgetForPaintable().setText(getState().getCaption());
+        getWidget().setText(getState().getCaption());
 
-        getWidgetForPaintable().disableOnClick = getState().isDisableOnClick();
+        getWidget().disableOnClick = getState().isDisableOnClick();
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            if (getWidgetForPaintable().errorIndicatorElement == null) {
-                getWidgetForPaintable().errorIndicatorElement = DOM
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM
                         .createSpan();
-                getWidgetForPaintable().errorIndicatorElement
+                getWidget().errorIndicatorElement
                         .setClassName("v-errorindicator");
             }
-            getWidgetForPaintable().wrapper.insertBefore(
-                    getWidgetForPaintable().errorIndicatorElement,
-                    getWidgetForPaintable().captionElement);
+            getWidget().wrapper.insertBefore(
+                    getWidget().errorIndicatorElement,
+                    getWidget().captionElement);
 
-        } else if (getWidgetForPaintable().errorIndicatorElement != null) {
-            getWidgetForPaintable().wrapper
-                    .removeChild(getWidgetForPaintable().errorIndicatorElement);
-            getWidgetForPaintable().errorIndicatorElement = null;
+        } else if (getWidget().errorIndicatorElement != null) {
+            getWidget().wrapper
+                    .removeChild(getWidget().errorIndicatorElement);
+            getWidget().errorIndicatorElement = null;
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            if (getWidgetForPaintable().icon == null) {
-                getWidgetForPaintable().icon = new Icon(client);
-                getWidgetForPaintable().wrapper.insertBefore(
-                        getWidgetForPaintable().icon.getElement(),
-                        getWidgetForPaintable().captionElement);
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                getWidget().wrapper.insertBefore(
+                        getWidget().icon.getElement(),
+                        getWidget().captionElement);
             }
-            getWidgetForPaintable().icon.setUri(uidl
+            getWidget().icon.setUri(uidl
                     .getStringAttribute(ATTRIBUTE_ICON));
         } else {
-            if (getWidgetForPaintable().icon != null) {
-                getWidgetForPaintable().wrapper
-                        .removeChild(getWidgetForPaintable().icon.getElement());
-                getWidgetForPaintable().icon = null;
+            if (getWidget().icon != null) {
+                getWidget().wrapper
+                        .removeChild(getWidget().icon.getElement());
+                getWidget().icon = null;
             }
         }
 
-        getWidgetForPaintable().clickShortcut = getState()
+        getWidget().clickShortcut = getState()
                 .getClickShortcutKeyCode();
     }
 
@@ -120,8 +120,8 @@ public class VButtonPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VButton getWidgetForPaintable() {
-        return (VButton) super.getWidgetForPaintable();
+    public VButton getWidget() {
+        return (VButton) super.getWidget();
     }
 
     @Override

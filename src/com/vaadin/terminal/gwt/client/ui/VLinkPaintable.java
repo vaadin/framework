@@ -27,67 +27,67 @@ public class VLinkPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
 
-        getWidgetForPaintable().enabled = !getState().isDisabled();
-        getWidgetForPaintable().readonly = getState().isReadOnly();
+        getWidget().enabled = !getState().isDisabled();
+        getWidget().readonly = getState().isReadOnly();
 
         if (uidl.hasAttribute("name")) {
-            getWidgetForPaintable().target = uidl.getStringAttribute("name");
-            getWidgetForPaintable().anchor.setAttribute("target",
-                    getWidgetForPaintable().target);
+            getWidget().target = uidl.getStringAttribute("name");
+            getWidget().anchor.setAttribute("target",
+                    getWidget().target);
         }
         if (uidl.hasAttribute("src")) {
-            getWidgetForPaintable().src = client.translateVaadinUri(uidl
+            getWidget().src = client.translateVaadinUri(uidl
                     .getStringAttribute("src"));
-            getWidgetForPaintable().anchor.setAttribute("href",
-                    getWidgetForPaintable().src);
+            getWidget().anchor.setAttribute("href",
+                    getWidget().src);
         }
 
         if (uidl.hasAttribute("border")) {
             if ("none".equals(uidl.getStringAttribute("border"))) {
-                getWidgetForPaintable().borderStyle = VLink.BORDER_STYLE_NONE;
+                getWidget().borderStyle = VLink.BORDER_STYLE_NONE;
             } else {
-                getWidgetForPaintable().borderStyle = VLink.BORDER_STYLE_MINIMAL;
+                getWidget().borderStyle = VLink.BORDER_STYLE_MINIMAL;
             }
         } else {
-            getWidgetForPaintable().borderStyle = VLink.BORDER_STYLE_DEFAULT;
+            getWidget().borderStyle = VLink.BORDER_STYLE_DEFAULT;
         }
 
-        getWidgetForPaintable().targetHeight = uidl
+        getWidget().targetHeight = uidl
                 .hasAttribute("targetHeight") ? uidl
                 .getIntAttribute("targetHeight") : -1;
-        getWidgetForPaintable().targetWidth = uidl.hasAttribute("targetWidth") ? uidl
+        getWidget().targetWidth = uidl.hasAttribute("targetWidth") ? uidl
                 .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
-        getWidgetForPaintable().captionElement.setInnerText(getState()
+        getWidget().captionElement.setInnerText(getState()
                 .getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            if (getWidgetForPaintable().errorIndicatorElement == null) {
-                getWidgetForPaintable().errorIndicatorElement = DOM.createDiv();
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(
-                        getWidgetForPaintable().errorIndicatorElement,
+                        getWidget().errorIndicatorElement,
                         "className", "v-errorindicator");
             }
-            DOM.insertChild(getWidgetForPaintable().getElement(),
-                    getWidgetForPaintable().errorIndicatorElement, 0);
-        } else if (getWidgetForPaintable().errorIndicatorElement != null) {
+            DOM.insertChild(getWidget().getElement(),
+                    getWidget().errorIndicatorElement, 0);
+        } else if (getWidget().errorIndicatorElement != null) {
             DOM.setStyleAttribute(
-                    getWidgetForPaintable().errorIndicatorElement, "display",
+                    getWidget().errorIndicatorElement, "display",
                     "none");
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            if (getWidgetForPaintable().icon == null) {
-                getWidgetForPaintable().icon = new Icon(client);
-                getWidgetForPaintable().anchor.insertBefore(
-                        getWidgetForPaintable().icon.getElement(),
-                        getWidgetForPaintable().captionElement);
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                getWidget().anchor.insertBefore(
+                        getWidget().icon.getElement(),
+                        getWidget().captionElement);
             }
-            getWidgetForPaintable().icon.setUri(uidl
+            getWidget().icon.setUri(uidl
                     .getStringAttribute(ATTRIBUTE_ICON));
         }
 
@@ -99,7 +99,7 @@ public class VLinkPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VLink getWidgetForPaintable() {
-        return (VLink) super.getWidgetForPaintable();
+    public VLink getWidget() {
+        return (VLink) super.getWidget();
     }
 }

@@ -27,31 +27,31 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     @Override
     public void init() {
         getLayoutManager().registerDependency(this,
-                getWidgetForPaintable().spacingMeasureElement);
+                getWidget().spacingMeasureElement);
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
-        VMeasuringOrderedLayout layout = getWidgetForPaintable();
+        VMeasuringOrderedLayout layout = getWidget();
         if (VCaption.isNeeded(uidl, component.getState())) {
             VLayoutSlot layoutSlot = layout.getSlotForChild(component
-                    .getWidgetForPaintable());
+                    .getWidget());
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
 
-                Widget widget = component.getWidgetForPaintable();
+                Widget widget = component.getWidget();
 
                 layout.setCaption(widget, caption);
             }
             caption.updateCaption(uidl);
         } else {
-            layout.setCaption(component.getWidgetForPaintable(), null);
+            layout.setCaption(component.getWidget(), null);
         }
     }
 
     @Override
-    public VMeasuringOrderedLayout getWidgetForPaintable() {
-        return (VMeasuringOrderedLayout) super.getWidgetForPaintable();
+    public VMeasuringOrderedLayout getWidget() {
+        return (VMeasuringOrderedLayout) super.getWidget();
     }
 
     @Override
@@ -64,7 +64,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         HashSet<VPaintableWidget> previousChildren = new HashSet<VPaintableWidget>(
                 getChildren());
 
-        VMeasuringOrderedLayout layout = getWidgetForPaintable();
+        VMeasuringOrderedLayout layout = getWidget();
 
         ValueMap expandRatios = uidl.getMapAttribute("expandRatios");
         ValueMap alignments = uidl.getMapAttribute("alignments");
@@ -74,12 +74,12 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
             final VPaintableWidget child = client.getPaintable(childUIDL);
-            Widget widget = child.getWidgetForPaintable();
+            Widget widget = child.getWidget();
 
             VLayoutSlot slot = layout.getSlotForChild(widget);
 
             if (widget.getParent() != layout) {
-                slot = new VPaintableLayoutSlot(getWidgetForPaintable()
+                slot = new VPaintableLayoutSlot(getWidget()
                         .getStylePrimaryName(), child);
             }
             layout.addOrMove(slot, currentIndex++);
@@ -110,12 +110,12 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         }
 
         for (VPaintableWidget child : previousChildren) {
-            Widget widget = child.getWidgetForPaintable();
+            Widget widget = child.getWidget();
 
             // Don't remove and unregister if it has been moved to a different
             // parent. Slot element will be left behind, but that is taken care
             // of later
-            if (widget.getParent() == getWidgetForPaintable()) {
+            if (widget.getParent() == getWidget()) {
                 layout.removeSlot(layout.getSlotForChild(widget));
 
                 VPaintableMap vPaintableMap = VPaintableMap.get(client);
@@ -152,7 +152,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
 
     private int getSizeForInnerSize(int size, boolean isVertical) {
         LayoutManager layoutManager = getLayoutManager();
-        Element element = getWidgetForPaintable().getElement();
+        Element element = getWidget().getElement();
         if (isVertical) {
             return size + layoutManager.getBorderHeight(element)
                     + layoutManager.getPaddingHeight(element);
@@ -177,15 +177,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     private int getInnerSizeInDirection(boolean isVertical) {
         if (isVertical) {
             return getLayoutManager().getInnerHeight(
-                    getWidgetForPaintable().getElement());
+                    getWidget().getElement());
         } else {
             return getLayoutManager().getInnerWidth(
-                    getWidgetForPaintable().getElement());
+                    getWidget().getElement());
         }
     }
 
     private void layoutPrimaryDirection() {
-        VMeasuringOrderedLayout layout = getWidgetForPaintable();
+        VMeasuringOrderedLayout layout = getWidget();
         boolean isVertical = layout.isVertical;
         boolean isUndefined = isUndefinedInDirection(isVertical);
 
@@ -202,7 +202,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         allocatedSize = layout.layoutPrimaryDirection(spacingSize,
                 allocatedSize, startPadding);
 
-        Style ownStyle = getWidgetForPaintable().getElement().getStyle();
+        Style ownStyle = getWidget().getElement().getStyle();
         if (isUndefined) {
             ownStyle.setPropertyPx(getSizeProperty(isVertical),
                     getSizeForInnerSize(allocatedSize, isVertical));
@@ -215,15 +215,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     private int getSpacingInDirection(boolean isVertical) {
         if (isVertical) {
             return getLayoutManager().getOuterHeight(
-                    getWidgetForPaintable().spacingMeasureElement);
+                    getWidget().spacingMeasureElement);
         } else {
             return getLayoutManager().getOuterWidth(
-                    getWidgetForPaintable().spacingMeasureElement);
+                    getWidget().spacingMeasureElement);
         }
     }
 
     private void layoutSecondaryDirection() {
-        VMeasuringOrderedLayout layout = getWidgetForPaintable();
+        VMeasuringOrderedLayout layout = getWidget();
         boolean isVertical = layout.isVertical;
         boolean isUndefined = isUndefinedInDirection(!isVertical);
 
@@ -239,17 +239,17 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
         allocatedSize = layout.layoutSecondaryDirection(allocatedSize,
                 startPadding);
 
-        Style ownStyle = getWidgetForPaintable().getElement().getStyle();
+        Style ownStyle = getWidget().getElement().getStyle();
 
         if (isUndefined) {
             ownStyle.setPropertyPx(
-                    getSizeProperty(!getWidgetForPaintable().isVertical),
+                    getSizeProperty(!getWidget().isVertical),
                     getSizeForInnerSize(allocatedSize,
-                            !getWidgetForPaintable().isVertical));
+                            !getWidget().isVertical));
         } else {
             ownStyle.setProperty(
-                    getSizeProperty(!getWidgetForPaintable().isVertical),
-                    getDefinedSize(!getWidgetForPaintable().isVertical));
+                    getSizeProperty(!getWidget().isVertical),
+                    getDefinedSize(!getWidget().isVertical));
         }
     }
 
@@ -264,15 +264,15 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     private int getStartPadding(boolean isVertical) {
         if (isVertical) {
             return getLayoutManager().getPaddingTop(
-                    getWidgetForPaintable().getElement());
+                    getWidget().getElement());
         } else {
             return getLayoutManager().getPaddingLeft(
-                    getWidgetForPaintable().getElement());
+                    getWidget().getElement());
         }
     }
 
     public void layoutHorizontally() {
-        if (getWidgetForPaintable().isVertical) {
+        if (getWidget().isVertical) {
             layoutSecondaryDirection();
         } else {
             layoutPrimaryDirection();
@@ -280,7 +280,7 @@ public abstract class VMeasuringOrderedLayoutPaintable extends
     }
 
     public void layoutVertically() {
-        if (getWidgetForPaintable().isVertical) {
+        if (getWidget().isVertical) {
             layoutPrimaryDirection();
         } else {
             layoutSecondaryDirection();

@@ -91,7 +91,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     VPaintableWidget paintable = Util.getPaintableForElement(a,
-                            a.getView().getWidgetForPaintable(), eventTarget);
+                            a.getView().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -120,7 +120,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     VPaintableWidget paintable = Util.getPaintableForElement(a,
-                            a.getView().getWidgetForPaintable(), eventTarget);
+                            a.getView().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -523,7 +523,7 @@ public class VDebugConsole extends VOverlay implements Console {
     private void printClientSideDetectedIssues(
             Set<VPaintableWidget> zeroHeightComponents, ApplicationConnection ac) {
         for (final VPaintableWidget paintable : zeroHeightComponents) {
-            final Widget layout = paintable.getParent().getWidgetForPaintable();
+            final Widget layout = paintable.getParent().getWidget();
 
             VerticalPanel errorDetails = new VerticalPanel();
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
@@ -566,7 +566,7 @@ public class VDebugConsole extends VOverlay implements Console {
         emphasisInUi.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
-                    Element element2 = paintable.getWidgetForPaintable()
+                    Element element2 = paintable.getWidget()
                             .getElement();
                     Widget.setStyleName(element2, "invalidlayout",
                             emphasisInUi.getValue());

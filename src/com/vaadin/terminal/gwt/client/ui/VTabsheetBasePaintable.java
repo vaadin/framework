@@ -21,7 +21,7 @@ public abstract class VTabsheetBasePaintable extends
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
 
         // Ensure correct implementation
         super.updateFromUIDL(uidl, client);
@@ -30,22 +30,22 @@ public abstract class VTabsheetBasePaintable extends
         }
 
         // Update member references
-        getWidgetForPaintable().id = uidl.getId();
-        getWidgetForPaintable().disabled = getState().isDisabled();
+        getWidget().id = uidl.getId();
+        getWidget().disabled = getState().isDisabled();
 
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);
 
         // Paintables in the TabSheet before update
         ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
-        for (Iterator<Widget> iterator = getWidgetForPaintable()
+        for (Iterator<Widget> iterator = getWidget()
                 .getWidgetIterator(); iterator.hasNext();) {
             oldWidgets.add(iterator.next());
         }
 
         // Clear previous values
-        getWidgetForPaintable().tabKeys.clear();
-        getWidgetForPaintable().disabledTabKeys.clear();
+        getWidget().tabKeys.clear();
+        getWidget().disabledTabKeys.clear();
 
         int index = 0;
         for (final Iterator<Object> it = tabs.getChildIterator(); it.hasNext();) {
@@ -55,29 +55,29 @@ public abstract class VTabsheetBasePaintable extends
             final boolean hidden = tab.getBooleanAttribute("hidden");
 
             if (tab.getBooleanAttribute(ATTRIBUTE_TAB_DISABLED)) {
-                getWidgetForPaintable().disabledTabKeys.add(key);
+                getWidget().disabledTabKeys.add(key);
             }
 
-            getWidgetForPaintable().tabKeys.add(key);
+            getWidget().tabKeys.add(key);
 
             if (selected) {
-                getWidgetForPaintable().activeTabIndex = index;
+                getWidget().activeTabIndex = index;
             }
-            getWidgetForPaintable().renderTab(tab, index, selected, hidden);
+            getWidget().renderTab(tab, index, selected, hidden);
             index++;
         }
 
-        int tabCount = getWidgetForPaintable().getTabCount();
+        int tabCount = getWidget().getTabCount();
         while (tabCount-- > index) {
-            getWidgetForPaintable().removeTab(index);
+            getWidget().removeTab(index);
         }
 
-        for (int i = 0; i < getWidgetForPaintable().getTabCount(); i++) {
-            VPaintableWidget p = getWidgetForPaintable().getTab(i);
+        for (int i = 0; i < getWidget().getTabCount(); i++) {
+            VPaintableWidget p = getWidget().getTab(i);
             // During the initial rendering the paintable might be null (this is
             // weird...)
             if (p != null) {
-                oldWidgets.remove(p.getWidgetForPaintable());
+                oldWidgets.remove(p.getWidget());
             }
         }
 
@@ -96,8 +96,8 @@ public abstract class VTabsheetBasePaintable extends
     }
 
     @Override
-    public VTabsheetBase getWidgetForPaintable() {
-        return (VTabsheetBase) super.getWidgetForPaintable();
+    public VTabsheetBase getWidget() {
+        return (VTabsheetBase) super.getWidget();
     }
 
 }

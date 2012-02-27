@@ -18,42 +18,42 @@ public class VOptionGroupPaintable extends VOptionGroupBasePaintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().htmlContentAllowed = uidl
+        getWidget().htmlContentAllowed = uidl
                 .hasAttribute(VOptionGroup.HTML_CONTENT_ALLOWED);
 
         super.updateFromUIDL(uidl, client);
 
-        getWidgetForPaintable().sendFocusEvents = client.hasEventListeners(
+        getWidget().sendFocusEvents = client.hasEventListeners(
                 this, EventId.FOCUS);
-        getWidgetForPaintable().sendBlurEvents = client.hasEventListeners(this,
+        getWidget().sendBlurEvents = client.hasEventListeners(this,
                 EventId.BLUR);
 
-        if (getWidgetForPaintable().focusHandlers != null) {
-            for (HandlerRegistration reg : getWidgetForPaintable().focusHandlers) {
+        if (getWidget().focusHandlers != null) {
+            for (HandlerRegistration reg : getWidget().focusHandlers) {
                 reg.removeHandler();
             }
-            getWidgetForPaintable().focusHandlers.clear();
-            getWidgetForPaintable().focusHandlers = null;
+            getWidget().focusHandlers.clear();
+            getWidget().focusHandlers = null;
 
-            for (HandlerRegistration reg : getWidgetForPaintable().blurHandlers) {
+            for (HandlerRegistration reg : getWidget().blurHandlers) {
                 reg.removeHandler();
             }
-            getWidgetForPaintable().blurHandlers.clear();
-            getWidgetForPaintable().blurHandlers = null;
+            getWidget().blurHandlers.clear();
+            getWidget().blurHandlers = null;
         }
 
-        if (getWidgetForPaintable().sendFocusEvents
-                || getWidgetForPaintable().sendBlurEvents) {
-            getWidgetForPaintable().focusHandlers = new ArrayList<HandlerRegistration>();
-            getWidgetForPaintable().blurHandlers = new ArrayList<HandlerRegistration>();
+        if (getWidget().sendFocusEvents
+                || getWidget().sendBlurEvents) {
+            getWidget().focusHandlers = new ArrayList<HandlerRegistration>();
+            getWidget().blurHandlers = new ArrayList<HandlerRegistration>();
 
             // add focus and blur handlers to checkboxes / radio buttons
-            for (Widget wid : getWidgetForPaintable().panel) {
+            for (Widget wid : getWidget().panel) {
                 if (wid instanceof CheckBox) {
-                    getWidgetForPaintable().focusHandlers.add(((CheckBox) wid)
-                            .addFocusHandler(getWidgetForPaintable()));
-                    getWidgetForPaintable().blurHandlers.add(((CheckBox) wid)
-                            .addBlurHandler(getWidgetForPaintable()));
+                    getWidget().focusHandlers.add(((CheckBox) wid)
+                            .addFocusHandler(getWidget()));
+                    getWidget().blurHandlers.add(((CheckBox) wid)
+                            .addBlurHandler(getWidget()));
                 }
             }
         }
@@ -65,7 +65,7 @@ public class VOptionGroupPaintable extends VOptionGroupBasePaintable {
     }
 
     @Override
-    public VOptionGroup getWidgetForPaintable() {
-        return (VOptionGroup) super.getWidgetForPaintable();
+    public VOptionGroup getWidget() {
+        return (VOptionGroup) super.getWidget();
     }
 }

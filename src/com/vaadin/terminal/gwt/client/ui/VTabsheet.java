@@ -762,7 +762,7 @@ public class VTabsheet extends VTabsheetBase {
         if (tabUidl.getChildCount() > 0) {
             tabContentUIDL = tabUidl.getChildUIDL(0);
             tabContentPaintable = client.getPaintable(tabContentUIDL);
-            tabContentWidget = tabContentPaintable.getWidgetForPaintable();
+            tabContentWidget = tabContentPaintable.getWidget();
         }
 
         if (tabContentPaintable != null) {
@@ -834,10 +834,10 @@ public class VTabsheet extends VTabsheetBase {
                     paintableMap.unregisterPaintable(paintableMap
                             .getPaintable(old));
                 }
-                tp.insert(content.getWidgetForPaintable(), activeTabIndex);
+                tp.insert(content.getWidget(), activeTabIndex);
             }
         } else {
-            tp.add(content.getWidgetForPaintable());
+            tp.add(content.getWidget());
         }
 
         tp.showWidget(activeTabIndex);
@@ -849,7 +849,7 @@ public class VTabsheet extends VTabsheetBase {
          * report correct size to updateOpenTabSize().
          */
         if (contentUIDL.getBooleanAttribute("cached")) {
-            client.handleComponentRelativeSize(content.getWidgetForPaintable());
+            client.handleComponentRelativeSize(content.getWidget());
         }
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");

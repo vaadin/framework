@@ -19,49 +19,49 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
 
-        getWidgetForPaintable().setReadOnly(getState().isReadOnly());
+        getWidget().setReadOnly(getState().isReadOnly());
 
-        getWidgetForPaintable().inputPrompt = uidl
+        getWidget().inputPrompt = uidl
                 .getStringAttribute(VTextField.ATTR_INPUTPROMPT);
 
-        getWidgetForPaintable().setMaxLength(
+        getWidget().setMaxLength(
                 uidl.hasAttribute("maxLength") ? uidl
                         .getIntAttribute("maxLength") : -1);
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().listenTextChangeEvents = client
+        getWidget().listenTextChangeEvents = client
                 .hasEventListeners(this, "ie");
-        if (getWidgetForPaintable().listenTextChangeEvents) {
-            getWidgetForPaintable().textChangeEventMode = uidl
+        if (getWidget().listenTextChangeEvents) {
+            getWidget().textChangeEventMode = uidl
                     .getStringAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE);
-            if (getWidgetForPaintable().textChangeEventMode
+            if (getWidget().textChangeEventMode
                     .equals(VTextField.TEXTCHANGE_MODE_EAGER)) {
-                getWidgetForPaintable().textChangeEventTimeout = 1;
+                getWidget().textChangeEventTimeout = 1;
             } else {
-                getWidgetForPaintable().textChangeEventTimeout = uidl
+                getWidget().textChangeEventTimeout = uidl
                         .getIntAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT);
-                if (getWidgetForPaintable().textChangeEventTimeout < 1) {
+                if (getWidget().textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
-                    getWidgetForPaintable().textChangeEventTimeout = 1;
+                    getWidget().textChangeEventTimeout = 1;
                 }
             }
-            getWidgetForPaintable().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
-            getWidgetForPaintable().attachCutEventListener(
-                    getWidgetForPaintable().getElement());
+            getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
+            getWidget().attachCutEventListener(
+                    getWidget().getElement());
         }
 
         if (uidl.hasAttribute("cols")) {
-            getWidgetForPaintable().setColumns(
+            getWidget().setColumns(
                     new Integer(uidl.getStringAttribute("cols")).intValue());
         }
 
@@ -75,9 +75,9 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
          */
         if (!(uidl
                 .getBooleanAttribute(VTextField.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                && getWidgetForPaintable().valueBeforeEdit != null && text
-                    .equals(getWidgetForPaintable().valueBeforeEdit))) {
-            getWidgetForPaintable().updateFieldContent(text);
+                && getWidget().valueBeforeEdit != null && text
+                    .equals(getWidget().valueBeforeEdit))) {
+            getWidget().updateFieldContent(text);
         }
 
         if (uidl.hasAttribute("selpos")) {
@@ -88,7 +88,7 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
              */
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    getWidgetForPaintable().setSelectionRange(pos, length);
+                    getWidget().setSelectionRange(pos, length);
                 }
             });
         }
@@ -98,9 +98,9 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
         // state.
         if (uidl.hasAttribute("wordwrap")
                 && uidl.getBooleanAttribute("wordwrap") == false) {
-            getWidgetForPaintable().setWordwrap(false);
+            getWidget().setWordwrap(false);
         } else {
-            getWidgetForPaintable().setWordwrap(true);
+            getWidget().setWordwrap(true);
         }
     }
 
@@ -110,12 +110,12 @@ public class VTextFieldPaintable extends VAbstractPaintableWidget implements
     }
 
     @Override
-    public VTextField getWidgetForPaintable() {
-        return (VTextField) super.getWidgetForPaintable();
+    public VTextField getWidget() {
+        return (VTextField) super.getWidget();
     }
 
     public void onBeforeShortcutAction(Event e) {
-        getWidgetForPaintable().valueChange(false);
+        getWidget().valueChange(false);
     }
 
 }

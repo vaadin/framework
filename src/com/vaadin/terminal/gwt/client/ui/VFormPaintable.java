@@ -17,7 +17,7 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
 
     @Override
     public void init() {
-        VForm form = getWidgetForPaintable();
+        VForm form = getWidget();
         getLayoutManager().registerDependency(this, form.footerContainer);
     }
 
@@ -28,8 +28,8 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
+        getWidget().client = client;
+        getWidget().id = uidl.getId();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
@@ -38,54 +38,54 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
 
         boolean legendEmpty = true;
         if (getState().getCaption() != null) {
-            getWidgetForPaintable().caption.setInnerText(getState()
+            getWidget().caption.setInnerText(getState()
                     .getCaption());
             legendEmpty = false;
         } else {
-            getWidgetForPaintable().caption.setInnerText("");
+            getWidget().caption.setInnerText("");
         }
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            if (getWidgetForPaintable().icon == null) {
-                getWidgetForPaintable().icon = new Icon(client);
-                getWidgetForPaintable().legend
-                        .insertFirst(getWidgetForPaintable().icon.getElement());
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                getWidget().legend
+                        .insertFirst(getWidget().icon.getElement());
             }
-            getWidgetForPaintable().icon.setUri(uidl
+            getWidget().icon.setUri(uidl
                     .getStringAttribute(ATTRIBUTE_ICON));
             legendEmpty = false;
         } else {
-            if (getWidgetForPaintable().icon != null) {
-                getWidgetForPaintable().legend
-                        .removeChild(getWidgetForPaintable().icon.getElement());
+            if (getWidget().icon != null) {
+                getWidget().legend
+                        .removeChild(getWidget().icon.getElement());
             }
         }
         if (legendEmpty) {
-            getWidgetForPaintable().addStyleDependentName("nocaption");
+            getWidget().addStyleDependentName("nocaption");
         } else {
-            getWidgetForPaintable().removeStyleDependentName("nocaption");
+            getWidget().removeStyleDependentName("nocaption");
         }
 
         if (uidl.hasAttribute("error")) {
             final UIDL errorUidl = uidl.getErrors();
-            getWidgetForPaintable().errorMessage.updateFromUIDL(errorUidl);
-            getWidgetForPaintable().errorMessage.setVisible(true);
+            getWidget().errorMessage.updateFromUIDL(errorUidl);
+            getWidget().errorMessage.setVisible(true);
         } else {
-            getWidgetForPaintable().errorMessage.setVisible(false);
+            getWidget().errorMessage.setVisible(false);
         }
 
         if (getState().hasDescription()) {
-            getWidgetForPaintable().desc.setInnerHTML(getState()
+            getWidget().desc.setInnerHTML(getState()
                     .getDescription());
-            if (getWidgetForPaintable().desc.getParentElement() == null) {
-                getWidgetForPaintable().fieldSet.insertAfter(
-                        getWidgetForPaintable().desc,
-                        getWidgetForPaintable().legend);
+            if (getWidget().desc.getParentElement() == null) {
+                getWidget().fieldSet.insertAfter(
+                        getWidget().desc,
+                        getWidget().legend);
             }
         } else {
-            getWidgetForPaintable().desc.setInnerHTML("");
-            if (getWidgetForPaintable().desc.getParentElement() != null) {
-                getWidgetForPaintable().fieldSet
-                        .removeChild(getWidgetForPaintable().desc);
+            getWidget().desc.setInnerHTML("");
+            if (getWidget().desc.getParentElement() != null) {
+                getWidget().fieldSet
+                        .removeChild(getWidget().desc);
             }
         }
 
@@ -96,69 +96,69 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
             // render footer
             VPaintableWidget newFooter = client.getPaintable(uidl
                     .getChildUIDL(1));
-            Widget newFooterWidget = newFooter.getWidgetForPaintable();
-            if (getWidgetForPaintable().footer == null) {
-                getWidgetForPaintable().add(newFooter.getWidgetForPaintable(),
-                        getWidgetForPaintable().footerContainer);
-                getWidgetForPaintable().footer = newFooterWidget;
-            } else if (newFooter != getWidgetForPaintable().footer) {
-                getWidgetForPaintable().remove(getWidgetForPaintable().footer);
+            Widget newFooterWidget = newFooter.getWidget();
+            if (getWidget().footer == null) {
+                getWidget().add(newFooter.getWidget(),
+                        getWidget().footerContainer);
+                getWidget().footer = newFooterWidget;
+            } else if (newFooter != getWidget().footer) {
+                getWidget().remove(getWidget().footer);
                 client.unregisterPaintable(VPaintableMap.get(getConnection())
-                        .getPaintable(getWidgetForPaintable().footer));
-                getWidgetForPaintable().add(newFooter.getWidgetForPaintable(),
-                        getWidgetForPaintable().footerContainer);
+                        .getPaintable(getWidget().footer));
+                getWidget().add(newFooter.getWidget(),
+                        getWidget().footerContainer);
             }
-            getWidgetForPaintable().footer = newFooterWidget;
+            getWidget().footer = newFooterWidget;
             newFooter.updateFromUIDL(uidl.getChildUIDL(1), client);
         } else {
-            if (getWidgetForPaintable().footer != null) {
-                getWidgetForPaintable().remove(getWidgetForPaintable().footer);
+            if (getWidget().footer != null) {
+                getWidget().remove(getWidget().footer);
                 client.unregisterPaintable(VPaintableMap.get(getConnection())
-                        .getPaintable(getWidgetForPaintable().footer));
+                        .getPaintable(getWidget().footer));
             }
         }
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         VPaintableWidget newLayout = client.getPaintable(layoutUidl);
-        Widget newLayoutWidget = newLayout.getWidgetForPaintable();
-        if (getWidgetForPaintable().lo == null) {
+        Widget newLayoutWidget = newLayout.getWidget();
+        if (getWidget().lo == null) {
             // Layout not rendered before
-            getWidgetForPaintable().lo = newLayoutWidget;
-            getWidgetForPaintable().add(newLayoutWidget,
-                    getWidgetForPaintable().fieldContainer);
-        } else if (getWidgetForPaintable().lo != newLayoutWidget) {
+            getWidget().lo = newLayoutWidget;
+            getWidget().add(newLayoutWidget,
+                    getWidget().fieldContainer);
+        } else if (getWidget().lo != newLayoutWidget) {
             // Layout has changed
             client.unregisterPaintable(VPaintableMap.get(getConnection())
-                    .getPaintable(getWidgetForPaintable().lo));
-            getWidgetForPaintable().remove(getWidgetForPaintable().lo);
-            getWidgetForPaintable().lo = newLayoutWidget;
-            getWidgetForPaintable().add(newLayoutWidget,
-                    getWidgetForPaintable().fieldContainer);
+                    .getPaintable(getWidget().lo));
+            getWidget().remove(getWidget().lo);
+            getWidget().lo = newLayoutWidget;
+            getWidget().add(newLayoutWidget,
+                    getWidget().fieldContainer);
         }
         newLayout.updateFromUIDL(layoutUidl, client);
 
         // also recalculates size of the footer if undefined size form - see
         // #3710
-        client.runDescendentsLayout(getWidgetForPaintable());
+        client.runDescendentsLayout(getWidget());
 
         // We may have actions attached
         if (uidl.getChildCount() > 1) {
             UIDL childUidl = uidl.getChildByTagName("actions");
             if (childUidl != null) {
-                if (getWidgetForPaintable().shortcutHandler == null) {
-                    getWidgetForPaintable().shortcutHandler = new ShortcutActionHandler(
+                if (getWidget().shortcutHandler == null) {
+                    getWidget().shortcutHandler = new ShortcutActionHandler(
                             getId(), client);
-                    getWidgetForPaintable().keyDownRegistration = getWidgetForPaintable()
-                            .addDomHandler(getWidgetForPaintable(),
+                    getWidget().keyDownRegistration = getWidget()
+                            .addDomHandler(getWidget(),
                                     KeyDownEvent.getType());
                 }
-                getWidgetForPaintable().shortcutHandler
+                getWidget().shortcutHandler
                         .updateActionMap(childUidl);
             }
-        } else if (getWidgetForPaintable().shortcutHandler != null) {
-            getWidgetForPaintable().keyDownRegistration.removeHandler();
-            getWidgetForPaintable().shortcutHandler = null;
-            getWidgetForPaintable().keyDownRegistration = null;
+        } else if (getWidget().shortcutHandler != null) {
+            getWidget().keyDownRegistration.removeHandler();
+            getWidget().shortcutHandler = null;
+            getWidget().keyDownRegistration = null;
         }
     }
 
@@ -168,8 +168,8 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
     }
 
     @Override
-    public VForm getWidgetForPaintable() {
-        return (VForm) super.getWidgetForPaintable();
+    public VForm getWidget() {
+        return (VForm) super.getWidget();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class VFormPaintable extends VAbstractPaintableWidgetContainer implements
     }
 
     public void layout() {
-        VForm form = getWidgetForPaintable();
+        VForm form = getWidget();
 
         int footerHeight = getLayoutManager().getOuterHeight(
                 form.footerContainer);

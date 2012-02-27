@@ -19,7 +19,7 @@ public class VAudioPaintable extends VMediaBasePaintable {
         if (!isRealUpdate(uidl)) {
             return;
         }
-        Style style = getWidgetForPaintable().getElement().getStyle();
+        Style style = getWidget().getElement().getStyle();
 
         // Make sure that the controls are not clipped if visible.
         if (shouldShowControls(uidl)

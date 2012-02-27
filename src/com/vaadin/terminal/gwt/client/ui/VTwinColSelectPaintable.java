@@ -16,7 +16,7 @@ public class VTwinColSelectPaintable extends VOptionGroupBasePaintable {
         // Captions are updated before super call to ensure the widths are set
         // correctly
         if (isRealUpdate(uidl)) {
-            getWidgetForPaintable().updateCaptions(uidl);
+            getWidget().updateCaptions(uidl);
         }
 
         super.updateFromUIDL(uidl, client);
@@ -28,7 +28,7 @@ public class VTwinColSelectPaintable extends VOptionGroupBasePaintable {
     }
 
     @Override
-    public VTwinColSelect getWidgetForPaintable() {
-        return (VTwinColSelect) super.getWidgetForPaintable();
+    public VTwinColSelect getWidget() {
+        return (VTwinColSelect) super.getWidget();
     }
 }

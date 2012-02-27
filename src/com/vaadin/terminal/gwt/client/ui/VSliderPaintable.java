@@ -15,8 +15,8 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
+        getWidget().client = client;
+        getWidget().id = uidl.getId();
 
         // Ensure correct implementation
         super.updateFromUIDL(uidl, client);
@@ -24,52 +24,52 @@ public class VSliderPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
-        getWidgetForPaintable().disabled = getState().isDisabled();
-        getWidgetForPaintable().readonly = getState().isReadOnly();
+        getWidget().immediate = getState().isImmediate();
+        getWidget().disabled = getState().isDisabled();
+        getWidget().readonly = getState().isReadOnly();
 
-        getWidgetForPaintable().vertical = uidl.hasAttribute("vertical");
+        getWidget().vertical = uidl.hasAttribute("vertical");
 
         // TODO should these style names be used?
         String style = getState().getStyle();
 
-        if (getWidgetForPaintable().vertical) {
-            getWidgetForPaintable().addStyleName(
+        if (getWidget().vertical) {
+            getWidget().addStyleName(
                     VSlider.CLASSNAME + "-vertical");
         } else {
-            getWidgetForPaintable().removeStyleName(
+            getWidget().removeStyleName(
                     VSlider.CLASSNAME + "-vertical");
         }
 
-        getWidgetForPaintable().min = uidl.getDoubleAttribute("min");
-        getWidgetForPaintable().max = uidl.getDoubleAttribute("max");
-        getWidgetForPaintable().resolution = uidl.getIntAttribute("resolution");
-        getWidgetForPaintable().value = new Double(
+        getWidget().min = uidl.getDoubleAttribute("min");
+        getWidget().max = uidl.getDoubleAttribute("max");
+        getWidget().resolution = uidl.getIntAttribute("resolution");
+        getWidget().value = new Double(
                 uidl.getDoubleVariable("value"));
 
-        getWidgetForPaintable().setFeedbackValue(getWidgetForPaintable().value);
+        getWidget().setFeedbackValue(getWidget().value);
 
-        getWidgetForPaintable().buildBase();
+        getWidget().buildBase();
 
-        if (!getWidgetForPaintable().vertical) {
+        if (!getWidget().vertical) {
             // Draw handle with a delay to allow base to gain maximum width
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    getWidgetForPaintable().buildHandle();
-                    getWidgetForPaintable().setValue(
-                            getWidgetForPaintable().value, false);
+                    getWidget().buildHandle();
+                    getWidget().setValue(
+                            getWidget().value, false);
                 }
             });
         } else {
-            getWidgetForPaintable().buildHandle();
-            getWidgetForPaintable().setValue(getWidgetForPaintable().value,
+            getWidget().buildHandle();
+            getWidget().setValue(getWidget().value,
                     false);
         }
     }
 
     @Override
-    public VSlider getWidgetForPaintable() {
-        return (VSlider) super.getWidgetForPaintable();
+    public VSlider getWidget() {
+        return (VSlider) super.getWidget();
     }
 
     @Override

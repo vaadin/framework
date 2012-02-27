@@ -30,7 +30,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
     };
 
@@ -41,59 +41,59 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().id = uidl.getId();
-        getWidgetForPaintable().client = client;
+        getWidget().id = uidl.getId();
+        getWidget().client = client;
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
-        DOM.setElementProperty(getWidgetForPaintable().closeBox, "id",
-                getWidgetForPaintable().id + "_window_close");
+        DOM.setElementProperty(getWidget().closeBox, "id",
+                getWidget().id + "_window_close");
 
         if (uidl.hasAttribute("invisible")) {
-            getWidgetForPaintable().hide();
+            getWidget().hide();
             return;
         }
 
         if (isRealUpdate(uidl)) {
-            if (uidl.getBooleanAttribute("modal") != getWidgetForPaintable().vaadinModality) {
-                getWidgetForPaintable().setVaadinModality(
-                        !getWidgetForPaintable().vaadinModality);
+            if (uidl.getBooleanAttribute("modal") != getWidget().vaadinModality) {
+                getWidget().setVaadinModality(
+                        !getWidget().vaadinModality);
             }
-            if (!getWidgetForPaintable().isAttached()) {
-                getWidgetForPaintable().setVisible(false); // hide until
+            if (!getWidget().isAttached()) {
+                getWidget().setVisible(false); // hide until
                                                            // possible centering
-                getWidgetForPaintable().show();
+                getWidget().show();
             }
-            if (uidl.getBooleanAttribute("resizable") != getWidgetForPaintable().resizable) {
-                getWidgetForPaintable().setResizable(
-                        !getWidgetForPaintable().resizable);
+            if (uidl.getBooleanAttribute("resizable") != getWidget().resizable) {
+                getWidget().setResizable(
+                        !getWidget().resizable);
             }
-            getWidgetForPaintable().resizeLazy = uidl
+            getWidget().resizeLazy = uidl
                     .hasAttribute(VView.RESIZE_LAZY);
 
-            getWidgetForPaintable().setDraggable(
+            getWidget().setDraggable(
                     !uidl.hasAttribute("fixedposition"));
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
-            getWidgetForPaintable()
+            getWidget()
                     .setCaption(
                             getState().getCaption(),
                             uidl.getStringAttribute(VAbstractPaintableWidget.ATTRIBUTE_ICON));
         }
 
-        getWidgetForPaintable().visibilityChangesDisabled = true;
+        getWidget().visibilityChangesDisabled = true;
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidgetForPaintable().visibilityChangesDisabled = false;
+        getWidget().visibilityChangesDisabled = false;
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().setClosable(!getState().isReadOnly());
+        getWidget().setClosable(!getState().isReadOnly());
 
         // Initialize the position form UIDL
         int positionx = uidl.getIntVariable("positionx");
@@ -105,7 +105,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             if (positiony < 0) {
                 positiony = 0;
             }
-            getWidgetForPaintable().setPopupPosition(positionx, positiony);
+            getWidget().setPopupPosition(positionx, positiony);
         }
 
         boolean showingUrl = false;
@@ -122,7 +122,7 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
                 DOM.setStyleAttribute(frame.getElement(), "height", "100%");
                 DOM.setStyleAttribute(frame.getElement(), "border", "0px");
                 frame.setUrl(parsedUri);
-                getWidgetForPaintable().contentPanel.setWidget(frame);
+                getWidget().contentPanel.setWidget(frame);
                 showingUrl = true;
             } else {
                 final String target = childUidl.getStringAttribute("name");
@@ -132,67 +132,67 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         }
 
         final VPaintableWidget lo = client.getPaintable(childUidl);
-        if (getWidgetForPaintable().layout != null) {
-            if (getWidgetForPaintable().layout != lo) {
+        if (getWidget().layout != null) {
+            if (getWidget().layout != lo) {
                 // remove old
-                client.unregisterPaintable(getWidgetForPaintable().layout);
-                getWidgetForPaintable().contentPanel
-                        .remove(getWidgetForPaintable().layout
-                                .getWidgetForPaintable());
+                client.unregisterPaintable(getWidget().layout);
+                getWidget().contentPanel
+                        .remove(getWidget().layout
+                                .getWidget());
                 // add new
                 if (!showingUrl) {
-                    getWidgetForPaintable().contentPanel.setWidget(lo
-                            .getWidgetForPaintable());
+                    getWidget().contentPanel.setWidget(lo
+                            .getWidget());
                 }
-                getWidgetForPaintable().layout = lo;
+                getWidget().layout = lo;
             }
         } else if (!showingUrl) {
-            getWidgetForPaintable().contentPanel.setWidget(lo
-                    .getWidgetForPaintable());
-            getWidgetForPaintable().layout = lo;
+            getWidget().contentPanel.setWidget(lo
+                    .getWidget());
+            getWidget().layout = lo;
         }
 
-        getWidgetForPaintable().dynamicWidth = getState().isUndefinedWidth();
-        getWidgetForPaintable().dynamicHeight = getState().isUndefinedHeight();
+        getWidget().dynamicWidth = getState().isUndefinedWidth();
+        getWidget().dynamicHeight = getState().isUndefinedHeight();
 
-        getWidgetForPaintable().layoutRelativeWidth = uidl
+        getWidget().layoutRelativeWidth = uidl
                 .hasAttribute("layoutRelativeWidth");
-        getWidgetForPaintable().layoutRelativeHeight = uidl
+        getWidget().layoutRelativeHeight = uidl
                 .hasAttribute("layoutRelativeHeight");
 
-        if (getWidgetForPaintable().dynamicWidth
-                && getWidgetForPaintable().layoutRelativeWidth) {
+        if (getWidget().dynamicWidth
+                && getWidget().layoutRelativeWidth) {
             /*
              * Relative layout width, fix window width before rendering (width
              * according to caption)
              */
-            getWidgetForPaintable().setNaturalWidth();
+            getWidget().setNaturalWidth();
         }
 
-        getWidgetForPaintable().layout.updateFromUIDL(childUidl, client);
-        if (!getWidgetForPaintable().dynamicHeight
-                && getWidgetForPaintable().layoutRelativeWidth) {
+        getWidget().layout.updateFromUIDL(childUidl, client);
+        if (!getWidget().dynamicHeight
+                && getWidget().layoutRelativeWidth) {
             /*
              * Relative layout width, and fixed height. Must update the size to
              * be able to take scrollbars into account (layout gets narrower
              * space if it is higher than the window) -> only vertical scrollbar
              */
-            client.runDescendentsLayout(getWidgetForPaintable());
+            client.runDescendentsLayout(getWidget());
         }
 
         /*
          * No explicit width is set and the layout does not have relative width
          * so fix the size according to the layout.
          */
-        if (getWidgetForPaintable().dynamicWidth
-                && !getWidgetForPaintable().layoutRelativeWidth) {
-            getWidgetForPaintable().setNaturalWidth();
+        if (getWidget().dynamicWidth
+                && !getWidget().layoutRelativeWidth) {
+            getWidget().setNaturalWidth();
         }
 
-        if (getWidgetForPaintable().dynamicHeight
-                && getWidgetForPaintable().layoutRelativeHeight) {
+        if (getWidget().dynamicHeight
+                && getWidget().layoutRelativeHeight) {
             // Prevent resizing until height has been fixed
-            getWidgetForPaintable().resizable = false;
+            getWidget().resizable = false;
         }
 
         // we may have actions and notifications
@@ -201,11 +201,11 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
             for (int i = 1; i < cnt; i++) {
                 childUidl = uidl.getChildUIDL(i);
                 if (childUidl.getTag().equals("actions")) {
-                    if (getWidgetForPaintable().shortcutHandler == null) {
-                        getWidgetForPaintable().shortcutHandler = new ShortcutActionHandler(
+                    if (getWidget().shortcutHandler == null) {
+                        getWidget().shortcutHandler = new ShortcutActionHandler(
                                 getId(), client);
                     }
-                    getWidgetForPaintable().shortcutHandler
+                    getWidget().shortcutHandler
                             .updateActionMap(childUidl);
                 }
             }
@@ -213,9 +213,9 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         }
 
         // setting scrollposition must happen after children is rendered
-        getWidgetForPaintable().contentPanel.setScrollPosition(uidl
+        getWidget().contentPanel.setScrollPosition(uidl
                 .getIntVariable("scrollTop"));
-        getWidgetForPaintable().contentPanel.setHorizontalScrollPosition(uidl
+        getWidget().contentPanel.setHorizontalScrollPosition(uidl
                 .getIntVariable("scrollLeft"));
 
         // Center this window on screen if requested
@@ -223,29 +223,29 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         // everything is painted into the window
         if (uidl.getBooleanAttribute("center")) {
             // mark as centered - this is unset on move/resize
-            getWidgetForPaintable().centered = true;
-            getWidgetForPaintable().center();
+            getWidget().centered = true;
+            getWidget().center();
         } else {
             // don't try to center the window anymore
-            getWidgetForPaintable().centered = false;
+            getWidget().centered = false;
         }
-        getWidgetForPaintable().updateShadowSizeAndPosition();
-        getWidgetForPaintable().setVisible(true);
+        getWidget().updateShadowSizeAndPosition();
+        getWidget().setVisible(true);
 
         boolean sizeReduced = false;
         // ensure window is not larger than browser window
-        if (getWidgetForPaintable().getOffsetWidth() > Window.getClientWidth()) {
-            getWidgetForPaintable().setWidth(Window.getClientWidth() + "px");
+        if (getWidget().getOffsetWidth() > Window.getClientWidth()) {
+            getWidget().setWidth(Window.getClientWidth() + "px");
             sizeReduced = true;
         }
-        if (getWidgetForPaintable().getOffsetHeight() > Window
+        if (getWidget().getOffsetHeight() > Window
                 .getClientHeight()) {
-            getWidgetForPaintable().setHeight(Window.getClientHeight() + "px");
+            getWidget().setHeight(Window.getClientHeight() + "px");
             sizeReduced = true;
         }
 
-        if (getWidgetForPaintable().dynamicHeight
-                && getWidgetForPaintable().layoutRelativeHeight) {
+        if (getWidget().dynamicHeight
+                && getWidget().layoutRelativeHeight) {
             /*
              * Window height is undefined, layout is 100% high so the layout
              * should define the initial window height but on resize the layout
@@ -253,9 +253,9 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
              * this.
              */
 
-            int h = getWidgetForPaintable().contents.getOffsetHeight()
-                    + getWidgetForPaintable().getExtraHeight();
-            int w = getWidgetForPaintable().getElement().getOffsetWidth();
+            int h = getWidget().contents.getOffsetHeight()
+                    + getWidget().getExtraHeight();
+            int w = getWidget().getElement().getOffsetWidth();
 
             client.updateVariable(getId(), "height", h, false);
             client.updateVariable(getId(), "width", w, true);
@@ -264,13 +264,13 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
         if (sizeReduced) {
             // If we changed the size we need to update the size of the child
             // component if it is relative (#3407)
-            client.runDescendentsLayout(getWidgetForPaintable());
+            client.runDescendentsLayout(getWidget());
         }
 
-        Util.runWebkitOverflowAutoFix(getWidgetForPaintable().contentPanel
+        Util.runWebkitOverflowAutoFix(getWidget().contentPanel
                 .getElement());
 
-        client.getView().getWidgetForPaintable().scrollIntoView(uidl);
+        client.getView().getWidget().scrollIntoView(uidl);
 
         if (uidl.hasAttribute("bringToFront")) {
             /*
@@ -278,8 +278,8 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
              * ApplicationConnection if another component was focused by the
              * server side.
              */
-            getWidgetForPaintable().contentPanel.focus();
-            getWidgetForPaintable().bringToFrontSequence = uidl
+            getWidget().contentPanel.focus();
+            getWidget().bringToFrontSequence = uidl
                     .getIntAttribute("bringToFront");
             VWindow.deferOrdering();
         }
@@ -295,8 +295,8 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
     }
 
     @Override
-    public VWindow getWidgetForPaintable() {
-        return (VWindow) super.getWidgetForPaintable();
+    public VWindow getWidget() {
+        return (VWindow) super.getWidget();
     }
 
     @Override
@@ -305,11 +305,11 @@ public class VWindowPaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void layout() {
-        getWidgetForPaintable().requestLayout();
+        getWidget().requestLayout();
     }
 
     public void postLayout() {
-        VWindow window = getWidgetForPaintable();
+        VWindow window = getWidget();
         if (window.centered) {
             window.center();
             window.updateShadowSizeAndPosition();

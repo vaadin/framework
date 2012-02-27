@@ -17,44 +17,44 @@ public class VAccordionPaintable extends VTabsheetBasePaintable implements
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().selectedUIDLItemIndex = -1;
+        getWidget().selectedUIDLItemIndex = -1;
         super.updateFromUIDL(uidl, client);
         /*
          * Render content after all tabs have been created and we know how large
          * the content area is
          */
-        if (getWidgetForPaintable().selectedUIDLItemIndex >= 0) {
-            StackItem selectedItem = getWidgetForPaintable().getStackItem(
-                    getWidgetForPaintable().selectedUIDLItemIndex);
-            UIDL selectedTabUIDL = getWidgetForPaintable().lazyUpdateMap
+        if (getWidget().selectedUIDLItemIndex >= 0) {
+            StackItem selectedItem = getWidget().getStackItem(
+                    getWidget().selectedUIDLItemIndex);
+            UIDL selectedTabUIDL = getWidget().lazyUpdateMap
                     .remove(selectedItem);
-            getWidgetForPaintable().open(
-                    getWidgetForPaintable().selectedUIDLItemIndex);
+            getWidget().open(
+                    getWidget().selectedUIDLItemIndex);
 
             selectedItem.setContent(selectedTabUIDL);
         } else if (isRealUpdate(uidl)
-                && getWidgetForPaintable().openTab != null) {
-            getWidgetForPaintable().close(getWidgetForPaintable().openTab);
+                && getWidget().openTab != null) {
+            getWidget().close(getWidget().openTab);
         }
 
-        getWidgetForPaintable().iLayout();
+        getWidget().iLayout();
         // finally render possible hidden tabs
-        if (getWidgetForPaintable().lazyUpdateMap.size() > 0) {
-            for (Iterator iterator = getWidgetForPaintable().lazyUpdateMap
+        if (getWidget().lazyUpdateMap.size() > 0) {
+            for (Iterator iterator = getWidget().lazyUpdateMap
                     .keySet().iterator(); iterator.hasNext();) {
                 StackItem item = (StackItem) iterator.next();
-                item.setContent(getWidgetForPaintable().lazyUpdateMap.get(item));
+                item.setContent(getWidget().lazyUpdateMap.get(item));
             }
-            getWidgetForPaintable().lazyUpdateMap.clear();
+            getWidget().lazyUpdateMap.clear();
         }
 
-        getWidgetForPaintable().renderInformation
-                .updateSize(getWidgetForPaintable().getElement());
+        getWidget().renderInformation
+                .updateSize(getWidget().getElement());
     }
 
     @Override
-    public VAccordion getWidgetForPaintable() {
-        return (VAccordion) super.getWidgetForPaintable();
+    public VAccordion getWidget() {
+        return (VAccordion) super.getWidget();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class VAccordionPaintable extends VTabsheetBasePaintable implements
     }
 
     public void layout() {
-        VAccordion accordion = getWidgetForPaintable();
+        VAccordion accordion = getWidget();
 
         accordion.updateOpenTabSize();
 

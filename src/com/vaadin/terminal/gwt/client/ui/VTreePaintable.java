@@ -29,37 +29,37 @@ public class VTreePaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().rendering = true;
+        getWidget().rendering = true;
 
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
 
         if (uidl.hasAttribute("partialUpdate")) {
             handleUpdate(uidl);
-            getWidgetForPaintable().rendering = false;
+            getWidget().rendering = false;
             return;
         }
 
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().paintableId = uidl.getId();
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().disabled = getState().isDisabled();
-        getWidgetForPaintable().readonly = getState().isReadOnly();
+        getWidget().disabled = getState().isDisabled();
+        getWidget().readonly = getState().isReadOnly();
 
-        getWidgetForPaintable().dragMode = uidl.hasAttribute("dragMode") ? uidl
+        getWidget().dragMode = uidl.hasAttribute("dragMode") ? uidl
                 .getIntAttribute("dragMode") : 0;
 
-        getWidgetForPaintable().isNullSelectionAllowed = uidl
+        getWidget().isNullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
 
         if (uidl.hasAttribute("alb")) {
-            getWidgetForPaintable().bodyActionKeys = uidl
+            getWidget().bodyActionKeys = uidl
                     .getStringArrayAttribute("alb");
         }
 
-        getWidgetForPaintable().body.clear();
+        getWidget().body.clear();
         // clear out any references to nodes that no longer are attached
-        getWidgetForPaintable().clearNodeToKeyMap();
+        getWidget().clearNodeToKeyMap();
         TreeNode childTree = null;
         UIDL childUidl = null;
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -68,12 +68,12 @@ public class VTreePaintable extends VAbstractPaintableWidget {
                 updateActionMap(childUidl);
                 continue;
             } else if ("-ac".equals(childUidl.getTag())) {
-                getWidgetForPaintable().updateDropHandler(childUidl);
+                getWidget().updateDropHandler(childUidl);
                 continue;
             }
-            childTree = getWidgetForPaintable().new TreeNode();
+            childTree = getWidget().new TreeNode();
             updateNodeFromUIDL(childTree, childUidl);
-            getWidgetForPaintable().body.add(childTree);
+            getWidget().body.add(childTree);
             childTree.addStyleDependentName("root");
             childTree.childNodeContainer.addStyleDependentName("root");
         }
@@ -83,42 +83,42 @@ public class VTreePaintable extends VAbstractPaintableWidget {
             childTree.childNodeContainer.addStyleDependentName("last");
         }
         final String selectMode = uidl.getStringAttribute("selectmode");
-        getWidgetForPaintable().selectable = !"none".equals(selectMode);
-        getWidgetForPaintable().isMultiselect = "multi".equals(selectMode);
+        getWidget().selectable = !"none".equals(selectMode);
+        getWidget().isMultiselect = "multi".equals(selectMode);
 
-        if (getWidgetForPaintable().isMultiselect) {
-            getWidgetForPaintable().multiSelectMode = uidl
+        if (getWidget().isMultiselect) {
+            getWidget().multiSelectMode = uidl
                     .getIntAttribute("multiselectmode");
         }
 
-        getWidgetForPaintable().selectedIds = uidl
+        getWidget().selectedIds = uidl
                 .getStringArrayVariableAsSet("selected");
 
         // Update lastSelection and focusedNode to point to *actual* nodes again
         // after the old ones have been cleared from the body. This fixes focus
         // and keyboard navigation issues as described in #7057 and other
         // tickets.
-        if (getWidgetForPaintable().lastSelection != null) {
-            getWidgetForPaintable().lastSelection = getWidgetForPaintable()
-                    .getNodeByKey(getWidgetForPaintable().lastSelection.key);
+        if (getWidget().lastSelection != null) {
+            getWidget().lastSelection = getWidget()
+                    .getNodeByKey(getWidget().lastSelection.key);
         }
-        if (getWidgetForPaintable().focusedNode != null) {
-            getWidgetForPaintable().setFocusedNode(
-                    getWidgetForPaintable().getNodeByKey(
-                            getWidgetForPaintable().focusedNode.key));
+        if (getWidget().focusedNode != null) {
+            getWidget().setFocusedNode(
+                    getWidget().getNodeByKey(
+                            getWidget().focusedNode.key));
         }
 
-        if (getWidgetForPaintable().lastSelection == null
-                && getWidgetForPaintable().focusedNode == null
-                && !getWidgetForPaintable().selectedIds.isEmpty()) {
-            getWidgetForPaintable().setFocusedNode(
-                    getWidgetForPaintable().getNodeByKey(
-                            getWidgetForPaintable().selectedIds.iterator()
+        if (getWidget().lastSelection == null
+                && getWidget().focusedNode == null
+                && !getWidget().selectedIds.isEmpty()) {
+            getWidget().setFocusedNode(
+                    getWidget().getNodeByKey(
+                            getWidget().selectedIds.iterator()
                                     .next()));
-            getWidgetForPaintable().focusedNode.setFocused(false);
+            getWidget().focusedNode.setFocused(false);
         }
 
-        getWidgetForPaintable().rendering = false;
+        getWidget().rendering = false;
 
     }
 
@@ -128,12 +128,12 @@ public class VTreePaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VTree getWidgetForPaintable() {
-        return (VTree) super.getWidgetForPaintable();
+    public VTree getWidget() {
+        return (VTree) super.getWidget();
     }
 
     private void handleUpdate(UIDL uidl) {
-        final TreeNode rootNode = getWidgetForPaintable().getNodeByKey(
+        final TreeNode rootNode = getWidget().getNodeByKey(
                 uidl.getStringAttribute("rootKey"));
         if (rootNode != null) {
             if (!rootNode.getState()) {
@@ -161,7 +161,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
                 iconUrl = getConnection().translateVaadinUri(
                         action.getStringAttribute(ATTRIBUTE_ACTION_ICON));
             }
-            getWidgetForPaintable().registerAction(key, caption, iconUrl);
+            getWidget().registerAction(key, caption, iconUrl);
         }
 
     }
@@ -171,7 +171,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
         treeNode.setText(uidl.getStringAttribute(ATTRIBUTE_NODE_CAPTION));
         treeNode.key = nodeKey;
 
-        getWidgetForPaintable().registerNode(treeNode);
+        getWidget().registerNode(treeNode);
 
         if (uidl.hasAttribute("al")) {
             treeNode.actionKeys = uidl.getStringArrayAttribute("al");
@@ -210,7 +210,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
             treeNode.setSelected(true);
             // ensure that identifier is in selectedIds array (this may be a
             // partial update)
-            getWidgetForPaintable().selectedIds.add(nodeKey);
+            getWidget().selectedIds.add(nodeKey);
         }
 
         treeNode.setIcon(uidl.getStringAttribute(ATTRIBUTE_NODE_ICON));
@@ -227,7 +227,7 @@ public class VTreePaintable extends VAbstractPaintableWidget {
                 updateActionMap(childUidl);
                 continue;
             }
-            final TreeNode childTree = getWidgetForPaintable().new TreeNode();
+            final TreeNode childTree = getWidget().new TreeNode();
             updateNodeFromUIDL(childTree, childUidl);
             containerNode.childNodeContainer.add(childTree);
             if (!i.hasNext()) {

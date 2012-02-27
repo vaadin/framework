@@ -13,35 +13,35 @@ public class VTextualDatePaintable extends VDateFieldPaintable {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        int origRes = getWidgetForPaintable().currentResolution;
-        String oldLocale = getWidgetForPaintable().currentLocale;
+        int origRes = getWidget().currentResolution;
+        String oldLocale = getWidget().currentLocale;
         super.updateFromUIDL(uidl, client);
-        if (origRes != getWidgetForPaintable().currentResolution
-                || oldLocale != getWidgetForPaintable().currentLocale) {
+        if (origRes != getWidget().currentResolution
+                || oldLocale != getWidget().currentLocale) {
             // force recreating format string
-            getWidgetForPaintable().formatStr = null;
+            getWidget().formatStr = null;
         }
         if (uidl.hasAttribute("format")) {
-            getWidgetForPaintable().formatStr = uidl
+            getWidget().formatStr = uidl
                     .getStringAttribute("format");
         }
 
-        getWidgetForPaintable().inputPrompt = uidl
+        getWidget().inputPrompt = uidl
                 .getStringAttribute(VTextualDate.ATTR_INPUTPROMPT);
 
-        getWidgetForPaintable().lenient = !uidl.getBooleanAttribute("strict");
+        getWidget().lenient = !uidl.getBooleanAttribute("strict");
 
-        getWidgetForPaintable().buildDate();
+        getWidget().buildDate();
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
-            getWidgetForPaintable().text.setTabIndex(uidl
+            getWidget().text.setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
 
-        if (getWidgetForPaintable().readonly) {
-            getWidgetForPaintable().text.addStyleDependentName("readonly");
+        if (getWidget().readonly) {
+            getWidget().text.addStyleDependentName("readonly");
         } else {
-            getWidgetForPaintable().text.removeStyleDependentName("readonly");
+            getWidget().text.removeStyleDependentName("readonly");
         }
 
     }
@@ -52,7 +52,7 @@ public class VTextualDatePaintable extends VDateFieldPaintable {
     }
 
     @Override
-    public VTextualDate getWidgetForPaintable() {
-        return (VTextualDate) super.getWidgetForPaintable();
+    public VTextualDate getWidget() {
+        return (VTextualDate) super.getWidget();
     }
 }

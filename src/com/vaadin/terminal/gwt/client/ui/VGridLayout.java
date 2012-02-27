@@ -550,7 +550,7 @@ public class VGridLayout extends ComplexPanel {
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 
-                    Widget widget = paintable.getWidgetForPaintable();
+                    Widget widget = paintable.getWidget();
                     insert(widget, slotWrapper, getWidgetCount(), false);
                     Cell oldCell = widgetToCell.put(widget, this);
                     if (oldCell != null) {

@@ -27,16 +27,16 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
+        getWidget().rendering = true;
 
         if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST)) {
-            getWidgetForPaintable().serverCacheFirst = uidl
+            getWidget().serverCacheFirst = uidl
                     .getIntAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST);
-            getWidgetForPaintable().serverCacheLast = uidl
+            getWidget().serverCacheLast = uidl
                     .getIntAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_LAST);
         } else {
-            getWidgetForPaintable().serverCacheFirst = -1;
-            getWidgetForPaintable().serverCacheLast = -1;
+            getWidget().serverCacheFirst = -1;
+            getWidget().serverCacheLast = -1;
         }
         /*
          * We need to do this before updateComponent since updateComponent calls
@@ -44,120 +44,120 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
          * the space available.
          */
         if (uidl.hasAttribute("colfooters")) {
-            getWidgetForPaintable().showColFooters = uidl
+            getWidget().showColFooters = uidl
                     .getBooleanAttribute("colfooters");
         }
 
-        getWidgetForPaintable().tFoot
-                .setVisible(getWidgetForPaintable().showColFooters);
+        getWidget().tFoot
+                .setVisible(getWidget().showColFooters);
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
-            getWidgetForPaintable().rendering = false;
+            getWidget().rendering = false;
             return;
         }
 
-        getWidgetForPaintable().enabled = !getState().isDisabled();
+        getWidget().enabled = !getState().isDisabled();
 
-        if (BrowserInfo.get().isIE8() && !getWidgetForPaintable().enabled) {
+        if (BrowserInfo.get().isIE8() && !getWidget().enabled) {
             /*
              * The disabled shim will not cover the table body if it is relative
              * in IE8. See #7324
              */
-            getWidgetForPaintable().scrollBodyPanel.getElement().getStyle()
+            getWidget().scrollBodyPanel.getElement().getStyle()
                     .setPosition(Position.STATIC);
         } else if (BrowserInfo.get().isIE8()) {
-            getWidgetForPaintable().scrollBodyPanel.getElement().getStyle()
+            getWidget().scrollBodyPanel.getElement().getStyle()
                     .setPosition(Position.RELATIVE);
         }
 
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getStringAttribute("id");
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getStringAttribute("id");
+        getWidget().immediate = getState().isImmediate();
 
-        int previousTotalRows = getWidgetForPaintable().totalRows;
-        getWidgetForPaintable().updateTotalRows(uidl);
-        boolean totalRowsChanged = (getWidgetForPaintable().totalRows != previousTotalRows);
+        int previousTotalRows = getWidget().totalRows;
+        getWidget().updateTotalRows(uidl);
+        boolean totalRowsChanged = (getWidget().totalRows != previousTotalRows);
 
-        getWidgetForPaintable().updateDragMode(uidl);
+        getWidget().updateDragMode(uidl);
 
-        getWidgetForPaintable().updateSelectionProperties(uidl, getState());
+        getWidget().updateSelectionProperties(uidl, getState());
 
         if (uidl.hasAttribute("alb")) {
-            getWidgetForPaintable().bodyActionKeys = uidl
+            getWidget().bodyActionKeys = uidl
                     .getStringArrayAttribute("alb");
         } else {
             // Need to clear the actions if the action handlers have been
             // removed
-            getWidgetForPaintable().bodyActionKeys = null;
+            getWidget().bodyActionKeys = null;
         }
 
-        getWidgetForPaintable().setCacheRateFromUIDL(uidl);
+        getWidget().setCacheRateFromUIDL(uidl);
 
-        getWidgetForPaintable().recalcWidths = uidl
+        getWidget().recalcWidths = uidl
                 .hasAttribute("recalcWidths");
-        if (getWidgetForPaintable().recalcWidths) {
-            getWidgetForPaintable().tHead.clear();
-            getWidgetForPaintable().tFoot.clear();
+        if (getWidget().recalcWidths) {
+            getWidget().tHead.clear();
+            getWidget().tFoot.clear();
         }
 
-        getWidgetForPaintable().updatePageLength(uidl);
+        getWidget().updatePageLength(uidl);
 
-        getWidgetForPaintable().updateFirstVisibleAndScrollIfNeeded(uidl);
+        getWidget().updateFirstVisibleAndScrollIfNeeded(uidl);
 
-        getWidgetForPaintable().showRowHeaders = uidl
+        getWidget().showRowHeaders = uidl
                 .getBooleanAttribute("rowheaders");
-        getWidgetForPaintable().showColHeaders = uidl
+        getWidget().showColHeaders = uidl
                 .getBooleanAttribute("colheaders");
 
-        getWidgetForPaintable().updateSortingProperties(uidl);
+        getWidget().updateSortingProperties(uidl);
 
-        boolean keyboardSelectionOverRowFetchInProgress = getWidgetForPaintable()
+        boolean keyboardSelectionOverRowFetchInProgress = getWidget()
                 .selectSelectedRows(uidl);
 
-        getWidgetForPaintable().updateActionMap(uidl);
+        getWidget().updateActionMap(uidl);
 
-        getWidgetForPaintable().updateColumnProperties(uidl);
+        getWidget().updateColumnProperties(uidl);
 
         UIDL ac = uidl.getChildByTagName("-ac");
         if (ac == null) {
-            if (getWidgetForPaintable().dropHandler != null) {
+            if (getWidget().dropHandler != null) {
                 // remove dropHandler if not present anymore
-                getWidgetForPaintable().dropHandler = null;
+                getWidget().dropHandler = null;
             }
         } else {
-            if (getWidgetForPaintable().dropHandler == null) {
-                getWidgetForPaintable().dropHandler = getWidgetForPaintable().new VScrollTableDropHandler();
+            if (getWidget().dropHandler == null) {
+                getWidget().dropHandler = getWidget().new VScrollTableDropHandler();
             }
-            getWidgetForPaintable().dropHandler.updateAcceptRules(ac);
+            getWidget().dropHandler.updateAcceptRules(ac);
         }
 
         UIDL partialRowAdditions = uidl.getChildByTagName("prows");
         UIDL partialRowUpdates = uidl.getChildByTagName("urows");
         if (partialRowUpdates != null || partialRowAdditions != null) {
             // we may have pending cache row fetch, cancel it. See #2136
-            getWidgetForPaintable().rowRequestHandler.cancel();
+            getWidget().rowRequestHandler.cancel();
 
-            getWidgetForPaintable().updateRowsInBody(partialRowUpdates);
-            getWidgetForPaintable().addAndRemoveRows(partialRowAdditions);
+            getWidget().updateRowsInBody(partialRowUpdates);
+            getWidget().addAndRemoveRows(partialRowAdditions);
         } else {
             UIDL rowData = uidl.getChildByTagName("rows");
             if (rowData != null) {
                 // we may have pending cache row fetch, cancel it. See #2136
-                getWidgetForPaintable().rowRequestHandler.cancel();
+                getWidget().rowRequestHandler.cancel();
 
-                if (!getWidgetForPaintable().recalcWidths
-                        && getWidgetForPaintable().initializedAndAttached) {
-                    getWidgetForPaintable().updateBody(rowData,
+                if (!getWidget().recalcWidths
+                        && getWidget().initializedAndAttached) {
+                    getWidget().updateBody(rowData,
                             uidl.getIntAttribute("firstrow"),
                             uidl.getIntAttribute("rows"));
-                    if (getWidgetForPaintable().headerChangedDuringUpdate) {
-                        getWidgetForPaintable().triggerLazyColumnAdjustment(
+                    if (getWidget().headerChangedDuringUpdate) {
+                        getWidget().triggerLazyColumnAdjustment(
                                 true);
-                    } else if (!getWidgetForPaintable()
+                    } else if (!getWidget()
                             .isScrollPositionVisible()
                             || totalRowsChanged
-                            || getWidgetForPaintable().lastRenderedHeight != getWidgetForPaintable().scrollBody
+                            || getWidget().lastRenderedHeight != getWidget().scrollBody
                                     .getOffsetHeight()) {
                         // webkits may still bug with their disturbing scrollbar
                         // bug, see #3457
@@ -168,33 +168,33 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
                         // or the height of the widget has also changed)
                         Scheduler.get().scheduleDeferred(new Command() {
                             public void execute() {
-                                Util.runWebkitOverflowAutoFix(getWidgetForPaintable().scrollBodyPanel
+                                Util.runWebkitOverflowAutoFix(getWidget().scrollBodyPanel
                                         .getElement());
                             }
                         });
                     }
                 } else {
-                    getWidgetForPaintable().initializeRows(uidl, rowData);
+                    getWidget().initializeRows(uidl, rowData);
                 }
             }
         }
 
-        if (!getWidgetForPaintable().isSelectable()) {
-            getWidgetForPaintable().scrollBody
+        if (!getWidget().isSelectable()) {
+            getWidget().scrollBody
                     .addStyleName(VScrollTable.CLASSNAME + "-body-noselection");
         } else {
-            getWidgetForPaintable().scrollBody
+            getWidget().scrollBody
                     .removeStyleName(VScrollTable.CLASSNAME
                             + "-body-noselection");
         }
 
-        getWidgetForPaintable().hideScrollPositionAnnotation();
-        getWidgetForPaintable().purgeUnregistryBag();
+        getWidget().hideScrollPositionAnnotation();
+        getWidget().purgeUnregistryBag();
 
         // selection is no in sync with server, avoid excessive server visits by
         // clearing to flag used during the normal operation
         if (!keyboardSelectionOverRowFetchInProgress) {
-            getWidgetForPaintable().selectionChanged = false;
+            getWidget().selectionChanged = false;
         }
 
         /*
@@ -202,11 +202,11 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
          * selectable mode and the next selected row was not yet rendered in the
          * client
          */
-        if (getWidgetForPaintable().selectFirstItemInNextRender
-                || getWidgetForPaintable().focusFirstItemInNextRender) {
-            getWidgetForPaintable().selectFirstRenderedRowInViewPort(
-                    getWidgetForPaintable().focusFirstItemInNextRender);
-            getWidgetForPaintable().selectFirstItemInNextRender = getWidgetForPaintable().focusFirstItemInNextRender = false;
+        if (getWidget().selectFirstItemInNextRender
+                || getWidget().focusFirstItemInNextRender) {
+            getWidget().selectFirstRenderedRowInViewPort(
+                    getWidget().focusFirstItemInNextRender);
+            getWidget().selectFirstItemInNextRender = getWidget().focusFirstItemInNextRender = false;
         }
 
         /*
@@ -214,35 +214,35 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
          * selectable mode and the next selected row was not yet rendered in the
          * client
          */
-        if (getWidgetForPaintable().selectLastItemInNextRender
-                || getWidgetForPaintable().focusLastItemInNextRender) {
-            getWidgetForPaintable().selectLastRenderedRowInViewPort(
-                    getWidgetForPaintable().focusLastItemInNextRender);
-            getWidgetForPaintable().selectLastItemInNextRender = getWidgetForPaintable().focusLastItemInNextRender = false;
+        if (getWidget().selectLastItemInNextRender
+                || getWidget().focusLastItemInNextRender) {
+            getWidget().selectLastRenderedRowInViewPort(
+                    getWidget().focusLastItemInNextRender);
+            getWidget().selectLastItemInNextRender = getWidget().focusLastItemInNextRender = false;
         }
-        getWidgetForPaintable().multiselectPending = false;
+        getWidget().multiselectPending = false;
 
-        if (getWidgetForPaintable().focusedRow != null) {
-            if (!getWidgetForPaintable().focusedRow.isAttached()
-                    && !getWidgetForPaintable().rowRequestHandler.isRunning()) {
+        if (getWidget().focusedRow != null) {
+            if (!getWidget().focusedRow.isAttached()
+                    && !getWidget().rowRequestHandler.isRunning()) {
                 // focused row has been orphaned, can't focus
-                getWidgetForPaintable().focusRowFromBody();
+                getWidget().focusRowFromBody();
             }
         }
 
-        getWidgetForPaintable().tabIndex = uidl.hasAttribute("tabindex") ? uidl
+        getWidget().tabIndex = uidl.hasAttribute("tabindex") ? uidl
                 .getIntAttribute("tabindex") : 0;
-        getWidgetForPaintable().setProperTabIndex();
+        getWidget().setProperTabIndex();
 
-        getWidgetForPaintable().resizeSortedColumnForSortIndicator();
+        getWidget().resizeSortedColumnForSortIndicator();
 
         // Remember this to detect situations where overflow hack might be
         // needed during scrolling
-        getWidgetForPaintable().lastRenderedHeight = getWidgetForPaintable().scrollBody
+        getWidget().lastRenderedHeight = getWidget().scrollBody
                 .getOffsetHeight();
 
-        getWidgetForPaintable().rendering = false;
-        getWidgetForPaintable().headerChangedDuringUpdate = false;
+        getWidget().rendering = false;
+        getWidget().headerChangedDuringUpdate = false;
 
     }
 
@@ -252,8 +252,8 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
     }
 
     @Override
-    public VScrollTable getWidgetForPaintable() {
-        return (VScrollTable) super.getWidgetForPaintable();
+    public VScrollTable getWidget() {
+        return (VScrollTable) super.getWidget();
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
@@ -261,10 +261,10 @@ public class VScrollTablePaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void layoutVertically() {
-        getWidgetForPaintable().updateHeight();
+        getWidget().updateHeight();
     }
 
     public void layoutHorizontally() {
-        getWidgetForPaintable().updateWidth();
+        getWidget().updateWidth();
     }
 }

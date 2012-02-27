@@ -23,24 +23,24 @@ public class VUnknownComponentPaintable extends VAbstractPaintableWidget {
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidgetForPaintable().setCaption(
+        getWidget().setCaption(
                 "Widgetset does not contain implementation for "
-                        + getWidgetForPaintable().serverClassName
+                        + getWidget().serverClassName
                         + ". Check its @ClientWidget mapping, widgetsets "
                         + "GWT module description file and re-compile your"
                         + " widgetset. In case you have downloaded a vaadin"
                         + " add-on package, you might want to refer to "
                         + "<a href='http://vaadin.com/using-addons'>add-on "
                         + "instructions</a>. Unrendered UIDL:");
-        if (getWidgetForPaintable().uidlTree != null) {
-            getWidgetForPaintable().uidlTree.removeFromParent();
+        if (getWidget().uidlTree != null) {
+            getWidget().uidlTree.removeFromParent();
         }
 
-        getWidgetForPaintable().uidlTree = new VUIDLBrowser(uidl,
+        getWidget().uidlTree = new VUIDLBrowser(uidl,
                 client.getConfiguration());
-        getWidgetForPaintable().uidlTree.open(true);
-        getWidgetForPaintable().uidlTree.setText("Unrendered UIDL");
-        getWidgetForPaintable().panel.add(getWidgetForPaintable().uidlTree);
+        getWidget().uidlTree.open(true);
+        getWidget().uidlTree.setText("Unrendered UIDL");
+        getWidget().panel.add(getWidget().uidlTree);
     }
 
     @Override
@@ -49,11 +49,11 @@ public class VUnknownComponentPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VUnknownComponent getWidgetForPaintable() {
-        return (VUnknownComponent) super.getWidgetForPaintable();
+    public VUnknownComponent getWidget() {
+        return (VUnknownComponent) super.getWidget();
     }
 
     public void setServerSideClassName(String serverClassName) {
-        getWidgetForPaintable().setServerSideClassName(serverClassName);
+        getWidget().setServerSideClassName(serverClassName);
     }
 }

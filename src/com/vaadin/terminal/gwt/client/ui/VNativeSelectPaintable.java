@@ -15,7 +15,7 @@ public class VNativeSelectPaintable extends VOptionGroupBasePaintable {
     }
 
     @Override
-    public VNativeSelect getWidgetForPaintable() {
-        return (VNativeSelect) super.getWidgetForPaintable();
+    public VNativeSelect getWidget() {
+        return (VNativeSelect) super.getWidget();
     }
 }

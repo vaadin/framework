@@ -85,7 +85,7 @@ public class VPaintableMap {
 
     @Deprecated
     public Widget getWidget(VPaintableWidget paintable) {
-        return paintable.getWidgetForPaintable();
+        return paintable.getWidget();
     }
 
     @Deprecated
@@ -99,7 +99,7 @@ public class VPaintableMap {
         idToPaintable.put(pid, paintable);
         if (paintable instanceof VPaintableWidget) {
             VPaintableWidget pw = (VPaintableWidget) paintable;
-            setPid(pw.getWidgetForPaintable().getElement(), pid);
+            setPid(pw.getWidget().getElement(), pid);
         }
     }
 
@@ -160,7 +160,7 @@ public class VPaintableMap {
     public Element getElement(String pid) {
         VPaintable p = getPaintable(pid);
         if (p instanceof VPaintableWidget) {
-            return ((VPaintableWidget) p).getWidgetForPaintable().getElement();
+            return ((VPaintableWidget) p).getWidget().getElement();
         }
 
         return null;
@@ -186,7 +186,7 @@ public class VPaintableMap {
         String id = getPid(p);
         Widget widget = null;
         if (p instanceof VPaintableWidget) {
-            widget = ((VPaintableWidget) p).getWidgetForPaintable();
+            widget = ((VPaintableWidget) p).getWidget();
         }
 
         if (id == null) {
@@ -242,7 +242,7 @@ public class VPaintableMap {
                 Widget widget = null;
                 if (paintable instanceof VPaintableWidget) {
                     widget = ((VPaintableWidget) paintable)
-                            .getWidgetForPaintable();
+                            .getWidget();
                 }
 
                 // check if can be cleaned

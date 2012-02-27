@@ -412,7 +412,7 @@ public class VAccordion extends VTabsheetBase {
 
         public void setContent(UIDL contentUidl) {
             final VPaintableWidget newPntbl = client.getPaintable(contentUidl);
-            Widget newWidget = newPntbl.getWidgetForPaintable();
+            Widget newWidget = newPntbl.getWidget();
             if (getChildWidget() == null) {
                 add(newWidget, content);
                 widgets.add(newWidget);
@@ -426,7 +426,7 @@ public class VAccordion extends VTabsheetBase {
                  * updated to report correct size.
                  */
                 client.handleComponentRelativeSize(newPntbl
-                        .getWidgetForPaintable());
+                        .getWidget());
             }
             if (isOpen() && isDynamicHeight()) {
                 setHeightFromWidget();
@@ -451,7 +451,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public boolean contains(VPaintableWidget p) {
-            return (getChildWidget() == p.getWidgetForPaintable());
+            return (getChildWidget() == p.getWidget());
         }
 
         public boolean isCaptionVisible() {

@@ -23,35 +23,35 @@ public class VProgressIndicatorPaintable extends VAbstractPaintableWidget {
         }
 
         // Save details
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
 
-        getWidgetForPaintable().indeterminate = uidl
+        getWidget().indeterminate = uidl
                 .getBooleanAttribute("indeterminate");
 
-        if (getWidgetForPaintable().indeterminate) {
+        if (getWidget().indeterminate) {
             String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
-            getWidgetForPaintable().addStyleName(basename);
+            getWidget().addStyleName(basename);
             if (getState().isDisabled()) {
-                getWidgetForPaintable().addStyleName(basename + "-disabled");
+                getWidget().addStyleName(basename + "-disabled");
             } else {
-                getWidgetForPaintable().removeStyleName(basename + "-disabled");
+                getWidget().removeStyleName(basename + "-disabled");
             }
         } else {
             try {
                 final float f = Float.parseFloat(uidl
                         .getStringAttribute("state"));
                 final int size = Math.round(100 * f);
-                DOM.setStyleAttribute(getWidgetForPaintable().indicator,
+                DOM.setStyleAttribute(getWidget().indicator,
                         "width", size + "%");
             } catch (final Exception e) {
             }
         }
 
         if (!getState().isDisabled()) {
-            getWidgetForPaintable().interval = uidl
+            getWidget().interval = uidl
                     .getIntAttribute("pollinginterval");
-            getWidgetForPaintable().poller
-                    .scheduleRepeating(getWidgetForPaintable().interval);
+            getWidget().poller
+                    .scheduleRepeating(getWidget().interval);
         }
     }
 
@@ -61,7 +61,7 @@ public class VProgressIndicatorPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VProgressIndicator getWidgetForPaintable() {
-        return (VProgressIndicator) super.getWidgetForPaintable();
+    public VProgressIndicator getWidget() {
+        return (VProgressIndicator) super.getWidget();
     }
 }

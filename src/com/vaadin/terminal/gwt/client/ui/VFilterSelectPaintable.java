@@ -26,14 +26,14 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
 
-        getWidgetForPaintable().readonly = getState().isReadOnly();
-        getWidgetForPaintable().enabled = !getState().isDisabled();
+        getWidget().readonly = getState().isReadOnly();
+        getWidget().enabled = !getState().isDisabled();
 
-        getWidgetForPaintable().tb.setEnabled(getWidgetForPaintable().enabled);
-        getWidgetForPaintable().updateReadOnly();
+        getWidget().tb.setEnabled(getWidget().enabled);
+        getWidget().updateReadOnly();
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
@@ -45,103 +45,103 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
         boolean noTextInput = uidl
                 .hasAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT)
                 && uidl.getBooleanAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT);
-        getWidgetForPaintable().setTextInputEnabled(!noTextInput);
+        getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
-            getWidgetForPaintable().tb.setTabIndex(uidl
+            getWidget().tb.setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidgetForPaintable().filteringmode = uidl
+            getWidget().filteringmode = uidl
                     .getIntAttribute("filteringmode");
         }
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().nullSelectionAllowed = uidl
+        getWidget().nullSelectionAllowed = uidl
                 .hasAttribute("nullselect");
 
-        getWidgetForPaintable().nullSelectItem = uidl
+        getWidget().nullSelectItem = uidl
                 .hasAttribute("nullselectitem")
                 && uidl.getBooleanAttribute("nullselectitem");
 
-        getWidgetForPaintable().currentPage = uidl.getIntVariable("page");
+        getWidget().currentPage = uidl.getIntVariable("page");
 
         if (uidl.hasAttribute("pagelength")) {
-            getWidgetForPaintable().pageLength = uidl
+            getWidget().pageLength = uidl
                     .getIntAttribute("pagelength");
         }
 
         if (uidl.hasAttribute(VFilterSelect.ATTR_INPUTPROMPT)) {
             // input prompt changed from server
-            getWidgetForPaintable().inputPrompt = uidl
+            getWidget().inputPrompt = uidl
                     .getStringAttribute(VFilterSelect.ATTR_INPUTPROMPT);
         } else {
-            getWidgetForPaintable().inputPrompt = "";
+            getWidget().inputPrompt = "";
         }
 
-        getWidgetForPaintable().suggestionPopup.updateStyleNames(uidl,
+        getWidget().suggestionPopup.updateStyleNames(uidl,
                 getState());
 
-        getWidgetForPaintable().allowNewItem = uidl
+        getWidget().allowNewItem = uidl
                 .hasAttribute("allownewitem");
-        getWidgetForPaintable().lastNewItemString = null;
+        getWidget().lastNewItemString = null;
 
-        getWidgetForPaintable().currentSuggestions.clear();
-        if (!getWidgetForPaintable().waitingForFilteringResponse) {
+        getWidget().currentSuggestions.clear();
+        if (!getWidget().waitingForFilteringResponse) {
             /*
              * Clear the current suggestions as the server response always
              * includes the new ones. Exception is when filtering, then we need
              * to retain the value if the user does not select any of the
              * options matching the filter.
              */
-            getWidgetForPaintable().currentSuggestion = null;
+            getWidget().currentSuggestion = null;
             /*
              * Also ensure no old items in menu. Unless cleared the old values
              * may cause odd effects on blur events. Suggestions in menu might
              * not necessary exist in select at all anymore.
              */
-            getWidgetForPaintable().suggestionPopup.menu.clearItems();
+            getWidget().suggestionPopup.menu.clearItems();
 
         }
 
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
-            getWidgetForPaintable().totalMatches = uidl
+            getWidget().totalMatches = uidl
                     .getIntAttribute("totalMatches");
         } else {
-            getWidgetForPaintable().totalMatches = 0;
+            getWidget().totalMatches = 0;
         }
 
         // used only to calculate minimum popup width
-        String captions = Util.escapeHTML(getWidgetForPaintable().inputPrompt);
+        String captions = Util.escapeHTML(getWidget().inputPrompt);
 
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
-            final FilterSelectSuggestion suggestion = getWidgetForPaintable().new FilterSelectSuggestion(
+            final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
                     optionUidl);
-            getWidgetForPaintable().currentSuggestions.add(suggestion);
+            getWidget().currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
-                if (!getWidgetForPaintable().waitingForFilteringResponse
-                        || getWidgetForPaintable().popupOpenerClicked) {
+                if (!getWidget().waitingForFilteringResponse
+                        || getWidget().popupOpenerClicked) {
                     String newSelectedOptionKey = Integer.toString(suggestion
                             .getOptionKey());
                     if (!newSelectedOptionKey
-                            .equals(getWidgetForPaintable().selectedOptionKey)
+                            .equals(getWidget().selectedOptionKey)
                             || suggestion.getReplacementString().equals(
-                                    getWidgetForPaintable().tb.getText())) {
+                                    getWidget().tb.getText())) {
                         // Update text field if we've got a new selection
                         // Also update if we've got the same text to retain old
                         // text selection behavior
-                        getWidgetForPaintable().setPromptingOff(
+                        getWidget().setPromptingOff(
                                 suggestion.getReplacementString());
-                        getWidgetForPaintable().selectedOptionKey = newSelectedOptionKey;
+                        getWidget().selectedOptionKey = newSelectedOptionKey;
                     }
                 }
-                getWidgetForPaintable().currentSuggestion = suggestion;
-                getWidgetForPaintable().setSelectedItemIcon(
+                getWidget().currentSuggestion = suggestion;
+                getWidget().setSelectedItemIcon(
                         suggestion.getIconUri());
             }
 
@@ -152,89 +152,89 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
             captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
-        if ((!getWidgetForPaintable().waitingForFilteringResponse || getWidgetForPaintable().popupOpenerClicked)
+        if ((!getWidget().waitingForFilteringResponse || getWidget().popupOpenerClicked)
                 && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
-            if (!getWidgetForPaintable().waitingForFilteringResponse
-                    || !getWidgetForPaintable().popupOpenerClicked) {
-                if (!getWidgetForPaintable().focused) {
+            if (!getWidget().waitingForFilteringResponse
+                    || !getWidget().popupOpenerClicked) {
+                if (!getWidget().focused) {
                     /*
                      * client.updateComponent overwrites all styles so we must
                      * ALWAYS set the prompting style at this point, even though
                      * we think it has been set already...
                      */
-                    getWidgetForPaintable().prompting = false;
-                    getWidgetForPaintable().setPromptingOn();
+                    getWidget().prompting = false;
+                    getWidget().setPromptingOn();
                 } else {
                     // we have focus in field, prompting can't be set on,
                     // instead just clear the input
-                    getWidgetForPaintable().tb.setValue("");
+                    getWidget().tb.setValue("");
                 }
             }
-            getWidgetForPaintable().setSelectedItemIcon(null);
-            getWidgetForPaintable().selectedOptionKey = null;
+            getWidget().setSelectedItemIcon(null);
+            getWidget().selectedOptionKey = null;
         }
 
-        if (getWidgetForPaintable().waitingForFilteringResponse
-                && getWidgetForPaintable().lastFilter.toLowerCase().equals(
+        if (getWidget().waitingForFilteringResponse
+                && getWidget().lastFilter.toLowerCase().equals(
                         uidl.getStringVariable("filter"))) {
-            getWidgetForPaintable().suggestionPopup.showSuggestions(
-                    getWidgetForPaintable().currentSuggestions,
-                    getWidgetForPaintable().currentPage,
-                    getWidgetForPaintable().totalMatches);
-            getWidgetForPaintable().waitingForFilteringResponse = false;
-            if (!getWidgetForPaintable().popupOpenerClicked
-                    && getWidgetForPaintable().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
+            getWidget().suggestionPopup.showSuggestions(
+                    getWidget().currentSuggestions,
+                    getWidget().currentPage,
+                    getWidget().totalMatches);
+            getWidget().waitingForFilteringResponse = false;
+            if (!getWidget().popupOpenerClicked
+                    && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
                 // we're paging w/ arrows
-                if (getWidgetForPaintable().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
-                    getWidgetForPaintable().suggestionPopup.menu
+                if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
+                    getWidget().suggestionPopup.menu
                             .selectLastItem();
                 } else {
-                    getWidgetForPaintable().suggestionPopup.menu
+                    getWidget().suggestionPopup.menu
                             .selectFirstItem();
                 }
 
                 // This is used for paging so we update the keyboard selection
                 // variable as well.
-                MenuItem activeMenuItem = getWidgetForPaintable().suggestionPopup.menu
+                MenuItem activeMenuItem = getWidget().suggestionPopup.menu
                         .getSelectedItem();
-                getWidgetForPaintable().suggestionPopup.menu
+                getWidget().suggestionPopup.menu
                         .setKeyboardSelectedItem(activeMenuItem);
 
                 // Update text field to contain the correct text
-                getWidgetForPaintable()
+                getWidget()
                         .setTextboxText(activeMenuItem.getText());
-                getWidgetForPaintable().tb.setSelectionRange(
-                        getWidgetForPaintable().lastFilter.length(),
+                getWidget().tb.setSelectionRange(
+                        getWidget().lastFilter.length(),
                         activeMenuItem.getText().length()
-                                - getWidgetForPaintable().lastFilter.length());
+                                - getWidget().lastFilter.length());
 
-                getWidgetForPaintable().selectPopupItemWhenResponseIsReceived = VFilterSelect.Select.NONE; // reset
+                getWidget().selectPopupItemWhenResponseIsReceived = VFilterSelect.Select.NONE; // reset
             }
-            if (getWidgetForPaintable().updateSelectionWhenReponseIsReceived) {
-                getWidgetForPaintable().suggestionPopup.menu
+            if (getWidget().updateSelectionWhenReponseIsReceived) {
+                getWidget().suggestionPopup.menu
                         .doPostFilterSelectedItemAction();
             }
         }
 
         // Calculate minumum textarea width
-        getWidgetForPaintable().suggestionPopupMinWidth = getWidgetForPaintable()
+        getWidget().suggestionPopupMinWidth = getWidget()
                 .minWidth(captions);
 
-        getWidgetForPaintable().popupOpenerClicked = false;
+        getWidget().popupOpenerClicked = false;
 
-        if (!getWidgetForPaintable().initDone) {
-            getWidgetForPaintable().updateRootWidth();
+        if (!getWidget().initDone) {
+            getWidget().updateRootWidth();
         }
 
         // Focus dependent style names are lost during the update, so we add
         // them here back again
-        if (getWidgetForPaintable().focused) {
-            getWidgetForPaintable().addStyleDependentName("focus");
+        if (getWidget().focused) {
+            getWidget().addStyleDependentName("focus");
         }
 
-        getWidgetForPaintable().initDone = true;
+        getWidget().initDone = true;
     }
 
     @Override
@@ -243,12 +243,12 @@ public class VFilterSelectPaintable extends VAbstractPaintableWidget implements
     }
 
     @Override
-    public VFilterSelect getWidgetForPaintable() {
-        return (VFilterSelect) super.getWidgetForPaintable();
+    public VFilterSelect getWidget() {
+        return (VFilterSelect) super.getWidget();
     }
 
     public void layout() {
-        VFilterSelect widget = getWidgetForPaintable();
+        VFilterSelect widget = getWidget();
         if (widget.initDone) {
             widget.updateRootWidth();
         }

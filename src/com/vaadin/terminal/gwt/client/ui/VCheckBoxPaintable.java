@@ -22,8 +22,8 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().id = uidl.getId();
+        getWidget().client = client;
+        getWidget().id = uidl.getId();
 
         // Ensure correct implementation
         super.updateFromUIDL(uidl, client);
@@ -31,70 +31,70 @@ public class VCheckBoxPaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().focusHandlerRegistration = EventHelper
+        getWidget().focusHandlerRegistration = EventHelper
                 .updateFocusHandler(this, client,
-                        getWidgetForPaintable().focusHandlerRegistration);
-        getWidgetForPaintable().blurHandlerRegistration = EventHelper
+                        getWidget().focusHandlerRegistration);
+        getWidget().blurHandlerRegistration = EventHelper
                 .updateBlurHandler(this, client,
-                        getWidgetForPaintable().blurHandlerRegistration);
+                        getWidget().blurHandlerRegistration);
 
         if (uidl.hasAttribute("error")) {
-            if (getWidgetForPaintable().errorIndicatorElement == null) {
-                getWidgetForPaintable().errorIndicatorElement = DOM
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM
                         .createSpan();
-                getWidgetForPaintable().errorIndicatorElement
+                getWidget().errorIndicatorElement
                         .setInnerHTML("&nbsp;");
                 DOM.setElementProperty(
-                        getWidgetForPaintable().errorIndicatorElement,
+                        getWidget().errorIndicatorElement,
                         "className", "v-errorindicator");
-                DOM.appendChild(getWidgetForPaintable().getElement(),
-                        getWidgetForPaintable().errorIndicatorElement);
-                DOM.sinkEvents(getWidgetForPaintable().errorIndicatorElement,
+                DOM.appendChild(getWidget().getElement(),
+                        getWidget().errorIndicatorElement);
+                DOM.sinkEvents(getWidget().errorIndicatorElement,
                         VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
             } else {
                 DOM.setStyleAttribute(
-                        getWidgetForPaintable().errorIndicatorElement,
+                        getWidget().errorIndicatorElement,
                         "display", "");
             }
-        } else if (getWidgetForPaintable().errorIndicatorElement != null) {
+        } else if (getWidget().errorIndicatorElement != null) {
             DOM.setStyleAttribute(
-                    getWidgetForPaintable().errorIndicatorElement, "display",
+                    getWidget().errorIndicatorElement, "display",
                     "none");
         }
 
         if (getState().isReadOnly()) {
-            getWidgetForPaintable().setEnabled(false);
+            getWidget().setEnabled(false);
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
-            if (getWidgetForPaintable().icon == null) {
-                getWidgetForPaintable().icon = new Icon(client);
-                DOM.insertChild(getWidgetForPaintable().getElement(),
-                        getWidgetForPaintable().icon.getElement(), 1);
-                getWidgetForPaintable().icon
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                DOM.insertChild(getWidget().getElement(),
+                        getWidget().icon.getElement(), 1);
+                getWidget().icon
                         .sinkEvents(VTooltip.TOOLTIP_EVENTS);
-                getWidgetForPaintable().icon.sinkEvents(Event.ONCLICK);
+                getWidget().icon.sinkEvents(Event.ONCLICK);
             }
-            getWidgetForPaintable().icon.setUri(uidl
+            getWidget().icon.setUri(uidl
                     .getStringAttribute(ATTRIBUTE_ICON));
-        } else if (getWidgetForPaintable().icon != null) {
+        } else if (getWidget().icon != null) {
             // detach icon
-            DOM.removeChild(getWidgetForPaintable().getElement(),
-                    getWidgetForPaintable().icon.getElement());
-            getWidgetForPaintable().icon = null;
+            DOM.removeChild(getWidget().getElement(),
+                    getWidget().icon.getElement());
+            getWidget().icon = null;
         }
 
         // Set text
-        getWidgetForPaintable().setText(getState().getCaption());
-        getWidgetForPaintable()
+        getWidget().setText(getState().getCaption());
+        getWidget()
                 .setValue(
-                        uidl.getBooleanVariable(getWidgetForPaintable().VARIABLE_STATE));
-        getWidgetForPaintable().immediate = getState().isImmediate();
+                        uidl.getBooleanVariable(getWidget().VARIABLE_STATE));
+        getWidget().immediate = getState().isImmediate();
     }
 
     @Override
-    public VCheckBox getWidgetForPaintable() {
-        return (VCheckBox) super.getWidgetForPaintable();
+    public VCheckBox getWidget() {
+        return (VCheckBox) super.getWidget();
     }
 
     @Override

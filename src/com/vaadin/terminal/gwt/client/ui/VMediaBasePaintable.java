@@ -28,15 +28,15 @@ public abstract class VMediaBasePaintable extends VAbstractPaintableWidget {
             return;
         }
 
-        getWidgetForPaintable().setControls(shouldShowControls(uidl));
-        getWidgetForPaintable().setAutoplay(shouldAutoplay(uidl));
-        getWidgetForPaintable().setMuted(isMediaMuted(uidl));
+        getWidget().setControls(shouldShowControls(uidl));
+        getWidget().setAutoplay(shouldAutoplay(uidl));
+        getWidget().setMuted(isMediaMuted(uidl));
 
         // Add all sources
         for (int ix = 0; ix < uidl.getChildCount(); ix++) {
             UIDL child = uidl.getChildUIDL(ix);
             if (TAG_SOURCE.equals(child.getTag())) {
-                getWidgetForPaintable().addSource(getSourceUrl(child),
+                getWidget().addSource(getSourceUrl(child),
                         getSourceType(child));
             }
         }
@@ -64,19 +64,19 @@ public abstract class VMediaBasePaintable extends VAbstractPaintableWidget {
 
     private void evalPlayCommand(UIDL uidl) {
         if (uidl.hasAttribute(ATTR_PLAY)) {
-            getWidgetForPaintable().play();
+            getWidget().play();
         }
     }
 
     private void evalPauseCommand(UIDL uidl) {
         if (uidl.hasAttribute(ATTR_PAUSE)) {
-            getWidgetForPaintable().pause();
+            getWidget().pause();
         }
     }
 
     @Override
-    public VMediaBase getWidgetForPaintable() {
-        return (VMediaBase) super.getWidgetForPaintable();
+    public VMediaBase getWidget() {
+        return (VMediaBase) super.getWidget();
     }
 
     /**
@@ -104,11 +104,11 @@ public abstract class VMediaBasePaintable extends VAbstractPaintableWidget {
         String alt = uidl.getStringAttribute(VMediaBasePaintable.ATTR_ALT_TEXT);
 
         if (alt == null || "".equals(alt)) {
-            alt = getWidgetForPaintable().getDefaultAltHtml();
+            alt = getWidget().getDefaultAltHtml();
         } else if (!allowHtmlContent(uidl)) {
             alt = Util.escapeHTML(alt);
         }
-        getWidgetForPaintable().setAltText(alt);
+        getWidget().setAltText(alt);
     }
 
 }

@@ -17,12 +17,12 @@ public class VMyDropTargetPaintable extends VAbstractPaintableWidget {
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
     }
 
     @Override
-    public VMyDropTarget getWidgetForPaintable() {
-        return (VMyDropTarget) super.getWidgetForPaintable();
+    public VMyDropTarget getWidget() {
+        return (VMyDropTarget) super.getWidget();
     }
 
     @Override

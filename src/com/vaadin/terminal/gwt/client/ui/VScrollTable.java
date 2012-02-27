@@ -4477,7 +4477,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         final VPaintableWidget cellContent = client
                                 .getPaintable((UIDL) cell);
 
-                        addCell(uidl, cellContent.getWidgetForPaintable(),
+                        addCell(uidl, cellContent.getWidget(),
                                 aligns[col++], style, sorted);
                         paintComponent(cellContent, (UIDL) cell);
                     }

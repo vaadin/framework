@@ -302,7 +302,7 @@ public class VCustomLayout extends ComplexPanel {
     /** Update caption for given widget */
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
         VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
-        Widget widget = paintable.getWidgetForPaintable();
+        Widget widget = paintable.getWidget();
         if (VCaption.isNeeded(uidl, paintable.getState())) {
             if (wrapper == null) {
                 // Add a wrapper between the layout and the child widget

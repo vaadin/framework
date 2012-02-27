@@ -128,7 +128,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
      *         or null if no relative coordinates can be calculated.
      */
     protected Element getRelativeToElement() {
-        return paintable.getWidgetForPaintable().getElement();
+        return paintable.getWidget().getElement();
     }
 
 }

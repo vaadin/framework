@@ -19,7 +19,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable implements
         if (isRealUpdate(uidl)) {
             // Handle stylename changes before generics (might affect size
             // calculations)
-            getWidgetForPaintable().handleStyleNames(uidl, getState());
+            getWidget().handleStyleNames(uidl, getState());
         }
 
         super.updateFromUIDL(uidl, client);
@@ -32,35 +32,35 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable implements
             // FIXME: This makes tab sheet tabs go to 1px width on every update
             // and then back to original width
             // update width later, in updateTabScroller();
-            DOM.setStyleAttribute(getWidgetForPaintable().tabs, "width", "1px");
-            DOM.setStyleAttribute(getWidgetForPaintable().tabs, "overflow",
+            DOM.setStyleAttribute(getWidget().tabs, "width", "1px");
+            DOM.setStyleAttribute(getWidget().tabs, "overflow",
                     "hidden");
         } else {
-            getWidgetForPaintable().showAllTabs();
-            DOM.setStyleAttribute(getWidgetForPaintable().tabs, "width", "");
-            DOM.setStyleAttribute(getWidgetForPaintable().tabs, "overflow",
+            getWidget().showAllTabs();
+            DOM.setStyleAttribute(getWidget().tabs, "width", "");
+            DOM.setStyleAttribute(getWidget().tabs, "overflow",
                     "visible");
-            getWidgetForPaintable().updateDynamicWidth();
+            getWidget().updateDynamicWidth();
         }
 
         if (!isUndefinedHeight()) {
             // Must update height after the styles have been set
-            getWidgetForPaintable().updateContentNodeHeight();
-            getWidgetForPaintable().updateOpenTabSize();
+            getWidget().updateContentNodeHeight();
+            getWidget().updateOpenTabSize();
         }
 
-        getWidgetForPaintable().iLayout();
+        getWidget().iLayout();
 
         // Re run relative size update to ensure optimal scrollbars
         // TODO isolate to situation that visible tab has undefined height
         try {
-            client.handleComponentRelativeSize(getWidgetForPaintable().tp
-                    .getWidget(getWidgetForPaintable().tp.getVisibleWidget()));
+            client.handleComponentRelativeSize(getWidget().tp
+                    .getWidget(getWidget().tp.getVisibleWidget()));
         } catch (Exception e) {
             // Ignore, most likely empty tabsheet
         }
 
-        getWidgetForPaintable().waitingForResponse = false;
+        getWidget().waitingForResponse = false;
     }
 
     @Override
@@ -69,8 +69,8 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable implements
     }
 
     @Override
-    public VTabsheet getWidgetForPaintable() {
-        return (VTabsheet) super.getWidgetForPaintable();
+    public VTabsheet getWidget() {
+        return (VTabsheet) super.getWidget();
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
@@ -78,7 +78,7 @@ public class VTabsheetPaintable extends VTabsheetBasePaintable implements
     }
 
     public void layout() {
-        VTabsheet tabsheet = getWidgetForPaintable();
+        VTabsheet tabsheet = getWidget();
 
         tabsheet.updateContentNodeHeight();
 

@@ -33,34 +33,34 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().rendering = true;
+        getWidget().rendering = true;
         // As VView is not created in the same way as all other paintables we
         // have to set the id here
         setId(uidl.getId());
-        getWidgetForPaintable().id = uidl.getId();
-        boolean firstPaint = getWidgetForPaintable().connection == null;
-        getWidgetForPaintable().connection = client;
+        getWidget().id = uidl.getId();
+        boolean firstPaint = getWidget().connection == null;
+        getWidget().connection = client;
 
-        getWidgetForPaintable().immediate = getState().isImmediate();
-        getWidgetForPaintable().resizeLazy = uidl
+        getWidget().immediate = getState().isImmediate();
+        getWidget().resizeLazy = uidl
                 .hasAttribute(VView.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
-        if (getWidgetForPaintable().theme != null
-                && !newTheme.equals(getWidgetForPaintable().theme)) {
+        if (getWidget().theme != null
+                && !newTheme.equals(getWidget().theme)) {
             // Complete page refresh is needed due css can affect layout
             // calculations etc
-            getWidgetForPaintable().reloadHostPage();
+            getWidget().reloadHostPage();
         } else {
-            getWidgetForPaintable().theme = newTheme;
+            getWidget().theme = newTheme;
         }
         // this also implicitly removes old styles
-        getWidgetForPaintable().setStyleName(
-                getWidgetForPaintable().getStylePrimaryName() + " "
+        getWidget().setStyleName(
+                getWidget().getStylePrimaryName() + " "
                         + getState().getStyle());
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
-        if (!getWidgetForPaintable().isEmbedded()
+        if (!getWidget().isEmbedded()
                 && getState().getCaption() != null) {
             // only change window title if we're in charge of the whole page
             com.google.gwt.user.client.Window.setTitle(getState().getCaption());
@@ -120,7 +120,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         if (isClosed) {
             // don't render the content, something else will be opened to this
             // browser view
-            getWidgetForPaintable().rendering = false;
+            getWidget().rendering = false;
             return;
         }
 
@@ -128,34 +128,34 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         UIDL childUidl = uidl.getChildUIDL(childIndex);
         final VPaintableWidget lo = client.getPaintable(childUidl);
 
-        if (getWidgetForPaintable().layout != null) {
-            if (getWidgetForPaintable().layout != lo) {
+        if (getWidget().layout != null) {
+            if (getWidget().layout != lo) {
                 // remove old
-                client.unregisterPaintable(getWidgetForPaintable().layout);
+                client.unregisterPaintable(getWidget().layout);
                 // add new
-                getWidgetForPaintable().setWidget(lo.getWidgetForPaintable());
-                getWidgetForPaintable().layout = lo;
+                getWidget().setWidget(lo.getWidget());
+                getWidget().layout = lo;
             }
         } else {
-            getWidgetForPaintable().setWidget(lo.getWidgetForPaintable());
-            getWidgetForPaintable().layout = lo;
+            getWidget().setWidget(lo.getWidget());
+            getWidget().layout = lo;
         }
 
-        getWidgetForPaintable().layout.updateFromUIDL(childUidl, client);
+        getWidget().layout.updateFromUIDL(childUidl, client);
 
         // Save currently open subwindows to track which will need to be closed
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
-                getWidgetForPaintable().subWindows);
+                getWidget().subWindows);
 
         // Handle other UIDL children
         while ((childUidl = uidl.getChildUIDL(++childIndex)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
-                if (getWidgetForPaintable().actionHandler == null) {
-                    getWidgetForPaintable().actionHandler = new ShortcutActionHandler(
-                            getWidgetForPaintable().id, client);
+                if (getWidget().actionHandler == null) {
+                    getWidget().actionHandler = new ShortcutActionHandler(
+                            getWidget().id, client);
                 }
-                getWidgetForPaintable().actionHandler
+                getWidget().actionHandler
                         .updateActionMap(childUidl);
             } else if (tag == "execJS") {
                 String script = childUidl.getStringAttribute("script");
@@ -170,11 +170,11 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
                 // subwindows
                 final VWindowPaintable w = (VWindowPaintable) client
                         .getPaintable(childUidl);
-                VWindow windowWidget = w.getWidgetForPaintable();
-                if (getWidgetForPaintable().subWindows.contains(windowWidget)) {
+                VWindow windowWidget = w.getWidget();
+                if (getWidget().subWindows.contains(windowWidget)) {
                     removedSubWindows.remove(windowWidget);
                 } else {
-                    getWidgetForPaintable().subWindows.add(windowWidget);
+                    getWidget().subWindows.add(windowWidget);
                 }
                 w.updateFromUIDL(childUidl, client);
             }
@@ -186,7 +186,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
             final VWindow w = rem.next();
             client.unregisterPaintable(VPaintableMap.get(getConnection())
                     .getPaintable(w));
-            getWidgetForPaintable().subWindows.remove(w);
+            getWidget().subWindows.remove(w);
             w.hide();
         }
 
@@ -198,7 +198,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
                             .getPaintableAttribute("focused", getConnection());
 
                     final Widget toBeFocused = paintable
-                            .getWidgetForPaintable();
+                            .getWidget();
                     /*
                      * Two types of Widgets can be focused, either implementing
                      * GWT HasFocus of a thinner Vaadin specific Focusable
@@ -219,64 +219,64 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
-            Window.addWindowClosingHandler(getWidgetForPaintable());
-            Window.addResizeHandler(getWidgetForPaintable());
+            Window.addWindowClosingHandler(getWidget());
+            Window.addResizeHandler(getWidget());
         }
 
-        getWidgetForPaintable().onResize();
+        getWidget().onResize();
 
         // finally set scroll position from UIDL
         if (uidl.hasVariable("scrollTop")) {
-            getWidgetForPaintable().scrollable = true;
-            getWidgetForPaintable().scrollTop = uidl
+            getWidget().scrollable = true;
+            getWidget().scrollTop = uidl
                     .getIntVariable("scrollTop");
-            DOM.setElementPropertyInt(getWidgetForPaintable().getElement(),
-                    "scrollTop", getWidgetForPaintable().scrollTop);
-            getWidgetForPaintable().scrollLeft = uidl
+            DOM.setElementPropertyInt(getWidget().getElement(),
+                    "scrollTop", getWidget().scrollTop);
+            getWidget().scrollLeft = uidl
                     .getIntVariable("scrollLeft");
-            DOM.setElementPropertyInt(getWidgetForPaintable().getElement(),
-                    "scrollLeft", getWidgetForPaintable().scrollLeft);
+            DOM.setElementPropertyInt(getWidget().getElement(),
+                    "scrollLeft", getWidget().scrollLeft);
         } else {
-            getWidgetForPaintable().scrollable = false;
+            getWidget().scrollable = false;
         }
 
         // Safari workaround must be run after scrollTop is updated as it sets
         // scrollTop using a deferred command.
         if (BrowserInfo.get().isSafari()) {
-            Util.runWebkitOverflowAutoFix(getWidgetForPaintable().getElement());
+            Util.runWebkitOverflowAutoFix(getWidget().getElement());
         }
 
-        getWidgetForPaintable().scrollIntoView(uidl);
+        getWidget().scrollIntoView(uidl);
 
         if (uidl.hasAttribute(VView.FRAGMENT_VARIABLE)) {
-            getWidgetForPaintable().currentFragment = uidl
+            getWidget().currentFragment = uidl
                     .getStringAttribute(VView.FRAGMENT_VARIABLE);
-            if (!getWidgetForPaintable().currentFragment.equals(History
+            if (!getWidget().currentFragment.equals(History
                     .getToken())) {
-                History.newItem(getWidgetForPaintable().currentFragment, true);
+                History.newItem(getWidget().currentFragment, true);
             }
         } else {
             // Initial request for which the server doesn't yet have a fragment
             // (and haven't shown any interest in getting one)
-            getWidgetForPaintable().currentFragment = History.getToken();
+            getWidget().currentFragment = History.getToken();
 
             // Include current fragment in the next request
-            client.updateVariable(getWidgetForPaintable().id,
+            client.updateVariable(getWidget().id,
                     VView.FRAGMENT_VARIABLE,
-                    getWidgetForPaintable().currentFragment, false);
+                    getWidget().currentFragment, false);
         }
 
-        getWidgetForPaintable().rendering = false;
+        getWidget().rendering = false;
     }
 
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        DOM.sinkEvents(getWidgetForPaintable().getElement(), Event.ONKEYDOWN
+        DOM.sinkEvents(getWidget().getElement(), Event.ONKEYDOWN
                 | Event.ONSCROLL);
 
         // iview is focused when created so element needs tabIndex
         // 1 due 0 is at the end of natural tabbing order
-        DOM.setElementProperty(getWidgetForPaintable().getElement(),
+        DOM.setElementProperty(getWidget().getElement(),
                 "tabIndex", "1");
 
         RootPanel root = RootPanel.get(rootPanelId);
@@ -294,14 +294,14 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
         root.addStyleName("v-theme-" + themeName);
 
-        root.add(getWidgetForPaintable());
+        root.add(getWidget());
 
         if (applicationConnection.getConfiguration().isStandalone()) {
             // set focus to iview element by default to listen possible keyboard
             // shortcuts. For embedded applications this is unacceptable as we
             // don't want to steal focus from the main page nor we don't want
             // side-effects from focusing (scrollIntoView).
-            getWidgetForPaintable().getElement().focus();
+            getWidget().getElement().focus();
         }
     }
 
@@ -311,7 +311,7 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
     };
 
@@ -320,8 +320,8 @@ public class VViewPaintable extends VAbstractPaintableWidgetContainer {
     }
 
     @Override
-    public VView getWidgetForPaintable() {
-        return (VView) super.getWidgetForPaintable();
+    public VView getWidget() {
+        return (VView) super.getWidget();
     }
 
     @Override

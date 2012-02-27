@@ -18,36 +18,36 @@ public class VUploadPaintable extends VAbstractPaintableWidget {
             return;
         }
         if (uidl.hasAttribute("notStarted")) {
-            getWidgetForPaintable().t.schedule(400);
+            getWidget().t.schedule(400);
             return;
         }
         if (uidl.hasAttribute("forceSubmit")) {
-            getWidgetForPaintable().submit();
+            getWidget().submit();
             return;
         }
-        getWidgetForPaintable().setImmediate(getState().isImmediate());
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
-        getWidgetForPaintable().nextUploadId = uidl.getIntAttribute("nextid");
+        getWidget().setImmediate(getState().isImmediate());
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
+        getWidget().nextUploadId = uidl.getIntAttribute("nextid");
         final String action = client.translateVaadinUri(uidl
                 .getStringVariable("action"));
-        getWidgetForPaintable().element.setAction(action);
+        getWidget().element.setAction(action);
         if (uidl.hasAttribute("buttoncaption")) {
-            getWidgetForPaintable().submitButton.setText(uidl
+            getWidget().submitButton.setText(uidl
                     .getStringAttribute("buttoncaption"));
-            getWidgetForPaintable().submitButton.setVisible(true);
+            getWidget().submitButton.setVisible(true);
         } else {
-            getWidgetForPaintable().submitButton.setVisible(false);
+            getWidget().submitButton.setVisible(false);
         }
-        getWidgetForPaintable().fu.setName(getWidgetForPaintable().paintableId
+        getWidget().fu.setName(getWidget().paintableId
                 + "_file");
 
         if (getState().isDisabled() || getState().isReadOnly()) {
-            getWidgetForPaintable().disableUpload();
+            getWidget().disableUpload();
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress
-            getWidgetForPaintable().enableUpload();
-            getWidgetForPaintable().ensureTargetFrame();
+            getWidget().enableUpload();
+            getWidget().ensureTargetFrame();
         }
     }
 
@@ -57,7 +57,7 @@ public class VUploadPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VUpload getWidgetForPaintable() {
-        return (VUpload) super.getWidgetForPaintable();
+    public VUpload getWidget() {
+        return (VUpload) super.getWidget();
     }
 }

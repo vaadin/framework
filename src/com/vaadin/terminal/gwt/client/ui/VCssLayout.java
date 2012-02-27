@@ -79,7 +79,7 @@ public class VCssLayout extends SimplePanel {
                     .hasNext();) {
                 final UIDL r = (UIDL) i.next();
                 final VPaintableWidget child = client.getPaintable(r);
-                final Widget widget = child.getWidgetForPaintable();
+                final Widget widget = child.getWidget();
                 if (widget.getParent() == this) {
                     oldWidgets.remove(widget);
                     VCaption vCaption = widgetToCaption.get(widget);
@@ -145,7 +145,7 @@ public class VCssLayout extends SimplePanel {
         }
 
         public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-            Widget widget = paintable.getWidgetForPaintable();
+            Widget widget = paintable.getWidget();
             VCaption caption = widgetToCaption.get(widget);
             if (VCaption.isNeeded(uidl, paintable.getState())) {
                 if (caption == null) {

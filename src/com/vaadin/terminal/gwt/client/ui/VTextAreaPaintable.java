@@ -18,11 +18,11 @@ public class VTextAreaPaintable extends VTextFieldPaintable {
         super.updateFromUIDL(uidl, client);
 
         if (uidl.hasAttribute("rows")) {
-            getWidgetForPaintable().setRows(uidl.getIntAttribute("rows"));
+            getWidget().setRows(uidl.getIntAttribute("rows"));
         }
 
-        if (getWidgetForPaintable().getMaxLength() >= 0) {
-            getWidgetForPaintable().sinkEvents(Event.ONKEYUP);
+        if (getWidget().getMaxLength() >= 0) {
+            getWidget().sinkEvents(Event.ONKEYUP);
         }
     }
 
@@ -32,7 +32,7 @@ public class VTextAreaPaintable extends VTextFieldPaintable {
     }
 
     @Override
-    public VTextArea getWidgetForPaintable() {
-        return (VTextArea) super.getWidgetForPaintable();
+    public VTextArea getWidget() {
+        return (VTextArea) super.getWidget();
     }
 }

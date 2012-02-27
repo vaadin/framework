@@ -23,33 +23,33 @@ public class VDateFieldPaintable extends VAbstractPaintableWidget {
         }
 
         // Save details
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().paintableId = uidl.getId();
-        getWidgetForPaintable().immediate = getState().isImmediate();
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
+        getWidget().immediate = getState().isImmediate();
 
-        getWidgetForPaintable().readonly = getState().isReadOnly();
-        getWidgetForPaintable().enabled = !getState().isDisabled();
+        getWidget().readonly = getState().isReadOnly();
+        getWidget().enabled = !getState().isDisabled();
 
         if (uidl.hasAttribute("locale")) {
             final String locale = uidl.getStringAttribute("locale");
             try {
-                getWidgetForPaintable().dts.setLocale(locale);
-                getWidgetForPaintable().currentLocale = locale;
+                getWidget().dts.setLocale(locale);
+                getWidget().currentLocale = locale;
             } catch (final LocaleNotLoadedException e) {
-                getWidgetForPaintable().currentLocale = getWidgetForPaintable().dts
+                getWidget().currentLocale = getWidget().dts
                         .getLocale();
                 VConsole.error("Tried to use an unloaded locale \"" + locale
                         + "\". Using default locale ("
-                        + getWidgetForPaintable().currentLocale + ").");
+                        + getWidget().currentLocale + ").");
                 VConsole.error(e);
             }
         }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
-        getWidgetForPaintable().showISOWeekNumbers = uidl
+        getWidget().showISOWeekNumbers = uidl
                 .getBooleanAttribute(VDateField.WEEK_NUMBERS)
-                && getWidgetForPaintable().dts.getFirstDayOfWeek() == 1;
+                && getWidget().dts.getFirstDayOfWeek() == 1;
 
         int newResolution;
         if (uidl.hasVariable("sec")) {
@@ -66,35 +66,35 @@ public class VDateFieldPaintable extends VAbstractPaintableWidget {
             newResolution = VDateField.RESOLUTION_YEAR;
         }
 
-        getWidgetForPaintable().currentResolution = newResolution;
+        getWidget().currentResolution = newResolution;
 
         // Add stylename that indicates current resolution
-        getWidgetForPaintable()
+        getWidget()
                 .addStyleName(
                         VDateField.CLASSNAME
                                 + "-"
                                 + VDateField
-                                        .resolutionToString(getWidgetForPaintable().currentResolution));
+                                        .resolutionToString(getWidget().currentResolution));
 
         final int year = uidl.getIntVariable("year");
-        final int month = (getWidgetForPaintable().currentResolution >= VDateField.RESOLUTION_MONTH) ? uidl
+        final int month = (getWidget().currentResolution >= VDateField.RESOLUTION_MONTH) ? uidl
                 .getIntVariable("month") : -1;
-        final int day = (getWidgetForPaintable().currentResolution >= VDateField.RESOLUTION_DAY) ? uidl
+        final int day = (getWidget().currentResolution >= VDateField.RESOLUTION_DAY) ? uidl
                 .getIntVariable("day") : -1;
-        final int hour = (getWidgetForPaintable().currentResolution >= VDateField.RESOLUTION_HOUR) ? uidl
+        final int hour = (getWidget().currentResolution >= VDateField.RESOLUTION_HOUR) ? uidl
                 .getIntVariable("hour") : 0;
-        final int min = (getWidgetForPaintable().currentResolution >= VDateField.RESOLUTION_MIN) ? uidl
+        final int min = (getWidget().currentResolution >= VDateField.RESOLUTION_MIN) ? uidl
                 .getIntVariable("min") : 0;
-        final int sec = (getWidgetForPaintable().currentResolution >= VDateField.RESOLUTION_SEC) ? uidl
+        final int sec = (getWidget().currentResolution >= VDateField.RESOLUTION_SEC) ? uidl
                 .getIntVariable("sec") : 0;
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            getWidgetForPaintable().setCurrentDate(
-                    new Date((long) getWidgetForPaintable().getTime(year,
+            getWidget().setCurrentDate(
+                    new Date((long) getWidget().getTime(year,
                             month, day, hour, min, sec, 0)));
         } else {
-            getWidgetForPaintable().setCurrentDate(null);
+            getWidget().setCurrentDate(null);
         }
     }
 
@@ -104,7 +104,7 @@ public class VDateFieldPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VDateField getWidgetForPaintable() {
-        return (VDateField) super.getWidgetForPaintable();
+    public VDateField getWidget() {
+        return (VDateField) super.getWidget();
     }
 }

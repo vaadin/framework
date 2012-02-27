@@ -33,30 +33,30 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
             return;
         }
         // These are for future server connections
-        getWidgetForPaintable().client = client;
-        getWidgetForPaintable().uidlId = uidl.getId();
+        getWidget().client = client;
+        getWidget().uidlId = uidl.getId();
 
-        getWidgetForPaintable().hostPopupVisible = uidl
+        getWidget().hostPopupVisible = uidl
                 .getBooleanVariable("popupVisibility");
 
-        getWidgetForPaintable().setHTML(uidl.getStringAttribute("html"));
+        getWidget().setHTML(uidl.getStringAttribute("html"));
 
         if (uidl.hasAttribute("hideOnMouseOut")) {
-            getWidgetForPaintable().popup.setHideOnMouseOut(uidl
+            getWidget().popup.setHideOnMouseOut(uidl
                     .getBooleanAttribute("hideOnMouseOut"));
         }
 
         // Render the popup if visible and show it.
-        if (getWidgetForPaintable().hostPopupVisible) {
+        if (getWidget().hostPopupVisible) {
             UIDL popupUIDL = uidl.getChildUIDL(0);
 
             // showPopupOnTop(popup, hostReference);
-            getWidgetForPaintable().preparePopup(getWidgetForPaintable().popup);
-            getWidgetForPaintable().popup.updateFromUIDL(popupUIDL, client);
+            getWidget().preparePopup(getWidget().popup);
+            getWidget().popup.updateFromUIDL(popupUIDL, client);
             if (getState().hasStyles()) {
                 final String[] styles = getState().getStyle().split(" ");
                 final StringBuffer styleBuf = new StringBuffer();
-                final String primaryName = getWidgetForPaintable().popup
+                final String primaryName = getWidget().popup
                         .getStylePrimaryName();
                 styleBuf.append(primaryName);
                 for (int i = 0; i < styles.length; i++) {
@@ -65,44 +65,44 @@ public class VPopupViewPaintable extends VAbstractPaintableWidgetContainer {
                     styleBuf.append("-");
                     styleBuf.append(styles[i]);
                 }
-                getWidgetForPaintable().popup.setStyleName(styleBuf.toString());
+                getWidget().popup.setStyleName(styleBuf.toString());
             } else {
-                getWidgetForPaintable().popup
-                        .setStyleName(getWidgetForPaintable().popup
+                getWidget().popup
+                        .setStyleName(getWidget().popup
                                 .getStylePrimaryName());
             }
-            getWidgetForPaintable().showPopup(getWidgetForPaintable().popup);
+            getWidget().showPopup(getWidget().popup);
 
             // The popup shouldn't be visible, try to hide it.
         } else {
-            getWidgetForPaintable().popup.hide();
+            getWidget().popup.hide();
         }
     }// updateFromUIDL
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {
         if (VCaption.isNeeded(uidl, component.getState())) {
-            if (getWidgetForPaintable().popup.captionWrapper != null) {
-                getWidgetForPaintable().popup.captionWrapper
+            if (getWidget().popup.captionWrapper != null) {
+                getWidget().popup.captionWrapper
                         .updateCaption(uidl);
             } else {
-                getWidgetForPaintable().popup.captionWrapper = new VCaptionWrapper(
+                getWidget().popup.captionWrapper = new VCaptionWrapper(
                         component, getConnection());
-                getWidgetForPaintable().popup
-                        .setWidget(getWidgetForPaintable().popup.captionWrapper);
-                getWidgetForPaintable().popup.captionWrapper
+                getWidget().popup
+                        .setWidget(getWidget().popup.captionWrapper);
+                getWidget().popup.captionWrapper
                         .updateCaption(uidl);
             }
         } else {
-            if (getWidgetForPaintable().popup.captionWrapper != null) {
-                getWidgetForPaintable().popup
-                        .setWidget(getWidgetForPaintable().popup.popupComponentWidget);
+            if (getWidget().popup.captionWrapper != null) {
+                getWidget().popup
+                        .setWidget(getWidget().popup.popupComponentWidget);
             }
         }
     }
 
     @Override
-    public VPopupView getWidgetForPaintable() {
-        return (VPopupView) super.getWidgetForPaintable();
+    public VPopupView getWidget() {
+        return (VPopupView) super.getWidget();
     }
 
     @Override

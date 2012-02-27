@@ -14,7 +14,7 @@ public class VPaintableLayoutSlot extends VLayoutSlot {
     private LayoutManager layoutManager;
 
     public VPaintableLayoutSlot(String baseClassName, VPaintableWidget paintable) {
-        super(baseClassName, paintable.getWidgetForPaintable());
+        super(baseClassName, paintable.getWidget());
         this.paintable = paintable;
         layoutManager = paintable.getLayoutManager();
     }
@@ -55,13 +55,13 @@ public class VPaintableLayoutSlot extends VLayoutSlot {
 
     @Override
     public int getWidgetHeight() {
-        return layoutManager.getOuterHeight(paintable.getWidgetForPaintable()
+        return layoutManager.getOuterHeight(paintable.getWidget()
                 .getElement());
     }
 
     @Override
     public int getWidgetWidth() {
-        return layoutManager.getOuterWidth(paintable.getWidgetForPaintable()
+        return layoutManager.getOuterWidth(paintable.getWidget()
                 .getElement());
     }
 

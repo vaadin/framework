@@ -25,7 +25,7 @@ public abstract class VAbstractPaintableWidgetContainer extends
     public Collection<VPaintableWidget> getChildren() {
         Collection<VPaintableWidget> children = new ArrayList<VPaintableWidget>();
 
-        addDescendantPaintables(getWidgetForPaintable(), children,
+        addDescendantPaintables(getWidget(), children,
                 VPaintableMap.get(getConnection()));
 
         return children;

@@ -22,7 +22,7 @@ public class VPasswordFieldPaintable extends VTextFieldPaintable {
     }
 
     @Override
-    public VPasswordField getWidgetForPaintable() {
-        return (VPasswordField) super.getWidgetForPaintable();
+    public VPasswordField getWidget() {
+        return (VPasswordField) super.getWidget();
     }
 }

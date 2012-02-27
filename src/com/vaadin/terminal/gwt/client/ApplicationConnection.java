@@ -826,7 +826,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(view.getWidgetForPaintable().getElement(),
+            DOM.appendChild(view.getWidget().getElement(),
                     loadElement);
             VConsole.log("inserting load indicator");
         }
@@ -968,7 +968,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        view.getWidgetForPaintable().clear();
+                        view.getWidget().clear();
                         getPaintableMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1838,7 +1838,7 @@ public class ApplicationConnection {
         @Override
         public void run() {
             VConsole.log("Running re-layout of " + view.getClass().getName());
-            runDescendentsLayout(view.getWidgetForPaintable());
+            runDescendentsLayout(view.getWidget());
             isPending = false;
         }
     };

@@ -22,14 +22,14 @@ public class VCustomComponentPaintable extends
         final UIDL child = uidl.getChildUIDL(0);
         if (child != null) {
             final VPaintableWidget paintable = client.getPaintable(child);
-            Widget widget = paintable.getWidgetForPaintable();
-            if (widget != getWidgetForPaintable().getWidget()) {
-                if (getWidgetForPaintable().getWidget() != null) {
+            Widget widget = paintable.getWidget();
+            if (widget != getWidget().getWidget()) {
+                if (getWidget().getWidget() != null) {
                     client.unregisterPaintable(VPaintableMap.get(client)
-                            .getPaintable(getWidgetForPaintable().getWidget()));
-                    getWidgetForPaintable().clear();
+                            .getPaintable(getWidget().getWidget()));
+                    getWidget().clear();
                 }
-                getWidgetForPaintable().setWidget(widget);
+                getWidget().setWidget(widget);
             }
             paintable.updateFromUIDL(child, client);
         }
@@ -41,8 +41,8 @@ public class VCustomComponentPaintable extends
     }
 
     @Override
-    public VCustomComponent getWidgetForPaintable() {
-        return (VCustomComponent) super.getWidgetForPaintable();
+    public VCustomComponent getWidget() {
+        return (VCustomComponent) super.getWidget();
     }
 
     public void updateCaption(VPaintableWidget component, UIDL uidl) {

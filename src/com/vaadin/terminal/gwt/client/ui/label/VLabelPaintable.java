@@ -19,7 +19,7 @@ public class VLabelPaintable extends VAbstractPaintableWidget {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
-        getWidgetForPaintable().setConnection(client);
+        getWidget().setConnection(client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -28,36 +28,36 @@ public class VLabelPaintable extends VAbstractPaintableWidget {
 
         final String mode = uidl.getStringAttribute("mode");
         if (mode == null || "text".equals(mode)) {
-            getWidgetForPaintable().setText(uidl.getChildString(0));
+            getWidget().setText(uidl.getChildString(0));
         } else if ("pre".equals(mode)) {
             PreElement preElement = Document.get().createPreElement();
             preElement.setInnerText(uidl.getChildUIDL(0).getChildString(0));
             // clear existing content
-            getWidgetForPaintable().setHTML("");
+            getWidget().setHTML("");
             // add preformatted text to dom
-            getWidgetForPaintable().getElement().appendChild(preElement);
+            getWidget().getElement().appendChild(preElement);
         } else if ("uidl".equals(mode)) {
-            getWidgetForPaintable().setHTML(uidl.getChildrenAsXML());
+            getWidget().setHTML(uidl.getChildrenAsXML());
         } else if ("xhtml".equals(mode)) {
             UIDL content = uidl.getChildUIDL(0).getChildUIDL(0);
             if (content.getChildCount() > 0) {
-                getWidgetForPaintable().setHTML(content.getChildString(0));
+                getWidget().setHTML(content.getChildString(0));
             } else {
-                getWidgetForPaintable().setHTML("");
+                getWidget().setHTML("");
             }
             sinkOnloads = true;
         } else if ("xml".equals(mode)) {
-            getWidgetForPaintable().setHTML(
+            getWidget().setHTML(
                     uidl.getChildUIDL(0).getChildString(0));
         } else if ("raw".equals(mode)) {
-            getWidgetForPaintable().setHTML(
+            getWidget().setHTML(
                     uidl.getChildUIDL(0).getChildString(0));
             sinkOnloads = true;
         } else {
-            getWidgetForPaintable().setText("");
+            getWidget().setText("");
         }
         if (sinkOnloads) {
-            Util.sinkOnloadForImages(getWidgetForPaintable().getElement());
+            Util.sinkOnloadForImages(getWidget().getElement());
         }
     }
 
@@ -67,8 +67,8 @@ public class VLabelPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VLabel getWidgetForPaintable() {
-        return (VLabel) super.getWidgetForPaintable();
+    public VLabel getWidget() {
+        return (VLabel) super.getWidget();
     }
 
 }

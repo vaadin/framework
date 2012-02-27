@@ -79,7 +79,7 @@ public class LayoutManager {
     }-*/;
 
     private static final MeasuredSize getMeasuredSize(VPaintableWidget paintable) {
-        Element element = paintable.getWidgetForPaintable().getElement();
+        Element element = paintable.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
             measuredSize = new MeasuredSize();
@@ -226,7 +226,7 @@ public class LayoutManager {
     private void measureElements(VPaintableWidget[] paintableWidgets) {
 
         for (VPaintableWidget paintableWidget : paintableWidgets) {
-            Element element = paintableWidget.getWidgetForPaintable()
+            Element element = paintableWidget.getWidget()
                     .getElement();
             MeasuredSize measuredSize = getMeasuredSize(paintableWidget);
             measuredAndUpdate(element, measuredSize);

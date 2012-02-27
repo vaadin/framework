@@ -746,9 +746,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private void updateContentsSize() {
         // Update child widget dimensions
         if (client != null) {
-            client.handleComponentRelativeSize(layout.getWidgetForPaintable());
+            client.handleComponentRelativeSize(layout.getWidget());
             client.runDescendentsLayout((HasWidgets) layout
-                    .getWidgetForPaintable());
+                    .getWidget());
         }
 
         Util.runWebkitOverflowAutoFix(contentPanel.getElement());
@@ -963,7 +963,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             setNaturalWidth();
         }
         // layout size change may affect its available space (scrollbars)
-        client.handleComponentRelativeSize(layout.getWidgetForPaintable());
+        client.handleComponentRelativeSize(layout.getWidget());
     }
 
     public ShortcutActionHandler getShortcutActionHandler() {

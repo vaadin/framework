@@ -8,8 +8,8 @@ import com.google.gwt.core.client.GWT;
 public class VVerticalLayoutPaintable extends VMeasuringOrderedLayoutPaintable {
 
     @Override
-    public VVerticalLayout getWidgetForPaintable() {
-        return (VVerticalLayout) super.getWidgetForPaintable();
+    public VVerticalLayout getWidget() {
+        return (VVerticalLayout) super.getWidget();
     }
 
     @Override

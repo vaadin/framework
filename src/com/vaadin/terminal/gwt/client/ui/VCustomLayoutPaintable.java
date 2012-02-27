@@ -20,28 +20,28 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
     /** Update the layout from UIDL */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
         // ApplicationConnection manages generic component features
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
 
-        getWidgetForPaintable().pid = uidl.getId();
-        if (!getWidgetForPaintable().hasTemplate()) {
+        getWidget().pid = uidl.getId();
+        if (!getWidget().hasTemplate()) {
             // Update HTML template only once
-            getWidgetForPaintable().initializeHTML(uidl, client);
+            getWidget().initializeHTML(uidl, client);
         }
 
         // Evaluate scripts
-        VCustomLayout.eval(getWidgetForPaintable().scripts);
-        getWidgetForPaintable().scripts = null;
+        VCustomLayout.eval(getWidget().scripts);
+        getWidget().scripts = null;
 
         // TODO Check if this is needed
-        client.runDescendentsLayout(getWidgetForPaintable());
+        client.runDescendentsLayout(getWidget());
 
         Set<Widget> oldWidgets = new HashSet<Widget>();
-        oldWidgets.addAll(getWidgetForPaintable().locationToWidget.values());
+        oldWidgets.addAll(getWidget().locationToWidget.values());
 
         // For all contained widgets
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -51,9 +51,9 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
                 UIDL childUIDL = uidlForChild.getChildUIDL(0);
                 final VPaintableWidget childPaintable = client
                         .getPaintable(childUIDL);
-                Widget childWidget = childPaintable.getWidgetForPaintable();
+                Widget childWidget = childPaintable.getWidget();
                 try {
-                    getWidgetForPaintable().setWidget(childWidget, location);
+                    getWidget().setWidget(childWidget, location);
                     childPaintable.updateFromUIDL(childUIDL, client);
                 } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
@@ -66,18 +66,18 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
             Widget oldWidget = iterator.next();
             if (oldWidget.isAttached()) {
                 // slot of this widget is emptied, remove it
-                getWidgetForPaintable().remove(oldWidget);
+                getWidget().remove(oldWidget);
             }
         }
 
         // TODO Check if this is needed
-        client.runDescendentsLayout(getWidgetForPaintable());
+        client.runDescendentsLayout(getWidget());
 
     }
 
     @Override
-    public VCustomLayout getWidgetForPaintable() {
-        return (VCustomLayout) super.getWidgetForPaintable();
+    public VCustomLayout getWidget() {
+        return (VCustomLayout) super.getWidget();
     }
 
     @Override
@@ -86,12 +86,12 @@ public class VCustomLayoutPaintable extends VAbstractPaintableWidgetContainer
     }
 
     public void updateCaption(VPaintableWidget paintable, UIDL uidl) {
-        getWidgetForPaintable().updateCaption(paintable, uidl);
+        getWidget().updateCaption(paintable, uidl);
 
     }
 
     public void layout() {
-        getWidgetForPaintable().iLayoutJS(
-                DOM.getFirstChild(getWidgetForPaintable().getElement()));
+        getWidget().iLayoutJS(
+                DOM.getFirstChild(getWidget().getElement()));
     }
 }

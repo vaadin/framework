@@ -335,7 +335,7 @@ public class VDragAndDropManager {
             private void addActiveDragSourceStyleName() {
                 VPaintableWidget dragSource = currentDrag.getTransferable()
                         .getDragSource();
-                dragSource.getWidgetForPaintable().addStyleName(
+                dragSource.getWidget().addStyleName(
                         ACTIVE_DRAG_SOURCE_STYLENAME);
             }
         };
@@ -544,7 +544,7 @@ public class VDragAndDropManager {
     }
 
     private void removeActiveDragSourceStyleName(VPaintableWidget dragSource) {
-        dragSource.getWidgetForPaintable().removeStyleName(
+        dragSource.getWidget().removeStyleName(
                 ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 

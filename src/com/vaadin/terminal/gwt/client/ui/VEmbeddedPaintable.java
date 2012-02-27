@@ -36,20 +36,20 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
         }
 
         // Save details
-        getWidgetForPaintable().client = client;
+        getWidget().client = client;
 
         boolean clearBrowserElement = true;
 
         clickEventHandler.handleEventHandlerRegistration(client);
 
         if (uidl.hasAttribute("type")) {
-            getWidgetForPaintable().type = uidl.getStringAttribute("type");
-            if (getWidgetForPaintable().type.equals("image")) {
-                getWidgetForPaintable().addStyleName(
+            getWidget().type = uidl.getStringAttribute("type");
+            if (getWidget().type.equals("image")) {
+                getWidget().addStyleName(
                         VEmbedded.CLASSNAME + "-image");
                 Element el = null;
                 boolean created = false;
-                NodeList<Node> nodes = getWidgetForPaintable().getElement()
+                NodeList<Node> nodes = getWidget().getElement()
                         .getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
@@ -61,7 +61,7 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
                     }
                 }
                 if (el == null) {
-                    getWidgetForPaintable().setHTML("");
+                    getWidget().setHTML("");
                     el = DOM.createImg();
                     created = true;
                     DOM.sinkEvents(el, Event.ONLOAD);
@@ -72,59 +72,59 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
                 style.setProperty("width", getState().getWidth());
                 style.setProperty("height", getState().getHeight());
 
-                DOM.setElementProperty(el, "src", getWidgetForPaintable()
+                DOM.setElementProperty(el, "src", getWidget()
                         .getSrc(uidl, client));
 
                 if (created) {
                     // insert in dom late
-                    getWidgetForPaintable().getElement().appendChild(el);
+                    getWidget().getElement().appendChild(el);
                 }
 
                 /*
                  * Sink tooltip events so tooltip is displayed when hovering the
                  * image.
                  */
-                getWidgetForPaintable().sinkEvents(VTooltip.TOOLTIP_EVENTS);
+                getWidget().sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
-            } else if (getWidgetForPaintable().type.equals("browser")) {
-                getWidgetForPaintable().addStyleName(
+            } else if (getWidget().type.equals("browser")) {
+                getWidget().addStyleName(
                         VEmbedded.CLASSNAME + "-browser");
-                if (getWidgetForPaintable().browserElement == null) {
-                    getWidgetForPaintable().setHTML(
+                if (getWidget().browserElement == null) {
+                    getWidget().setHTML(
                             "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
                                     + " allowTransparency=\"true\" src=\"\""
                                     + " name=\"" + uidl.getId()
                                     + "\"></iframe>");
-                    getWidgetForPaintable().browserElement = DOM
-                            .getFirstChild(getWidgetForPaintable().getElement());
+                    getWidget().browserElement = DOM
+                            .getFirstChild(getWidget().getElement());
                 }
-                DOM.setElementAttribute(getWidgetForPaintable().browserElement,
-                        "src", getWidgetForPaintable().getSrc(uidl, client));
+                DOM.setElementAttribute(getWidget().browserElement,
+                        "src", getWidget().getSrc(uidl, client));
                 clearBrowserElement = false;
             } else {
                 VConsole.log("Unknown Embedded type '"
-                        + getWidgetForPaintable().type + "'");
+                        + getWidget().type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
                 // Handle embedding of Flash
-                getWidgetForPaintable().addStyleName(
+                getWidget().addStyleName(
                         VEmbedded.CLASSNAME + "-flash");
-                getWidgetForPaintable().setHTML(
-                        getWidgetForPaintable().createFlashEmbed(uidl));
+                getWidget().setHTML(
+                        getWidget().createFlashEmbed(uidl));
 
             } else if (mime.equals("image/svg+xml")) {
-                getWidgetForPaintable().addStyleName(
+                getWidget().addStyleName(
                         VEmbedded.CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = VEmbedded.getParameters(uidl);
                 if (parameters.get("data") == null) {
-                    data = getWidgetForPaintable().getSrc(uidl, client);
+                    data = getWidget().getSrc(uidl, client);
                 } else {
                     data = "data:image/svg+xml," + parameters.get("data");
                 }
-                getWidgetForPaintable().setHTML("");
+                getWidget().setHTML("");
                 ObjectElement obj = Document.get().createObjectElement();
                 obj.setType(mime);
                 obj.setData(data);
@@ -154,7 +154,7 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
                     obj.setAttribute("standby",
                             uidl.getStringAttribute("standby"));
                 }
-                getWidgetForPaintable().getElement().appendChild(obj);
+                getWidget().getElement().appendChild(obj);
 
             } else {
                 VConsole.log("Unknown Embedded mimetype '" + mime + "'");
@@ -164,7 +164,7 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
         }
 
         if (clearBrowserElement) {
-            getWidgetForPaintable().browserElement = null;
+            getWidget().browserElement = null;
         }
     }
 
@@ -174,8 +174,8 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
     }
 
     @Override
-    public VEmbedded getWidgetForPaintable() {
-        return (VEmbedded) super.getWidgetForPaintable();
+    public VEmbedded getWidget() {
+        return (VEmbedded) super.getWidget();
     }
 
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(
@@ -184,7 +184,7 @@ public class VEmbeddedPaintable extends VAbstractPaintableWidget {
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
                 H handler, Type<H> type) {
-            return getWidgetForPaintable().addDomHandler(handler, type);
+            return getWidget().addDomHandler(handler, type);
         }
 
     };

@@ -19,32 +19,32 @@ public class VDateFieldCalendarPaintable extends VDateFieldPaintable {
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
-        getWidgetForPaintable().calendarPanel
-                .setShowISOWeekNumbers(getWidgetForPaintable()
+        getWidget().calendarPanel
+                .setShowISOWeekNumbers(getWidget()
                         .isShowISOWeekNumbers());
-        getWidgetForPaintable().calendarPanel
-                .setDateTimeService(getWidgetForPaintable()
+        getWidget().calendarPanel
+                .setDateTimeService(getWidget()
                         .getDateTimeService());
-        getWidgetForPaintable().calendarPanel
-                .setResolution(getWidgetForPaintable().getCurrentResolution());
-        Date currentDate = getWidgetForPaintable().getCurrentDate();
+        getWidget().calendarPanel
+                .setResolution(getWidget().getCurrentResolution());
+        Date currentDate = getWidget().getCurrentDate();
         if (currentDate != null) {
-            getWidgetForPaintable().calendarPanel.setDate(new Date(currentDate
+            getWidget().calendarPanel.setDate(new Date(currentDate
                     .getTime()));
         } else {
-            getWidgetForPaintable().calendarPanel.setDate(null);
+            getWidget().calendarPanel.setDate(null);
         }
 
-        if (getWidgetForPaintable().currentResolution > VDateField.RESOLUTION_DAY) {
-            getWidgetForPaintable().calendarPanel
+        if (getWidget().currentResolution > VDateField.RESOLUTION_DAY) {
+            getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
                         public void changed(int hour, int min, int sec, int msec) {
-                            Date d = getWidgetForPaintable().getDate();
+                            Date d = getWidget().getDate();
                             if (d == null) {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidgetForPaintable().calendarPanel
+                                d = (Date) getWidget().calendarPanel
                                         .getDate().clone();
                             }
                             d.setHours(hour);
@@ -53,19 +53,19 @@ public class VDateFieldCalendarPaintable extends VDateFieldPaintable {
                             DateTimeService.setMilliseconds(d, msec);
 
                             // Always update time changes to the server
-                            getWidgetForPaintable().calendarPanel.setDate(d);
-                            getWidgetForPaintable().updateValueFromPanel();
+                            getWidget().calendarPanel.setDate(d);
+                            getWidget().updateValueFromPanel();
                         }
                     });
         }
 
-        if (getWidgetForPaintable().currentResolution <= VDateField.RESOLUTION_MONTH) {
-            getWidgetForPaintable().calendarPanel
+        if (getWidget().currentResolution <= VDateField.RESOLUTION_MONTH) {
+            getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
                         public void focusChanged(Date date) {
                             Date date2 = new Date();
-                            if (getWidgetForPaintable().calendarPanel.getDate() != null) {
-                                date2.setTime(getWidgetForPaintable().calendarPanel
+                            if (getWidget().calendarPanel.getDate() != null) {
+                                date2.setTime(getWidget().calendarPanel
                                         .getDate().getTime());
                             }
                             /*
@@ -73,20 +73,20 @@ public class VDateFieldCalendarPaintable extends VDateFieldPaintable {
                              */
                             date2.setYear(date.getYear());
                             date2.setMonth(date.getMonth());
-                            getWidgetForPaintable().calendarPanel
+                            getWidget().calendarPanel
                                     .setDate(date2);
                             /*
                              * Then update the value from panel to server
                              */
-                            getWidgetForPaintable().updateValueFromPanel();
+                            getWidget().updateValueFromPanel();
                         }
                     });
         } else {
-            getWidgetForPaintable().calendarPanel.setFocusChangeListener(null);
+            getWidget().calendarPanel.setFocusChangeListener(null);
         }
 
         // Update possible changes
-        getWidgetForPaintable().calendarPanel.renderCalendar();
+        getWidget().calendarPanel.renderCalendar();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class VDateFieldCalendarPaintable extends VDateFieldPaintable {
     }
 
     @Override
-    public VDateFieldCalendar getWidgetForPaintable() {
-        return (VDateFieldCalendar) super.getWidgetForPaintable();
+    public VDateFieldCalendar getWidget() {
+        return (VDateFieldCalendar) super.getWidget();
     }
 }
