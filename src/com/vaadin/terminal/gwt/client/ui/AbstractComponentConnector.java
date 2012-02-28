@@ -9,19 +9,20 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
-public abstract class AbstractComponentConnector implements ComponentConnector {
+public abstract class AbstractComponentConnector extends AbstractConnector
+        implements ComponentConnector {
 
     // Generic UIDL parameter names, to be moved to shared state.
     // Attributes are here mainly if they apply to all paintable widgets or
@@ -36,8 +37,6 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private Widget widget;
-    private ApplicationConnection connection;
-    private String id;
 
     /* State variables */
     private boolean enabled = true;
@@ -53,12 +52,6 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
      * Default constructor
      */
     public AbstractComponentConnector() {
-    }
-
-    /**
-     * Called after the application connection reference has been set up
-     */
-    public void init() {
     }
 
     /**
@@ -81,34 +74,6 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
         }
 
         return widget;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.VPaintable#getConnection()
-     */
-    public final ApplicationConnection getConnection() {
-        return connection;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.VPaintable#setConnection(com.vaadin.terminal
-     * .gwt.client.ApplicationConnection)
-     */
-    public final void setConnection(ApplicationConnection connection) {
-        this.connection = connection;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     /**
@@ -156,7 +121,8 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
                 return null;
             }
             if (paintableMap.isConnector(w)) {
-                return (ComponentContainerConnector) paintableMap.getConnector(w);
+                return (ComponentContainerConnector) paintableMap
+                        .getConnector(w);
             }
         }
     }
@@ -184,8 +150,8 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
         setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
 
         if (uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(getWidget().getElement(), "id",
-                    uidl.getId().substring(5));
+            DOM.setElementProperty(getWidget().getElement(), "id", uidl.getId()
+                    .substring(5));
         }
 
         if (!isVisible()) {
@@ -203,8 +169,7 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
          */
-        if (uidl.hasAttribute("tabindex")
-                && getWidget() instanceof Focusable) {
+        if (uidl.hasAttribute("tabindex") && getWidget() instanceof Focusable) {
             ((Focusable) getWidget()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
@@ -471,6 +436,6 @@ public abstract class AbstractComponentConnector implements ComponentConnector {
     }
 
     public LayoutManager getLayoutManager() {
-        return LayoutManager.get(connection);
+        return LayoutManager.get(getConnection());
     }
 }

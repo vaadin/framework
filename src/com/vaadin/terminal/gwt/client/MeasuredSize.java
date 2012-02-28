@@ -184,7 +184,6 @@ public class MeasuredSize {
         setOuterHeight(requiredHeight + marginHeight);
 
         int requiredWidth = Util.getRequiredWidth(element);
-        VConsole.log("Width of " + element.toString() + " is " + requiredWidth);
         int marginWidth = sumWidths(margins);
         setOuterWidth(requiredWidth + marginWidth);
 

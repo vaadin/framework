@@ -241,6 +241,13 @@ public class ApplicationConfiguration implements EntryPoint {
         return appUri;
     }
 
+    public String getThemeName() {
+        String uri = getThemeUri();
+        String themeName = uri.substring(uri.lastIndexOf('/'));
+        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
+        return themeName;
+    }
+
     public String getThemeUri() {
         return themeUri;
     }

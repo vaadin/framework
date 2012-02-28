@@ -34,10 +34,7 @@ public class RootConnector extends AbstractComponentContainerConnector {
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidget().rendering = true;
-        // As VView is not created in the same way as all other paintables we
-        // have to set the id here
-        setId(uidl.getId());
-        getWidget().id = uidl.getId();
+        getWidget().id = getId();
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
 
@@ -275,15 +272,9 @@ public class RootConnector extends AbstractComponentContainerConnector {
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user
         root.getElement().setInnerHTML("");
-        // For backwards compatibility with static index pages only.
-        // No longer added by AbstractApplicationServlet/Portlet
-        root.removeStyleName("v-app-loading");
 
-        String themeUri = applicationConnection.getConfiguration()
-                .getThemeUri();
-        String themeName = themeUri.substring(themeUri.lastIndexOf('/'));
-        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
-        root.addStyleName("v-theme-" + themeName);
+        root.addStyleName("v-theme-"
+                + applicationConnection.getConfiguration().getThemeName());
 
         root.add(getWidget());
 

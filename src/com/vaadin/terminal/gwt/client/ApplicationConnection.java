@@ -169,7 +169,6 @@ public class ApplicationConnection {
 
     public ApplicationConnection() {
         view = GWT.create(RootConnector.class);
-        view.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -1058,36 +1057,32 @@ public class ApplicationConnection {
                     try {
                         final UIDL change = changes.get(i).cast();
                         final UIDL uidl = change.getChildUIDL(0);
-                        String paintableId = uidl.getId();
-                        // TODO optimize
+                        String connectorId = uidl.getId();
+
+                        if (!connectorMap.hasConnector(connectorId)
+                                && uidl.getTag().equals(
+                                        configuration.getEncodedWindowTag())) {
+                            // First RootConnector update. Up until this
+                            // point the connectorId for RootConnector has
+                            // not been known
+                            connectorMap.registerConnector(connectorId, view);
+                            view.doInit(connectorId, ApplicationConnection.this);
+                        }
+
                         final ComponentConnector paintable = (ComponentConnector) connectorMap
-                                .getConnector(paintableId);
+                                .getConnector(connectorId);
                         if (paintable != null) {
                             paintable.updateFromUIDL(uidl,
                                     ApplicationConnection.this);
                             updatedComponentConnectors.add(paintable);
                         } else {
-                            if (!uidl.getTag().equals(
-                                    configuration.getEncodedWindowTag())) {
-                                VConsole.error("Received update for "
-                                        + uidl.getTag()
-                                        + ", but there is no such paintable ("
-                                        + paintableId + ") rendered.");
-                            } else {
-                                String pid = uidl.getId();
-                                if (!connectorMap.hasConnector(pid)) {
-                                    connectorMap.registerConnector(pid, view);
-                                }
-                                // VView does not call updateComponent so we
-                                // register any event listeners here
-                                connectorMap.registerEventListenersFromUIDL(
-                                        pid, uidl);
+                            VConsole.error("Received update for "
+                                    + uidl.getTag()
+                                    + ", but there is no such paintable ("
+                                    + connectorId + ") rendered.");
 
-                                // Finally allow VView to update itself
-                                view.updateFromUIDL(uidl,
-                                        ApplicationConnection.this);
-                            }
                         }
+
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
@@ -1708,10 +1703,8 @@ public class ApplicationConnection {
         // Create and register a new connector with the given type
         ComponentConnector p = widgetSet.createWidget(connectorType,
                 configuration);
-        p.setConnection(this);
-        p.setId(connectorId);
-        p.init();
         connectorMap.registerConnector(connectorId, p);
+        p.doInit(connectorId, this);
 
         return p;
     }
