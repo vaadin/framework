@@ -41,7 +41,7 @@ public interface Connector {
 
     /**
      * Returns the id for this connector. This must always be what has been set
-     * in {@link #init(String, ApplicationConnection)} and must never change.
+     * in {@link #doInit(String, ApplicationConnection)} and must never change.
      * 
      * @return The id for the connector.
      */
@@ -51,7 +51,7 @@ public interface Connector {
      * Gets ApplicationConnection instance that created this connector.
      * 
      * @return The ApplicationConnection as set by
-     *         {@link #init(String, ApplicationConnection)}
+     *         {@link #doInit(String, ApplicationConnection)}
      */
     public ApplicationConnection getConnection();
 
