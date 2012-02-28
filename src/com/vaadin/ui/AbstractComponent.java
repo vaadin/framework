@@ -775,7 +775,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 // related code has been updated
                 if (getIcon() != null) {
                     target.addAttribute(
-                            AbstractComponentConnector.ATTRIBUTE_ICON, getIcon());
+                            AbstractComponentConnector.ATTRIBUTE_ICON,
+                            getIcon());
                 }
 
                 if (eventIdentifiers != null) {
@@ -868,12 +869,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineHeight(this))) {
             sharedState.setHeight("" + getCSSHeight());
+        } else {
+            sharedState.setHeight("");
         }
 
         if (getWidth() >= 0
                 && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineWidth(this))) {
             sharedState.setWidth("" + getCSSWidth());
+        } else {
+            sharedState.setWidth("");
         }
 
         sharedState.setImmediate(isImmediate());
