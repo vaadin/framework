@@ -1,7 +1,6 @@
 .v-orderedlayout,
 .v-horizontallayout,
 .v-verticallayout {
-	overflow: hidden;
 	position: relative;
 }
 
@@ -41,5 +40,4 @@
 
 .v-horizontallayout-slot, .v-verticallayout-slot {
 	position: absolute;
-	overflow: hidden;
 }
