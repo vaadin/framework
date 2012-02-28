@@ -44,7 +44,7 @@
 	<!-- Generate client side proxies for client to server RPC interfaces -->
 	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyGenerator">
-		<when-type-assignable class="com.vaadin.terminal.gwt.client.communication.ClientToServerRpc" />
+		<when-type-assignable class="com.vaadin.terminal.gwt.client.communication.ServerRpc" />
 	</generate-with> -->	
 
 	<!-- Fall through to this rule for everything but IE -->

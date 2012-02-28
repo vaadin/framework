@@ -17,8 +17,8 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc;
-import com.vaadin.terminal.gwt.client.communication.ClientToServerRpc.InitializableClientToServerRpc;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
@@ -429,7 +429,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *            The RPC instance to initialize. Must have been created using
      *            GWT.create().
      */
-    protected <T extends ClientToServerRpc> T initRPC(T clientToServerRpc) {
+    protected <T extends ServerRpc> T initRPC(T clientToServerRpc) {
         ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getId(),
                 getConnection());
         return clientToServerRpc;
