@@ -36,8 +36,7 @@ public class UnknownComponentConnector extends AbstractComponentConnector {
             getWidget().uidlTree.removeFromParent();
         }
 
-        getWidget().uidlTree = new VUIDLBrowser(uidl,
-                client.getConfiguration());
+        getWidget().uidlTree = new VUIDLBrowser(uidl, client.getConfiguration());
         getWidget().uidlTree.open(true);
         getWidget().uidlTree.setText("Unrendered UIDL");
         getWidget().panel.add(getWidget().uidlTree);

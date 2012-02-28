@@ -17,9 +17,9 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
 /**
@@ -49,9 +49,9 @@ public class ShortcutActionHandler {
     }
 
     /**
-     * A focusable {@link ComponentConnector} implementing this interface will be
-     * notified before shortcut actions are handled if it will be the target of
-     * the action (most commonly means it is the focused component during the
+     * A focusable {@link ComponentConnector} implementing this interface will
+     * be notified before shortcut actions are handled if it will be the target
+     * of the action (most commonly means it is the focused component during the
      * keyboard combination is triggered by the user).
      */
     public interface BeforeShortcutActionListener extends ComponentConnector {

@@ -39,8 +39,7 @@ public class UploadConnector extends AbstractComponentConnector {
         } else {
             getWidget().submitButton.setVisible(false);
         }
-        getWidget().fu.setName(getWidget().paintableId
-                + "_file");
+        getWidget().fu.setName(getWidget().paintableId + "_file");
 
         if (getState().isDisabled() || getState().isReadOnly()) {
             getWidget().disableUpload();

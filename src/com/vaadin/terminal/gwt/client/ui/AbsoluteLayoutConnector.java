@@ -15,14 +15,14 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 
-public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
-        implements DirectionalManagedLayout {
+public class AbsoluteLayoutConnector extends
+        AbstractComponentContainerConnector implements DirectionalManagedLayout {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this, EventId.LAYOUT_CLICK) {
@@ -73,8 +73,8 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
     }
 
     public void updateCaption(ComponentConnector component, UIDL uidl) {
-        AbsoluteWrapper parent2 = (AbsoluteWrapper) (component
-                .getWidget()).getParent();
+        AbsoluteWrapper parent2 = (AbsoluteWrapper) (component.getWidget())
+                .getParent();
         parent2.updateCaption(uidl);
     }
 

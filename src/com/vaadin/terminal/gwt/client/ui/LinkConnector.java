@@ -34,14 +34,12 @@ public class LinkConnector extends AbstractComponentConnector {
 
         if (uidl.hasAttribute("name")) {
             getWidget().target = uidl.getStringAttribute("name");
-            getWidget().anchor.setAttribute("target",
-                    getWidget().target);
+            getWidget().anchor.setAttribute("target", getWidget().target);
         }
         if (uidl.hasAttribute("src")) {
             getWidget().src = client.translateVaadinUri(uidl
                     .getStringAttribute("src"));
-            getWidget().anchor.setAttribute("href",
-                    getWidget().src);
+            getWidget().anchor.setAttribute("href", getWidget().src);
         }
 
         if (uidl.hasAttribute("border")) {
@@ -54,41 +52,35 @@ public class LinkConnector extends AbstractComponentConnector {
             getWidget().borderStyle = VLink.BORDER_STYLE_DEFAULT;
         }
 
-        getWidget().targetHeight = uidl
-                .hasAttribute("targetHeight") ? uidl
+        getWidget().targetHeight = uidl.hasAttribute("targetHeight") ? uidl
                 .getIntAttribute("targetHeight") : -1;
         getWidget().targetWidth = uidl.hasAttribute("targetWidth") ? uidl
                 .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
-        getWidget().captionElement.setInnerText(getState()
-                .getCaption());
+        getWidget().captionElement.setInnerText(getState().getCaption());
 
         // handle error
         if (uidl.hasAttribute("error")) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createDiv();
-                DOM.setElementProperty(
-                        getWidget().errorIndicatorElement,
+                DOM.setElementProperty(getWidget().errorIndicatorElement,
                         "className", "v-errorindicator");
             }
             DOM.insertChild(getWidget().getElement(),
                     getWidget().errorIndicatorElement, 0);
         } else if (getWidget().errorIndicatorElement != null) {
-            DOM.setStyleAttribute(
-                    getWidget().errorIndicatorElement, "display",
+            DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
                     "none");
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
-                getWidget().anchor.insertBefore(
-                        getWidget().icon.getElement(),
+                getWidget().anchor.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(uidl
-                    .getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
         }
 
     }

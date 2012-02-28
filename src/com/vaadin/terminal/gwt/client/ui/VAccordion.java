@@ -15,12 +15,12 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class VAccordion extends VTabsheetBase {
 
@@ -411,7 +411,8 @@ public class VAccordion extends VTabsheetBase {
         }
 
         public void setContent(UIDL contentUidl) {
-            final ComponentConnector newPntbl = client.getPaintable(contentUidl);
+            final ComponentConnector newPntbl = client
+                    .getPaintable(contentUidl);
             Widget newWidget = newPntbl.getWidget();
             if (getChildWidget() == null) {
                 add(newWidget, content);
@@ -425,8 +426,7 @@ public class VAccordion extends VTabsheetBase {
                  * The size of a cached, relative sized component must be
                  * updated to report correct size.
                  */
-                client.handleComponentRelativeSize(newPntbl
-                        .getWidget());
+                client.handleComponentRelativeSize(newPntbl.getWidget());
             }
             if (isOpen() && isDynamicHeight()) {
                 setHeightFromWidget();

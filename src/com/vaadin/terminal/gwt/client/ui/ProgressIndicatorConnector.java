@@ -25,8 +25,7 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
         // Save details
         getWidget().client = client;
 
-        getWidget().indeterminate = uidl
-                .getBooleanAttribute("indeterminate");
+        getWidget().indeterminate = uidl.getBooleanAttribute("indeterminate");
 
         if (getWidget().indeterminate) {
             String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
@@ -41,17 +40,15 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
                 final float f = Float.parseFloat(uidl
                         .getStringAttribute("state"));
                 final int size = Math.round(100 * f);
-                DOM.setStyleAttribute(getWidget().indicator,
-                        "width", size + "%");
+                DOM.setStyleAttribute(getWidget().indicator, "width", size
+                        + "%");
             } catch (final Exception e) {
             }
         }
 
         if (!getState().isDisabled()) {
-            getWidget().interval = uidl
-                    .getIntAttribute("pollinginterval");
-            getWidget().poller
-                    .scheduleRepeating(getWidget().interval);
+            getWidget().interval = uidl.getIntAttribute("pollinginterval");
+            getWidget().poller.scheduleRepeating(getWidget().interval);
         }
     }
 

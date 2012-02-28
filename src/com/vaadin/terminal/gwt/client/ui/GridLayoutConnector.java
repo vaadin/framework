@@ -13,12 +13,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
@@ -127,8 +127,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     public void updateCaption(ComponentConnector paintable, UIDL uidl) {
         VGridLayout layout = getWidget();
         if (VCaption.isNeeded(uidl, paintable.getState())) {
-            Cell cell = layout.widgetToCell.get(paintable
-                    .getWidget());
+            Cell cell = layout.widgetToCell.get(paintable.getWidget());
             VLayoutSlot layoutSlot = cell.slot;
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {

@@ -22,8 +22,8 @@ public interface ServerRpc extends Serializable {
     /**
      * Initialization support for client to server RPC interfaces.
      * 
-     * This is in a separate interface instead of {@link ServerRpc}
-     * because otherwise also server side proxies would have to implement the
+     * This is in a separate interface instead of {@link ServerRpc} because
+     * otherwise also server side proxies would have to implement the
      * initialization method.
      * 
      * @since 7.0

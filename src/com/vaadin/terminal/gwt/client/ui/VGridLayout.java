@@ -17,14 +17,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
+import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public class VGridLayout extends ComplexPanel {
 
@@ -554,7 +554,8 @@ public class VGridLayout extends ComplexPanel {
                 ComponentConnector paintable = client.getPaintable(childUidl);
 
                 if (slot == null || slot.getPaintable() != paintable) {
-                    slot = new ComponentConnectorLayoutSlot(CLASSNAME, paintable);
+                    slot = new ComponentConnectorLayoutSlot(CLASSNAME,
+                            paintable);
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 

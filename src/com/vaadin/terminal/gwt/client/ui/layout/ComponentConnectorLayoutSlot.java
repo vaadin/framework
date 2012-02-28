@@ -3,9 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.layout;
 
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class ComponentConnectorLayoutSlot extends VLayoutSlot {
@@ -13,7 +13,8 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
     final ComponentConnector paintable;
     private LayoutManager layoutManager;
 
-    public ComponentConnectorLayoutSlot(String baseClassName, ComponentConnector paintable) {
+    public ComponentConnectorLayoutSlot(String baseClassName,
+            ComponentConnector paintable) {
         super(baseClassName, paintable.getWidget());
         this.paintable = paintable;
         layoutManager = paintable.getLayoutManager();
@@ -55,14 +56,12 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
 
     @Override
     public int getWidgetHeight() {
-        return layoutManager.getOuterHeight(paintable.getWidget()
-                .getElement());
+        return layoutManager.getOuterHeight(paintable.getWidget().getElement());
     }
 
     @Override
     public int getWidgetWidth() {
-        return layoutManager.getOuterWidth(paintable.getWidget()
-                .getElement());
+        return layoutManager.getOuterWidth(paintable.getWidget().getElement());
     }
 
     @Override

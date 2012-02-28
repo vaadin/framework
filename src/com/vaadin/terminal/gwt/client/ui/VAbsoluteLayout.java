@@ -15,11 +15,11 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class VAbsoluteLayout extends ComplexPanel {
 
@@ -143,8 +143,7 @@ public class VAbsoluteLayout extends ComplexPanel {
                 // child may need relative size adjustment if wrapper details
                 // have changed this could be optimized (check if wrapper size
                 // has changed)
-                client.handleComponentRelativeSize(paintable
-                        .getWidget());
+                client.handleComponentRelativeSize(paintable.getWidget());
             }
         }
 

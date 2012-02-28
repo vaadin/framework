@@ -23,10 +23,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ValueMap;
 
 /**
@@ -544,8 +544,7 @@ public class VDragAndDropManager {
     }
 
     private void removeActiveDragSourceStyleName(ComponentConnector dragSource) {
-        dragSource.getWidget().removeStyleName(
-                ACTIVE_DRAG_SOURCE_STYLENAME);
+        dragSource.getWidget().removeStyleName(ACTIVE_DRAG_SOURCE_STYLENAME);
     }
 
     private void clearDragElement() {

@@ -53,8 +53,7 @@ public class TreeConnector extends AbstractComponentConnector {
                 .getBooleanAttribute("nullselect");
 
         if (uidl.hasAttribute("alb")) {
-            getWidget().bodyActionKeys = uidl
-                    .getStringArrayAttribute("alb");
+            getWidget().bodyActionKeys = uidl.getStringArrayAttribute("alb");
         }
 
         getWidget().body.clear();
@@ -91,21 +90,19 @@ public class TreeConnector extends AbstractComponentConnector {
                     .getIntAttribute("multiselectmode");
         }
 
-        getWidget().selectedIds = uidl
-                .getStringArrayVariableAsSet("selected");
+        getWidget().selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
         // Update lastSelection and focusedNode to point to *actual* nodes again
         // after the old ones have been cleared from the body. This fixes focus
         // and keyboard navigation issues as described in #7057 and other
         // tickets.
         if (getWidget().lastSelection != null) {
-            getWidget().lastSelection = getWidget()
-                    .getNodeByKey(getWidget().lastSelection.key);
+            getWidget().lastSelection = getWidget().getNodeByKey(
+                    getWidget().lastSelection.key);
         }
         if (getWidget().focusedNode != null) {
             getWidget().setFocusedNode(
-                    getWidget().getNodeByKey(
-                            getWidget().focusedNode.key));
+                    getWidget().getNodeByKey(getWidget().focusedNode.key));
         }
 
         if (getWidget().lastSelection == null
@@ -113,8 +110,7 @@ public class TreeConnector extends AbstractComponentConnector {
                 && !getWidget().selectedIds.isEmpty()) {
             getWidget().setFocusedNode(
                     getWidget().getNodeByKey(
-                            getWidget().selectedIds.iterator()
-                                    .next()));
+                            getWidget().selectedIds.iterator().next()));
             getWidget().focusedNode.setFocused(false);
         }
 

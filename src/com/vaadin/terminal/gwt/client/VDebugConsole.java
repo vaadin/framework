@@ -90,14 +90,15 @@ public class VDebugConsole extends VOverlay implements Console {
 
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    ComponentConnector paintable = Util.getPaintableForElement(a,
-                            a.getView().getWidget(), eventTarget);
+                    ComponentConnector paintable = Util.getPaintableForElement(
+                            a, a.getView().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
                     }
                     if (paintable != null) {
-                        String pid = ConnectorMap.get(a).getConnectorId(paintable);
+                        String pid = ConnectorMap.get(a).getConnectorId(
+                                paintable);
                         VUIDLBrowser.highlight(paintable);
                         label.setText("Currently focused  :"
                                 + paintable.getClass() + " ID:" + pid);
@@ -119,8 +120,8 @@ public class VDebugConsole extends VOverlay implements Console {
                         .getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    ComponentConnector paintable = Util.getPaintableForElement(a,
-                            a.getView().getWidget(), eventTarget);
+                    ComponentConnector paintable = Util.getPaintableForElement(
+                            a, a.getView().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getPaintableForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -521,7 +522,8 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     private void printClientSideDetectedIssues(
-            Set<ComponentConnector> zeroHeightComponents, ApplicationConnection ac) {
+            Set<ComponentConnector> zeroHeightComponents,
+            ApplicationConnection ac) {
         for (final ComponentConnector paintable : zeroHeightComponents) {
             final Widget layout = paintable.getParent().getWidget();
 
@@ -566,8 +568,7 @@ public class VDebugConsole extends VOverlay implements Console {
         emphasisInUi.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
-                    Element element2 = paintable.getWidget()
-                            .getElement();
+                    Element element2 = paintable.getWidget().getElement();
                     Widget.setStyleName(element2, "invalidlayout",
                             emphasisInUi.getValue());
                 }

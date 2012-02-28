@@ -38,8 +38,8 @@ public class TextFieldConnector extends AbstractComponentConnector implements
 
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().listenTextChangeEvents = client
-                .hasEventListeners(this, "ie");
+        getWidget().listenTextChangeEvents = client.hasEventListeners(this,
+                "ie");
         if (getWidget().listenTextChangeEvents) {
             getWidget().textChangeEventMode = uidl
                     .getStringAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE);
@@ -56,8 +56,7 @@ public class TextFieldConnector extends AbstractComponentConnector implements
                 }
             }
             getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
-            getWidget().attachCutEventListener(
-                    getWidget().getElement());
+            getWidget().attachCutEventListener(getWidget().getElement());
         }
 
         if (uidl.hasAttribute("cols")) {

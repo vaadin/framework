@@ -64,11 +64,11 @@ public class BrowserInfo {
                 browserDetails.setIEMode(documentMode);
             }
         }
-        
+
         if (browserDetails.isChrome()) {
-        	touchDevice = detectChromeTouchDevice();
+            touchDevice = detectChromeTouchDevice();
         } else {
-        	touchDevice = detectTouchDevice();
+            touchDevice = detectTouchDevice();
         }
     }
 
@@ -76,7 +76,7 @@ public class BrowserInfo {
     /*-{
         try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
     }-*/;
-    
+
     private native boolean detectChromeTouchDevice()
     /*-{
         return ("ontouchstart" in window);

@@ -8,12 +8,12 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.UIDL;
 
-public class FormConnector extends AbstractComponentContainerConnector implements
-        SimpleManagedLayout {
+public class FormConnector extends AbstractComponentContainerConnector
+        implements SimpleManagedLayout {
 
     @Override
     public void init() {
@@ -38,8 +38,7 @@ public class FormConnector extends AbstractComponentContainerConnector implement
 
         boolean legendEmpty = true;
         if (getState().getCaption() != null) {
-            getWidget().caption.setInnerText(getState()
-                    .getCaption());
+            getWidget().caption.setInnerText(getState().getCaption());
             legendEmpty = false;
         } else {
             getWidget().caption.setInnerText("");
@@ -47,16 +46,13 @@ public class FormConnector extends AbstractComponentContainerConnector implement
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
-                getWidget().legend
-                        .insertFirst(getWidget().icon.getElement());
+                getWidget().legend.insertFirst(getWidget().icon.getElement());
             }
-            getWidget().icon.setUri(uidl
-                    .getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
             legendEmpty = false;
         } else {
             if (getWidget().icon != null) {
-                getWidget().legend
-                        .removeChild(getWidget().icon.getElement());
+                getWidget().legend.removeChild(getWidget().icon.getElement());
             }
         }
         if (legendEmpty) {
@@ -74,18 +70,15 @@ public class FormConnector extends AbstractComponentContainerConnector implement
         }
 
         if (getState().hasDescription()) {
-            getWidget().desc.setInnerHTML(getState()
-                    .getDescription());
+            getWidget().desc.setInnerHTML(getState().getDescription());
             if (getWidget().desc.getParentElement() == null) {
-                getWidget().fieldSet.insertAfter(
-                        getWidget().desc,
+                getWidget().fieldSet.insertAfter(getWidget().desc,
                         getWidget().legend);
             }
         } else {
             getWidget().desc.setInnerHTML("");
             if (getWidget().desc.getParentElement() != null) {
-                getWidget().fieldSet
-                        .removeChild(getWidget().desc);
+                getWidget().fieldSet.removeChild(getWidget().desc);
             }
         }
 
@@ -124,16 +117,14 @@ public class FormConnector extends AbstractComponentContainerConnector implement
         if (getWidget().lo == null) {
             // Layout not rendered before
             getWidget().lo = newLayoutWidget;
-            getWidget().add(newLayoutWidget,
-                    getWidget().fieldContainer);
+            getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         } else if (getWidget().lo != newLayoutWidget) {
             // Layout has changed
             client.unregisterPaintable(ConnectorMap.get(getConnection())
                     .getConnector(getWidget().lo));
             getWidget().remove(getWidget().lo);
             getWidget().lo = newLayoutWidget;
-            getWidget().add(newLayoutWidget,
-                    getWidget().fieldContainer);
+            getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         }
         newLayout.updateFromUIDL(layoutUidl, client);
 
@@ -149,11 +140,9 @@ public class FormConnector extends AbstractComponentContainerConnector implement
                     getWidget().shortcutHandler = new ShortcutActionHandler(
                             getId(), client);
                     getWidget().keyDownRegistration = getWidget()
-                            .addDomHandler(getWidget(),
-                                    KeyDownEvent.getType());
+                            .addDomHandler(getWidget(), KeyDownEvent.getType());
                 }
-                getWidget().shortcutHandler
-                        .updateActionMap(childUidl);
+                getWidget().shortcutHandler.updateActionMap(childUidl);
             }
         } else if (getWidget().shortcutHandler != null) {
             getWidget().keyDownRegistration.removeHandler();

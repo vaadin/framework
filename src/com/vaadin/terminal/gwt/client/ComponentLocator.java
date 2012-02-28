@@ -96,8 +96,8 @@ public class ComponentLocator {
             // If we found a Paintable then we use that as reference. We should
             // find the Paintable for all but very special cases (like
             // overlays).
-            w = ((ComponentConnector) ConnectorMap.get(client).getConnector(pid))
-                    .getWidget();
+            w = ((ComponentConnector) ConnectorMap.get(client)
+                    .getConnector(pid)).getWidget();
 
             /*
              * Still if the Paintable contains a widget that implements
@@ -376,8 +376,8 @@ public class ComponentLocator {
             return "";
         } else if (w instanceof VWindow) {
             VWindow win = (VWindow) w;
-            ArrayList<VWindow> subWindowList = client.getView()
-                    .getWidget().getSubWindowList();
+            ArrayList<VWindow> subWindowList = client.getView().getWidget()
+                    .getSubWindowList();
             int indexOfSubWindow = subWindowList.indexOf(win);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         } else if (w instanceof RootPanel) {
@@ -440,8 +440,8 @@ public class ComponentLocator {
                 w = client.getView().getWidget();
             } else if (w == null) {
                 // Must be static pid (PID_S*)
-                w = ((ComponentConnector) ConnectorMap.get(client).getConnector(
-                        part)).getWidget();
+                w = ((ComponentConnector) ConnectorMap.get(client)
+                        .getConnector(part)).getWidget();
             } else if (part.startsWith("domChild[")) {
                 // The target widget has been found and the rest identifies the
                 // element
@@ -522,8 +522,8 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    iterator = client.getView().getWidget()
-                            .getSubWindowList().iterator();
+                    iterator = client.getView().getWidget().getSubWindowList()
+                            .iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {

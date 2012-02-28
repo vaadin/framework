@@ -179,8 +179,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Hide the error indicator if needed
         if (shouldHideErrors()) {
-            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS,
-                    true);
+            target.addAttribute(
+                    AbstractComponentConnector.ATTRIBUTE_HIDEERRORS, true);
         }
     }
 

@@ -23,11 +23,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
 /**
@@ -227,8 +227,7 @@ public class VView extends SimplePanel implements ResizeHandler,
                 public void execute() {
                     final ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("scrollTo", connection);
-                    paintable.getWidget().getElement()
-                            .scrollIntoView();
+                    paintable.getWidget().getElement().scrollIntoView();
                 }
             });
         }

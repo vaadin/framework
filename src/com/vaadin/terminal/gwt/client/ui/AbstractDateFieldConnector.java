@@ -36,8 +36,7 @@ public class AbstractDateFieldConnector extends AbstractComponentConnector {
                 getWidget().dts.setLocale(locale);
                 getWidget().currentLocale = locale;
             } catch (final LocaleNotLoadedException e) {
-                getWidget().currentLocale = getWidget().dts
-                        .getLocale();
+                getWidget().currentLocale = getWidget().dts.getLocale();
                 VConsole.error("Tried to use an unloaded locale \"" + locale
                         + "\". Using default locale ("
                         + getWidget().currentLocale + ").");
@@ -91,8 +90,8 @@ public class AbstractDateFieldConnector extends AbstractComponentConnector {
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
             getWidget().setCurrentDate(
-                    new Date((long) getWidget().getTime(year,
-                            month, day, hour, min, sec, 0)));
+                    new Date((long) getWidget().getTime(year, month, day, hour,
+                            min, sec, 0)));
         } else {
             getWidget().setCurrentDate(null);
         }

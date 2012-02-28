@@ -6,9 +6,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 final public class VItemIdIs extends VAcceptCriterion {
 
@@ -21,8 +21,8 @@ final public class VItemIdIs extends VAcceptCriterion {
             VDropHandler currentDropHandler = VDragAndDropManager.get()
                     .getCurrentDropHandler();
             String pid2 = ConnectorMap.get(
-                    currentDropHandler.getApplicationConnection()).getConnectorId(
-                    dragSource);
+                    currentDropHandler.getApplicationConnection())
+                    .getConnectorId(dragSource);
             if (pid2.equals(pid)) {
                 Object searchedId = drag.getTransferable().getData("itemId");
                 String[] stringArrayAttribute = configuration

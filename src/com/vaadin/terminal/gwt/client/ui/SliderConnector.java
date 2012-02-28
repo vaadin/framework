@@ -34,18 +34,15 @@ public class SliderConnector extends AbstractComponentConnector {
         String style = getState().getStyle();
 
         if (getWidget().vertical) {
-            getWidget().addStyleName(
-                    VSlider.CLASSNAME + "-vertical");
+            getWidget().addStyleName(VSlider.CLASSNAME + "-vertical");
         } else {
-            getWidget().removeStyleName(
-                    VSlider.CLASSNAME + "-vertical");
+            getWidget().removeStyleName(VSlider.CLASSNAME + "-vertical");
         }
 
         getWidget().min = uidl.getDoubleAttribute("min");
         getWidget().max = uidl.getDoubleAttribute("max");
         getWidget().resolution = uidl.getIntAttribute("resolution");
-        getWidget().value = new Double(
-                uidl.getDoubleVariable("value"));
+        getWidget().value = new Double(uidl.getDoubleVariable("value"));
 
         getWidget().setFeedbackValue(getWidget().value);
 
@@ -56,14 +53,12 @@ public class SliderConnector extends AbstractComponentConnector {
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     getWidget().buildHandle();
-                    getWidget().setValue(
-                            getWidget().value, false);
+                    getWidget().setValue(getWidget().value, false);
                 }
             });
         } else {
             getWidget().buildHandle();
-            getWidget().setValue(getWidget().value,
-                    false);
+            getWidget().setValue(getWidget().value, false);
         }
     }
 

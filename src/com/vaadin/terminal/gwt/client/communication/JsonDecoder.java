@@ -42,8 +42,7 @@ public class JsonDecoder {
      *            mapper between connector ID and {@link Connector} objects
      * @return converted value (does not contain JSON types)
      */
-    public static Object convertValue(JSONArray jsonArray,
-            ConnectorMap idMapper) {
+    public static Object convertValue(JSONArray jsonArray, ConnectorMap idMapper) {
         String type = ((JSONString) jsonArray.get(0)).stringValue();
         return convertValue(type, jsonArray.get(1), idMapper);
     }

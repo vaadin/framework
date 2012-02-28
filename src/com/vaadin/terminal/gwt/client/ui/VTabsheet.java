@@ -22,13 +22,13 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.label.VLabel;
 
 public class VTabsheet extends VTabsheetBase {
@@ -205,8 +205,7 @@ public class VTabsheet extends VTabsheetBase {
                 if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
-                client.registerTooltip(getTabsheet(), getElement(),
-                        tooltipInfo);
+                client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
             } else {
                 client.registerTooltip(getTabsheet(), getElement(), null);
             }

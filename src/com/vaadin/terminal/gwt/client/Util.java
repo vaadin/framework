@@ -97,8 +97,7 @@ public class Util {
         List<ApplicationConnection> runningApplications = ApplicationConfiguration
                 .getRunningApplications();
         for (ApplicationConnection applicationConnection : runningApplications) {
-            ConnectorMap paintableMap = applicationConnection
-                    .getConnectorMap();
+            ConnectorMap paintableMap = applicationConnection.getConnectorMap();
             ComponentConnector paintable = paintableMap.getConnector(widget);
             if (paintable == null) {
                 continue;
@@ -698,8 +697,8 @@ public class Util {
      * @param element
      *            the element to start from
      */
-    public static ComponentConnector findPaintable(ApplicationConnection client,
-            Element element) {
+    public static ComponentConnector findPaintable(
+            ApplicationConnection client, Element element) {
         Widget widget = Util.findWidget(element, null);
         ConnectorMap vPaintableMap = ConnectorMap.get(client);
         while (widget != null && !vPaintableMap.isConnector(widget)) {
@@ -834,8 +833,9 @@ public class Util {
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
                     String formattedValue = value instanceof Connector ? c
-                            .getConnectorMap().getConnectorId((Connector) value)
-                            : String.valueOf(value);
+                            .getConnectorMap()
+                            .getConnectorId((Connector) value) : String
+                            .valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }
                 if (null == formattedParams) {

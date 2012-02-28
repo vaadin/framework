@@ -11,9 +11,9 @@ import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class PanelConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout, PostLayoutListener {
@@ -57,12 +57,10 @@ public class PanelConnector extends AbstractComponentContainerConnector
             // Affects size calculations
 
             // Restore default stylenames
-            getWidget().contentNode.setClassName(VPanel.CLASSNAME
-                    + "-content");
-            getWidget().bottomDecoration
-                    .setClassName(VPanel.CLASSNAME + "-deco");
-            getWidget().captionNode.setClassName(VPanel.CLASSNAME
-                    + "-caption");
+            getWidget().contentNode.setClassName(VPanel.CLASSNAME + "-content");
+            getWidget().bottomDecoration.setClassName(VPanel.CLASSNAME
+                    + "-deco");
+            getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = false;
             if (getState().getCaption() != null
                     && !"".equals(getState().getCaption())) {
@@ -70,8 +68,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
                 hasCaption = true;
             } else {
                 getWidget().setCaption("");
-                getWidget().captionNode
-                        .setClassName(VPanel.CLASSNAME + "-nocaption");
+                getWidget().captionNode.setClassName(VPanel.CLASSNAME
+                        + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent
@@ -118,8 +116,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
             if (getWidget().layout != null) {
                 client.unregisterPaintable(getWidget().layout);
             }
-            getWidget()
-                    .setWidget(newLayout.getWidget());
+            getWidget().setWidget(newLayout.getWidget());
             getWidget().layout = newLayout;
         }
         getWidget().layout.updateFromUIDL(layoutUidl, client);
@@ -134,8 +131,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
                         getWidget().shortcutHandler = new ShortcutActionHandler(
                                 getId(), client);
                     }
-                    getWidget().shortcutHandler
-                            .updateActionMap(childUidl);
+                    getWidget().shortcutHandler.updateActionMap(childUidl);
                 }
             }
         }
@@ -156,8 +152,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
         // And apply tab index
         if (uidl.hasVariable("tabindex")) {
-            getWidget().contentNode.setTabIndex(uidl
-                    .getIntVariable("tabindex"));
+            getWidget().contentNode
+                    .setTabIndex(uidl.getIntVariable("tabindex"));
         }
     }
 

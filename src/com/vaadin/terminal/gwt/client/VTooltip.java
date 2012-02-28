@@ -207,7 +207,8 @@ public class VTooltip extends VOverlay {
 
     }
 
-    public void handleTooltipEvent(Event event, ComponentConnector owner, Object key) {
+    public void handleTooltipEvent(Event event, ComponentConnector owner,
+            Object key) {
         final int type = DOM.eventGetType(event);
         if ((VTooltip.TOOLTIP_EVENTS & type) == type) {
             if (type == Event.ONMOUSEOVER) {

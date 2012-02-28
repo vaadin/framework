@@ -22,8 +22,7 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
             getWidget().formatStr = null;
         }
         if (uidl.hasAttribute("format")) {
-            getWidget().formatStr = uidl
-                    .getStringAttribute("format");
+            getWidget().formatStr = uidl.getStringAttribute("format");
         }
 
         getWidget().inputPrompt = uidl
@@ -34,8 +33,7 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
         getWidget().buildDate();
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
-            getWidget().text.setTabIndex(uidl
-                    .getIntAttribute("tabindex"));
+            getWidget().text.setTabIndex(uidl.getIntAttribute("tabindex"));
         }
 
         if (getWidget().readonly) {

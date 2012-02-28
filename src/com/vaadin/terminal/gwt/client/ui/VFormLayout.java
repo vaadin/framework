@@ -20,12 +20,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -179,13 +179,11 @@ public class VFormLayout extends SimplePanel {
         }
 
         public void updateCaption(ComponentConnector paintable, UIDL uidl) {
-            final Caption c = widgetToCaption.get(paintable
-                    .getWidget());
+            final Caption c = widgetToCaption.get(paintable.getWidget());
             if (c != null) {
                 c.updateCaption(uidl, paintable.getState());
             }
-            final ErrorFlag e = widgetToError.get(paintable
-                    .getWidget());
+            final ErrorFlag e = widgetToError.get(paintable.getWidget());
             if (e != null) {
                 e.updateFromUIDL(uidl, paintable);
             }
@@ -234,7 +232,8 @@ public class VFormLayout extends SimplePanel {
          *            return null
          * @param client
          */
-        public Caption(ComponentConnector component, ApplicationConnection client) {
+        public Caption(ComponentConnector component,
+                ApplicationConnection client) {
             super();
             this.client = client;
             owner = component;

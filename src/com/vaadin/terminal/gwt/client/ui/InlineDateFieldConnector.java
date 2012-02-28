@@ -19,18 +19,15 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
-        getWidget().calendarPanel
-                .setShowISOWeekNumbers(getWidget()
-                        .isShowISOWeekNumbers());
-        getWidget().calendarPanel
-                .setDateTimeService(getWidget()
-                        .getDateTimeService());
-        getWidget().calendarPanel
-                .setResolution(getWidget().getCurrentResolution());
+        getWidget().calendarPanel.setShowISOWeekNumbers(getWidget()
+                .isShowISOWeekNumbers());
+        getWidget().calendarPanel.setDateTimeService(getWidget()
+                .getDateTimeService());
+        getWidget().calendarPanel.setResolution(getWidget()
+                .getCurrentResolution());
         Date currentDate = getWidget().getCurrentDate();
         if (currentDate != null) {
-            getWidget().calendarPanel.setDate(new Date(currentDate
-                    .getTime()));
+            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
         } else {
             getWidget().calendarPanel.setDate(null);
         }
@@ -44,8 +41,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendarPanel
-                                        .getDate().clone();
+                                d = (Date) getWidget().calendarPanel.getDate()
+                                        .clone();
                             }
                             d.setHours(hour);
                             d.setMinutes(min);
@@ -73,8 +70,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                              */
                             date2.setYear(date.getYear());
                             date2.setMonth(date.getMonth());
-                            getWidget().calendarPanel
-                                    .setDate(date2);
+                            getWidget().calendarPanel.setDate(date2);
                             /*
                              * Then update the value from panel to server
                              */

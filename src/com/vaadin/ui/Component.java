@@ -648,8 +648,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      * Notifies the component that it is detached from the application.
      * 
      * <p>
-     * The {@link #getApplication()} and {@link #getRoot()} methods might
-     * return <code>null</code> after this method is called.
+     * The {@link #getApplication()} and {@link #getRoot()} methods might return
+     * <code>null</code> after this method is called.
      * </p>
      * 
      * <p>

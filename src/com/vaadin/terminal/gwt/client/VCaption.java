@@ -8,8 +8,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 
 public class VCaption extends HTML {
@@ -78,7 +78,8 @@ public class VCaption extends HTML {
         owner = component;
 
         if (client != null && owner != null) {
-            setOwnerPid(getElement(), ConnectorMap.get(client).getConnectorId(owner));
+            setOwnerPid(getElement(),
+                    ConnectorMap.get(client).getConnectorId(owner));
         }
 
         setStyleName(CLASSNAME);

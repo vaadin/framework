@@ -18,8 +18,8 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
-import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
+import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {

@@ -6,10 +6,10 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class PopupViewConnector extends AbstractComponentContainerConnector {
 
@@ -67,9 +67,8 @@ public class PopupViewConnector extends AbstractComponentContainerConnector {
                 }
                 getWidget().popup.setStyleName(styleBuf.toString());
             } else {
-                getWidget().popup
-                        .setStyleName(getWidget().popup
-                                .getStylePrimaryName());
+                getWidget().popup.setStyleName(getWidget().popup
+                        .getStylePrimaryName());
             }
             getWidget().showPopup(getWidget().popup);
 
@@ -82,15 +81,12 @@ public class PopupViewConnector extends AbstractComponentContainerConnector {
     public void updateCaption(ComponentConnector component, UIDL uidl) {
         if (VCaption.isNeeded(uidl, component.getState())) {
             if (getWidget().popup.captionWrapper != null) {
-                getWidget().popup.captionWrapper
-                        .updateCaption(uidl);
+                getWidget().popup.captionWrapper.updateCaption(uidl);
             } else {
                 getWidget().popup.captionWrapper = new VCaptionWrapper(
                         component, getConnection());
-                getWidget().popup
-                        .setWidget(getWidget().popup.captionWrapper);
-                getWidget().popup.captionWrapper
-                        .updateCaption(uidl);
+                getWidget().popup.setWidget(getWidget().popup.captionWrapper);
+                getWidget().popup.captionWrapper.updateCaption(uidl);
             }
         } else {
             if (getWidget().popup.captionWrapper != null) {

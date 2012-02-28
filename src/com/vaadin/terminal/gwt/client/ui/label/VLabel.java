@@ -16,7 +16,7 @@ public class VLabel extends HTML {
 
     public static final String CLASSNAME = "v-label";
     private static final String CLASSNAME_UNDEFINED_WIDTH = "v-label-undef-w";
-    
+
     private ApplicationConnection connection;
 
     public VLabel() {

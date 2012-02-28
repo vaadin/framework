@@ -59,12 +59,10 @@ public class ButtonConnector extends AbstractComponentConnector {
             return;
         }
 
-        getWidget().focusHandlerRegistration = EventHelper
-                .updateFocusHandler(this, client,
-                        getWidget().focusHandlerRegistration);
-        getWidget().blurHandlerRegistration = EventHelper
-                .updateBlurHandler(this, client,
-                        getWidget().blurHandlerRegistration);
+        getWidget().focusHandlerRegistration = EventHelper.updateFocusHandler(
+                this, client, getWidget().focusHandlerRegistration);
+        getWidget().blurHandlerRegistration = EventHelper.updateBlurHandler(
+                this, client, getWidget().blurHandlerRegistration);
 
         // Save details
         getWidget().client = client;
@@ -78,40 +76,33 @@ public class ButtonConnector extends AbstractComponentConnector {
         // handle error
         if (uidl.hasAttribute("error")) {
             if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM
-                        .createSpan();
+                getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement
                         .setClassName("v-errorindicator");
             }
-            getWidget().wrapper.insertBefore(
-                    getWidget().errorIndicatorElement,
+            getWidget().wrapper.insertBefore(getWidget().errorIndicatorElement,
                     getWidget().captionElement);
 
         } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().wrapper
-                    .removeChild(getWidget().errorIndicatorElement);
+            getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);
             getWidget().errorIndicatorElement = null;
         }
 
         if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
-                getWidget().wrapper.insertBefore(
-                        getWidget().icon.getElement(),
+                getWidget().wrapper.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(uidl
-                    .getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
         } else {
             if (getWidget().icon != null) {
-                getWidget().wrapper
-                        .removeChild(getWidget().icon.getElement());
+                getWidget().wrapper.removeChild(getWidget().icon.getElement());
                 getWidget().icon = null;
             }
         }
 
-        getWidget().clickShortcut = getState()
-                .getClickShortcutKeyCode();
+        getWidget().clickShortcut = getState().getClickShortcutKeyCode();
     }
 
     @Override

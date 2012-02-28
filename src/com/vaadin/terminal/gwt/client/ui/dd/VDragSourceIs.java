@@ -3,9 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 /**
  * TODO Javadoc!
@@ -17,7 +17,8 @@ final public class VDragSourceIs extends VAcceptCriterion {
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         try {
-            ComponentConnector component = drag.getTransferable().getDragSource();
+            ComponentConnector component = drag.getTransferable()
+                    .getDragSource();
             int c = configuration.getIntAttribute("c");
             for (int i = 0; i < c; i++) {
                 String requiredPid = configuration

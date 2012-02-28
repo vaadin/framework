@@ -120,8 +120,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
         super.configureField(field);
         // Add Bean validators if there are annotations
         if (isBeanValidationImplementationAvailable()) {
-            BeanValidator validator = new BeanValidator(
-                    beanType, getPropertyId(field).toString());
+            BeanValidator validator = new BeanValidator(beanType,
+                    getPropertyId(field).toString());
             field.addValidator(validator);
             if (field.getLocale() != null) {
                 validator.setLocale(field.getLocale());

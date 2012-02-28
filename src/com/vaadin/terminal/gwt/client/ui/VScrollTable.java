@@ -59,15 +59,15 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -1112,8 +1112,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     void purgeUnregistryBag() {
         for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
                 .hasNext();) {
-            ConnectorMap.get(client)
-                    .unregisterChildConnectors(iterator.next());
+            ConnectorMap.get(client).unregisterChildConnectors(iterator.next());
         }
         lazyUnregistryBag.clear();
     }
@@ -2266,8 +2265,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     handleCaptionEvent(event);
                     boolean stopPropagation = true;
                     if (event.getTypeInt() == Event.ONCONTEXTMENU
-                            && !client.hasEventListeners(
-                                    VScrollTable.this, HEADER_CLICK_EVENT_ID)) {
+                            && !client.hasEventListeners(VScrollTable.this,
+                                    HEADER_CLICK_EVENT_ID)) {
                         // Prevent showing the browser's context menu only when
                         // there is a header click listener.
                         stopPropagation = false;
@@ -4128,8 +4127,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
                     .get(index);
             // Unregister row tooltip
-            client.registerTooltip(VScrollTable.this,
-                    toBeRemoved.getElement(), null);
+            client.registerTooltip(VScrollTable.this, toBeRemoved.getElement(),
+                    null);
             for (int i = 0; i < toBeRemoved.getElement().getChildCount(); i++) {
                 // Unregister cell tooltips
                 Element td = toBeRemoved.getElement().getChild(i).cast();
@@ -4391,12 +4390,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
                     TooltipInfo info = new TooltipInfo(rowDescription);
-                    client.registerTooltip(VScrollTable.this, rowElement,
-                            info);
+                    client.registerTooltip(VScrollTable.this, rowElement, info);
                 } else {
                     // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, rowElement,
-                            null);
+                    client.registerTooltip(VScrollTable.this, rowElement, null);
                 }
 
                 tHead.getColumnAlignments();
@@ -4477,8 +4474,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         final ComponentConnector cellContent = client
                                 .getPaintable((UIDL) cell);
 
-                        addCell(uidl, cellContent.getWidget(),
-                                aligns[col++], style, sorted);
+                        addCell(uidl, cellContent.getWidget(), aligns[col++],
+                                style, sorted);
                         paintComponent(cellContent, (UIDL) cell);
                     }
                 }
@@ -4761,21 +4758,19 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         if (ConnectorMap.get(client).getWidgetTooltipInfo(
                                 VScrollTable.this, target) != null) {
                             // Cell has description, use it
-                            client.handleTooltipEvent(event,
-                                    VScrollTable.this, target);
+                            client.handleTooltipEvent(event, VScrollTable.this,
+                                    target);
                         } else {
                             // Cell might have row description, use row
                             // description
-                            client.handleTooltipEvent(event,
-                                    VScrollTable.this,
+                            client.handleTooltipEvent(event, VScrollTable.this,
                                     target.getParentElement());
                         }
                     }
 
                 } else {
                     // Table row (tr)
-                    client.handleTooltipEvent(event, VScrollTable.this,
-                            target);
+                    client.handleTooltipEvent(event, VScrollTable.this, target);
                 }
             }
 
@@ -4791,8 +4786,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         showContextMenu(event);
                         if (enabled
                                 && (actionKeys != null || client
-                                        .hasEventListeners(
-                                                VScrollTable.this,
+                                        .hasEventListeners(VScrollTable.this,
                                                 ITEM_CLICK_EVENT_ID))) {
                             /*
                              * Prevent browser context menu only if there are

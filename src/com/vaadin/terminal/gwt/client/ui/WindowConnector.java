@@ -13,9 +13,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 public class WindowConnector extends AbstractComponentContainerConnector
@@ -46,8 +46,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
-        DOM.setElementProperty(getWidget().closeBox, "id",
-                getWidget().id + "_window_close");
+        DOM.setElementProperty(getWidget().closeBox, "id", getWidget().id
+                + "_window_close");
 
         if (uidl.hasAttribute("invisible")) {
             getWidget().hide();
@@ -56,23 +56,19 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
         if (isRealUpdate(uidl)) {
             if (uidl.getBooleanAttribute("modal") != getWidget().vaadinModality) {
-                getWidget().setVaadinModality(
-                        !getWidget().vaadinModality);
+                getWidget().setVaadinModality(!getWidget().vaadinModality);
             }
             if (!getWidget().isAttached()) {
                 getWidget().setVisible(false); // hide until
-                                                           // possible centering
+                                               // possible centering
                 getWidget().show();
             }
             if (uidl.getBooleanAttribute("resizable") != getWidget().resizable) {
-                getWidget().setResizable(
-                        !getWidget().resizable);
+                getWidget().setResizable(!getWidget().resizable);
             }
-            getWidget().resizeLazy = uidl
-                    .hasAttribute(VView.RESIZE_LAZY);
+            getWidget().resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
 
-            getWidget().setDraggable(
-                    !uidl.hasAttribute("fixedposition"));
+            getWidget().setDraggable(!uidl.hasAttribute("fixedposition"));
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
@@ -136,19 +132,15 @@ public class WindowConnector extends AbstractComponentContainerConnector
             if (getWidget().layout != lo) {
                 // remove old
                 client.unregisterPaintable(getWidget().layout);
-                getWidget().contentPanel
-                        .remove(getWidget().layout
-                                .getWidget());
+                getWidget().contentPanel.remove(getWidget().layout.getWidget());
                 // add new
                 if (!showingUrl) {
-                    getWidget().contentPanel.setWidget(lo
-                            .getWidget());
+                    getWidget().contentPanel.setWidget(lo.getWidget());
                 }
                 getWidget().layout = lo;
             }
         } else if (!showingUrl) {
-            getWidget().contentPanel.setWidget(lo
-                    .getWidget());
+            getWidget().contentPanel.setWidget(lo.getWidget());
             getWidget().layout = lo;
         }
 
@@ -160,8 +152,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getWidget().layoutRelativeHeight = uidl
                 .hasAttribute("layoutRelativeHeight");
 
-        if (getWidget().dynamicWidth
-                && getWidget().layoutRelativeWidth) {
+        if (getWidget().dynamicWidth && getWidget().layoutRelativeWidth) {
             /*
              * Relative layout width, fix window width before rendering (width
              * according to caption)
@@ -170,8 +161,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().layout.updateFromUIDL(childUidl, client);
-        if (!getWidget().dynamicHeight
-                && getWidget().layoutRelativeWidth) {
+        if (!getWidget().dynamicHeight && getWidget().layoutRelativeWidth) {
             /*
              * Relative layout width, and fixed height. Must update the size to
              * be able to take scrollbars into account (layout gets narrower
@@ -184,13 +174,11 @@ public class WindowConnector extends AbstractComponentContainerConnector
          * No explicit width is set and the layout does not have relative width
          * so fix the size according to the layout.
          */
-        if (getWidget().dynamicWidth
-                && !getWidget().layoutRelativeWidth) {
+        if (getWidget().dynamicWidth && !getWidget().layoutRelativeWidth) {
             getWidget().setNaturalWidth();
         }
 
-        if (getWidget().dynamicHeight
-                && getWidget().layoutRelativeHeight) {
+        if (getWidget().dynamicHeight && getWidget().layoutRelativeHeight) {
             // Prevent resizing until height has been fixed
             getWidget().resizable = false;
         }
@@ -205,8 +193,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
                         getWidget().shortcutHandler = new ShortcutActionHandler(
                                 getId(), client);
                     }
-                    getWidget().shortcutHandler
-                            .updateActionMap(childUidl);
+                    getWidget().shortcutHandler.updateActionMap(childUidl);
                 }
             }
 
@@ -238,14 +225,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().setWidth(Window.getClientWidth() + "px");
             sizeReduced = true;
         }
-        if (getWidget().getOffsetHeight() > Window
-                .getClientHeight()) {
+        if (getWidget().getOffsetHeight() > Window.getClientHeight()) {
             getWidget().setHeight(Window.getClientHeight() + "px");
             sizeReduced = true;
         }
 
-        if (getWidget().dynamicHeight
-                && getWidget().layoutRelativeHeight) {
+        if (getWidget().dynamicHeight && getWidget().layoutRelativeHeight) {
             /*
              * Window height is undefined, layout is 100% high so the layout
              * should define the initial window height but on resize the layout
@@ -267,8 +252,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
             client.runDescendentsLayout(getWidget());
         }
 
-        Util.runWebkitOverflowAutoFix(getWidget().contentPanel
-                .getElement());
+        Util.runWebkitOverflowAutoFix(getWidget().contentPanel.getElement());
 
         client.getView().getWidget().scrollIntoView(uidl);
 

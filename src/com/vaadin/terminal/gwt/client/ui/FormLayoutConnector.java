@@ -6,8 +6,8 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.UIDL;
 
 public class FormLayoutConnector extends AbstractComponentContainerConnector {
     @Override

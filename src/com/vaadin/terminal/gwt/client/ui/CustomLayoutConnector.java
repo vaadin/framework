@@ -11,8 +11,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.UIDL;
 
 public class CustomLayoutConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout {
@@ -91,7 +91,6 @@ public class CustomLayoutConnector extends AbstractComponentContainerConnector
     }
 
     public void layout() {
-        getWidget().iLayoutJS(
-                DOM.getFirstChild(getWidget().getElement()));
+        getWidget().iLayoutJS(DOM.getFirstChild(getWidget().getElement()));
     }
 }

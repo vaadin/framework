@@ -45,12 +45,10 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         if (uidl.hasAttribute("type")) {
             getWidget().type = uidl.getStringAttribute("type");
             if (getWidget().type.equals("image")) {
-                getWidget().addStyleName(
-                        VEmbedded.CLASSNAME + "-image");
+                getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
                 Element el = null;
                 boolean created = false;
-                NodeList<Node> nodes = getWidget().getElement()
-                        .getChildNodes();
+                NodeList<Node> nodes = getWidget().getElement().getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -72,8 +70,8 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                 style.setProperty("width", getState().getWidth());
                 style.setProperty("height", getState().getHeight());
 
-                DOM.setElementProperty(el, "src", getWidget()
-                        .getSrc(uidl, client));
+                DOM.setElementProperty(el, "src",
+                        getWidget().getSrc(uidl, client));
 
                 if (created) {
                     // insert in dom late
@@ -87,36 +85,31 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                 getWidget().sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
             } else if (getWidget().type.equals("browser")) {
-                getWidget().addStyleName(
-                        VEmbedded.CLASSNAME + "-browser");
+                getWidget().addStyleName(VEmbedded.CLASSNAME + "-browser");
                 if (getWidget().browserElement == null) {
                     getWidget().setHTML(
                             "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
                                     + " allowTransparency=\"true\" src=\"\""
                                     + " name=\"" + uidl.getId()
                                     + "\"></iframe>");
-                    getWidget().browserElement = DOM
-                            .getFirstChild(getWidget().getElement());
+                    getWidget().browserElement = DOM.getFirstChild(getWidget()
+                            .getElement());
                 }
-                DOM.setElementAttribute(getWidget().browserElement,
-                        "src", getWidget().getSrc(uidl, client));
+                DOM.setElementAttribute(getWidget().browserElement, "src",
+                        getWidget().getSrc(uidl, client));
                 clearBrowserElement = false;
             } else {
-                VConsole.log("Unknown Embedded type '"
-                        + getWidget().type + "'");
+                VConsole.log("Unknown Embedded type '" + getWidget().type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
                 // Handle embedding of Flash
-                getWidget().addStyleName(
-                        VEmbedded.CLASSNAME + "-flash");
-                getWidget().setHTML(
-                        getWidget().createFlashEmbed(uidl));
+                getWidget().addStyleName(VEmbedded.CLASSNAME + "-flash");
+                getWidget().setHTML(getWidget().createFlashEmbed(uidl));
 
             } else if (mime.equals("image/svg+xml")) {
-                getWidget().addStyleName(
-                        VEmbedded.CLASSNAME + "-svg");
+                getWidget().addStyleName(VEmbedded.CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = VEmbedded.getParameters(uidl);
                 if (parameters.get("data") == null) {

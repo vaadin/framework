@@ -10,10 +10,10 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 
 public class TableConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
@@ -44,12 +44,10 @@ public class TableConnector extends AbstractComponentContainerConnector
          * the space available.
          */
         if (uidl.hasAttribute("colfooters")) {
-            getWidget().showColFooters = uidl
-                    .getBooleanAttribute("colfooters");
+            getWidget().showColFooters = uidl.getBooleanAttribute("colfooters");
         }
 
-        getWidget().tFoot
-                .setVisible(getWidget().showColFooters);
+        getWidget().tFoot.setVisible(getWidget().showColFooters);
 
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
@@ -84,8 +82,7 @@ public class TableConnector extends AbstractComponentContainerConnector
         getWidget().updateSelectionProperties(uidl, getState());
 
         if (uidl.hasAttribute("alb")) {
-            getWidget().bodyActionKeys = uidl
-                    .getStringArrayAttribute("alb");
+            getWidget().bodyActionKeys = uidl.getStringArrayAttribute("alb");
         } else {
             // Need to clear the actions if the action handlers have been
             // removed
@@ -94,8 +91,7 @@ public class TableConnector extends AbstractComponentContainerConnector
 
         getWidget().setCacheRateFromUIDL(uidl);
 
-        getWidget().recalcWidths = uidl
-                .hasAttribute("recalcWidths");
+        getWidget().recalcWidths = uidl.hasAttribute("recalcWidths");
         if (getWidget().recalcWidths) {
             getWidget().tHead.clear();
             getWidget().tFoot.clear();
@@ -105,10 +101,8 @@ public class TableConnector extends AbstractComponentContainerConnector
 
         getWidget().updateFirstVisibleAndScrollIfNeeded(uidl);
 
-        getWidget().showRowHeaders = uidl
-                .getBooleanAttribute("rowheaders");
-        getWidget().showColHeaders = uidl
-                .getBooleanAttribute("colheaders");
+        getWidget().showRowHeaders = uidl.getBooleanAttribute("rowheaders");
+        getWidget().showColHeaders = uidl.getBooleanAttribute("colheaders");
 
         getWidget().updateSortingProperties(uidl);
 
@@ -152,10 +146,8 @@ public class TableConnector extends AbstractComponentContainerConnector
                             uidl.getIntAttribute("firstrow"),
                             uidl.getIntAttribute("rows"));
                     if (getWidget().headerChangedDuringUpdate) {
-                        getWidget().triggerLazyColumnAdjustment(
-                                true);
-                    } else if (!getWidget()
-                            .isScrollPositionVisible()
+                        getWidget().triggerLazyColumnAdjustment(true);
+                    } else if (!getWidget().isScrollPositionVisible()
                             || totalRowsChanged
                             || getWidget().lastRenderedHeight != getWidget().scrollBody
                                     .getOffsetHeight()) {
@@ -180,12 +172,11 @@ public class TableConnector extends AbstractComponentContainerConnector
         }
 
         if (!getWidget().isSelectable()) {
-            getWidget().scrollBody
-                    .addStyleName(VScrollTable.CLASSNAME + "-body-noselection");
+            getWidget().scrollBody.addStyleName(VScrollTable.CLASSNAME
+                    + "-body-noselection");
         } else {
-            getWidget().scrollBody
-                    .removeStyleName(VScrollTable.CLASSNAME
-                            + "-body-noselection");
+            getWidget().scrollBody.removeStyleName(VScrollTable.CLASSNAME
+                    + "-body-noselection");
         }
 
         getWidget().hideScrollPositionAnnotation();

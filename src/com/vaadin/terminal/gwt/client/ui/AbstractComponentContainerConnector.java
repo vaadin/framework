@@ -9,9 +9,9 @@ import java.util.Collection;
 import com.google.gwt.user.client.ui.HasOneWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector {

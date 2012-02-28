@@ -73,10 +73,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
             getWidget().moreItem.setHTML(itemHTML.toString());
             getWidget().moreItem.setCommand(VMenuBar.emptyCommand);
 
-            getWidget().collapsedRootItems = new VMenuBar(true,
-                    getWidget());
-            getWidget().moreItem
-                    .setSubMenu(getWidget().collapsedRootItems);
+            getWidget().collapsedRootItems = new VMenuBar(true, getWidget());
+            getWidget().moreItem.setSubMenu(getWidget().collapsedRootItems);
             getWidget().moreItem.addStyleName(VMenuBar.CLASSNAME
                     + "-more-menuitem");
         }
@@ -106,8 +104,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                     // item's id-number
                     cmd = new Command() {
                         public void execute() {
-                            getWidget().hostReference
-                                    .onMenuClick(itemId);
+                            getWidget().hostReference.onMenuClick(itemId);
                         }
                     };
                 }

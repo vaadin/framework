@@ -44,8 +44,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     private int top;
 
-    private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
-            100, new ScheduledCommand() {
+    private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
+            new ScheduledCommand() {
                 public void execute() {
                     imagesLoaded();
                 }

@@ -49,29 +49,24 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
 
         // not a FocusWidget -> needs own tabindex handling
         if (uidl.hasAttribute("tabindex")) {
-            getWidget().tb.setTabIndex(uidl
-                    .getIntAttribute("tabindex"));
+            getWidget().tb.setTabIndex(uidl.getIntAttribute("tabindex"));
         }
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = uidl
-                    .getIntAttribute("filteringmode");
+            getWidget().filteringmode = uidl.getIntAttribute("filteringmode");
         }
 
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().nullSelectionAllowed = uidl
-                .hasAttribute("nullselect");
+        getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
-        getWidget().nullSelectItem = uidl
-                .hasAttribute("nullselectitem")
+        getWidget().nullSelectItem = uidl.hasAttribute("nullselectitem")
                 && uidl.getBooleanAttribute("nullselectitem");
 
         getWidget().currentPage = uidl.getIntVariable("page");
 
         if (uidl.hasAttribute("pagelength")) {
-            getWidget().pageLength = uidl
-                    .getIntAttribute("pagelength");
+            getWidget().pageLength = uidl.getIntAttribute("pagelength");
         }
 
         if (uidl.hasAttribute(VFilterSelect.ATTR_INPUTPROMPT)) {
@@ -82,11 +77,9 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
             getWidget().inputPrompt = "";
         }
 
-        getWidget().suggestionPopup.updateStyleNames(uidl,
-                getState());
+        getWidget().suggestionPopup.updateStyleNames(uidl, getState());
 
-        getWidget().allowNewItem = uidl
-                .hasAttribute("allownewitem");
+        getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
         getWidget().lastNewItemString = null;
 
         getWidget().currentSuggestions.clear();
@@ -109,8 +102,7 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
 
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
-            getWidget().totalMatches = uidl
-                    .getIntAttribute("totalMatches");
+            getWidget().totalMatches = uidl.getIntAttribute("totalMatches");
         } else {
             getWidget().totalMatches = 0;
         }
@@ -141,8 +133,7 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
                     }
                 }
                 getWidget().currentSuggestion = suggestion;
-                getWidget().setSelectedItemIcon(
-                        suggestion.getIconUri());
+                getWidget().setSelectedItemIcon(suggestion.getIconUri());
             }
 
             // Collect captions so we can calculate minimum width for textarea
@@ -180,19 +171,16 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
                 && getWidget().lastFilter.toLowerCase().equals(
                         uidl.getStringVariable("filter"))) {
             getWidget().suggestionPopup.showSuggestions(
-                    getWidget().currentSuggestions,
-                    getWidget().currentPage,
+                    getWidget().currentSuggestions, getWidget().currentPage,
                     getWidget().totalMatches);
             getWidget().waitingForFilteringResponse = false;
             if (!getWidget().popupOpenerClicked
                     && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
                 // we're paging w/ arrows
                 if (getWidget().selectPopupItemWhenResponseIsReceived == VFilterSelect.Select.LAST) {
-                    getWidget().suggestionPopup.menu
-                            .selectLastItem();
+                    getWidget().suggestionPopup.menu.selectLastItem();
                 } else {
-                    getWidget().suggestionPopup.menu
-                            .selectFirstItem();
+                    getWidget().suggestionPopup.menu.selectFirstItem();
                 }
 
                 // This is used for paging so we update the keyboard selection
@@ -203,8 +191,7 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
                         .setKeyboardSelectedItem(activeMenuItem);
 
                 // Update text field to contain the correct text
-                getWidget()
-                        .setTextboxText(activeMenuItem.getText());
+                getWidget().setTextboxText(activeMenuItem.getText());
                 getWidget().tb.setSelectionRange(
                         getWidget().lastFilter.length(),
                         activeMenuItem.getText().length()
@@ -219,8 +206,7 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
         }
 
         // Calculate minumum textarea width
-        getWidget().suggestionPopupMinWidth = getWidget()
-                .minWidth(captions);
+        getWidget().suggestionPopupMinWidth = getWidget().minWidth(captions);
 
         getWidget().popupOpenerClicked = false;
 

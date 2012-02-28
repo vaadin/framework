@@ -29,7 +29,8 @@ public class DoubleRangeValidator extends RangeValidator<Double> {
      * @param maxValue
      *            The maximum value to accept or null for no limit
      */
-    public DoubleRangeValidator(String errorMessage, Double minValue, Double maxValue) {
+    public DoubleRangeValidator(String errorMessage, Double minValue,
+            Double maxValue) {
         super(errorMessage, Double.class, minValue, maxValue);
     }
 
