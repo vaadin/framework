@@ -90,41 +90,44 @@ public abstract class VLayoutSlot {
 
         if (isRelativeWidth()) {
             style.setPropertyPx("width", (int) availableWidth);
-            style.clearProperty("minWidth");
         } else {
             style.clearProperty("width");
-            if (caption != null && captionAboveCompnent) {
-                style.setPropertyPx("minWidth", captionWidth);
-            } else {
-                style.clearProperty("minWidth");
-            }
         }
 
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isLeft()) {
-            double usedWidth = getWidgetWidth();
+            double usedWidth;
+            if (isRelativeWidth()) {
+                String percentWidth = getWidget().getElement().getStyle()
+                        .getWidth();
+                double percentage = parsePercent(percentWidth);
+                usedWidth = availableWidth * (percentage / 100);
+            } else {
+                usedWidth = getWidgetWidth();
+            }
             if (alignment.isHorizontalCenter()) {
                 currentLocation += (allocatedSpace - usedWidth) / 2d;
                 if (captionAboveCompnent) {
-                    captionStyle.setLeft(usedWidth / 2 - (captionWidth / 2d),
+                    captionStyle.setLeft((usedWidth - captionWidth) / 2,
                             Unit.PX);
-                    captionStyle.clearRight();
                 }
             } else {
                 currentLocation += (allocatedSpace - usedWidth);
                 if (captionAboveCompnent) {
-                    captionStyle.clearLeft();
-                    captionStyle.setRight(0, Unit.PX);
+                    captionStyle.setLeft(usedWidth - captionWidth, Unit.PX);
                 }
             }
         } else {
             if (captionAboveCompnent) {
                 captionStyle.setLeft(0, Unit.PX);
-                captionStyle.clearRight();
             }
         }
 
         style.setLeft(currentLocation, Unit.PX);
+    }
+
+    private double parsePercent(String size) {
+        return Double.parseDouble(size.replaceAll("%", ""));
     }
 
     public void positionVertically(double currentLocation, double allocatedSpace) {
@@ -132,11 +135,13 @@ public abstract class VLayoutSlot {
 
         double contentHeight = allocatedSpace;
 
+        int captionHeight;
         VCaption caption = getCaption();
         if (caption == null || caption.shouldBePlacedAfterComponent()) {
             style.clearPaddingTop();
+            captionHeight = 0;
         } else {
-            int captionHeight = getCaptionHeight();
+            captionHeight = getCaptionHeight();
             contentHeight -= captionHeight;
             style.setPaddingTop(captionHeight, Unit.PX);
         }
@@ -149,7 +154,14 @@ public abstract class VLayoutSlot {
 
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isTop()) {
-            int usedHeight = getUsedHeight();
+            double usedHeight;
+            if (isRelativeHeight()) {
+                String height = getWidget().getElement().getStyle().getHeight();
+                double percentage = parsePercent(height);
+                usedHeight = captionHeight + contentHeight * (percentage / 100);
+            } else {
+                usedHeight = getUsedHeight();
+            }
             if (alignment.isVerticalCenter()) {
                 currentLocation += (allocatedSpace - usedHeight) / 2d;
             } else {
