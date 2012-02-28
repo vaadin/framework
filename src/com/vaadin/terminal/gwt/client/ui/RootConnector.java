@@ -33,6 +33,11 @@ public class RootConnector extends AbstractComponentContainerConnector {
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
+        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
+        // register the listened events by the server-side to the event-handler
+        // of the component
+        paintableMap.registerEventListenersFromUIDL(getId(), uidl);
+
         getWidget().rendering = true;
         getWidget().id = getId();
         boolean firstPaint = getWidget().connection == null;
