@@ -46,6 +46,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             caption.updateCaption(uidl);
         } else {
             layout.setCaption(component.getWidget(), null);
+            getLayoutManager().setNeedsUpdate(this);
         }
     }
 

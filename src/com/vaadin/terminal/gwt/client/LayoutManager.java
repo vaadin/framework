@@ -240,6 +240,7 @@ public class LayoutManager {
         for (Element element : nonPaintableElements) {
             MeasuredSize measuredSize = getMeasuredSize(element, null);
             measuredAndUpdate(element, measuredSize);
+            measuredSize.clearDirtyState();
         }
     }
 
