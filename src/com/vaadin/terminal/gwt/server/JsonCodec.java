@@ -19,7 +19,6 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
  * Decoder for converting RPC parameters and other values from JSON in transfer
@@ -153,9 +152,6 @@ public class JsonCodec implements Serializable {
             // TODO as undefined type?
             return combineTypeAndValue(JsonEncoder.VTYPE_UNDEFINED,
                     JSONObject.NULL);
-        } else if (value instanceof SharedState) {
-            return combineTypeAndValue(value.getClass().getName(),
-                    encodeObject(value, idMapper));
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -181,9 +177,14 @@ public class JsonCodec implements Serializable {
             Paintable paintable = (Paintable) value;
             return combineTypeAndValue(JsonEncoder.VTYPE_PAINTABLE,
                     idMapper.getPaintableId(paintable));
-        } else {
+        } else if (getTransportType(value) != JsonEncoder.VTYPE_UNDEFINED) {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
+        } else {
+            // Any object that we do not know how to encode we encode by looping
+            // through fields
+            return combineTypeAndValue(value.getClass().getCanonicalName(),
+                    encodeObject(value, idMapper));
         }
     }
 

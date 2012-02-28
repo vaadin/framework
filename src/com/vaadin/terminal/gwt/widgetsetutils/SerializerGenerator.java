@@ -5,7 +5,9 @@
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.Generator;
@@ -24,6 +26,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
+import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
 /**
@@ -36,29 +39,27 @@ import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
  */
 public class SerializerGenerator extends Generator {
 
-    private String packageName;
-    private String beanSerializerClassName;
+    private static final String SUBTYPE_SEPARATOR = "___";
+    private static String beanSerializerPackageName = SerializerMap.class
+            .getPackage().getName();
 
     @Override
     public String generate(TreeLogger logger, GeneratorContext context,
             String beanTypeName) throws UnableToCompleteException {
-        String beanSerializerTypeName = beanTypeName + "_Serializer";
+        JClassType beanType = context.getTypeOracle().findType(beanTypeName);
+        String beanSerializerClassName = getSerializerSimpleClassName(beanType);
         try {
-            TypeOracle typeOracle = context.getTypeOracle();
-
-            // get classType and save instance variables
-            JClassType classType = typeOracle.getType(beanTypeName);
-            packageName = classType.getPackage().getName();
-            beanSerializerClassName = classType.getSimpleSourceName()
-                    + "_Serializer";
             // Generate class source code
-            generateClass(logger, context, beanTypeName, beanSerializerTypeName);
+            generateClass(logger, context, beanType, beanSerializerPackageName,
+                    beanSerializerClassName);
         } catch (Exception e) {
             logger.log(TreeLogger.ERROR, "SerializerGenerator failed for "
-                    + beanTypeName, e);
+                    + beanType.getQualifiedSourceName(), e);
         }
         // return the fully qualifed name of the class generated
-        return packageName + "." + beanSerializerClassName;
+        logger.log(TreeLogger.INFO, "Generated Serializer class "
+                + getFullyQualifiedSerializerClassName(beanType));
+        return getFullyQualifiedSerializerClassName(beanType);
     }
 
     /**
@@ -68,17 +69,19 @@ public class SerializerGenerator extends Generator {
      *            Logger object
      * @param context
      *            Generator context
+     * @param beanType
      * @param beanTypeName
      *            bean type for which the serializer is to be generated
      * @param beanSerializerTypeName
      *            name of the serializer class to generate
      */
     private void generateClass(TreeLogger logger, GeneratorContext context,
-            String beanTypeName, String beanSerializerTypeName) {
+            JClassType beanType, String serializerPackageName,
+            String serializerClassName) {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
-        printWriter = context.tryCreate(logger, packageName,
-                beanSerializerClassName);
+        printWriter = context.tryCreate(logger, serializerPackageName,
+                serializerClassName);
 
         // print writer if null, source code has ALREADY been generated
         if (printWriter == null) {
@@ -86,13 +89,14 @@ public class SerializerGenerator extends Generator {
         }
         Date date = new Date();
         TypeOracle typeOracle = context.getTypeOracle();
-        logger.log(Type.DEBUG, "Processing serializable type " + beanTypeName
-                + "...");
+        String beanQualifiedSourceName = beanType.getQualifiedSourceName();
+        logger.log(Type.DEBUG, "Processing serializable type "
+                + beanQualifiedSourceName + "...");
 
         // init composer, set class properties, create source writer
         ClassSourceFileComposerFactory composer = null;
-        composer = new ClassSourceFileComposerFactory(packageName,
-                beanSerializerClassName);
+        composer = new ClassSourceFileComposerFactory(serializerPackageName,
+                serializerClassName);
         composer.addImport(GWT.class.getName());
         composer.addImport(JSONArray.class.getName());
         // composer.addImport(JSONObject.class.getName());
@@ -106,34 +110,27 @@ public class SerializerGenerator extends Generator {
                 printWriter);
         sourceWriter.indent();
 
-        sourceWriter.println("public " + beanTypeName + " deserialize("
-                + JSONObject.class.getName() + " jsonValue, "
+        sourceWriter.println("public " + beanQualifiedSourceName
+                + " deserialize(" + JSONObject.class.getName() + " jsonValue, "
                 + ConnectorMap.class.getName() + " idMapper) {");
         sourceWriter.indent();
 
         // VButtonState state = GWT.create(VButtonState.class);
-        sourceWriter.println(beanTypeName + " state = GWT.create("
-                + beanTypeName + ".class);");
-        JClassType beanType = typeOracle.findType(beanTypeName);
+        sourceWriter.println(beanQualifiedSourceName + " state = GWT.create("
+                + beanQualifiedSourceName + ".class);");
         JClassType objectType = typeOracle.findType("java.lang.Object");
         while (!objectType.equals(beanType)) {
-            for (JMethod method : beanType.getMethods()) {
-                // Process all setters that have corresponding fields
-                if (!method.isPublic() || method.isStatic()
-                        || !method.getName().startsWith("set")
-                        || method.getParameterTypes().length != 1) {
-                    // Not setter, skip to next method
-                    continue;
-
-                }
+            for (JMethod method : getSetters(beanType)) {
                 String setterName = method.getName();
                 String capitalizedFieldName = setterName.substring(3);
                 String fieldName = decapitalize(capitalizedFieldName);
                 JType setterParameterType = method.getParameterTypes()[0];
 
-                logger.log(Type.DEBUG, "* Processing field " + fieldName
-                        + " in " + beanTypeName + " (" + beanType.getName()
-                        + ")");
+                logger.log(
+                        Type.INFO,
+                        "* Processing field " + fieldName + " in "
+                                + beanQualifiedSourceName + " ("
+                                + beanType.getName() + ")");
 
                 String jsonFieldName = "json" + capitalizedFieldName;
                 // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
@@ -178,7 +175,45 @@ public class SerializerGenerator extends Generator {
 
     }
 
+    protected static List<JMethod> getSetters(JClassType beanType) {
+
+        List<JMethod> setterMethods = new ArrayList<JMethod>();
+
+        for (JMethod method : beanType.getMethods()) {
+            // Process all setters that have corresponding fields
+            if (!method.isPublic() || method.isStatic()
+                    || !method.getName().startsWith("set")
+                    || method.getParameterTypes().length != 1) {
+                // Not setter, skip to next method
+                continue;
+            }
+            setterMethods.add(method);
+        }
+
+        return setterMethods;
+    }
+
     private String decapitalize(String name) {
         return name.substring(0, 1).toLowerCase() + name.substring(1);
+    }
+
+    private static String getSerializerSimpleClassName(JClassType beanType) {
+        return getSimpleClassName(beanType) + "_Serializer";
+    }
+
+    private static String getSimpleClassName(JClassType type) {
+        if (type.isMemberType()) {
+            // Assumed to be static sub class
+            String baseName = getSimpleClassName(type.getEnclosingType());
+            String name = baseName + SUBTYPE_SEPARATOR
+                    + type.getSimpleSourceName();
+            return name;
+        }
+        return type.getSimpleSourceName();
+    }
+
+    public static String getFullyQualifiedSerializerClassName(JClassType type) {
+        return beanSerializerPackageName + "."
+                + getSerializerSimpleClassName(type);
     }
 }
