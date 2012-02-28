@@ -54,8 +54,8 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * 
  * Client-side widgets receive updates from the corresponding server-side
  * components as calls to
- * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not
- * to be confused with the server side interface
+ * {@link VPaintableWidget#updateFromUIDL(UIDL, ApplicationConnection)} (not to
+ * be confused with the server side interface
  * {@link com.vaadin.terminal.Paintable} ). Any client-side changes (typically
  * resulting from user actions) are sent back to the server as variable changes
  * (see {@link #updateVariable()}).
@@ -1002,7 +1002,7 @@ public class ApplicationConnection {
                 // Process changes
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
 
-                ArrayList<ComponentConnector> updatedVPaintableWidgets = new ArrayList<ComponentConnector>();
+                ArrayList<ComponentConnector> updatedComponentConnectors = new ArrayList<ComponentConnector>();
                 componentCaptionSizeChanges.clear();
 
                 Duration updateDuration = new Duration();
@@ -1021,7 +1021,7 @@ public class ApplicationConnection {
                                 && !uidl.getTag().equals(
                                         configuration.getEncodedWindowTag())) {
                             // create, initialize and register the paintable
-                            getPaintable(uidl);
+                            getConnector(uidl.getId(), uidl.getTag());
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1034,13 +1034,13 @@ public class ApplicationConnection {
                 JsArrayString keyArray = states.getKeyArray();
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
-                        String paintableId = keyArray.get(i);
+                        String connectorId = keyArray.get(i);
                         Connector paintable = connectorMap
-                                .getConnector(paintableId);
+                                .getConnector(connectorId);
                         if (null != paintable) {
 
                             JSONArray stateDataAndType = new JSONArray(
-                                    states.getJavaScriptObject(paintableId));
+                                    states.getJavaScriptObject(connectorId));
 
                             Object state = JsonDecoder.convertValue(
                                     stateDataAndType, connectorMap);
@@ -1058,20 +1058,21 @@ public class ApplicationConnection {
                     try {
                         final UIDL change = changes.get(i).cast();
                         final UIDL uidl = change.getChildUIDL(0);
+                        String paintableId = uidl.getId();
                         // TODO optimize
                         final ComponentConnector paintable = (ComponentConnector) connectorMap
-                                .getConnector(uidl.getId());
+                                .getConnector(paintableId);
                         if (paintable != null) {
                             paintable.updateFromUIDL(uidl,
                                     ApplicationConnection.this);
-                            updatedVPaintableWidgets.add(paintable);
+                            updatedComponentConnectors.add(paintable);
                         } else {
                             if (!uidl.getTag().equals(
                                     configuration.getEncodedWindowTag())) {
                                 VConsole.error("Received update for "
                                         + uidl.getTag()
                                         + ", but there is no such paintable ("
-                                        + uidl.getId() + ") rendered.");
+                                        + paintableId + ") rendered.");
                             } else {
                                 String pid = uidl.getId();
                                 if (!connectorMap.hasConnector(pid)) {
@@ -1660,32 +1661,59 @@ public class ApplicationConnection {
 
     }
 
-    /**
-     * Get either existing or new Paintable for given UIDL.
-     * 
-     * If corresponding Paintable has been previously painted, return it.
-     * Otherwise create and register a new Paintable from UIDL. Caller must
-     * update the returned Paintable from UIDL after it has been connected to
-     * parent.
-     * 
-     * @param uidl
-     *            UIDL to create Paintable from.
-     * @return Either existing or new Paintable corresponding to UIDL.
-     */
+    @Deprecated
     public ComponentConnector getPaintable(UIDL uidl) {
-        final String pid = uidl.getId();
-        // the actual content UIDL may be deferred, but it always contains
-        // enough information to create a paintable instance
-        if (!connectorMap.hasConnector(pid)) {
-            // Create and register a new paintable if no old was found
-            ComponentConnector p = widgetSet.createWidget(uidl.getTag(),
-                    configuration);
-            p.setConnection(this);
-            p.setId(pid);
-            p.init();
-            connectorMap.registerConnector(pid, p);
+        return getConnector(uidl.getId(), uidl.getTag());
+    }
+
+    /**
+     * Get either an existing ComponentConnector or create a new
+     * ComponentConnector with the given type and id.
+     * 
+     * If a ComponentConnector with the given id already exists, returns it.
+     * Otherwise creates and registers a new ComponentConnector of the given
+     * type.
+     * 
+     * @param connectorId
+     *            Id of the paintable
+     * @param connectorType
+     *            Type of the connector, as passed from the server side
+     * 
+     * @return Either an existing ComponentConnector or a new ComponentConnector
+     *         of the given type
+     */
+    public ComponentConnector getConnector(String connectorId,
+            String connectorType) {
+        if (!connectorMap.hasConnector(connectorId)) {
+            return createAndRegisterConnector(connectorId, connectorType);
         }
-        return (ComponentConnector) connectorMap.getConnector(pid);
+        return (ComponentConnector) connectorMap.getConnector(connectorId);
+    }
+
+    /**
+     * Creates a new ComponentConnector with the given type and id.
+     * 
+     * Creates and registers a new ComponentConnector of the given type. Should
+     * never be called with the connector id of an existing connector.
+     * 
+     * @param connectorId
+     *            Id of the new connector
+     * @param connectorType
+     *            Type of the connector, as passed from the server side
+     * 
+     * @return A new ComponentConnector of the given type
+     */
+    private ComponentConnector createAndRegisterConnector(String connectorId,
+            String connectorType) {
+        // Create and register a new connector with the given type
+        ComponentConnector p = widgetSet.createWidget(connectorType,
+                configuration);
+        p.setConnection(this);
+        p.setId(connectorId);
+        p.init();
+        connectorMap.registerConnector(connectorId, p);
+
+        return p;
     }
 
     /**
