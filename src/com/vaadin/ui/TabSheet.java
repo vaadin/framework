@@ -20,9 +20,9 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
+import com.vaadin.terminal.gwt.client.ui.TabsheetConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetPaintable;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -56,7 +56,7 @@ import com.vaadin.ui.themes.Runo;
  * @VERSION@
  * @since 3.0
  */
-@ClientWidget(VTabsheetPaintable.class)
+@ClientWidget(TabsheetConnector.class)
 public class TabSheet extends AbstractComponentContainer {
 
     /**
@@ -379,7 +379,7 @@ public class TabSheet extends AbstractComponentContainer {
             target.startTag("tab");
             if (!tab.isEnabled() && tab.isVisible()) {
                 target.addAttribute(
-                        VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED, true);
+                        TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED, true);
             }
 
             if (!tab.isVisible()) {
@@ -400,13 +400,13 @@ public class TabSheet extends AbstractComponentContainer {
             final String caption = tab.getCaption();
             if (caption != null && caption.length() > 0) {
                 target.addAttribute(
-                        VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION, caption);
+                        TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION, caption);
             }
 
             final String description = tab.getDescription();
             if (description != null) {
                 target.addAttribute(
-                        VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION,
+                        TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION,
                         description);
             }
 

@@ -7,12 +7,12 @@ package com.vaadin.ui;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VTextAreaPaintable;
+import com.vaadin.terminal.gwt.client.ui.TextAreaConnector;
 
 /**
  * A text field that supports multi line editing.
  */
-@ClientWidget(VTextAreaPaintable.class)
+@ClientWidget(TextAreaConnector.class)
 public class TextArea extends AbstractTextField {
 
     private static final int DEFAULT_ROWS = 5;

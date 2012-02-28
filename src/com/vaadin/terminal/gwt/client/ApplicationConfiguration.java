@@ -17,7 +17,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
-import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
+import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
 
@@ -388,7 +388,7 @@ public class ApplicationConfiguration implements EntryPoint {
             return classes[parseInt];
         } catch (Exception e) {
             // component was not present in mappings
-            return VUnknownComponentPaintable.class;
+            return UnknownComponentConnector.class;
         }
     }
 
@@ -398,7 +398,7 @@ public class ApplicationConfiguration implements EntryPoint {
             String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
             classes[value] = widgetSet.getImplementationByClassName(key);
-            if (classes[value] == VUnknownComponentPaintable.class) {
+            if (classes[value] == UnknownComponentConnector.class) {
                 if (unknownComponents == null) {
                     unknownComponents = new HashMap<String, String>();
                 }

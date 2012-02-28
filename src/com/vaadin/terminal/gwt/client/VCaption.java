@@ -10,7 +10,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetBasePaintable;
+import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 
 public class VCaption extends HTML {
 
@@ -404,7 +404,7 @@ public class VCaption extends HTML {
         } else {
             // TODO fallback for cases where the caption has no owner (Tabsheet,
             // Accordion)
-            if (uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION) != null) {
+            if (uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION) != null) {
                 return true;
             }
         }

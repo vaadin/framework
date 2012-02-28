@@ -4,7 +4,7 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.VFormLayoutPaintable;
+import com.vaadin.terminal.gwt.client.ui.FormLayoutConnector;
 
 /**
  * FormLayout is used by {@link Form} to layout fields. It may also be used
@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.ui.VFormLayoutPaintable;
  * bottom are by default on.
  * 
  */
-@ClientWidget(VFormLayoutPaintable.class)
+@ClientWidget(FormLayoutConnector.class)
 public class FormLayout extends AbstractOrderedLayout {
 
     public FormLayout() {

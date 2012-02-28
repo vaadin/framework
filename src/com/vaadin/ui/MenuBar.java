@@ -13,8 +13,8 @@ import java.util.Stack;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.MenuBarConnector;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar;
-import com.vaadin.terminal.gwt.client.ui.VMenuBarPaintable;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -25,7 +25,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * </p>
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VMenuBarPaintable.class, loadStyle = LoadStyle.LAZY)
+@ClientWidget(value = MenuBarConnector.class, loadStyle = LoadStyle.LAZY)
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu

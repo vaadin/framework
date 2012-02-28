@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
-import com.vaadin.terminal.gwt.client.ui.VButtonPaintable.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonClientToServerRpc;
 
 public class VNativeButton extends Button implements ClickHandler,
         FocusHandler, BlurHandler {

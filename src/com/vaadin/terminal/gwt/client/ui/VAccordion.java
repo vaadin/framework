@@ -441,9 +441,9 @@ public class VAccordion extends VTabsheetBase {
             // TODO need to call this because the caption does not have an owner
             caption.updateCaptionWithoutOwner(
                     uidl,
-                    uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
+                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
         }
 
         public int getWidgetWidth() {

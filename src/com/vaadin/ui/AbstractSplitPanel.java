@@ -15,7 +15,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanelPaintable;
+import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
     private boolean locked = false;
 
-    private static final String SPLITTER_CLICK_EVENT = VAbstractSplitPanelPaintable.SPLITTER_CLICK_EVENT_IDENTIFIER;
+    private static final String SPLITTER_CLICK_EVENT = AbstractSplitPanelConnector.SPLITTER_CLICK_EVENT_IDENTIFIER;
 
     /**
      * Modifiable and Serializable Iterator for the components, used by

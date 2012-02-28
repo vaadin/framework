@@ -7,7 +7,7 @@ package com.vaadin.ui;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VVideoPaintable;
+import com.vaadin.terminal.gwt.client.ui.VideoConnector;
 
 /**
  * The Video component translates into an HTML5 &lt;video&gt; element and as
@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.ui.VVideoPaintable;
  * @author Vaadin Ltd
  * @since 6.7.0
  */
-@ClientWidget(VVideoPaintable.class)
+@ClientWidget(VideoConnector.class)
 public class Video extends AbstractMedia {
 
     private Resource poster;
@@ -80,7 +80,7 @@ public class Video extends AbstractMedia {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         if (getPoster() != null) {
-            target.addAttribute(VVideoPaintable.ATTR_POSTER, getPoster());
+            target.addAttribute(VideoConnector.ATTR_POSTER, getPoster());
         }
     }
 }

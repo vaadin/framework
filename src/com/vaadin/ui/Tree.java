@@ -44,8 +44,8 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.TreeConnector;
 import com.vaadin.terminal.gwt.client.ui.VTree;
-import com.vaadin.terminal.gwt.client.ui.VTreePaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetInSubtree;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
@@ -61,7 +61,7 @@ import com.vaadin.tools.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-@ClientWidget(VTreePaintable.class)
+@ClientWidget(TreeConnector.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource, ItemClickNotifier, DragSource,
         DropTarget {
@@ -610,8 +610,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (itemStyleGenerator != null) {
                     String stylename = itemStyleGenerator.getStyle(itemId);
                     if (stylename != null) {
-                        target.addAttribute(
-                                VTreePaintable.ATTRIBUTE_NODE_STYLE, stylename);
+                        target.addAttribute(TreeConnector.ATTRIBUTE_NODE_STYLE,
+                                stylename);
                     }
                 }
 
@@ -624,11 +624,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
 
                 // Adds the attributes
-                target.addAttribute(VTreePaintable.ATTRIBUTE_NODE_CAPTION,
+                target.addAttribute(TreeConnector.ATTRIBUTE_NODE_CAPTION,
                         getItemCaption(itemId));
                 final Resource icon = getItemIcon(itemId);
                 if (icon != null) {
-                    target.addAttribute(VTreePaintable.ATTRIBUTE_NODE_ICON,
+                    target.addAttribute(TreeConnector.ATTRIBUTE_NODE_ICON,
                             getItemIcon(itemId));
                 }
                 final String key = itemIdMapper.key(itemId);
@@ -686,12 +686,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Action a = i.next();
                 target.startTag("action");
                 if (a.getCaption() != null) {
-                    target.addAttribute(
-                            VTreePaintable.ATTRIBUTE_ACTION_CAPTION,
+                    target.addAttribute(TreeConnector.ATTRIBUTE_ACTION_CAPTION,
                             a.getCaption());
                 }
                 if (a.getIcon() != null) {
-                    target.addAttribute(VTreePaintable.ATTRIBUTE_ACTION_ICON,
+                    target.addAttribute(TreeConnector.ATTRIBUTE_ACTION_ICON,
                             a.getIcon());
                 }
                 target.addAttribute("key", actionMapper.key(a));

@@ -35,6 +35,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
 import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * <p>

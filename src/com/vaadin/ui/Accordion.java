@@ -3,7 +3,7 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.VAccordionPaintable;
+import com.vaadin.terminal.gwt.client.ui.AccordionConnector;
 
 /**
  * An accordion is a component similar to a {@link TabSheet}, but with a
@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.ui.VAccordionPaintable;
  * 
  * @see TabSheet
  */
-@ClientWidget(VAccordionPaintable.class)
+@ClientWidget(AccordionConnector.class)
 public class Accordion extends TabSheet {
 
 }

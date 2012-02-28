@@ -1,0 +1,108 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+package com.vaadin.terminal.gwt.client.ui;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonClientToServerRpc;
+
+public class NativeButtonConnector extends AbstractComponentConnector {
+
+    @Override
+    public void init() {
+        super.init();
+
+        ButtonClientToServerRpc rpcProxy = GWT
+                .create(ButtonClientToServerRpc.class);
+        getWidget().buttonRpcProxy = initRPC(rpcProxy);
+    }
+
+    @Override
+    protected boolean delegateCaptionHandling() {
+        return false;
+    }
+
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+
+        // Ensure correct implementation,
+        // but don't let container manage caption etc.
+        super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
+            return;
+        }
+
+        getWidget().disableOnClick = getState().isDisableOnClick();
+        getWidget().focusHandlerRegistration = EventHelper.updateFocusHandler(
+                this, client, getWidget().focusHandlerRegistration);
+        getWidget().blurHandlerRegistration = EventHelper.updateBlurHandler(
+                this, client, getWidget().blurHandlerRegistration);
+
+        // Save details
+        getWidget().client = client;
+        getWidget().paintableId = uidl.getId();
+
+        // Set text
+        getWidget().setText(getState().getCaption());
+
+        // handle error
+        if (uidl.hasAttribute("error")) {
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM.createSpan();
+                getWidget().errorIndicatorElement
+                        .setClassName("v-errorindicator");
+            }
+            getWidget().getElement().insertBefore(
+                    getWidget().errorIndicatorElement,
+                    getWidget().captionElement);
+
+        } else if (getWidget().errorIndicatorElement != null) {
+            getWidget().getElement().removeChild(
+                    getWidget().errorIndicatorElement);
+            getWidget().errorIndicatorElement = null;
+        }
+
+        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(client);
+                getWidget().getElement().insertBefore(
+                        getWidget().icon.getElement(),
+                        getWidget().captionElement);
+            }
+            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+        } else {
+            if (getWidget().icon != null) {
+                getWidget().getElement().removeChild(
+                        getWidget().icon.getElement());
+                getWidget().icon = null;
+            }
+        }
+
+    }
+
+    @Override
+    protected Widget createWidget() {
+        return GWT.create(VNativeButton.class);
+    }
+
+    @Override
+    public VNativeButton getWidget() {
+        return (VNativeButton) super.getWidget();
+    }
+
+    @Override
+    public ButtonState getState() {
+        return (ButtonState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return GWT.create(ButtonState.class);
+    }
+}

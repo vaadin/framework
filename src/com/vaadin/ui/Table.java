@@ -46,8 +46,8 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.TableConnector;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable;
-import com.vaadin.terminal.gwt.client.ui.VScrollTablePaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 
 /**
@@ -74,7 +74,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  * @since 3.0
  */
 @SuppressWarnings({ "deprecation" })
-@ClientWidget(VScrollTablePaintable.class)
+@ClientWidget(TableConnector.class)
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
         ItemClickNotifier, DragSource, DropTarget {

@@ -9,8 +9,8 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's
@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(VFilterSelectPaintable.class)
+@ClientWidget(ComboBoxConnector.class)
 public class ComboBox extends Select {
 
     private String inputPrompt = null;

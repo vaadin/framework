@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable;
+import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class WidgetSet {
 
@@ -43,11 +43,11 @@ public class WidgetSet {
         Class<? extends ComponentConnector> classType = resolveWidgetType(tag,
                 conf);
 
-        if (classType == null || classType == VUnknownComponentPaintable.class) {
+        if (classType == null || classType == UnknownComponentConnector.class) {
             String serverSideName = conf
                     .getUnknownServerClassNameByEncodedTagName(tag);
-            VUnknownComponentPaintable c = GWT
-                    .create(VUnknownComponentPaintable.class);
+            UnknownComponentConnector c = GWT
+                    .create(UnknownComponentConnector.class);
             c.setServerSideClassName(serverSideName);
             return c;
         } else {
@@ -80,7 +80,7 @@ public class WidgetSet {
     public Class<? extends ComponentConnector> getImplementationByClassName(
             String fullyqualifiedName) {
         if (fullyqualifiedName == null) {
-            return VUnknownComponentPaintable.class;
+            return UnknownComponentConnector.class;
         }
         Class<? extends ComponentConnector> implementationByServerSideClassName = widgetMap
                 .getImplementationByServerSideClassName(fullyqualifiedName);

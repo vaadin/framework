@@ -24,7 +24,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
+import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelectPaintable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VFilterSelectPaintable.class)
+@ClientWidget(ComboBoxConnector.class)
 public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
@@ -276,8 +276,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
 
         // Hide the error indicator if needed
         if (shouldHideErrors()) {
-            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS,
-                    true);
+            target.addAttribute(
+                    AbstractComponentConnector.ATTRIBUTE_HIDEERRORS, true);
         }
     }
 

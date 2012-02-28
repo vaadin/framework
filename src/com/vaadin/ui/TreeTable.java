@@ -22,7 +22,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VTreeTablePaintable;
+import com.vaadin.terminal.gwt.client.ui.TreeTableConnector;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
@@ -48,7 +48,7 @@ import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
  * share UI state in the container.
  */
 @SuppressWarnings({ "serial" })
-@ClientWidget(VTreeTablePaintable.class)
+@ClientWidget(TreeTableConnector.class)
 public class TreeTable extends Table implements Hierarchical {
 
     private static final Logger logger = Logger.getLogger(TreeTable.class
@@ -454,7 +454,7 @@ public class TreeTable extends Table implements Hierarchical {
                 Object object = visibleColumns2[i];
                 if (hierarchyColumnId.equals(object)) {
                     target.addAttribute(
-                            VTreeTablePaintable.ATTRIBUTE_HIERARCHY_COLUMN_INDEX,
+                            TreeTableConnector.ATTRIBUTE_HIERARCHY_COLUMN_INDEX,
                             i);
                     break;
                 }

@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VCustomComponentPaintable;
+import com.vaadin.terminal.gwt.client.ui.CustomComponentConnector;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -27,7 +27,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VCustomComponentPaintable.class, loadStyle = LoadStyle.EAGER)
+@ClientWidget(value = CustomComponentConnector.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponent extends AbstractComponentContainer {
 
     /**

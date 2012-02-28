@@ -14,7 +14,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.ui.VCssLayoutPaintable;
+import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.
@@ -57,7 +57,7 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayoutPaintable;
  * @since 6.1 brought in from "FastLayouts" incubator project
  * 
  */
-@ClientWidget(VCssLayoutPaintable.class)
+@ClientWidget(CssLayoutConnector.class)
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;

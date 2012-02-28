@@ -196,12 +196,12 @@ public class VTabsheet extends VTabsheetBase {
 
         @Override
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION)
+            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)
                     || uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
                 tooltipInfo
                         .setTitle(uidl
-                                .getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
+                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
                 if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
                     tooltipInfo.setErrorUidl(uidl.getErrors());
                 }
@@ -215,9 +215,9 @@ public class VTabsheet extends VTabsheetBase {
             // not have an owner
             boolean ret = updateCaptionWithoutOwner(
                     uidl,
-                    uidl.getStringAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(VTabsheetBasePaintable.ATTRIBUTE_TAB_DESCRIPTION));
+                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
 
             setClosable(uidl.hasAttribute("closable"));
 

@@ -27,7 +27,7 @@ import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VFormPaintable;
+import com.vaadin.terminal.gwt.client.ui.FormConnector;
 
 /**
  * Form component provides easy way of creating and managing sets fields.
@@ -62,7 +62,7 @@ import com.vaadin.terminal.gwt.client.ui.VFormPaintable;
  * @deprecated Use {@link FieldGroup} instead of {@link Form} for more
  *             flexibility.
  */
-@ClientWidget(VFormPaintable.class)
+@ClientWidget(FormConnector.class)
 @Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,
         Buffered, Item, Validatable, Action.Notifier {

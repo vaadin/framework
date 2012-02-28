@@ -18,7 +18,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.ui.VGridLayoutPaintable;
+import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ import com.vaadin.terminal.gwt.client.ui.VGridLayoutPaintable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VGridLayoutPaintable.class)
+@ClientWidget(GridLayoutConnector.class)
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
 

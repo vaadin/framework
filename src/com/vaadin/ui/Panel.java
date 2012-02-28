@@ -16,7 +16,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VPanelPaintable;
+import com.vaadin.terminal.gwt.client.ui.PanelConnector;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -30,12 +30,12 @@ import com.vaadin.ui.themes.Runo;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VPanelPaintable.class)
+@ClientWidget(PanelConnector.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable {
 
-    private static final String CLICK_EVENT = VPanelPaintable.CLICK_EVENT_IDENTIFIER;
+    private static final String CLICK_EVENT = PanelConnector.CLICK_EVENT_IDENTIFIER;
 
     /**
      * Removes extra decorations from the Panel.

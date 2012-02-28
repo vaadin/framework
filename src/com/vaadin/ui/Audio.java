@@ -5,7 +5,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VAudioPaintable;
+import com.vaadin.terminal.gwt.client.ui.AudioConnector;
 
 /**
  * The Audio component translates into an HTML5 &lt;audio&gt; element and as
@@ -28,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ui.VAudioPaintable;
  * @author Vaadin Ltd
  * @since 6.7.0
  */
-@ClientWidget(VAudioPaintable.class)
+@ClientWidget(AudioConnector.class)
 public class Audio extends AbstractMedia {
 
     public Audio() {

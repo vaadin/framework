@@ -3,10 +3,10 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.VNativeButtonPaintable;
+import com.vaadin.terminal.gwt.client.ui.NativeButtonConnector;
 
 @SuppressWarnings("serial")
-@ClientWidget(VNativeButtonPaintable.class)
+@ClientWidget(NativeButtonConnector.class)
 public class NativeButton extends Button {
 
     public NativeButton() {

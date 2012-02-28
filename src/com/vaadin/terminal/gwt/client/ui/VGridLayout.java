@@ -24,7 +24,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
-import com.vaadin.terminal.gwt.client.ui.layout.VPaintableLayoutSlot;
+import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 
 public class VGridLayout extends ComplexPanel {
 
@@ -528,7 +528,7 @@ public class VGridLayout extends ComplexPanel {
 
         private AlignmentInfo alignment;
 
-        VPaintableLayoutSlot slot;
+        ComponentConnectorLayoutSlot slot;
 
         public void updateFromUidl(UIDL cellUidl) {
             // Set cell width
@@ -554,7 +554,7 @@ public class VGridLayout extends ComplexPanel {
                 ComponentConnector paintable = client.getPaintable(childUidl);
 
                 if (slot == null || slot.getPaintable() != paintable) {
-                    slot = new VPaintableLayoutSlot(CLASSNAME, paintable);
+                    slot = new ComponentConnectorLayoutSlot(CLASSNAME, paintable);
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 

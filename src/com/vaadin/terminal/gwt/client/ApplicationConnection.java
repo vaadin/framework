@@ -36,16 +36,14 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
@@ -56,8 +54,8 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * 
  * Client-side widgets receive updates from the corresponding server-side
  * components as calls to
- * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not to
- * be confused with the server side interface
+ * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not
+ * to be confused with the server side interface
  * {@link com.vaadin.terminal.Paintable} ). Any client-side changes (typically
  * resulting from user actions) are sent back to the server as variable changes
  * (see {@link #updateVariable()}).
@@ -137,7 +135,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final VViewPaintable view;
+    private final RootConnector view;
 
     protected boolean applicationRunning = false;
 
@@ -170,7 +168,7 @@ public class ApplicationConnection {
     private final LayoutManager layoutManager = new LayoutManager(this);
 
     public ApplicationConnection() {
-        view = GWT.create(VViewPaintable.class);
+        view = GWT.create(RootConnector.class);
         view.setConnection(this);
     }
 
@@ -826,8 +824,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(view.getWidget().getElement(),
-                    loadElement);
+            DOM.appendChild(view.getWidget().getElement(), loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -923,6 +920,7 @@ public class ApplicationConnection {
 
     protected void handleUIDLMessage(final Date start, final String jsonText,
             final ValueMap json) {
+        VConsole.log("Handling message from server");
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -956,6 +954,7 @@ public class ApplicationConnection {
                 VConsole.dirUIDL(json, configuration);
 
                 if (json.containsKey("locales")) {
+                    VConsole.log(" * Handling locales");
                     // Store locale data
                     JsArray<ValueMap> valueMapArray = json
                             .getJSValueMapArray("locales");
@@ -965,6 +964,7 @@ public class ApplicationConnection {
                 boolean repaintAll = false;
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
+                    VConsole.log(" * Handling meta information");
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
@@ -1009,6 +1009,7 @@ public class ApplicationConnection {
 
                 int length = changes.length();
 
+                VConsole.log(" * Creating connectors (if needed)");
                 // create paintables if necessary
                 for (int i = 0; i < length; i++) {
                     try {
@@ -1027,6 +1028,7 @@ public class ApplicationConnection {
                     }
                 }
 
+                VConsole.log(" * Updating connector states");
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
                 JsArrayString keyArray = states.getKeyArray();
@@ -1050,6 +1052,7 @@ public class ApplicationConnection {
                     }
                 }
 
+                VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
                 // update paintables
                 for (int i = 0; i < length; i++) {
                     try {
@@ -1869,11 +1872,11 @@ public class ApplicationConnection {
     }
 
     /**
-     * Gets the main view, a.k.a top-level window.
+     * Gets the main view
      * 
      * @return the main view
      */
-    public VViewPaintable getView() {
+    public RootConnector getView() {
         return view;
     }
 

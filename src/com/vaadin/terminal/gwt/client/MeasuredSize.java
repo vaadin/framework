@@ -152,7 +152,6 @@ public class MeasuredSize {
         boolean wasWidthChanged = widthChanged;
 
         ComputedStyle computedStyle = new ComputedStyle(element);
-
         int[] paddings = computedStyle.getPadding();
         if (!heightChanged && hasHeightChanged(this.paddings, paddings)) {
             heightChanged = true;
@@ -185,6 +184,7 @@ public class MeasuredSize {
         setOuterHeight(requiredHeight + marginHeight);
 
         int requiredWidth = Util.getRequiredWidth(element);
+        VConsole.log("Width of " + element.toString() + " is " + requiredWidth);
         int marginWidth = sumWidths(margins);
         setOuterWidth(requiredWidth + marginWidth);
 

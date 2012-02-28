@@ -24,7 +24,8 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.VViewPaintable;
+import com.vaadin.terminal.gwt.client.ui.RootConnector;
+import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Root;
@@ -71,7 +72,8 @@ import com.vaadin.ui.Root;
  */
 public class WidgetMapGenerator extends Generator {
 
-    private static String paintableClassName = ComponentConnector.class.getName();
+    private static String paintableClassName = ComponentConnector.class
+            .getName();
 
     private String packageName;
     private String className;
@@ -258,8 +260,8 @@ public class WidgetMapGenerator extends Generator {
             if (widgetsWithInstantiator.contains(clientClass)) {
                 continue;
             }
-            if (clientClass == VViewPaintable.class) {
-                // VView's are not instantiated by widgetset
+            if (clientClass == RootConnector.class) {
+                // Roots are not instantiated by widgetset
                 continue;
             }
             if (!first) {
@@ -373,8 +375,8 @@ public class WidgetMapGenerator extends Generator {
             sourceWriter.println(".class;}");
             sourceWriter.print("else ");
         }
-        sourceWriter
-                .println("return com.vaadin.terminal.gwt.client.ui.VUnknownComponentPaintable.class;");
+        sourceWriter.println("return "
+                + UnknownComponentConnector.class.getName() + ".class;");
         sourceWriter.outdent();
         sourceWriter.println("}");
 
@@ -384,7 +386,7 @@ public class WidgetMapGenerator extends Generator {
             Class<? extends Paintable> class1) {
         Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass;
         if (Root.class == class1) {
-            clientClass = VViewPaintable.class;
+            clientClass = RootConnector.class;
         } else {
             ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
             clientClass = annotation.value();

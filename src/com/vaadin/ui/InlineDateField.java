@@ -7,7 +7,7 @@ package com.vaadin.ui;
 import java.util.Date;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendarPaintable;
+import com.vaadin.terminal.gwt.client.ui.InlineDateFieldConnector;
 
 /**
  * <p>
@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.ui.VDateFieldCalendarPaintable;
  * @VERSION@
  * @since 5.0
  */
-@ClientWidget(VDateFieldCalendarPaintable.class)
+@ClientWidget(InlineDateFieldConnector.class)
 public class InlineDateField extends DateField {
 
     public InlineDateField() {

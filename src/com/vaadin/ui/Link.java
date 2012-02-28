@@ -7,7 +7,7 @@ package com.vaadin.ui;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VLinkPaintable;
+import com.vaadin.terminal.gwt.client.ui.LinkConnector;
 
 /**
  * Link is used to create external or internal URL links.
@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ui.VLinkPaintable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(VLinkPaintable.class)
+@ClientWidget(LinkConnector.class)
 public class Link extends AbstractComponent {
 
     /* Target window border type constant: No window border */

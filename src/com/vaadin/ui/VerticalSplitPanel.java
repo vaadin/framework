@@ -3,7 +3,7 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.VVerticalSplitPanelPaintable;
+import com.vaadin.terminal.gwt.client.ui.VerticalSplitPanelConnector;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
@@ -23,7 +23,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * </pre>
  * 
  */
-@ClientWidget(value = VVerticalSplitPanelPaintable.class, loadStyle = LoadStyle.EAGER)
+@ClientWidget(value = VerticalSplitPanelConnector.class, loadStyle = LoadStyle.EAGER)
 public class VerticalSplitPanel extends AbstractSplitPanel {
 
     public VerticalSplitPanel() {

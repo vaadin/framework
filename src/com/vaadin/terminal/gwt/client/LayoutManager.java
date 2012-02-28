@@ -78,7 +78,8 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private static final MeasuredSize getMeasuredSize(ComponentConnector paintable) {
+    private static final MeasuredSize getMeasuredSize(
+            ComponentConnector paintable) {
         Element element = paintable.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
@@ -101,6 +102,8 @@ public class LayoutManager {
     }
 
     public void doLayout() {
+        VConsole.log("Starting layout phase");
+
         ConnectorMap paintableMap = connection.getConnectorMap();
         ComponentConnector[] paintableWidgets = paintableMap
                 .getRegisteredComponentConnectors();
@@ -213,21 +216,23 @@ public class LayoutManager {
             }
         }
 
+        VConsole.log("Layout phase done");
+        VConsole.log("Calling post layout listeners");
+
         for (ComponentConnector vPaintableWidget : paintableWidgets) {
             if (vPaintableWidget instanceof PostLayoutListener) {
                 ((PostLayoutListener) vPaintableWidget).postLayout();
             }
         }
 
-        VConsole.log("Total layout time: " + totalDuration.elapsedMillis()
-                + "ms");
+        VConsole.log("Total layout phase time: "
+                + totalDuration.elapsedMillis() + "ms");
     }
 
     private void measureElements(ComponentConnector[] paintableWidgets) {
 
         for (ComponentConnector paintableWidget : paintableWidgets) {
-            Element element = paintableWidget.getWidget()
-                    .getElement();
+            Element element = paintableWidget.getWidget().getElement();
             MeasuredSize measuredSize = getMeasuredSize(paintableWidget);
             measuredAndUpdate(element, measuredSize);
         }
