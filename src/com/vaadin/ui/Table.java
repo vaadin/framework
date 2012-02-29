@@ -3839,22 +3839,8 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
-        if (event instanceof IndexedContainer.ItemSetChangeEvent) {
-            IndexedContainer.ItemSetChangeEvent evt = (IndexedContainer.ItemSetChangeEvent) event;
-            // if the event is not a global one and the added item is outside
-            // the visible/buffered area, no need to do anything
-            if (evt.getAddedItemIndex() != -1
-                    && (firstToBeRenderedInClient >= 0)
-                    && (lastToBeRenderedInClient >= 0)
-                    && (firstToBeRenderedInClient > evt.getAddedItemIndex() || lastToBeRenderedInClient < evt
-                            .getAddedItemIndex())) {
-                return;
-            }
-        }
-        // ensure that page still has first item in page, ignore buffer refresh
-        // (forced in this method)
-        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
 
+        setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
         refreshRowCache();
     }
 
