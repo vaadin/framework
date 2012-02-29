@@ -6,8 +6,10 @@ package com.vaadin.terminal;
 
 import java.io.Serializable;
 import java.util.EventObject;
+import java.util.List;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * Interface implemented by all classes that can be painted. Classes
@@ -53,6 +55,17 @@ public interface Paintable extends java.util.EventListener, Serializable {
      * @since 7.0
      */
     public SharedState getState();
+
+    /**
+     * Returns the list of pending server to client RPC calls and clears the
+     * list.
+     * 
+     * @return unmodifiable ordered list of pending server to client method
+     *         calls (not null)
+     * 
+     * @since 7.0
+     */
+    public List<ClientMethodInvocation> retrievePendingRpcCalls();
 
     /**
      * Requests that the paintable should be repainted as soon as possible.

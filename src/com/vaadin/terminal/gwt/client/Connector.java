@@ -3,6 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.util.Collection;
+
+import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
@@ -72,5 +75,19 @@ public interface Connector {
      * Note that the shared state is not yet available at this point.
      */
     public void doInit(String connectorId, ApplicationConnection connection);
+
+    /**
+     * For internal use by the framework: returns the registered RPC
+     * implementations for an RPC interface identifier.
+     * 
+     * TODO interface identifier type or format may change
+     * 
+     * @param rpcInterfaceId
+     *            RPC interface identifier: fully qualified interface type name
+     * @return RPC interface implementations registered for an RPC interface,
+     *         not null
+     */
+    public <T extends ClientRpc> Collection<T> getRpcImplementations(
+            String rpcInterfaceId);
 
 }

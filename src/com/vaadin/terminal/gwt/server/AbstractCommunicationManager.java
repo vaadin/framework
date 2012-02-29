@@ -807,6 +807,7 @@ public abstract class AbstractCommunicationManager implements
         }
 
         LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
+        LinkedList<Paintable> rpcPendingQueue = new LinkedList<Paintable>();
 
         if (paintables != null) {
 
@@ -815,9 +816,11 @@ public abstract class AbstractCommunicationManager implements
             paintQueue.addAll(paintables);
 
             while (!paintQueue.isEmpty()) {
-                final Paintable p = paintQueue.pop();
+                final Paintable p = paintQueue.removeFirst();
                 // for now, all painted components may need a state refresh
                 stateQueue.push(p);
+                // ... and RPC calls to be sent
+                rpcPendingQueue.push(p);
 
                 // // TODO CLEAN
                 // if (p instanceof Root) {
@@ -898,10 +901,50 @@ public abstract class AbstractCommunicationManager implements
             }
             outWriter.print("\"state\":");
             outWriter.append(sharedStates.toString());
-            outWriter.print(", "); // close changes
+            outWriter.print(", "); // close states
         }
 
-        // TODO send server to client RPC calls in call order here
+        // send server to client RPC calls for components in the root, in call
+        // order
+        if (!rpcPendingQueue.isEmpty()) {
+            // collect RPC calls from components in the root in the order in
+            // which they were performed, remove the calls from components
+            List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(rpcPendingQueue);
+
+            JSONArray rpcCalls = new JSONArray();
+            for (ClientMethodInvocation invocation : pendingInvocations) {
+                // add invocation to rpcCalls
+                try {
+                    JSONArray invocationJson = new JSONArray();
+                    invocationJson
+                            .put(getPaintableId(invocation.getPaintable()));
+                    invocationJson.put(invocation.getInterfaceName());
+                    invocationJson.put(invocation.getMethodName());
+                    JSONArray paramJson = new JSONArray();
+                    for (int i = 0; i < invocation.getParameters().length; ++i) {
+                        paramJson.put(JsonCodec.encode(
+                                invocation.getParameters()[i], this));
+                    }
+                    invocationJson.put(paramJson);
+                    rpcCalls.put(invocationJson);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to serialize RPC method call parameters for paintable "
+                                    + getPaintableId(invocation.getPaintable())
+                                    + " method "
+                                    + invocation.getInterfaceName() + "."
+                                    + invocation.getMethodName() + ": "
+                                    + e.getMessage());
+                }
+
+            }
+
+            if (rpcCalls.length() > 0) {
+                outWriter.print("\"rpc\" : ");
+                outWriter.append(rpcCalls.toString());
+                outWriter.print(", "); // close rpc
+            }
+        }
 
         outWriter.print("\"meta\" : {");
         boolean metaOpen = false;
@@ -1048,6 +1091,45 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+    }
+
+    /**
+     * Collects all pending RPC calls from listed {@link Paintable}s and clears
+     * their RPC queues.
+     * 
+     * @param rpcPendingQueue
+     *            list of {@link Paintable} of interest
+     * @return ordered list of pending RPC calls
+     */
+    private List<ClientMethodInvocation> collectPendingRpcCalls(
+            LinkedList<Paintable> rpcPendingQueue) {
+        List<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
+        for (Paintable paintable : rpcPendingQueue) {
+            List<ClientMethodInvocation> paintablePendingRpc = paintable
+                    .retrievePendingRpcCalls();
+            if (null != paintablePendingRpc && !paintablePendingRpc.isEmpty()) {
+                List<ClientMethodInvocation> oldPendingRpc = pendingInvocations;
+                int totalCalls = pendingInvocations.size()
+                        + paintablePendingRpc.size();
+                pendingInvocations = new ArrayList<ClientMethodInvocation>(
+                        totalCalls);
+
+                // merge two ordered comparable lists
+                for (int destIndex = 0, oldIndex = 0, paintableIndex = 0; destIndex < totalCalls; destIndex++) {
+                    if (paintableIndex >= paintablePendingRpc.size()
+                            || (oldIndex < oldPendingRpc.size() && ((Comparable<ClientMethodInvocation>) oldPendingRpc
+                                    .get(oldIndex))
+                                    .compareTo(paintablePendingRpc
+                                            .get(paintableIndex)) <= 0)) {
+                        pendingInvocations.add(oldPendingRpc.get(oldIndex++));
+                    } else {
+                        pendingInvocations.add(paintablePendingRpc
+                                .get(paintableIndex++));
+                    }
+                }
+            }
+        }
+        return pendingInvocations;
     }
 
     protected abstract InputStream getThemeResourceAsStream(Root root,
@@ -1279,7 +1361,7 @@ public abstract class AbstractCommunicationManager implements
                 }
 
                 final VariableOwner owner = getVariableOwner(invocation
-                        .getPaintableId());
+                        .getConnectorId());
 
                 if (owner != null && owner.isEnabled()) {
                     VariableChange change = new VariableChange(invocation);
@@ -1290,8 +1372,8 @@ public abstract class AbstractCommunicationManager implements
                     Map<String, Object> m = new HashMap<String, Object>();
                     m.put(change.getName(), change.getValue());
                     while (nextInvocation != null
-                            && invocation.getPaintableId().equals(
-                                    nextInvocation.getPaintableId())
+                            && invocation.getConnectorId().equals(
+                                    nextInvocation.getConnectorId())
                             && ApplicationConnection.UPDATE_VARIABLE_METHOD
                                     .equals(nextInvocation.getMethodName())) {
                         i++;
@@ -1343,7 +1425,7 @@ public abstract class AbstractCommunicationManager implements
                         }
                     } else {
                         msg += "non-existent component, VAR_PID="
-                                + invocation.getPaintableId();
+                                + invocation.getConnectorId();
                         // TODO should this cause the message to be ignored?
                         success = false;
                     }
@@ -1369,13 +1451,13 @@ public abstract class AbstractCommunicationManager implements
      * @param invocation
      */
     protected void applyInvocation(MethodInvocation invocation) {
-        final RpcTarget target = getRpcTarget(invocation.getPaintableId());
+        final RpcTarget target = getRpcTarget(invocation.getConnectorId());
         if (null != target) {
             ServerRpcManager.applyInvocation(target, invocation);
         } else {
             // TODO better exception?
             throw new RuntimeException("No RPC target for paintable "
-                    + invocation.getPaintableId());
+                    + invocation.getConnectorId());
         }
     }
 
@@ -1397,7 +1479,7 @@ public abstract class AbstractCommunicationManager implements
         // parse JSON to MethodInvocations
         for (int i = 0; i < invocationsJson.length(); ++i) {
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
-            String paintableId = invocationJson.getString(0);
+            String connectorId = invocationJson.getString(0);
             String interfaceName = invocationJson.getString(1);
             String methodName = invocationJson.getString(2);
             JSONArray parametersJson = invocationJson.getJSONArray(3);
@@ -1406,7 +1488,7 @@ public abstract class AbstractCommunicationManager implements
                 parameters[j] = JsonCodec.convertVariableValue(
                         parametersJson.getJSONArray(j), this);
             }
-            MethodInvocation invocation = new MethodInvocation(paintableId,
+            MethodInvocation invocation = new MethodInvocation(connectorId,
                     interfaceName, methodName, parameters);
             invocations.add(invocation);
         }

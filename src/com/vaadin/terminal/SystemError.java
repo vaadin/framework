@@ -6,9 +6,12 @@ package com.vaadin.terminal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.List;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * <code>SystemError</code> is a runtime exception caused by error in system.
@@ -94,6 +97,10 @@ public class SystemError extends RuntimeException implements ErrorMessage {
     public SharedState getState() {
         // TODO implement: move relevant parts from paint() to getState()
         return null;
+    }
+
+    public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+        return Collections.emptyList();
     }
 
     /**

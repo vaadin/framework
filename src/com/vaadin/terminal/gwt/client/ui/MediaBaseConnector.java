@@ -6,13 +6,12 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
     public static final String TAG_SOURCE = "src";
 
-    public static final String ATTR_PAUSE = "pause";
-    public static final String ATTR_PLAY = "play";
     public static final String ATTR_MUTED = "muted";
     public static final String ATTR_CONTROLS = "ctrl";
     public static final String ATTR_AUTOPLAY = "auto";
@@ -20,6 +19,38 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
     public static final String ATTR_RESOURCE_TYPE = "type";
     public static final String ATTR_HTML = "html";
     public static final String ATTR_ALT_TEXT = "alt";
+
+    /**
+     * Server to client RPC interface for controlling playback of the media.
+     * 
+     * @since 7.0
+     */
+    public static interface MediaControl extends ClientRpc {
+        /**
+         * Start playing the media.
+         */
+        public void play();
+
+        /**
+         * Pause playback of the media.
+         */
+        public void pause();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        registerRpc(MediaControl.class, new MediaControl() {
+            public void play() {
+                getWidget().play();
+            }
+
+            public void pause() {
+                getWidget().pause();
+            }
+        });
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -41,9 +72,6 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
             }
         }
         setAltText(uidl);
-
-        evalPauseCommand(uidl);
-        evalPlayCommand(uidl);
     }
 
     protected boolean shouldShowControls(UIDL uidl) {
@@ -60,18 +88,6 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
     private boolean allowHtmlContent(UIDL uidl) {
         return uidl.getBooleanAttribute(ATTR_HTML);
-    }
-
-    private void evalPlayCommand(UIDL uidl) {
-        if (uidl.hasAttribute(ATTR_PLAY)) {
-            getWidget().play();
-        }
-    }
-
-    private void evalPauseCommand(UIDL uidl) {
-        if (uidl.hasAttribute(ATTR_PAUSE)) {
-            getWidget().pause();
-        }
     }
 
     @Override

@@ -4,8 +4,12 @@
 
 package com.vaadin.terminal;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * <code>UserError</code> is a controlled error occurred in application. User
@@ -147,6 +151,10 @@ public class UserError implements ErrorMessage {
     public SharedState getState() {
         // TODO implement: move relevant parts from paint() to getState()
         return null;
+    }
+
+    public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+        return Collections.emptyList();
     }
 
     /* Documented in interface */

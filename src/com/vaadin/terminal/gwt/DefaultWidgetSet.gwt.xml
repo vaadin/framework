@@ -47,6 +47,12 @@
 		<when-type-assignable class="com.vaadin.terminal.gwt.client.communication.ServerRpc" />
 	</generate-with> -->	
 
+	<!-- Generate client side RPC manager for server to client RPC -->
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.RpcManagerGenerator">
+		<when-type-assignable class="com.vaadin.terminal.gwt.client.communication.RpcManager" />
+	</generate-with> -->	
+
 	<!-- Fall through to this rule for everything but IE -->
 	<replace-with
 		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">

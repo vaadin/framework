@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
+import java.util.Arrays;
+
 /**
  * Information needed by the framework to send an RPC method invocation from the
  * client to the server or vice versa.
@@ -12,21 +14,21 @@ package com.vaadin.terminal.gwt.client.communication;
  */
 public class MethodInvocation {
 
-    private final String paintableId;
+    private final String connectorId;
     private final String interfaceName;
     private final String methodName;
     private final Object[] parameters;
 
-    public MethodInvocation(String paintableId, String interfaceName,
+    public MethodInvocation(String connectorId, String interfaceName,
             String methodName, Object[] parameters) {
-        this.paintableId = paintableId;
+        this.connectorId = connectorId;
         this.interfaceName = interfaceName;
         this.methodName = methodName;
         this.parameters = parameters;
     }
 
-    public String getPaintableId() {
-        return paintableId;
+    public String getConnectorId() {
+        return connectorId;
     }
 
     public String getInterfaceName() {
@@ -39,5 +41,11 @@ public class MethodInvocation {
 
     public Object[] getParameters() {
         return parameters;
+    }
+
+    @Override
+    public String toString() {
+        return connectorId + ":" + interfaceName + "." + methodName + "("
+                + Arrays.toString(parameters) + ")";
     }
 }

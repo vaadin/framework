@@ -5,6 +5,8 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.terminal.ErrorMessage;
@@ -12,6 +14,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * <p>
@@ -336,6 +339,10 @@ public interface Buffered extends Serializable {
         public SharedState getState() {
             // TODO implement: move relevant parts from paint() to getState()
             return null;
+        }
+
+        public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+            return Collections.emptyList();
         }
 
         /* Documented in super interface */

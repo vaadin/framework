@@ -11,8 +11,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 /**
  * Interface to be extended by all client to server RPC interfaces.
  * 
- * The nested interface InitializableClientToServerRpc The
- * {@link #initRpc(String, ApplicationConnection)} method is created
+ * The nested interface InitializableClientToServerRpc has an
+ * {@link #initRpc(String, ApplicationConnection)} method, which is created
  * automatically by a GWT generator and must be called on the client side before
  * generated implementations of the interface are used to perform RPC calls.
  * 

@@ -858,7 +858,7 @@ public class Util {
             String curId = null;
             ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
             for (int i = 0; i < loggedBurst.size(); i++) {
-                String id = loggedBurst.get(i).getPaintableId();
+                String id = loggedBurst.get(i).getConnectorId();
 
                 if (curId == null) {
                     curId = id;

@@ -5,12 +5,15 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
@@ -171,6 +174,10 @@ public interface Validator extends Serializable {
         public SharedState getState() {
             // TODO implement: move relevant parts from paint() to getState()
             return null;
+        }
+
+        public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+            return Collections.emptyList();
         }
 
         /**

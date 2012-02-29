@@ -39,6 +39,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -54,8 +55,8 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * 
  * Client-side widgets receive updates from the corresponding server-side
  * components as calls to
- * {@link VPaintableWidget#updateFromUIDL(UIDL, ApplicationConnection)} (not to
- * be confused with the server side interface
+ * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not
+ * to be confused with the server side interface
  * {@link com.vaadin.terminal.Paintable} ). Any client-side changes (typically
  * resulting from user actions) are sent back to the server as variable changes
  * (see {@link #updateVariable()}).
@@ -166,6 +167,8 @@ public class ApplicationConnection {
     private Set<ComponentConnector> zeroHeightComponents = null;
 
     private final LayoutManager layoutManager = new LayoutManager(this);
+
+    private final RpcManager rpcManager = GWT.create(RpcManager.class);
 
     public ApplicationConnection() {
         view = GWT.create(RootConnector.class);
@@ -808,7 +811,7 @@ public class ApplicationConnection {
      */
     private void cleanVariableBurst(ArrayList<MethodInvocation> variableBurst) {
         for (int i = 1; i < variableBurst.size(); i++) {
-            String id = variableBurst.get(i).getPaintableId();
+            String id = variableBurst.get(i).getConnectorId();
             if (!getConnectorMap().hasConnector(id)
                     && !getConnectorMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
@@ -1088,6 +1091,27 @@ public class ApplicationConnection {
                     }
                 }
 
+                if (json.containsKey("rpc")) {
+                    VConsole.log(" * Performing server to client RPC calls");
+
+                    JSONArray rpcCalls = new JSONArray(
+                            json.getJavaScriptObject("rpc"));
+
+                    int rpcLength = rpcCalls.size();
+                    for (int i = 0; i < rpcLength; i++) {
+                        try {
+                            JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
+                            MethodInvocation invocation = parseMethodInvocation(rpcCall);
+                            VConsole.log("Server to client RPC call: "
+                                    + invocation);
+                            rpcManager.applyInvocation(invocation,
+                                    getConnectorMap());
+                        } catch (final Throwable e) {
+                            VConsole.error(e);
+                        }
+                    }
+                }
+
                 if (json.containsKey("dd")) {
                     // response contains data for drag and drop service
                     VDragAndDropManager.get().handleServerResponse(
@@ -1163,8 +1187,23 @@ public class ApplicationConnection {
                 endRequest();
 
             }
+
         };
         ApplicationConfiguration.runWhenWidgetsLoaded(c);
+    }
+
+    private MethodInvocation parseMethodInvocation(JSONArray rpcCall) {
+        String connectorId = ((JSONString) rpcCall.get(0)).stringValue();
+        String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
+        String methodName = ((JSONString) rpcCall.get(2)).stringValue();
+        JSONArray parametersJson = (JSONArray) rpcCall.get(3);
+        Object[] parameters = new Object[parametersJson.size()];
+        for (int j = 0; j < parametersJson.size(); ++j) {
+            parameters[j] = JsonDecoder.convertValue(
+                    (JSONArray) parametersJson.get(j), getConnectorMap());
+        }
+        return new MethodInvocation(connectorId, interfaceName, methodName,
+                parameters);
     }
 
     // Redirect browser, null reloads current page
@@ -1177,11 +1216,11 @@ public class ApplicationConnection {
     	}
     }-*/;
 
-    private void addVariableToQueue(String paintableId, String variableName,
+    private void addVariableToQueue(String connectorId, String variableName,
             Object value, boolean immediate) {
         // note that type is now deduced from value
         // TODO could eliminate invocations of same shared variable setter
-        addMethodInvocationToQueue(new MethodInvocation(paintableId,
+        addMethodInvocationToQueue(new MethodInvocation(connectorId,
                 UPDATE_VARIABLE_INTERFACE, UPDATE_VARIABLE_METHOD,
                 new Object[] { variableName, value }), immediate);
     }
@@ -1273,7 +1312,7 @@ public class ApplicationConnection {
             for (MethodInvocation invocation : pendingInvocations) {
                 JSONArray invocationJson = new JSONArray();
                 invocationJson.set(0,
-                        new JSONString(invocation.getPaintableId()));
+                        new JSONString(invocation.getConnectorId()));
                 invocationJson.set(1,
                         new JSONString(invocation.getInterfaceName()));
                 invocationJson.set(2,

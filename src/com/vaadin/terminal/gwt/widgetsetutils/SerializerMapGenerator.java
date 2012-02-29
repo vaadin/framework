@@ -66,7 +66,7 @@ public class SerializerMapGenerator extends Generator {
     }
 
     /**
-     * Generate source code for WidgetMapImpl
+     * Generate source code for SerializerMapImpl
      * 
      * @param typesNeedingSerializers
      * 
@@ -80,8 +80,7 @@ public class SerializerMapGenerator extends Generator {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
         printWriter = context.tryCreate(logger, packageName, className);
-        // print writer if null, source code has ALREADY been generated,
-        // return (WidgetMap is equal to all permutations atm)
+        // print writer if null, source code has ALREADY been generated
         if (printWriter == null) {
             return;
         }

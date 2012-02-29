@@ -7,10 +7,12 @@ package com.vaadin.terminal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * Class for combining multiple error messages together.
@@ -136,6 +138,10 @@ public class CompositeErrorMessage implements ErrorMessage, Serializable {
     public SharedState getState() {
         // TODO implement: move relevant parts from paint() to getState()
         return null;
+    }
+
+    public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+        return Collections.emptyList();
     }
 
     /* Documented in super interface */

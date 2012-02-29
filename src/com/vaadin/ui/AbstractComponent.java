@@ -5,7 +5,9 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +34,9 @@ import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.RpcManager;
 import com.vaadin.terminal.gwt.server.RpcTarget;
@@ -161,16 +166,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private ActionManager actionManager;
 
     /**
-     * A map from RPC interface class to the RPC call manager that handles
-     * incoming RPC calls for that interface.
+     * A map from client to server RPC interface class to the RPC call manager
+     * that handles incoming RPC calls for that interface.
      */
     private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
+
+    /**
+     * A map from server to client RPC interface class to the RPC proxy that
+     * sends ourgoing RPC calls for that interface.
+     */
+    private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<Class<?>, ClientRpc>();
 
     /**
      * Shared state object to be communicated from the server to the client when
      * modified.
      */
     private ComponentState sharedState;
+
+    /**
+     * Pending RPC method invocations to be sent.
+     */
+    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
 
     /* Constructor */
 
@@ -1631,8 +1647,86 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
+    /**
+     * Returns an RPC proxy for a given server to client RPC interface for this
+     * component.
+     * 
+     * TODO more javadoc, subclasses, ...
+     * 
+     * @param rpcInterface
+     *            RPC interface type
+     * 
+     * @since 7.0
+     */
+    public <T extends ClientRpc> T getRpcProxy(final Class<T> rpcInterface) {
+        // create, initialize and return a dynamic proxy for RPC
+        try {
+            if (!rpcProxyMap.containsKey(rpcInterface)) {
+                InvocationHandler handler = new InvocationHandler() {
+                    public Object invoke(Object proxy, Method method,
+                            Object[] args) throws Throwable {
+                        addMethodInvocationToQueue(rpcInterface.getName()
+                                .replaceAll("\\$", "."), method.getName(), args);
+                        // TODO no need to do full repaint if only RPC calls
+                        requestRepaint();
+                        return null;
+                    }
+                };
+                Class<?> proxyClass = Proxy.getProxyClass(
+                        rpcInterface.getClassLoader(),
+                        new Class[] { rpcInterface });
+                T rpcProxy = (T) proxyClass.getConstructor(
+                        new Class[] { InvocationHandler.class }).newInstance(
+                        new Object[] { handler });
+                // cache the proxy
+                rpcProxyMap.put(rpcInterface, rpcProxy);
+            }
+            return (T) rpcProxyMap.get(rpcInterface);
+        } catch (Exception e) {
+            // TODO exception handling?
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * For internal use: adds a method invocation to the pending RPC call queue.
+     * 
+     * @param interfaceName
+     *            RPC interface name
+     * @param methodName
+     *            RPC method name
+     * @param parameters
+     *            RPC vall parameters
+     * 
+     * @since 7.0
+     */
+    protected void addMethodInvocationToQueue(String interfaceName,
+            String methodName, Object[] parameters) {
+        // add to queue
+        pendingInvocations.add(new ClientMethodInvocation(this, interfaceName,
+                methodName, parameters));
+    }
+
+    /**
+     * @see RpcTarget#getRpcManager(Class)
+     * 
+     * @param rpcInterface
+     *            RPC interface for which a call was made
+     * @return RPC Manager handling calls for the interface
+     * 
+     * @since 7.0
+     */
     public RpcManager getRpcManager(Class<?> rpcInterface) {
         return rpcManagerMap.get(rpcInterface);
     }
 
+    public List<ClientMethodInvocation> retrievePendingRpcCalls() {
+        if (pendingInvocations.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            List<ClientMethodInvocation> result = pendingInvocations;
+            pendingInvocations = new ArrayList<ClientMethodInvocation>();
+            return Collections.unmodifiableList(result);
+        }
+    }
 }

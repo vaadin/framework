@@ -13,6 +13,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
+import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector.MediaControl;
 
 /**
  * Abstract base class for the HTML5 media components.
@@ -32,10 +33,6 @@ public class AbstractMedia extends AbstractComponent {
     private boolean autoplay;
 
     private boolean muted;
-
-    private boolean pause;
-
-    private boolean play;
 
     /**
      * Sets a single media file as the source of the media component.
@@ -182,22 +179,14 @@ public class AbstractMedia extends AbstractComponent {
      * Pauses the media.
      */
     public void pause() {
-        // cancel any possible play command
-        play = false;
-
-        pause = true;
-        requestRepaint();
+        getRpcProxy(MediaControl.class).pause();
     }
 
     /**
      * Starts playback of the media.
      */
     public void play() {
-        // cancel any possible pause command.
-        pause = false;
-
-        play = true;
-        requestRepaint();
+        getRpcProxy(MediaControl.class).play();
     }
 
     @Override
@@ -218,13 +207,5 @@ public class AbstractMedia extends AbstractComponent {
             target.endTag(MediaBaseConnector.TAG_SOURCE);
         }
         target.addAttribute(MediaBaseConnector.ATTR_MUTED, isMuted());
-        if (play) {
-            target.addAttribute(MediaBaseConnector.ATTR_PLAY, true);
-            play = false;
-        }
-        if (pause) {
-            target.addAttribute(MediaBaseConnector.ATTR_PAUSE, true);
-            pause = false;
-        }
     }
 }
