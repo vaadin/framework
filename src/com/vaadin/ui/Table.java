@@ -3840,6 +3840,8 @@ public class Table extends AbstractSelect implements Action.Container,
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
 
+        // ensure that page still has first item in page, ignore buffer refresh
+        // (forced in this method)
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
         refreshRowCache();
     }
