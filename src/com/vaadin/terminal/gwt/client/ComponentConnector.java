@@ -24,7 +24,7 @@ public interface ComponentConnector extends Connector {
     public ComponentState getState();
 
     /**
-     * TODO: Rename to getWidget
+     * Returns the widget for this {@link ComponentConnector}
      */
     public Widget getWidget();
 
