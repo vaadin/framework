@@ -21,6 +21,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
@@ -146,11 +147,12 @@ public class SerializerMapGenerator extends Generator {
         }
 
         // Serializer classes might also be needed for RPC methods
-        JClassType serverRpcType = typeOracle.findType(ServerRpc.class
-                .getName());
-        JClassType[] serverRpcSubtypes = serverRpcType.getSubtypes();
-        for (JClassType type : serverRpcSubtypes) {
-            addMethodParameterTypes(type, types);
+        for (Class<?> cls : new Class[] { ServerRpc.class, ClientRpc.class }) {
+            JClassType rpcType = typeOracle.findType(cls.getName());
+            JClassType[] serverRpcSubtypes = rpcType.getSubtypes();
+            for (JClassType type : serverRpcSubtypes) {
+                addMethodParameterTypes(type, types);
+            }
         }
 
         // Add all types used from/in the types
