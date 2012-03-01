@@ -1485,7 +1485,7 @@ public abstract class AbstractCommunicationManager implements
             JSONArray parametersJson = invocationJson.getJSONArray(3);
             Object[] parameters = new Object[parametersJson.length()];
             for (int j = 0; j < parametersJson.length(); ++j) {
-                parameters[j] = JsonCodec.convertVariableValue(
+                parameters[j] = JsonCodec.decode(
                         parametersJson.getJSONArray(j), this);
             }
             MethodInvocation invocation = new MethodInvocation(connectorId,

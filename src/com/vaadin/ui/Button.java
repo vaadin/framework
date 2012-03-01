@@ -48,8 +48,8 @@ public class Button extends AbstractComponent implements
     public Button() {
         // TODO take the implementation out of an anonymous class?
         registerRpcImplementation(new ButtonServerRpc() {
-            public void click(String mouseEventDetails) {
-                fireClick(MouseEventDetails.deSerialize(mouseEventDetails));
+            public void click(MouseEventDetails mouseEventDetails) {
+                fireClick(mouseEventDetails);
             }
 
             public void disableOnClick() {

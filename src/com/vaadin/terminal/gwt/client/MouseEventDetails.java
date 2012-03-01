@@ -66,6 +66,49 @@ public class MouseEventDetails implements Serializable {
         return relativeY;
     }
 
+    public void setButton(int button) {
+        this.button = button;
+    }
+
+    public void setClientX(int clientX) {
+        this.clientX = clientX;
+    }
+
+    public void setClientY(int clientY) {
+        this.clientY = clientY;
+    }
+
+    public void setAltKey(boolean altKey) {
+        this.altKey = altKey;
+    }
+
+    public void setCtrlKey(boolean ctrlKey) {
+        this.ctrlKey = ctrlKey;
+    }
+
+    public void setMetaKey(boolean metaKey) {
+        this.metaKey = metaKey;
+    }
+
+    public void setShiftKey(boolean shiftKey) {
+        this.shiftKey = shiftKey;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public void setRelativeX(int relativeX) {
+        this.relativeX = relativeX;
+    }
+
+    public void setRelativeY(int relativeY) {
+        this.relativeY = relativeY;
+    }
+
+    public MouseEventDetails() {
+    }
+
     public MouseEventDetails(NativeEvent evt) {
         this(evt, null);
     }
@@ -83,9 +126,6 @@ public class MouseEventDetails implements Serializable {
             relativeX = getRelativeX(clientX, relativeToElement);
             relativeY = getRelativeY(clientY, relativeToElement);
         }
-    }
-
-    private MouseEventDetails() {
     }
 
     @Override
@@ -128,8 +168,8 @@ public class MouseEventDetails implements Serializable {
         return "";
     }
 
-    public Class<MouseEventDetails> getType() {
-        return MouseEventDetails.class;
+    public int getType() {
+        return type;
     }
 
     public boolean isDoubleClick() {

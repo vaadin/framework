@@ -125,7 +125,7 @@ public class VNativeButton extends Button implements ClickHandler,
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        buttonRpcProxy.click(details.serialize());
+        buttonRpcProxy.click(details);
 
         clickPending = false;
     }

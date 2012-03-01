@@ -4,9 +4,11 @@
 
 package com.vaadin.terminal.gwt.server;
 
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,8 +63,8 @@ public class JsonCodec implements Serializable {
      * @throws JSONException
      *             if the conversion fails
      */
-    public static Object convertVariableValue(JSONArray value,
-            PaintableIdMapper idMapper) throws JSONException {
+    public static Object decode(JSONArray value, PaintableIdMapper idMapper)
+            throws JSONException {
         return convertVariableValue(value.getString(0), value.get(1), idMapper);
     }
 
@@ -96,6 +98,10 @@ public class JsonCodec implements Serializable {
         } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
+        } else {
+            // Try to decode object using fields
+            return decodeObject(variableType, (JSONObject) value, idMapper);
+
         }
 
         return val;
@@ -107,8 +113,7 @@ public class JsonCodec implements Serializable {
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String key = it.next();
-            map.put(key,
-                    convertVariableValue(jsonMap.getJSONArray(key), idMapper));
+            map.put(key, decode(jsonMap.getJSONArray(key), idMapper));
         }
         return map;
     }
@@ -129,7 +134,7 @@ public class JsonCodec implements Serializable {
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = jsonArray.getJSONArray(i);
-            tokens.add(convertVariableValue(entryArray, idMapper));
+            tokens.add(decode(entryArray, idMapper));
         }
         return tokens.toArray(new Object[tokens.size()]);
     }
@@ -208,6 +213,44 @@ public class JsonCodec implements Serializable {
             throw new JSONException(e);
         }
         return jsonMap;
+    }
+
+    private static Object decodeObject(String type,
+            JSONObject serializedObject, PaintableIdMapper idMapper)
+            throws JSONException {
+
+        Class<?> cls;
+        try {
+            cls = Class.forName(type);
+
+            Object decodedObject = cls.newInstance();
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(cls)
+                    .getPropertyDescriptors()) {
+                if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+                    continue;
+                }
+
+                String fieldName = pd.getName();
+                JSONArray encodedObject = serializedObject
+                        .getJSONArray(fieldName);
+                pd.getWriteMethod().invoke(decodedObject,
+                        decode(encodedObject, idMapper));
+            }
+
+            return decodedObject;
+        } catch (ClassNotFoundException e) {
+            throw new JSONException(e);
+        } catch (IllegalArgumentException e) {
+            throw new JSONException(e);
+        } catch (IllegalAccessException e) {
+            throw new JSONException(e);
+        } catch (InvocationTargetException e) {
+            throw new JSONException(e);
+        } catch (InstantiationException e) {
+            throw new JSONException(e);
+        } catch (IntrospectionException e) {
+            throw new JSONException(e);
+        }
     }
 
     private static JSONArray encodeArrayContents(Object[] array,

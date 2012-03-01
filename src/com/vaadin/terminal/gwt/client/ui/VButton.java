@@ -307,7 +307,7 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
         // Add mouse details
         MouseEventDetails details = new MouseEventDetails(
                 event.getNativeEvent(), getElement());
-        buttonRpcProxy.click(details.serialize());
+        buttonRpcProxy.click(details);
 
         clickPending = false;
     }

@@ -28,7 +28,7 @@ public class ButtonConnector extends AbstractComponentConnector {
          * @param mouseEventDetails
          *            serialized mouse event details
          */
-        public void click(String mouseEventDetails);
+        public void click(MouseEventDetails mouseEventDetails);
 
         /**
          * Indicate to the server that the client has disabled the button as a

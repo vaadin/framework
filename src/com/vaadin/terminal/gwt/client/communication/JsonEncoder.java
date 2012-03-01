@@ -93,8 +93,20 @@ public class JsonEncoder {
             return combineTypeAndValue(VTYPE_PAINTABLE, new JSONString(
                     connectorMap.getConnectorId(paintable)));
         } else {
-            return combineTypeAndValue(getTransportType(value), new JSONString(
-                    String.valueOf(value)));
+            if (getTransportType(value) != VTYPE_UNDEFINED) {
+                return combineTypeAndValue(getTransportType(value),
+                        new JSONString(String.valueOf(value)));
+            } else {
+                // Try to find a generated serializer object, class name is the
+                // type
+                String type = value.getClass().getName();
+                VaadinSerializer serializer = JsonDecoder.serializerMap
+                        .getSerializer(type);
+
+                // TODO handle case with no serializer found
+                return combineTypeAndValue(type,
+                        serializer.serialize(value, connectorMap));
+            }
         }
     }
 

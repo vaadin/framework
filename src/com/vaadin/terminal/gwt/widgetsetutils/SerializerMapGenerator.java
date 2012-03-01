@@ -22,6 +22,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
@@ -144,13 +145,33 @@ public class SerializerMapGenerator extends Generator {
             types.add(type);
         }
 
-        // Add all types used from/in the determined types
+        // Serializer classes might also be needed for RPC methods
+        JClassType serverRpcType = typeOracle.findType(ServerRpc.class
+                .getName());
+        JClassType[] serverRpcSubtypes = serverRpcType.getSubtypes();
+        for (JClassType type : serverRpcSubtypes) {
+            addMethodParameterTypes(type, types);
+        }
+
+        // Add all types used from/in the types
         for (Object t : types.toArray()) {
             findSubTypesNeedingSerializers((JClassType) t, types);
         }
         logger.log(Type.INFO, "Serializable data types: " + types.toString());
 
         return types;
+    }
+
+    private void addMethodParameterTypes(JClassType classContainingMethods,
+            HashSet<JClassType> types) {
+        for (JMethod method : classContainingMethods.getMethods()) {
+            if (method.getName().equals("initRpc")) {
+                continue;
+            }
+            for (JType type : method.getParameterTypes()) {
+                types.add(type.isClass());
+            }
+        }
     }
 
     public void findSubTypesNeedingSerializers(JClassType type,
@@ -169,6 +190,7 @@ public class SerializerMapGenerator extends Generator {
             }
 
             serializableTypes.add(setterType.isClass());
+            findSubTypesNeedingSerializers(type, serializableTypes);
         }
     }
 

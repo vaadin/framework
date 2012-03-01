@@ -22,10 +22,12 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
+import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
 
@@ -110,6 +112,42 @@ public class SerializerGenerator extends Generator {
                 printWriter);
         sourceWriter.indent();
 
+        // Serializer
+
+        // public JSONValue serialize(Object value, ConnectorMap idMapper) {
+        sourceWriter.println("public " + JSONValue.class.getName()
+                + " serialize(" + Object.class.getName() + " value, "
+                + ConnectorMap.class.getName() + " idMapper) {");
+        sourceWriter.indent();
+        // MouseEventDetails castedValue = (MouseEventDetails) value;
+        sourceWriter.println(beanQualifiedSourceName + " castedValue = ("
+                + beanQualifiedSourceName + ") value;");
+        // JSONObject json = new JSONObject();
+        sourceWriter.println(JSONObject.class.getName() + " json = new "
+                + JSONObject.class.getName() + "();");
+
+        for (JMethod setterMethod : getSetters(beanType)) {
+            String setterName = setterMethod.getName();
+            String capitalizedFieldName = setterName.substring(3);
+            String fieldName = decapitalize(capitalizedFieldName);
+            String getterName = findGetter(beanType, setterMethod);
+
+            if (getterName == null) {
+                logger.log(TreeLogger.WARN, "No getter found for " + fieldName
+                        + ". Serialization will likely fail");
+            }
+            // json.put("button",
+            // JsonEncoder.encode(castedValue.getButton(), idMapper));
+            sourceWriter.println("json.put(\"" + fieldName + "\", "
+                    + JsonEncoder.class.getName() + ".encode(castedValue."
+                    + getterName + "(), idMapper));");
+        }
+        // return json;
+        sourceWriter.println("return json;");
+        // }
+        sourceWriter.println("}");
+
+        // Deserializer
         sourceWriter.println("public " + beanQualifiedSourceName
                 + " deserialize(" + JSONObject.class.getName() + " jsonValue, "
                 + ConnectorMap.class.getName() + " idMapper) {");
@@ -118,44 +156,35 @@ public class SerializerGenerator extends Generator {
         // VButtonState state = GWT.create(VButtonState.class);
         sourceWriter.println(beanQualifiedSourceName + " state = GWT.create("
                 + beanQualifiedSourceName + ".class);");
-        JClassType objectType = typeOracle.findType("java.lang.Object");
-        while (!objectType.equals(beanType)) {
-            for (JMethod method : getSetters(beanType)) {
-                String setterName = method.getName();
-                String capitalizedFieldName = setterName.substring(3);
-                String fieldName = decapitalize(capitalizedFieldName);
-                JType setterParameterType = method.getParameterTypes()[0];
+        for (JMethod method : getSetters(beanType)) {
+            String setterName = method.getName();
+            String capitalizedFieldName = setterName.substring(3);
+            String fieldName = decapitalize(capitalizedFieldName);
+            JType setterParameterType = method.getParameterTypes()[0];
 
-                logger.log(
-                        Type.INFO,
-                        "* Processing field " + fieldName + " in "
-                                + beanQualifiedSourceName + " ("
-                                + beanType.getName() + ")");
+            logger.log(Type.INFO, "* Processing field " + fieldName + " in "
+                    + beanQualifiedSourceName + " (" + beanType.getName() + ")");
 
-                String jsonFieldName = "json" + capitalizedFieldName;
-                // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
-                sourceWriter.println("JSONArray " + jsonFieldName
-                        + " = (JSONArray) jsonValue.get(\"" + fieldName
-                        + "\");");
+            String jsonFieldName = "json" + capitalizedFieldName;
+            // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
+            sourceWriter.println("JSONArray " + jsonFieldName
+                    + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
-                // state.setHeight((String)
-                // JsonDecoder.convertValue(jsonFieldValue,idMapper));
+            // state.setHeight((String)
+            // JsonDecoder.convertValue(jsonFieldValue,idMapper));
 
-                String fieldType;
-                JPrimitiveType primitiveType = setterParameterType
-                        .isPrimitive();
-                if (primitiveType != null) {
-                    // This is a primitive type -> must used the boxed type
-                    fieldType = primitiveType.getQualifiedBoxedSourceName();
-                } else {
-                    fieldType = setterParameterType.getQualifiedSourceName();
-                }
-
-                sourceWriter.println("state." + setterName + "((" + fieldType
-                        + ") JsonDecoder.convertValue(" + jsonFieldName
-                        + ", idMapper));");
+            String fieldType;
+            JPrimitiveType primitiveType = setterParameterType.isPrimitive();
+            if (primitiveType != null) {
+                // This is a primitive type -> must used the boxed type
+                fieldType = primitiveType.getQualifiedBoxedSourceName();
+            } else {
+                fieldType = setterParameterType.getQualifiedSourceName();
             }
-            beanType = beanType.getSuperclass();
+
+            sourceWriter.println("state." + setterName + "((" + fieldType
+                    + ") JsonDecoder.convertValue(" + jsonFieldName
+                    + ", idMapper));");
         }
 
         // return state;
@@ -175,19 +204,41 @@ public class SerializerGenerator extends Generator {
 
     }
 
+    private String findGetter(JClassType beanType, JMethod setterMethod) {
+        JType setterParameterType = setterMethod.getParameterTypes()[0];
+        String capitalizedFieldName = setterMethod.getName().substring(3);
+        if (setterParameterType.getQualifiedSourceName().equals(
+                boolean.class.getName())) {
+            return "is" + capitalizedFieldName;
+        } else {
+            return "get" + capitalizedFieldName;
+        }
+    }
+
+    /**
+     * Returns a list of all setters found in the beanType or its parent class
+     * 
+     * @param beanType
+     *            The type to check
+     * @return A list of setter methods from the class and its parents
+     */
     protected static List<JMethod> getSetters(JClassType beanType) {
 
         List<JMethod> setterMethods = new ArrayList<JMethod>();
 
-        for (JMethod method : beanType.getMethods()) {
-            // Process all setters that have corresponding fields
-            if (!method.isPublic() || method.isStatic()
-                    || !method.getName().startsWith("set")
-                    || method.getParameterTypes().length != 1) {
-                // Not setter, skip to next method
-                continue;
+        while (!beanType.getQualifiedSourceName()
+                .equals(Object.class.getName())) {
+            for (JMethod method : beanType.getMethods()) {
+                // Process all setters that have corresponding fields
+                if (!method.isPublic() || method.isStatic()
+                        || !method.getName().startsWith("set")
+                        || method.getParameterTypes().length != 1) {
+                    // Not setter, skip to next method
+                    continue;
+                }
+                setterMethods.add(method);
             }
-            setterMethods.add(method);
+            beanType = beanType.getSuperclass();
         }
 
         return setterMethods;

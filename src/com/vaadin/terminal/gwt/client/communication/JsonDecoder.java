@@ -29,8 +29,7 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
  * @since 7.0
  */
 public class JsonDecoder {
-    private static SerializerMap serializerMap = GWT
-            .create(SerializerMap.class);
+    static SerializerMap serializerMap = GWT.create(SerializerMap.class);
 
     /**
      * Convert a JSON array with two elements (type and value) into a
