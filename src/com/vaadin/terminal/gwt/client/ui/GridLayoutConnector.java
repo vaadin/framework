@@ -114,6 +114,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
                 paintableMap.unregisterConnector(paintableMap.getConnector(w));
             }
             cell.slot.getWrapperElement().removeFromParent();
+            cell.slot = null;
         }
 
         int bitMask = uidl.getIntAttribute("margins");
