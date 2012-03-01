@@ -124,7 +124,7 @@ public class RpcManagerGenerator extends Generator {
                     for (int i = 0; i < parameterTypes.length; ++i) {
                         paramString = paramString + "("
                                 + parameterTypes[i].getQualifiedSourceName()
-                                + ") invocation.getParameters()[i]";
+                                + ") invocation.getParameters()[" + i + "]";
                         if (i < parameterTypes.length - 1) {
                             paramString = paramString + ", ";
                         }
