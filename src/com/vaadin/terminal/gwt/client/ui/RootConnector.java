@@ -224,6 +224,8 @@ public class RootConnector extends AbstractComponentContainerConnector
             Window.addResizeHandler(getWidget());
         }
 
+        getWidget().onResize();
+
         // finally set scroll position from UIDL
         if (uidl.hasVariable("scrollTop")) {
             getWidget().scrollable = true;
