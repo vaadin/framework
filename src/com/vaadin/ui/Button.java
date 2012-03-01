@@ -21,7 +21,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector;
-import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
 import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
@@ -47,7 +47,7 @@ public class Button extends AbstractComponent implements
      */
     public Button() {
         // TODO take the implementation out of an anonymous class?
-        registerRpcImplementation(new ButtonClientToServerRpc() {
+        registerRpcImplementation(new ButtonServerRpc() {
             public void click(String mouseEventDetails) {
                 fireClick(MouseEventDetails.deSerialize(mouseEventDetails));
             }
@@ -57,7 +57,7 @@ public class Button extends AbstractComponent implements
                 // this (client side has already disabled the button)
                 setEnabled(false);
             }
-        }, ButtonClientToServerRpc.class);
+        }, ButtonServerRpc.class);
     }
 
     /**

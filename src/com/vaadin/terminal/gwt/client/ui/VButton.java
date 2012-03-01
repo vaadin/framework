@@ -25,7 +25,7 @@ import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
-import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 
 public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
         BlurHandler {
@@ -89,7 +89,7 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
 
     protected int clickShortcut = 0;
     // TODO Move this to VButtonPaintable
-    ButtonClientToServerRpc buttonRpcProxy;
+    ButtonServerRpc buttonRpcProxy;
 
     public VButton() {
         super(DOM.createDiv());

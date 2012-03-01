@@ -10,7 +10,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonClientToServerRpc;
+import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 
 public class NativeButtonConnector extends AbstractComponentConnector {
 
@@ -18,8 +18,8 @@ public class NativeButtonConnector extends AbstractComponentConnector {
     public void init() {
         super.init();
 
-        ButtonClientToServerRpc rpcProxy = GWT
-                .create(ButtonClientToServerRpc.class);
+        ButtonServerRpc rpcProxy = GWT
+                .create(ButtonServerRpc.class);
         getWidget().buttonRpcProxy = initRPC(rpcProxy);
     }
 

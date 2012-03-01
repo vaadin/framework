@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
@@ -20,7 +21,7 @@ public class ButtonConnector extends AbstractComponentConnector {
      * 
      * @since 7.0
      */
-    public interface ButtonClientToServerRpc extends ServerRpc {
+    public interface ButtonServerRpc extends ServerRpc {
         /**
          * Button click event.
          * 
@@ -44,8 +45,7 @@ public class ButtonConnector extends AbstractComponentConnector {
     @Override
     public void init() {
         super.init();
-        ButtonClientToServerRpc rpcProxy = GWT
-                .create(ButtonClientToServerRpc.class);
+        ButtonServerRpc rpcProxy = GWT.create(ButtonServerRpc.class);
         getWidget().buttonRpcProxy = initRPC(rpcProxy);
     }
 

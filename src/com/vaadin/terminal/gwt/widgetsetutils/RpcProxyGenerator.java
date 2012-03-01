@@ -50,7 +50,7 @@ public class RpcProxyGenerator extends Generator {
             throw new UnableToCompleteException();
         }
 
-        String generatedClassName = "ClientToServerRpc_"
+        String generatedClassName = "ServerRpc_"
                 + requestedType.getName().replaceAll("[$.]", "_");
 
         JClassType initializableInterface = typeOracle
