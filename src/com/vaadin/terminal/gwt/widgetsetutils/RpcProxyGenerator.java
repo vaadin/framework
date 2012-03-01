@@ -99,18 +99,18 @@ public class RpcProxyGenerator extends Generator {
                 .findType(ApplicationConnection.class.getCanonicalName());
 
         // fields
-        writer.println("private String paintableId;");
+        writer.println("private String connectorId;");
         writer.println("private "
                 + applicationConnectionClass.getQualifiedSourceName()
                 + " client;");
 
         // init method from the RPC interface
-        writer.println("public void initRpc(String paintableId, "
+        writer.println("public void initRpc(String connectorId, "
                 + applicationConnectionClass.getQualifiedSourceName()
                 + " client) {");
         writer.indent();
 
-        writer.println("this.paintableId = paintableId;");
+        writer.println("this.connectorId = connectorId;");
         writer.println("this.client = client;");
 
         writer.outdent();
@@ -126,7 +126,7 @@ public class RpcProxyGenerator extends Generator {
             writer.println(" {");
             writer.indent();
 
-            writer.print("client.addMethodInvocationToQueue(new MethodInvocation(paintableId, \""
+            writer.print("client.addMethodInvocationToQueue(new MethodInvocation(connectorId, \""
                     + requestedType.getQualifiedBinaryName() + "\", \"");
             writer.print(m.getName());
             writer.print("\", new Object[] {");
