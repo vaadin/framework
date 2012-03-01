@@ -22,7 +22,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
@@ -115,7 +114,7 @@ public class SerializerGenerator extends Generator {
         // Serializer
 
         // public JSONValue serialize(Object value, ConnectorMap idMapper) {
-        sourceWriter.println("public " + JSONValue.class.getName()
+        sourceWriter.println("public " + JSONObject.class.getName()
                 + " serialize(" + Object.class.getName() + " value, "
                 + ConnectorMap.class.getName() + " idMapper) {");
         sourceWriter.indent();
