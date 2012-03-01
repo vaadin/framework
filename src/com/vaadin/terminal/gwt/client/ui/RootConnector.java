@@ -8,6 +8,8 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -27,7 +29,8 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class RootConnector extends AbstractComponentContainerConnector {
+public class RootConnector extends AbstractComponentContainerConnector
+        implements SimpleManagedLayout {
 
     private static final String CLICK_EVENT_IDENTIFIER = PanelConnector.CLICK_EVENT_IDENTIFIER;
 
@@ -221,8 +224,6 @@ public class RootConnector extends AbstractComponentContainerConnector {
             Window.addResizeHandler(getWidget());
         }
 
-        getWidget().onResize();
-
         // finally set scroll position from UIDL
         if (uidl.hasVariable("scrollTop")) {
             getWidget().scrollable = true;
@@ -314,6 +315,23 @@ public class RootConnector extends AbstractComponentContainerConnector {
     @Override
     protected Widget createWidget() {
         return GWT.create(VView.class);
+    }
+
+    public void layout() {
+        ComponentConnector child = getWidget().layout;
+        Style childStyle = child.getWidget().getElement().getStyle();
+        /*
+         * Must set absolute position if the child has relative height and
+         * there's a chance of horizontal scrolling as some browsers will
+         * otherwise not take the scrollbar into account when calculating the
+         * height. Assuming v-view does not have an undefined width for now, see
+         * #8460.
+         */
+        if (child.isRelativeHeight()) {
+            childStyle.setPosition(Position.ABSOLUTE);
+        } else {
+            childStyle.clearPosition();
+        }
     }
 
 }
