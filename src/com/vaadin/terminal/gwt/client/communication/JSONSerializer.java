@@ -5,19 +5,23 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.server.JsonCodec;
 
 /**
- * Serializer that can deserialize custom objects received from the server.
+ * Implementors of this interface knows how to serialize an Object of a given
+ * type to JSON and how to deserialize the JSON back into an object.
  * 
- * Each serializer can handle objects of a single type - see
- * {@link SerializerMap}.
+ * The {@link #serialize(Object, ConnectorMap)} and
+ * {@link #deserialize(JSONObject, ConnectorMap)} methods must be symmetric so
+ * they can be chained and produce the original result (or an equal result).
+ * 
+ * Each {@link JSONSerializer} implementation can handle an object of a single
+ * type - see {@link SerializerMap}.
  * 
  * @since 7.0
  */
-public interface VaadinSerializer {
+public interface JSONSerializer {
 
     /**
      * Creates and deserializes an object received from the server. Must be

@@ -8,7 +8,7 @@ import com.vaadin.terminal.gwt.widgetsetutils.SerializerMapGenerator;
 
 /**
  * Provide a mapping from a type (communicated between the server and the
- * client) and a {@link VaadinSerializer} instance.
+ * client) and a {@link JSONSerializer} instance.
  * 
  * An implementation of this class is created at GWT compilation time by
  * {@link SerializerMapGenerator}, so this interface can be instantiated with
@@ -29,6 +29,6 @@ public interface SerializerMap {
      *             if no serializer is found
      */
     // TODO better error handling in javadoc and in generator
-    public VaadinSerializer getSerializer(String type);
+    public JSONSerializer getSerializer(String type);
 
 }

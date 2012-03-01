@@ -28,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
-import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 
 /**
  * GWT generator for creating serializer classes for custom classes sent from
@@ -105,7 +105,7 @@ public class SerializerGenerator extends Generator {
         composer.addImport(JsonDecoder.class.getName());
         // composer.addImport(VaadinSerializer.class.getName());
 
-        composer.addImplementedInterface(VaadinSerializer.class.getName());
+        composer.addImplementedInterface(JSONSerializer.class.getName());
 
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);

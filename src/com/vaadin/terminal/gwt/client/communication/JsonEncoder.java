@@ -100,7 +100,7 @@ public class JsonEncoder {
                 // Try to find a generated serializer object, class name is the
                 // type
                 String type = value.getClass().getName();
-                VaadinSerializer serializer = JsonDecoder.serializerMap
+                JSONSerializer serializer = JsonDecoder.serializerMap
                         .getSerializer(type);
 
                 // TODO handle case with no serializer found

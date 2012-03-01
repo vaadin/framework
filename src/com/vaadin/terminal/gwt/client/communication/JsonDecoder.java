@@ -80,7 +80,7 @@ public class JsonDecoder {
             val = idMapper.getConnector(String.valueOf(value));
         } else {
             // object, class name as type
-            VaadinSerializer serializer = serializerMap
+            JSONSerializer serializer = serializerMap
                     .getSerializer(variableType);
             // TODO handle case with no serializer found
             Object object = serializer

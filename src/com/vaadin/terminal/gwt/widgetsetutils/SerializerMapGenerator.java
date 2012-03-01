@@ -25,7 +25,7 @@ import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
-import com.vaadin.terminal.gwt.client.communication.VaadinSerializer;
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 
 /**
  * GWT generator that creates a {@link SerializerMap} implementation (mapper
@@ -98,7 +98,7 @@ public class SerializerMapGenerator extends Generator {
                 printWriter);
         sourceWriter.indent();
 
-        sourceWriter.println("public " + VaadinSerializer.class.getName()
+        sourceWriter.println("public " + JSONSerializer.class.getName()
                 + " getSerializer(String type) {");
         sourceWriter.indent();
 
