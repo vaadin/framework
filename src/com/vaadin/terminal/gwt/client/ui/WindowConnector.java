@@ -41,12 +41,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().id = uidl.getId();
+        getWidget().id = getId();
         getWidget().client = client;
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
-        DOM.setElementProperty(getWidget().closeBox, "id", getWidget().id
+        DOM.setElementProperty(getWidget().closeBox, "id", getId()
                 + "_window_close");
 
         if (uidl.hasAttribute("invisible")) {
