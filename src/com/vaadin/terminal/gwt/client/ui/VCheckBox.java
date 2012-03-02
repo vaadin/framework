@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
@@ -50,8 +51,9 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                 }
 
                 // Add mouse details
-                MouseEventDetails details = new MouseEventDetails(
-                        event.getNativeEvent(), getElement());
+                MouseEventDetails details = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getElement());
                 client.updateVariable(id, "mousedetails", details.serialize(),
                         false);
                 client.updateVariable(id, VARIABLE_STATE, getValue(), immediate);

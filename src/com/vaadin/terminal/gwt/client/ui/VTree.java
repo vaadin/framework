@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -752,7 +753,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     focus();
                 }
             }
-            final MouseEventDetails details = new MouseEventDetails(evt);
+            final MouseEventDetails details = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(evt);
             ScheduledCommand command = new ScheduledCommand() {
                 public void execute() {
                     // Determine if we should send the event immediately to the

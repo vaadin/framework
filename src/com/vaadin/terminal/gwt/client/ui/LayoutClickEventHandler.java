@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
 public abstract class LayoutClickEventHandler extends ClickEventHandler {
 
@@ -28,8 +29,8 @@ public abstract class LayoutClickEventHandler extends ClickEventHandler {
         String pid = ConnectorMap.get(getApplicationConnection())
                 .getConnectorId(paintable);
 
-        MouseEventDetails mouseDetails = new MouseEventDetails(event,
-                getRelativeToElement());
+        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event, getRelativeToElement());
         ComponentConnector childComponent = getChildComponent((Element) event
                 .getEventTarget().cast());
 

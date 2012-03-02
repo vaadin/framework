@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
@@ -123,8 +124,8 @@ public class VNativeButton extends Button implements ClickHandler,
         }
 
         // Add mouse details
-        MouseEventDetails details = new MouseEventDetails(
-                event.getNativeEvent(), getElement());
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent(), getElement());
         buttonRpcProxy.click(details);
 
         clickPending = false;

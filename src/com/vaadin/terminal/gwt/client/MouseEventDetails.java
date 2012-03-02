@@ -5,19 +5,18 @@ package com.vaadin.terminal.gwt.client;
 
 import java.io.Serializable;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.user.client.Event;
-
 /**
  * Helper class to store and transfer mouse event details.
  */
 public class MouseEventDetails implements Serializable {
-    public static final int BUTTON_LEFT = Event.BUTTON_LEFT;
-    public static final int BUTTON_MIDDLE = Event.BUTTON_MIDDLE;
-    public static final int BUTTON_RIGHT = Event.BUTTON_RIGHT;
+    // From com.google.gwt.dom.client.NativeEvent
+    public static final int BUTTON_LEFT = 1;
+    public static final int BUTTON_MIDDLE = 4;
+    public static final int BUTTON_RIGHT = 2;
 
     private static final char DELIM = ',';
+    // From com.google.gwt.user.client.Event
+    private static final int ONDBLCLICK = 0x00002;
 
     private int button;
     private int clientX;
@@ -109,25 +108,6 @@ public class MouseEventDetails implements Serializable {
     public MouseEventDetails() {
     }
 
-    public MouseEventDetails(NativeEvent evt) {
-        this(evt, null);
-    }
-
-    public MouseEventDetails(NativeEvent evt, Element relativeToElement) {
-        type = Event.getTypeInt(evt.getType());
-        clientX = Util.getTouchOrMouseClientX(evt);
-        clientY = Util.getTouchOrMouseClientY(evt);
-        button = evt.getButton();
-        altKey = evt.getAltKey();
-        ctrlKey = evt.getCtrlKey();
-        metaKey = evt.getMetaKey();
-        shiftKey = evt.getShiftKey();
-        if (relativeToElement != null) {
-            relativeX = getRelativeX(clientX, relativeToElement);
-            relativeY = getRelativeY(clientY, relativeToElement);
-        }
-    }
-
     @Override
     public String toString() {
         return serialize();
@@ -173,17 +153,7 @@ public class MouseEventDetails implements Serializable {
     }
 
     public boolean isDoubleClick() {
-        return type == Event.ONDBLCLICK;
-    }
-
-    private static int getRelativeX(int clientX, Element target) {
-        return clientX - target.getAbsoluteLeft() + target.getScrollLeft()
-                + target.getOwnerDocument().getScrollLeft();
-    }
-
-    private static int getRelativeY(int clientY, Element target) {
-        return clientY - target.getAbsoluteTop() + target.getScrollTop()
-                + target.getOwnerDocument().getScrollTop();
+        return type == ONDBLCLICK;
     }
 
 }

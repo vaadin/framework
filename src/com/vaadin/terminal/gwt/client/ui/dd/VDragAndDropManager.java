@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ValueMap;
@@ -606,8 +607,9 @@ public class VDragAndDropManager {
 
         if (currentDrag.getCurrentGwtEvent() != null) {
             try {
-                MouseEventDetails mouseEventDetails = new MouseEventDetails(
-                        currentDrag.getCurrentGwtEvent());
+                MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(currentDrag
+                                .getCurrentGwtEvent());
                 currentDrag.getDropDetails().put("mouseEvent",
                         mouseEventDetails.serialize());
             } catch (Exception e) {

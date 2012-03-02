@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.Util;
@@ -118,8 +118,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             VDragEvent dragEvent = VDragAndDropManager.get().startDrag(
                     transferable, event, true);
 
-            transferable.setData("mouseDown",
-                    new MouseEventDetails(event).serialize());
+            transferable.setData("mouseDown", MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event).serialize());
 
             if (dragStartMode == WRAPPER) {
                 dragEvent.createDragImage(getElement(), true);

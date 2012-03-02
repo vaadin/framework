@@ -64,6 +64,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -2320,7 +2321,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void fireHeaderClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
                     HEADER_CLICK_EVENT_ID)) {
-                MouseEventDetails details = new MouseEventDetails(event);
+                MouseEventDetails details = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent",
                         details.toString(), false);
                 client.updateVariable(paintableId, "headerClickCID", cid, true);
@@ -3377,7 +3379,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void fireFooterClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
                     FOOTER_CLICK_EVENT_ID)) {
-                MouseEventDetails details = new MouseEventDetails(event);
+                MouseEventDetails details = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent",
                         details.toString(), false);
                 client.updateVariable(paintableId, "footerClickCID", cid, true);
@@ -4731,7 +4734,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             false);
                 }
 
-                MouseEventDetails details = new MouseEventDetails(event);
+                MouseEventDetails details = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event);
 
                 client.updateVariable(paintableId, "clickEvent",
                         details.toString(), immediate);

@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
 public abstract class ClickEventHandler implements DoubleClickHandler,
         ContextMenuHandler, MouseUpHandler {
@@ -85,8 +86,8 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
         String pid = ConnectorMap.get(getApplicationConnection())
                 .getConnectorId(paintable);
 
-        MouseEventDetails mouseDetails = new MouseEventDetails(event,
-                getRelativeToElement());
+        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event, getRelativeToElement());
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("mouseDetails", mouseDetails.serialize());
