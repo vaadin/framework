@@ -680,9 +680,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (delayedFocus) {
             focus();
         }
-        if (actionManager != null) {
-            actionManager.setViewer(getRoot());
-        }
+        setActionManagerViewer();
     }
 
     /*
@@ -691,6 +689,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void detach() {
         if (actionManager != null) {
+            // Remove any existing viewer. Root cast is just to make the
+            // compiler happy
             actionManager.setViewer((Root) null);
         }
     }
@@ -1605,11 +1605,55 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     protected ActionManager getActionManager() {
         if (actionManager == null) {
             actionManager = new ActionManager();
-            if (getRoot() != null) {
+            setActionManagerViewer();
+        }
+        return actionManager;
+    }
+
+    /**
+     * Set a viewer for the action manager to be the parent sub window (if the
+     * component is in a window) or the root (otherwise). This is still a
+     * simplification of the real case as this should be handled by the parent
+     * VOverlay (on the client side) if the component is inside an VOverlay
+     * component.
+     */
+    private void setActionManagerViewer() {
+        if (actionManager != null && getRoot() != null) {
+            // Attached and has action manager
+            Window w = findParentOfType(Window.class, this);
+            if (w != null) {
+                actionManager.setViewer(w);
+            } else {
                 actionManager.setViewer(getRoot());
             }
         }
-        return actionManager;
+
+    }
+
+    /**
+     * Helper method for finding the first parent component of a given type.
+     * Useful e.g. for finding the Window the component is inside.
+     * 
+     * @param <T>
+     * @param parentType
+     *            The type to look for
+     * @param c
+     *            The target component
+     * @return A parent component of type {@literal parentType} or null if no
+     *         parent component in the hierarchy can be assigned to the given
+     *         type.
+     */
+    private static <T extends Component> T findParentOfType(
+            Class<T> parentType, Component c) {
+        Component p = c.getParent();
+        if (p == null) {
+            return null;
+        }
+
+        if (parentType.isAssignableFrom(p.getClass())) {
+            return (T) p;
+        }
+        return findParentOfType(parentType, p);
     }
 
     public void addShortcutListener(ShortcutListener shortcut) {
