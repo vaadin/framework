@@ -77,7 +77,6 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         setStyleName(CLASSNAME);
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
         DOM.sinkEvents(contentNode, Event.ONSCROLL | Event.TOUCHEVENTS);
-        getElement().getStyle().setProperty("overflow", "hidden");
         addHandler(new TouchStartHandler() {
             public void onTouchStart(TouchStartEvent event) {
                 getTouchScrollDelegate().onTouchStart(event);
