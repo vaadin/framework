@@ -11,8 +11,19 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -20,18 +31,22 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.label.VLabel;
 
-public class VTabsheet extends VTabsheetBase {
+public class VTabsheet extends VTabsheetBase implements Focusable,
+        FocusHandler, BlurHandler, KeyDownHandler {
 
     private static class VCloseEvent {
         private Tab tab;
@@ -54,7 +69,8 @@ public class VTabsheet extends VTabsheetBase {
      * Representation of a single "tab" shown in the TabBar
      * 
      */
-    private static class Tab extends SimplePanel {
+    private static class Tab extends SimplePanel implements HasFocusHandlers,
+            HasBlurHandlers, HasKeyDownHandlers {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
         private static final String TD_FIRST_CLASSNAME = TD_CLASSNAME
                 + "-first";
@@ -86,6 +102,7 @@ public class VTabsheet extends VTabsheetBase {
             setStyleName(td, TD_CLASSNAME);
 
             div = DOM.createDiv();
+            focusImpl.setTabIndex(td, -1);
             setStyleName(div, DIV_CLASSNAME);
 
             DOM.appendChild(td, div);
@@ -94,6 +111,9 @@ public class VTabsheet extends VTabsheetBase {
                     .getApplicationConnection());
             add(tabCaption);
 
+            addFocusHandler(getTabsheet());
+            addBlurHandler(getTabsheet());
+            addKeyDownHandler(getTabsheet());
         }
 
         public boolean isHiddenOnServer() {
@@ -117,6 +137,9 @@ public class VTabsheet extends VTabsheetBase {
         public void setEnabledOnServer(boolean enabled) {
             enabledOnServer = enabled;
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
+            if (!enabled) {
+                focusImpl.setTabIndex(td, -1);
+            }
         }
 
         public void addClickHandler(ClickHandler handler) {
@@ -136,10 +159,18 @@ public class VTabsheet extends VTabsheetBase {
          *            true if the Tab is the first visible Tab
          */
         public void setStyleNames(boolean selected, boolean first) {
+            // TODO #5100 doesn't belong here
+            focusImpl.setTabIndex(td, selected ? getTabsheet().tabulatorIndex
+                    : -1);
+
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
             setStyleName(td, TD_SELECTED_FIRST_CLASSNAME, selected && first);
             setStyleName(div, DIV_SELECTED_CLASSNAME, selected);
+        }
+
+        public boolean isClosable() {
+            return tabCaption.isClosable();
         }
 
         public void onClose() {
@@ -179,6 +210,25 @@ public class VTabsheet extends VTabsheetBase {
             tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
         }
 
+        public HandlerRegistration addFocusHandler(FocusHandler handler) {
+            return addDomHandler(handler, FocusEvent.getType());
+        }
+
+        public HandlerRegistration addBlurHandler(BlurHandler handler) {
+            return addDomHandler(handler, BlurEvent.getType());
+        }
+
+        public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+            return addDomHandler(handler, KeyDownEvent.getType());
+        }
+
+        public void focus() {
+            focusImpl.focus(td);
+        }
+
+        public void blur() {
+            focusImpl.blur(td);
+        }
     }
 
     private static class TabCaption extends VCaption {
@@ -268,6 +318,10 @@ public class VTabsheet extends VTabsheetBase {
             }
         }
 
+        public boolean isClosable() {
+            return closable;
+        }
+
         @Override
         public int getRequiredWidth() {
             int width = super.getRequiredWidth();
@@ -276,7 +330,6 @@ public class VTabsheet extends VTabsheetBase {
             }
             return width;
         }
-
     }
 
     static class TabBar extends ComplexPanel implements ClickHandler,
@@ -463,7 +516,6 @@ public class VTabsheet extends VTabsheetBase {
             currentFirst.recalculateCaptionWidth();
             return nextVisible;
         }
-
     }
 
     public static final String CLASSNAME = "v-tabsheet";
@@ -475,6 +527,11 @@ public class VTabsheet extends VTabsheetBase {
     public static final String TAB_STYLE_NAME = "tabstyle";
 
     final Element tabs; // tabbar and 'scroller' container
+    Tab focusedTab;
+    int tabulatorIndex = 0;
+
+    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
+
     private final Element scroller; // tab-scroller element
     private final Element scrollerNext; // tab-scroller next button element
     private final Element scrollerPrev; // tab-scroller prev button element
@@ -484,7 +541,7 @@ public class VTabsheet extends VTabsheetBase {
      */
     private int scrollerIndex = 0;
 
-    private final TabBar tb = new TabBar(this);
+    final TabBar tb = new TabBar(this);
     final VTabsheetPanel tp = new VTabsheetPanel();
     final Element contentNode;
 
@@ -501,16 +558,24 @@ public class VTabsheet extends VTabsheetBase {
 
     private String currentStyle;
 
-    private void onTabSelected(final int tabIndex) {
+    /**
+     * @return Whether the tab could be selected or not.
+     */
+    private boolean onTabSelected(final int tabIndex) {
         if (disabled || waitingForResponse) {
-            return;
+            return false;
         }
         final Object tabKey = tabKeys.get(tabIndex);
         if (disabledTabKeys.contains(tabKey)) {
-            return;
+            return false;
         }
         if (client != null && activeTabIndex != tabIndex) {
             tb.selectTab(tabIndex);
+
+            if (focusedTab != null) {
+                focusedTab = tb.getTab(tabIndex);
+            }
+
             addStyleDependentName("loading");
             // run updating variables in deferred command to bypass some FF
             // optimization issues
@@ -525,7 +590,10 @@ public class VTabsheet extends VTabsheetBase {
                 }
             });
             waitingForResponse = true;
+
+            return true;
         }
+        return false;
     }
 
     public ApplicationConnection getApplicationConnection() {
@@ -559,6 +627,9 @@ public class VTabsheet extends VTabsheetBase {
 
     public VTabsheet() {
         super(CLASSNAME);
+
+        addHandler(this, FocusEvent.getType());
+        addHandler(this, BlurEvent.getType());
 
         // Tab scrolling
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
@@ -1033,5 +1104,93 @@ public class VTabsheet extends VTabsheetBase {
         if (tp.getWidgetCount() > index) {
             tp.remove(index);
         }
+    }
+
+    public void onBlur(BlurEvent event) {
+        if (focusedTab != null && event.getSource() instanceof Tab) {
+            focusedTab = null;
+            if (client.hasEventListeners(this, EventId.BLUR)) {
+                client.updateVariable(id, EventId.BLUR, "", true);
+            }
+        }
+    }
+
+    public void onFocus(FocusEvent event) {
+        if (focusedTab == null && event.getSource() instanceof Tab) {
+            focusedTab = (Tab) event.getSource();
+            if (client.hasEventListeners(this, EventId.FOCUS)) {
+                client.updateVariable(id, EventId.FOCUS, "", true);
+            }
+        }
+    }
+
+    public void focus() {
+        tb.getTab(activeTabIndex).focus();
+    }
+
+    public void blur() {
+        tb.getTab(activeTabIndex).blur();
+    }
+
+    public void onKeyDown(KeyDownEvent event) {
+        if (event.getSource() instanceof Tab) {
+            int keycode = event.getNativeEvent().getKeyCode();
+
+            if (keycode == getPreviousTabKey()) {
+                int newTabIndex = activeTabIndex;
+                // Find the previous non-disabled tab with wraparound.
+                do {
+                    newTabIndex = (newTabIndex != 0) ? newTabIndex - 1 : tb
+                            .getTabCount() - 1;
+                } while (newTabIndex != activeTabIndex
+                        && !onTabSelected(newTabIndex));
+                activeTabIndex = newTabIndex;
+
+                // Tab scrolling
+                if (isScrolledTabs()) {
+                    int newFirstIndex = tb.scrollLeft(scrollerIndex);
+                    if (newFirstIndex != -1) {
+                        scrollerIndex = newFirstIndex;
+                        updateTabScroller();
+                    }
+                }
+
+            } else if (keycode == getNextTabKey()) {
+                int newTabIndex = activeTabIndex;
+                // Find the next non-disabled tab with wraparound.
+                do {
+                    newTabIndex = (newTabIndex + 1) % tb.getTabCount();
+                } while (newTabIndex != activeTabIndex
+                        && !onTabSelected(newTabIndex));
+                activeTabIndex = newTabIndex;
+
+                if (isClippedTabs()) {
+                    int newFirstIndex = tb.scrollRight(scrollerIndex);
+                    if (newFirstIndex != -1) {
+                        scrollerIndex = newFirstIndex;
+                        updateTabScroller();
+                    }
+                }
+
+            } else if (keycode == getCloseTabKey()) {
+                Tab tab = tb.getTab(activeTabIndex);
+                if (tab.isClosable()) {
+                    tab.onClose();
+                    removeTab(activeTabIndex);
+                }
+            }
+        }
+    }
+
+    protected int getPreviousTabKey() {
+        return KeyCodes.KEY_LEFT;
+    }
+
+    protected int getNextTabKey() {
+        return KeyCodes.KEY_RIGHT;
+    }
+
+    protected int getCloseTabKey() {
+        return KeyCodes.KEY_DELETE;
     }
 }

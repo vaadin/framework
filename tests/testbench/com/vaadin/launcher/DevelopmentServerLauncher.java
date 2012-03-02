@@ -13,13 +13,13 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.launcher.util.BrowserLauncher;
+
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
-
-import com.vaadin.launcher.util.BrowserLauncher;
 
 /**
  * Class for running Jetty servlet container within Eclipse project.
@@ -105,7 +105,7 @@ public class DevelopmentServerLauncher {
                         + mode
                         + ".\n"
                         + "Running in http://localhost:"
-                        + serverPort
+                        + port
                         + "\n-------------------------------------------------\n");
 
         final Server server = new Server();

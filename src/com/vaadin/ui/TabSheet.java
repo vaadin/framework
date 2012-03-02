@@ -14,6 +14,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.BlurNotifier;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
@@ -24,6 +30,7 @@ import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.TabsheetConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
 
@@ -57,7 +64,8 @@ import com.vaadin.ui.themes.Runo;
  * @since 3.0
  */
 @ClientWidget(TabsheetConnector.class)
-public class TabSheet extends AbstractComponentContainer {
+public class TabSheet extends AbstractComponentContainer implements Focusable,
+        FocusNotifier, BlurNotifier {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,
@@ -96,6 +104,8 @@ public class TabSheet extends AbstractComponentContainer {
      * Handler to be called when a tab is closed.
      */
     private CloseHandler closeHandler;
+
+    private int tabIndex;
 
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default, and the
@@ -363,6 +373,10 @@ public class TabSheet extends AbstractComponentContainer {
 
         if (areTabsHidden()) {
             target.addAttribute("hidetabs", true);
+        }
+
+        if (tabIndex != 0) {
+            target.addAttribute("tabindex", tabIndex);
         }
 
         target.startTag("tabs");
@@ -659,6 +673,12 @@ public class TabSheet extends AbstractComponentContainer {
             if (tab != null) {
                 closeHandler.onTabClose(this, tab);
             }
+        }
+        if (variables.containsKey(FocusEvent.EVENT_ID)) {
+            fireEvent(new FocusEvent(this));
+        }
+        if (variables.containsKey(BlurEvent.EVENT_ID)) {
+            fireEvent(new BlurEvent(this));
         }
     }
 
@@ -1235,4 +1255,36 @@ public class TabSheet extends AbstractComponentContainer {
         return components.indexOf(tab.getComponent());
     }
 
+    @Override
+    public void focus() {
+        super.focus();
+    }
+
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+        requestRepaint();
+    }
+
+    public void addListener(BlurListener listener) {
+        addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
+                BlurListener.blurMethod);
+    }
+
+    public void removeListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    public void addListener(FocusListener listener) {
+        addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
+                FocusListener.focusMethod);
+    }
+
+    public void removeListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+
+    }
 }

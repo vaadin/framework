@@ -1,6 +1,7 @@
 package com.vaadin.tests;
 
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 
@@ -9,7 +10,10 @@ public class VerifyBrowserVersion extends TestBase {
     @Override
     protected void setup() {
         WebApplicationContext context = (WebApplicationContext) getContext();
-        addComponent(new Label(context.getBrowser().getBrowserApplication()));
+        WebBrowser browser = context.getBrowser();
+        addComponent(new Label(browser.getBrowserApplication()));
+        addComponent(new Label("Touch device? "
+                + (browser.isTouchDevice() ? "YES" : "No")));
     }
 
     @Override
