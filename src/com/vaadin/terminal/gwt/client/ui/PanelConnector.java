@@ -192,8 +192,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
         }
 
         LayoutManager layoutManager = getLayoutManager();
-        int top = layoutManager.getOuterHeight(panel.captionNode);
-        int bottom = layoutManager.getOuterHeight(panel.bottomDecoration);
+        int top = layoutManager.getInnerHeight(panel.captionNode);
+        int bottom = layoutManager.getInnerHeight(panel.bottomDecoration);
 
         Style style = panel.getElement().getStyle();
         panel.captionNode.getStyle().setMarginTop(-top, Unit.PX);
