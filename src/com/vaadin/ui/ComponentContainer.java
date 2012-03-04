@@ -70,6 +70,14 @@ public interface ComponentContainer extends Component {
     public Iterator<Component> getComponentIterator();
 
     /**
+     * Gets the number of children this {@link ComponentContainer} has. This
+     * must be symmetric with what {@link #getComponentIterator()} returns.
+     * 
+     * @return The number of child components this container has.
+     */
+    public int getComponentCount();
+
+    /**
      * Causes a repaint of this component, and all components below it.
      * 
      * This should only be used in special cases, e.g when the state of a

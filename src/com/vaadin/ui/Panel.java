@@ -661,4 +661,13 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         super.focus();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.ComponentContainer#getComponentCount()
+     */
+    public int getComponentCount() {
+        // This is so wrong... (#2924)
+        return content.getComponentCount();
+    }
 }

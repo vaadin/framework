@@ -632,8 +632,22 @@ public abstract class Root extends AbstractComponentContainer implements
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
+     */
     public Iterator<Component> getComponentIterator() {
         return Collections.singleton((Component) getContent()).iterator();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.ComponentContainer#getComponentCount()
+     */
+    public int getComponentCount() {
+        return getContent() == null ? 0 : 1;
     }
 
     /**
