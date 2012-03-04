@@ -28,7 +28,7 @@ public class AbstractDateFieldConnector extends AbstractComponentConnector {
         getWidget().immediate = getState().isImmediate();
 
         getWidget().readonly = getState().isReadOnly();
-        getWidget().enabled = !getState().isDisabled();
+        getWidget().enabled = getState().isEnabled();
 
         if (uidl.hasAttribute("locale")) {
             final String locale = uidl.getStringAttribute("locale");

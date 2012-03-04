@@ -30,7 +30,7 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
         if (getWidget().indeterminate) {
             String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
             getWidget().addStyleName(basename);
-            if (getState().isDisabled()) {
+            if (!getState().isEnabled()) {
                 getWidget().addStyleName(basename + "-disabled");
             } else {
                 getWidget().removeStyleName(basename + "-disabled");
@@ -46,7 +46,7 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
             }
         }
 
-        if (!getState().isDisabled()) {
+        if (getState().isEnabled()) {
             getWidget().interval = uidl.getIntAttribute("pollinginterval");
             getWidget().poller.scheduleRepeating(getWidget().interval);
         }

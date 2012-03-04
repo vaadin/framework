@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.ui.Component;
 
 /**
  * Default shared state implementation for UI components.
@@ -19,11 +20,12 @@ public class ComponentState extends SharedState {
     private boolean readOnly = false;
     private boolean immediate = false;
     private String style = "";
-    private boolean disabled = false;
+    private boolean enabled = true;
     private String description = "";
     // Note: for the caption, there is a difference between null and an empty
     // string!
     private String caption = null;
+    private boolean visible = true;
 
     /**
      * Returns the component height as set by the server.
@@ -180,26 +182,26 @@ public class ComponentState extends SharedState {
     }
 
     /**
-     * Returns true if the component is disabled.
+     * Returns true if the component is enabled.
      * 
      * @see com.vaadin.ui.Component#isEnabled()
      * 
-     * @return true if the component is disabled
+     * @return true if the component is enabled
      */
-    public boolean isDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     /**
-     * Disables or enables the component.
+     * Enables or disables the component.
      * 
      * @see com.vaadin.ui.Component#setEnabled(boolean)
      * 
-     * @param disabled
+     * @param enabled
      *            new mode for the component
      */
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**
@@ -262,6 +264,28 @@ public class ComponentState extends SharedState {
      */
     public void setCaption(String caption) {
         this.caption = caption;
+    }
+
+    /**
+     * Returns the visibility state of the component. Note that this state is
+     * related to the component only, not its parent. This might differ from
+     * what {@link Component#isVisible()} returns as this takes the hierarchy
+     * into account.
+     * 
+     * @return The visibility state.
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * Sets the visibility state of the component.
+     * 
+     * @param visible
+     *            The new visibility state.
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
 }

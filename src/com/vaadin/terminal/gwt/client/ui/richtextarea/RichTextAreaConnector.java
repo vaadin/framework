@@ -28,7 +28,7 @@ public class RichTextAreaConnector extends AbstractComponentConnector implements
             }
         }
         if (isRealUpdate(uidl)) {
-            getWidget().setEnabled(!getState().isDisabled());
+            getWidget().setEnabled(getState().isEnabled());
         }
 
         super.updateFromUIDL(uidl, client);

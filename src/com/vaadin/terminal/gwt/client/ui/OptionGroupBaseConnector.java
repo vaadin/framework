@@ -25,7 +25,7 @@ public abstract class OptionGroupBaseConnector extends
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().readonly = getState().isReadOnly();
-        getWidget().disabled = getState().isDisabled();
+        getWidget().disabled = !getState().isEnabled();
         getWidget().multiselect = "multi".equals(uidl
                 .getStringAttribute("selectmode"));
         getWidget().immediate = getState().isImmediate();

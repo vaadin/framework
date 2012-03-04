@@ -38,7 +38,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         getWidget().openRootOnHover = uidl
                 .getBooleanAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER);
 
-        getWidget().enabled = !getState().isDisabled();
+        getWidget().enabled = getState().isEnabled();
 
         // For future connections
         getWidget().client = client;

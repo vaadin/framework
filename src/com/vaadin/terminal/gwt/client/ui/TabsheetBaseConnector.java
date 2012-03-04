@@ -31,7 +31,7 @@ public abstract class TabsheetBaseConnector extends
 
         // Update member references
         getWidget().id = uidl.getId();
-        getWidget().disabled = getState().isDisabled();
+        getWidget().disabled = !getState().isEnabled();
 
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);

@@ -43,7 +43,7 @@ public class TreeConnector extends AbstractComponentConnector {
 
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().disabled = getState().isDisabled();
+        getWidget().disabled = !getState().isEnabled();
         getWidget().readonly = getState().isReadOnly();
 
         getWidget().dragMode = uidl.hasAttribute("dragMode") ? uidl

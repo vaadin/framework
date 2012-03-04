@@ -30,7 +30,7 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
         getWidget().paintableId = uidl.getId();
 
         getWidget().readonly = getState().isReadOnly();
-        getWidget().enabled = !getState().isDisabled();
+        getWidget().enabled = getState().isEnabled();
 
         getWidget().tb.setEnabled(getWidget().enabled);
         getWidget().updateReadOnly();

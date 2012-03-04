@@ -65,11 +65,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private ArrayList<String> styles;
 
     /**
-     * Caption text.
-     */
-    private String caption;
-
-    /**
      * Application specific data object. The component does not use or modify
      * this.
      */
@@ -79,26 +74,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Icon to be shown together with caption.
      */
     private Resource icon;
-
-    /**
-     * Is the component enabled (its normal usage is allowed).
-     */
-    private boolean enabled = true;
-
-    /**
-     * Is the component visible (it is rendered).
-     */
-    private boolean visible = true;
-
-    /**
-     * Is the component read-only ?
-     */
-    private boolean readOnly = false;
-
-    /**
-     * Description of the usage (XML).
-     */
-    private String description = null;
 
     /**
      * The container this component resides in.
@@ -119,12 +94,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * The internal error message of the component.
      */
     private ErrorMessage componentError = null;
-
-    /**
-     * Immediate mode: if true, all variable changes are required to be sent
-     * from the terminal immediately.
-     */
-    private boolean immediate = false;
 
     /**
      * Locale of this component.
@@ -306,7 +275,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * the default documentation from implemented interface.
      */
     public String getCaption() {
-        return caption;
+        return getState().getCaption();
     }
 
     /**
@@ -319,7 +288,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the new caption <code>String</code> for the component.
      */
     public void setCaption(String caption) {
-        this.caption = caption;
+        getState().setCaption(caption);
         requestRepaint();
     }
 
@@ -393,7 +362,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * here, we use the default documentation from implemented interface.
      */
     public boolean isEnabled() {
-        return enabled && (parent == null || parent.isEnabled()) && isVisible();
+        return getState().isEnabled()
+                && (getParent() == null || getParent().isEnabled());
     }
 
     /*
@@ -401,29 +371,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * use the default documentation from implemented interface.
      */
     public void setEnabled(boolean enabled) {
-        if (this.enabled != enabled) {
-            boolean wasEnabled = this.enabled;
-            boolean wasEnabledInContext = isEnabled();
-
-            this.enabled = enabled;
-
-            boolean isEnabled = enabled;
-            boolean isEnabledInContext = isEnabled();
-
-            // If the actual enabled state (as rendered, in context) has not
-            // changed we do not need to repaint except if the parent is
-            // invisible.
-            // If the parent is invisible we must request a repaint so the
-            // component is repainted with the new enabled state when the parent
-            // is set visible again. This workaround is needed as isEnabled
-            // checks isVisible.
-            boolean needRepaint = (wasEnabledInContext != isEnabledInContext)
-                    || (wasEnabled != isEnabled && (getParent() == null || !getParent()
-                            .isVisible()));
-
-            if (needRepaint) {
-                requestRepaint();
-            }
+        if (getState().isEnabled() != enabled) {
+            getState().setEnabled(enabled);
+            requestRepaint();
         }
     }
 
@@ -433,7 +383,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * interface.
      */
     public boolean isImmediate() {
-        return immediate;
+        return getState().isImmediate();
     }
 
     /**
@@ -447,7 +397,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
-        this.immediate = immediate;
+        getState().setImmediate(immediate);
         requestRepaint();
     }
 
@@ -457,7 +407,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.ui.Component#isVisible()
      */
     public boolean isVisible() {
-        return visible && (getParent() == null || getParent().isVisible());
+        return getState().isVisible()
+                && (getParent() == null || getParent().isVisible());
     }
 
     /*
@@ -467,8 +418,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setVisible(boolean visible) {
 
-        if (this.visible != visible) {
-            this.visible = visible;
+        if (getState().isVisible() != visible) {
+            getState().setVisible(visible);
             // Instead of requesting repaint normally we
             // fire the event directly to assure that the
             // event goes through event in the component might
@@ -535,7 +486,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @return component's description <code>String</code>
      */
     public String getDescription() {
-        return description;
+        return getState().getDescription();
     }
 
     /**
@@ -552,7 +503,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the new description string for the component.
      */
     public void setDescription(String description) {
-        this.description = description;
+        getState().setDescription(description);
         requestRepaint();
     }
 
@@ -638,7 +589,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * here, we use the default documentation from implemented interface.
      */
     public boolean isReadOnly() {
-        return readOnly;
+        return getState().isReadOnly();
     }
 
     /*
@@ -646,7 +597,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * use the default documentation from implemented interface.
      */
     public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
+        getState().setReadOnly(readOnly);
         requestRepaint();
     }
 
@@ -669,7 +620,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void attach() {
         requestRepaint();
-        if (!visible) {
+        if (!getState().isVisible()) {
             /*
              * Bypass the repaint optimization in childRequestedRepaint method
              * when attaching. When reattaching (possibly moving) -> must
@@ -874,13 +825,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
         // basic state: caption, size, enabled, ...
 
-        if (!isVisible()) {
-            return null;
-        }
-
-        // TODO for now, this superclass always recreates the state from
-        // scratch, whereas subclasses should only modify it
-
+        // TODO This logic should be on the client side and the state should
+        // simply be a data object with "width" and "height".
         if (getHeight() >= 0
                 && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineHeight(this))) {
@@ -897,14 +843,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             sharedState.setWidth("");
         }
 
-        sharedState.setImmediate(isImmediate());
-        sharedState.setReadOnly(isReadOnly());
-        sharedState.setDisabled(!isEnabled());
-
+        // TODO This should be an array in state and the logic for converting
+        // array -> class name should be on the client side
         sharedState.setStyle(getStyleName());
-
-        sharedState.setCaption(getCaption());
-        sharedState.setDescription(getDescription());
 
         // TODO icon also in shared state - how to convert Resource?
 
@@ -942,7 +883,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             Collection<RepaintRequestListener> alreadyNotified) {
         // Invisible components (by flag in this particular component) do not
         // need repaints
-        if (!visible) {
+        if (!getState().isVisible()) {
             return;
         }
 

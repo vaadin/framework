@@ -55,7 +55,7 @@ public class TableConnector extends AbstractComponentContainerConnector
             return;
         }
 
-        getWidget().enabled = !getState().isDisabled();
+        getWidget().enabled = getState().isEnabled();
 
         if (BrowserInfo.get().isIE8() && !getWidget().enabled) {
             /*

@@ -29,7 +29,7 @@ public class LinkConnector extends AbstractComponentConnector {
 
         getWidget().client = client;
 
-        getWidget().enabled = !getState().isDisabled();
+        getWidget().enabled = getState().isEnabled();
         getWidget().readonly = getState().isReadOnly();
 
         if (uidl.hasAttribute("name")) {

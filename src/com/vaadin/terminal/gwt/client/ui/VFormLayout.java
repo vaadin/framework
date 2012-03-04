@@ -61,7 +61,7 @@ public class VFormLayout extends SimplePanel {
             }
         }
 
-        if (state.isDisabled()) {
+        if (!state.isEnabled()) {
             styles.add(ApplicationConnection.DISABLED_CLASSNAME);
         }
 

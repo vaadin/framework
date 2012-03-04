@@ -25,7 +25,7 @@ public class SliderConnector extends AbstractComponentConnector {
         }
 
         getWidget().immediate = getState().isImmediate();
-        getWidget().disabled = getState().isDisabled();
+        getWidget().disabled = !getState().isEnabled();
         getWidget().readonly = getState().isReadOnly();
 
         getWidget().vertical = uidl.hasAttribute("vertical");

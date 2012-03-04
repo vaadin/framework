@@ -75,7 +75,7 @@ public abstract class AbstractSplitPanelConnector extends
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidget().setEnabled(!getState().isDisabled());
+        getWidget().setEnabled(getState().isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration(client);
         if (getState().hasStyles()) {

@@ -173,7 +173,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ((Focusable) getWidget()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
-        setEnabled(!getState().isDisabled());
+        setEnabled(getState().isEnabled());
 
         // Style names
         String styleName = getStyleNameFromUIDL(getWidget()
@@ -358,7 +358,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     protected static String getStyleNameFromUIDL(String primaryStyleName,
             UIDL uidl, ComponentState state, boolean field) {
-        boolean enabled = !state.isDisabled();
+        boolean enabled = state.isEnabled();
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
