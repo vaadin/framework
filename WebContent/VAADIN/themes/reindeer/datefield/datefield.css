@@ -225,22 +225,19 @@ td.v-datefield-calendarpanel-nextyear {
 .v-op .v-datefield-popup {
 	background: rgba(255,255,255,.95);
 }
-.v-datefield-textfield {
+.v-has-width > input.v-datefield-textfield {
 	width: 100%;
 }
-.v-undefined-width > .v-datefield-textfield {
-	width: auto;
-}
-.v-datefield-year.v-undefined-width > .v-datefield-textfield {
+.v-datefield-year > .v-datefield-textfield {
 	width: 4.5em;
 }
-.v-datefield-month.v-undefined-width > .v-datefield-textfield {
+.v-datefield-month > .v-datefield-textfield {
 	width: 5.5em;
 }
-.v-datefield-day.v-undefined-width > .v-datefield-textfield {
+.v-datefield-day > .v-datefield-textfield {
 	width: 6em;
 }
-.v-datefield-full.v-undefined-width  >.v-datefield-textfield {
+.v-datefield-full >.v-datefield-textfield {
 	width: 12.5em;
 }
 .v-datefield-popupcalendar input.v-datefield-textfield {

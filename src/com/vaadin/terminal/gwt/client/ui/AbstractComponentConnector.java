@@ -249,8 +249,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set defined sizes
         Widget component = getWidget();
 
-        component.setStyleName("v-undefined-width", isUndefinedWidth());
-        component.setStyleName("v-undefined-height", isUndefinedHeight());
+        component.setStyleName("v-has-width", !isUndefinedWidth());
+        component.setStyleName("v-has-height", !isUndefinedHeight());
 
         component.setHeight(h);
         component.setWidth(w);
