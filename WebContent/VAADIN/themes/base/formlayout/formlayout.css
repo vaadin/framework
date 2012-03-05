@@ -1,3 +1,9 @@
+.v-formlayout.v-has-width > table {
+	width: 100%;
+}
+.v-formlayout.v-has-height > table {
+	height: 100%;
+}
 .v-formlayout-cell .v-errorindicator {
 	display: block;
 }
