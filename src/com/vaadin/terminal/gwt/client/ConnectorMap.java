@@ -175,7 +175,7 @@ public class ConnectorMap {
      */
     public void unregisterConnector(Connector connector) {
 
-        // add to unregistry que
+        // add to unregistry queue
 
         if (connector == null) {
             VConsole.error("WARN: Trying to unregister null connector");
