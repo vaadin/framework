@@ -14,6 +14,7 @@
 .v-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
+	width: 0;
 }
 .v-formlayout-captioncell .v-caption {
 	overflow: visible;
