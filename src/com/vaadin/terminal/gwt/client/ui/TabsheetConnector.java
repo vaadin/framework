@@ -93,6 +93,10 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         }
 
         tabsheet.updateOpenTabSize();
+        if (isUndefinedWidth()) {
+            tabsheet.updateDynamicWidth();
+        }
+
         tabsheet.iLayout();
 
     }
