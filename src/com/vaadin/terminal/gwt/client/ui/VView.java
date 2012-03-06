@@ -156,6 +156,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private void ensureSubWindowsVisible() {
         for (VWindow subWindow : subWindows) {
+            // First process width as it might affect the height
             int oldLeft = subWindow.getPopupLeft();
             int oldWidth = subWindow.getOffsetWidth();
             int oldRight = oldLeft + oldWidth;
@@ -167,9 +168,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 if (newLeft < 0) {
                     newLeft = 0;
                     subWindow.setWidth(width + "px");
+                    subWindow.updateContentsSize();
                 }
             }
 
+            // Process height once the width is final
             int oldTop = subWindow.getPopupTop();
             int oldHeight = subWindow.getOffsetHeight();
             int oldBottom = oldTop + oldHeight;
@@ -181,6 +184,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 if (newTop < 0) {
                     newTop = 0;
                     subWindow.setHeight(height + "px");
+                    subWindow.updateContentsSize();
                 }
             }
 
