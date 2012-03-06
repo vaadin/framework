@@ -479,7 +479,7 @@ public class ApplicationConnection {
         if (!synchronous) {
             RequestCallback requestCallback = new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
-                    showCommunicationError(exception.getMessage());
+                    showCommunicationError(exception.getMessage(), -1);
                     endRequest();
                     if (!applicationRunning) {
                         // start failed, let's try to start the next app
@@ -497,7 +497,9 @@ public class ApplicationConnection {
 
                     switch (statusCode) {
                     case 0:
-                        showCommunicationError("Invalid status code 0 (server down?)");
+                        showCommunicationError(
+                                "Invalid status code 0 (server down?)",
+                                statusCode);
                         endRequest();
                         return;
 
@@ -530,8 +532,9 @@ public class ApplicationConnection {
                     if ((statusCode / 100) == 4) {
                         // Handle all 4xx errors the same way as (they are
                         // all permanent errors)
-                        showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
-                                + statusCode);
+                        showCommunicationError(
+                                "UIDL could not be read from server. Check servlets mappings. Error code: "
+                                        + statusCode, statusCode);
                         endRequest();
                         return;
                     }
@@ -565,7 +568,8 @@ public class ApplicationConnection {
                     } catch (final Exception e) {
                         endRequest();
                         showCommunicationError(e.getMessage()
-                                + " - Original JSON-text:" + jsonText);
+                                + " - Original JSON-text:" + jsonText,
+                                statusCode);
                         return;
                     }
 
@@ -656,12 +660,28 @@ public class ApplicationConnection {
      * 
      * @param details
      *            Optional details for debugging.
+     * 
+     * @deprecated Use the method with errorCode instead
      */
+    @Deprecated
     protected void showCommunicationError(String details) {
         VConsole.error("Communication error: " + details);
         showError(details, configuration.getCommunicationErrorCaption(),
                 configuration.getCommunicationErrorMessage(),
                 configuration.getCommunicationErrorUrl());
+    }
+
+    /**
+     * Shows the communication error notification.
+     * 
+     * @param details
+     *            Optional details for debugging.
+     * @param statusCode
+     *            The http error code during the problematic request or -1 if
+     *            error happened before response was received.
+     */
+    protected void showCommunicationError(String details, int statusCode) {
+        showAuthenticationError(details);
     }
 
     /**
