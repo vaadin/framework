@@ -149,8 +149,44 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             connection.runDescendentsLayout(VView.this);
             Util.runWebkitOverflowAutoFix(getElement());
 
+            ensureSubWindowsVisible();
             sendClientResized();
         }
+    }
+
+    private void ensureSubWindowsVisible() {
+        for (VWindow subWindow : subWindows) {
+            int oldLeft = subWindow.getPopupLeft();
+            int oldWidth = subWindow.getOffsetWidth();
+            int oldRight = oldLeft + oldWidth;
+
+            int newLeft = oldLeft;
+
+            if (oldRight > width) {
+                newLeft = width - oldWidth;
+                if (newLeft < 0) {
+                    newLeft = 0;
+                    subWindow.setWidth(width + "px");
+                }
+            }
+
+            int oldTop = subWindow.getPopupTop();
+            int oldHeight = subWindow.getOffsetHeight();
+            int oldBottom = oldTop + oldHeight;
+
+            int newTop = oldTop;
+
+            if (oldBottom > height) {
+                newTop = height - oldHeight;
+                if (newTop < 0) {
+                    newTop = 0;
+                    subWindow.setHeight(height + "px");
+                }
+            }
+
+            subWindow.setPopupPosition(newLeft, newTop);
+        }
+
     }
 
     public String getTheme() {
