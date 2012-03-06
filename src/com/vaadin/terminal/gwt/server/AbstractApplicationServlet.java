@@ -1897,7 +1897,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         final String widgetsetFilePath = widgetsetBasePath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
-                + ".nocache.js?" + new Date().getTime();
+                + ".nocache.js" + createPreventCachingQueryString();
 
         // Get system messages
         Application.SystemMessages systemMessages = null;
@@ -2004,6 +2004,17 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         page.write("setTimeout('if (typeof " + widgetset.replace('.', '_')
                 + " == \"undefined\") {alert(\"Failed to load the widgetset: "
                 + widgetsetFilePath + "\")};',15000);\n" + "//]]>\n</script>\n");
+    }
+
+    /**
+     * To ensure the GWT kickstart scritp is downloaded each time (even if
+     * server caching is not set up right), we add a unique query parameter to
+     * the end of the script file.
+     * 
+     * @return
+     */
+    protected String createPreventCachingQueryString() {
+        return "?" + new Date().getTime();
     }
 
     /**
