@@ -1060,7 +1060,7 @@ public class VWindow extends VOverlay implements Container,
         }
     }
 
-    void updateContentsSize() {
+    private void updateContentsSize() {
         // Update child widget dimensions
         if (client != null) {
             client.handleComponentRelativeSize((Widget) layout);
