@@ -47,32 +47,19 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Minimum allowed height of a window. This refers to the content area, not
      * the outer borders.
      */
-    private static final int MIN_CONTENT_AREA_HEIGHT = 100;
+    public static final int MIN_CONTENT_AREA_HEIGHT = 100;
 
     /**
      * Minimum allowed width of a window. This refers to the content area, not
      * the outer borders.
      */
-    private static final int MIN_CONTENT_AREA_WIDTH = 150;
+    public static final int MIN_CONTENT_AREA_WIDTH = 150;
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
     private static boolean orderingDefered;
 
     public static final String CLASSNAME = "v-window";
-
-    /**
-     * Difference between offsetWidth and inner width for the content area.
-     */
-    private int contentAreaBorderPadding = -1;
-    /**
-     * Pixels used by inner borders and paddings horizontally (calculated only
-     * once). This is the difference between the width of the root element and
-     * the content area, such that if root element width is set to "XYZpx" the
-     * inner width (width-border-padding) of the content area is
-     * X-contentAreaRootDifference.
-     */
-    private int contentAreaToRootDifference = -1;
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -82,7 +69,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     Element contents;
 
-    private Element header;
+    Element header;
 
     private Element footer;
 
@@ -136,23 +123,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private boolean closable = true;
 
-    boolean dynamicWidth = false;
-    boolean dynamicHeight = false;
-    boolean layoutRelativeWidth = false;
-    boolean layoutRelativeHeight = false;
-
     // If centered (via UIDL), the window should stay in the centered -mode
     // until a position is received from the server, or the user moves or
     // resizes the window.
     boolean centered = false;
 
-    private String width;
-
-    private String height;
-
     boolean immediate;
 
-    private Element wrapper, wrapper2;
+    private Element wrapper;
 
     boolean visibilityChangesDisabled;
 
@@ -243,15 +221,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
-        wrapper2 = DOM.createDiv();
-        DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
-
-        DOM.appendChild(wrapper2, closeBox);
-        DOM.appendChild(wrapper2, header);
+        DOM.appendChild(wrapper, header);
+        DOM.appendChild(wrapper, closeBox);
         DOM.appendChild(header, headerText);
-        DOM.appendChild(wrapper2, contents);
-        DOM.appendChild(wrapper2, footer);
-        DOM.appendChild(wrapper, wrapper2);
+        DOM.appendChild(wrapper, contents);
+        DOM.appendChild(wrapper, footer);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
         sinkEvents(Event.MOUSEEVENTS | Event.TOUCHEVENTS | Event.ONCLICK
@@ -339,52 +313,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             header.getStyle().setProperty("cursor", "");
             footer.getStyle().setProperty("cursor", "");
         }
-    }
-
-    void setNaturalWidth() {
-        /*
-         * Use max(layout width, window width) i.e layout content width or
-         * caption width. We remove the previous set width so the width is
-         * allowed to shrink. All widths are measured as outer sizes, i.e. the
-         * borderWidth is added to the content.
-         */
-
-        DOM.setStyleAttribute(getElement(), "width", "");
-
-        // Content
-        int contentWidth = contentPanel.getElement().getScrollWidth();
-        contentWidth += getContentAreaToRootDifference();
-
-        // Window width (caption)
-        int windowCaptionWidth = getOffsetWidth();
-
-        int naturalWidth = (contentWidth > windowCaptionWidth ? contentWidth
-                : windowCaptionWidth);
-
-        setWidth(naturalWidth + "px");
-    }
-
-    private int getContentAreaToRootDifference() {
-        if (contentAreaToRootDifference < 0) {
-            measure();
-        }
-        return contentAreaToRootDifference;
-    }
-
-    private void measure() {
-        if (!isAttached()) {
-            return;
-        }
-
-        contentAreaBorderPadding = Util.measureHorizontalPaddingAndBorder(
-                contents, 4);
-        int wrapperPaddingBorder = Util.measureHorizontalPaddingAndBorder(
-                wrapper, 0)
-                + Util.measureHorizontalPaddingAndBorder(wrapper2, 0);
-
-        contentAreaToRootDifference = wrapperPaddingBorder
-                + contentAreaBorderPadding;
-
     }
 
     /**
@@ -650,8 +578,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 resizing = true;
                 startX = Util.getTouchOrMouseClientX(event);
                 startY = Util.getTouchOrMouseClientY(event);
-                origW = getElement().getOffsetWidth();
-                origH = getElement().getOffsetHeight();
+                origW = contents.getOffsetWidth();
+                origH = contents.getOffsetHeight();
                 DOM.setCapture(getElement());
                 event.preventDefault();
                 break;
@@ -716,13 +644,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
 
         int w = Util.getTouchOrMouseClientX(event) - startX + origW;
-        if (w < MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference()) {
-            w = MIN_CONTENT_AREA_WIDTH + getContentAreaToRootDifference();
+        if (w < MIN_CONTENT_AREA_WIDTH) {
+            w = MIN_CONTENT_AREA_WIDTH;
         }
 
         int h = Util.getTouchOrMouseClientY(event) - startY + origH;
-        if (h < MIN_CONTENT_AREA_HEIGHT + getExtraHeight()) {
-            h = MIN_CONTENT_AREA_HEIGHT + getExtraHeight();
+        if (h < MIN_CONTENT_AREA_HEIGHT) {
+            h = MIN_CONTENT_AREA_HEIGHT;
         }
 
         setWidth(w + "px");
@@ -730,8 +658,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
-            client.updateVariable(id, "width", w, false);
-            client.updateVariable(id, "height", h, immediate);
+            client.updateVariable(id, "width", getWidget().getOffsetWidth(),
+                    false);
+            client.updateVariable(id, "height", getWidget().getOffsetHeight(),
+                    immediate);
         }
 
         if (updateVariables || !resizeLazy) {
@@ -755,87 +685,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     @Override
-    /**
-     * Width is set to the out-most element (v-window).
-     * 
-     * This function should never be called with percentage values (it will
-     * throw an exception)
-     */
     public void setWidth(String width) {
-        this.width = width;
-        if (!isAttached()) {
-            return;
-        }
-        if (width != null && !"".equals(width)) {
-            int rootPixelWidth = -1;
-            if (width.indexOf("px") < 0) {
-                /*
-                 * Convert non-pixel values to pixels by setting the width and
-                 * then measuring it. Updates the "width" variable with the
-                 * pixel width.
-                 */
-                DOM.setStyleAttribute(getElement(), "width", width);
-                rootPixelWidth = getElement().getOffsetWidth();
-                width = rootPixelWidth + "px";
-            } else {
-                rootPixelWidth = Integer.parseInt(width.substring(0,
-                        width.indexOf("px")));
-            }
-
-            // "width" now contains the new width in pixels
-
-            // Apply the new pixel width
-            getElement().getStyle().setProperty("width", width);
-
-            // Caculate the inner width of the content area
-            int contentAreaInnerWidth = rootPixelWidth
-                    - getContentAreaToRootDifference();
-            if (contentAreaInnerWidth < MIN_CONTENT_AREA_WIDTH) {
-                contentAreaInnerWidth = MIN_CONTENT_AREA_WIDTH;
-                int rootWidth = contentAreaInnerWidth
-                        + getContentAreaToRootDifference();
-                DOM.setStyleAttribute(getElement(), "width", rootWidth + "px");
-            }
-
-            updateShadowSizeAndPosition();
-        }
-    }
-
-    @Override
-    /**
-     * Height is set to the out-most element (v-window).
-     * 
-     * This function should never be called with percentage values (it will
-     * throw an exception)
-     * 
-     * @param height A CSS string specifying the new height of the window.
-     *               An empty string or null clears the height and lets
-     *               the browser to compute it based on the window contents. 
-     */
-    public void setHeight(String height) {
-        if (!isAttached()
-                || (height == null ? this.height == null : height
-                        .equals(this.height))) {
-            return;
-        }
-        if (height == null || "".equals(height)) {
-            getElement().getStyle().clearHeight();
-            contentPanel.getElement().getStyle().clearHeight();
+        super.setWidth(width);
+        // Let the width of the heading affect the total width if the window has
+        // undefined width
+        if (width == null || width.length() == 0) {
+            headerText.removeClassName("v-not-spanning");
         } else {
-            getElement().getStyle().setProperty("height", height);
-            int contentHeight = getElement().getOffsetHeight()
-                    - getExtraHeight();
-            if (contentHeight < MIN_CONTENT_AREA_HEIGHT) {
-                contentHeight = MIN_CONTENT_AREA_HEIGHT;
-                int rootHeight = contentHeight + getExtraHeight();
-                getElement().getStyle()
-                        .setProperty("height", rootHeight + "px");
-            }
-            contentPanel.getElement().getStyle()
-                    .setProperty("height", contentHeight + "px");
+            headerText.addClassName("v-not-spanning");
         }
-        this.height = height;
-        updateShadowSizeAndPosition();
     }
 
     int getExtraHeight() {
@@ -947,22 +805,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // getElement(), so we need to override this.
         setStyleName(getElement(), getStylePrimaryName() + "-" + styleSuffix,
                 true);
-    }
-
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-
-        setWidth(width);
-        setHeight(height);
-    }
-
-    void requestLayout() {
-        if (dynamicWidth && !layoutRelativeWidth) {
-            setNaturalWidth();
-        }
-        // layout size change may affect its available space (scrollbars)
-        client.handleComponentRelativeSize(layout.getWidget());
     }
 
     public ShortcutActionHandler getShortcutActionHandler() {

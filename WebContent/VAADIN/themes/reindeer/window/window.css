@@ -9,12 +9,12 @@
 	border-color: rgba(0,0,0,.2);
 }
 .v-window-outerheader {
-	padding: 12px 32px 0 14px;
+	padding: 12px 0 0;
 	height: 25px;
 	background: black repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.v-window-header {
+div.v-window-header {
 	font-weight: bold;
 	font-size: 12px;
 	line-height: normal;
@@ -24,6 +24,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
+	padding: 0 32px 0 14px
 }
 .v-window-error .v-window-header {
 	padding-left: 13px;

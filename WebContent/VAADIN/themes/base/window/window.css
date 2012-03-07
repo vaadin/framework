@@ -2,15 +2,20 @@
 	background: #fff;
 }
 .v-window-outerheader {
-	padding: 0.3em 1em;
+	padding: 0.3em 0;
 	height: 1em;
+	position: relative;
 }
 
 .v-window-outerheader,
 .v-window-draggingCurtain {
  	cursor: move;	
 }
-
+.v-window-header.v-not-spanning {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
 .v-window-header {
 	font-weight: bold;
 }
@@ -20,7 +25,7 @@ div.v-window-header {
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
 	overflow: hidden;
-	padding: 0;
+	padding: 0 1em;
 }
 .v-window-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */

@@ -408,11 +408,8 @@ public class ComponentSizeValidator implements Serializable {
         if (parent.getHeight() < 0) {
             // Undefined height
             if (parent instanceof Window) {
-                Window w = (Window) parent;
-                if (w.getParent() == null) {
-                    // main window is considered to have size
-                    return true;
-                }
+                // Sub window with undefined size has a min-height
+                return true;
             }
 
             if (parent instanceof AbstractOrderedLayout) {
@@ -503,12 +500,8 @@ public class ComponentSizeValidator implements Serializable {
             return true;
         }
         if (parent instanceof Window) {
-            Window w = (Window) parent;
-            if (w.getParent() == null) {
-                // main window is considered to have size
-                return true;
-            }
-
+            // Sub window with undefined size has a min-width
+            return true;
         }
 
         if (parent.getWidth() < 0) {

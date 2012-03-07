@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -14,8 +15,8 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 public class WindowConnector extends AbstractComponentContainerConnector
@@ -38,6 +39,13 @@ public class WindowConnector extends AbstractComponentContainerConnector
     protected boolean delegateCaptionHandling() {
         return false;
     };
+
+    @Override
+    protected void init() {
+        super.init();
+        getLayoutManager().registerDependency(this,
+                getWidget().contentPanel.getElement());
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -144,44 +152,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().layout = lo;
         }
 
-        getWidget().dynamicWidth = getState().isUndefinedWidth();
-        getWidget().dynamicHeight = getState().isUndefinedHeight();
-
-        getWidget().layoutRelativeWidth = uidl
-                .hasAttribute("layoutRelativeWidth");
-        getWidget().layoutRelativeHeight = uidl
-                .hasAttribute("layoutRelativeHeight");
-
-        if (getWidget().dynamicWidth && getWidget().layoutRelativeWidth) {
-            /*
-             * Relative layout width, fix window width before rendering (width
-             * according to caption)
-             */
-            getWidget().setNaturalWidth();
-        }
-
         getWidget().layout.updateFromUIDL(childUidl, client);
-        if (!getWidget().dynamicHeight && getWidget().layoutRelativeWidth) {
-            /*
-             * Relative layout width, and fixed height. Must update the size to
-             * be able to take scrollbars into account (layout gets narrower
-             * space if it is higher than the window) -> only vertical scrollbar
-             */
-            client.runDescendentsLayout(getWidget());
-        }
-
-        /*
-         * No explicit width is set and the layout does not have relative width
-         * so fix the size according to the layout.
-         */
-        if (getWidget().dynamicWidth && !getWidget().layoutRelativeWidth) {
-            getWidget().setNaturalWidth();
-        }
-
-        if (getWidget().dynamicHeight && getWidget().layoutRelativeHeight) {
-            // Prevent resizing until height has been fixed
-            getWidget().resizable = false;
-        }
 
         // we may have actions and notifications
         if (uidl.getChildCount() > 1) {
@@ -206,53 +177,24 @@ public class WindowConnector extends AbstractComponentContainerConnector
                 .getIntVariable("scrollLeft"));
 
         // Center this window on screen if requested
-        // This has to be here because we might not know the content size before
+        // This had to be here because we might not know the content size before
         // everything is painted into the window
         if (uidl.getBooleanAttribute("center")) {
             // mark as centered - this is unset on move/resize
             getWidget().centered = true;
-            getWidget().center();
         } else {
             // don't try to center the window anymore
             getWidget().centered = false;
         }
-        getWidget().updateShadowSizeAndPosition();
         getWidget().setVisible(true);
 
-        boolean sizeReduced = false;
         // ensure window is not larger than browser window
         if (getWidget().getOffsetWidth() > Window.getClientWidth()) {
             getWidget().setWidth(Window.getClientWidth() + "px");
-            sizeReduced = true;
         }
         if (getWidget().getOffsetHeight() > Window.getClientHeight()) {
             getWidget().setHeight(Window.getClientHeight() + "px");
-            sizeReduced = true;
         }
-
-        if (getWidget().dynamicHeight && getWidget().layoutRelativeHeight) {
-            /*
-             * Window height is undefined, layout is 100% high so the layout
-             * should define the initial window height but on resize the layout
-             * should be as high as the window. We fix the height to deal with
-             * this.
-             */
-
-            int h = getWidget().contents.getOffsetHeight()
-                    + getWidget().getExtraHeight();
-            int w = getWidget().getElement().getOffsetWidth();
-
-            client.updateVariable(getId(), "height", h, false);
-            client.updateVariable(getId(), "width", w, true);
-        }
-
-        if (sizeReduced) {
-            // If we changed the size we need to update the size of the child
-            // component if it is relative (#3407)
-            client.runDescendentsLayout(getWidget());
-        }
-
-        Util.runWebkitOverflowAutoFix(getWidget().contentPanel.getElement());
 
         client.getView().getWidget().scrollIntoView(uidl);
 
@@ -289,15 +231,29 @@ public class WindowConnector extends AbstractComponentContainerConnector
     }
 
     public void layout() {
-        getWidget().requestLayout();
+        LayoutManager lm = getLayoutManager();
+        VWindow window = getWidget();
+        Element contentElement = window.contentPanel.getElement();
+        if (!window.layout.isUndefinedWidth()
+                && lm.getOuterWidth(contentElement) < VWindow.MIN_CONTENT_AREA_WIDTH) {
+            // Use minimum width if less than a certain size
+            window.setWidth(VWindow.MIN_CONTENT_AREA_WIDTH + "px");
+        }
+
+        if (!window.layout.isUndefinedHeight()
+                && lm.getOuterHeight(contentElement) < VWindow.MIN_CONTENT_AREA_HEIGHT) {
+            // Use minimum height if less than a certain size
+            window.setHeight(VWindow.MIN_CONTENT_AREA_HEIGHT + "px");
+        }
+
     }
 
     public void postLayout() {
         VWindow window = getWidget();
         if (window.centered) {
             window.center();
-            window.updateShadowSizeAndPosition();
         }
+        window.updateShadowSizeAndPosition();
     }
 
 }
