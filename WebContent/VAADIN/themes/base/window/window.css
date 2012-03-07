@@ -25,15 +25,6 @@ div.v-window-header {
 .v-window-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
 }
-/* Partial fix for bug #1106 */
-/* Target Firefox 2 (somehow this will force almost all window borders on top of a Flash object) */
-.v-window-contents, x:-moz-any-link {
-	overflow: hidden;
-}
-/* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
-.v-window-contents, x:-moz-any-link, x:default {
-	overflow: visible;
-}
 .v-window-contents > div {
 	outline: none;
 }
