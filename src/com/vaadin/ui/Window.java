@@ -222,8 +222,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
                 && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
                         .get("height") != getHeight())) {
             sizeHasChanged = true;
-            System.out.println("Got height from server: "
-                    + variables.get("height"));
         }
         if (variables.containsKey("width")
                 && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
