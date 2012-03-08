@@ -38,8 +38,10 @@ public interface Connector {
      * 
      * @param state
      *            The new state
-     * 
+     * @deprecated This should be removed. Framework should update what is
+     *             returned by getState() instead of setting a new state object.
      */
+    @Deprecated
     public void setState(SharedState state);
 
     /**
@@ -59,20 +61,22 @@ public interface Connector {
     public ApplicationConnection getConnection();
 
     /**
-     * Tests whether the component is enabled or not. A user can not interact
-     * with disabled components. Disabled components are rendered in a style
-     * that indicates the status, usually in gray color. Children of a disabled
-     * component are also disabled.
+     * Tests whether the connector is enabled or not. Disabled connectors will
+     * ignore all attempts at communications. Received messages will be
+     * discarded. This method must check that the connector is enabled in
+     * context, that is if it's parent is disabled, this method must return
+     * false.
      * 
-     * @return true if the component is enabled, false otherwise
+     * @return true if the connector is enabled, false otherwise
      */
-    // public boolean isEnabled();
+    public boolean isEnabled();
 
     /**
      * 
      * Called once by the framework to initialize the connector.
      * 
-     * Note that the shared state is not yet available at this point.
+     * Note that the shared state is not yet available at this point nor any
+     * hierarchy information.
      */
     public void doInit(String connectorId, ApplicationConnection connection);
 
