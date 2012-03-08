@@ -3,18 +3,18 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
-import com.google.gwt.user.client.ui.HasOneWidget;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.Util;
 
 public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector {
+
+    Collection<ComponentConnector> children;
 
     /**
      * Default constructor
@@ -22,39 +22,42 @@ public abstract class AbstractComponentContainerConnector extends
     public AbstractComponentContainerConnector() {
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ComponentContainerConnector#getChildren()
+     */
     public Collection<ComponentConnector> getChildren() {
-        Collection<ComponentConnector> children = new ArrayList<ComponentConnector>();
-
-        addDescendantPaintables(getWidget(), children,
-                ConnectorMap.get(getConnection()));
+        if (children == null) {
+            return new LinkedList<ComponentConnector>();
+        }
 
         return children;
     }
 
-    private static void addDescendantPaintables(Widget widget,
-            Collection<ComponentConnector> paintables, ConnectorMap paintableMap) {
-        // FIXME: Store hierarchy instead of doing lookup every time
-
-        if (widget instanceof HasWidgets) {
-            for (Widget child : (HasWidgets) widget) {
-                addIfPaintable(child, paintables, paintableMap);
-            }
-        } else if (widget instanceof HasOneWidget) {
-            Widget child = ((HasOneWidget) widget).getWidget();
-            addIfPaintable(child, paintables, paintableMap);
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ComponentContainerConnector#setChildren
+     * (java.util.Collection)
+     */
+    public void setChildren(Collection<ComponentConnector> children) {
+        this.children = children;
     }
 
-    private static void addIfPaintable(Widget widget,
-            Collection<ComponentConnector> paintables, ConnectorMap paintableMap) {
-        ComponentConnector paintable = paintableMap.getConnector(widget);
-        if (paintable != null) {
-            // If widget is a paintable, add it to the collection
-            paintables.add(paintable);
-        } else {
-            // Else keep looking for paintables inside the widget
-            addDescendantPaintables(widget, paintables, paintableMap);
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ComponentContainerConnector#
+     * connectorHierarchyChanged
+     * (com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent)
+     */
+    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
+        //TODO Remove debug info
+        System.out.println("Hierarchy changed for " + Util.getSimpleName(this));
+        System.out.println("* Old children: " + event.getOldChildren());
+        System.out.println("* New children: " + getChildren());
     }
-
 }

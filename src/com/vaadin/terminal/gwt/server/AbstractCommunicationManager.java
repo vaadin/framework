@@ -26,6 +26,7 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +68,8 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 
 /**
@@ -806,8 +809,11 @@ public abstract class AbstractCommunicationManager implements
                     windowCache);
         }
 
+        // TODO These seem unnecessary and could be removed/replaced by looping
+        // through paintQueue without removing paintables from it
         LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
         LinkedList<Paintable> rpcPendingQueue = new LinkedList<Paintable>();
+        LinkedList<Paintable> hierarchyPendingQueue = new LinkedList<Paintable>();
 
         if (paintables != null) {
 
@@ -819,6 +825,8 @@ public abstract class AbstractCommunicationManager implements
                 final Paintable p = paintQueue.removeFirst();
                 // for now, all painted components may need a state refresh
                 stateQueue.push(p);
+                // also a hierarchy update
+                hierarchyPendingQueue.push(p);
                 // ... and RPC calls to be sent
                 rpcPendingQueue.push(p);
 
@@ -870,7 +878,7 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print("], "); // close changes
 
         if (!stateQueue.isEmpty()) {
-            // paint shared state
+            // send shared state to client
 
             // for now, send the complete state of all modified and new
             // components
@@ -902,6 +910,45 @@ public abstract class AbstractCommunicationManager implements
             outWriter.print("\"state\":");
             outWriter.append(sharedStates.toString());
             outWriter.print(", "); // close states
+        }
+        if (!hierarchyPendingQueue.isEmpty()) {
+            // Send update hierarchy information to the client.
+
+            // This could be optimized aswell to send only info if hierarchy has
+            // actually changed. Much like with the shared state. Note though
+            // that an empty hierarchy is information aswell (e.g. change from 1
+            // child to 0 children)
+
+            outWriter.print("\"hierarchy\":");
+
+            JSONObject hierarchyInfo = new JSONObject();
+            for (Paintable p : hierarchyPendingQueue) {
+                if (p instanceof ComponentContainer) {
+                    ComponentContainer cc = (ComponentContainer) p;
+                    String connectorId = paintableIdMap.get(cc);
+                    JSONArray children = new JSONArray();
+
+                    Iterator<Component> iterator = getChildComponentIterator(cc);
+                    while (iterator.hasNext()) {
+                        Component child = iterator.next();
+                        if (child.getState().isVisible()) {
+                            String childConnectorId = paintableIdMap.get(child);
+                            children.put(childConnectorId);
+                        }
+                    }
+                    try {
+                        hierarchyInfo.put(connectorId, children);
+                    } catch (JSONException e) {
+                        throw new PaintException(
+                                "Failed to send hierarchy information about "
+                                        + connectorId + " to the client: "
+                                        + e.getMessage());
+                    }
+                }
+            }
+            outWriter.append(hierarchyInfo.toString());
+            outWriter.print(", "); // close states
+
         }
 
         // send server to client RPC calls for components in the root, in call
@@ -1091,6 +1138,34 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+    }
+
+    private static class NullIterator<E> implements Iterator<E> {
+
+        public boolean hasNext() {
+            return false;
+        }
+
+        public E next() {
+            return null;
+        }
+
+        public void remove() {
+        }
+
+    }
+
+    private Iterator<Component> getChildComponentIterator(ComponentContainer cc) {
+        if (cc instanceof Panel) {
+            // This is so wrong.. (#2924)
+            if (((Panel) cc).getContent() == null) {
+                return new NullIterator<Component>();
+            } else {
+                return Collections.singleton(
+                        (Component) ((Panel) cc).getContent()).iterator();
+            }
+        }
+        return cc.getComponentIterator();
     }
 
     /**
@@ -2197,6 +2272,8 @@ public abstract class AbstractCommunicationManager implements
         writeUidlResponse(true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
+        System.out.println("Initial UIDL:");
+        System.out.println(initialUIDL);
         return initialUIDL;
     }
 

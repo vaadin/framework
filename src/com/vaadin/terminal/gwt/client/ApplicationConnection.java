@@ -5,10 +5,13 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -996,121 +999,30 @@ public class ApplicationConnection {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
-                // three phases/loops:
-                // - changes: create paintables (if necessary)
-                // - state: set shared states
-                // - changes: call updateFromUIDL() for each paintable
-
-                // Process changes
-                JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
-
-                ArrayList<ComponentConnector> updatedComponentConnectors = new ArrayList<ComponentConnector>();
                 componentCaptionSizeChanges.clear();
 
                 Duration updateDuration = new Duration();
 
-                int length = changes.length();
+                // Ensure that all connectors that we are about to update exist
+                createConnectorsIfNeeded(json);
 
-                VConsole.log(" * Creating connectors (if needed)");
-                // create paintables if necessary
-                for (int i = 0; i < length; i++) {
-                    try {
-                        final UIDL change = changes.get(i).cast();
-                        final UIDL uidl = change.getChildUIDL(0);
-                        Connector paintable = connectorMap.getConnector(uidl
-                                .getId());
-                        if (null == paintable
-                                && !uidl.getTag().equals(
-                                        configuration.getEncodedWindowTag())) {
-                            // create, initialize and register the paintable
-                            getConnector(uidl.getId(), uidl.getTag());
-                        }
-                    } catch (final Throwable e) {
-                        VConsole.error(e);
-                    }
-                }
+                // Update states, do not fire events
+                updateConnectorState(json);
 
-                VConsole.log(" * Updating connector states");
-                // set states for all paintables mentioned in "state"
-                ValueMap states = json.getValueMap("state");
-                JsArrayString keyArray = states.getKeyArray();
-                for (int i = 0; i < keyArray.length(); i++) {
-                    try {
-                        String connectorId = keyArray.get(i);
-                        Connector paintable = connectorMap
-                                .getConnector(connectorId);
-                        if (null != paintable) {
+                // Update hierarchy, do not fire events
+                Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
 
-                            JSONArray stateDataAndType = new JSONArray(
-                                    states.getJavaScriptObject(connectorId));
+                // Fire state change events (TODO)
+                VConsole.log(" * Sending state change events");
 
-                            Object state = JsonDecoder.convertValue(
-                                    stateDataAndType, connectorMap);
+                // Fire hierarchy change events
+                sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
 
-                            paintable.setState((SharedState) state);
-                        }
-                    } catch (final Throwable e) {
-                        VConsole.error(e);
-                    }
-                }
+                // Update of legacy (UIDL) style connectors
+                updateVaadin6StyleConnectors(json);
 
-                VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
-                // update paintables
-                for (int i = 0; i < length; i++) {
-                    try {
-                        final UIDL change = changes.get(i).cast();
-                        final UIDL uidl = change.getChildUIDL(0);
-                        String connectorId = uidl.getId();
-
-                        if (!connectorMap.hasConnector(connectorId)
-                                && uidl.getTag().equals(
-                                        configuration.getEncodedWindowTag())) {
-                            // First RootConnector update. Up until this
-                            // point the connectorId for RootConnector has
-                            // not been known
-                            connectorMap.registerConnector(connectorId, view);
-                            view.doInit(connectorId, ApplicationConnection.this);
-                        }
-
-                        final ComponentConnector paintable = (ComponentConnector) connectorMap
-                                .getConnector(connectorId);
-                        if (paintable != null) {
-                            paintable.updateFromUIDL(uidl,
-                                    ApplicationConnection.this);
-                            updatedComponentConnectors.add(paintable);
-                        } else {
-                            VConsole.error("Received update for "
-                                    + uidl.getTag()
-                                    + ", but there is no such paintable ("
-                                    + connectorId + ") rendered.");
-
-                        }
-
-                    } catch (final Throwable e) {
-                        VConsole.error(e);
-                    }
-                }
-
-                if (json.containsKey("rpc")) {
-                    VConsole.log(" * Performing server to client RPC calls");
-
-                    JSONArray rpcCalls = new JSONArray(
-                            json.getJavaScriptObject("rpc"));
-
-                    int rpcLength = rpcCalls.size();
-                    for (int i = 0; i < rpcLength; i++) {
-                        try {
-                            JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
-                            MethodInvocation invocation = parseMethodInvocation(rpcCall);
-                            VConsole.log("Server to client RPC call: "
-                                    + invocation);
-                            rpcManager.applyInvocation(invocation,
-                                    getConnectorMap());
-                        } catch (final Throwable e) {
-                            VConsole.error(e);
-                        }
-                    }
-                }
+                // Handle any RPC invocations done on the server side
+                handleRpcInvocations(json);
 
                 if (json.containsKey("dd")) {
                     // response contains data for drag and drop service
@@ -1185,6 +1097,211 @@ public class ApplicationConnection {
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
                 endRequest();
+
+            }
+
+            private void createConnectorsIfNeeded(ValueMap json) {
+                VConsole.log(" * Creating connectors (if needed)");
+
+                JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
+                // FIXME: This should be based on shared state, not the old
+                // "changes"
+                int length = changes.length();
+                for (int i = 0; i < length; i++) {
+                    try {
+                        final UIDL change = changes.get(i).cast();
+                        final UIDL uidl = change.getChildUIDL(0);
+                        String connectorId = uidl.getId();
+                        Connector connector = connectorMap
+                                .getConnector(connectorId);
+                        if (connector != null) {
+                            continue;
+                        }
+
+                        // Connector does not exist so we must create it
+                        if (!uidl.getTag().equals(
+                                configuration.getEncodedWindowTag())) {
+                            // create, initialize and register the paintable
+                            getConnector(uidl.getId(), uidl.getTag());
+                        } else {
+                            // First RootConnector update. Before this the
+                            // RootConnector has been created but not
+                            // initialized as the connector id has not been
+                            // known
+                            connectorMap.registerConnector(connectorId, view);
+                            view.doInit(connectorId, ApplicationConnection.this);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+            }
+
+            private void updateVaadin6StyleConnectors(ValueMap json) {
+                JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
+                int length = changes.length();
+
+                VConsole.log(" * Passing UIDL to Vaadin 6 style connectors");
+                // update paintables
+                for (int i = 0; i < length; i++) {
+                    try {
+                        final UIDL change = changes.get(i).cast();
+                        final UIDL uidl = change.getChildUIDL(0);
+                        String connectorId = uidl.getId();
+
+                        final ComponentConnector paintable = (ComponentConnector) connectorMap
+                                .getConnector(connectorId);
+                        if (paintable != null) {
+                            paintable.updateFromUIDL(uidl,
+                                    ApplicationConnection.this);
+                        } else {
+                            VConsole.error("Received update for "
+                                    + uidl.getTag()
+                                    + ", but there is no such paintable ("
+                                    + connectorId + ") rendered.");
+
+                        }
+
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+            }
+
+            private void sendHierarchyChangeEvents(
+                    Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents) {
+                if (pendingHierarchyChangeEvents.isEmpty()) {
+                    return;
+                }
+
+                VConsole.log(" * Sending hierarchy change events");
+                for (ConnectorHierarchyChangedEvent event : pendingHierarchyChangeEvents) {
+                    event.getParent().connectorHierarchyChanged(event);
+                }
+
+            }
+
+            private void updateConnectorState(ValueMap json) {
+                VConsole.log(" * Updating connector states");
+                // set states for all paintables mentioned in "state"
+                ValueMap states = json.getValueMap("state");
+                JsArrayString keyArray = states.getKeyArray();
+                for (int i = 0; i < keyArray.length(); i++) {
+                    try {
+                        String connectorId = keyArray.get(i);
+                        Connector paintable = connectorMap
+                                .getConnector(connectorId);
+                        if (null != paintable) {
+
+                            JSONArray stateDataAndType = new JSONArray(
+                                    states.getJavaScriptObject(connectorId));
+
+                            Object state = JsonDecoder.convertValue(
+                                    stateDataAndType, connectorMap);
+
+                            paintable.setState((SharedState) state);
+                        }
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+            }
+
+            /**
+             * Updates the connector hierarchy and returns a list of events that
+             * should be fired after update of the hierarchy and the state is
+             * done.
+             * 
+             * @param json
+             *            The JSON containing the hierarchy information
+             * @return A collection of events that should be fired when update
+             *         of hierarchy and state is complete
+             */
+            private Collection<ConnectorHierarchyChangedEvent> updateConnectorHierarchy(
+                    ValueMap json) {
+                List<ConnectorHierarchyChangedEvent> events = new LinkedList<ConnectorHierarchyChangedEvent>();
+
+                VConsole.log(" * Updating connector hierarchy");
+                ValueMap hierarchies = json.getValueMap("hierarchy");
+                JsArrayString hierarchyKeys = hierarchies.getKeyArray();
+                for (int i = 0; i < hierarchyKeys.length(); i++) {
+                    try {
+                        String connectorId = hierarchyKeys.get(i);
+                        Connector connector = connectorMap
+                                .getConnector(connectorId);
+                        if (!(connector instanceof ComponentContainerConnector)) {
+                            VConsole.error("Retrieved a hierarchy update for a connector ("
+                                    + connectorId
+                                    + ") that is not a ComponentContainerConnector");
+                            continue;
+                        }
+                        ComponentContainerConnector ccc = (ComponentContainerConnector) connector;
+
+                        JsArrayString childConnectorIds = hierarchies
+                                .getJSStringArray(connectorId);
+                        int childConnectorSize = childConnectorIds.length();
+
+                        List<Connector> newChildren = new ArrayList<Connector>();
+                        for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
+                            String childConnectorId = childConnectorIds
+                                    .get(connectorIndex);
+                            ComponentConnector childConnector = (ComponentConnector) connectorMap
+                                    .getConnector(childConnectorId);
+                            newChildren.add(childConnector);
+                            if (childConnector.getParent() != ccc) {
+                                // Avoid extra calls to setParent
+                                childConnector.setParent(ccc);
+                            }
+                        }
+
+                        // TODO This check should be done on the server side in
+                        // the future so the hierarchy update is only sent when
+                        // something actually has changed
+                        Collection<ComponentConnector> oldChildren = ccc
+                                .getChildren();
+                        boolean actuallyChanged = !Util.collectionsEquals(
+                                oldChildren, newChildren);
+
+                        if (!actuallyChanged) {
+                            continue;
+                        }
+
+                        // Fire change event if the hierarchy has changed
+                        ConnectorHierarchyChangedEvent event = GWT
+                                .create(ConnectorHierarchyChangedEvent.class);
+                        event.setOldChildren(oldChildren);
+                        event.setParent(ccc);
+                        ccc.setChildren((Collection) newChildren);
+                        events.add(event);
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
+                }
+                return events;
+
+            }
+
+            private void handleRpcInvocations(ValueMap json) {
+                if (json.containsKey("rpc")) {
+                    VConsole.log(" * Performing server to client RPC calls");
+
+                    JSONArray rpcCalls = new JSONArray(
+                            json.getJavaScriptObject("rpc"));
+
+                    int rpcLength = rpcCalls.size();
+                    for (int i = 0; i < rpcLength; i++) {
+                        try {
+                            JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
+                            MethodInvocation invocation = parseMethodInvocation(rpcCall);
+                            VConsole.log("Server to client RPC call: "
+                                    + invocation);
+                            rpcManager.applyInvocation(invocation,
+                                    getConnectorMap());
+                        } catch (final Throwable e) {
+                            VConsole.error(e);
+                        }
+                    }
+                }
 
             }
 

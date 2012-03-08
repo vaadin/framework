@@ -24,6 +24,8 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
 
+    private ComponentContainerConnector parent;
+
     // Generic UIDL parameter names, to be moved to shared state.
     // Attributes are here mainly if they apply to all paintable widgets or
     // affect captions - otherwise, they are in the relevant subclasses.
@@ -108,23 +110,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     protected ComponentState createState() {
         return GWT.create(ComponentState.class);
-    }
-
-    public ComponentContainerConnector getParent() {
-        // FIXME: Hierarchy should be set by framework instead of looked up here
-        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-
-        Widget w = getWidget();
-        while (true) {
-            w = w.getParent();
-            if (w == null) {
-                return null;
-            }
-            if (paintableMap.isConnector(w)) {
-                return (ComponentContainerConnector) paintableMap
-                        .getConnector(w);
-            }
-        }
     }
 
     protected static boolean isRealUpdate(UIDL uidl) {
@@ -438,4 +423,25 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public LayoutManager getLayoutManager() {
         return LayoutManager.get(getConnection());
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Connector#getParent()
+     */
+    public ComponentContainerConnector getParent() {
+        return parent;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.Connector#setParent(com.vaadin.terminal
+     * .gwt.client.ComponentContainerConnector)
+     */
+    public void setParent(ComponentContainerConnector parent) {
+        this.parent = parent;
+    }
+
 }

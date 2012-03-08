@@ -17,6 +17,7 @@ import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.gwt.client.ComponentState;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -683,6 +684,18 @@ public interface Component extends Paintable, VariableOwner, Sizeable,
      *         attached to an application.
      */
     public Locale getLocale();
+
+    /**
+     * Returns the current shared state bean for the component. The state (or
+     * changes to it) is communicated from the server to the client.
+     * 
+     * Subclasses can use a more specific return type for this method.
+     * 
+     * @return The state object for the component
+     * 
+     * @since 7.0
+     */
+    public ComponentState getState();
 
     /**
      * The child components of the component must call this method when they

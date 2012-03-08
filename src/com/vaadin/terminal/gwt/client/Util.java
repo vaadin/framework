@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
@@ -1093,5 +1095,40 @@ public class Util {
     public static boolean isTouchEventOrLeftMouseButton(Event event) {
         boolean touchEvent = Util.isTouchEvent(event);
         return touchEvent || event.getButton() == Event.BUTTON_LEFT;
+    }
+
+    /**
+     * Performs a shallow comparison of the collections.
+     * 
+     * @param collection1 The first collection
+     * @param collection2 The second collection
+     * @return true if the collections contain the same elements in the same
+     *         order, false otherwise
+     */
+    public static boolean collectionsEquals(Collection collection1, Collection collection2) {
+        if (collection1 == null) {
+            return collection2 == null;
+        }
+        if (collection2 == null) {
+            return false;
+        }
+        Iterator<Object> collection1Iterator = collection1.iterator();
+        Iterator<Object> collection2Iterator = collection2.iterator();
+
+        while (collection1Iterator.hasNext()) {
+            if (!collection2Iterator.hasNext()) {
+                return false;
+            }
+            Object collection1Object = collection1Iterator.next();
+            Object collection2Object = collection2Iterator.next();
+            if (collection1Object != collection2Object) {
+                return false;
+            }
+        }
+        if (collection2Iterator.hasNext()) {
+            return false;
+        }
+
+        return true;
     }
 }
