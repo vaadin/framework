@@ -1,20 +1,38 @@
 .v-window {
 	background: #fff;
 }
+.v-window-contents {
+	padding: 1.6em 0 10px;
+	margin: -1.6em 0 -10px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.v-window.v-has-width > div.popupContent,
+.v-window.v-has-width .v-window-wrap,
+.v-window.v-has-width .v-window-contents,
+.v-window.v-has-width .v-window-contents > div {
+	width: 100%;
+}
+
+.v-window.v-has-height > div.popupContent,
+.v-window.v-has-height .v-window-wrap,
+.v-window.v-has-height .v-window-contents,
+.v-window.v-has-height .v-window-contents > div {
+	height: 100%;
+}
+
 .v-window-outerheader {
-	padding: 0.3em 0;
-	height: 1em;
+	padding: 0.3em 1em;
+	height: 1.6em;
 	position: relative;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 
 .v-window-outerheader,
 .v-window-draggingCurtain {
  	cursor: move;	
-}
-.v-window-header.v-not-spanning {
-	position: absolute;
-	left: 0;
-	right: 0;
 }
 .v-window-header {
 	font-weight: bold;
@@ -25,7 +43,7 @@ div.v-window-header {
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
 	overflow: hidden;
-	padding: 0 1em;
+	padding: 0;
 }
 .v-window-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */

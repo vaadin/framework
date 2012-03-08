@@ -32,6 +32,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
@@ -47,13 +48,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * Minimum allowed height of a window. This refers to the content area, not
      * the outer borders.
      */
-    public static final int MIN_CONTENT_AREA_HEIGHT = 100;
+    private static final int MIN_CONTENT_AREA_HEIGHT = 100;
 
     /**
      * Minimum allowed width of a window. This refers to the content area, not
      * the outer borders.
      */
-    public static final int MIN_CONTENT_AREA_WIDTH = 150;
+    private static final int MIN_CONTENT_AREA_WIDTH = 150;
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -578,8 +579,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 resizing = true;
                 startX = Util.getTouchOrMouseClientX(event);
                 startY = Util.getTouchOrMouseClientY(event);
-                origW = contents.getOffsetWidth();
-                origH = contents.getOffsetHeight();
+                origW = getElement().getOffsetWidth();
+                origH = getElement().getOffsetHeight();
                 DOM.setCapture(getElement());
                 event.preventDefault();
                 break;
@@ -644,13 +645,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
 
         int w = Util.getTouchOrMouseClientX(event) - startX + origW;
-        if (w < MIN_CONTENT_AREA_WIDTH) {
-            w = MIN_CONTENT_AREA_WIDTH;
+        int minWidth = getMinWidth();
+        if (w < minWidth) {
+            w = minWidth;
         }
 
         int h = Util.getTouchOrMouseClientY(event) - startY + origH;
-        if (h < MIN_CONTENT_AREA_HEIGHT) {
-            h = MIN_CONTENT_AREA_HEIGHT;
+        int minHeight = getMinHeight();
+        if (h < minHeight) {
+            h = minHeight;
         }
 
         setWidth(w + "px");
@@ -658,10 +661,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         if (updateVariables) {
             // sending width back always as pixels, no need for unit
-            client.updateVariable(id, "width", getWidget().getOffsetWidth(),
-                    false);
-            client.updateVariable(id, "height", getWidget().getOffsetHeight(),
-                    immediate);
+            client.updateVariable(id, "width", w, false);
+            client.updateVariable(id, "height", h, immediate);
         }
 
         if (updateVariables || !resizeLazy) {
@@ -686,18 +687,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void setWidth(String width) {
-        super.setWidth(width);
-        // Let the width of the heading affect the total width if the window has
-        // undefined width
-        if (width == null || width.length() == 0) {
-            headerText.removeClassName("v-not-spanning");
-        } else {
-            headerText.addClassName("v-not-spanning");
-        }
+        // Override PopupPanel which sets the width to the contents
+        getElement().getStyle().setProperty("width", width);
+        // Update v-has-width in case undefined window is resized
+        setStyleName("v-has-width", width != null && width.length() > 0);
     }
 
-    int getExtraHeight() {
-        return header.getOffsetHeight() + footer.getOffsetHeight();
+    @Override
+    public void setHeight(String height) {
+        // Override PopupPanel which sets the height to the contents
+        getElement().getStyle().setProperty("height", height);
+        // Update v-has-height in case undefined window is resized
+        setStyleName("v-has-height", height != null && height.length() > 0);
     }
 
     private void onDragEvent(Event event) {
@@ -841,6 +842,26 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     public void focus() {
         contentPanel.focus();
+    }
+
+    public int getMinHeight() {
+        return MIN_CONTENT_AREA_HEIGHT + getDecorationHeight();
+    }
+
+    private int getDecorationHeight() {
+        LayoutManager layoutManager = layout.getLayoutManager();
+        return layoutManager.getOuterHeight(getElement())
+                - layoutManager.getInnerHeight(contentPanel.getElement());
+    }
+
+    public int getMinWidth() {
+        return MIN_CONTENT_AREA_WIDTH + getDecorationWidth();
+    }
+
+    private int getDecorationWidth() {
+        LayoutManager layoutManager = layout.getLayoutManager();
+        return layoutManager.getOuterWidth(getElement())
+                - layoutManager.getInnerWidth(contentPanel.getElement());
     }
 
 }

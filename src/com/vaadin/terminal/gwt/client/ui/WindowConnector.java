@@ -234,16 +234,20 @@ public class WindowConnector extends AbstractComponentContainerConnector
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
         Element contentElement = window.contentPanel.getElement();
-        if (!window.layout.isUndefinedWidth()
-                && lm.getOuterWidth(contentElement) < VWindow.MIN_CONTENT_AREA_WIDTH) {
+        boolean needsMinWidth = !isUndefinedWidth()
+                || window.layout.isRelativeWidth();
+        int minWidth = window.getMinWidth();
+        if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
             // Use minimum width if less than a certain size
-            window.setWidth(VWindow.MIN_CONTENT_AREA_WIDTH + "px");
+            window.setWidth(minWidth + "px");
         }
 
-        if (!window.layout.isUndefinedHeight()
-                && lm.getOuterHeight(contentElement) < VWindow.MIN_CONTENT_AREA_HEIGHT) {
+        boolean needsMinHeight = !isUndefinedHeight()
+                || window.layout.isRelativeHeight();
+        int minHeight = window.getMinHeight();
+        if (needsMinHeight && lm.getInnerHeight(contentElement) < minHeight) {
             // Use minimum height if less than a certain size
-            window.setHeight(VWindow.MIN_CONTENT_AREA_HEIGHT + "px");
+            window.setHeight(minHeight + "px");
         }
 
     }
