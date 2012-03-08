@@ -58,8 +58,6 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     private final Panel panel;
 
-    private boolean widthSet = false;
-
     /**
      * A ListBox which catches double clicks
      * 
@@ -225,32 +223,6 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             }
         }
 
-        int cols = -1;
-        if (getColumns() > 0) {
-            cols = getColumns();
-        } else if (!widthSet) {
-            cols = DEFAULT_COLUMN_COUNT;
-        }
-
-        if (cols >= 0) {
-            String colWidth = cols + "em";
-            String containerWidth = (2 * cols + 4) + "em";
-            // Caption wrapper width == optionsSelect + buttons +
-            // selectionsSelect
-            String captionWrapperWidth = (2 * cols + 4 - 0.5) + "em";
-
-            options.setWidth(colWidth);
-            if (optionsCaption != null) {
-                optionsCaption.setWidth(colWidth);
-            }
-            selections.setWidth(colWidth);
-            if (selectionsCaption != null) {
-                selectionsCaption.setWidth(colWidth);
-            }
-            buttons.setWidth("3.5em");
-            optionsContainer.setWidth(containerWidth);
-            captionWrapper.setWidth(captionWrapperWidth);
-        }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
             selections.setVisibleItemCount(getRows());
@@ -359,18 +331,12 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         }
     }
 
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        if ("".equals(height)) {
-            options.setHeight("");
-            selections.setHeight("");
-        } else {
-            setInternalHeights();
-        }
+    void clearInternalHeights() {
+        selections.setHeight("");
+        options.setHeight("");
     }
 
-    private void setInternalHeights() {
+    void setInternalHeights() {
         int captionHeight = 0;
         int totalHeight = getOffsetHeight();
 
@@ -386,18 +352,36 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     }
 
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        if (!"".equals(width) && width != null) {
-            setInternalWidths();
-            widthSet = true;
+    void clearInternalWidths() {
+        int cols = -1;
+        if (getColumns() > 0) {
+            cols = getColumns();
         } else {
-            widthSet = false;
+            cols = DEFAULT_COLUMN_COUNT;
+        }
+
+        if (cols >= 0) {
+            String colWidth = cols + "em";
+            String containerWidth = (2 * cols + 4) + "em";
+            // Caption wrapper width == optionsSelect + buttons +
+            // selectionsSelect
+            String captionWrapperWidth = (2 * cols + 4 - 0.5) + "em";
+
+            options.setWidth(colWidth);
+            if (optionsCaption != null) {
+                optionsCaption.setWidth(colWidth);
+            }
+            selections.setWidth(colWidth);
+            if (selectionsCaption != null) {
+                selectionsCaption.setWidth(colWidth);
+            }
+            buttons.setWidth("3.5em");
+            optionsContainer.setWidth(containerWidth);
+            captionWrapper.setWidth(captionWrapperWidth);
         }
     }
 
-    private void setInternalWidths() {
+    void setInternalWidths() {
         DOM.setStyleAttribute(getElement(), "position", "relative");
         int bordersAndPaddings = Util.measureHorizontalPaddingAndBorder(
                 buttons.getElement(), 0);

@@ -7,9 +7,11 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class TwinColSelectConnector extends OptionGroupBaseConnector {
+public class TwinColSelectConnector extends OptionGroupBaseConnector implements
+        DirectionalManagedLayout {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -30,5 +32,21 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector {
     @Override
     public VTwinColSelect getWidget() {
         return (VTwinColSelect) super.getWidget();
+    }
+
+    public void layoutVertically() {
+        if (isUndefinedHeight()) {
+            getWidget().clearInternalHeights();
+        } else {
+            getWidget().setInternalHeights();
+        }
+    }
+
+    public void layoutHorizontally() {
+        if (isUndefinedWidth()) {
+            getWidget().clearInternalWidths();
+        } else {
+            getWidget().setInternalWidths();
+        }
     }
 }
