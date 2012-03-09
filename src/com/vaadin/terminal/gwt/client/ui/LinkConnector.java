@@ -74,13 +74,13 @@ public class LinkConnector extends AbstractComponentConnector {
                     "none");
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
                 getWidget().anchor.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(getState().getIcon().getURL());
         }
 
     }

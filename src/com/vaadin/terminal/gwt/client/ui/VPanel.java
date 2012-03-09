@@ -133,11 +133,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         }
     }
 
-    void setIconUri(UIDL uidl, ApplicationConnection client) {
-        final String iconUri = uidl
-                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON) ? uidl
-                .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)
-                : null;
+    void setIconUri(String iconUri, ApplicationConnection client) {
         if (iconUri == null) {
             if (icon != null) {
                 DOM.removeChild(captionNode, icon.getElement());

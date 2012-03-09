@@ -43,12 +43,12 @@ public class FormConnector extends AbstractComponentContainerConnector
         } else {
             getWidget().caption.setInnerText("");
         }
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
                 getWidget().legend.insertFirst(getWidget().icon.getElement());
             }
-            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(getState().getIcon().getURL());
             legendEmpty = false;
         } else {
             if (getWidget().icon != null) {

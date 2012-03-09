@@ -33,7 +33,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     // constants, which may refer to these.
     // Not all references to the string literals have been converted to use
     // these!
-    public static final String ATTRIBUTE_ICON = "icon";
     public static final String ATTRIBUTE_REQUIRED = "required";
     public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";

@@ -65,7 +65,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     public static final String ATTRIBUTE_CHECKED = "checked";
     public static final String ATTRIBUTE_ITEM_DESCRIPTION = "description";
-    public static final String ATTRIBUTE_ITEM_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_ITEM_ICON = "icon";
     public static final String ATTRIBUTE_ITEM_DISABLED = "disabled";
     public static final String ATTRIBUTE_ITEM_STYLE = "style";
 

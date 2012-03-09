@@ -59,7 +59,7 @@ public class CheckBoxConnector extends AbstractComponentConnector {
             getWidget().setEnabled(false);
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
                 DOM.insertChild(getWidget().getElement(),
@@ -67,7 +67,7 @@ public class CheckBoxConnector extends AbstractComponentConnector {
                 getWidget().icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
                 getWidget().icon.sinkEvents(Event.ONCLICK);
             }
-            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(getState().getIcon().getURL());
         } else if (getWidget().icon != null) {
             // detach icon
             DOM.removeChild(getWidget().getElement(),

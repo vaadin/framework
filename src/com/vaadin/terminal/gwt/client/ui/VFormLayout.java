@@ -267,14 +267,13 @@ public class VFormLayout extends SimplePanel {
 
             boolean isEmpty = true;
 
-            if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)) {
+            if (state.getIcon() != null) {
                 if (icon == null) {
                     icon = new Icon(client);
 
                     DOM.insertChild(getElement(), icon.getElement(), 0);
                 }
-                icon.setUri(uidl
-                        .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
+                icon.setUri(state.getIcon().getURL());
                 isEmpty = false;
             } else {
                 if (icon != null) {

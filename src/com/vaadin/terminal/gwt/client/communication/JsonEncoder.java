@@ -12,6 +12,7 @@ import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 
@@ -52,9 +53,11 @@ public class JsonEncoder {
      *            value to convert
      * @param connectorMap
      *            mapper from connectors to connector IDs
+     * @param connection
      * @return JSON representation of the value
      */
-    public static JSONValue encode(Object value, ConnectorMap connectorMap) {
+    public static JSONValue encode(Object value, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
         if (null == value) {
             // TODO as undefined type?
             return combineTypeAndValue(VTYPE_UNDEFINED, JSONNull.getInstance());
@@ -76,7 +79,7 @@ public class JsonEncoder {
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < array.length; ++i) {
                 // TODO handle object graph loops?
-                jsonArray.set(i, encode(array[i], connectorMap));
+                jsonArray.set(i, encode(array[i], connectorMap, connection));
             }
             return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
@@ -85,7 +88,7 @@ public class JsonEncoder {
             for (String mapKey : map.keySet()) {
                 // TODO handle object graph loops?
                 Object mapValue = map.get(mapKey);
-                jsonMap.put(mapKey, encode(mapValue, connectorMap));
+                jsonMap.put(mapKey, encode(mapValue, connectorMap, connection));
             }
             return combineTypeAndValue(VTYPE_MAP, jsonMap);
         } else if (value instanceof Connector) {
@@ -105,7 +108,7 @@ public class JsonEncoder {
 
                 // TODO handle case with no serializer found
                 return combineTypeAndValue(type,
-                        serializer.serialize(value, connectorMap));
+                        serializer.serialize(value, connectorMap, connection));
             }
         }
     }

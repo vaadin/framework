@@ -59,7 +59,7 @@ public class VNotification extends VOverlay {
     public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
     public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
     public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
-    public static final String ATTRIBUTE_NOTIFICATION_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_NOTIFICATION_ICON = "icon";
     public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
     public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
 

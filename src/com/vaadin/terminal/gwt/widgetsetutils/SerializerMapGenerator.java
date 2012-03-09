@@ -19,13 +19,16 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
-import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 
 /**
  * GWT generator that creates a {@link SerializerMap} implementation (mapper
@@ -47,13 +50,17 @@ public class SerializerMapGenerator extends Generator {
             TypeOracle typeOracle = context.getTypeOracle();
             Set<JClassType> typesNeedingSerializers = findTypesNeedingSerializers(
                     typeOracle, logger);
-
+            Set<JClassType> typesWithExistingSerializers = findTypesWithExistingSerializers(
+                    typeOracle, logger);
+            Set<JClassType> serializerMappings = new HashSet<JClassType>();
+            serializerMappings.addAll(typesNeedingSerializers);
+            serializerMappings.addAll(typesWithExistingSerializers);
             // get classType and save instance variables
             JClassType classType = typeOracle.getType(typeName);
             packageName = classType.getPackage().getName();
             className = classType.getSimpleSourceName() + "Impl";
             // Generate class source code for SerializerMapImpl
-            generateSerializerMap(typesNeedingSerializers, logger, context);
+            generateSerializerMap(serializerMappings, logger, context);
 
             SerializerGenerator sg = new SerializerGenerator();
             for (JClassType type : typesNeedingSerializers) {
@@ -65,6 +72,27 @@ public class SerializerMapGenerator extends Generator {
         }
         // return the fully qualifed name of the class generated
         return packageName + "." + className;
+    }
+
+    private Set<JClassType> findTypesWithExistingSerializers(
+            TypeOracle typeOracle, TreeLogger logger) {
+        JClassType serializerInterface = typeOracle
+                .findType(JSONSerializer.class.getName());
+        Set<JClassType> types = new HashSet<JClassType>();
+        for (JClassType serializer : serializerInterface.getSubtypes()) {
+            JType[] deserializeParamTypes = new JType[] {
+                    typeOracle.findType(JSONObject.class.getName()),
+                    typeOracle.findType(ConnectorMap.class.getName()),
+                    typeOracle.findType(ApplicationConnection.class.getName()) };
+            JMethod deserializeMethod = serializer.findMethod("deserialize",
+                    deserializeParamTypes);
+            if (deserializeMethod == null) {
+                continue;
+            }
+
+            types.add(deserializeMethod.getReturnType().isClass());
+        }
+        return types;
     }
 
     /**

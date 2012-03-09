@@ -14,6 +14,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 
@@ -39,23 +40,26 @@ public class JsonDecoder {
      *            JSON array with two elements
      * @param idMapper
      *            mapper between connector ID and {@link Connector} objects
+     * @param connection
+     *            reference to the current ApplicationConnection
      * @return converted value (does not contain JSON types)
      */
-    public static Object convertValue(JSONArray jsonArray, ConnectorMap idMapper) {
+    public static Object convertValue(JSONArray jsonArray,
+            ConnectorMap idMapper, ApplicationConnection connection) {
         String type = ((JSONString) jsonArray.get(0)).stringValue();
-        return convertValue(type, jsonArray.get(1), idMapper);
+        return convertValue(type, jsonArray.get(1), idMapper, connection);
     }
 
     private static Object convertValue(String variableType, Object value,
-            ConnectorMap idMapper) {
+            ConnectorMap idMapper, ApplicationConnection connection) {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_UNDEFINED.equals(variableType)) {
             val = null;
         } else if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = convertArray((JSONArray) value, idMapper);
+            val = convertArray((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = convertMap((JSONObject) value, idMapper);
+            val = convertMap((JSONObject) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = convertStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
@@ -83,8 +87,8 @@ public class JsonDecoder {
             JSONSerializer serializer = serializerMap
                     .getSerializer(variableType);
             // TODO handle case with no serializer found
-            Object object = serializer
-                    .deserialize((JSONObject) value, idMapper);
+            Object object = serializer.deserialize((JSONObject) value,
+                    idMapper, connection);
             return object;
         }
 
@@ -92,12 +96,14 @@ public class JsonDecoder {
     }
 
     private static Map<String, Object> convertMap(JSONObject jsonMap,
-            ConnectorMap idMapper) {
+            ConnectorMap idMapper, ApplicationConnection connection) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
-            map.put(key, convertValue((JSONArray) jsonMap.get(key), idMapper));
+            map.put(key,
+                    convertValue((JSONArray) jsonMap.get(key), idMapper,
+                            connection));
         }
         return map;
     }
@@ -112,12 +118,12 @@ public class JsonDecoder {
     }
 
     private static Object[] convertArray(JSONArray jsonArray,
-            ConnectorMap idMapper) {
+            ConnectorMap idMapper, ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(convertValue(entryArray, idMapper));
+            tokens.add(convertValue(entryArray, idMapper, connection));
         }
         return tokens.toArray(new Object[tokens.size()]);
     }

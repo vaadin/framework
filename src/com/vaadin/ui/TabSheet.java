@@ -25,7 +25,6 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.TabsheetConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
@@ -408,7 +407,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             // VCaption.updateCaption(uidl)
             final Resource icon = tab.getIcon();
             if (icon != null) {
-                target.addAttribute(AbstractComponentConnector.ATTRIBUTE_ICON,
+                target.addAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON,
                         icon);
             }
             final String caption = tab.getCaption();

@@ -86,10 +86,11 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
-            getWidget()
-                    .setCaption(
-                            getState().getCaption(),
-                            uidl.getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
+            String iconURL = null;
+            if (getState().getIcon() != null) {
+                iconURL = getState().getIcon().getURL();
+            }
+            getWidget().setCaption(getState().getCaption(), iconURL);
         }
 
         getWidget().visibilityChangesDisabled = true;

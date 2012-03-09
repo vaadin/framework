@@ -16,10 +16,10 @@ public class TreeConnector extends AbstractComponentConnector {
 
     public static final String ATTRIBUTE_NODE_STYLE = "style";
     public static final String ATTRIBUTE_NODE_CAPTION = "caption";
-    public static final String ATTRIBUTE_NODE_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_NODE_ICON = "icon";
 
     public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
-    public static final String ATTRIBUTE_ACTION_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
+    public static final String ATTRIBUTE_ACTION_ICON = ATTRIBUTE_NODE_ICON;
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

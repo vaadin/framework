@@ -118,8 +118,7 @@ public class VCaption extends HTML {
         }
         setStyleName(style);
 
-        boolean hasIcon = uidl
-                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON);
+        boolean hasIcon = owner.getState().getIcon() != null;
         boolean showRequired = uidl
                 .getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED);
         boolean showError = uidl
@@ -138,8 +137,7 @@ public class VCaption extends HTML {
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(uidl
-                    .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
+            icon.setUri(owner.getState().getIcon().getURL());
 
         } else if (icon != null) {
             // Remove existing
@@ -257,7 +255,7 @@ public class VCaption extends HTML {
 
     @Deprecated
     public boolean updateCaptionWithoutOwner(UIDL uidl, String caption,
-            boolean disabled, boolean hasDescription) {
+            boolean disabled, boolean hasDescription, String iconURL) {
         // TODO temporary method, needed because some tabsheet and accordion
         // internal captions do not have an owner or shared state. Simplified to
         // only support those cases
@@ -281,8 +279,7 @@ public class VCaption extends HTML {
                 removeStyleDependentName("hasdescription");
             }
         }
-        boolean hasIcon = uidl
-                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON);
+        boolean hasIcon = iconURL != null;
         boolean showError = uidl
                 .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
                 && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
@@ -299,8 +296,7 @@ public class VCaption extends HTML {
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(uidl
-                    .getStringAttribute(AbstractComponentConnector.ATTRIBUTE_ICON));
+            icon.setUri(iconURL);
 
         } else if (icon != null) {
             // Remove existing
@@ -412,7 +408,7 @@ public class VCaption extends HTML {
         if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
             return true;
         }
-        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ICON)) {
+        if (state.getIcon() != null) {
             return true;
         }
         if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {

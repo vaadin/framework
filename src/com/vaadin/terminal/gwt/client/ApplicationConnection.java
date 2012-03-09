@@ -1197,7 +1197,8 @@ public class ApplicationConnection {
                                     states.getJavaScriptObject(connectorId));
 
                             Object state = JsonDecoder.convertValue(
-                                    stateDataAndType, connectorMap);
+                                    stateDataAndType, connectorMap,
+                                    ApplicationConnection.this);
 
                             paintable.setState((SharedState) state);
                         }
@@ -1317,7 +1318,7 @@ public class ApplicationConnection {
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
             parameters[j] = JsonDecoder.convertValue(
-                    (JSONArray) parametersJson.get(j), getConnectorMap());
+                    (JSONArray) parametersJson.get(j), getConnectorMap(), this);
         }
         return new MethodInvocation(connectorId, interfaceName, methodName,
                 parameters);
@@ -1438,7 +1439,8 @@ public class ApplicationConnection {
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
-                            invocation.getParameters()[i], getConnectorMap()));
+                            invocation.getParameters()[i], getConnectorMap(),
+                            this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);

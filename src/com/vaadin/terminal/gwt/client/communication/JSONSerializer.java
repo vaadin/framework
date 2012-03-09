@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.json.client.JSONObject;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.server.JsonCodec;
 
@@ -21,7 +22,7 @@ import com.vaadin.terminal.gwt.server.JsonCodec;
  * 
  * @since 7.0
  */
-public interface JSONSerializer {
+public interface JSONSerializer<T> {
 
     /**
      * Creates and deserializes an object received from the server. Must be
@@ -37,7 +38,8 @@ public interface JSONSerializer {
      *            references to paintables
      * @return A deserialized object
      */
-    Object deserialize(JSONObject jsonValue, ConnectorMap idMapper);
+    T deserialize(JSONObject jsonValue, ConnectorMap idMapper,
+            ApplicationConnection connection);
 
     /**
      * Serialize the given object into JSON. Must be compatible with
@@ -52,6 +54,7 @@ public interface JSONSerializer {
      *            references to paintables
      * @return A JSON serialized version of the object
      */
-    JSONObject serialize(Object value, ConnectorMap idMapper);
+    JSONObject serialize(T value, ConnectorMap idMapper,
+            ApplicationConnection connection);
 
 }

@@ -24,11 +24,12 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
-import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 
 /**
  * GWT generator for creating serializer classes for custom classes sent from
@@ -113,10 +114,12 @@ public class SerializerGenerator extends Generator {
 
         // Serializer
 
-        // public JSONValue serialize(Object value, ConnectorMap idMapper) {
+        // public JSONValue serialize(Object value, ConnectorMap idMapper,
+        // ApplicationConnection connection) {
         sourceWriter.println("public " + JSONObject.class.getName()
                 + " serialize(" + Object.class.getName() + " value, "
-                + ConnectorMap.class.getName() + " idMapper) {");
+                + ConnectorMap.class.getName() + " idMapper, "
+                + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
         // MouseEventDetails castedValue = (MouseEventDetails) value;
         sourceWriter.println(beanQualifiedSourceName + " castedValue = ("
@@ -136,10 +139,11 @@ public class SerializerGenerator extends Generator {
                         + ". Serialization will likely fail");
             }
             // json.put("button",
-            // JsonEncoder.encode(castedValue.getButton(), idMapper));
+            // JsonEncoder.encode(castedValue.getButton(), idMapper,
+            // connection));
             sourceWriter.println("json.put(\"" + fieldName + "\", "
                     + JsonEncoder.class.getName() + ".encode(castedValue."
-                    + getterName + "(), idMapper));");
+                    + getterName + "(), idMapper, connection));");
         }
         // return json;
         sourceWriter.println("return json;");
@@ -149,7 +153,8 @@ public class SerializerGenerator extends Generator {
         // Deserializer
         sourceWriter.println("public " + beanQualifiedSourceName
                 + " deserialize(" + JSONObject.class.getName() + " jsonValue, "
-                + ConnectorMap.class.getName() + " idMapper) {");
+                + ConnectorMap.class.getName() + " idMapper, "
+                + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
 
         // VButtonState state = GWT.create(VButtonState.class);
@@ -170,7 +175,7 @@ public class SerializerGenerator extends Generator {
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
             // state.setHeight((String)
-            // JsonDecoder.convertValue(jsonFieldValue,idMapper));
+            // JsonDecoder.convertValue(jsonFieldValue,idMapper, connection));
 
             String fieldType;
             JPrimitiveType primitiveType = setterParameterType.isPrimitive();
@@ -183,7 +188,7 @@ public class SerializerGenerator extends Generator {
 
             sourceWriter.println("state." + setterName + "((" + fieldType
                     + ") JsonDecoder.convertValue(" + jsonFieldName
-                    + ", idMapper));");
+                    + ", idMapper, connection));");
         }
 
         // return state;

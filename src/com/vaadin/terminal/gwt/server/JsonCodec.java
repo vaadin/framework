@@ -153,6 +153,12 @@ public class JsonCodec implements Serializable {
      */
     public static JSONArray encode(Object value, PaintableIdMapper idMapper)
             throws JSONException {
+        return encode(value, null, idMapper);
+    }
+
+    public static JSONArray encode(Object value, Class<?> valueType,
+            PaintableIdMapper idMapper) throws JSONException {
+
         if (null == value) {
             // TODO as undefined type?
             return combineTypeAndValue(JsonEncoder.VTYPE_UNDEFINED,
@@ -188,7 +194,11 @@ public class JsonCodec implements Serializable {
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return combineTypeAndValue(value.getClass().getCanonicalName(),
+            if (valueType == null) {
+                valueType = value.getClass();
+            }
+
+            return combineTypeAndValue(valueType.getCanonicalName(),
                     encodeObject(value, idMapper));
         }
     }
@@ -201,12 +211,13 @@ public class JsonCodec implements Serializable {
             for (PropertyDescriptor pd : Introspector.getBeanInfo(
                     value.getClass()).getPropertyDescriptors()) {
                 String fieldName = pd.getName();
+                Class<?> fieldType = pd.getPropertyType();
                 if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
                     continue;
                 }
                 Method getterMethod = pd.getReadMethod();
                 Object fieldValue = getterMethod.invoke(value, null);
-                jsonMap.put(fieldName, encode(fieldValue, idMapper));
+                jsonMap.put(fieldName, encode(fieldValue, fieldType, idMapper));
             }
         } catch (Exception e) {
             // TODO: Should exceptions be handled in a different way?

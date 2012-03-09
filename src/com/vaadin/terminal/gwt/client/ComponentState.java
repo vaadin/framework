@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.URLReference;
 import com.vaadin.ui.Component;
 
 /**
@@ -26,6 +27,7 @@ public class ComponentState extends SharedState {
     // string!
     private String caption = null;
     private boolean visible = true;
+    private URLReference icon = null;
 
     /**
      * Returns the component height as set by the server.
@@ -286,6 +288,14 @@ public class ComponentState extends SharedState {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public URLReference getIcon() {
+        return icon;
+    }
+
+    public void setIcon(URLReference icon) {
+        this.icon = icon;
     }
 
 }

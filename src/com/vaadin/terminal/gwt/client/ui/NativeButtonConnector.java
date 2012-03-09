@@ -18,8 +18,7 @@ public class NativeButtonConnector extends AbstractComponentConnector {
     public void init() {
         super.init();
 
-        ButtonServerRpc rpcProxy = GWT
-                .create(ButtonServerRpc.class);
+        ButtonServerRpc rpcProxy = GWT.create(ButtonServerRpc.class);
         getWidget().buttonRpcProxy = initRPC(rpcProxy);
     }
 
@@ -68,14 +67,14 @@ public class NativeButtonConnector extends AbstractComponentConnector {
             getWidget().errorIndicatorElement = null;
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_ICON)) {
+        if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
                 getWidget().getElement().insertBefore(
                         getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(uidl.getStringAttribute(ATTRIBUTE_ICON));
+            getWidget().icon.setUri(getState().getIcon().getURL());
         } else {
             if (getWidget().icon != null) {
                 getWidget().getElement().removeChild(

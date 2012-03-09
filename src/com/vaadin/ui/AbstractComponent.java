@@ -35,7 +35,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.communication.ResourceReference;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.RpcManager;
@@ -69,11 +69,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * this.
      */
     private Object applicationData;
-
-    /**
-     * Icon to be shown together with caption.
-     */
-    private Resource icon;
 
     /**
      * The container this component resides in.
@@ -341,7 +336,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * use the default documentation from implemented interface.
      */
     public Resource getIcon() {
-        return icon;
+        return ((ResourceReference) getState().getIcon()).getResource();
     }
 
     /**
@@ -353,7 +348,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            the icon to be shown with the component's caption.
      */
     public void setIcon(Resource icon) {
-        this.icon = icon;
+        if (icon == null) {
+            getState().setIcon(null);
+        } else {
+            getState().setIcon(new ResourceReference(icon));
+        }
         requestRepaint();
     }
 
@@ -736,15 +735,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
             // Only paint content of visible components.
             if (isVisible()) {
-                // width and height are only in shared state
-
-                // TODO probably can remove also icon once all the VCaption
-                // related code has been updated
-                if (getIcon() != null) {
-                    target.addAttribute(
-                            AbstractComponentConnector.ATTRIBUTE_ICON,
-                            getIcon());
-                }
 
                 if (eventIdentifiers != null) {
                     target.addAttribute("eventListeners",
