@@ -72,7 +72,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     Element header;
 
-    private Element footer;
+    Element footer;
 
     private Element resizeBox;
 

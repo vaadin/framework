@@ -16,10 +16,6 @@
 	background: black repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.v-window-contents {
-	padding: 37px 0 15px;
-	margin: -37px 0 -15px;
-}
 .v-window-header {
 	font-weight: bold;
 	font-size: 12px;

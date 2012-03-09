@@ -5,6 +5,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -45,6 +47,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         super.init();
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());
+        getLayoutManager().registerDependency(this, getWidget().header);
+        getLayoutManager().registerDependency(this, getWidget().footer);
     }
 
     @Override
@@ -250,6 +254,15 @@ public class WindowConnector extends AbstractComponentContainerConnector
             window.setHeight(minHeight + "px");
         }
 
+        Style contentStyle = window.contents.getStyle();
+
+        int headerHeight = lm.getOuterHeight(window.header);
+        contentStyle.setPaddingTop(headerHeight, Unit.PX);
+        contentStyle.setMarginTop(-headerHeight, Unit.PX);
+
+        int footerHeight = lm.getOuterHeight(window.footer);
+        contentStyle.setPaddingBottom(footerHeight, Unit.PX);
+        contentStyle.setMarginBottom(-footerHeight, Unit.PX);
     }
 
     public void postLayout() {

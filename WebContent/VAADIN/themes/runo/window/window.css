@@ -22,10 +22,6 @@
 	color: #f14c1a;
 	text-shadow: 0 1px 0 #fff;
 }
-.v-window-contents {
-	padding: 49px 0 8px;
-	margin: -49px 0 -8px;
-}
 .v-window-contents > div {
 	background: #fff;
 	border: 2px solid #babfc0;
