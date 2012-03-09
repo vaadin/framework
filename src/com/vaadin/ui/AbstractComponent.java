@@ -60,11 +60,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /* Private members */
 
     /**
-     * Style names.
-     */
-    private ArrayList<String> styles;
-
-    /**
      * Application specific data object. The component does not use or modify
      * this.
      */
@@ -206,8 +201,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public String getStyleName() {
         String s = "";
-        if (styles != null) {
-            for (final Iterator<String> it = styles.iterator(); it.hasNext();) {
+        if (getState().getStyles() != null) {
+            for (final Iterator<String> it = getState().getStyles().iterator(); it
+                    .hasNext();) {
                 s += it.next();
                 if (it.hasNext()) {
                     s += " ";
@@ -223,13 +219,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setStyleName(String style) {
         if (style == null || "".equals(style)) {
-            styles = null;
+            getState().setStyles(null);
             requestRepaint();
             return;
         }
-        if (styles == null) {
-            styles = new ArrayList<String>();
+        if (getState().getStyles() == null) {
+            getState().setStyles(new ArrayList<String>());
         }
+        List<String> styles = getState().getStyles();
         styles.clear();
         String[] styleParts = style.split(" +");
         for (String part : styleParts) {
@@ -244,9 +241,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (style == null || "".equals(style)) {
             return;
         }
-        if (styles == null) {
-            styles = new ArrayList<String>();
+        if (getState().getStyles() == null) {
+            getState().setStyles(new ArrayList<String>());
         }
+        List<String> styles = getState().getStyles();
         if (!styles.contains(style)) {
             styles.add(style);
             requestRepaint();
@@ -254,11 +252,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     public void removeStyleName(String style) {
-        if (styles != null) {
+        if (getState().getStyles() != null) {
             String[] styleParts = style.split(" +");
             for (String part : styleParts) {
                 if (part.length() > 0) {
-                    styles.remove(part);
+                    getState().getStyles().remove(part);
                 }
             }
             requestRepaint();
@@ -813,8 +811,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (null == sharedState) {
             sharedState = createState();
         }
-        // basic state: caption, size, enabled, ...
-
         // TODO This logic should be on the client side and the state should
         // simply be a data object with "width" and "height".
         if (getHeight() >= 0
@@ -832,12 +828,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         } else {
             sharedState.setWidth("");
         }
-
-        // TODO This should be an array in state and the logic for converting
-        // array -> class name should be on the client side
-        sharedState.setStyle(getStyleName());
-
-        // TODO icon also in shared state - how to convert Resource?
 
         return sharedState;
     }

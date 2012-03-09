@@ -30,8 +30,7 @@ public class SliderConnector extends AbstractFieldConnector {
 
         getWidget().vertical = uidl.hasAttribute("vertical");
 
-        // TODO should these style names be used?
-        String style = getState().getStyle();
+        // TODO should style names be used?
 
         if (getWidget().vertical) {
             getWidget().addStyleName(VSlider.CLASSNAME + "-vertical");

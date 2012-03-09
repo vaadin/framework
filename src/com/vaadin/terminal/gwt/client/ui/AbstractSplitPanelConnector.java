@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.LinkedList;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
@@ -79,9 +81,9 @@ public abstract class AbstractSplitPanelConnector extends
 
         clickEventHandler.handleEventHandlerRegistration(client);
         if (getState().hasStyles()) {
-            getWidget().componentStyleNames = getState().getStyle().split(" ");
+            getWidget().componentStyleNames = getState().getStyles();
         } else {
-            getWidget().componentStyleNames = new String[0];
+            getWidget().componentStyleNames = new LinkedList<String>();
         }
 
         getWidget().setLocked(uidl.getBooleanAttribute("locked"));

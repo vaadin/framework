@@ -82,11 +82,10 @@ public class PanelConnector extends AbstractComponentContainerConnector
             String contentClass = contentBaseClass;
             String decoClass = decoBaseClass;
             if (getState().hasStyles()) {
-                final String[] styles = getState().getStyle().split(" ");
-                for (int i = 0; i < styles.length; i++) {
-                    captionClass += " " + captionBaseClass + "-" + styles[i];
-                    contentClass += " " + contentBaseClass + "-" + styles[i];
-                    decoClass += " " + decoBaseClass + "-" + styles[i];
+                for (String style : getState().getStyles()) {
+                    captionClass += " " + captionBaseClass + "-" + style;
+                    contentClass += " " + contentBaseClass + "-" + style;
+                    decoClass += " " + decoBaseClass + "-" + style;
                 }
             }
             getWidget().captionNode.setClassName(captionClass);

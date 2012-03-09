@@ -57,10 +57,14 @@ public class RootConnector extends AbstractComponentContainerConnector
             getWidget().theme = newTheme;
         }
         // this also implicitly removes old styles
-        getWidget()
-                .setStyleName(
-                        getWidget().getStylePrimaryName() + " "
-                                + getState().getStyle());
+        String styles = "";
+        styles += getWidget().getStylePrimaryName() + " ";
+        if (getState().hasStyles()) {
+            for (String style : getState().getStyles()) {
+                styles += style + " ";
+            }
+        }
+        getWidget().setStyleName(styles.trim());
 
         clickEventHandler.handleEventHandlerRegistration(client);
 

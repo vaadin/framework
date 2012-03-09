@@ -122,7 +122,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                 // any item specific styles are set above in
                 // currentItem.updateFromUIDL(item, client)
                 if (getState().hasStyles()) {
-                    for (String style : getState().getStyle().split(" ")) {
+                    for (String style : getState().getStyles()) {
                         currentMenu.addStyleDependentName(style);
                     }
                 }

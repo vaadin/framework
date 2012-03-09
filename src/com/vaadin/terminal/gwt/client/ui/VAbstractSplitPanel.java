@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
@@ -66,7 +68,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean positionReversed = false;
 
-    String[] componentStyleNames;
+    List<String> componentStyleNames;
 
     private Element draggingCurtain;
 
@@ -603,13 +605,12 @@ public class VAbstractSplitPanel extends ComplexPanel {
             splitterStyle = CLASSNAME + splitterSuffix + "-locked";
             lockedSuffix = "-locked";
         }
-        for (int i = 0; i < componentStyleNames.length; i++) {
-            splitterStyle += " " + CLASSNAME + splitterSuffix + "-"
-                    + componentStyleNames[i] + lockedSuffix;
-            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-"
-                    + componentStyleNames[i];
+        for (String style : componentStyleNames) {
+            splitterStyle += " " + CLASSNAME + splitterSuffix + "-" + style
+                    + lockedSuffix;
+            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-" + style;
             secondStyle += " " + CLASSNAME + secondContainerSuffix + "-"
-                    + componentStyleNames[i];
+                    + style;
         }
         DOM.setElementProperty(splitter, "className", splitterStyle);
         DOM.setElementProperty(firstContainer, "className", firstStyle);

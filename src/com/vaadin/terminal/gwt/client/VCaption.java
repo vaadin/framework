@@ -108,9 +108,8 @@ public class VCaption extends HTML {
 
         String style = CLASSNAME;
         if (owner.getState().hasStyles()) {
-            final String[] styles = owner.getState().getStyle().split(" ");
-            for (int i = 0; i < styles.length; i++) {
-                style += " " + CLASSNAME + "-" + styles[i];
+            for (String customStyle : owner.getState().getStyles()) {
+                style += " " + CLASSNAME + "-" + customStyle;
             }
         }
         if (!owner.isEnabled()) {

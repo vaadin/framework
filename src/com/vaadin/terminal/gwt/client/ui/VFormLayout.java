@@ -56,8 +56,7 @@ public class VFormLayout extends SimplePanel {
     private String[] getStylesFromState(ComponentState state, boolean enabled) {
         List<String> styles = new ArrayList<String>();
         if (state.hasStyles()) {
-            String[] stylesnames = state.getStyle().split(" ");
-            for (String name : stylesnames) {
+            for (String name : state.getStyles()) {
                 styles.add(name);
             }
         }

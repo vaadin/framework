@@ -552,10 +552,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void updateStyleNames(UIDL uidl, ComponentState componentState) {
             setStyleName(CLASSNAME + "-suggestpopup");
-            final String[] styles = componentState.getStyle().split(" ");
-            for (int i = 0; i < styles.length; i++) {
-                if (!"".equals(styles[i])) {
-                    addStyleDependentName(styles[i]);
+            if (componentState.hasStyles()) {
+                for (String style : componentState.getStyles()) {
+                    if (!"".equals(style)) {
+                        addStyleDependentName(style);
+                    }
                 }
             }
         }

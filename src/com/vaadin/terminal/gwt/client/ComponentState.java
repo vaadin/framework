@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.List;
+
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.URLReference;
 import com.vaadin.ui.Component;
@@ -20,7 +22,6 @@ public class ComponentState extends SharedState {
     private String width = "";
     private boolean readOnly = false;
     private boolean immediate = false;
-    private String style = "";
     private boolean enabled = true;
     private String description = "";
     // Note: for the caption, there is a difference between null and an empty
@@ -28,6 +29,7 @@ public class ComponentState extends SharedState {
     private String caption = null;
     private boolean visible = true;
     private URLReference icon = null;
+    private List<String> styles = null;
 
     /**
      * Returns the component height as set by the server.
@@ -152,35 +154,12 @@ public class ComponentState extends SharedState {
     }
 
     /**
-     * Returns the component styles as set by the server, as a space separated
-     * string.
-     * 
-     * @return component styles as defined by the server, not null
-     */
-    public String getStyle() {
-        if (style == null) {
-            return "";
-        }
-        return style;
-    }
-
-    /**
-     * Sets the component styles as a space separated string.
-     * 
-     * @param style
-     *            component styles as a space separated string, not null
-     */
-    public void setStyle(String style) {
-        this.style = style;
-    }
-
-    /**
      * Returns true if the component has user-defined styles.
      * 
      * @return true if the component has user-defined styles
      */
     public boolean hasStyles() {
-        return !"".equals(getStyle());
+        return styles != null && !styles.isEmpty();
     }
 
     /**
@@ -296,6 +275,25 @@ public class ComponentState extends SharedState {
 
     public void setIcon(URLReference icon) {
         this.icon = icon;
+    }
+
+    /**
+     * Gets the style names for the component.
+     * 
+     * @return A List of style names or null if no styles have been set.
+     */
+    public List<String> getStyles() {
+        return styles;
+    }
+
+    /**
+     * Sets the style names for the component.
+     * 
+     * @param styles
+     *            A list containing style names
+     */
+    public void setStyles(List<String> styles) {
+        this.styles = styles;
     }
 
 }

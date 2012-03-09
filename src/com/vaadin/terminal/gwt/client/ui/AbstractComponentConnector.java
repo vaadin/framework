@@ -362,14 +362,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // add additional styles as css classes, prefixed with component default
         // stylename
         if (state.hasStyles()) {
-            final String[] styles = state.getStyle().split(" ");
-            for (int i = 0; i < styles.length; i++) {
+            for (String style : state.getStyles()) {
                 styleBuf.append(" ");
                 styleBuf.append(primaryStyleName);
                 styleBuf.append("-");
-                styleBuf.append(styles[i]);
+                styleBuf.append(style);
                 styleBuf.append(" ");
-                styleBuf.append(styles[i]);
+                styleBuf.append(style);
             }
         }
 

@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
@@ -713,21 +714,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
         if (state.hasStyles()) {
-            final String style = state.getStyle();
-            if (currentStyle != style) {
-                currentStyle = style;
-                final String[] styles = style.split(" ");
+            final List<String> styles = state.getStyles();
+            if (!currentStyle.equals(styles.toString())) {
+                currentStyle = styles.toString();
                 final String tabsBaseClass = TABS_CLASSNAME;
                 String tabsClass = tabsBaseClass;
                 final String contentBaseClass = CLASSNAME + "-content";
                 String contentClass = contentBaseClass;
                 final String decoBaseClass = CLASSNAME + "-deco";
                 String decoClass = decoBaseClass;
-                for (int i = 0; i < styles.length; i++) {
-                    tb.addStyleDependentName(styles[i]);
-                    tabsClass += " " + tabsBaseClass + "-" + styles[i];
-                    contentClass += " " + contentBaseClass + "-" + styles[i];
-                    decoClass += " " + decoBaseClass + "-" + styles[i];
+                for (String style : styles) {
+                    tb.addStyleDependentName(style);
+                    tabsClass += " " + tabsBaseClass + "-" + style;
+                    contentClass += " " + contentBaseClass + "-" + style;
+                    decoClass += " " + decoBaseClass + "-" + style;
                 }
                 DOM.setElementProperty(tabs, "className", tabsClass);
                 DOM.setElementProperty(contentNode, "className", contentClass);
