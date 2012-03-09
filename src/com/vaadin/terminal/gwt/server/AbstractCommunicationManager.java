@@ -1997,33 +1997,28 @@ public abstract class AbstractCommunicationManager implements
         String id = paintableIdMap.get(paintable);
         if (id == null) {
             // use testing identifier as id if set
-            id = paintable.getDebugId();
-            if (id == null) {
-                id = "PID" + Integer.toString(idSequence++);
+            String debugId = paintable.getDebugId();
+            if (debugId == null) {
+                id = "PID" + idSequence++;
             } else {
-                id = "PID_S" + id;
-            }
-            Paintable old = idPaintableMap.put(id, paintable);
-            if (old != null && old != paintable) {
-                /*
-                 * Two paintables have the same id. We still make sure the old
-                 * one is a component which is still attached to the
-                 * application. This is just a precaution and should not be
-                 * absolutely necessary.
-                 */
-
-                if (old instanceof Component
-                        && ((Component) old).getApplication() != null) {
-                    throw new IllegalStateException("Two paintables ("
-                            + paintable.getClass().getSimpleName() + ","
-                            + old.getClass().getSimpleName()
-                            + ") have been assigned the same id: "
-                            + paintable.getDebugId());
+                id = "PID_S" + debugId;
+                for (int seq = 0;; ++seq) {
+                    // In case of a duplicate debug id, uniquify the PID by
+                    // inserting a sequential integer. Try successive numbers
+                    // until finding a PID that is either not used at all or
+                    // used by a detached component. See #5109.
+                    Paintable old = idPaintableMap.get(id);
+                    if (old == null
+                            || (old instanceof Component && ((Component) old)
+                                    .getApplication() == null)) {
+                        break;
+                    }
+                    id = "PID_" + seq + "S" + debugId;
                 }
             }
+            idPaintableMap.put(id, paintable);
             paintableIdMap.put(paintable, id);
         }
-
         return id;
     }
 

@@ -436,7 +436,7 @@ public class ComponentLocator {
             } else if (part.equals("")) {
                 w = client.getView();
             } else if (w == null) {
-                // Must be static pid (PID_S*)
+                // Must be static pid (PID_*)
                 w = (Widget) client.getPaintable(part);
             } else if (part.startsWith("domChild[")) {
                 // The target widget has been found and the rest identifies the
@@ -515,7 +515,7 @@ public class ComponentLocator {
             return false;
         }
 
-        return pid.startsWith("PID_S");
+        return pid.startsWith("PID_");
     }
 
 }

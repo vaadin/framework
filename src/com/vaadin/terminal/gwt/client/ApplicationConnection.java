@@ -1830,9 +1830,13 @@ public class ApplicationConnection {
             }
         }
 
-        if (configuration.useDebugIdInDOM() && uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(component.getElement(), "id", uidl.getId()
-                    .substring(5));
+        String id = uidl.getId();
+        if (configuration.useDebugIdInDOM() && id.startsWith("PID_")) {
+            // PIDs with a debug id have form "PID_[seq]S[debugid]" where [seq]
+            // is either empty or a sequential integer used to uniquify
+            // different Paintables having the same debug id. See #5109.
+            DOM.setElementProperty(component.getElement(), "id",
+                    id.substring(id.indexOf('S') + 1));
         }
 
         if (!visible) {
