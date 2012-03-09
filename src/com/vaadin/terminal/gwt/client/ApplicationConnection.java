@@ -1196,7 +1196,7 @@ public class ApplicationConnection {
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(connectorId));
 
-                            Object state = JsonDecoder.convertValue(
+                            Object state = JsonDecoder.decodeValue(
                                     stateDataAndType, connectorMap,
                                     ApplicationConnection.this);
 
@@ -1317,7 +1317,7 @@ public class ApplicationConnection {
         JSONArray parametersJson = (JSONArray) rpcCall.get(3);
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
-            parameters[j] = JsonDecoder.convertValue(
+            parameters[j] = JsonDecoder.decodeValue(
                     (JSONArray) parametersJson.get(j), getConnectorMap(), this);
         }
         return new MethodInvocation(connectorId, interfaceName, methodName,

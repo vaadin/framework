@@ -12,7 +12,7 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
             ConnectorMap idMapper, ApplicationConnection connection) {
         URLReference reference = GWT.create(URLReference.class);
         JSONArray jsonURL = (JSONArray) jsonValue.get("URL");
-        String URL = (String) JsonDecoder.convertValue(jsonURL, idMapper,
+        String URL = (String) JsonDecoder.decodeValue(jsonURL, idMapper,
                 connection);
         reference.setURL(connection.translateVaadinUri(URL));
         return reference;

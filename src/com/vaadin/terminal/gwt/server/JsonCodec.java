@@ -45,6 +45,7 @@ public class JsonCodec implements Serializable {
         registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
         registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
         registerType(Map.class, JsonEncoder.VTYPE_MAP);
+        registerType(List.class, JsonEncoder.VTYPE_LIST);
     }
 
     private static void registerType(Class<?> type, String transportType) {
@@ -65,19 +66,21 @@ public class JsonCodec implements Serializable {
      */
     public static Object decode(JSONArray value, PaintableIdMapper idMapper)
             throws JSONException {
-        return convertVariableValue(value.getString(0), value.get(1), idMapper);
+        return decodeVariableValue(value.getString(0), value.get(1), idMapper);
     }
 
-    private static Object convertVariableValue(String variableType,
+    private static Object decodeVariableValue(String variableType,
             Object value, PaintableIdMapper idMapper) throws JSONException {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = convertArray((JSONArray) value, idMapper);
+            val = decodeArray((JSONArray) value, idMapper);
+        } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
+            val = decodeList((JSONArray) value, idMapper);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = convertMap((JSONObject) value, idMapper);
+            val = decodeMap((JSONObject) value, idMapper);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
-            val = convertStringArray((JSONArray) value);
+            val = decodeStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
             val = value;
         } else if (JsonEncoder.VTYPE_INTEGER.equals(variableType)) {
@@ -107,7 +110,7 @@ public class JsonCodec implements Serializable {
         return val;
     }
 
-    private static Object convertMap(JSONObject jsonMap,
+    private static Object decodeMap(JSONObject jsonMap,
             PaintableIdMapper idMapper) throws JSONException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keys();
@@ -118,7 +121,7 @@ public class JsonCodec implements Serializable {
         return map;
     }
 
-    private static String[] convertStringArray(JSONArray jsonArray)
+    private static String[] decodeStringArray(JSONArray jsonArray)
             throws JSONException {
         int length = jsonArray.length();
         List<String> tokens = new ArrayList<String>(length);
@@ -128,15 +131,21 @@ public class JsonCodec implements Serializable {
         return tokens.toArray(new String[tokens.size()]);
     }
 
-    private static Object convertArray(JSONArray jsonArray,
+    private static Object decodeArray(JSONArray jsonArray,
             PaintableIdMapper idMapper) throws JSONException {
-        List<Object> tokens = new ArrayList<Object>();
+        List list = decodeList(jsonArray, idMapper);
+        return list.toArray(new Object[list.size()]);
+    }
+
+    private static List decodeList(JSONArray jsonArray,
+            PaintableIdMapper idMapper) throws JSONException {
+        List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = jsonArray.getJSONArray(i);
-            tokens.add(decode(entryArray, idMapper));
+            list.add(decode(entryArray, idMapper));
         }
-        return tokens.toArray(new Object[tokens.size()]);
+        return list;
     }
 
     /**
@@ -176,6 +185,10 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
         } else if (value instanceof Number) {
             return combineTypeAndValue(getTransportType(value), value);
+        } else if (value instanceof List) {
+            List list = (List) value;
+            JSONArray jsonArray = encodeList(list, idMapper);
+            return combineTypeAndValue(JsonEncoder.VTYPE_LIST, jsonArray);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
             JSONArray jsonArray = encodeArrayContents(array, idMapper);
@@ -267,9 +280,19 @@ public class JsonCodec implements Serializable {
     private static JSONArray encodeArrayContents(Object[] array,
             PaintableIdMapper idMapper) throws JSONException {
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < array.length; ++i) {
+        for (Object o : array) {
             // TODO handle object graph loops?
-            jsonArray.put(encode(array[i], idMapper));
+            jsonArray.put(encode(o, idMapper));
+        }
+        return jsonArray;
+    }
+
+    private static JSONArray encodeList(List list, PaintableIdMapper idMapper)
+            throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+        for (Object o : list) {
+            // TODO handle object graph loops?
+            jsonArray.put(encode(o, idMapper));
         }
         return jsonArray;
     }

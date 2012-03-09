@@ -219,8 +219,14 @@ public class SerializerMapGenerator extends Generator {
                 continue;
             }
 
-            serializableTypes.add(setterType.isClass());
-            findSubTypesNeedingSerializers(type, serializableTypes);
+            JClassType setterTypeClass = setterType.isClass();
+            if (setterTypeClass != null) {
+                // setterTypeClass is null at least for List<String>. It is
+                // possible that we need to handle the cases somehow, for
+                // instance for List<MyObject>.
+                serializableTypes.add(setterTypeClass);
+                findSubTypesNeedingSerializers(type, serializableTypes);
+            }
         }
     }
 

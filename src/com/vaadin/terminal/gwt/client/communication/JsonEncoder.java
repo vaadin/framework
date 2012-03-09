@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.json.client.JSONArray;
@@ -39,8 +40,7 @@ public class JsonEncoder {
     public static final String VTYPE_ARRAY = "a";
     public static final String VTYPE_STRINGARRAY = "c";
     public static final String VTYPE_MAP = "m";
-    // TODO this will be replaced by the shared state class name
-    public static final String VTYPE_SHAREDSTATE = "t";
+    public static final String VTYPE_LIST = "L";
 
     // TODO is this needed?
     public static final String VTYPE_UNDEFINED = "u";
@@ -135,6 +135,8 @@ public class JsonEncoder {
             return VTYPE_DOUBLE;
         } else if (value instanceof Long) {
             return VTYPE_LONG;
+        } else if (value instanceof List) {
+            return VTYPE_LIST;
         } else if (value instanceof Enum) {
             return VTYPE_STRING; // transported as string representation
         } else if (value instanceof String[]) {

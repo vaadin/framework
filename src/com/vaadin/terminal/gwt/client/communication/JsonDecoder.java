@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
- * Client side decoder for converting shared state and other values from JSON
+ * Client side decoder for decodeing shared state and other values from JSON
  * received from the server.
  * 
  * Currently, basic data types as well as Map, String[] and Object[] are
@@ -33,8 +33,8 @@ public class JsonDecoder {
     static SerializerMap serializerMap = GWT.create(SerializerMap.class);
 
     /**
-     * Convert a JSON array with two elements (type and value) into a
-     * client-side type, recursively if necessary.
+     * Decode a JSON array with two elements (type and value) into a client-side
+     * type, recursively if necessary.
      * 
      * @param jsonArray
      *            JSON array with two elements
@@ -42,26 +42,28 @@ public class JsonDecoder {
      *            mapper between connector ID and {@link Connector} objects
      * @param connection
      *            reference to the current ApplicationConnection
-     * @return converted value (does not contain JSON types)
+     * @return decoded value (does not contain JSON types)
      */
-    public static Object convertValue(JSONArray jsonArray,
+    public static Object decodeValue(JSONArray jsonArray,
             ConnectorMap idMapper, ApplicationConnection connection) {
         String type = ((JSONString) jsonArray.get(0)).stringValue();
-        return convertValue(type, jsonArray.get(1), idMapper, connection);
+        return decodeValue(type, jsonArray.get(1), idMapper, connection);
     }
 
-    private static Object convertValue(String variableType, Object value,
+    private static Object decodeValue(String variableType, Object value,
             ConnectorMap idMapper, ApplicationConnection connection) {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_UNDEFINED.equals(variableType)) {
             val = null;
         } else if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = convertArray((JSONArray) value, idMapper, connection);
+            val = decodeArray((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = convertMap((JSONObject) value, idMapper, connection);
+            val = decodeMap((JSONObject) value, idMapper, connection);
+        } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
+            val = decodeList((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
-            val = convertStringArray((JSONArray) value);
+            val = decodeStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
             val = ((JSONString) value).stringValue();
         } else if (JsonEncoder.VTYPE_INTEGER.equals(variableType)) {
@@ -95,20 +97,20 @@ public class JsonDecoder {
         return val;
     }
 
-    private static Map<String, Object> convertMap(JSONObject jsonMap,
+    private static Map<String, Object> decodeMap(JSONObject jsonMap,
             ConnectorMap idMapper, ApplicationConnection connection) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
             map.put(key,
-                    convertValue((JSONArray) jsonMap.get(key), idMapper,
+                    decodeValue((JSONArray) jsonMap.get(key), idMapper,
                             connection));
         }
         return map;
     }
 
-    private static String[] convertStringArray(JSONArray jsonArray) {
+    private static String[] decodeStringArray(JSONArray jsonArray) {
         int size = jsonArray.size();
         List<String> tokens = new ArrayList<String>(size);
         for (int i = 0; i < size; ++i) {
@@ -117,15 +119,20 @@ public class JsonDecoder {
         return tokens.toArray(new String[tokens.size()]);
     }
 
-    private static Object[] convertArray(JSONArray jsonArray,
+    private static Object[] decodeArray(JSONArray jsonArray,
+            ConnectorMap idMapper, ApplicationConnection connection) {
+        List<Object> list = decodeList(jsonArray, idMapper, connection);
+        return list.toArray(new Object[list.size()]);
+    }
+
+    private static List<Object> decodeList(JSONArray jsonArray,
             ConnectorMap idMapper, ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(convertValue(entryArray, idMapper, connection));
+            tokens.add(decodeValue(entryArray, idMapper, connection));
         }
-        return tokens.toArray(new Object[tokens.size()]);
+        return tokens;
     }
-
 }

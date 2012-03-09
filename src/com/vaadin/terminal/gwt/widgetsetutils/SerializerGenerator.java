@@ -175,7 +175,7 @@ public class SerializerGenerator extends Generator {
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
             // state.setHeight((String)
-            // JsonDecoder.convertValue(jsonFieldValue,idMapper, connection));
+            // JsonDecoder.decodeValue(jsonFieldValue,idMapper, connection));
 
             String fieldType;
             JPrimitiveType primitiveType = setterParameterType.isPrimitive();
@@ -187,8 +187,8 @@ public class SerializerGenerator extends Generator {
             }
 
             sourceWriter.println("state." + setterName + "((" + fieldType
-                    + ") JsonDecoder.convertValue(" + jsonFieldName
-                    + ", idMapper, connection));");
+                    + ") " + JsonDecoder.class.getName() + ".decodeValue("
+                    + jsonFieldName + ", idMapper, connection));");
         }
 
         // return state;
