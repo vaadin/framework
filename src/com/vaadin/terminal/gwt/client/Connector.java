@@ -74,7 +74,7 @@ public interface Connector {
     /**
      * 
      * Called once by the framework to initialize the connector.
-     * 
+     * <p>
      * Note that the shared state is not yet available at this point nor any
      * hierarchy information.
      */

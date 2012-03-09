@@ -1,3 +1,6 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -10,10 +13,14 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
-/* 
- @VaadinApache2LicenseForJavaFiles@
+/**
+ * An abstract implementation of Connector.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ * 
  */
-
 public abstract class AbstractConnector implements Connector {
 
     private ApplicationConnection connection;
@@ -30,10 +37,6 @@ public abstract class AbstractConnector implements Connector {
         return connection;
     }
 
-    private final void setConnection(ApplicationConnection connection) {
-        this.connection = connection;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -43,22 +46,18 @@ public abstract class AbstractConnector implements Connector {
         return id;
     }
 
-    private void setId(String id) {
-        this.id = id;
-    }
-
     /**
-     * 
      * Called once by the framework to initialize the connector.
-     * 
-     * Custom widgets should not override this method, override init instead;
-     * 
-     * Note that the shared state is not yet available at this point.
+     * <p>
+     * Note that the shared state is not yet available when this method is
+     * called.
+     * <p>
+     * Connector classes should override {@link #init()} instead of this method.
      */
     public final void doInit(String connectorId,
             ApplicationConnection connection) {
-        setConnection(connection);
-        setId(connectorId);
+        this.connection = connection;
+        id = connectorId;
 
         init();
     }
@@ -67,8 +66,8 @@ public abstract class AbstractConnector implements Connector {
      * Called when the connector has been initialized. Override this method to
      * perform initialization of the connector.
      */
-    // FIXME: It might make sense to make this abstract to force users to use
-    // init instead of constructor, where connection and id has not yet been
+    // FIXME: It might make sense to make this abstract to force users to
+    // use init instead of constructor, where connection and id has not yet been
     // set.
     protected void init() {
 
@@ -84,6 +83,8 @@ public abstract class AbstractConnector implements Connector {
      *            RPC interface
      * @param implementation
      *            implementation that should receive RPC calls
+     * @param <T>
+     *            The type of the RPC interface that is being registered
      */
     protected <T extends ClientRpc> void registerRpc(Class<T> rpcInterface,
             T implementation) {

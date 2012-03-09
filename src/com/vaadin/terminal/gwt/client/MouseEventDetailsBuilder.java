@@ -1,19 +1,45 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
-/* 
- @VaadinApache2LicenseForJavaFiles@
+/**
+ * Helper class for constructing a MouseEventDetails object from a
+ * {@link NativeEvent}.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ * 
  */
-
 public class MouseEventDetailsBuilder {
 
+    /**
+     * Construct a {@link MouseEventDetails} object from the given event
+     * 
+     * @param evt
+     *            The event to use as a source for the details
+     * @return a MouseEventDetails containing information from the event
+     */
     public static MouseEventDetails buildMouseEventDetails(NativeEvent evt) {
         return buildMouseEventDetails(evt, null);
     }
 
+    /**
+     * Construct a {@link MouseEventDetails} object from the given event
+     * 
+     * @param evt
+     *            The event to use as a source for the details
+     * @param relativeToElement
+     *            The element whose position
+     *            {@link MouseEventDetails#getRelativeX()} and
+     *            {@link MouseEventDetails#getRelativeY()} are relative to.
+     * @return a MouseEventDetails containing information from the event
+     */
     public static MouseEventDetails buildMouseEventDetails(NativeEvent evt,
             Element relativeToElement) {
         MouseEventDetails mouseEventDetails = new MouseEventDetails();
