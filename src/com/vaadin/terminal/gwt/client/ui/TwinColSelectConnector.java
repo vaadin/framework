@@ -19,6 +19,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         // correctly
         if (isRealUpdate(uidl)) {
             getWidget().updateCaptions(uidl);
+            getLayoutManager().setWidthNeedsUpdate(this);
         }
 
         super.updateFromUIDL(uidl, client);
