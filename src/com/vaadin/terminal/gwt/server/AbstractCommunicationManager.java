@@ -814,6 +814,7 @@ public abstract class AbstractCommunicationManager implements
         LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
         LinkedList<Paintable> rpcPendingQueue = new LinkedList<Paintable>();
         LinkedList<Paintable> hierarchyPendingQueue = new LinkedList<Paintable>();
+        LinkedList<Paintable> connectorTypeQueue = new LinkedList<Paintable>();
 
         if (paintables != null) {
 
@@ -825,6 +826,9 @@ public abstract class AbstractCommunicationManager implements
                 final Paintable p = paintQueue.removeFirst();
                 // for now, all painted components may need a state refresh
                 stateQueue.push(p);
+                // TODO This should be optimized. The type only needs to be sent
+                // once for each connector id + on refresh
+                connectorTypeQueue.push(p);
                 // also a hierarchy update
                 hierarchyPendingQueue.push(p);
                 // ... and RPC calls to be sent
@@ -911,6 +915,24 @@ public abstract class AbstractCommunicationManager implements
             outWriter.append(sharedStates.toString());
             outWriter.print(", "); // close states
         }
+        if (!connectorTypeQueue.isEmpty()) {
+            JSONObject connectorTypes = new JSONObject();
+            while (!connectorTypeQueue.isEmpty()) {
+                final Paintable p = connectorTypeQueue.pop();
+                String paintableId = getPaintableId(p);
+                String connectorType = paintTarget.getTag(p);
+                try {
+                    connectorTypes.put(paintableId, connectorType);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to send connector type for paintable "
+                                    + paintableId + ": " + e.getMessage());
+                }
+            }
+            outWriter.print("\"types\":");
+            outWriter.append(connectorTypes.toString());
+            outWriter.print(", "); // close states
+        }
         if (!hierarchyPendingQueue.isEmpty()) {
             // Send update hierarchy information to the client.
 
@@ -932,7 +954,7 @@ public abstract class AbstractCommunicationManager implements
                     while (iterator.hasNext()) {
                         Component child = iterator.next();
                         if (child.getState().isVisible()) {
-                            String childConnectorId = paintableIdMap.get(child);
+                            String childConnectorId = getPaintableId(child);
                             children.put(childConnectorId);
                         }
                     }
@@ -947,7 +969,7 @@ public abstract class AbstractCommunicationManager implements
                 }
             }
             outWriter.append(hierarchyInfo.toString());
-            outWriter.print(", "); // close states
+            outWriter.print(", "); // close hierarchy
 
         }
 

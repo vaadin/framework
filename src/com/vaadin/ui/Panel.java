@@ -17,9 +17,8 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector;
+import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.ui.Component.Focusable;
-import com.vaadin.ui.themes.Reindeer;
-import com.vaadin.ui.themes.Runo;
 
 /**
  * Panel - a simple single component container.
@@ -38,49 +37,15 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     private static final String CLICK_EVENT = PanelConnector.CLICK_EVENT_IDENTIFIER;
 
     /**
-     * Removes extra decorations from the Panel.
-     * 
-     * @deprecated this style is no longer part of the core framework and this
-     *             component, even though most built-in themes implement this
-     *             style. Use the constant specified in the theme class file
-     *             that you're using, if it provides one, e.g.
-     *             {@link Reindeer#PANEL_LIGHT} or {@link Runo#PANEL_LIGHT} .
-     */
-    @Deprecated
-    public static final String STYLE_LIGHT = "light";
-
-    /**
      * Content of the panel.
      */
     private ComponentContainer content;
-
-    /**
-     * Scroll X position.
-     */
-    private int scrollOffsetX = 0;
-
-    /**
-     * Scroll Y position.
-     */
-    private int scrollOffsetY = 0;
-
-    /**
-     * Scrolling mode.
-     */
-    private boolean scrollable = false;
 
     /**
      * Keeps track of the Actions added to this component, and manages the
      * painting and handling as well.
      */
     protected ActionManager actionManager;
-
-    /**
-     * By default the Panel is not in the normal document focus flow and can
-     * only be focused by using the focus()-method. Change this to 0 if you want
-     * to have the Panel in the normal focus flow.
-     */
-    private int tabIndex = -1;
 
     /**
      * Creates a new empty panel. A VerticalLayout is used as content.
@@ -98,7 +63,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     public Panel(ComponentContainer content) {
         setContent(content);
-        setWidth(100, UNITS_PERCENTAGE);
+        setWidth(100, Unit.PERCENTAGE);
+        getState().setTabIndex(-1);
     }
 
     /**
@@ -254,14 +220,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        // This is needed for now for paint to be ever run for the child
         content.paint(target);
-
-        target.addVariable(this, "tabindex", getTabIndex());
-
-        if (isScrollable()) {
-            target.addVariable(this, "scrollLeft", getScrollLeft());
-            target.addVariable(this, "scrollTop", getScrollTop());
-        }
 
         if (actionManager != null) {
             actionManager.paintActions(null, target);
@@ -346,11 +306,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         final Integer newScrollY = (Integer) variables.get("scrollTop");
         if (newScrollX != null && newScrollX.intValue() != getScrollLeft()) {
             // set internally, not to fire request repaint
-            scrollOffsetX = newScrollX.intValue();
+            getState().setScrollLeft(newScrollX.intValue());
         }
         if (newScrollY != null && newScrollY.intValue() != getScrollTop()) {
             // set internally, not to fire request repaint
-            scrollOffsetY = newScrollY.intValue();
+            getState().setScrollTop(newScrollY.intValue());
         }
 
         // Actions
@@ -368,15 +328,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
      */
     public int getScrollLeft() {
-        return scrollOffsetX;
-    }
-
-    /**
-     * @deprecated use {@link #getScrollLeft()} instead
-     */
-    @Deprecated
-    public int getScrollOffsetX() {
-        return getScrollLeft();
+        return getState().getScrollLeft();
     }
 
     /*
@@ -385,110 +337,35 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
      */
     public int getScrollTop() {
-        return scrollOffsetY;
-    }
-
-    /**
-     * @deprecated use {@link #getScrollTop()} instead
-     */
-    @Deprecated
-    public int getScrollOffsetY() {
-        return getScrollTop();
+        return getState().getScrollTop();
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
-     */
-    public boolean isScrollable() {
-        return scrollable;
-    }
-
-    /**
-     * Sets the panel as programmatically scrollable.
-     * 
-     * <p>
-     * Panel is by default not scrollable programmatically with
-     * {@link #setScrollLeft(int)} and {@link #setScrollTop(int)}, so if you use
-     * those methods, you need to enable scrolling with this method. Components
-     * that extend Panel may have a different default for the programmatic
-     * scrollability.
-     * </p>
-     * 
-     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
-     */
-    public void setScrollable(boolean isScrollingEnabled) {
-        if (scrollable != isScrollingEnabled) {
-            scrollable = isScrollingEnabled;
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Sets the horizontal scroll position.
-     * 
-     * <p>
-     * Setting the horizontal scroll position with this method requires that
-     * programmatic scrolling of the component has been enabled. For Panel it is
-     * disabled by default, so you have to call {@link #setScrollable(boolean)}.
-     * Components extending Panel may have a different default for programmatic
-     * scrollability.
-     * </p>
-     * 
      * @see com.vaadin.terminal.Scrollable#setScrollLeft(int)
-     * @see #setScrollable(boolean)
      */
-    public void setScrollLeft(int pixelsScrolled) {
-        if (pixelsScrolled < 0) {
+    public void setScrollLeft(int scrollLeft) {
+        if (scrollLeft < 0) {
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
         }
-        if (scrollOffsetX != pixelsScrolled) {
-            scrollOffsetX = pixelsScrolled;
-            requestRepaint();
-        }
+        getState().setScrollLeft(scrollLeft);
+        requestRepaint();
     }
 
-    /**
-     * @deprecated use setScrollLeft() method instead
-     */
-    @Deprecated
-    public void setScrollOffsetX(int pixels) {
-        setScrollLeft(pixels);
-    }
-
-    /**
-     * Sets the vertical scroll position.
-     * 
-     * <p>
-     * Setting the vertical scroll position with this method requires that
-     * programmatic scrolling of the component has been enabled. For Panel it is
-     * disabled by default, so you have to call {@link #setScrollable(boolean)}.
-     * Components extending Panel may have a different default for programmatic
-     * scrollability.
-     * </p>
+    /*
+     * (non-Javadoc)
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollTop(int)
-     * @see #setScrollable(boolean)
      */
-    public void setScrollTop(int pixelsScrolledDown) {
-        if (pixelsScrolledDown < 0) {
+    public void setScrollTop(int scrollTop) {
+        if (scrollTop < 0) {
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
         }
-        if (scrollOffsetY != pixelsScrolledDown) {
-            scrollOffsetY = pixelsScrolledDown;
-            requestRepaint();
-        }
-    }
-
-    /**
-     * @deprecated use setScrollTop() method instead
-     */
-    @Deprecated
-    public void setScrollOffsetY(int pixels) {
-        setScrollTop(pixels);
+        getState().setScrollTop(scrollTop);
+        requestRepaint();
     }
 
     /* Documented in superclass */
@@ -641,14 +518,14 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * {@inheritDoc}
      */
     public int getTabIndex() {
-        return tabIndex;
+        return getState().getTabIndex();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
+        getState().setTabIndex(tabIndex);
         requestRepaint();
     }
 
@@ -669,5 +546,15 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public int getComponentCount() {
         // This is so wrong... (#2924)
         return content.getComponentCount();
+    }
+
+    @Override
+    public PanelState getState() {
+        return (PanelState) super.getState();
+    }
+
+    @Override
+    protected PanelState createState() {
+        return new PanelState();
     }
 }

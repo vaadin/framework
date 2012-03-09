@@ -99,7 +99,6 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         elhp.setVisible(false);
-        elhp.setScrollable(true);
         elh.setWidth("2000px");
         elh.setHeight("100px");
         addFields(elh);
@@ -251,7 +250,6 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
             Panel controlWrapper = new Panel();
             controlWrapper.addComponent(controls);
             controlWrapper.setWidth("100%");
-            controlWrapper.setScrollable(true);
             controlWrapper.setStyleName("controls");
             internalLayout.addComponent(controlWrapper);
             Panel testPanel = new Panel(testPanelLayout);
@@ -392,15 +390,13 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
         }
 
         private void updateMarginsAndSpacing() {
-            testedLayout.setMargin(
-                    ((Boolean) marginTop.getValue()).booleanValue(),
-                    ((Boolean) marginRight.getValue()).booleanValue(),
-                    ((Boolean) marginBottom.getValue()).booleanValue(),
-                    ((Boolean) marginLeft.getValue()).booleanValue());
+            testedLayout.setMargin(marginTop.getValue().booleanValue(),
+                    marginRight.getValue().booleanValue(), marginBottom
+                            .getValue().booleanValue(), marginLeft.getValue()
+                            .booleanValue());
             if (testedLayout instanceof Layout.SpacingHandler) {
-                ((Layout.SpacingHandler) testedLayout)
-                        .setSpacing(((Boolean) spacing.getValue())
-                                .booleanValue());
+                ((Layout.SpacingHandler) testedLayout).setSpacing(spacing
+                        .getValue().booleanValue());
             }
         }
 

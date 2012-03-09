@@ -107,7 +107,6 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
                 }
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
-                w.setScrollable(true);
                 w.setHeight("80%");
                 w.addComponent(new Label(msg.toString(), ContentMode.XHTML));
                 main.addWindow(w);

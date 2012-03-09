@@ -1103,26 +1103,22 @@ public class ApplicationConnection {
             private void createConnectorsIfNeeded(ValueMap json) {
                 VConsole.log(" * Creating connectors (if needed)");
 
-                JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
-                // FIXME: This should be based on shared state, not the old
-                // "changes"
-                int length = changes.length();
-                for (int i = 0; i < length; i++) {
+                ValueMap types = json.getValueMap("types");
+                JsArrayString keyArray = types.getKeyArray();
+                for (int i = 0; i < keyArray.length(); i++) {
                     try {
-                        final UIDL change = changes.get(i).cast();
-                        final UIDL uidl = change.getChildUIDL(0);
-                        String connectorId = uidl.getId();
+                        String connectorId = keyArray.get(i);
+                        String connectorType = types.getString(connectorId);
                         Connector connector = connectorMap
                                 .getConnector(connectorId);
                         if (connector != null) {
                             continue;
                         }
-
                         // Connector does not exist so we must create it
-                        if (!uidl.getTag().equals(
-                                configuration.getEncodedWindowTag())) {
+                        if (!connectorType.equals(configuration
+                                .getEncodedWindowTag())) {
                             // create, initialize and register the paintable
-                            getConnector(uidl.getId(), uidl.getTag());
+                            getConnector(connectorId, connectorType);
                         } else {
                             // First RootConnector update. Before this the
                             // RootConnector has been created but not
@@ -1258,7 +1254,7 @@ public class ApplicationConnection {
                         // TODO This check should be done on the server side in
                         // the future so the hierarchy update is only sent when
                         // something actually has changed
-                        Collection<ComponentConnector> oldChildren = ccc
+                        List<ComponentConnector> oldChildren = ccc
                                 .getChildren();
                         boolean actuallyChanged = !Util.collectionsEquals(
                                 oldChildren, newChildren);
@@ -1272,7 +1268,7 @@ public class ApplicationConnection {
                                 .create(ConnectorHierarchyChangedEvent.class);
                         event.setOldChildren(oldChildren);
                         event.setParent(ccc);
-                        ccc.setChildren((Collection) newChildren);
+                        ccc.setChildren((List) newChildren);
                         events.add(event);
                     } catch (final Throwable e) {
                         VConsole.error(e);

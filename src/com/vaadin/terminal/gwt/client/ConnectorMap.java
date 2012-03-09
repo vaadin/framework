@@ -188,15 +188,9 @@ public class ConnectorMap {
         }
 
         if (id == null) {
-            /*
-             * Uncomment the following to debug unregistring components. No
-             * paintables with null id should end here. At least one exception
-             * is our VScrollTableRow, that is hacked to fake it self as a
-             * Paintable to build support for sizing easier.
-             */
-            // if (!(p instanceof VScrollTableRow)) {
-            // VConsole.log("Trying to unregister Paintable not created by Application Connection.");
-            // }
+            VConsole.log("Tried to unregister a "
+                    + connector.getClass().getName() + " (" + id
+                    + ") which was not registered");
         } else {
             unregistryBag.add(id);
         }
@@ -212,7 +206,7 @@ public class ConnectorMap {
         for (Connector connector : getConnectors()) {
             if (connector instanceof ComponentConnector) {
                 ComponentConnector componentConnector = (ComponentConnector) connector;
-                if (!unregistryBag.contains(getConnectorId(connector))) {
+                if (!unregistryBag.contains(connector.getId())) {
                     result.add(componentConnector);
                 }
             }
@@ -237,6 +231,8 @@ public class ConnectorMap {
                             + ") that is never registered (or already unregistered)");
                     continue;
                 }
+                VConsole.log("Unregistering connector "
+                        + connector.getClass().getName() + " " + connectorId);
                 Widget widget = null;
                 if (connector instanceof ComponentConnector) {
                     widget = ((ComponentConnector) connector).getWidget();

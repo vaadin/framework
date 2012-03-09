@@ -62,7 +62,6 @@ public class BasicPanelTest extends TestBase {
         getLayout().addComponent(panel);
         getLayout().setExpandRatio(panel, 1);
 
-        panel.setScrollable(true);
         panel.setScrollTop(50);
         panel.setScrollLeft(50);
         panel.setImmediate(true);

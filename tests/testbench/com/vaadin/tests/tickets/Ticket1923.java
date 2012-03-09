@@ -19,7 +19,6 @@ public class Ticket1923 extends com.vaadin.Application.LegacyApplication {
 
         p = new Panel("TestPanel 250x300");
         // p.getLayout().setWidth("100%");
-        p.setScrollable(true);
         // p.setContent(new GridLayout(1, 100));
         for (int i = 0; i < ROWS; i++) {
             p.addComponent(new Label(

@@ -32,7 +32,6 @@ public class Ticket1869 extends com.vaadin.Application.LegacyApplication {
         lo.addComponent(elp);
         elp.setWidth("300px");
         elp.setHeight("300px");
-        elp.setScrollable(true);
 
         HorizontalLayout elh = new HorizontalLayout();
         Panel elph = new Panel(
@@ -49,7 +48,6 @@ public class Ticket1869 extends com.vaadin.Application.LegacyApplication {
         lo.addComponent(elph);
         elph.setWidth("300px");
         elph.setHeight("300px");
-        elph.setScrollable(true);
 
     }
 }

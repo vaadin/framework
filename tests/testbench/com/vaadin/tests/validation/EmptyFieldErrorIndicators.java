@@ -45,7 +45,6 @@ public class EmptyFieldErrorIndicators extends TestBase {
         panel.setSizeFull();
         panel.setStyleName(Reindeer.PANEL_LIGHT);
         panel.addComponent(hl);
-        panel.setScrollable(true);
         addComponent(panel);
     }
 

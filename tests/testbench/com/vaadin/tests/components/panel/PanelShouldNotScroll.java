@@ -18,7 +18,6 @@ public class PanelShouldNotScroll extends TestBase {
     @Override
     protected void setup() {
         final Panel p = new Panel(new CssLayout());
-        p.setScrollable(true);
         p.setSizeFull();
         p.setHeight("600px");
         p.addComponent(foo());

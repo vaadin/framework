@@ -1,6 +1,6 @@
 package com.vaadin.terminal.gwt.client;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Event for containing data related to a change in the {@link Connector}
@@ -14,7 +14,7 @@ import java.util.Collection;
  * 
  */
 public class ConnectorHierarchyChangedEvent {
-    Collection<ComponentConnector> oldChildren;
+    List<ComponentConnector> oldChildren;
     private ComponentContainerConnector parent;
 
     public ConnectorHierarchyChangedEvent() {
@@ -26,7 +26,7 @@ public class ConnectorHierarchyChangedEvent {
      * 
      * @return A collection of old child connectors. Never returns null.
      */
-    public Collection<ComponentConnector> getOldChildren() {
+    public List<ComponentConnector> getOldChildren() {
         return oldChildren;
     }
 
@@ -36,7 +36,7 @@ public class ConnectorHierarchyChangedEvent {
      * @param oldChildren
      *            The old child connectors. Must not be null.
      */
-    public void setOldChildren(Collection<ComponentConnector> oldChildren) {
+    public void setOldChildren(List<ComponentConnector> oldChildren) {
         this.oldChildren = oldChildren;
     }
 

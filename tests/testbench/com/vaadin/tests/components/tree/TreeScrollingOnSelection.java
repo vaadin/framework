@@ -36,7 +36,6 @@ public class TreeScrollingOnSelection extends TestBase {
         tree.setImmediate(true);
 
         Panel panel = new Panel();
-        panel.setScrollable(true);
         panel.addComponent(tree);
         panel.setWidth("200px");
         panel.setHeight("300px");

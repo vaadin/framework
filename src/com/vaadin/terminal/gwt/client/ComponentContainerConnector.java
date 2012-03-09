@@ -4,7 +4,7 @@
 
 package com.vaadin.terminal.gwt.client;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.user.client.ui.HasWidgets;
 
@@ -42,7 +42,7 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * @return A collection of children for this connector. An empty collection
      *         if there are no children. Never returns null.
      */
-    public Collection<ComponentConnector> getChildren();
+    public List<ComponentConnector> getChildren();
 
     /**
      * Sets the children for this connector. This method should only be called
@@ -57,7 +57,7 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * @param children
      *            The new child connectors
      */
-    public void setChildren(Collection<ComponentConnector> children);
+    public void setChildren(List<ComponentConnector> children);
 
     /**
      * Called when the child connector hierarchy of this connector has changed.

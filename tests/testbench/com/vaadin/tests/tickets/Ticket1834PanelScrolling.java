@@ -69,7 +69,6 @@ public class Ticket1834PanelScrolling extends
         main.addComponent(b);
 
         p = new Panel("TestPanel");
-        p.setScrollable(true);
 
         for (int i = 0; i < ROWS; i++) {
             p.addComponent(new Label(

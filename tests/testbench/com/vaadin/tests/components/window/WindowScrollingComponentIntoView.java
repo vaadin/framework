@@ -75,7 +75,6 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
 
         Panel panel = new Panel("scrollable panel");
         panel.setHeight(400, Panel.UNITS_PIXELS);
-        panel.setScrollable(true);
         panel.setScrollLeft(50);
         panel.setScrollTop(50);
         panel.getContent().setSizeUndefined();

@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -38,8 +37,6 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     final Element contentNode = DOM.createDiv();
 
     private Element errorIndicatorElement;
-
-    ComponentConnector layout;
 
     ShortcutActionHandler shortcutHandler;
 
