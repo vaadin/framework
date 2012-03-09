@@ -72,6 +72,11 @@ public class VTooltip extends VOverlay {
             DOM.setStyleAttribute(description, "display", "none");
         }
         if (hasContent) {
+            // Issue #8454: With IE7 the tooltips size is calculated based on
+            // the last tooltip's position, causing problems if the last one was
+            // in the right or bottom edge. For this reason the tooltip is moved
+            // first to 0,0 position so that the calculation goes correctly.
+            setPopupPosition(0, 0);
             setPopupPositionAndShow(new PositionCallback() {
                 public void setPosition(int offsetWidth, int offsetHeight) {
 
