@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class ProgressIndicatorConnector extends AbstractComponentConnector {
+public class ProgressIndicatorConnector extends AbstractFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -30,7 +30,7 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
         if (getWidget().indeterminate) {
             String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
             getWidget().addStyleName(basename);
-            if (!getState().isEnabled()) {
+            if (!isEnabled()) {
                 getWidget().addStyleName(basename + "-disabled");
             } else {
                 getWidget().removeStyleName(basename + "-disabled");
@@ -46,7 +46,7 @@ public class ProgressIndicatorConnector extends AbstractComponentConnector {
             }
         }
 
-        if (getState().isEnabled()) {
+        if (isEnabled()) {
             getWidget().interval = uidl.getIntAttribute("pollinginterval");
             getWidget().poller.scheduleRepeating(getWidget().interval);
         }

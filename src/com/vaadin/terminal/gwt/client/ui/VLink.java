@@ -31,8 +31,6 @@ public class VLink extends HTML implements ClickHandler {
 
     protected boolean enabled;
 
-    protected boolean readonly;
-
     protected int targetWidth;
 
     protected int targetHeight;
@@ -57,7 +55,7 @@ public class VLink extends HTML implements ClickHandler {
     }
 
     public void onClick(ClickEvent event) {
-        if (enabled && !readonly) {
+        if (enabled) {
             if (target == null) {
                 target = "_self";
             }

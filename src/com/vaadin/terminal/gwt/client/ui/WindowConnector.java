@@ -104,7 +104,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().setClosable(!getState().isReadOnly());
+        getWidget().setClosable(!isReadOnly());
 
         // Initialize the position form UIDL
         int positionx = uidl.getIntVariable("positionx");

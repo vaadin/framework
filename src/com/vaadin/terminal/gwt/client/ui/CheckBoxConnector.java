@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
-public class CheckBoxConnector extends AbstractComponentConnector {
+public class CheckBoxConnector extends AbstractFieldConnector {
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -55,7 +55,7 @@ public class CheckBoxConnector extends AbstractComponentConnector {
                     "none");
         }
 
-        if (getState().isReadOnly()) {
+        if (isReadOnly()) {
             getWidget().setEnabled(false);
         }
 

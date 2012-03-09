@@ -8,10 +8,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
-public class RichTextAreaConnector extends AbstractComponentConnector implements
+public class RichTextAreaConnector extends AbstractFieldConnector implements
         BeforeShortcutActionListener {
 
     @Override
@@ -28,7 +28,7 @@ public class RichTextAreaConnector extends AbstractComponentConnector implements
             }
         }
         if (isRealUpdate(uidl)) {
-            getWidget().setEnabled(getState().isEnabled());
+            getWidget().setEnabled(isEnabled());
         }
 
         super.updateFromUIDL(uidl, client);
@@ -36,7 +36,7 @@ public class RichTextAreaConnector extends AbstractComponentConnector implements
             return;
         }
 
-        getWidget().setReadOnly(getState().isReadOnly());
+        getWidget().setReadOnly(isReadOnly());
         getWidget().immediate = getState().isImmediate();
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;

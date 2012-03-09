@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
-public class TextFieldConnector extends AbstractComponentConnector implements
+public class TextFieldConnector extends AbstractFieldConnector implements
         BeforeShortcutActionListener {
 
     @Override
@@ -27,7 +27,7 @@ public class TextFieldConnector extends AbstractComponentConnector implements
             return;
         }
 
-        getWidget().setReadOnly(getState().isReadOnly());
+        getWidget().setReadOnly(isReadOnly());
 
         getWidget().inputPrompt = uidl
                 .getStringAttribute(VTextField.ATTR_INPUTPROMPT);

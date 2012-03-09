@@ -41,7 +41,7 @@ public class UploadConnector extends AbstractComponentConnector {
         }
         getWidget().fu.setName(getWidget().paintableId + "_file");
 
-        if (!getState().isEnabled() || getState().isReadOnly()) {
+        if (!isEnabled() || isReadOnly()) {
             getWidget().disableUpload();
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress

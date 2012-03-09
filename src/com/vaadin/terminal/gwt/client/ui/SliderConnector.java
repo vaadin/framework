@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public class SliderConnector extends AbstractComponentConnector {
+public class SliderConnector extends AbstractFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -25,8 +25,8 @@ public class SliderConnector extends AbstractComponentConnector {
         }
 
         getWidget().immediate = getState().isImmediate();
-        getWidget().disabled = !getState().isEnabled();
-        getWidget().readonly = getState().isReadOnly();
+        getWidget().disabled = !isEnabled();
+        getWidget().readonly = isReadOnly();
 
         getWidget().vertical = uidl.hasAttribute("vertical");
 

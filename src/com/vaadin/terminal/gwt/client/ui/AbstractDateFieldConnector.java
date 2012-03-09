@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class AbstractDateFieldConnector extends AbstractComponentConnector {
+public class AbstractDateFieldConnector extends AbstractFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -27,8 +27,8 @@ public class AbstractDateFieldConnector extends AbstractComponentConnector {
         getWidget().paintableId = uidl.getId();
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().readonly = getState().isReadOnly();
-        getWidget().enabled = getState().isEnabled();
+        getWidget().readonly = isReadOnly();
+        getWidget().enabled = isEnabled();
 
         if (uidl.hasAttribute("locale")) {
             final String locale = uidl.getStringAttribute("locale");

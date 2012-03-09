@@ -12,7 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect.FilterSelectSuggestion;
 
-public class ComboBoxConnector extends AbstractComponentConnector implements
+public class ComboBoxConnector extends AbstractFieldConnector implements
         SimpleManagedLayout {
 
     /*
@@ -29,8 +29,8 @@ public class ComboBoxConnector extends AbstractComponentConnector implements
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
-        getWidget().readonly = getState().isReadOnly();
-        getWidget().enabled = getState().isEnabled();
+        getWidget().readonly = isReadOnly();
+        getWidget().enabled = isEnabled();
 
         getWidget().tb.setEnabled(getWidget().enabled);
         getWidget().updateReadOnly();

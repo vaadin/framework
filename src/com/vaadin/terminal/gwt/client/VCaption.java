@@ -113,7 +113,7 @@ public class VCaption extends HTML {
                 style += " " + CLASSNAME + "-" + styles[i];
             }
         }
-        if (!owner.getState().isEnabled()) {
+        if (!owner.isEnabled()) {
             style += " " + ApplicationConnection.DISABLED_CLASSNAME;
         }
         setStyleName(style);

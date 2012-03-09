@@ -8,9 +8,11 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -55,7 +57,7 @@ public class TableConnector extends AbstractComponentContainerConnector
             return;
         }
 
-        getWidget().enabled = getState().isEnabled();
+        getWidget().enabled = isEnabled();
 
         if (BrowserInfo.get().isIE8() && !getWidget().enabled) {
             /*
@@ -79,7 +81,7 @@ public class TableConnector extends AbstractComponentContainerConnector
 
         getWidget().updateDragMode(uidl);
 
-        getWidget().updateSelectionProperties(uidl, getState());
+        getWidget().updateSelectionProperties(uidl, getState(), isReadOnly());
 
         if (uidl.hasAttribute("alb")) {
             getWidget().bodyActionKeys = uidl.getStringArrayAttribute("alb");
@@ -262,4 +264,20 @@ public class TableConnector extends AbstractComponentContainerConnector
     public void postLayout() {
         getWidget().sizeInit();
     }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly() || getState().isPropertyReadOnly();
+    }
+
+    @Override
+    public AbstractFieldState getState() {
+        return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return GWT.create(AbstractFieldState.class);
+    }
+
 }

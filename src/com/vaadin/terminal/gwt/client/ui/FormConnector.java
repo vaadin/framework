@@ -7,8 +7,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 
@@ -174,6 +176,21 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         form.fieldContainer.getStyle().setPaddingBottom(footerHeight, Unit.PX);
         form.footerContainer.getStyle().setMarginTop(-footerHeight, Unit.PX);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return super.isReadOnly() || getState().isPropertyReadOnly();
+    }
+
+    @Override
+    public AbstractFieldState getState() {
+        return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return GWT.create(AbstractFieldState.class);
     }
 
 }

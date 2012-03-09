@@ -969,7 +969,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
-    void updateSelectionProperties(UIDL uidl, ComponentState state) {
+    void updateSelectionProperties(UIDL uidl, ComponentState state,
+            boolean readOnly) {
         setMultiSelectMode(uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT);
 
@@ -977,7 +978,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .getBooleanAttribute("nsa") : true;
 
         if (uidl.hasAttribute("selectmode")) {
-            if (state.isReadOnly()) {
+            if (readOnly) {
                 selectMode = SelectMode.NONE;
             } else if (uidl.getStringAttribute("selectmode").equals("multi")) {
                 selectMode = SelectMode.MULTI;

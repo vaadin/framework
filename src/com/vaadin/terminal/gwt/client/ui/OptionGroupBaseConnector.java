@@ -7,8 +7,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public abstract class OptionGroupBaseConnector extends
-        AbstractComponentConnector {
+public abstract class OptionGroupBaseConnector extends AbstractFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -24,8 +23,8 @@ public abstract class OptionGroupBaseConnector extends
 
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
-        getWidget().readonly = getState().isReadOnly();
-        getWidget().disabled = !getState().isEnabled();
+        getWidget().readonly = isReadOnly();
+        getWidget().disabled = !isEnabled();
         getWidget().multiselect = "multi".equals(uidl
                 .getStringAttribute("selectmode"));
         getWidget().immediate = getState().isImmediate();

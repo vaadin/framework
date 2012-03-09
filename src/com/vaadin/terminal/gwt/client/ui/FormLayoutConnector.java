@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout.Caption;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout.ErrorFlag;
 
 public class FormLayoutConnector extends AbstractComponentContainerConnector {
     @Override
@@ -23,7 +25,16 @@ public class FormLayoutConnector extends AbstractComponentContainerConnector {
     }
 
     public void updateCaption(ComponentConnector component, UIDL uidl) {
-        getWidget().table.updateCaption(component, uidl);
+        final Caption c = getWidget().table.widgetToCaption.get(component
+                .getWidget());
+        if (c != null) {
+            c.updateCaption(uidl, component.getState(), component.isEnabled());
+        }
+        final ErrorFlag e = getWidget().table.widgetToError.get(component
+                .getWidget());
+        if (e != null) {
+            e.updateFromUIDL(uidl, component);
+        }
     }
 
     @Override

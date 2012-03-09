@@ -106,4 +106,13 @@ public interface ComponentConnector extends Connector {
      *            The new parent of the connector
      */
     public void setParent(ComponentContainerConnector parent);
+
+    /**
+     * Checks if the connector is read only.
+     * 
+     * @deprecated This belongs in AbstractFieldConnector, see #8514
+     * @return true
+     */
+    @Deprecated
+    public boolean isReadOnly();
 }

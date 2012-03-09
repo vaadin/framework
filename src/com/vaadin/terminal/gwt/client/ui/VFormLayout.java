@@ -50,9 +50,10 @@ public class VFormLayout extends SimplePanel {
      * 
      * @param state
      *            shared state of the component
+     * @param enabled
      * @return An array of stylenames
      */
-    private String[] getStylesFromState(ComponentState state) {
+    private String[] getStylesFromState(ComponentState state, boolean enabled) {
         List<String> styles = new ArrayList<String>();
         if (state.hasStyles()) {
             String[] stylesnames = state.getStyle().split(" ");
@@ -61,7 +62,7 @@ public class VFormLayout extends SimplePanel {
             }
         }
 
-        if (!state.isEnabled()) {
+        if (!enabled) {
             styles.add(ApplicationConnection.DISABLED_CLASSNAME);
         }
 
@@ -74,8 +75,8 @@ public class VFormLayout extends SimplePanel {
         private static final int COLUMN_ERRORFLAG = 1;
         private static final int COLUMN_WIDGET = 2;
 
-        private HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
-        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
+        HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
+        HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
@@ -178,18 +179,6 @@ public class VFormLayout extends SimplePanel {
             }
         }
 
-        public void updateCaption(ComponentConnector paintable, UIDL uidl) {
-            final Caption c = widgetToCaption.get(paintable.getWidget());
-            if (c != null) {
-                c.updateCaption(uidl, paintable.getState());
-            }
-            final ErrorFlag e = widgetToError.get(paintable.getWidget());
-            if (e != null) {
-                e.updateFromUIDL(uidl, paintable);
-            }
-
-        }
-
         /*
          * (non-Javadoc)
          * 
@@ -259,11 +248,12 @@ public class VFormLayout extends SimplePanel {
             setStyleName(styleName);
         }
 
-        public void updateCaption(UIDL uidl, ComponentState state) {
+        public void updateCaption(UIDL uidl, ComponentState state,
+                boolean enabled) {
             setVisible(!uidl.getBooleanAttribute("invisible"));
 
             // Update styles as they might have changed when the caption changed
-            setStyles(getStylesFromState(state));
+            setStyles(getStylesFromState(state, enabled));
 
             boolean isEmpty = true;
 
@@ -356,7 +346,7 @@ public class VFormLayout extends SimplePanel {
         }
     }
 
-    private class ErrorFlag extends HTML {
+    class ErrorFlag extends HTML {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;

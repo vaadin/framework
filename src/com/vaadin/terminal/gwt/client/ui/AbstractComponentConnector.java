@@ -40,7 +40,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private Widget widget;
 
     /* State variables */
-    private boolean enabled = true;
     private boolean visible = true;
 
     // shared state from the server to the client
@@ -157,12 +156,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ((Focusable) getWidget()).setTabIndex(uidl
                     .getIntAttribute("tabindex"));
         }
-        setEnabled(getState().isEnabled());
+
+        if (getWidget() instanceof FocusWidget) {
+            FocusWidget fw = (FocusWidget) getWidget();
+            fw.setEnabled(isEnabled());
+        }
 
         // Style names
         String styleName = getStyleNameFromUIDL(getWidget()
-                .getStylePrimaryName(), uidl, getState(),
-                getWidget() instanceof Field);
+                .getStylePrimaryName(), uidl, getWidget() instanceof Field,
+                this);
         getWidget().setStyleName(styleName);
 
         // Update tooltip
@@ -264,24 +267,21 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return declaredWidth;
     }
 
-    /**
-     * Sets the enabled state of this paintable
+    /*
+     * (non-Javadoc)
      * 
-     * @param enabled
-     *            true if the paintable is enabled, false otherwise
+     * @see com.vaadin.terminal.gwt.client.Connector#isEnabled()
      */
-    protected void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-
-        if (getWidget() instanceof FocusWidget) {
-            FocusWidget fw = (FocusWidget) getWidget();
-            fw.setEnabled(enabled);
+    public boolean isEnabled() {
+        if (!getState().isEnabled()) {
+            return false;
         }
 
-    }
-
-    public boolean isEnabled() {
-        return enabled;
+        if (getParent() == null) {
+            return true;
+        } else {
+            return getParent().isEnabled();
+        }
     }
 
     /**
@@ -341,19 +341,20 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @return
      */
     protected static String getStyleNameFromUIDL(String primaryStyleName,
-            UIDL uidl, ComponentState state, boolean field) {
-        boolean enabled = state.isEnabled();
+            UIDL uidl, boolean field, ComponentConnector connector) {
+        ComponentState state = connector.getState();
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
         styleBuf.append(" v-paintable");
 
-        // first disabling and read-only status
-        if (!enabled) {
+        // Uses connector methods to enable connectors to take hierarchy or
+        // multiple state variables into account
+        if (!connector.isEnabled()) {
             styleBuf.append(" ");
             styleBuf.append(ApplicationConnection.DISABLED_CLASSNAME);
         }
-        if (state.isReadOnly()) {
+        if (connector.isReadOnly()) {
             styleBuf.append(" ");
             styleBuf.append("v-readonly");
         }
@@ -372,6 +373,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }
 
+        // TODO Move to AbstractFieldConnector
         // add modified classname to Fields
         if (field && uidl.hasAttribute("modified")) {
             styleBuf.append(" ");
@@ -392,6 +394,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         return styleBuf.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ComponentConnector#isReadOnly()
+     */
+    @Deprecated
+    public boolean isReadOnly() {
+        return getState().isReadOnly();
     }
 
     /**

@@ -30,6 +30,7 @@ import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
@@ -730,6 +731,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Sets the new data source
         dataSource = newDataSource;
+        getState().setPropertyReadOnly(
+                dataSource == null ? false : dataSource.isReadOnly());
 
         // Check if the current converter is compatible.
         if (newDataSource != null
@@ -1218,6 +1221,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @see Property.ReadOnlyStatusChangeListener
      */
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
+        getState().setPropertyReadOnly(event.getProperty().isReadOnly());
         requestRepaint();
     }
 
@@ -1613,4 +1617,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         requestRepaint();
     }
 
+    @Override
+    public AbstractFieldState getState() {
+        return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    protected AbstractFieldState createState() {
+        return new AbstractFieldState();
+    }
 }
