@@ -4,6 +4,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 
+/* 
+ @VaadinApache2LicenseForJavaFiles@
+ */
+
 public class MouseEventDetailsBuilder {
 
     public static MouseEventDetails buildMouseEventDetails(NativeEvent evt) {

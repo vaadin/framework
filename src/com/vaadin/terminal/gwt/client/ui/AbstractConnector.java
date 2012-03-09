@@ -10,6 +10,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
+/* 
+ @VaadinApache2LicenseForJavaFiles@
+ */
+
 public abstract class AbstractConnector implements Connector {
 
     private ApplicationConnection connection;
