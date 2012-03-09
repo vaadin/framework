@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 public class WindowConnector extends AbstractComponentContainerConnector
@@ -263,6 +264,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         int footerHeight = lm.getOuterHeight(window.footer);
         contentStyle.setPaddingBottom(footerHeight, Unit.PX);
         contentStyle.setMarginBottom(-footerHeight, Unit.PX);
+
+        Util.runWebkitOverflowAutoFix(window.contentPanel.getElement());
     }
 
     public void postLayout() {
