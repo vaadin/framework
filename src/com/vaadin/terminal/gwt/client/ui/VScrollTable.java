@@ -456,6 +456,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     int serverCacheFirst = -1;
     int serverCacheLast = -1;
 
+    private boolean sizeNeedsInit = true;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -838,9 +840,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         tFoot.setHorizontalScrollPosition(0);
 
         initialContentReceived = true;
-        if (isAttached()) {
-            sizeInit();
-        }
+        sizeNeedsInit = true;
         scrollBody.restoreRowVisibility();
     }
 
@@ -965,7 +965,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         if (oldPageLength != pageLength && initializedAndAttached) {
             // page length changed, need to update size
-            sizeInit();
+            sizeNeedsInit = true;
         }
     }
 
@@ -1581,14 +1581,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     @Override
-    protected void onAttach() {
-        super.onAttach();
-        if (initialContentReceived) {
-            sizeInit();
-        }
-    }
-
-    @Override
     protected void onDetach() {
         rowRequestHandler.cancel();
         super.onDetach();
@@ -1611,7 +1603,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * 
      * * Makes deferred request to get some cache rows
      */
-    private void sizeInit() {
+    void sizeInit() {
+        if (!sizeNeedsInit) {
+            return;
+        }
+        sizeNeedsInit = false;
         /*
          * We will use browsers table rendering algorithm to find proper column
          * widths. If content and header take less space than available, we will
@@ -5521,6 +5517,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     }
 
+    @Override
+    public void setWidth(String width) {
+        String oldWidth = getElement().getStyle().getWidth();
+        if (!oldWidth.equals(width)) {
+            super.setWidth(width);
+            updateWidth();
+        }
+    }
+
     void updateWidth() {
         if (!isVisible()) {
             /*
@@ -5543,8 +5548,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         } else {
 
-            // Readjust size of table
-            sizeInit();
+            sizeNeedsInit = true;
 
             // readjust undefined width columns
             triggerLazyColumnAdjustment(false);

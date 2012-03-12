@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class TableConnector extends AbstractComponentContainerConnector
-        implements DirectionalManagedLayout {
+        implements DirectionalManagedLayout, PostLayoutListener {
 
     /*
      * (non-Javadoc)
@@ -256,6 +256,10 @@ public class TableConnector extends AbstractComponentContainerConnector
     }
 
     public void layoutHorizontally() {
-        getWidget().updateWidth();
+        // getWidget().updateWidth();
+    }
+
+    public void postLayout() {
+        getWidget().sizeInit();
     }
 }
