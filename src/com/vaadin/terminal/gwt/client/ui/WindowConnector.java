@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
@@ -238,9 +239,10 @@ public class WindowConnector extends AbstractComponentContainerConnector
     public void layout() {
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
+        ComponentConnector layout = window.layout;
         Element contentElement = window.contentPanel.getElement();
-        boolean needsMinWidth = !isUndefinedWidth()
-                || window.layout.isRelativeWidth();
+
+        boolean needsMinWidth = !isUndefinedWidth() || layout.isRelativeWidth();
         int minWidth = window.getMinWidth();
         if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
             // Use minimum width if less than a certain size
@@ -248,7 +250,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         boolean needsMinHeight = !isUndefinedHeight()
-                || window.layout.isRelativeHeight();
+                || layout.isRelativeHeight();
         int minHeight = window.getMinHeight();
         if (needsMinHeight && lm.getInnerHeight(contentElement) < minHeight) {
             // Use minimum height if less than a certain size
@@ -264,6 +266,33 @@ public class WindowConnector extends AbstractComponentContainerConnector
         int footerHeight = lm.getOuterHeight(window.footer);
         contentStyle.setPaddingBottom(footerHeight, Unit.PX);
         contentStyle.setMarginBottom(-footerHeight, Unit.PX);
+
+        /*
+         * Must set absolute position if the child has relative height and
+         * there's a chance of horizontal scrolling as some browsers will
+         * otherwise not take the scrollbar into account when calculating the
+         * height.
+         */
+        Element layoutElement = layout.getWidget().getElement();
+        Style childStyle = layoutElement.getStyle();
+        if (layout.isRelativeHeight()) {
+            childStyle.setPosition(Position.ABSOLUTE);
+
+            Style wrapperStyle = contentElement.getStyle();
+            if (window.getElement().getStyle().getWidth().length() == 0
+                    && !layout.isRelativeWidth()) {
+                /*
+                 * Need to lock width to make undefined width work even with
+                 * absolute positioning
+                 */
+                int contentWidth = lm.getOuterWidth(layoutElement);
+                wrapperStyle.setWidth(contentWidth, Unit.PX);
+            } else {
+                wrapperStyle.clearWidth();
+            }
+        } else {
+            childStyle.clearPosition();
+        }
 
         Util.runWebkitOverflowAutoFix(window.contentPanel.getElement());
     }
