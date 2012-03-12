@@ -3,8 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -23,6 +23,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
+
+    private List<ComponentConnector> previousChildren;
 
     @Override
     public void init() {
@@ -62,9 +64,6 @@ public abstract class AbstractOrderedLayoutConnector extends
             return;
         }
 
-        HashSet<ComponentConnector> previousChildren = new HashSet<ComponentConnector>(
-                getChildren());
-
         VMeasuringOrderedLayout layout = getWidget();
 
         ValueMap expandRatios = uidl.getMapAttribute("expandRatios");
@@ -72,6 +71,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         int currentIndex = 0;
         // TODO Support reordering elements!
+        // FIXME: move to connectorHierarchyChanged!!
         for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL childUIDL = (UIDL) it.next();
             final ComponentConnector child = client.getPaintable(childUIDL);
@@ -280,5 +280,11 @@ public abstract class AbstractOrderedLayoutConnector extends
             layoutSecondaryDirection();
         }
     }
+
+    @Override
+    public void connectorHierarchyChanged(
+            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent event) {
+        previousChildren = event.getOldChildren();
+    };
 
 }
