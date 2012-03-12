@@ -20,7 +20,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
@@ -130,7 +130,7 @@ public class RpcManagerGenerator extends Generator {
                         }
                     }
                     sourceWriter
-                            .println(Connector.class.getName()
+                            .println(ServerConnector.class.getName()
                                     + " connector = connectorMap.getConnector(invocation.getConnectorId());");
                     sourceWriter
                             .println("for ("

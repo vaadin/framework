@@ -15,7 +15,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
@@ -39,7 +39,7 @@ public class JsonDecoder {
      * @param jsonArray
      *            JSON array with two elements
      * @param idMapper
-     *            mapper between connector ID and {@link Connector} objects
+     *            mapper between connector ID and {@link ServerConnector} objects
      * @param connection
      *            reference to the current ApplicationConnection
      * @return decoded value (does not contain JSON types)

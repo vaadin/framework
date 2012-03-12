@@ -1109,7 +1109,7 @@ public class ApplicationConnection {
                     try {
                         String connectorId = keyArray.get(i);
                         String connectorType = types.getString(connectorId);
-                        Connector connector = connectorMap
+                        ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (connector != null) {
                             continue;
@@ -1185,7 +1185,7 @@ public class ApplicationConnection {
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String connectorId = keyArray.get(i);
-                        Connector paintable = connectorMap
+                        ServerConnector paintable = connectorMap
                                 .getConnector(connectorId);
                         if (null != paintable) {
 
@@ -1224,7 +1224,7 @@ public class ApplicationConnection {
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
                     try {
                         String connectorId = hierarchyKeys.get(i);
-                        Connector connector = connectorMap
+                        ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (!(connector instanceof ComponentContainerConnector)) {
                             VConsole.error("Retrieved a hierarchy update for a connector ("
@@ -1238,7 +1238,7 @@ public class ApplicationConnection {
                                 .getJSStringArray(connectorId);
                         int childConnectorSize = childConnectorIds.length();
 
-                        List<Connector> newChildren = new ArrayList<Connector>();
+                        List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
                         for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
                             String childConnectorId = childConnectorIds
                                     .get(connectorIndex);
@@ -1489,7 +1489,7 @@ public class ApplicationConnection {
      *            true if the update is to be sent as soon as possible
      */
     public void updateVariable(String paintableId, String variableName,
-            Connector newValue, boolean immediate) {
+            ServerConnector newValue, boolean immediate) {
         addVariableToQueue(paintableId, variableName, newValue, immediate);
     }
 
@@ -2155,7 +2155,7 @@ public class ApplicationConnection {
     }
 
     @Deprecated
-    public void unregisterPaintable(Connector p) {
+    public void unregisterPaintable(ServerConnector p) {
         connectorMap.unregisterConnector(p);
     }
 

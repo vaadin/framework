@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
  * Updates can be sent back to the server using the
  * {@link ApplicationConnection#updateVariable()} methods.
  */
-public interface ComponentConnector extends Connector {
+public interface ComponentConnector extends ServerConnector {
 
     /*
      * (non-Javadoc)

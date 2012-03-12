@@ -516,7 +516,7 @@ public final class UIDL extends JavaScriptObject {
      *            the name of the attribute
      * @return the Paintable referenced by the attribute, if it exists
      */
-    public Connector getPaintableAttribute(String name,
+    public ServerConnector getPaintableAttribute(String name,
             ApplicationConnection connection) {
         return ConnectorMap.get(connection).getConnector(
                 getStringAttribute(name));
@@ -529,7 +529,7 @@ public final class UIDL extends JavaScriptObject {
      *            the name of the variable
      * @return the Paintable referenced by the variable, if it exists
      */
-    public Connector getPaintableVariable(String name,
+    public ServerConnector getPaintableVariable(String name,
             ApplicationConnection connection) {
         return ConnectorMap.get(connection).getConnector(
                 getStringVariable(name));

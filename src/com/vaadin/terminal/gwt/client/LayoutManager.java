@@ -166,7 +166,7 @@ public class LayoutManager {
             for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
                 String pid = needsWidthUpdateArray.get(i);
 
-                Connector paintable = paintableMap.getConnector(pid);
+                ServerConnector paintable = paintableMap.getConnector(pid);
                 if (paintable instanceof DirectionalManagedLayout) {
                     DirectionalManagedLayout cl = (DirectionalManagedLayout) paintable;
                     cl.layoutHorizontally();

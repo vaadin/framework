@@ -14,7 +14,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
@@ -91,8 +91,8 @@ public class JsonEncoder {
                 jsonMap.put(mapKey, encode(mapValue, connectorMap, connection));
             }
             return combineTypeAndValue(VTYPE_MAP, jsonMap);
-        } else if (value instanceof Connector) {
-            Connector paintable = (Connector) value;
+        } else if (value instanceof ServerConnector) {
+            ServerConnector paintable = (ServerConnector) value;
             return combineTypeAndValue(VTYPE_PAINTABLE, new JSONString(
                     connectorMap.getConnectorId(paintable)));
         } else {
@@ -123,7 +123,7 @@ public class JsonEncoder {
     private static String getTransportType(Object value) {
         if (value instanceof String) {
             return VTYPE_STRING;
-        } else if (value instanceof Connector) {
+        } else if (value instanceof ServerConnector) {
             return VTYPE_PAINTABLE;
         } else if (value instanceof Boolean) {
             return VTYPE_BOOLEAN;

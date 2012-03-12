@@ -106,7 +106,7 @@ public class Util {
             }
             String pid = paintableMap.getConnectorId(paintable);
             if (pid != null) {
-                Connector otherPaintable = paintableMap.getConnector(pid);
+                ServerConnector otherPaintable = paintableMap.getConnector(pid);
                 if (otherPaintable == paintable) {
                     return applicationConnection;
                 }
@@ -834,9 +834,9 @@ public class Util {
                     Object value = parameters[1];
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
-                    String formattedValue = value instanceof Connector ? c
+                    String formattedValue = value instanceof ServerConnector ? c
                             .getConnectorMap()
-                            .getConnectorId((Connector) value) : String
+                            .getConnectorId((ServerConnector) value) : String
                             .valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }

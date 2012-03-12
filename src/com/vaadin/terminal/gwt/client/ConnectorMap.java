@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class ConnectorMap {
 
-    private Map<String, Connector> idToConnector = new HashMap<String, Connector>();
+    private Map<String, ServerConnector> idToConnector = new HashMap<String, ServerConnector>();
 
     public static ConnectorMap get(ApplicationConnection applicationConnection) {
         return applicationConnection.getConnectorMap();
@@ -34,14 +34,14 @@ public class ConnectorMap {
     private Set<String> unregistryBag = new HashSet<String>();
 
     /**
-     * Returns a {@link Connector} by its id
+     * Returns a {@link ServerConnector} by its id
      * 
      * @param id
      *            The connector id
      * @return A connector or null if a connector with the given id has not been
      *         registered
      */
-    public Connector getConnector(String connectorId) {
+    public ServerConnector getConnector(String connectorId) {
         return idToConnector.get(connectorId);
     }
 
@@ -91,7 +91,7 @@ public class ConnectorMap {
         return getConnector(widget.getElement());
     }
 
-    public void registerConnector(String id, Connector connector) {
+    public void registerConnector(String id, ServerConnector connector) {
         ComponentDetail componentDetail = GWT.create(ComponentDetail.class);
         idToComponentDetail.put(id, componentDetail);
         idToConnector.put(id, connector);
@@ -117,10 +117,10 @@ public class ConnectorMap {
      *            the connector whose id is needed
      * @return the id for the given connector or null if the connector could not
      *         be found
-     * @deprecated use {@link Connector#getId()} instead
+     * @deprecated use {@link ServerConnector#getId()} instead
      */
     @Deprecated
-    public String getConnectorId(Connector connector) {
+    public String getConnectorId(ServerConnector connector) {
         if (connector == null) {
             return null;
         }
@@ -135,7 +135,7 @@ public class ConnectorMap {
     /**
      * Gets the connector id using a DOM element - the element should be the
      * root element for a connector, otherwise no id will be found. Use
-     * {@link #getConnectorId(Connector)} instead whenever possible.
+     * {@link #getConnectorId(ServerConnector)} instead whenever possible.
      * 
      * @see #getConnectorId(Paintable)
      * @param el
@@ -156,7 +156,7 @@ public class ConnectorMap {
      * @return the element for the connector corresponding to the id
      */
     public Element getElement(String connectorId) {
-        Connector p = getConnector(connectorId);
+        ServerConnector p = getConnector(connectorId);
         if (p instanceof ComponentConnector) {
             return ((ComponentConnector) p).getWidget().getElement();
         }
@@ -173,7 +173,7 @@ public class ConnectorMap {
      * @param connector
      *            the connector to remove
      */
-    public void unregisterConnector(Connector connector) {
+    public void unregisterConnector(ServerConnector connector) {
 
         // add to unregistry queue
 
@@ -203,7 +203,7 @@ public class ConnectorMap {
     public ComponentConnector[] getRegisteredComponentConnectors() {
         ArrayList<ComponentConnector> result = new ArrayList<ComponentConnector>();
 
-        for (Connector connector : getConnectors()) {
+        for (ServerConnector connector : getConnectors()) {
             if (connector instanceof ComponentConnector) {
                 ComponentConnector componentConnector = (ComponentConnector) connector;
                 if (!unregistryBag.contains(connector.getId())) {
@@ -219,7 +219,7 @@ public class ConnectorMap {
         if (unregisterConnectors) {
             for (String connectorId : unregistryBag) {
                 // TODO purge shared state for pid
-                Connector connector = getConnector(connectorId);
+                ServerConnector connector = getConnector(connectorId);
                 if (connector == null) {
                     /*
                      * this should never happen, but it does :-( See e.g.
@@ -261,7 +261,7 @@ public class ConnectorMap {
      * not unregister the given container itself. Does not actually remove the
      * widgets from the DOM.
      * 
-     * @see #unregisterConnector(Connector)
+     * @see #unregisterConnector(ServerConnector)
      * @param container
      *            The container that contains the connectors that should be
      *            unregistered
@@ -347,7 +347,7 @@ public class ConnectorMap {
         return getTooltipInfo(getConnector(widget), key);
     }
 
-    public Collection<? extends Connector> getConnectors() {
+    public Collection<? extends ServerConnector> getConnectors() {
         return Collections.unmodifiableCollection(idToConnector.values());
     }
 

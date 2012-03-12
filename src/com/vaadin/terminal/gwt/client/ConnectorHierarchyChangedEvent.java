@@ -3,7 +3,7 @@ package com.vaadin.terminal.gwt.client;
 import java.util.List;
 
 /**
- * Event for containing data related to a change in the {@link Connector}
+ * Event for containing data related to a change in the {@link ServerConnector}
  * hierarchy. A {@link ConnectorHierarchyChangedEvent} is fired when an update
  * from the server has been fully processed and all hierarchy updates have been
  * completed.

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
 /**
@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.communication.ClientRpc;
  * @since 7.0.0
  * 
  */
-public abstract class AbstractConnector implements Connector {
+public abstract class AbstractConnector implements ServerConnector {
 
     private ApplicationConnection connection;
     private String id;

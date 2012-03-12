@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
  * @version @VERSION@
  * @since 7.0.0
  */
-public interface Connector {
+public interface ServerConnector {
     /**
      * TODO
      * 
