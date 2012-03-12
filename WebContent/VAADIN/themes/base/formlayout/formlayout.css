@@ -14,9 +14,7 @@
 .v-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
-}
-.v-formlayout.v-has-width > table > tbody > tr > td.v-formlayout-contentcell {
-	width: 100%;
+	width: 1px; /* Don't use any extra space */
 }
 .v-formlayout-captioncell .v-caption {
 	overflow: visible;
