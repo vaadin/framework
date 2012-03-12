@@ -256,7 +256,7 @@ public class TableConnector extends AbstractComponentContainerConnector
     }
 
     public void layoutHorizontally() {
-        // getWidget().updateWidth();
+        getWidget().updateWidth();
     }
 
     public void postLayout() {

@@ -5517,15 +5517,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     }
 
-    @Override
-    public void setWidth(String width) {
-        String oldWidth = getElement().getStyle().getWidth();
-        if (!oldWidth.equals(width)) {
-            super.setWidth(width);
-            updateWidth();
-        }
-    }
-
     void updateWidth() {
         if (!isVisible()) {
             /*
