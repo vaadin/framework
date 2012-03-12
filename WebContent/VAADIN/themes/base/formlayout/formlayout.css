@@ -15,7 +15,7 @@
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-contentcell {
+.v-formlayout.v-has-width > table > tbody > tr > td.v-formlayout-contentcell {
 	width: 100%;
 }
 .v-formlayout-captioncell .v-caption {
