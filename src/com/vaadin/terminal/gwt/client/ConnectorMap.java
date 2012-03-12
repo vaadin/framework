@@ -117,14 +117,14 @@ public class ConnectorMap {
      *            the connector whose id is needed
      * @return the id for the given connector or null if the connector could not
      *         be found
-     * @deprecated use {@link ServerConnector#getId()} instead
+     * @deprecated use {@link ServerConnector#getConnectorId()} instead
      */
     @Deprecated
     public String getConnectorId(ServerConnector connector) {
         if (connector == null) {
             return null;
         }
-        return connector.getId();
+        return connector.getConnectorId();
     }
 
     @Deprecated
@@ -181,7 +181,7 @@ public class ConnectorMap {
             VConsole.error("WARN: Trying to unregister null connector");
             return;
         }
-        String id = connector.getId();
+        String id = connector.getConnectorId();
         Widget widget = null;
         if (connector instanceof ComponentConnector) {
             widget = ((ComponentConnector) connector).getWidget();
@@ -206,7 +206,7 @@ public class ConnectorMap {
         for (ServerConnector connector : getConnectors()) {
             if (connector instanceof ComponentConnector) {
                 ComponentConnector componentConnector = (ComponentConnector) connector;
-                if (!unregistryBag.contains(connector.getId())) {
+                if (!unregistryBag.contains(connector.getConnectorId())) {
                     result.add(componentConnector);
                 }
             }

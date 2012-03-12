@@ -85,7 +85,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
             layout.addOrMove(slot, currentIndex++);
 
-            String pid = child.getId();
+            String pid = child.getConnectorId();
 
             AlignmentInfo alignment;
             if (alignments.containsKey(pid)) {

@@ -127,7 +127,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         // register the listened events by the server-side to the event-handler
         // of the component
-        paintableMap.registerEventListenersFromUIDL(getId(), uidl);
+        paintableMap.registerEventListenersFromUIDL(getConnectorId(), uidl);
 
         // Visibility
         setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
@@ -210,7 +210,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             w = componentState.getWidth();
         } else {
             // TODO move logging to VUIDLBrowser and VDebugConsole
-            VConsole.log("No state for paintable " + getId()
+            VConsole.log("No state for paintable " + getConnectorId()
                     + " in VAbstractPaintableWidget.updateComponentSize()");
         }
 
@@ -425,7 +425,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *            GWT.create().
      */
     protected <T extends ServerRpc> T initRPC(T clientToServerRpc) {
-        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getId(),
+        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getConnectorId(),
                 getConnection());
         return clientToServerRpc;
     }

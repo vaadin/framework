@@ -37,7 +37,7 @@ public class LayoutManager {
         if (measuredSize.isWidthNeedsUpdate()) {
             ownerSize.setWidthNeedsUpdate();
         }
-        measuredSize.addDependent(owner.getId());
+        measuredSize.addDependent(owner.getConnectorId());
     }
 
     private MeasuredSize ensureMeasured(Element element) {
@@ -95,7 +95,7 @@ public class LayoutManager {
         if (measuredSize == null) {
             return;
         }
-        measuredSize.removeDependent(owner.getId());
+        measuredSize.removeDependent(owner.getConnectorId());
         if (!needsMeasure(element)) {
             nonPaintableElements.remove(element);
             setMeasuredSize(element, null);
@@ -139,18 +139,18 @@ public class LayoutManager {
 
                 if (measuredSize.isHeightNeedsUpdate()) {
                     if (managed) {
-                        needsHeightUpdate.add(paintable.getId());
+                        needsHeightUpdate.add(paintable.getConnectorId());
                     }
                     if (!paintable.isRelativeHeight() && managedParent) {
-                        needsHeightUpdate.add(parent.getId());
+                        needsHeightUpdate.add(parent.getConnectorId());
                     }
                 }
                 if (measuredSize.isWidthNeedsUpdate()) {
                     if (managed) {
-                        needsWidthUpdate.add(paintable.getId());
+                        needsWidthUpdate.add(paintable.getConnectorId());
                     }
                     if (!paintable.isRelativeWidth() && managedParent) {
-                        needsWidthUpdate.add(parent.getId());
+                        needsWidthUpdate.add(parent.getConnectorId());
                     }
                 }
                 measuredSize.clearDirtyState();

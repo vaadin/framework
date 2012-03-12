@@ -140,7 +140,7 @@ public class FormConnector extends AbstractComponentContainerConnector
             if (childUidl != null) {
                 if (getWidget().shortcutHandler == null) {
                     getWidget().shortcutHandler = new ShortcutActionHandler(
-                            getId(), client);
+                            getConnectorId(), client);
                     getWidget().keyDownRegistration = getWidget()
                             .addDomHandler(getWidget(), KeyDownEvent.getType());
                 }

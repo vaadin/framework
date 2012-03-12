@@ -164,7 +164,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
                 if (childUidl.getTag().equals("actions")) {
                     if (getWidget().shortcutHandler == null) {
                         getWidget().shortcutHandler = new ShortcutActionHandler(
-                                getId(), client);
+                                getConnectorId(), client);
                     }
                     getWidget().shortcutHandler.updateActionMap(childUidl);
                 }

@@ -42,7 +42,7 @@ public abstract class AbstractConnector implements ServerConnector {
      * 
      * @see com.vaadin.terminal.gwt.client.Connector#getId()
      */
-    public String getId() {
+    public String getConnectorId() {
         return id;
     }
 

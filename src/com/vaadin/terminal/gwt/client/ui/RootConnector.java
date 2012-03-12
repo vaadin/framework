@@ -39,10 +39,10 @@ public class RootConnector extends AbstractComponentContainerConnector
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         // register the listened events by the server-side to the event-handler
         // of the component
-        paintableMap.registerEventListenersFromUIDL(getId(), uidl);
+        paintableMap.registerEventListenersFromUIDL(getConnectorId(), uidl);
 
         getWidget().rendering = true;
-        getWidget().id = getId();
+        getWidget().id = getConnectorId();
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
 
