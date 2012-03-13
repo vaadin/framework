@@ -2071,21 +2071,32 @@ public class ApplicationConnection {
                 eventIdentifier);
     }
 
-    private boolean layoutScheduled = false;
+    private boolean layoutPending = false;
     private ScheduledCommand layoutCommand = new ScheduledCommand() {
         public void execute() {
-            layoutScheduled = false;
-
-            layoutManager.doLayout();
+            /*
+             * Layout again if a new layout is requested while the current one
+             * is running.
+             */
+            while (layoutPending) {
+                layoutPending = false;
+                layoutManager.doLayout();
+            }
         }
     };
 
     public void doLayout(boolean lazy) {
+        layoutPending = true;
         if (!lazy) {
             layoutCommand.execute();
-        } else if (!layoutScheduled) {
-            layoutScheduled = true;
-            Scheduler.get().scheduleDeferred(layoutCommand);
+        } else if (!layoutPending) {
+            /*
+             * Current layoutCommand will do layouts again if layoutScheduled is
+             * set to true -> no need to schedule another command
+             */
+            if (!layoutManager.isLayoutRunning()) {
+                Scheduler.get().scheduleDeferred(layoutCommand);
+            }
         }
     }
 

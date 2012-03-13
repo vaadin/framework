@@ -1862,6 +1862,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
         });
+
+        client.doLayout(true);
     }
 
     /**
@@ -5511,7 +5513,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     scrollBodyPanel.setScrollPosition(scrollTop - 1);
                 }
 
-                sizeInit();
+                sizeNeedsInit = true;
             }
         }
 

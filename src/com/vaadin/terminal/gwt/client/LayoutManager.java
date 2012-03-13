@@ -17,6 +17,7 @@ public class LayoutManager {
     private final ApplicationConnection connection;
     private final Set<Element> nonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
+    private boolean layoutRunning = false;
 
     public LayoutManager(ApplicationConnection connection) {
         this.connection = connection;
@@ -101,8 +102,17 @@ public class LayoutManager {
         }
     }
 
+    public boolean isLayoutRunning() {
+        return layoutRunning;
+    }
+
     public void doLayout() {
+        if (layoutRunning) {
+            throw new IllegalStateException(
+                    "Can't start a new layout phase before the previous layout phase ends.");
+        }
         VConsole.log("Starting layout phase");
+        layoutRunning = true;
 
         ConnectorMap paintableMap = connection.getConnectorMap();
         ComponentConnector[] paintableWidgets = paintableMap
@@ -225,6 +235,7 @@ public class LayoutManager {
             }
         }
 
+        layoutRunning = false;
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
     }
