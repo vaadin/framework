@@ -337,14 +337,9 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     void setInternalHeights() {
-        int captionHeight = 0;
+        int captionHeight = Util.getRequiredHeight(captionWrapper);
         int totalHeight = getOffsetHeight();
 
-        if (optionsCaption != null) {
-            captionHeight = Util.getRequiredHeight(optionsCaption);
-        } else if (selectionsCaption != null) {
-            captionHeight = Util.getRequiredHeight(selectionsCaption);
-        }
         String selectHeight = (totalHeight - captionHeight) + "px";
 
         selections.setHeight(selectHeight);
