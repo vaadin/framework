@@ -20,6 +20,7 @@ import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 
 /**
@@ -35,6 +36,7 @@ public class JsonCodec implements Serializable {
     static {
         registerType(String.class, JsonEncoder.VTYPE_STRING);
         registerType(Paintable.class, JsonEncoder.VTYPE_PAINTABLE);
+        registerType(Connector.class, JsonEncoder.VTYPE_PAINTABLE);
         registerType(Boolean.class, JsonEncoder.VTYPE_BOOLEAN);
         registerType(Integer.class, JsonEncoder.VTYPE_INTEGER);
         registerType(Float.class, JsonEncoder.VTYPE_FLOAT);

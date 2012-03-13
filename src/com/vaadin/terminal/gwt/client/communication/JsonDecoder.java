@@ -15,8 +15,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**
  * Client side decoder for decodeing shared state and other values from JSON
@@ -39,7 +39,8 @@ public class JsonDecoder {
      * @param jsonArray
      *            JSON array with two elements
      * @param idMapper
-     *            mapper between connector ID and {@link ServerConnector} objects
+     *            mapper between connector ID and {@link ServerConnector}
+     *            objects
      * @param connection
      *            reference to the current ApplicationConnection
      * @return decoded value (does not contain JSON types)
@@ -82,8 +83,7 @@ public class JsonDecoder {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
         } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
-            // TODO handle properly
-            val = idMapper.getConnector(String.valueOf(value));
+            val = idMapper.getConnector(((JSONString) value).stringValue());
         } else {
             // object, class name as type
             JSONSerializer serializer = serializerMap
