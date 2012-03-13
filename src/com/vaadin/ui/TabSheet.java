@@ -1286,4 +1286,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
     }
+
+    @Override
+    public boolean isComponentVisible(Component childComponent) {
+        return childComponent == getSelectedTab();
+    }
 }

@@ -253,4 +253,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
         // content never detached
     }
 
+    public boolean isComponentVisible(Component childComponent) {
+        return true;
+    }
 }

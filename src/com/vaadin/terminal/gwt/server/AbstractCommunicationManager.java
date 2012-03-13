@@ -946,22 +946,23 @@ public abstract class AbstractCommunicationManager implements
             JSONObject hierarchyInfo = new JSONObject();
             for (Paintable p : hierarchyPendingQueue) {
                 if (p instanceof HasComponents) {
-                    HasComponents cc = (HasComponents) p;
-                    String connectorId = paintableIdMap.get(cc);
+                    HasComponents parent = (HasComponents) p;
+                    String parentConnectorId = paintableIdMap.get(parent);
                     JSONArray children = new JSONArray();
 
-                    for (Component child : getChildComponents(cc)) {
-                        if (child.getState().isVisible()) {
+                    for (Component child : getChildComponents(parent)) {
+                        if (child.getState().isVisible()
+                                && parent.isComponentVisible(child)) {
                             String childConnectorId = getPaintableId(child);
                             children.put(childConnectorId);
                         }
                     }
                     try {
-                        hierarchyInfo.put(connectorId, children);
+                        hierarchyInfo.put(parentConnectorId, children);
                     } catch (JSONException e) {
                         throw new PaintException(
                                 "Failed to send hierarchy information about "
-                                        + connectorId + " to the client: "
+                                        + parentConnectorId + " to the client: "
                                         + e.getMessage());
                     }
                 }

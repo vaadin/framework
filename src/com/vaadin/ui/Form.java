@@ -1420,4 +1420,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         return count;
     }
+
+    public boolean isComponentVisible(Component childComponent) {
+        return true;
+    };
 }
