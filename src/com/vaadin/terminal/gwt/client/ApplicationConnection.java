@@ -2086,10 +2086,11 @@ public class ApplicationConnection {
     };
 
     public void doLayout(boolean lazy) {
-        layoutPending = true;
         if (!lazy) {
+            layoutPending = true;
             layoutCommand.execute();
         } else if (!layoutPending) {
+            layoutPending = true;
             /*
              * Current layoutCommand will do layouts again if layoutScheduled is
              * set to true -> no need to schedule another command
