@@ -116,7 +116,7 @@ public class LayoutManager {
 
         ConnectorMap paintableMap = connection.getConnectorMap();
         ComponentConnector[] paintableWidgets = paintableMap
-                .getRegisteredComponentConnectors();
+                .getComponentConnectors();
 
         int passes = 0;
         Duration totalDuration = new Duration();
@@ -282,7 +282,7 @@ public class LayoutManager {
     public void foceLayout() {
         ConnectorMap paintableMap = connection.getConnectorMap();
         ComponentConnector[] paintableWidgets = paintableMap
-                .getRegisteredComponentConnectors();
+                .getComponentConnectors();
         for (ComponentConnector vPaintableWidget : paintableWidgets) {
             MeasuredSize measuredSize = getMeasuredSize(vPaintableWidget);
             measuredSize.setHeightNeedsUpdate();

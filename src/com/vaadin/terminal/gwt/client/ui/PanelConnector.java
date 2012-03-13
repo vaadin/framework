@@ -271,28 +271,12 @@ public class PanelConnector extends AbstractComponentContainerConnector
     @Override
     public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
         super.connectorHierarchyChanged(event);
+        // We always have 1 child, Panel takes care of ensuring content is never
+        // null
+        ComponentConnector newChild = getChildren().get(0);
+        Widget newChildWidget = newChild.getWidget();
 
-        possiblyUnregisterOldChild(event);
-
-        // We always have 0 or 1 child
-        ComponentConnector newChild = null;
-        if (getChildren().size() != 0) {
-            // We now have one child
-            newChild = getChildren().get(0);
-        }
-
-        getWidget().setWidget(newChild.getWidget());
+        getWidget().setWidget(newChildWidget);
     }
 
-    private void possiblyUnregisterOldChild(ConnectorHierarchyChangedEvent event) {
-        // Did we have a child that needs to be unregistered?
-        if (event.getOldChildren().size() != 0) {
-            ComponentConnector oldChild = event.getOldChildren().get(0);
-            // We had a child, unregister it
-            // TODO Should be handled by the framework
-            if (oldChild.getParent() == null) {
-                getConnection().unregisterPaintable(oldChild);
-            }
-        }
-    }
 }

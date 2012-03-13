@@ -1030,6 +1030,7 @@ public class ApplicationConnection {
                             json.getValueMap("dd"));
                 }
 
+                unregisterRemovedConnectors();
                 VConsole.log("updateFromUidl: "
                         + updateDuration.elapsedMillis() + " ms");
 
@@ -1077,16 +1078,6 @@ public class ApplicationConnection {
                     }
                 }
 
-                if (repaintAll) {
-                    /*
-                     * idToPaintableDetail is already cleanded at the start of
-                     * the changeset handling, bypass cleanup.
-                     */
-                    connectorMap.purgeUnregistryBag(false);
-                } else {
-                    connectorMap.purgeUnregistryBag(true);
-                }
-
                 // TODO build profiling for widget impl loading time
 
                 final long prosessingTime = (new Date().getTime())
@@ -1097,6 +1088,29 @@ public class ApplicationConnection {
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
                 endRequest();
+
+            }
+
+            private void unregisterRemovedConnectors() {
+                List<ServerConnector> currentConnectors = new ArrayList<ServerConnector>(
+                        connectorMap.getConnectors());
+                for (ServerConnector c : currentConnectors) {
+                    if (c instanceof ComponentConnector) {
+                        ComponentConnector cc = (ComponentConnector) c;
+                        if (cc.getParent() == null
+                                && !(cc instanceof RootConnector)) {
+                            // The connector has been detached from the
+                            // hierarchy, unregister it and any possible
+                            // children. The RootConnector should never be
+                            // unregistered even though it has no parent.
+                            connectorMap.unregisterConnector(cc);
+                        } else if (cc.getParent() != null
+                                && !cc.getParent().getChildren().contains(cc)) {
+                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                        }
+                    }
+
+                }
 
             }
 
@@ -1244,6 +1258,16 @@ public class ApplicationConnection {
                                     .get(connectorIndex);
                             ComponentConnector childConnector = (ComponentConnector) connectorMap
                                     .getConnector(childConnectorId);
+                            if (childConnector == null) {
+                                VConsole.error("Hierarchy claims that "
+                                        + childConnectorId + " is a child for "
+                                        + connectorId + " ("
+                                        + connector.getClass().getName()
+                                        + ") but no connector with id "
+                                        + childConnectorId
+                                        + " has been registered");
+                                continue;
+                            }
                             newChildren.add(childConnector);
                             if (childConnector.getParent() != ccc) {
                                 // Avoid extra calls to setParent
@@ -1270,6 +1294,20 @@ public class ApplicationConnection {
                         event.setParent(ccc);
                         ccc.setChildren((List) newChildren);
                         events.add(event);
+
+                        // Remove parent for children that are no longer
+                        // attached to this (avoid updating children if they
+                        // have already been assigned to a new parent)
+                        for (ComponentConnector oldChild : oldChildren) {
+                            if (oldChild.getParent() != ccc) {
+                                continue;
+                            }
+
+                            // TODO This could probably be optimized
+                            if (!newChildren.contains(oldChild)) {
+                                oldChild.setParent(null);
+                            }
+                        }
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
@@ -2156,7 +2194,9 @@ public class ApplicationConnection {
 
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        connectorMap.unregisterConnector(p);
+        System.out.println("unregisterPaintable (unnecessarily) called for "
+                + p.getConnectorId());
+        // connectorMap.unregisterConnector(p);
     }
 
     public VTooltip getVTooltip() {

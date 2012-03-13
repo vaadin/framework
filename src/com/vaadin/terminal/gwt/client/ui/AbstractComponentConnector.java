@@ -190,7 +190,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             } else {
                 VConsole.error("Parent of connector "
                         + getClass().getName()
-                        + " is null. This is typically an indication of a broken component hierarchy");
+                        + " ("
+                        + getConnectorId()
+                        + ") is null. This is typically an indication of a broken component hierarchy");
             }
         }
 
@@ -432,8 +434,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *            GWT.create().
      */
     protected <T extends ServerRpc> T initRPC(T clientToServerRpc) {
-        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(getConnectorId(),
-                getConnection());
+        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(
+                getConnectorId(), getConnection());
         return clientToServerRpc;
     }
 

@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -30,8 +28,6 @@ public class ConnectorMap {
     @Deprecated
     private final ComponentDetailMap idToComponentDetail = ComponentDetailMap
             .create();
-
-    private Set<String> unregistryBag = new HashSet<String>();
 
     /**
      * Returns a {@link ServerConnector} by its id
@@ -174,84 +170,52 @@ public class ConnectorMap {
      *            the connector to remove
      */
     public void unregisterConnector(ServerConnector connector) {
-
-        // add to unregistry queue
-
         if (connector == null) {
-            VConsole.error("WARN: Trying to unregister null connector");
+            VConsole.error("Trying to unregister null connector");
             return;
         }
-        String id = connector.getConnectorId();
+
+        String connectorId = connector.getConnectorId();
+        VConsole.log("Unregistering connector " + connectorId + " ("
+                + connector.getClass().getName() + ")");
+
+        // Warn if widget is still attached to DOM. It should never be at this
+        // point.
         Widget widget = null;
         if (connector instanceof ComponentConnector) {
             widget = ((ComponentConnector) connector).getWidget();
         }
 
-        if (id == null) {
-            VConsole.log("Tried to unregister a "
-                    + connector.getClass().getName() + " (" + id
-                    + ") which was not registered");
-        } else {
-            unregistryBag.add(id);
+        if (widget != null && widget.isAttached()) {
+            VConsole.log("Widget for unregistered connector " + connectorId
+                    + " is still attached to the DOM.");
         }
-        if (widget != null && widget instanceof HasWidgets) {
-            unregisterChildConnectors((HasWidgets) widget);
-        }
+        idToComponentDetail.remove(connectorId);
+        idToConnector.remove(connectorId);
 
+        if (connector instanceof ComponentContainerConnector) {
+            for (ComponentConnector child : ((ComponentContainerConnector) connector)
+                    .getChildren()) {
+                unregisterConnector(child);
+            }
+        }
     }
 
-    public ComponentConnector[] getRegisteredComponentConnectors() {
+    /**
+     * Gets all registered {@link ComponentConnector} instances
+     * 
+     * @return An array of all registered {@link ComponentConnector} instances
+     */
+    public ComponentConnector[] getComponentConnectors() {
         ArrayList<ComponentConnector> result = new ArrayList<ComponentConnector>();
 
         for (ServerConnector connector : getConnectors()) {
             if (connector instanceof ComponentConnector) {
-                ComponentConnector componentConnector = (ComponentConnector) connector;
-                if (!unregistryBag.contains(connector.getConnectorId())) {
-                    result.add(componentConnector);
-                }
+                result.add((ComponentConnector) connector);
             }
         }
 
         return result.toArray(new ComponentConnector[result.size()]);
-    }
-
-    void purgeUnregistryBag(boolean unregisterConnectors) {
-        if (unregisterConnectors) {
-            for (String connectorId : unregistryBag) {
-                // TODO purge shared state for pid
-                ServerConnector connector = getConnector(connectorId);
-                if (connector == null) {
-                    /*
-                     * this should never happen, but it does :-( See e.g.
-                     * com.vaadin.tests.components.accordion.RemoveTabs (with
-                     * test script)
-                     */
-                    VConsole.error("Tried to unregister component (id="
-                            + connectorId
-                            + ") that is never registered (or already unregistered)");
-                    continue;
-                }
-                VConsole.log("Unregistering connector "
-                        + connector.getClass().getName() + " " + connectorId);
-                Widget widget = null;
-                if (connector instanceof ComponentConnector) {
-                    widget = ((ComponentConnector) connector).getWidget();
-                }
-
-                // check if can be cleaned
-                if (widget == null || !widget.isAttached()) {
-                    // clean reference to paintable
-                    idToComponentDetail.remove(connectorId);
-                    idToConnector.remove(connectorId);
-                }
-                /*
-                 * else NOP : same component has been reattached to another
-                 * parent or replaced by another component implementation.
-                 */
-            }
-        }
-
-        unregistryBag.clear();
     }
 
     /**
@@ -265,7 +229,9 @@ public class ConnectorMap {
      * @param container
      *            The container that contains the connectors that should be
      *            unregistered
+     * @deprecated Only here for now to support the broken VScrollTable behavior
      */
+    @Deprecated
     public void unregisterChildConnectors(HasWidgets container) {
         // FIXME: This should be based on the paintable hierarchy
         final Iterator<Widget> it = container.iterator();
@@ -274,8 +240,11 @@ public class ConnectorMap {
             ComponentConnector p = getConnector(w);
             if (p != null) {
                 // This will unregister the paintable and all its children
-                unregisterConnector(p);
-            } else if (w instanceof HasWidgets) {
+                idToComponentDetail.remove(p.getConnectorId());
+                idToConnector.remove(p.getConnectorId());
+            }
+
+            if (w instanceof HasWidgets) {
                 // For normal widget containers, unregister the children
                 unregisterChildConnectors((HasWidgets) w);
             }
