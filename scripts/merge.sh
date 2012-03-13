@@ -13,14 +13,14 @@ localchanges=`svn stat|wc -l`
 if [ "$localchanges" != "0" ]
 then
 	echo "You must have a clean working space copy"
-	#exit 2
+	exit 2
 fi
 
 if [ "$SVN_PASS_FILE" != "" ]
 then
        SVN_PASS=`cat "$SVN_PASS_FILE"`
 fi
-
+       
 svn up
 
 currentrepowithoutversion=`svn info|grep URL|sed "s/URL: //"|sed "s/\/[^\/]*$//"`

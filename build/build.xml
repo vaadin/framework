@@ -542,7 +542,7 @@
     <target name="compile-widgetset" description="Compiles the widgetset given as the first parameter">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <property name="widgetset-style" value="OBF" />
-    	<property name="widgetset-localWorkers" value="1" />
+    	<property name="widgetset-localWorkers" value="4" />
     	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
         <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
