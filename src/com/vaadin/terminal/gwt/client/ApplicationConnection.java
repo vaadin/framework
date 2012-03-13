@@ -683,7 +683,7 @@ public class ApplicationConnection {
      *            error happened before response was received.
      */
     protected void showCommunicationError(String details, int statusCode) {
-        showAuthenticationError(details);
+        showCommunicationError(details);
     }
 
     /**
