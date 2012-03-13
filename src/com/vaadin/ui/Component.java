@@ -18,6 +18,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.server.RpcTarget;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -53,7 +54,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
  * @since 3.0
  */
 public interface Component extends Paintable, VariableOwner, Sizeable,
-        Serializable {
+        Serializable, RpcTarget {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component

@@ -23,7 +23,6 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
-import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Component.Focusable;
@@ -40,7 +39,7 @@ import com.vaadin.ui.Component.Focusable;
 @ClientWidget(value = ButtonConnector.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
-        Action.ShortcutNotifier, RpcTarget {
+        Action.ShortcutNotifier {
 
     /**
      * Creates a new push button.

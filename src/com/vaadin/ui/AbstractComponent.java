@@ -1604,8 +1604,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     protected <T> void registerRpcImplementation(T implementation,
             Class<T> rpcInterfaceType) {
         if (this instanceof RpcTarget) {
-            rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
-                    (RpcTarget) this, implementation, rpcInterfaceType));
+            rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(this,
+                    implementation, rpcInterfaceType));
         } else {
             throw new RuntimeException(
                     "Cannot register an RPC implementation for a component that is not an RpcTarget");
