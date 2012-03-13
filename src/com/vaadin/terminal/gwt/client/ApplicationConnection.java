@@ -140,7 +140,7 @@ public class ApplicationConnection {
 
     protected boolean applicationRunning = false;
 
-    private int activeRequests = 0;
+    private boolean hasActiveRequest = false;
 
     /** Parameters for this application connection loaded from the web-page */
     private ApplicationConfiguration configuration;
@@ -358,12 +358,12 @@ public class ApplicationConnection {
 
     /**
      * Indicates whether or not there are currently active UIDL requests. Used
-     * internally to squence requests properly, seldom needed in Widgets.
+     * internally to sequence requests properly, seldom needed in Widgets.
      * 
      * @return true if there are active requests
      */
     public boolean hasActiveRequest() {
-        return (activeRequests > 0);
+        return hasActiveRequest;
     }
 
     private String getRepaintAllParameters() {
@@ -521,7 +521,9 @@ public class ApplicationConnection {
                         (new Timer() {
                             @Override
                             public void run() {
-                                activeRequests--;
+                                // TODO why? Here used to be "activeRequests--;"
+                                // but can't see why exactly
+                                hasActiveRequest = false;
                                 doUidlRequest(uri, payload, synchronous);
                             }
                         }).schedule(delay);
@@ -735,7 +737,7 @@ public class ApplicationConnection {
     }
 
     protected void startRequest() {
-        activeRequests++;
+        hasActiveRequest = true;
         requestStartTime = new Date();
         // show initial throbber
         if (loadTimer == null) {
@@ -763,11 +765,11 @@ public class ApplicationConnection {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
-        activeRequests--;
+        hasActiveRequest = false;
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                if (activeRequests == 0) {
+                if (!hasActiveRequest()) {
                     hideLoadingIndicator();
                 }
             }
@@ -1402,10 +1404,6 @@ public class ApplicationConnection {
             }
         }
         makeUidlRequest(req.toString(), "", forceSync);
-    }
-
-    private void makeUidlRequest(String string) {
-        makeUidlRequest(string, "", false);
     }
 
     /**
