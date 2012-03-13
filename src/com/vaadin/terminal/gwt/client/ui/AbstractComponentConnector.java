@@ -184,7 +184,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         // Set captions
         if (delegateCaptionHandling()) {
-            getParent().updateCaption(this, uidl);
+            ComponentContainerConnector parent = getParent();
+            if (parent != null) {
+                parent.updateCaption(this, uidl);
+            } else {
+                VConsole.error("Parent of connector "
+                        + getClass().getName()
+                        + " is null. This is typically an indication of a broken component hierarchy");
+            }
         }
 
         /*
