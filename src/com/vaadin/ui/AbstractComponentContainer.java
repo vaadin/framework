@@ -372,4 +372,14 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
+    /**
+     * Returns an iterator for the child components.
+     * 
+     * @return An iterator for the child components.
+     * @see #getComponentIterator()
+     * @since 7.0.0
+     */
+    public Iterator<Component> iterator() {
+        return getComponentIterator();
+    }
 }

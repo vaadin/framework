@@ -68,7 +68,7 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 
@@ -945,14 +945,12 @@ public abstract class AbstractCommunicationManager implements
 
             JSONObject hierarchyInfo = new JSONObject();
             for (Paintable p : hierarchyPendingQueue) {
-                if (p instanceof ComponentContainer) {
-                    ComponentContainer cc = (ComponentContainer) p;
+                if (p instanceof HasComponents) {
+                    HasComponents cc = (HasComponents) p;
                     String connectorId = paintableIdMap.get(cc);
                     JSONArray children = new JSONArray();
 
-                    Iterator<Component> iterator = getChildComponentIterator(cc);
-                    while (iterator.hasNext()) {
-                        Component child = iterator.next();
+                    for (Component child : getChildComponents(cc)) {
                         if (child.getState().isVisible()) {
                             String childConnectorId = getPaintableId(child);
                             children.put(childConnectorId);
@@ -1177,17 +1175,17 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    private Iterator<Component> getChildComponentIterator(ComponentContainer cc) {
+    private Iterable<Component> getChildComponents(HasComponents cc) {
         if (cc instanceof Panel) {
             // This is so wrong.. (#2924)
             if (((Panel) cc).getContent() == null) {
-                return new NullIterator<Component>();
+                return Collections.emptyList();
             } else {
-                return Collections.singleton(
-                        (Component) ((Panel) cc).getContent()).iterator();
+                return Collections.singleton((Component) ((Panel) cc)
+                        .getContent());
             }
         }
-        return cc.getComponentIterator();
+        return cc;
     }
 
     /**

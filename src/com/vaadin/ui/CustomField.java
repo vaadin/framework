@@ -173,6 +173,10 @@ public abstract class CustomField<T> extends AbstractField<T> implements
         return new ComponentIterator();
     }
 
+    public Iterator<Component> iterator() {
+        return getComponentIterator();
+    }
+
     public int getComponentCount() {
         return (null != getContent()) ? 1 : 0;
     }
