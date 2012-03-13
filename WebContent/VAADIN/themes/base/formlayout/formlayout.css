@@ -14,6 +14,8 @@
 .v-formlayout-captioncell {
 	text-align:right;
 	white-space: nowrap;
+}
+.v-formlayout-errorcell, .v-formlayout-captioncell {
 	width: 1px; /* Don't use any extra space */
 }
 .v-formlayout-captioncell .v-caption {
