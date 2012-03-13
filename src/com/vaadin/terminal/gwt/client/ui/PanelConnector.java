@@ -144,18 +144,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
         getWidget().handleError(uidl);
 
-        // Render content
-        // final UIDL layoutUidl = uidl.getChildUIDL(0);
-        // final ComponentConnector newLayout = client.getPaintable(layoutUidl);
-        // if (newLayout != getWidget().layout) {
-        // if (getWidget().layout != null) {
-        // client.unregisterPaintable(getWidget().layout);
-        // }
-        // getWidget().setWidget(newLayout.getWidget());
-        // getWidget().layout = newLayout;
-        // }
-        // getWidget().layout.updateFromUIDL(layoutUidl, client);
-
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 0) {
             final int cnt = uidl.getChildCount();
