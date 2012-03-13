@@ -10,6 +10,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 
 public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector {
@@ -56,8 +57,20 @@ public abstract class AbstractComponentContainerConnector extends
      */
     public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
         // TODO Remove debug info
-        System.out.println("Hierarchy changed for " + Util.getSimpleName(this));
-        System.out.println("* Old children: " + event.getOldChildren());
-        System.out.println("* New children: " + getChildren());
+        VConsole.log("Hierarchy changed for " + Util.getSimpleName(this) + " ("
+                + getConnectorId() + ")");
+        String oldChildren = "* Old children: ";
+        for (ComponentConnector child : event.getOldChildren()) {
+            oldChildren += Util.getSimpleName(child) + " ("
+                    + child.getConnectorId() + ") ";
+        }
+        VConsole.log(oldChildren);
+
+        String newChildren = "* New children: ";
+        for (ComponentConnector child : getChildren()) {
+            newChildren += Util.getSimpleName(child) + " ("
+                    + child.getConnectorId() + ") ";
+        }
+        VConsole.log(newChildren);
     }
 }
