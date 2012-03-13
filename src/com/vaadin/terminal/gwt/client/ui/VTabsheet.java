@@ -896,9 +896,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     private void renderContent(final UIDL contentUIDL) {
         final ComponentConnector content = client.getPaintable(contentUIDL);
+        Widget newWidget = content.getWidget();
         if (tp.getWidgetCount() > activeTabIndex) {
             Widget old = tp.getWidget(activeTabIndex);
-            if (old != content) {
+            if (old != newWidget) {
                 tp.remove(activeTabIndex);
                 ConnectorMap paintableMap = ConnectorMap.get(client);
                 if (paintableMap.isConnector(old)) {

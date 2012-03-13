@@ -9,7 +9,6 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public abstract class TabsheetBaseConnector extends
@@ -37,7 +36,7 @@ public abstract class TabsheetBaseConnector extends
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);
 
-        // Paintables in the TabSheet before update
+        // Widgets in the TabSheet before update
         ArrayList<Widget> oldWidgets = new ArrayList<Widget>();
         for (Iterator<Widget> iterator = getWidget().getWidgetIterator(); iterator
                 .hasNext();) {
@@ -75,23 +74,19 @@ public abstract class TabsheetBaseConnector extends
 
         for (int i = 0; i < getWidget().getTabCount(); i++) {
             ComponentConnector p = getWidget().getTab(i);
-            // During the initial rendering the paintable might be null (this is
-            // weird...)
+            // null for PlaceHolder widgets
             if (p != null) {
                 oldWidgets.remove(p.getWidget());
             }
         }
 
-        // Perform unregister for any paintables removed during update
+        // Detach any old tab widget, should be max 1
         for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
                 .hasNext();) {
             Widget oldWidget = iterator.next();
-            ComponentConnector oldPaintable = ConnectorMap.get(client)
-                    .getConnector(oldWidget);
             if (oldWidget.isAttached()) {
                 oldWidget.removeFromParent();
             }
-            ConnectorMap.get(client).unregisterConnector(oldPaintable);
         }
 
     }

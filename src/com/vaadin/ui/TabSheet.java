@@ -7,10 +7,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -28,7 +26,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.TabsheetConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
-import com.vaadin.terminal.gwt.server.CommunicationManager;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -93,11 +90,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * When true, the tab selection area is not displayed to the user.
      */
     private boolean tabsHidden;
-
-    /**
-     * Tabs that have been shown to the user (have been painted as selected).
-     */
-    private HashSet<Component> paintedTabs = new HashSet<Component>();
 
     /**
      * Handler to be called when a tab is closed.
@@ -380,12 +372,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         target.startTag("tabs");
 
-        Collection<Component> orphaned = new HashSet<Component>(paintedTabs);
-
         for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
             final Component component = i.next();
-
-            orphaned.remove(component);
 
             Tab tab = tabs.get(component);
 
@@ -436,17 +424,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             target.addAttribute("key", keyMapper.key(component));
             if (component.equals(selected)) {
                 target.addAttribute("selected", true);
-                if (!paintedTabs.contains(component)) {
-                    // Ensure the component is painted if it hasn't already been
-                    // painted in this tabsheet
-                    component.requestRepaint();
-                    paintedTabs.add(component);
-                }
                 component.paint(target);
-            } else if (paintedTabs.contains(component)) {
-                component.paint(target);
-            } else {
-                component.requestRepaintRequests();
             }
             target.endTag("tab");
         }
@@ -457,10 +435,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             target.addVariable(this, "selected", keyMapper.key(selected));
         }
 
-        // clean possibly orphaned entries in paintedTabs
-        for (Component component2 : orphaned) {
-            paintedTabs.remove(component2);
-        }
     }
 
     /**
@@ -599,6 +573,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             updateSelection();
             fireSelectedTabChange();
             requestRepaint();
+            // Repaint of the selected component is needed as only the selected
+            // component is communicated to the client. Otherwise this will be a
+            // "cached" update even though the client knows nothing about the
+            // connector
+            if (selected instanceof ComponentContainer) {
+                ((ComponentContainer) selected).requestRepaintAll();
+            } else {
+                selected.requestRepaint();
+            }
         }
     }
 
@@ -878,16 +861,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     protected void fireSelectedTabChange() {
         fireEvent(new SelectedTabChangeEvent(this));
-    }
-
-    @Override
-    public void removeListener(RepaintRequestListener listener) {
-        super.removeListener(listener);
-        if (listener instanceof CommunicationManager) {
-            // clean the paintedTabs here instead of detach to avoid subtree
-            // caching issues when detached-attached without render
-            paintedTabs.clear();
-        }
     }
 
     /**

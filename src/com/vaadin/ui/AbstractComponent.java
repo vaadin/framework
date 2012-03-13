@@ -409,8 +409,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.ui.Component#isVisible()
      */
     public boolean isVisible() {
-        return getState().isVisible()
-                && (getParent() == null || getParent().isVisible());
+        if (getParent() == null) {
+            return getState().isVisible();
+        } else {
+            return getState().isVisible() && getParent().isVisible()
+                    && ((HasComponents) getParent()).isComponentVisible(this);
+        }
     }
 
     /*
@@ -1698,5 +1702,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             pendingInvocations = new ArrayList<ClientMethodInvocation>();
             return Collections.unmodifiableList(result);
         }
+    }
+
+    public String getConnectorId() {
+        throw new RuntimeException(
+                "TODO: Move connector id handling to AbstractComponent");
     }
 }

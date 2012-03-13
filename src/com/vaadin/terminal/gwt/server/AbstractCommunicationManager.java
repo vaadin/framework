@@ -951,8 +951,7 @@ public abstract class AbstractCommunicationManager implements
                     JSONArray children = new JSONArray();
 
                     for (Component child : getChildComponents(parent)) {
-                        if (child.getState().isVisible()
-                                && parent.isComponentVisible(child)) {
+                        if (child.isVisible()) {
                             String childConnectorId = getPaintableId(child);
                             children.put(childConnectorId);
                         }
@@ -962,8 +961,8 @@ public abstract class AbstractCommunicationManager implements
                     } catch (JSONException e) {
                         throw new PaintException(
                                 "Failed to send hierarchy information about "
-                                        + parentConnectorId + " to the client: "
-                                        + e.getMessage());
+                                        + parentConnectorId
+                                        + " to the client: " + e.getMessage());
                     }
                 }
             }
