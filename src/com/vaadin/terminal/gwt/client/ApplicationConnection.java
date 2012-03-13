@@ -1117,6 +1117,10 @@ public class ApplicationConnection {
             private void createConnectorsIfNeeded(ValueMap json) {
                 VConsole.log(" * Creating connectors (if needed)");
 
+                if (!json.containsKey("types")) {
+                    return;
+                }
+
                 ValueMap types = json.getValueMap("types");
                 JsArrayString keyArray = types.getKeyArray();
                 for (int i = 0; i < keyArray.length(); i++) {
@@ -1193,6 +1197,9 @@ public class ApplicationConnection {
 
             private void updateConnectorState(ValueMap json) {
                 VConsole.log(" * Updating connector states");
+                if (!json.containsKey("state")) {
+                    return;
+                }
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
                 JsArrayString keyArray = states.getKeyArray();
@@ -1233,6 +1240,10 @@ public class ApplicationConnection {
                 List<ConnectorHierarchyChangedEvent> events = new LinkedList<ConnectorHierarchyChangedEvent>();
 
                 VConsole.log(" * Updating connector hierarchy");
+                if (!json.containsKey("hierarchy")) {
+                    return events;
+                }
+
                 ValueMap hierarchies = json.getValueMap("hierarchy");
                 JsArrayString hierarchyKeys = hierarchies.getKeyArray();
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
