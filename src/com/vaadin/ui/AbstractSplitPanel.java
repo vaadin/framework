@@ -14,8 +14,10 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector;
+import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector.AbstractSplitPanelState;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -30,10 +32,6 @@ import com.vaadin.tools.ReflectTools;
  * @since 6.5
  */
 public abstract class AbstractSplitPanel extends AbstractLayout {
-
-    private Component firstComponent;
-
-    private Component secondComponent;
 
     private int pos = 50;
 
@@ -66,18 +64,19 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
                 return null;
             }
             i++;
+            AbstractSplitPanelState state = getState();
             if (i == 1) {
-                return firstComponent == null ? secondComponent
-                        : firstComponent;
+                return (getFirstComponent() == null ? getSecondComponent()
+                        : getFirstComponent());
             } else if (i == 2) {
-                return secondComponent;
+                return (Component) state.getSecondChild();
             }
             return null;
         }
 
         public void remove() {
             if (i == 1) {
-                if (firstComponent != null) {
+                if (getFirstComponent() != null) {
                     setFirstComponent(null);
                     i = 0;
                 } else {
@@ -98,60 +97,83 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      */
     @Override
     public void addComponent(Component c) {
-        if (firstComponent == null) {
-            firstComponent = c;
-        } else if (secondComponent == null) {
-            secondComponent = c;
+        if (getFirstComponent() == null) {
+            setFirstComponent(c);
+        } else if (getSecondComponent() == null) {
+            setSecondComponent(c);
         } else {
             throw new UnsupportedOperationException(
                     "Split panel can contain only two components");
         }
-        super.addComponent(c);
-        requestRepaint();
     }
 
+    /**
+     * Sets the first component of this split panel. Depending on the direction
+     * the first component is shown at the top or to the left.
+     * 
+     * @param c
+     *            The component to use as first component
+     */
     public void setFirstComponent(Component c) {
-        if (firstComponent == c) {
+        if (getFirstComponent() == c) {
             // Nothing to do
             return;
         }
 
-        if (firstComponent != null) {
+        if (getFirstComponent() != null) {
             // detach old
-            removeComponent(firstComponent);
+            removeComponent(getFirstComponent());
         }
-        firstComponent = c;
-        super.addComponent(c);
-        requestRepaint();
-    }
-
-    public void setSecondComponent(Component c) {
-        if (c == secondComponent) {
-            // Nothing to do
-            return;
+        getState().setFirstChild(c);
+        if (c != null) {
+            super.addComponent(c);
         }
 
-        if (secondComponent != null) {
-            // detach old
-            removeComponent(secondComponent);
-        }
-        secondComponent = c;
-        super.addComponent(c);
         requestRepaint();
     }
 
     /**
-     * @return the first component of this SplitPanel.
+     * Sets the second component of this split panel. Depending on the direction
+     * the second component is shown at the bottom or to the left.
+     * 
+     * @param c
+     *            The component to use as first component
+     */
+    public void setSecondComponent(Component c) {
+        if (getSecondComponent() == c) {
+            // Nothing to do
+            return;
+        }
+
+        if (getSecondComponent() != null) {
+            // detach old
+            removeComponent(getSecondComponent());
+        }
+        getState().setSecondChild(c);
+        if (c != null) {
+            super.addComponent(c);
+        }
+        requestRepaint();
+    }
+
+    /**
+     * Gets the first component of this split panel. Depending on the direction
+     * this is either the component shown at the top or to the left.
+     * 
+     * @return the first component of this split panel
      */
     public Component getFirstComponent() {
-        return firstComponent;
+        return (Component) getState().getFirstChild();
     }
 
     /**
-     * @return the second component of this SplitPanel.
+     * Gets the second component of this split panel. Depending on the direction
+     * this is either the component shown at the top or to the left.
+     * 
+     * @return the second component of this split panel
      */
     public Component getSecondComponent() {
-        return secondComponent;
+        return (Component) getState().getSecondChild();
     }
 
     /**
@@ -163,10 +185,10 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
-        if (c == firstComponent) {
-            firstComponent = null;
-        } else if (c == secondComponent) {
-            secondComponent = null;
+        if (c == getFirstComponent()) {
+            getState().setFirstChild(null);
+        } else if (c == getSecondComponent()) {
+            getState().setSecondChild(null);
         }
         requestRepaint();
     }
@@ -188,10 +210,10 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      */
     public int getComponentCount() {
         int count = 0;
-        if (firstComponent != null) {
+        if (getFirstComponent() != null) {
             count++;
         }
-        if (secondComponent != null) {
+        if (getSecondComponent() != null) {
             count++;
         }
         return count;
@@ -219,27 +241,19 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
         target.addAttribute("reversed", posReversed);
 
-        if (firstComponent != null) {
-            firstComponent.paint(target);
-        } else {
-            VerticalLayout temporaryComponent = new VerticalLayout();
-            temporaryComponent.setParent(this);
-            temporaryComponent.paint(target);
+        if (getFirstComponent() != null) {
+            getFirstComponent().paint(target);
         }
-        if (secondComponent != null) {
-            secondComponent.paint(target);
-        } else {
-            VerticalLayout temporaryComponent = new VerticalLayout();
-            temporaryComponent.setParent(this);
-            temporaryComponent.paint(target);
+        if (getSecondComponent() != null) {
+            getSecondComponent().paint(target);
         }
     }
 
     /* Documented in superclass */
     public void replaceComponent(Component oldComponent, Component newComponent) {
-        if (oldComponent == firstComponent) {
+        if (oldComponent == getFirstComponent()) {
             setFirstComponent(newComponent);
-        } else if (oldComponent == secondComponent) {
+        } else if (oldComponent == getSecondComponent()) {
             setSecondComponent(newComponent);
         }
         requestRepaint();
@@ -435,4 +449,13 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         removeListener(SPLITTER_CLICK_EVENT, SplitterClickEvent.class, listener);
     }
 
+    @Override
+    public AbstractSplitPanelState getState() {
+        return (AbstractSplitPanelState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        return new AbstractSplitPanelState();
+    }
 }
