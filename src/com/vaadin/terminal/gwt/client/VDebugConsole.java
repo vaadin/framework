@@ -329,6 +329,7 @@ public class VDebugConsole extends VOverlay implements Console {
         logToDebugWindow(msg, false);
         GWT.log(msg);
         consoleLog(msg);
+        System.out.println(msg);
     }
 
     private List<String> msgQueue = new LinkedList<String>();
@@ -419,6 +420,8 @@ public class VDebugConsole extends VOverlay implements Console {
 
         GWT.log(msg);
         consoleErr(msg);
+        System.out.println(msg);
+
     }
 
     /*
