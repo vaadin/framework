@@ -98,9 +98,19 @@ public class TestClassesSerializable extends TestCase {
         if (!nonSerializableClasses.isEmpty()) {
             String nonSerializableString = "";
             Iterator<Class<?>> it = nonSerializableClasses.iterator();
-            nonSerializableString = it.next().getName();
             while (it.hasNext()) {
-                nonSerializableString += ", " + it.next().getName();
+                Class c = it.next();
+                nonSerializableString += ", " + c.getName();
+                if (c.isAnonymousClass()) {
+                    nonSerializableString += "(super: ";
+                    nonSerializableString += c.getSuperclass().getName();
+                    nonSerializableString += ", interfaces: ";
+                    for (Class i : c.getInterfaces()) {
+                        nonSerializableString += i.getName();
+                        nonSerializableString += ",";
+                    }
+                    nonSerializableString += ")";
+                }
             }
             fail("Serializable not implemented by the following classes and interfaces: "
                     + nonSerializableString);
