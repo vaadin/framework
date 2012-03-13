@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +66,7 @@ import com.vaadin.terminal.gwt.client.ui.FormConnector;
 @ClientWidget(FormConnector.class)
 @Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,
-        Buffered, Item, Validatable, Action.Notifier {
+        Buffered, Item, Validatable, Action.Notifier, HasComponents {
 
     private Object propertyValue;
 
@@ -1357,4 +1358,66 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
+    public Iterator<Component> iterator() {
+        return getComponentIterator();
+    }
+
+    /**
+     * Modifiable and Serializable Iterator for the components, used by
+     * {@link Form#getComponentIterator()}.
+     */
+    private class ComponentIterator implements Iterator<Component>,
+            Serializable {
+
+        int i = 0;
+
+        public boolean hasNext() {
+            if (i < getComponentCount()) {
+                return true;
+            }
+            return false;
+        }
+
+        public Component next() {
+            if (!hasNext()) {
+                return null;
+            }
+            i++;
+            if (i == 1) {
+                return layout != null ? layout : formFooter;
+            } else if (i == 2) {
+                return formFooter;
+            }
+            return null;
+        }
+
+        public void remove() {
+            if (i == 1) {
+                if (layout != null) {
+                    setLayout(null);
+                    i = 0;
+                } else {
+                    setFooter(null);
+                }
+            } else if (i == 2) {
+                setFooter(null);
+            }
+        }
+    }
+
+    public Iterator<Component> getComponentIterator() {
+        return new ComponentIterator();
+    }
+
+    public int getComponentCount() {
+        int count = 0;
+        if (layout != null) {
+            count++;
+        }
+        if (formFooter != null) {
+            count++;
+        }
+
+        return count;
+    }
 }
