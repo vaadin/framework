@@ -334,7 +334,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * use the default documentation from implemented interface.
      */
     public Resource getIcon() {
-        return ((ResourceReference) getState().getIcon()).getResource();
+        ResourceReference ref = ((ResourceReference) getState().getIcon());
+        if (ref == null) {
+            return null;
+        } else {
+            return ref.getResource();
+        }
     }
 
     /**
