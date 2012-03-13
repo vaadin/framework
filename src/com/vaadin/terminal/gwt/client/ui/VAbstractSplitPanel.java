@@ -324,10 +324,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             break;
         }
 
-        // fixes scrollbars issues on webkit based browsers
-        Util.runWebkitOverflowAutoFix(secondContainer);
-        Util.runWebkitOverflowAutoFix(firstContainer);
-
     }
 
     void setFirstWidget(Widget w) {
