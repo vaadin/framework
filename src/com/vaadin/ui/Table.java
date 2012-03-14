@@ -971,7 +971,9 @@ public class Table extends AbstractSelect implements Action.Container,
             }
 
             if (index > maxIndex) {
-                setCurrentPageFirstItemIndex(maxIndex);
+                // Note that we pass index, not maxIndex, letting
+                // setCurrentPageFirstItemIndex handle the situation.
+                setCurrentPageFirstItemIndex(index);
                 return;
             }
 
@@ -1259,9 +1261,11 @@ public class Table extends AbstractSelect implements Action.Container,
             maxIndex = 0;
         }
 
-        // Ensures that the new value is valid
+        // Assume that we want to scroll to the very bottom (so that the bottom
+        // row is completely visible even if (table height) / (row height) is
+        // not an integer.)
         if (newIndex > maxIndex) {
-            newIndex = maxIndex;
+            newIndex = maxIndex + 1;
         }
 
         // Refresh first item id
