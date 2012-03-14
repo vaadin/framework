@@ -1562,4 +1562,9 @@ public abstract class Root extends AbstractComponentContainer implements
         }
     }
 
+    @Override
+    public boolean isConnectorEnabled() {
+        // TODO How can a Root be invisible? What does it mean?
+        return isVisible() && isEnabled();
+    }
 }

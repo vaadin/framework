@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.RenderInformation.Size;
@@ -216,39 +214,6 @@ public class ConnectorMap {
         }
 
         return result.toArray(new ComponentConnector[result.size()]);
-    }
-
-    /**
-     * Unregisters the child connectors for the given container recursively.
-     * 
-     * Use when after removing a connector that contains other connectors. Does
-     * not unregister the given container itself. Does not actually remove the
-     * widgets from the DOM.
-     * 
-     * @see #unregisterConnector(ServerConnector)
-     * @param container
-     *            The container that contains the connectors that should be
-     *            unregistered
-     * @deprecated Only here for now to support the broken VScrollTable behavior
-     */
-    @Deprecated
-    public void unregisterChildConnectors(HasWidgets container) {
-        // FIXME: This should be based on the paintable hierarchy
-        final Iterator<Widget> it = container.iterator();
-        while (it.hasNext()) {
-            final Widget w = it.next();
-            ComponentConnector p = getConnector(w);
-            if (p != null) {
-                // This will unregister the paintable and all its children
-                idToComponentDetail.remove(p.getConnectorId());
-                idToConnector.remove(p.getConnectorId());
-            }
-
-            if (w instanceof HasWidgets) {
-                // For normal widget containers, unregister the children
-                unregisterChildConnectors((HasWidgets) w);
-            }
-        }
     }
 
     /**

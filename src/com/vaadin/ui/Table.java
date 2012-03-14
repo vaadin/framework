@@ -77,7 +77,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 @ClientWidget(TableConnector.class)
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
-        ItemClickNotifier, DragSource, DropTarget {
+        ItemClickNotifier, DragSource, DropTarget, HasComponents {
 
     private static final Logger logger = Logger
             .getLogger(Table.class.getName());
@@ -5288,11 +5288,23 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void setVisible(boolean visible) {
-        if (!isVisible() && visible) {
+        if (!isVisibleInContext() && visible) {
             // We need to ensure that the rows are sent to the client when the
             // Table is made visible if it has been rendered as invisible.
             setRowCacheInvalidated(true);
         }
         super.setVisible(visible);
+    }
+
+    public Iterator<Component> iterator() {
+        return getComponentIterator();
+    }
+
+    public Iterator<Component> getComponentIterator() {
+        return visibleComponents.iterator();
+    }
+
+    public boolean isComponentVisible(Component childComponent) {
+        return true;
     }
 }

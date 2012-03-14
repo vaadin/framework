@@ -123,4 +123,13 @@ public abstract class AbstractConnector implements ServerConnector {
         return (Collection<T>) rpcImplementations.get(rpcInterfaceId);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
+     */
+    public boolean isConnectorEnabled() {
+        // Client side can always receive message from the server
+        return true;
+    }
 }

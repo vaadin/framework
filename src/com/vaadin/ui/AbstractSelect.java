@@ -35,6 +35,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
 import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * <p>
@@ -581,7 +582,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * to the terminal or null if no items is visible.
      */
     public Collection<?> getVisibleItemIds() {
-        if (isVisible()) {
+        if (isVisibleInContext()) {
             return getItemIds();
         }
         return null;

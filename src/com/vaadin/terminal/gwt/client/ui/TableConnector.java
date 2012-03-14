@@ -182,7 +182,6 @@ public class TableConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().hideScrollPositionAnnotation();
-        getWidget().purgeUnregistryBag();
 
         // selection is no in sync with server, avoid excessive server visits by
         // clearing to flag used during the normal operation

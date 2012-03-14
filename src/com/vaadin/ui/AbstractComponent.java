@@ -68,7 +68,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * The container this component resides in.
      */
-    private Component parent = null;
+    private HasComponents parent = null;
 
     /**
      * The EventRouter used for the event model.
@@ -360,22 +360,46 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /*
-     * Tests if the component is enabled or not. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component#isEnabled()
      */
     public boolean isEnabled() {
-        return getState().isEnabled()
-                && (getParent() == null || getParent().isEnabled());
+        return getState().isEnabled();
     }
 
     /*
-     * Enables or disables the component. Don't add a JavaDoc comment here, we
-     * use the default documentation from implemented interface.
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component#setEnabled(boolean)
      */
     public void setEnabled(boolean enabled) {
         if (getState().isEnabled() != enabled) {
             getState().setEnabled(enabled);
             requestRepaint();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
+     */
+    public boolean isConnectorEnabled() {
+        if (getParent() == null) {
+            // No parent -> the component cannot receive updates from the client
+            return false;
+        } else {
+            boolean thisEnabledAndVisible = isEnabled() && isVisible();
+            if (!thisEnabledAndVisible) {
+                return false;
+            }
+
+            if (!getParent().isConnectorEnabled()) {
+                return false;
+            }
+
+            return getParent().isComponentVisible(this);
         }
     }
 
@@ -409,12 +433,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.ui.Component#isVisible()
      */
     public boolean isVisible() {
-        if (getParent() == null) {
-            return getState().isVisible();
-        } else {
-            return getState().isVisible() && getParent().isVisible()
-                    && ((HasComponents) getParent()).isComponentVisible(this);
-        }
+        return getState().isVisible();
     }
 
     /*
@@ -423,7 +442,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.ui.Component#setVisible(boolean)
      */
     public void setVisible(boolean visible) {
-
         if (getState().isVisible() != visible) {
             getState().setVisible(visible);
             // Instead of requesting repaint normally we
@@ -517,7 +535,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Gets the component's parent component. Don't add a JavaDoc comment here,
      * we use the default documentation from implemented interface.
      */
-    public Component getParent() {
+    public HasComponents getParent() {
         return parent;
     }
 
@@ -525,7 +543,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Sets the parent component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
-    public void setParent(Component parent) {
+    public void setParent(HasComponents parent) {
 
         // If the parent is not changed, don't do anything
         if (parent == this.parent) {
@@ -741,7 +759,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Paint the contents of the component
 
             // Only paint content of visible components.
-            if (isVisible()) {
+            if (isVisibleInContext()) {
 
                 if (eventIdentifiers != null) {
                     target.addAttribute("eventListeners",
@@ -761,6 +779,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         target.endPaintable(this);
 
         repaintRequestListenersNotified = false;
+    }
+
+    /**
+     * Checks if the component is visible and its parent is visible,
+     * recursively.
+     * <p>
+     * This is only a helper until paint is moved away from this class.
+     * 
+     * @return
+     */
+    @Deprecated
+    protected boolean isVisibleInContext() {
+        HasComponents p = getParent();
+        while (p != null) {
+            if (!p.isVisible()) {
+                return false;
+            }
+            p = p.getParent();
+        }
+        // All parents visible, return this state
+        return isVisible();
     }
 
     /**

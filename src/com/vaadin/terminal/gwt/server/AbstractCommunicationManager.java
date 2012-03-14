@@ -61,6 +61,7 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
@@ -951,7 +952,7 @@ public abstract class AbstractCommunicationManager implements
                     JSONArray children = new JSONArray();
 
                     for (Component child : getChildComponents(parent)) {
-                        if (child.isVisible()) {
+                        if (isVisible(child)) {
                             String childConnectorId = getPaintableId(child);
                             children.put(childConnectorId);
                         }
@@ -1158,6 +1159,15 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+    }
+
+    private boolean isVisible(Component child) {
+        HasComponents parent = (HasComponents) child.getParent();
+        if (parent == null || !child.isVisible()) {
+            return child.isVisible();
+        }
+
+        return parent.isComponentVisible(child) && isVisible(parent);
     }
 
     private static class NullIterator<E> implements Iterator<E> {
@@ -1458,7 +1468,15 @@ public abstract class AbstractCommunicationManager implements
                 final VariableOwner owner = getVariableOwner(invocation
                         .getConnectorId());
 
-                if (owner != null && owner.isEnabled()) {
+                boolean connectorEnabled;
+                if (owner instanceof Connector) {
+                    connectorEnabled = ((Connector) owner).isConnectorEnabled();
+                } else {
+                    // TODO Remove
+                    connectorEnabled = owner.isEnabled();
+                }
+
+                if (owner != null && connectorEnabled) {
                     VariableChange change = new VariableChange(invocation);
 
                     // TODO could optimize with a single value map if only one
@@ -2050,7 +2068,7 @@ public abstract class AbstractCommunicationManager implements
                     if (componentsRoot != r) {
                         resultset.remove(p);
                     } else if (component.getParent() != null
-                            && !component.getParent().isVisible()) {
+                            && !isVisible(component.getParent())) {
                         /*
                          * Do not return components in an invisible subtree.
                          * 

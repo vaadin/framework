@@ -430,7 +430,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      */
     boolean recalcWidths = false;
 
-    private final ArrayList<Panel> lazyUnregistryBag = new ArrayList<Panel>();
     boolean rendering = false;
     private boolean hasFocus = false;
     private int dragmode;
@@ -826,7 +825,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     void initializeRows(UIDL uidl, UIDL rowData) {
         if (scrollBody != null) {
             scrollBody.removeFromParent();
-            lazyUnregistryBag.add(scrollBody);
         }
         scrollBody = createScrollBody();
 
@@ -1104,19 +1102,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             cache_rate = d;
             cache_react_rate = 0.75 * d;
         }
-    }
-
-    /**
-     * Unregisters Paintables in "trashed" HasWidgets (IScrollTableBodys or
-     * IScrollTableRows). This is done lazily as Table must survive from
-     * "subtreecaching" logic.
-     */
-    void purgeUnregistryBag() {
-        for (Iterator<Panel> iterator = lazyUnregistryBag.iterator(); iterator
-                .hasNext();) {
-            ConnectorMap.get(client).unregisterChildConnectors(iterator.next());
-        }
-        lazyUnregistryBag.clear();
     }
 
     void updateActionMap(UIDL mainUidl) {
@@ -4136,7 +4121,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 Element td = toBeRemoved.getElement().getChild(i).cast();
                 client.registerTooltip(VScrollTable.this, td, null);
             }
-            lazyUnregistryBag.add(toBeRemoved);
             tBodyElement.removeChild(toBeRemoved.getElement());
             orphan(toBeRemoved);
             renderedRows.remove(index);

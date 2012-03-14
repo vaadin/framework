@@ -205,8 +205,14 @@ public interface Component extends Connector, Paintable, VariableOwner,
      * component are also disabled. Components are enabled by default.
      * 
      * <p>
-     * As a security feature, all variable change events for disabled components
-     * are blocked on the server-side.
+     * As a security feature, all updates for disabled components are blocked on
+     * the server-side.
+     * </p>
+     * 
+     * <p>
+     * Note that this method only returns the status of the component and does
+     * not take parents into account. Even though this method returns true the
+     * component can be disabled to the user if a parent is disabled.
      * </p>
      * 
      * @return <code>true</code> if the component and its parent are enabled,
@@ -219,9 +225,6 @@ public interface Component extends Connector, Paintable, VariableOwner,
      * Enables or disables the component. The user can not interact disabled
      * components, which are shown with a style that indicates the status,
      * usually shaded in light gray color. Components are enabled by default.
-     * Children of a disabled component are automatically disabled; if a child
-     * component is explicitly set as disabled, changes in the disabled status
-     * of its parents do not change its status.
      * 
      * <pre>
      * Button enabled = new Button(&quot;Enabled&quot;);
@@ -251,27 +254,22 @@ public interface Component extends Connector, Paintable, VariableOwner,
      * 
      * <p>
      * Visible components are drawn in the user interface, while invisible ones
-     * are not. The effect is not merely a cosmetic CSS change, but the entire
-     * HTML element will be empty. Making a component invisible through this
-     * property can alter the positioning of other components.
+     * are not. The effect is not merely a cosmetic CSS change - no information
+     * about an invisible component will be sent to the client. The effect is
+     * thus the same as removing the component from its parent. Making a
+     * component invisible through this property can alter the positioning of
+     * other components.
      * </p>
      * 
      * <p>
-     * A component is visible only if all its parents are also visible. Notice
-     * that if a child component is explicitly set as invisible, changes in the
-     * visibility status of its parents do not change its status.
+     * A component is visible only if all its parents are also visible. This is
+     * not checked by this method though, so even if this method returns true,
+     * the component can be hidden from the user because a parent is set to
+     * invisible.
      * </p>
      * 
-     * <p>
-     * This method does not check whether the component is attached (see
-     * {@link #attach()}). The component and all its parents may be considered
-     * "visible", but not necessarily attached to application. To test if
-     * component will actually be drawn, check both its visibility and that
-     * {@link #getApplication()} does not return {@code null}.
-     * </p>
-     * 
-     * @return <code>true</code> if the component is visible in the user
-     *         interface, <code>false</code> if not
+     * @return <code>true</code> if the component has been set to be visible in
+     *         the user interface, <code>false</code> if not
      * @see #setVisible(boolean)
      * @see #attach()
      */
@@ -282,8 +280,9 @@ public interface Component extends Connector, Paintable, VariableOwner,
      * 
      * <p>
      * Visible components are drawn in the user interface, while invisible ones
-     * are not. The effect is not merely a cosmetic CSS change, but the entire
-     * HTML element will be empty.
+     * are not. The effect is not merely a cosmetic CSS change - no information
+     * about an invisible component will be sent to the client. The effect is
+     * thus the same as removing the component from its parent.
      * </p>
      * 
      * <pre>
@@ -318,7 +317,7 @@ public interface Component extends Connector, Paintable, VariableOwner,
      * @return the parent component
      * @see #setParent(Component)
      */
-    public Component getParent();
+    public HasComponents getParent();
 
     /**
      * Sets the parent component of the component.
@@ -349,7 +348,7 @@ public interface Component extends Connector, Paintable, VariableOwner,
      *             if a parent is given even though the component already has a
      *             parent
      */
-    public void setParent(Component parent);
+    public void setParent(HasComponents parent);
 
     /**
      * Tests whether the component is in the read-only mode. The user can not

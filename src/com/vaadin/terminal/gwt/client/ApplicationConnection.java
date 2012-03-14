@@ -1092,6 +1092,7 @@ public class ApplicationConnection {
             }
 
             private void unregisterRemovedConnectors() {
+                int unregistered = 0;
                 List<ServerConnector> currentConnectors = new ArrayList<ServerConnector>(
                         connectorMap.getConnectors());
                 for (ServerConnector c : currentConnectors) {
@@ -1104,6 +1105,7 @@ public class ApplicationConnection {
                             // children. The RootConnector should never be
                             // unregistered even though it has no parent.
                             connectorMap.unregisterConnector(cc);
+                            unregistered++;
                         } else if (cc.getParent() != null
                                 && !cc.getParent().getChildren().contains(cc)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
@@ -1112,6 +1114,7 @@ public class ApplicationConnection {
 
                 }
 
+                VConsole.log("* Unregistered " + unregistered + " connectors");
             }
 
             private void createConnectorsIfNeeded(ValueMap json) {
