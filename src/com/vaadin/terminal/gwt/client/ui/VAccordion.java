@@ -128,8 +128,7 @@ public class VAccordion extends VTabsheetBase {
             // StackItem
             Widget oldWidget = item.getComponent();
             if (oldWidget != null) {
-                item = new StackItem(tabUidl);
-                insert(item, getElement(), newIndex, true);
+                oldWidget.removeFromParent();
             }
         }
         return item;
@@ -262,7 +261,8 @@ public class VAccordion extends VTabsheetBase {
     }
 
     /**
-     *
+     * A StackItem has always two children, Child 0 is a VCaption, Child 1 is
+     * the actual child widget.
      */
     protected class StackItem extends ComplexPanel implements ClickHandler {
 
