@@ -10,6 +10,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableElement;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -551,13 +552,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     boolean waitingForResponse;
 
-    /**
-     * Previous visible widget is set invisible with CSS (not display: none, but
-     * visibility: hidden), to avoid flickering during render process. Normal
-     * visibility must be returned later when new widget is rendered.
-     */
-    private Widget previousVisibleWidget;
-
     private String currentStyle;
 
     /**
@@ -579,18 +573,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             addStyleDependentName("loading");
-            // run updating variables in deferred command to bypass some FF
-            // optimization issues
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    previousVisibleWidget = tp.getWidget(tp.getVisibleWidget());
-                    DOM.setStyleAttribute(
-                            DOM.getParent(previousVisibleWidget.getElement()),
-                            "visibility", "hidden");
-                    client.updateVariable(id, "selected", tabKeys.get(tabIndex)
-                            .toString(), true);
-                }
-            });
+            // Hide the current contents so a loading indicator can be shown
+            // instead
+            Widget currentlyDisplayedWidget = tp.getWidget(tp
+                    .getVisibleWidget());
+            currentlyDisplayedWidget.getElement().getParentElement().getStyle()
+                    .setVisibility(Visibility.HIDDEN);
+            client.updateVariable(id, "selected", tabKeys.get(tabIndex)
+                    .toString(), true);
             waitingForResponse = true;
 
             return true;
@@ -925,12 +915,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
-        if (previousVisibleWidget != null) {
-            DOM.setStyleAttribute(
-                    DOM.getParent(previousVisibleWidget.getElement()),
-                    "visibility", "");
-            previousVisibleWidget = null;
-        }
     }
 
     void updateContentNodeHeight() {
