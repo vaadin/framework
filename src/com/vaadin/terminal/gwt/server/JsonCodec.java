@@ -231,7 +231,7 @@ public class JsonCodec implements Serializable {
                     continue;
                 }
                 Method getterMethod = pd.getReadMethod();
-                Object fieldValue = getterMethod.invoke(value, null);
+                Object fieldValue = getterMethod.invoke(value, (Object[]) null);
                 jsonMap.put(fieldName, encode(fieldValue, fieldType, idMapper));
             }
         } catch (Exception e) {
