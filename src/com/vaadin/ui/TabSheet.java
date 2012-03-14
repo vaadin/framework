@@ -152,7 +152,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             tabs.remove(c);
             if (c.equals(selected)) {
                 if (components.isEmpty()) {
-                    selected = null;
+                    setSelected(null);
                 } else {
                     // select the first enabled and visible tab, if any
                     updateSelection();
@@ -279,7 +279,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
             tabs.put(c, tab);
             if (selected == null) {
-                selected = c;
+                setSelected(c);
                 fireSelectedTabChange();
             }
             super.addComponent(c);
@@ -569,20 +569,32 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     public void setSelectedTab(Component c) {
         if (c != null && components.contains(c) && !c.equals(selected)) {
-            selected = c;
+            setSelected(c);
             updateSelection();
             fireSelectedTabChange();
             requestRepaint();
-            // Repaint of the selected component is needed as only the selected
-            // component is communicated to the client. Otherwise this will be a
-            // "cached" update even though the client knows nothing about the
-            // connector
-            if (selected instanceof ComponentContainer) {
-                ((ComponentContainer) selected).requestRepaintAll();
-            } else {
-                selected.requestRepaint();
-            }
         }
+    }
+
+    /**
+     * Sets the selected tab in the TabSheet. Ensures that the selected tab is
+     * repainted if needed.
+     * 
+     * @param c
+     *            The new selection or null for no selection
+     */
+    private void setSelected(Component c) {
+        selected = c;
+        // Repaint of the selected component is needed as only the selected
+        // component is communicated to the client. Otherwise this will be a
+        // "cached" update even though the client knows nothing about the
+        // connector
+        if (selected instanceof ComponentContainer) {
+            ((ComponentContainer) selected).requestRepaintAll();
+        } else if (selected != null) {
+            selected.requestRepaint();
+        }
+
     }
 
     /**
@@ -619,14 +631,14 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 // The current selection is not valid so we need to change
                 // it
                 if (tab.isEnabled() && tab.isVisible()) {
-                    selected = component;
+                    setSelected(component);
                     break;
                 } else {
                     /*
                      * The current selection is not valid but this tab cannot be
                      * selected either.
                      */
-                    selected = null;
+                    setSelected(null);
                 }
             }
         }
@@ -685,7 +697,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         if (selected == oldComponent) {
             // keep selection w/o selectedTabChange event
-            selected = newComponent;
+            setSelected(newComponent);
         }
 
         Tab newTab = tabs.get(newComponent);
