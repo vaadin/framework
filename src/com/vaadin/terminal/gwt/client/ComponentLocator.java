@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
+import com.vaadin.terminal.gwt.client.ui.VTabsheetPanel;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
@@ -463,6 +464,12 @@ public class ComponentLocator {
                 if (w instanceof VGridLayout
                         && "AbsolutePanel".equals(widgetClassName)) {
                     continue;
+                }
+
+                if (w instanceof VTabsheetPanel && !"0".equals(indexString)) {
+                    // TabSheetPanel now only contains 1 connector => the index
+                    // is always 0 which indicates the widget in the active tab
+                    indexString = "0";
                 }
 
                 /*
