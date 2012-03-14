@@ -332,7 +332,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (firstChild != null) {
             firstChild.removeFromParent();
         }
-        super.add(w, firstContainer);
+        if (w != null) {
+            super.add(w, firstContainer);
+        }
         firstChild = w;
     }
 
@@ -340,7 +342,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (secondChild != null) {
             secondChild.removeFromParent();
         }
-        super.add(w, secondContainer);
+        if (w != null) {
+            super.add(w, secondContainer);
+        }
         secondChild = w;
     }
 
