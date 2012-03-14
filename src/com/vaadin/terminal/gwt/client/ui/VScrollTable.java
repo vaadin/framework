@@ -5764,6 +5764,19 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return contentAreaBorderHeight;
     }
 
+    @Override
+    public void setHeight(String height) {
+        if (height.length() == 0
+                && getElement().getStyle().getHeight().length() != 0) {
+            /*
+             * Changing from defined to undefined size -> should do a size init
+             * to take page length into account again
+             */
+            sizeNeedsInit = true;
+        }
+        super.setHeight(height);
+    }
+
     void updateHeight() {
         setContainerHeight();
 
