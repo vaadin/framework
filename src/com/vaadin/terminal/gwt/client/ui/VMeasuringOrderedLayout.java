@@ -151,14 +151,35 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
             }
 
             double extraPixels = unallocatedSpace * childExpandRatio;
-            double allocatedSpace = extraPixels;
+            double endLocation = currentLocation + extraPixels;
             if (!slot.isRelativeInDirection(isVertical)) {
-                allocatedSpace += slot.getUsedSizeInDirection(isVertical);
+                endLocation += slot.getUsedSizeInDirection(isVertical);
             }
 
-            slot.positionInDirection(currentLocation, allocatedSpace,
-                    isVertical);
-            currentLocation += allocatedSpace + spacingSize;
+            /*
+             * currentLocation and allocatedSpace are used with full precision
+             * to avoid missing pixels in the end. The pixel dimensions passed
+             * to the DOM are still rounded. Otherwise e.g. 10.5px start
+             * position + 10.5px space might be cause the component to go 1px
+             * beyond the edge as the effect of the browser's rounding may cause
+             * something similar to 11px + 11px.
+             * 
+             * It's most efficient to use doubles all the way because native
+             * javascript emulates other number types using doubles.
+             */
+            double roundedLocation = Math.round(currentLocation);
+
+            /*
+             * Space is calculated as the difference between rounded start and
+             * end locations. Just rounding the space would cause e.g. 10.5px +
+             * 10.5px = 21px -> 11px + 11px = 22px but in this way we get 11px +
+             * 10px = 21px.
+             */
+            double roundedSpace = Math.round(endLocation) - roundedLocation;
+
+            slot.positionInDirection(roundedLocation, roundedSpace, isVertical);
+
+            currentLocation = endLocation + spacingSize;
         }
 
         return allocatedSize;
