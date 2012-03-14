@@ -338,4 +338,17 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
     }
 
+    /**
+     * Checks if the given sub window is a child of this Root Connector
+     * 
+     * @deprecated Should be replaced by a more generic mechanism for getting
+     *             non-ComponentConnector children
+     * @param wc
+     * @return
+     */
+    @Deprecated
+    public boolean hasSubWindow(WindowConnector wc) {
+        return getWidget().subWindows.contains(wc.getWidget());
+    }
+
 }

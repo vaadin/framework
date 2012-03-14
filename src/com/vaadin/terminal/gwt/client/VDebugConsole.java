@@ -51,6 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
+import com.vaadin.terminal.gwt.client.ui.VWindow;
 
 /**
  * A helper console for client side development. The debug console can also be
@@ -659,8 +660,7 @@ public class VDebugConsole extends VOverlay implements Console {
             actions.add(analyzeLayout);
             actions.add(highlight);
             actions.add(connectorStats);
-            connectorStats
-                    .setTitle("Show connector statistics for client");
+            connectorStats.setTitle("Show connector statistics for client");
             highlight
                     .setTitle("Select a component and print details about it to the server log and client side console.");
             actions.add(savePosition);
@@ -821,6 +821,12 @@ public class VDebugConsole extends VOverlay implements Console {
         ConnectorMap connectorMap = a.getConnectorMap();
         Collection<? extends ServerConnector> registeredConnectors = connectorMap
                 .getConnectors();
+        log("Sub windows:");
+        Set<ComponentConnector> subWindowHierarchyConnectors = new HashSet<ComponentConnector>();
+        for (VWindow w : root.getWidget().getSubWindowList()) {
+            dumpConnectorHierarchy(connectorMap.getConnector(w), "",
+                    subWindowHierarchyConnectors);
+        }
         log("Registered connectors not in hierarchy (should be empty):");
         for (ServerConnector registeredConnector : registeredConnectors) {
 
@@ -828,6 +834,9 @@ public class VDebugConsole extends VOverlay implements Console {
                 continue;
             }
 
+            if (subWindowHierarchyConnectors.contains(registeredConnector)) {
+                continue;
+            }
             error(getConnectorString(registeredConnector));
 
         }

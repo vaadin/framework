@@ -48,6 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
+import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
@@ -1098,17 +1099,23 @@ public class ApplicationConnection {
                 for (ServerConnector c : currentConnectors) {
                     if (c instanceof ComponentConnector) {
                         ComponentConnector cc = (ComponentConnector) c;
-                        if (cc.getParent() == null
-                                && !(cc instanceof RootConnector)) {
+                        if (cc.getParent() != null) {
+                            if (!cc.getParent().getChildren().contains(cc)) {
+                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                            }
+                        } else if ((cc instanceof RootConnector && cc == getView())) {
+                            // RootConnector for this connection, leave as-is
+                        } else if (cc instanceof WindowConnector
+                                && getView().hasSubWindow((WindowConnector) cc)) {
+                            // Sub window attached to this RootConnector, leave
+                            // as-is
+                        } else {
                             // The connector has been detached from the
                             // hierarchy, unregister it and any possible
                             // children. The RootConnector should never be
                             // unregistered even though it has no parent.
                             connectorMap.unregisterConnector(cc);
                             unregistered++;
-                        } else if (cc.getParent() != null
-                                && !cc.getParent().getChildren().contains(cc)) {
-                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
                     }
 
