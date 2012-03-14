@@ -466,10 +466,10 @@ public class ComponentLocator {
                     continue;
                 }
 
-                if (w instanceof VTabsheetPanel && !"0".equals(indexString)) {
+                if (w instanceof VTabsheetPanel && widgetPosition != 0) {
                     // TabSheetPanel now only contains 1 connector => the index
                     // is always 0 which indicates the widget in the active tab
-                    indexString = "0";
+                    widgetPosition = 0;
                 }
 
                 /*
