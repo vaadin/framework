@@ -21,9 +21,9 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
 
 /**
  * A component that represents an application (browser native) window or a sub
@@ -73,10 +73,6 @@ import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 @SuppressWarnings("serial")
 @ClientWidget(WindowConnector.class)
 public class Window extends Panel implements FocusNotifier, BlurNotifier {
-
-    public class WindowState extends PanelState {
-
-    }
 
     /**
      * <b>Sub window only</b>. Top offset in pixels for the sub window (relative
@@ -892,4 +888,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
         bringToFront();
     }
 
+    @Override
+    public WindowState getState() {
+        return (WindowState) super.getState();
+    }
+
+    @Override
+    protected WindowState createState() {
+        return new WindowState();
+    }
 }

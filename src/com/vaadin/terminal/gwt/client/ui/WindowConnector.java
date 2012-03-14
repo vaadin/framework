@@ -21,11 +21,16 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
 public class WindowConnector extends AbstractComponentContainerConnector
         implements BeforeShortcutActionListener, SimpleManagedLayout,
         PostLayoutListener {
+
+    public static class WindowState extends PanelState {
+
+    }
 
     private static final String CLICK_EVENT_IDENTIFIER = PanelConnector.CLICK_EVENT_IDENTIFIER;
 
@@ -178,10 +183,9 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         // setting scrollposition must happen after children is rendered
-        getWidget().contentPanel.setScrollPosition(uidl
-                .getIntVariable("scrollTop"));
-        getWidget().contentPanel.setHorizontalScrollPosition(uidl
-                .getIntVariable("scrollLeft"));
+        getWidget().contentPanel.setScrollPosition(getState().getScrollTop());
+        getWidget().contentPanel.setHorizontalScrollPosition(getState()
+                .getScrollLeft());
 
         // Center this window on screen if requested
         // This had to be here because we might not know the content size before
@@ -306,4 +310,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         window.updateShadowSizeAndPosition();
     }
 
+    @Override
+    public WindowState getState() {
+        return (WindowState) super.getState();
+    }
 }
