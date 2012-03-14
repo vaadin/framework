@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +48,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
@@ -151,6 +154,7 @@ public class VDebugConsole extends VOverlay implements Console {
     private Button analyzeLayout = new Button("AL");
     private Button savePosition = new Button("S");
     private Button highlight = new Button("H");
+    private Button connectorStats = new Button("CS");
     private CheckBox hostedMode = new CheckBox("GWT");
     private CheckBox autoScroll = new CheckBox("Autoscroll ");
     private HorizontalPanel actions;
@@ -654,6 +658,9 @@ public class VDebugConsole extends VOverlay implements Console {
             actions.add(forceLayout);
             actions.add(analyzeLayout);
             actions.add(highlight);
+            actions.add(connectorStats);
+            connectorStats
+                    .setTitle("Show connector statistics for client");
             highlight
                     .setTitle("Select a component and print details about it to the server log and client side console.");
             actions.add(savePosition);
@@ -781,6 +788,15 @@ public class VDebugConsole extends VOverlay implements Console {
             });
 
         }
+        connectorStats.addClickHandler(new ClickHandler() {
+
+            public void onClick(ClickEvent event) {
+                for (ApplicationConnection a : ApplicationConfiguration
+                        .getRunningApplications()) {
+                    dumpConnectorInfo(a);
+                }
+            }
+        });
         log("Starting Vaadin client side engine. Widgetset: "
                 + GWT.getModuleName());
 
@@ -793,6 +809,56 @@ public class VDebugConsole extends VOverlay implements Console {
                 + ApplicationConfiguration.VERSION
                 + " does not seem to match theme version </div>", true);
 
+    }
+
+    protected void dumpConnectorInfo(ApplicationConnection a) {
+        RootConnector root = a.getView();
+        log("================");
+        log("Connector hierarchy for Root: " + root.getState().getCaption()
+                + " (" + root.getConnectorId() + ")");
+        Set<ComponentConnector> connectorsInHierarchy = new HashSet<ComponentConnector>();
+        dumpConnectorHierarchy(root, "", connectorsInHierarchy);
+        ConnectorMap connectorMap = a.getConnectorMap();
+        Collection<? extends ServerConnector> registeredConnectors = connectorMap
+                .getConnectors();
+        log("Registered connectors not in hierarchy (should be empty):");
+        for (ServerConnector registeredConnector : registeredConnectors) {
+
+            if (connectorsInHierarchy.contains(registeredConnector)) {
+                continue;
+            }
+
+            error(getConnectorString(registeredConnector));
+
+        }
+        log("Unregistered connectors in hierarchy (should be empty):");
+        for (ServerConnector hierarchyConnector : connectorsInHierarchy) {
+            if (!connectorMap.hasConnector(hierarchyConnector.getConnectorId())) {
+                error(getConnectorString(hierarchyConnector));
+            }
+
+        }
+
+        log("================");
+
+    }
+
+    private void dumpConnectorHierarchy(ComponentConnector connector,
+            String indent, Set<ComponentConnector> connectors) {
+        connectors.add(connector);
+        log(indent + "* " + getConnectorString(connector));
+        if (connector instanceof ComponentContainerConnector) {
+            for (ComponentConnector c : ((ComponentContainerConnector) connector)
+                    .getChildren()) {
+                dumpConnectorHierarchy(c, indent + " ", connectors);
+            }
+        }
+
+    }
+
+    private String getConnectorString(ServerConnector connector) {
+        return Util.getSimpleName(connector) + " ("
+                + connector.getConnectorId() + ")";
     }
 
     public void setQuietMode(boolean quietDebugMode) {
