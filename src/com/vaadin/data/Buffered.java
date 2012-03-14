@@ -5,16 +5,8 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
 import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.SystemError;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
-import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * <p>
@@ -209,7 +201,7 @@ public interface Buffered extends Serializable {
      */
     @SuppressWarnings("serial")
     public class SourceException extends RuntimeException implements
-            ErrorMessage, Serializable {
+            Serializable {
 
         /** Source class implementing the buffered interface */
         private final Buffered source;
@@ -256,11 +248,7 @@ public interface Buffered extends Serializable {
         /**
          * Gets the cause of the exception.
          * 
-         * @return The cause for the exception.
-         * @throws MoreThanOneCauseException
-         *             if there is more than one cause for the exception. This
-         *             is possible if the commit operation triggers more than
-         *             one error at the same time.
+         * @return The (first) cause for the exception, null if no cause.
          */
         @Override
         public final Throwable getCause() {
@@ -286,89 +274,6 @@ public interface Buffered extends Serializable {
          */
         public Buffered getSource() {
             return source;
-        }
-
-        /**
-         * Gets the error level of this buffered source exception. The level of
-         * the exception is maximum error level of all the contained causes.
-         * <p>
-         * The causes that do not specify error level default to
-         * <code>ERROR</code> level. Also source exception without any causes
-         * are of level <code>ERROR</code>.
-         * </p>
-         * 
-         * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
-         */
-        public ErrorLevel getErrorLevel() {
-
-            ErrorLevel level = null;
-
-            for (int i = 0; i < causes.length; i++) {
-                final ErrorLevel causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
-                        .getErrorLevel() : ErrorLevel.ERROR;
-                if (level == null) {
-                    level = causeLevel;
-                } else {
-                    if (causeLevel.intValue() > level.intValue()) {
-                        level = causeLevel;
-                    }
-                }
-            }
-
-            return level == null ? ErrorLevel.ERROR : level;
-        }
-
-        /* Documented in super interface */
-        public void paint(PaintTarget target) throws PaintException {
-            target.startTag("error");
-            target.addAttribute("level", getErrorLevel().getText());
-
-            // Paint all the exceptions
-            for (int i = 0; i < causes.length; i++) {
-                if (causes[i] instanceof ErrorMessage) {
-                    ((ErrorMessage) causes[i]).paint(target);
-                } else {
-                    new SystemError(causes[i]).paint(target);
-                }
-            }
-
-            target.endTag("error");
-
-        }
-
-        public SharedState getState() {
-            // TODO implement: move relevant parts from paint() to getState()
-            return null;
-        }
-
-        public List<ClientMethodInvocation> retrievePendingRpcCalls() {
-            return Collections.emptyList();
-        }
-
-        /* Documented in super interface */
-        public void addListener(RepaintRequestListener listener) {
-        }
-
-        /* Documented in super interface */
-        public void removeListener(RepaintRequestListener listener) {
-        }
-
-        /* Documented in super interface */
-        public void requestRepaint() {
-        }
-
-        /* Documented in super interface */
-        public void requestRepaintRequests() {
-        }
-
-        public String getDebugId() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        public void setDebugId(String id) {
-            throw new UnsupportedOperationException(
-                    "Setting testing id for this Paintable is not implemented");
         }
 
     }

@@ -24,10 +24,12 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.gwt.client.ui.FormConnector;
 
 /**
@@ -242,15 +244,13 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                     if (validationError != null) {
                         // Show caption as error for fields with empty errors
                         if ("".equals(validationError.toString())) {
-                            validationError = new Validator.InvalidValueException(
-                                    field.getCaption());
+                            validationError = new UserError(field.getCaption());
                         }
                         break;
                     } else if (f instanceof Field && !((Field<?>) f).isValid()) {
                         // Something is wrong with the field, but no proper
                         // error is given. Generate one.
-                        validationError = new Validator.InvalidValueException(
-                                field.getCaption());
+                        validationError = new UserError(field.getCaption());
                         break;
                     }
                 }
@@ -264,9 +264,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
 
         // Throw combination of the error types
-        return new CompositeErrorMessage(new ErrorMessage[] {
-                getComponentError(), validationError,
-                currentBufferedSourceException });
+        return new CompositeErrorMessage(
+                new ErrorMessage[] {
+                        getComponentError(),
+                        validationError,
+                        AbstractErrorMessage
+                                .getErrorMessageForException(currentBufferedSourceException) });
     }
 
     /**

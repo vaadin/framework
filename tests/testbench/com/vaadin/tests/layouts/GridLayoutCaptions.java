@@ -3,6 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -95,7 +96,9 @@ public class GridLayoutCaptions extends TestBase {
                     "Ipsum lipsum laarum lop... ");
 
             for (Object propIDs : getItemDataSource().getItemPropertyIds()) {
-                ((TextField) getField(propIDs)).setComponentError(ive);
+                ((TextField) getField(propIDs))
+                        .setComponentError(AbstractErrorMessage
+                                .getErrorMessageForException(ive));
 
             }
 

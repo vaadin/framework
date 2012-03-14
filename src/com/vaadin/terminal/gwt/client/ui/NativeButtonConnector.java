@@ -51,7 +51,7 @@ public class NativeButtonConnector extends AbstractComponentConnector {
         getWidget().setText(getState().getCaption());
 
         // handle error
-        if (uidl.hasAttribute("error")) {
+        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement

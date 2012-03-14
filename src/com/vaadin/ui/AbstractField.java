@@ -26,6 +26,7 @@ import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
@@ -1125,7 +1126,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
          * the requiredError string. For these fields the exclamation mark will
          * be hidden but the error must still be sent to the client.
          */
-        ErrorMessage validationError = null;
+        Validator.InvalidValueException validationError = null;
         if (isValidationVisible()) {
             try {
                 validate();
@@ -1146,8 +1147,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
 
         // Throw combination of the error types
-        return new CompositeErrorMessage(new ErrorMessage[] { superError,
-                validationError, getCurrentBufferedSourceException() });
+        return new CompositeErrorMessage(
+                new ErrorMessage[] {
+                        superError,
+                        AbstractErrorMessage
+                                .getErrorMessageForException(validationError),
+                        AbstractErrorMessage
+                                .getErrorMessageForException(getCurrentBufferedSourceException()) });
 
     }
 

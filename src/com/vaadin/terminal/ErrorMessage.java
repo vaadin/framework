@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @VERSION@
  * @since 3.0
  */
-public interface ErrorMessage extends Paintable, Serializable {
+public interface ErrorMessage extends Serializable {
 
     public enum ErrorLevel {
         /**
@@ -111,31 +111,19 @@ public interface ErrorMessage extends Paintable, Serializable {
     public ErrorLevel getErrorLevel();
 
     /**
-     * Error messages are inmodifiable and thus listeners are not needed. This
-     * method should be implemented as empty.
+     * <p>
+     * Paints the error message into a UIDL stream. This method creates the UIDL
+     * sequence describing it and outputs it to the given UIDL stream.
+     * </p>
      * 
-     * @param listener
-     *            the listener to be added.
-     * @see com.vaadin.terminal.Paintable#addListener(Paintable.RepaintRequestListener)
+     * @param target
+     *            the target UIDL stream where the error should paint itself to.
+     * @throws PaintException
+     *             if the paint operation failed.
+     * @deprecated error messages should not be painted to UIDL but sent
+     *             differently
      */
-    public void addListener(RepaintRequestListener listener);
-
-    /**
-     * Error messages are inmodifiable and thus listeners are not needed. This
-     * method should be implemented as empty.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     * @see com.vaadin.terminal.Paintable#removeListener(Paintable.RepaintRequestListener)
-     */
-    public void removeListener(RepaintRequestListener listener);
-
-    /**
-     * Error messages are inmodifiable and thus listeners are not needed. This
-     * method should be implemented as empty.
-     * 
-     * @see com.vaadin.terminal.Paintable#requestRepaint()
-     */
-    public void requestRepaint();
+    @Deprecated
+    public void paint(PaintTarget target) throws PaintException;
 
 }

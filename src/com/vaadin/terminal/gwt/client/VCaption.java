@@ -32,12 +32,12 @@ public class VCaption extends HTML {
 
     private int maxWidth = -1;
 
-    protected static final String ATTRIBUTE_ICON = "icon";
+    protected static final String ATTRIBUTE_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
     protected static final String ATTRIBUTE_CAPTION = "caption";
     protected static final String ATTRIBUTE_DESCRIPTION = "description";
-    protected static final String ATTRIBUTE_REQUIRED = "required";
-    protected static final String ATTRIBUTE_ERROR = "error";
-    protected static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
+    protected static final String ATTRIBUTE_REQUIRED = AbstractComponentConnector.ATTRIBUTE_REQUIRED;
+    protected static final String ATTRIBUTE_ERROR = AbstractComponentConnector.ATTRIBUTE_ERROR;
+    protected static final String ATTRIBUTE_HIDEERRORS = AbstractComponentConnector.ATTRIBUTE_HIDEERRORS;
 
     private enum InsertPosition {
         ICON, CAPTION, REQUIRED, ERROR

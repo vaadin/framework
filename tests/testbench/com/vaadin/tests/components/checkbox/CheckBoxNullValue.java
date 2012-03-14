@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.checkbox;
 
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -34,12 +35,14 @@ public class CheckBoxNullValue extends TestBase {
                 try {
                     checkbox.validate();
                 } catch (InvalidValueException e) {
-                    checkbox.setComponentError(e);
+                    checkbox.setComponentError(AbstractErrorMessage
+                            .getErrorMessageForException(e));
                 }
                 try {
                     requiredCheckbox.validate();
                 } catch (InvalidValueException e) {
-                    requiredCheckbox.setComponentError(e);
+                    requiredCheckbox.setComponentError(AbstractErrorMessage
+                            .getErrorMessageForException(e));
                 }
                 valueLabel.setValue("Checkbox: " + checkbox.getValue()
                         + "; Required checkbox: " + requiredCheckbox.getValue());

@@ -5,15 +5,8 @@
 package com.vaadin.data;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
@@ -73,8 +66,7 @@ public interface Validator extends Serializable {
      * @since 3.0
      */
     @SuppressWarnings("serial")
-    public class InvalidValueException extends RuntimeException implements
-            ErrorMessage {
+    public class InvalidValueException extends RuntimeException {
 
         /**
          * Array of one or more validation errors that are causing this
@@ -138,111 +130,14 @@ public interface Validator extends Serializable {
             return true;
         }
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.terminal.ErrorMessage#getErrorLevel()
-         */
-        public final ErrorLevel getErrorLevel() {
-            return ErrorLevel.ERROR;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.vaadin.terminal.Paintable#paint(com.vaadin.terminal.PaintTarget)
-         */
-        public void paint(PaintTarget target) throws PaintException {
-            target.startTag("error");
-            target.addAttribute("level", ErrorLevel.ERROR.getText());
-
-            // Error message
-            final String message = getHtmlMessage();
-            if (message != null) {
-                target.addText(message);
-            }
-
-            // Paint all the causes
-            for (int i = 0; i < causes.length; i++) {
-                causes[i].paint(target);
-            }
-
-            target.endTag("error");
-        }
-
-        public SharedState getState() {
-            // TODO implement: move relevant parts from paint() to getState()
-            return null;
-        }
-
-        public List<ClientMethodInvocation> retrievePendingRpcCalls() {
-            return Collections.emptyList();
-        }
-
         /**
          * Returns the message of the error in HTML.
          * 
          * Note that this API may change in future versions.
          */
-        protected String getHtmlMessage() {
+        public String getHtmlMessage() {
             return AbstractApplicationServlet
                     .safeEscapeForHtml(getLocalizedMessage());
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.vaadin.terminal.ErrorMessage#addListener(com.vaadin.terminal.
-         * Paintable.RepaintRequestListener)
-         */
-        public void addListener(RepaintRequestListener listener) {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.vaadin.terminal.ErrorMessage#removeListener(com.vaadin.terminal
-         * .Paintable.RepaintRequestListener)
-         */
-        public void removeListener(RepaintRequestListener listener) {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.terminal.ErrorMessage#requestRepaint()
-         */
-        public void requestRepaint() {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.terminal.Paintable#requestRepaintRequests()
-         */
-        public void requestRepaintRequests() {
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.terminal.Paintable#getDebugId()
-         */
-        public String getDebugId() {
-            return null;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.terminal.Paintable#setDebugId(java.lang.String)
-         */
-        public void setDebugId(String id) {
-            throw new UnsupportedOperationException(
-                    "InvalidValueException cannot have a debug id");
         }
 
         /**
