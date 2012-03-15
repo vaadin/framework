@@ -77,7 +77,9 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     public void removeSlot(VLayoutSlot slot) {
         VCaption caption = slot.getCaption();
         if (caption != null) {
-            remove(caption);
+            // Must remove using setCaption to ensure dependencies (layout ->
+            // caption) are unregistered
+            slot.setCaption(null);
         }
 
         remove(slot.getWidget());
