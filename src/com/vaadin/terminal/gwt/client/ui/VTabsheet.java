@@ -970,7 +970,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             height = contentNode.getOffsetHeight();
         }
         if (!isDynamicWidth()) {
-            width = contentNode.getOffsetWidth();
+            width = contentNode.getOffsetWidth() - getContentAreaBorderWidth();
         } else {
             /*
              * If the tabbar is wider than the content we need to use the tabbar
