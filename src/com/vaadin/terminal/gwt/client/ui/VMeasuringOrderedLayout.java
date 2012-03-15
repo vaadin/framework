@@ -85,7 +85,12 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     }
 
     public VLayoutSlot getSlotForChild(Widget widget) {
-        return (VLayoutSlot) widget.getLayoutData();
+        Object o = widget.getLayoutData();
+        if (o instanceof VLayoutSlot) {
+            return (VLayoutSlot) o;
+        }
+
+        return null;
     }
 
     public void setCaption(Widget child, VCaption caption) {
