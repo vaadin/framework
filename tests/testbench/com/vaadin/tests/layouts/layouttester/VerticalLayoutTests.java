@@ -456,7 +456,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         vlo2.addComponent(c1);
         // Must add something around the hr to avoid the margins collapsing
         vlo2.addComponent(new Label(
-                "<div style='height: 0.01px'></div><hr /><div style='height: 0.01px'></div>",
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
                 ContentMode.XHTML));
         vlo2.addComponent(c2);
         vlo2.setExpandRatio(c1, 0.5f);
