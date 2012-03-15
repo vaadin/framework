@@ -1594,6 +1594,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return;
         }
         sizeNeedsInit = false;
+
+        scrollBody.setContainerHeight();
+
         /*
          * We will use browsers table rendering algorithm to find proper column
          * widths. If content and header take less space than available, we will
@@ -4131,12 +4134,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             throw new UnsupportedOperationException();
         }
 
-        @Override
-        protected void onAttach() {
-            super.onAttach();
-            setContainerHeight();
-        }
-
         /**
          * Fix container blocks height according to totalRows to avoid
          * "bouncing" when scrolling
@@ -5747,6 +5744,19 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     "auto");
         }
         return contentAreaBorderHeight;
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if (height.length() == 0
+                && getElement().getStyle().getHeight().length() != 0) {
+            /*
+             * Changing from defined to undefined size -> should do a size init
+             * to take page length into account again
+             */
+            sizeNeedsInit = true;
+        }
+        super.setHeight(height);
     }
 
     void updateHeight() {
