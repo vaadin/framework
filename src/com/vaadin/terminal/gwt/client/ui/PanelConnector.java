@@ -143,7 +143,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
             getWidget().setIconUri(null, client);
         }
 
-        getWidget().handleError(uidl);
+        getWidget().setErrorIndicatorVisible(
+                null != getState().getErrorMessage());
 
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 0) {

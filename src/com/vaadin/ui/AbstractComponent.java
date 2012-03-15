@@ -754,10 +754,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Paint the contents of the component
             paintContent(target);
 
-            final ErrorMessage error = getErrorMessage();
-            if (error != null) {
-                error.paint(target);
-            }
         }
         target.endPaintable(this);
 
@@ -861,6 +857,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             sharedState.setWidth("" + getCSSWidth());
         } else {
             sharedState.setWidth("");
+        }
+
+        ErrorMessage error = getErrorMessage();
+        if (null != error) {
+            sharedState.setErrorMessage(error.getFormattedHtmlMessage());
         }
 
         return sharedState;

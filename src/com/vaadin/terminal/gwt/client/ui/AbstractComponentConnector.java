@@ -35,7 +35,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     // Not all references to the string literals have been converted to use
     // these!
     public static final String ATTRIBUTE_REQUIRED = "required";
-    public static final String ATTRIBUTE_ERROR = "error";
     public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private Widget widget;
@@ -168,11 +167,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             tooltipInfo.setTitle(null);
         }
         // add error info to tooltip if present
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-            tooltipInfo.setErrorUidl(uidl.getErrors());
-        } else {
-            tooltipInfo.setErrorUidl(null);
-        }
+        tooltipInfo.setErrorMessage(getState().getErrorMessage());
 
         // Set captions
         if (delegateCaptionHandling()) {
@@ -358,7 +353,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         // add error classname to components w/ error
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+        if (null != state.getErrorMessage()) {
             styleBuf.append(" ");
             styleBuf.append(primaryStyleName);
             styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);

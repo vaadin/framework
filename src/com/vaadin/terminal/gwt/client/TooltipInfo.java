@@ -7,7 +7,7 @@ public class TooltipInfo {
 
     private String title;
 
-    private UIDL errorUidl;
+    private String errorMessageHtml;
 
     public TooltipInfo() {
     }
@@ -24,12 +24,12 @@ public class TooltipInfo {
         this.title = title;
     }
 
-    public UIDL getErrorUidl() {
-        return errorUidl;
+    public String getErrorMessage() {
+        return errorMessageHtml;
     }
 
-    public void setErrorUidl(UIDL errorUidl) {
-        this.errorUidl = errorUidl;
+    public void setErrorMessage(String errorMessage) {
+        errorMessageHtml = errorMessage;
     }
 
 }

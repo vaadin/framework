@@ -74,7 +74,7 @@ public class ButtonConnector extends AbstractComponentConnector {
         getWidget().disableOnClick = getState().isDisableOnClick();
 
         // handle error
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+        if (null != getState().getErrorMessage()) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement

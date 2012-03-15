@@ -411,11 +411,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                         description);
             }
 
-            final ErrorMessage componentError = tab.getComponentError();
-            if (componentError != null) {
-                componentError.paint(target);
-            }
-
             final String styleName = tab.getStyleName();
             if (styleName != null && styleName.length() != 0) {
                 target.addAttribute(VTabsheet.TAB_STYLE_NAME, styleName);
@@ -1000,12 +995,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         public void setComponentError(ErrorMessage componentError);
 
         /**
-         * Gets the curent error message shown for the tab.
+         * Gets the current error message shown for the tab.
+         * 
+         * TODO currently not sent to the client
          * 
          * @see AbstractComponent#setComponentError(ErrorMessage)
-         * 
-         * @param error
-         *            message or null if none
          */
         public ErrorMessage getComponentError();
 

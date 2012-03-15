@@ -4,8 +4,6 @@
 
 package com.vaadin.terminal.gwt.client;
 
-import java.util.Iterator;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -20,30 +18,13 @@ public class VErrorMessage extends FlowPanel {
         setStyleName(CLASSNAME);
     }
 
-    public void updateFromUIDL(UIDL uidl) {
+    public void updateMessage(String htmlErrorMessage) {
         clear();
-        if (uidl.getChildCount() == 0) {
+        if (htmlErrorMessage == null || htmlErrorMessage.length() == 0) {
             add(new HTML(" "));
         } else {
-            for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-                final Object child = it.next();
-                if (child instanceof String) {
-                    final String errorMessage = (String) child;
-                    add(new HTML(errorMessage));
-                } else {
-                    try {
-                        final VErrorMessage childError = new VErrorMessage();
-                        childError.updateFromUIDL((UIDL) child);
-                        add(childError);
-                    } catch (Exception e) {
-                        // TODO XML type error, check if this can even happen
-                        // anymore??
-                        final UIDL.XML xml = (UIDL.XML) child;
-                        add(new HTML(xml.getXMLAsString()));
-
-                    }
-                }
-            }
+            // pre-formatted on the server as div per child
+            add(new HTML(htmlErrorMessage));
         }
     }
 

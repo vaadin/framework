@@ -493,17 +493,6 @@ public final class UIDL extends JavaScriptObject {
         return this.length - 2;
     }-*/;
 
-    /**
-     * Shorthand that returns the component errors as UIDL. Only applicable for
-     * Paintables.
-     * 
-     * @return the error UIDL if available
-     */
-    public native UIDL getErrors()
-    /*-{
-        return this[1]['error']; 
-    }-*/;
-
     native boolean isMapAttribute(String name)
     /*-{
         return typeof this[1][name] == "object";

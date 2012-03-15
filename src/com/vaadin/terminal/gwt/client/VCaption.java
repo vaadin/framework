@@ -32,11 +32,9 @@ public class VCaption extends HTML {
 
     private int maxWidth = -1;
 
-    protected static final String ATTRIBUTE_ICON = AbstractComponentConnector.ATTRIBUTE_ICON;
     protected static final String ATTRIBUTE_CAPTION = "caption";
     protected static final String ATTRIBUTE_DESCRIPTION = "description";
     protected static final String ATTRIBUTE_REQUIRED = AbstractComponentConnector.ATTRIBUTE_REQUIRED;
-    protected static final String ATTRIBUTE_ERROR = AbstractComponentConnector.ATTRIBUTE_ERROR;
     protected static final String ATTRIBUTE_HIDEERRORS = AbstractComponentConnector.ATTRIBUTE_HIDEERRORS;
 
     private enum InsertPosition {
@@ -120,8 +118,7 @@ public class VCaption extends HTML {
         boolean hasIcon = owner.getState().getIcon() != null;
         boolean showRequired = uidl
                 .getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED);
-        boolean showError = uidl
-                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
+        boolean showError = owner.getState().getErrorMessage() != null
                 && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
@@ -279,9 +276,6 @@ public class VCaption extends HTML {
             }
         }
         boolean hasIcon = iconURL != null;
-        boolean showError = uidl
-                .hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
-                && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
 
         if (hasIcon) {
             if (icon == null) {
@@ -324,7 +318,7 @@ public class VCaption extends HTML {
                 // browsers when it is set to the empty string. If there is an
                 // icon, error indicator or required indicator they will ensure
                 // that space is reserved.
-                if (!hasIcon && !showError) {
+                if (!hasIcon) {
                     captionText.setInnerHTML("&nbsp;");
                 }
             } else {
@@ -335,22 +329,6 @@ public class VCaption extends HTML {
             // Remove existing
             DOM.removeChild(getElement(), captionText);
             captionText = null;
-        }
-
-        if (showError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(InsertPosition.ERROR));
-            }
-        } else if (errorIndicatorElement != null) {
-            // Remove existing
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -400,6 +378,9 @@ public class VCaption extends HTML {
             if (state.getIcon() != null) {
                 return true;
             }
+            if (state.getErrorMessage() != null) {
+                return true;
+            }
         } else {
             // TODO fallback for cases where the caption has no owner (Tabsheet,
             // Accordion)
@@ -409,9 +390,6 @@ public class VCaption extends HTML {
             if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
                 return true;
             }
-        }
-        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
-            return true;
         }
         if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
             return true;

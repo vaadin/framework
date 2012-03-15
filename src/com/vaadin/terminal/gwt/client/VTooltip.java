@@ -56,9 +56,9 @@ public class VTooltip extends VOverlay {
      */
     private void show(TooltipInfo info) {
         boolean hasContent = false;
-        if (info.getErrorUidl() != null) {
+        if (info.getErrorMessage() != null) {
             em.setVisible(true);
-            em.updateFromUIDL(info.getErrorUidl());
+            em.updateMessage(info.getErrorMessage());
             hasContent = true;
         } else {
             em.setVisible(false);

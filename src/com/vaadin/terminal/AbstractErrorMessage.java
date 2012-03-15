@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Validator;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
@@ -58,7 +57,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         this.message = message;
     }
 
-    protected String getMessage() {
+    public String getMessage() {
         return message;
     }
 
@@ -91,43 +90,41 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         causes.add(cause);
     }
 
-    @Deprecated
-    public void paint(PaintTarget target) throws PaintException {
-
-        // TODO if no message and only one cause, paint cause only? error level?
-
-        target.startTag(AbstractComponentConnector.ATTRIBUTE_ERROR);
-        target.addAttribute("level", level.getText());
-
-        paintContent(target);
-
-        target.endTag(AbstractComponentConnector.ATTRIBUTE_ERROR);
-    }
-
-    // TODO temporary method - move logic to client side
-    @Deprecated
-    protected void paintContent(PaintTarget target) throws PaintException {
-        // Paint the message
+    public String getFormattedHtmlMessage() {
+        String result = null;
         switch (getMode()) {
         case TEXT:
-            target.addText(AbstractApplicationServlet
-                    .safeEscapeForHtml(getMessage()));
+            result = AbstractApplicationServlet.safeEscapeForHtml(getMessage());
             break;
         case PREFORMATTED:
-            target.addText("<pre>"
+            result = "<pre>"
                     + AbstractApplicationServlet
-                            .safeEscapeForHtml(getMessage()) + "</pre>");
+                            .safeEscapeForHtml(getMessage()) + "</pre>";
             break;
         case XHTML:
-            target.addText(getMessage());
+            result = getMessage();
             break;
         }
-
-        if (getCauses().size() > 0) {
+        // if no message, combine the messages of all children
+        if (null == result && null != getCauses() && getCauses().size() > 0) {
+            StringBuilder sb = new StringBuilder();
             for (ErrorMessage cause : getCauses()) {
-                cause.paint(target);
+                String childMessage = cause.getFormattedHtmlMessage();
+                if (null != childMessage) {
+                    sb.append("<div>");
+                    sb.append(childMessage);
+                    sb.append("</div>\n");
+                }
+            }
+            if (sb.length() > 0) {
+                result = sb.toString();
             }
         }
+        // still no message? use an empty string for backwards compatibility
+        if (null == result) {
+            result = "";
+        }
+        return result;
     }
 
     // TODO replace this with a helper method elsewhere?

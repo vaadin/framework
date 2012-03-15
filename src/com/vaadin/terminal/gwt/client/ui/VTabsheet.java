@@ -248,15 +248,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         @Override
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)
-                    || uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
+            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
                 tooltipInfo
                         .setTitle(uidl
                                 .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
-                if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
-                    tooltipInfo.setErrorUidl(uidl.getErrors());
-                }
+                // TODO currently, there is no error indicator and message for a tab
                 client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
             } else {
                 client.registerTooltip(getTabsheet(), getElement(), null);

@@ -38,6 +38,11 @@ public class ComponentState extends SharedState {
      */
     private Set<String> registeredEventListeners = null;
 
+    // HTML formatted error message for the component
+    // TODO this could be an object with more information, but currently the UI
+    // only uses the message
+    private String errorMessage = null;
+
     /**
      * Returns the component height as set by the server.
      * 
@@ -376,7 +381,29 @@ public class ComponentState extends SharedState {
         if (registeredEventListeners.size() == 0) {
             registeredEventListeners = null;
         }
+    }
 
+    /**
+     * Returns the current error message for the component.
+     * 
+     * @return HTML formatted error message to show for the component or null if
+     *         none
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * Sets the current error message for the component.
+     * 
+     * TODO this could use an object with more details about the error
+     * 
+     * @param errorMessage
+     *            HTML formatted error message to show for the component or null
+     *            for none
+     */
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
 }

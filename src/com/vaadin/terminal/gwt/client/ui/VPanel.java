@@ -114,8 +114,8 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         DOM.setInnerHTML(captionText, text);
     }
 
-    void handleError(UIDL uidl) {
-        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
+    void setErrorIndicatorVisible(boolean showError) {
+        if (showError) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createSpan();
                 DOM.setElementProperty(errorIndicatorElement, "className",

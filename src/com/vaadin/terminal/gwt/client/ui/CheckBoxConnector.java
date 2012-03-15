@@ -36,7 +36,7 @@ public class CheckBoxConnector extends AbstractFieldConnector {
         getWidget().blurHandlerRegistration = EventHelper.updateBlurHandler(
                 this, client, getWidget().blurHandlerRegistration);
 
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
+        if (null != getState().getErrorMessage()) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");

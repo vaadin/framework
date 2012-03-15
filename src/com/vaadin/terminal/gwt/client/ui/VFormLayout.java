@@ -351,7 +351,7 @@ public class VFormLayout extends SimplePanel {
 
         public void updateFromUIDL(UIDL uidl, ComponentConnector component) {
             owner = component;
-            if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)
+            if (null != owner.getState().getErrorMessage()
                     && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS)) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();

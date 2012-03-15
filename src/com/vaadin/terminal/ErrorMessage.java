@@ -111,19 +111,16 @@ public interface ErrorMessage extends Serializable {
     public ErrorLevel getErrorLevel();
 
     /**
-     * <p>
-     * Paints the error message into a UIDL stream. This method creates the UIDL
-     * sequence describing it and outputs it to the given UIDL stream.
-     * </p>
+     * Returns the HTML formatted message to show in as the error message on the
+     * client.
      * 
-     * @param target
-     *            the target UIDL stream where the error should paint itself to.
-     * @throws PaintException
-     *             if the paint operation failed.
-     * @deprecated error messages should not be painted to UIDL but sent
-     *             differently
+     * This method should perform any necessary escaping to avoid XSS attacks.
+     * 
+     * TODO this API may still change to use a separate data transfer object
+     * 
+     * @return HTML formatted string for the error message
+     * @since 7.0
      */
-    @Deprecated
-    public void paint(PaintTarget target) throws PaintException;
+    public String getFormattedHtmlMessage();
 
 }

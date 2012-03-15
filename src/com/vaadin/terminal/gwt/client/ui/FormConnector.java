@@ -64,9 +64,9 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().removeStyleDependentName("nocaption");
         }
 
-        if (uidl.hasAttribute(ATTRIBUTE_ERROR)) {
-            final UIDL errorUidl = uidl.getErrors();
-            getWidget().errorMessage.updateFromUIDL(errorUidl);
+        if (null != getState().getErrorMessage()) {
+            getWidget().errorMessage.updateMessage(getState()
+                    .getErrorMessage());
             getWidget().errorMessage.setVisible(true);
         } else {
             getWidget().errorMessage.setVisible(false);

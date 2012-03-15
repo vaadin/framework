@@ -37,11 +37,10 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.service.ApplicationContext;
+import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
-import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
@@ -1006,12 +1005,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         // Shows the error in AbstractComponent
         if (owner instanceof AbstractComponent) {
-            if (t instanceof ErrorMessage) {
-                ((AbstractComponent) owner).setComponentError((ErrorMessage) t);
-            } else {
-                ((AbstractComponent) owner)
-                        .setComponentError(new SystemError(t));
-            }
+            ((AbstractComponent) owner).setComponentError(AbstractErrorMessage
+                    .getErrorMessageForException(t));
         }
 
         // also print the error on console

@@ -34,7 +34,6 @@ import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.CustomLayout;
@@ -82,8 +81,6 @@ public class JsonPaintTarget implements PaintTarget {
     private boolean customLayoutArgumentsOpen = false;
 
     private JsonTag tag;
-
-    private int errorsOpen;
 
     private boolean cacheEnabled = false;
 
@@ -162,10 +159,6 @@ public class JsonPaintTarget implements PaintTarget {
 
         tag = new JsonTag(tagName);
 
-        if (AbstractComponentConnector.ATTRIBUTE_ERROR.equals(tagName)) {
-            errorsOpen++;
-        }
-
         customLayoutArgumentsOpen = false;
 
     }
@@ -204,22 +197,7 @@ public class JsonPaintTarget implements PaintTarget {
                         + tagName + "' expected: '" + lastTag + "'.");
             }
 
-            // simple hack which writes error uidl structure into attribute
-            if (AbstractComponentConnector.ATTRIBUTE_ERROR.equals(lastTag)) {
-                if (errorsOpen == 1) {
-                    parent.addAttribute("\""
-                            + AbstractComponentConnector.ATTRIBUTE_ERROR
-                            + "\":[\""
-                            + AbstractComponentConnector.ATTRIBUTE_ERROR
-                            + "\",{}" + tag.getData() + "]");
-                } else {
-                    // sub error
-                    parent.addData(tag.getJSON());
-                }
-                errorsOpen--;
-            } else {
-                parent.addData(tag.getJSON());
-            }
+            parent.addData(tag.getJSON());
 
             tag = parent;
         } else {
