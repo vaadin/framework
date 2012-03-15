@@ -269,7 +269,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         button4.setEnabled(false);
 
         vlo2.addComponent(c1);
-        vlo2.addComponent(new Label("<hr />", ContentMode.XHTML));
+        vlo2.addComponent(new Label(
+                "<div style='height: 1px'></div><hr /><div style='height: 1px'></div>",
+                ContentMode.XHTML));
         vlo2.addComponent(c2);
         vlo2.setExpandRatio(c1, 0.5f);
         vlo2.setExpandRatio(c2, 0.5f);
