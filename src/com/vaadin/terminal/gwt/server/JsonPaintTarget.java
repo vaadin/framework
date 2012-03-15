@@ -702,16 +702,16 @@ public class JsonPaintTarget implements PaintTarget {
         openPaintables.push(paintable);
         openPaintableTags.push(tagName);
 
-        if (cacheEnabled && isPreviouslyPainted) {
-            // cached (unmodified) paintable, paint the it now
-            paintedComponents.add(paintable);
-            deferredPaintables.remove(paintable);
-            return PaintStatus.CACHED;
-        } else if (!topLevelPaintableTag) {
+        if (!topLevelPaintableTag) {
             // notify manager: add to paint queue instead of painting now
             manager.queuePaintable(paintable);
             deferredPaintables.add(paintable);
             return PaintStatus.DEFER;
+        } else if (cacheEnabled && isPreviouslyPainted) {
+            // cached (unmodified) paintable, paint the it now
+            paintedComponents.add(paintable);
+            deferredPaintables.remove(paintable);
+            return PaintStatus.CACHED;
         } else {
             // not a nested paintable, paint the it now
             paintedComponents.add(paintable);
