@@ -1013,11 +1013,15 @@ public class ApplicationConnection {
                 // Update hierarchy, do not fire events
                 Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
 
-                // Fire state change events (TODO)
-                VConsole.log(" * Sending state change events");
-
                 // Fire hierarchy change events
                 sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
+
+                // (TODO) Fire state change events. Should be after hierarchy
+                // change listeners: At least caption updates for the parent are
+                // strange if fired from state change listeners and thus calls
+                // the parent BEFORE the parent is aware of the child (through a
+                // hierarchy change event)
+                VConsole.log(" * Sending state change events");
 
                 // Update of legacy (UIDL) style connectors
                 updateVaadin6StyleConnectors(json);
