@@ -64,6 +64,7 @@ public interface ComponentContainer extends HasComponents {
      * must be symmetric with what {@link #getComponentIterator()} returns.
      * 
      * @return The number of child components this container has.
+     * @since 7.0.0
      */
     public int getComponentCount();
 
