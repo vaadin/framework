@@ -246,6 +246,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             layout.addOrMove(slot, currentIndex++);
         }
 
+        // TODO: Move this to layout and base it on DOM and "currentIndex" 
         for (ComponentConnector child : previousChildren) {
             Widget widget = child.getWidget();
             if (child.getParent() != this) {
