@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 
 public class PanelConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout, PostLayoutListener {
@@ -207,6 +208,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
         // Read actual value back to ensure update logic is correct
         panel.scrollTop = panel.contentNode.getScrollTop();
         panel.scrollLeft = panel.contentNode.getScrollLeft();
+
+        Util.runWebkitOverflowAutoFix(panel.contentNode);
     }
 
     public void postLayout() {
