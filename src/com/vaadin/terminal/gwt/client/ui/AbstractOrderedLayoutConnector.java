@@ -3,16 +3,13 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.Iterator;
 import java.util.List;
 
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -23,8 +20,6 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
-
-    private List<ComponentConnector> previousChildren;
 
     @Override
     public void init() {
@@ -69,22 +64,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         ValueMap expandRatios = uidl.getMapAttribute("expandRatios");
         ValueMap alignments = uidl.getMapAttribute("alignments");
 
-        int currentIndex = 0;
-        // TODO Support reordering elements!
-        // FIXME: move to connectorHierarchyChanged!!
-        for (final Iterator<Object> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL childUIDL = (UIDL) it.next();
-            final ComponentConnector child = client.getPaintable(childUIDL);
-            Widget widget = child.getWidget();
-
-            VLayoutSlot slot = layout.getSlotForChild(widget);
-
-            if (widget.getParent() != layout) {
-                slot = new ComponentConnectorLayoutSlot(getWidget()
-                        .getStylePrimaryName(), child);
-            }
-            layout.addOrMove(slot, currentIndex++);
-
+        for (ComponentConnector child : getChildren()) {
+            VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
             String pid = child.getConnectorId();
 
             AlignmentInfo alignment;
@@ -102,48 +83,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                 expandRatio = 0;
             }
             slot.setExpandRatio(expandRatio);
-
-            if (!childUIDL.getBooleanAttribute("cached")) {
-                child.updateFromUIDL(childUIDL, client);
-            }
-
-            previousChildren.remove(child);
-        }
-
-        if (previousChildren != null) {
-            for (ComponentConnector child : previousChildren) {
-                Widget widget = child.getWidget();
-
-                // Don't remove and unregister if it has been moved to a
-                // different
-                // parent. Slot element will be left behind, but that is taken
-                // care
-                // of later
-                if (widget.getParent() == getWidget()) {
-                    layout.removeSlot(layout.getSlotForChild(widget));
-
-                    ConnectorMap vPaintableMap = ConnectorMap.get(client);
-                    vPaintableMap.unregisterConnector(child);
-                }
-            }
-        }
-        // Remove empty layout slots left behind after children have moved to
-        // other paintables
-        while (true) {
-            int childCount = layout.getElement().getChildCount();
-            if (childCount <= 1) {
-                // Stop if no more slots (spacing element is always present)
-                break;
-            }
-
-            Node lastSlot = layout.getElement().getChild(childCount - 2);
-            if (lastSlot.getChildCount() == 0) {
-                // Remove if empty
-                lastSlot.removeFromParent();
-            } else {
-                // Stop searching when last slot is not empty
-                break;
-            }
         }
 
         int bitMask = uidl.getIntAttribute("margins");
@@ -287,7 +226,35 @@ public abstract class AbstractOrderedLayoutConnector extends
     @Override
     public void connectorHierarchyChanged(
             com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent event) {
-        previousChildren = event.getOldChildren();
+        super.connectorHierarchyChanged(event);
+        List<ComponentConnector> previousChildren = event.getOldChildren();
+        int currentIndex = 0;
+        VMeasuringOrderedLayout layout = getWidget();
+
+        for (ComponentConnector child : getChildren()) {
+            Widget childWidget = child.getWidget();
+            VLayoutSlot slot = layout.getSlotForChild(childWidget);
+
+            if (childWidget.getParent() != layout) {
+                // If the child widget was previously attached to another
+                // AbstractOrderedLayout a slot might be found that belongs to
+                // another AbstractOrderedLayout. In this case we discard it and
+                // create a new slot.
+                slot = new ComponentConnectorLayoutSlot(getWidget()
+                        .getStylePrimaryName(), child);
+            }
+            layout.addOrMove(slot, currentIndex++);
+        }
+
+        for (ComponentConnector child : previousChildren) {
+            Widget widget = child.getWidget();
+            if (child.getParent() != this) {
+                // Remove slot if the connector is no longer a child of this
+                // layout
+                layout.removeSlot(layout.getSlotForChild(widget));
+            }
+        }
+
     };
 
 }
