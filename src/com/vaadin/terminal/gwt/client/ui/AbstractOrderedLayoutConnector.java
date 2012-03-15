@@ -110,20 +110,23 @@ public abstract class AbstractOrderedLayoutConnector extends
             previousChildren.remove(child);
         }
 
-        for (ComponentConnector child : previousChildren) {
-            Widget widget = child.getWidget();
+        if (previousChildren != null) {
+            for (ComponentConnector child : previousChildren) {
+                Widget widget = child.getWidget();
 
-            // Don't remove and unregister if it has been moved to a different
-            // parent. Slot element will be left behind, but that is taken care
-            // of later
-            if (widget.getParent() == getWidget()) {
-                layout.removeSlot(layout.getSlotForChild(widget));
+                // Don't remove and unregister if it has been moved to a
+                // different
+                // parent. Slot element will be left behind, but that is taken
+                // care
+                // of later
+                if (widget.getParent() == getWidget()) {
+                    layout.removeSlot(layout.getSlotForChild(widget));
 
-                ConnectorMap vPaintableMap = ConnectorMap.get(client);
-                vPaintableMap.unregisterConnector(child);
+                    ConnectorMap vPaintableMap = ConnectorMap.get(client);
+                    vPaintableMap.unregisterConnector(child);
+                }
             }
         }
-
         // Remove empty layout slots left behind after children have moved to
         // other paintables
         while (true) {
