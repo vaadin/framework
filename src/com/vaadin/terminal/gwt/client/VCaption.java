@@ -397,17 +397,20 @@ public class VCaption extends HTML {
             if (state.getCaption() != null) {
                 return true;
             }
+            if (state.getIcon() != null) {
+                return true;
+            }
         } else {
             // TODO fallback for cases where the caption has no owner (Tabsheet,
             // Accordion)
             if (uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION) != null) {
                 return true;
             }
+            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
+                return true;
+            }
         }
         if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_ERROR)) {
-            return true;
-        }
-        if (state.getIcon() != null) {
             return true;
         }
         if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
