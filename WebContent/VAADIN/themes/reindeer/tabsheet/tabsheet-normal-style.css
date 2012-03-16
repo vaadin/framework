@@ -52,9 +52,6 @@
 	font-size: 14px;
 	font-weight: normal;
 }
-.v-ff .v-tabsheet-caption-close {
-	margin-top: -17px;
-}
 .v-tabsheet-caption-close:hover {
 	background-image: url(img/close-btn-hover.png); /** sprite-ref: verticals */
 }
