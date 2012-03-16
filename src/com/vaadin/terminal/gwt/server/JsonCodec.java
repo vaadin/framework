@@ -203,7 +203,7 @@ public class JsonCodec implements Serializable {
             Paintable paintable = (Paintable) value;
             return combineTypeAndValue(JsonEncoder.VTYPE_PAINTABLE,
                     idMapper.getPaintableId(paintable));
-        } else if (getTransportType(value) != JsonEncoder.VTYPE_NULL) {
+        } else if (getTransportType(value) != null) {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
         } else {
@@ -317,16 +317,20 @@ public class JsonCodec implements Serializable {
         return outerArray;
     }
 
+    /**
+     * Gets the transport type for the value. Returns null if no transport type
+     * can be found.
+     * 
+     * @param value
+     * @return
+     * @throws JSONException
+     */
     private static String getTransportType(Object value) throws JSONException {
         if (null == value) {
             return JsonEncoder.VTYPE_NULL;
         }
         String transportType = typeToTransportType.get(value.getClass());
-        if (null != transportType) {
-            return transportType;
-        }
-        throw new JSONException("Unknown object type "
-                + value.getClass().getName());
+        return transportType;
     }
 
 }
