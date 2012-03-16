@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -280,7 +281,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
          */
         Element layoutElement = layout.getWidget().getElement();
         Style childStyle = layoutElement.getStyle();
-        if (layout.isRelativeHeight()) {
+        if (layout.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
             childStyle.setPosition(Position.ABSOLUTE);
 
             Style wrapperStyle = contentElement.getStyle();

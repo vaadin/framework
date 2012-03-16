@@ -331,7 +331,7 @@ public class RootConnector extends AbstractComponentContainerConnector
          * height. Assuming v-view does not have an undefined width for now, see
          * #8460.
          */
-        if (child.isRelativeHeight()) {
+        if (child.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
             childStyle.setPosition(Position.ABSOLUTE);
         } else {
             childStyle.clearPosition();
