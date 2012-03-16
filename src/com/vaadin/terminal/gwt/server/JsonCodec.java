@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -35,8 +36,7 @@ public class JsonCodec implements Serializable {
 
     static {
         registerType(String.class, JsonEncoder.VTYPE_STRING);
-        registerType(Paintable.class, JsonEncoder.VTYPE_PAINTABLE);
-        registerType(Connector.class, JsonEncoder.VTYPE_PAINTABLE);
+        registerType(Connector.class, JsonEncoder.VTYPE_CONNECTOR);
         registerType(Boolean.class, JsonEncoder.VTYPE_BOOLEAN);
         registerType(Integer.class, JsonEncoder.VTYPE_INTEGER);
         registerType(Float.class, JsonEncoder.VTYPE_FLOAT);
@@ -60,27 +60,28 @@ public class JsonCodec implements Serializable {
      * 
      * @param value
      *            JSON array with two elements
-     * @param idMapper
+     * @param application
      *            mapper between paintable ID and {@link Paintable} objects
      * @return converted value (does not contain JSON types)
      * @throws JSONException
      *             if the conversion fails
      */
-    public static Object decode(JSONArray value, PaintableIdMapper idMapper)
+    public static Object decode(JSONArray value, Application application)
             throws JSONException {
-        return decodeVariableValue(value.getString(0), value.get(1), idMapper);
+        return decodeVariableValue(value.getString(0), value.get(1),
+                application);
     }
 
     private static Object decodeVariableValue(String variableType,
-            Object value, PaintableIdMapper idMapper) throws JSONException {
+            Object value, Application application) throws JSONException {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = decodeArray((JSONArray) value, idMapper);
+            val = decodeArray((JSONArray) value, application);
         } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
-            val = decodeList((JSONArray) value, idMapper);
+            val = decodeList((JSONArray) value, application);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = decodeMap((JSONObject) value, idMapper);
+            val = decodeMap((JSONObject) value, application);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = decodeStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
@@ -100,27 +101,26 @@ public class JsonCodec implements Serializable {
         } else if (JsonEncoder.VTYPE_BOOLEAN.equals(variableType)) {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
-            // TODO handle properly
-            val = idMapper.getPaintable(String.valueOf(value));
+        } else if (JsonEncoder.VTYPE_CONNECTOR.equals(variableType)) {
+            val = application.getConnector(String.valueOf(value));
         } else if (JsonEncoder.VTYPE_NULL.equals(variableType)) {
             val = null;
         } else {
             // Try to decode object using fields
-            return decodeObject(variableType, (JSONObject) value, idMapper);
+            return decodeObject(variableType, (JSONObject) value, application);
 
         }
 
         return val;
     }
 
-    private static Object decodeMap(JSONObject jsonMap,
-            PaintableIdMapper idMapper) throws JSONException {
+    private static Object decodeMap(JSONObject jsonMap, Application application)
+            throws JSONException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String key = it.next();
-            map.put(key, decode(jsonMap.getJSONArray(key), idMapper));
+            map.put(key, decode(jsonMap.getJSONArray(key), application));
         }
         return map;
     }
@@ -136,18 +136,18 @@ public class JsonCodec implements Serializable {
     }
 
     private static Object decodeArray(JSONArray jsonArray,
-            PaintableIdMapper idMapper) throws JSONException {
-        List list = decodeList(jsonArray, idMapper);
+            Application application) throws JSONException {
+        List list = decodeList(jsonArray, application);
         return list.toArray(new Object[list.size()]);
     }
 
-    private static List decodeList(JSONArray jsonArray,
-            PaintableIdMapper idMapper) throws JSONException {
+    private static List decodeList(JSONArray jsonArray, Application application)
+            throws JSONException {
         List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = jsonArray.getJSONArray(i);
-            list.add(decode(entryArray, idMapper));
+            list.add(decode(entryArray, application));
         }
         return list;
     }
@@ -158,19 +158,19 @@ public class JsonCodec implements Serializable {
      * 
      * @param value
      *            value to convert
-     * @param idMapper
+     * @param application
      *            mapper between paintable ID and {@link Paintable} objects
      * @return JSON representation of the value
      * @throws JSONException
      *             if encoding a value fails (e.g. NaN or infinite number)
      */
-    public static JSONArray encode(Object value, PaintableIdMapper idMapper)
+    public static JSONArray encode(Object value, Application application)
             throws JSONException {
-        return encode(value, null, idMapper);
+        return encode(value, null, application);
     }
 
     public static JSONArray encode(Object value, Class<?> valueType,
-            PaintableIdMapper idMapper) throws JSONException {
+            Application application) throws JSONException {
 
         if (null == value) {
             return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
@@ -189,20 +189,20 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(getTransportType(value), value);
         } else if (value instanceof List) {
             List list = (List) value;
-            JSONArray jsonArray = encodeList(list, idMapper);
+            JSONArray jsonArray = encodeList(list, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_LIST, jsonArray);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
-            JSONArray jsonArray = encodeArrayContents(array, idMapper);
+            JSONArray jsonArray = encodeArrayContents(array, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) value;
-            JSONObject jsonMap = encodeMapContents(map, idMapper);
+            JSONObject jsonMap = encodeMapContents(map, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
-        } else if (value instanceof Paintable) {
-            Paintable paintable = (Paintable) value;
-            return combineTypeAndValue(JsonEncoder.VTYPE_PAINTABLE,
-                    idMapper.getPaintableId(paintable));
+        } else if (value instanceof Connector) {
+            Connector connector = (Connector) value;
+            return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
+                    connector.getConnectorId());
         } else if (getTransportType(value) != null) {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
@@ -214,11 +214,11 @@ public class JsonCodec implements Serializable {
             }
 
             return combineTypeAndValue(valueType.getCanonicalName(),
-                    encodeObject(value, idMapper));
+                    encodeObject(value, application));
         }
     }
 
-    private static Object encodeObject(Object value, PaintableIdMapper idMapper)
+    private static Object encodeObject(Object value, Application application)
             throws JSONException {
         JSONObject jsonMap = new JSONObject();
 
@@ -232,7 +232,8 @@ public class JsonCodec implements Serializable {
                 }
                 Method getterMethod = pd.getReadMethod();
                 Object fieldValue = getterMethod.invoke(value, (Object[]) null);
-                jsonMap.put(fieldName, encode(fieldValue, fieldType, idMapper));
+                jsonMap.put(fieldName,
+                        encode(fieldValue, fieldType, application));
             }
         } catch (Exception e) {
             // TODO: Should exceptions be handled in a different way?
@@ -242,7 +243,7 @@ public class JsonCodec implements Serializable {
     }
 
     private static Object decodeObject(String type,
-            JSONObject serializedObject, PaintableIdMapper idMapper)
+            JSONObject serializedObject, Application application)
             throws JSONException {
 
         Class<?> cls;
@@ -260,7 +261,7 @@ public class JsonCodec implements Serializable {
                 JSONArray encodedObject = serializedObject
                         .getJSONArray(fieldName);
                 pd.getWriteMethod().invoke(decodedObject,
-                        decode(encodedObject, idMapper));
+                        decode(encodedObject, application));
             }
 
             return decodedObject;
@@ -280,32 +281,32 @@ public class JsonCodec implements Serializable {
     }
 
     private static JSONArray encodeArrayContents(Object[] array,
-            PaintableIdMapper idMapper) throws JSONException {
+            Application application) throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : array) {
             // TODO handle object graph loops?
-            jsonArray.put(encode(o, idMapper));
+            jsonArray.put(encode(o, application));
         }
         return jsonArray;
     }
 
-    private static JSONArray encodeList(List list, PaintableIdMapper idMapper)
+    private static JSONArray encodeList(List list, Application application)
             throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : list) {
             // TODO handle object graph loops?
-            jsonArray.put(encode(o, idMapper));
+            jsonArray.put(encode(o, application));
         }
         return jsonArray;
     }
 
     private static JSONObject encodeMapContents(Map<String, Object> map,
-            PaintableIdMapper idMapper) throws JSONException {
+            Application application) throws JSONException {
         JSONObject jsonMap = new JSONObject();
         for (String mapKey : map.keySet()) {
             // TODO handle object graph loops?
             Object mapValue = map.get(mapKey);
-            jsonMap.put(mapKey, encode(mapValue, idMapper));
+            jsonMap.put(mapKey, encode(mapValue, application));
         }
         return jsonMap;
     }

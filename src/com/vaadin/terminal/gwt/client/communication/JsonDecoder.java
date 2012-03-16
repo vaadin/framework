@@ -82,7 +82,7 @@ public class JsonDecoder {
         } else if (JsonEncoder.VTYPE_BOOLEAN.equals(variableType)) {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
+        } else if (JsonEncoder.VTYPE_CONNECTOR.equals(variableType)) {
             val = idMapper.getConnector(((JSONString) value).stringValue());
         } else {
             // object, class name as type

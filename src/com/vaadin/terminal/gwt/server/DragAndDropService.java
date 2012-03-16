@@ -18,10 +18,13 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 
-public class DragAndDropService implements VariableOwner {
+public class DragAndDropService implements VariableOwner, Connector {
 
     private static final Logger logger = Logger
             .getLogger(DragAndDropService.class.getName());
@@ -177,7 +180,7 @@ public class DragAndDropService implements VariableOwner {
     }
 
     public boolean isEnabled() {
-        return true;
+        return isConnectorEnabled();
     }
 
     public boolean isImmediate() {
@@ -211,5 +214,19 @@ public class DragAndDropService implements VariableOwner {
             return true;
         }
         return false;
+    }
+
+    public SharedState getState() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public String getConnectorId() {
+        return VDragAndDropManager.DD_SERVICE;
+    }
+
+    public boolean isConnectorEnabled() {
+        // Drag'n'drop can't be disabled
+        return true;
     }
 }

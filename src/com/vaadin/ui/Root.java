@@ -409,6 +409,9 @@ public abstract class Root extends AbstractComponentContainer implements
     /** Identifies the click event */
     private static final String CLICK_EVENT_ID = VView.CLICK_EVENT_ID;
 
+    private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
+            this);
+
     /**
      * Creates a new empty root without a caption. This root will have a
      * {@link VerticalLayout} with margins enabled as its content.
@@ -1567,4 +1570,17 @@ public abstract class Root extends AbstractComponentContainer implements
         // TODO How can a Root be invisible? What does it mean?
         return isVisible() && isEnabled();
     }
+
+    public DirtyConnectorTracker getDirtyConnectorTracker() {
+        return dirtyConnectorTracker;
+    }
+
+    public void componentAttached(Component component) {
+        getDirtyConnectorTracker().componentAttached(component);
+    }
+
+    public void componentDetached(Component component) {
+        getDirtyConnectorTracker().componentDetached(component);
+    }
+
 }

@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.portlet.MimeResponse;
@@ -22,12 +23,10 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.ui.Component;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Root;
 
 /**
@@ -50,26 +49,36 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
-        VariableOwner variableOwner = getVariableOwner(ownerId);
-        StreamVariable streamVariable = ownerToNameToStreamVariable.get(
-                variableOwner).get(name);
+        Connector owner = getConnector(getApplication(), ownerId);
+        StreamVariable streamVariable = ownerToNameToStreamVariable.get(owner)
+                .get(name);
 
         if (contentType.contains("boundary")) {
             doHandleSimpleMultipartFileUpload(request, response,
-                    streamVariable, name, variableOwner,
+                    streamVariable, name, owner,
                     contentType.split("boundary=")[1]);
         } else {
-            doHandleXhrFilePost(request, response, streamVariable, name,
-                    variableOwner, request.getContentLength());
+            doHandleXhrFilePost(request, response, streamVariable, name, owner,
+                    request.getContentLength());
         }
 
     }
 
     @Override
-    protected void unregisterPaintable(Component p) {
-        super.unregisterPaintable(p);
+    protected void postPaint(Root root) {
+        super.postPaint(root);
+
+        Application application = root.getApplication();
         if (ownerToNameToStreamVariable != null) {
-            ownerToNameToStreamVariable.remove(p);
+            Iterator<Connector> iterator = ownerToNameToStreamVariable.keySet()
+                    .iterator();
+            while (iterator.hasNext()) {
+                Connector owner = iterator.next();
+                if (application.getConnector(owner.getConnectorId()) == null) {
+                    // Owner is no longer attached to the application
+                    iterator.remove();
+                }
+            }
         }
     }
 
@@ -83,13 +92,13 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         currentUidlResponse = null;
     }
 
-    private Map<VariableOwner, Map<String, StreamVariable>> ownerToNameToStreamVariable;
+    private Map<Connector, Map<String, StreamVariable>> ownerToNameToStreamVariable;
 
     @Override
-    String getStreamVariableTargetUrl(VariableOwner owner, String name,
+    String getStreamVariableTargetUrl(Connector owner, String name,
             StreamVariable value) {
         if (ownerToNameToStreamVariable == null) {
-            ownerToNameToStreamVariable = new HashMap<VariableOwner, Map<String, StreamVariable>>();
+            ownerToNameToStreamVariable = new HashMap<Connector, Map<String, StreamVariable>>();
         }
         Map<String, StreamVariable> nameToReceiver = ownerToNameToStreamVariable
                 .get(owner);
@@ -101,14 +110,14 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         ResourceURL resurl = currentUidlResponse.createResourceURL();
         resurl.setResourceID("UPLOAD");
         resurl.setParameter("name", name);
-        resurl.setParameter("rec-owner", getPaintableId((Paintable) owner));
+        resurl.setParameter("rec-owner", owner.getConnectorId());
         resurl.setProperty("name", name);
-        resurl.setProperty("rec-owner", getPaintableId((Paintable) owner));
+        resurl.setProperty("rec-owner", owner.getConnectorId());
         return resurl.toString();
     }
 
     @Override
-    protected void cleanStreamVariable(VariableOwner owner, String name) {
+    protected void cleanStreamVariable(Connector owner, String name) {
         Map<String, StreamVariable> map = ownerToNameToStreamVariable
                 .get(owner);
         map.remove(name);

@@ -69,9 +69,11 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DirtyConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Window;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -91,7 +93,7 @@ import com.vaadin.ui.Root;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractCommunicationManager implements
-        Paintable.RepaintRequestListener, PaintableIdMapper, Serializable {
+        Paintable.RepaintRequestListener, Serializable {
 
     private static final String DASHDASH = "--";
 
@@ -142,15 +144,16 @@ public abstract class AbstractCommunicationManager implements
 
     // cannot combine with paint queue:
     // this can contain dirty components from any Root
-    private final ArrayList<Paintable> dirtyPaintables = new ArrayList<Paintable>();
+    // TODO Remove, it is now in Root
+    // private final ArrayList<Paintable> dirtyPaintables = new
+    // ArrayList<Paintable>();
 
     // queue used during painting to keep track of what still needs to be
     // painted within the Root being painted
-    private LinkedList<Paintable> paintQueue = new LinkedList<Paintable>();
+    // private LinkedList<Connector> paintQueue = new LinkedList<Connector>();
 
-    private final HashMap<Paintable, String> paintableIdMap = new HashMap<Paintable, String>();
-
-    private final HashMap<String, Paintable> idPaintableMap = new HashMap<String, Paintable>();
+    // private final HashMap<String, Paintable> idPaintableMap = new
+    // HashMap<String, Paintable>();
 
     private int idSequence = 0;
 
@@ -167,6 +170,8 @@ public abstract class AbstractCommunicationManager implements
     private String requestThemeName;
 
     private int maxInactiveInterval;
+
+    private Connector highlightedConnector;
 
     /**
      * TODO New constructor - document me!
@@ -193,8 +198,6 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "highlightComponent";
 
-    private Paintable highLightedPaintable;
-
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int readByte = stream.read();
@@ -220,7 +223,7 @@ public abstract class AbstractCommunicationManager implements
      */
     protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, VariableOwner owner, String boundary)
+            String variableName, Connector owner, String boundary)
             throws IOException {
         // multipart parsing, supports only one file for request, but that is
         // fine for our current terminal
@@ -319,7 +322,7 @@ public abstract class AbstractCommunicationManager implements
      */
     protected void doHandleXhrFilePost(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, VariableOwner owner, int contentLength)
+            String variableName, Connector owner, int contentLength)
             throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
@@ -536,8 +539,8 @@ public abstract class AbstractCommunicationManager implements
             if (request.getParameter(GET_PARAM_HIGHLIGHT_COMPONENT) != null) {
                 String pid = request
                         .getParameter(GET_PARAM_HIGHLIGHT_COMPONENT);
-                highLightedPaintable = idPaintableMap.get(pid);
-                highlightPaintable(highLightedPaintable);
+                highlightedConnector = root.getApplication().getConnector(pid);
+                highlightConnector(highlightedConnector);
             }
         }
 
@@ -597,22 +600,35 @@ public abstract class AbstractCommunicationManager implements
 
             paintAfterVariableChanges(request, response, callback, repaintAll,
                     outWriter, root, analyzeLayouts);
-
+            postPaint(root);
         }
 
         outWriter.close();
         requestThemeName = null;
     }
 
-    protected void highlightPaintable(Paintable highLightedPaintable2) {
+    /**
+     * Method called after the paint phase while still being synchronized on the
+     * application
+     * 
+     * @param root
+     * 
+     */
+    protected void postPaint(Root root) {
+        // Remove connectors that have been detached from the application during
+        // handling of the request
+        root.getApplication().cleanConnectorMap();
+    }
+
+    protected void highlightConnector(Connector highlightedConnector) {
         StringBuilder sb = new StringBuilder();
         sb.append("*** Debug details of a component:  *** \n");
         sb.append("Type: ");
-        sb.append(highLightedPaintable2.getClass().getName());
-        if (highLightedPaintable2 instanceof AbstractComponent) {
-            AbstractComponent component = (AbstractComponent) highLightedPaintable2;
+        sb.append(highlightedConnector.getClass().getName());
+        if (highlightedConnector instanceof AbstractComponent) {
+            AbstractComponent component = (AbstractComponent) highlightedConnector;
             sb.append("\nId:");
-            sb.append(paintableIdMap.get(component));
+            sb.append(highlightedConnector.getConnectorId());
             if (component.getCaption() != null) {
                 sb.append("\nCaption:");
                 sb.append(component.getCaption());
@@ -681,10 +697,6 @@ public abstract class AbstractCommunicationManager implements
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException, IOException {
 
-        if (repaintAll) {
-            makeAllPaintablesDirty(root);
-        }
-
         // Removes application if it has stopped during variable changes
         if (!application.isRunning()) {
             endApplication(request, response, application);
@@ -746,52 +758,43 @@ public abstract class AbstractCommunicationManager implements
 
     // for internal use by JsonPaintTarget
     public void queuePaintable(Paintable paintable) {
-        if (!paintQueue.contains(paintable)) {
-            paintQueue.add(paintable);
-        }
+        // if (!paintQueue.contains(paintable)) {
+        // paintQueue.add((Connector) paintable);
+        // }
     }
 
     public void writeUidlResponse(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
-        ArrayList<Paintable> paintables = null;
-
+        ArrayList<Connector> dirtyVisibleConnectors = new ArrayList<Connector>();
+        Application application = root.getApplication();
         // Paints components
+        DirtyConnectorTracker rootConnectorTracker = root
+                .getDirtyConnectorTracker();
+        System.out.println("* Creating response to client");
         if (repaintAll) {
-            paintables = new ArrayList<Paintable>();
-            paintables.add(root);
+            System.out.println("Full repaint");
+
+            getClientCache(root).clear();
+
+            rootConnectorTracker.markAllComponentsDirty();
+
+            dirtyVisibleConnectors.addAll(rootConnectorTracker
+                    .getDirtyComponents());
 
             // Reset sent locales
             locales = null;
             requireLocale(application.getLocale().toString());
 
         } else {
-            // remove detached components from paintableIdMap so they
-            // can be GC'ed
-            /*
-             * TODO figure out if we could move this beyond the painting phase,
-             * "respond as fast as possible, then do the cleanup". Beware of
-             * painting the dirty detached components.
-             */
-            for (Iterator<Paintable> it = paintableIdMap.keySet().iterator(); it
-                    .hasNext();) {
-                Component p = (Component) it.next();
-                if (p.getApplication() == null) {
-                    unregisterPaintable(p);
-                    // Take into account that some other component may have
-                    // reused p's ID by now (this can happen when manually
-                    // assigning IDs with setDebugId().) See #8090.
-                    String pid = paintableIdMap.get(p);
-                    if (idPaintableMap.get(pid) == p) {
-                        idPaintableMap.remove(pid);
-                    }
-                    it.remove();
-                    dirtyPaintables.remove(p);
-                }
-            }
             // TODO second list/stack for those whose state needs to be sent?
-            paintables = getDirtyVisibleComponents(root);
+            dirtyVisibleConnectors
+                    .addAll(getDirtyVisibleComponents(rootConnectorTracker));
         }
+
+        System.out.println("* Found " + dirtyVisibleConnectors.size()
+                + " dirty connectors to paint");
+        rootConnectorTracker.markAllComponentsClean();
 
         outWriter.print("\"changes\":[");
 
@@ -799,73 +802,31 @@ public abstract class AbstractCommunicationManager implements
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
-        ClientCache clientCache = getClientCache(root);
 
-        // TODO These seem unnecessary and could be removed/replaced by looping
-        // through paintQueue without removing paintables from it
-        LinkedList<Paintable> stateQueue = new LinkedList<Paintable>();
-        LinkedList<Paintable> rpcPendingQueue = new LinkedList<Paintable>();
-        LinkedList<Paintable> hierarchyPendingQueue = new LinkedList<Paintable>();
-        LinkedList<Paintable> connectorTypeQueue = new LinkedList<Paintable>();
+        for (Connector connector : dirtyVisibleConnectors) {
+            if (connector instanceof Paintable) {
+                Paintable p = (Paintable) connector;
+                paintTarget.startTag("change");
+                final String pid = connector.getConnectorId();
+                paintTarget.addAttribute("pid", pid);
+                p.paint(paintTarget);
+                paintTarget.endTag("change");
+            }
+        }
 
-        if (paintables != null) {
+        if (analyzeLayouts) {
+            // TODO Check if this works
+            invalidComponentRelativeSizes = ComponentSizeValidator
+                    .validateComponentRelativeSizes(root.getContent(), null,
+                            null);
 
-            // clear and rebuild paint queue
-            paintQueue.clear();
-            paintQueue.addAll(paintables);
-
-            while (!paintQueue.isEmpty()) {
-                final Paintable p = paintQueue.removeFirst();
-                // for now, all painted components may need a state refresh
-                stateQueue.push(p);
-                // TODO This should be optimized. The type only needs to be sent
-                // once for each connector id + on refresh
-                connectorTypeQueue.push(p);
-                // also a hierarchy update
-                hierarchyPendingQueue.push(p);
-                // ... and RPC calls to be sent
-                rpcPendingQueue.push(p);
-
-                // // TODO CLEAN
-                // if (p instanceof Root) {
-                // final Root r = (Root) p;
-                // if (r.getTerminal() == null) {
-                // r.setTerminal(application.getRoot().getTerminal());
-                // }
-                // }
-
-                // TODO we may still get changes that have been
-                // rendered already (changes with only cached flag)
-                if (paintTarget.needsToBePainted(p)) {
-                    paintTarget.startTag("change");
-                    final String pid = getPaintableId(p);
-                    paintTarget.addAttribute("pid", pid);
-
-                    // paints subcomponents as references (via
-                    // JsonPaintTarget.startPaintable()) and defers painting
-                    // their contents to another top-level change (via
-                    // queuePaintable())
-                    p.paint(paintTarget);
-
-                    paintTarget.endTag("change");
-                }
-                paintablePainted(p);
-
-                if (analyzeLayouts) {
-                    Root w = (Root) p;
+            // Also check any existing subwindows
+            if (root.getWindows() != null) {
+                for (Window subWindow : root.getWindows()) {
                     invalidComponentRelativeSizes = ComponentSizeValidator
-                            .validateComponentRelativeSizes(w.getContent(),
-                                    null, null);
-
-                    // // Also check any existing subwindows
-                    // if (w.getChildWindows() != null) {
-                    // for (Window subWindow : w.getChildWindows()) {
-                    // invalidComponentRelativeSizes = ComponentSizeValidator
-                    // .validateComponentRelativeSizes(
-                    // subWindow.getContent(),
-                    // invalidComponentRelativeSizes, null);
-                    // }
-                    // }
+                            .validateComponentRelativeSizes(
+                                    subWindow.getContent(),
+                                    invalidComponentRelativeSizes, null);
                 }
             }
         }
@@ -873,136 +834,131 @@ public abstract class AbstractCommunicationManager implements
         paintTarget.close();
         outWriter.print("], "); // close changes
 
-        if (!stateQueue.isEmpty()) {
-            // send shared state to client
+        // send shared state to client
 
-            // for now, send the complete state of all modified and new
-            // components
+        // for now, send the complete state of all modified and new
+        // components
 
-            // Ideally, all this would be sent before "changes", but that causes
-            // complications with legacy components that create sub-components
-            // in their paint phase. Nevertheless, this will be processed on the
-            // client after component creation but before legacy UIDL
-            // processing.
-
-            JSONObject sharedStates = new JSONObject();
-            while (!stateQueue.isEmpty()) {
-                final Paintable p = stateQueue.pop();
-                String paintableId = getPaintableId(p);
-                SharedState state = p.getState();
-                if (null != state) {
-                    // encode and send shared state
-                    try {
-                        JSONArray stateJsonArray = JsonCodec
-                                .encode(state, this);
-                        sharedStates.put(paintableId, stateJsonArray);
-                    } catch (JSONException e) {
-                        throw new PaintException(
-                                "Failed to serialize shared state for paintable "
-                                        + paintableId + ": " + e.getMessage());
-                    }
-                }
-            }
-            outWriter.print("\"state\":");
-            outWriter.append(sharedStates.toString());
-            outWriter.print(", "); // close states
-        }
-        if (!connectorTypeQueue.isEmpty()) {
-            JSONObject connectorTypes = new JSONObject();
-            while (!connectorTypeQueue.isEmpty()) {
-                final Paintable p = connectorTypeQueue.pop();
-                String paintableId = getPaintableId(p);
-                String connectorType = paintTarget.getTag(p);
+        // Ideally, all this would be sent before "changes", but that causes
+        // complications with legacy components that create sub-components
+        // in their paint phase. Nevertheless, this will be processed on the
+        // client after component creation but before legacy UIDL
+        // processing.
+        JSONObject sharedStates = new JSONObject();
+        for (Connector connector : dirtyVisibleConnectors) {
+            SharedState state = connector.getState();
+            if (null != state) {
+                // encode and send shared state
                 try {
-                    connectorTypes.put(paintableId, connectorType);
+                    JSONArray stateJsonArray = JsonCodec.encode(state,
+                            application);
+                    sharedStates
+                            .put(connector.getConnectorId(), stateJsonArray);
                 } catch (JSONException e) {
                     throw new PaintException(
-                            "Failed to send connector type for paintable "
-                                    + paintableId + ": " + e.getMessage());
+                            "Failed to serialize shared state for connector "
+                                    + connector.getConnectorId() + ": "
+                                    + e.getMessage());
                 }
             }
-            outWriter.print("\"types\":");
-            outWriter.append(connectorTypes.toString());
-            outWriter.print(", "); // close states
         }
-        if (!hierarchyPendingQueue.isEmpty()) {
-            // Send update hierarchy information to the client.
+        outWriter.print("\"state\":");
+        outWriter.append(sharedStates.toString());
+        outWriter.print(", "); // close states
 
-            // This could be optimized aswell to send only info if hierarchy has
-            // actually changed. Much like with the shared state. Note though
-            // that an empty hierarchy is information aswell (e.g. change from 1
-            // child to 0 children)
+        // TODO This should be optimized. The type only needs to be
+        // sent once for each connector id + on refresh
 
-            outWriter.print("\"hierarchy\":");
+        JSONObject connectorTypes = new JSONObject();
+        for (Connector connector : dirtyVisibleConnectors) {
+            String connectorType = paintTarget.getTag((Paintable) connector);
+            try {
+                connectorTypes.put(connector.getConnectorId(), connectorType);
+            } catch (JSONException e) {
+                throw new PaintException(
+                        "Failed to send connector type for connector "
+                                + connector.getConnectorId() + ": "
+                                + e.getMessage());
+            }
+        }
+        outWriter.print("\"types\":");
+        outWriter.append(connectorTypes.toString());
+        outWriter.print(", "); // close states
 
-            JSONObject hierarchyInfo = new JSONObject();
-            for (Paintable p : hierarchyPendingQueue) {
-                if (p instanceof HasComponents) {
-                    HasComponents parent = (HasComponents) p;
-                    String parentConnectorId = paintableIdMap.get(parent);
-                    JSONArray children = new JSONArray();
+        // Send update hierarchy information to the client.
 
-                    for (Component child : getChildComponents(parent)) {
-                        if (isVisible(child)) {
-                            String childConnectorId = getPaintableId(child);
-                            children.put(childConnectorId);
-                        }
-                    }
-                    try {
-                        hierarchyInfo.put(parentConnectorId, children);
-                    } catch (JSONException e) {
-                        throw new PaintException(
-                                "Failed to send hierarchy information about "
-                                        + parentConnectorId
-                                        + " to the client: " + e.getMessage());
+        // This could be optimized aswell to send only info if hierarchy has
+        // actually changed. Much like with the shared state. Note though
+        // that an empty hierarchy is information aswell (e.g. change from 1
+        // child to 0 children)
+
+        outWriter.print("\"hierarchy\":");
+
+        JSONObject hierarchyInfo = new JSONObject();
+        for (Connector connector : dirtyVisibleConnectors) {
+            if (connector instanceof HasComponents) {
+                HasComponents parent = (HasComponents) connector;
+                String parentConnectorId = parent.getConnectorId();
+                JSONArray children = new JSONArray();
+
+                for (Component child : getChildComponents(parent)) {
+                    if (isVisible(child)) {
+                        children.put(child.getConnectorId());
                     }
                 }
+                try {
+                    hierarchyInfo.put(parentConnectorId, children);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to send hierarchy information about "
+                                    + parentConnectorId + " to the client: "
+                                    + e.getMessage());
+                }
             }
-            outWriter.append(hierarchyInfo.toString());
-            outWriter.print(", "); // close hierarchy
-
         }
+        outWriter.append(hierarchyInfo.toString());
+        outWriter.print(", "); // close hierarchy
 
         // send server to client RPC calls for components in the root, in call
         // order
-        if (!rpcPendingQueue.isEmpty()) {
-            // collect RPC calls from components in the root in the order in
-            // which they were performed, remove the calls from components
-            List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(rpcPendingQueue);
 
-            JSONArray rpcCalls = new JSONArray();
-            for (ClientMethodInvocation invocation : pendingInvocations) {
-                // add invocation to rpcCalls
-                try {
-                    JSONArray invocationJson = new JSONArray();
-                    invocationJson
-                            .put(getPaintableId(invocation.getPaintable()));
-                    invocationJson.put(invocation.getInterfaceName());
-                    invocationJson.put(invocation.getMethodName());
-                    JSONArray paramJson = new JSONArray();
-                    for (int i = 0; i < invocation.getParameters().length; ++i) {
-                        paramJson.put(JsonCodec.encode(
-                                invocation.getParameters()[i], this));
-                    }
-                    invocationJson.put(paramJson);
-                    rpcCalls.put(invocationJson);
-                } catch (JSONException e) {
-                    throw new PaintException(
-                            "Failed to serialize RPC method call parameters for paintable "
-                                    + getPaintableId(invocation.getPaintable())
-                                    + " method "
-                                    + invocation.getInterfaceName() + "."
-                                    + invocation.getMethodName() + ": "
-                                    + e.getMessage());
+        // collect RPC calls from components in the root in the order in
+        // which they were performed, remove the calls from components
+
+        LinkedList<ClientConnector> rpcPendingQueue = new LinkedList<ClientConnector>(
+                (Collection<? extends ClientConnector>) dirtyVisibleConnectors);
+        List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(rpcPendingQueue);
+
+        JSONArray rpcCalls = new JSONArray();
+        for (ClientMethodInvocation invocation : pendingInvocations) {
+            // add invocation to rpcCalls
+            try {
+                JSONArray invocationJson = new JSONArray();
+                invocationJson.put(invocation.getConnector().getConnectorId());
+                invocationJson.put(invocation.getInterfaceName());
+                invocationJson.put(invocation.getMethodName());
+                JSONArray paramJson = new JSONArray();
+                for (int i = 0; i < invocation.getParameters().length; ++i) {
+                    paramJson.put(JsonCodec.encode(
+                            invocation.getParameters()[i], application));
                 }
-
+                invocationJson.put(paramJson);
+                rpcCalls.put(invocationJson);
+            } catch (JSONException e) {
+                throw new PaintException(
+                        "Failed to serialize RPC method call parameters for connector "
+                                + invocation.getConnector().getConnectorId()
+                                + " method " + invocation.getInterfaceName()
+                                + "." + invocation.getMethodName() + ": "
+                                + e.getMessage());
             }
 
-            if (rpcCalls.length() > 0) {
-                outWriter.print("\"rpc\" : ");
-                outWriter.append(rpcCalls.toString());
-                outWriter.print(", "); // close rpc
-            }
+        }
+
+        if (rpcCalls.length() > 0) {
+            outWriter.print("\"rpc\" : ");
+            outWriter.append(rpcCalls.toString());
+            outWriter.print(", "); // close rpc
         }
 
         outWriter.print("\"meta\" : {");
@@ -1027,11 +983,11 @@ public abstract class AbstractCommunicationManager implements
                 }
                 outWriter.write("]");
             }
-            if (highLightedPaintable != null) {
+            if (highlightedConnector != null) {
                 outWriter.write(", \"hl\":\"");
-                outWriter.write(paintableIdMap.get(highLightedPaintable));
+                outWriter.write(highlightedConnector.getConnectorId());
                 outWriter.write("\"");
-                highLightedPaintable = null;
+                highlightedConnector = null;
             }
         }
 
@@ -1123,6 +1079,8 @@ public abstract class AbstractCommunicationManager implements
         Collection<Class<? extends Paintable>> usedPaintableTypes = paintTarget
                 .getUsedPaintableTypes();
         boolean typeMappingsOpen = false;
+        ClientCache clientCache = getClientCache(root);
+
         for (Class<? extends Paintable> class1 : usedPaintableTypes) {
             if (clientCache.cache(class1)) {
                 // client does not know the mapping key for this type, send
@@ -1208,10 +1166,10 @@ public abstract class AbstractCommunicationManager implements
      * @return ordered list of pending RPC calls
      */
     private List<ClientMethodInvocation> collectPendingRpcCalls(
-            LinkedList<Paintable> rpcPendingQueue) {
+            LinkedList<ClientConnector> rpcPendingQueue) {
         List<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
-        for (Paintable paintable : rpcPendingQueue) {
-            List<ClientMethodInvocation> paintablePendingRpc = paintable
+        for (ClientConnector connector : rpcPendingQueue) {
+            List<ClientMethodInvocation> paintablePendingRpc = connector
                     .retrievePendingRpcCalls();
             if (null != paintablePendingRpc && !paintablePendingRpc.isEmpty()) {
                 List<ClientMethodInvocation> oldPendingRpc = pendingInvocations;
@@ -1260,30 +1218,6 @@ public abstract class AbstractCommunicationManager implements
 
     private String getRequestTheme() {
         return requestThemeName;
-    }
-
-    public void makeAllPaintablesDirty(Root root) {
-        // If repaint is requested, clean all ids in this root window
-        for (final Iterator<String> it = idPaintableMap.keySet().iterator(); it
-                .hasNext();) {
-            final Component c = (Component) idPaintableMap.get(it.next());
-            if (isChildOf(root, c)) {
-                it.remove();
-                paintableIdMap.remove(c);
-            }
-        }
-        // clean WindowCache
-        getClientCache(root).clear();
-    }
-
-    /**
-     * Called when communication manager stops listening for repaints for given
-     * component.
-     * 
-     * @param p
-     */
-    protected void unregisterPaintable(Component p) {
-        p.removeListener(this);
     }
 
     /**
@@ -1458,20 +1392,14 @@ public abstract class AbstractCommunicationManager implements
                 if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
                         .equals(interfaceName)) {
                     // handle other RPC calls than variable changes
-                    applyInvocation(invocation);
+                    applyInvocation(app, invocation);
                     continue;
                 }
 
-                final VariableOwner owner = getVariableOwner(invocation
-                        .getConnectorId());
+                final VariableOwner owner = (VariableOwner) getConnector(app,
+                        invocation.getConnectorId());
 
-                boolean connectorEnabled;
-                if (owner instanceof Connector) {
-                    connectorEnabled = ((Connector) owner).isConnectorEnabled();
-                } else {
-                    // TODO Remove
-                    connectorEnabled = owner.isEnabled();
-                }
+                boolean connectorEnabled = owner.isEnabled();
 
                 if (owner != null && connectorEnabled) {
                     VariableChange change = new VariableChange(invocation);
@@ -1558,15 +1486,17 @@ public abstract class AbstractCommunicationManager implements
      * Execute an RPC call from the client by finding its target and letting the
      * RPC mechanism call the correct method for it.
      * 
+     * @param app
+     * 
      * @param invocation
      */
-    protected void applyInvocation(MethodInvocation invocation) {
-        final RpcTarget target = getRpcTarget(invocation.getConnectorId());
-        if (null != target) {
-            ServerRpcManager.applyInvocation(target, invocation);
+    protected void applyInvocation(Application app, MethodInvocation invocation) {
+        Connector c = app.getConnector(invocation.getConnectorId());
+        if (c instanceof RpcTarget) {
+            ServerRpcManager.applyInvocation((RpcTarget) c, invocation);
         } else {
             // TODO better exception?
-            throw new RuntimeException("No RPC target for paintable "
+            throw new RuntimeException("No RPC target for connector "
                     + invocation.getConnectorId());
         }
     }
@@ -1596,7 +1526,7 @@ public abstract class AbstractCommunicationManager implements
             Object[] parameters = new Object[parametersJson.length()];
             for (int j = 0; j < parametersJson.length(); ++j) {
                 parameters[j] = JsonCodec.decode(
-                        parametersJson.getJSONArray(j), this);
+                        parametersJson.getJSONArray(j), application);
             }
             MethodInvocation invocation = new MethodInvocation(connectorId,
                     interfaceName, methodName, parameters);
@@ -1610,34 +1540,17 @@ public abstract class AbstractCommunicationManager implements
         owner.changeVariables(source, m);
     }
 
-    protected VariableOwner getVariableOwner(String string) {
-        VariableOwner owner = (VariableOwner) idPaintableMap.get(string);
-        if (owner == null && string.startsWith("DD")) {
+    protected Connector getConnector(Application app, String connectorId) {
+        Connector c = app.getConnector(connectorId);
+        if (c == null
+                && connectorId.equals(getDragAndDropService().getConnectorId())) {
             return getDragAndDropService();
         }
-        return owner;
+
+        return c;
     }
 
-    /**
-     * Returns the RPC call target for a paintable ID.
-     * 
-     * @since 7.0
-     * 
-     * @param string
-     *            paintable ID
-     * @return RPC call target or null if none found
-     */
-    protected RpcTarget getRpcTarget(String string) {
-        // TODO improve this - VariableOwner and RpcManager separate?
-        VariableOwner owner = getVariableOwner(string);
-        if (owner instanceof RpcTarget) {
-            return (RpcTarget) owner;
-        } else {
-            return null;
-        }
-    }
-
-    private VariableOwner getDragAndDropService() {
+    private DragAndDropService getDragAndDropService() {
         if (dragAndDropService == null) {
             dragAndDropService = new DragAndDropService(this);
         }
@@ -1973,56 +1886,6 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print("for(;;);[{");
     }
 
-    public Paintable getPaintable(String paintableId) {
-        return idPaintableMap.get(paintableId);
-    }
-
-    /**
-     * Gets the Paintable Id. If Paintable has debug id set it will be used
-     * prefixed with "PID_S". Otherwise a sequenced ID is created.
-     * 
-     * @param paintable
-     * @return the paintable Id.
-     */
-    public String getPaintableId(Paintable paintable) {
-
-        String id = paintableIdMap.get(paintable);
-        if (id == null) {
-            // use testing identifier as id if set
-            id = paintable.getDebugId();
-            if (id == null) {
-                id = "PID" + Integer.toString(idSequence++);
-            } else {
-                id = "PID_S" + id;
-            }
-            Paintable old = idPaintableMap.put(id, paintable);
-            if (old != null && old != paintable) {
-                /*
-                 * Two paintables have the same id. We still make sure the old
-                 * one is a component which is still attached to the
-                 * application. This is just a precaution and should not be
-                 * absolutely necessary.
-                 */
-
-                if (old instanceof Component
-                        && ((Component) old).getApplication() != null) {
-                    throw new IllegalStateException("Two paintables ("
-                            + paintable.getClass().getSimpleName() + ","
-                            + old.getClass().getSimpleName()
-                            + ") have been assigned the same id: "
-                            + paintable.getDebugId());
-                }
-            }
-            paintableIdMap.put(paintable, id);
-        }
-
-        return id;
-    }
-
-    public boolean hasPaintableId(Paintable paintable) {
-        return paintableIdMap.containsKey(paintable);
-    }
-
     /**
      * Returns dirty components which are in given window. Components in an
      * invisible subtrees are omitted.
@@ -2031,65 +1894,26 @@ public abstract class AbstractCommunicationManager implements
      *            root window for which dirty components is to be fetched
      * @return
      */
-    private ArrayList<Paintable> getDirtyVisibleComponents(Root r) {
-        final ArrayList<Paintable> resultset = new ArrayList<Paintable>(
-                dirtyPaintables);
-
-        // TODO mostly unnecessary?
-        // The following algorithm removes any components that would be painted
-        // as a direct descendant of other components from the dirty components
-        // list. The result is that each component should be painted exactly
-        // once and any unmodified components will be painted as "cached=true".
-
-        for (final Iterator<Paintable> i = dirtyPaintables.iterator(); i
-                .hasNext();) {
-            final Paintable p = i.next();
-            if (p instanceof Component) {
-                final Component component = (Component) p;
-                if (component.getApplication() == null) {
-                    // component is detached after requestRepaint is called
-                    resultset.remove(p);
-                    i.remove();
-                } else {
-                    Root componentsRoot = component.getRoot();
-                    if (componentsRoot == null) {
-                        // This should not happen unless somebody has overriden
-                        // getApplication or getWindow in an illegal way.
-                        throw new IllegalStateException(
-                                "component.getWindow() returned null for a component attached to the application");
-                    }
-                    // if (componentsRoot.getParent() != null) {
-                    // // this is a subwindow
-                    // componentsRoot = componentsRoot.getParent();
-                    // }
-                    if (componentsRoot != r) {
-                        resultset.remove(p);
-                    } else if (component.getParent() != null
-                            && !isVisible(component.getParent())) {
-                        /*
-                         * Do not return components in an invisible subtree.
-                         * 
-                         * Components that are invisible in visible subree, must
-                         * be rendered (to let client know that they need to be
-                         * hidden).
-                         */
-                        resultset.remove(p);
-                    }
-                }
+    private ArrayList<Component> getDirtyVisibleComponents(
+            DirtyConnectorTracker dirtyConnectorTracker) {
+        ArrayList<Component> dirtyComponents = new ArrayList<Component>();
+        for (Component c : dirtyConnectorTracker.getDirtyComponents()) {
+            if (isVisible(c)) {
+                dirtyComponents.add(c);
             }
         }
 
-        return resultset;
+        return dirtyComponents;
     }
 
     /**
      * @see com.vaadin.terminal.Paintable.RepaintRequestListener#repaintRequested(com.vaadin.terminal.Paintable.RepaintRequestEvent)
      */
     public void repaintRequested(RepaintRequestEvent event) {
-        final Paintable p = event.getPaintable();
-        if (!dirtyPaintables.contains(p)) {
-            dirtyPaintables.add(p);
-        }
+        // final Paintable p = event.getPaintable();
+        // if (!dirtyPaintables.contains(p)) {
+        // dirtyPaintables.add(p);
+        // }
     }
 
     /**
@@ -2099,8 +1923,8 @@ public abstract class AbstractCommunicationManager implements
      * @param paintable
      */
     private void paintablePainted(Paintable paintable) {
-        dirtyPaintables.remove(paintable);
-        paintable.requestRepaintRequests();
+        // dirtyPaintables.remove(paintable);
+        // paintable.requestRepaintRequests();
     }
 
     /**
@@ -2143,23 +1967,6 @@ public abstract class AbstractCommunicationManager implements
         } else {
             return new Locale(temp[0], temp[1], temp[2]);
         }
-    }
-
-    /**
-     * Helper method to test if a component contains another
-     * 
-     * @param parent
-     * @param child
-     */
-    private static boolean isChildOf(Component parent, Component child) {
-        Component p = child.getParent();
-        while (p != null) {
-            if (parent == p) {
-                return true;
-            }
-            p = p.getParent();
-        }
-        return false;
     }
 
     protected class InvalidUIDLSecurityKeyException extends
@@ -2210,10 +2017,10 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    abstract String getStreamVariableTargetUrl(VariableOwner owner,
-            String name, StreamVariable value);
+    abstract String getStreamVariableTargetUrl(Connector owner, String name,
+            StreamVariable value);
 
-    abstract protected void cleanStreamVariable(VariableOwner owner, String name);
+    abstract protected void cleanStreamVariable(Connector owner, String name);
 
     /**
      * Gets the bootstrap handler that should be used for generating the pages
@@ -2297,7 +2104,6 @@ public abstract class AbstractCommunicationManager implements
     protected String getInitialUIDL(WrappedRequest request, Root root)
             throws PaintException {
         // TODO maybe unify writeUidlResponse()?
-        makeAllPaintablesDirty(root);
         StringWriter sWriter = new StringWriter();
         PrintWriter pWriter = new PrintWriter(sWriter);
         pWriter.print("{");
@@ -2460,5 +2266,14 @@ public abstract class AbstractCommunicationManager implements
             }
             return b;
         }
+    }
+
+    @Deprecated
+    public String getPaintableId(Paintable paintable) {
+        if (paintable instanceof Connector) {
+            return ((Connector) paintable).getConnectorId();
+        }
+        throw new RuntimeException("Paintable " + paintable
+                + " must implement Connector");
     }
 }

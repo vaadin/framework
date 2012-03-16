@@ -18,7 +18,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.RpcTarget;
 
 /**
@@ -54,7 +54,7 @@ import com.vaadin.terminal.gwt.server.RpcTarget;
  * @VERSION@
  * @since 3.0
  */
-public interface Component extends Connector, Paintable, VariableOwner,
+public interface Component extends ClientConnector, Paintable, VariableOwner,
         Sizeable, Serializable, RpcTarget {
 
     /**

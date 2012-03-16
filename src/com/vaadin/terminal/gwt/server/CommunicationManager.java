@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,12 +16,10 @@ import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.ui.Component;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Root;
 
 /**
@@ -62,6 +61,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Handles file upload request submitted via Upload component.
      * 
+     * @param application
+     * 
      * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
      * 
      * @param request
@@ -69,9 +70,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(WrappedRequest request,
-            WrappedResponse response) throws IOException,
-            InvalidUIDLSecurityKeyException {
+    public void handleFileUpload(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException, InvalidUIDLSecurityKeyException {
 
         /*
          * URI pattern: APP/UPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
@@ -92,7 +93,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
         String secKey = streamVariableToSeckey.get(streamVariable);
         if (secKey.equals(parts[2])) {
 
-            VariableOwner source = getVariableOwner(paintableId);
+            Connector source = getConnector(application, paintableId);
             String contentType = request.getContentType();
             if (contentType.contains("boundary")) {
                 // Multipart requests contain boundary string
@@ -113,18 +114,26 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void unregisterPaintable(Component p) {
-        /* Cleanup possible receivers */
+    protected void postPaint(Root root) {
+        super.postPaint(root);
+
+        Application application = root.getApplication();
         if (pidToNameToStreamVariable != null) {
-            Map<String, StreamVariable> removed = pidToNameToStreamVariable
-                    .remove(getPaintableId(p));
-            if (removed != null) {
-                for (String key : removed.keySet()) {
-                    streamVariableToSeckey.remove(removed.get(key));
+            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
+                    .iterator();
+            while (iterator.hasNext()) {
+                String connectorId = iterator.next();
+                if (application.getConnector(connectorId) == null) {
+                    // Owner is no longer attached to the application
+                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
+                            .get(connectorId);
+                    for (String key : removed.keySet()) {
+                        streamVariableToSeckey.remove(removed.get(key));
+                    }
+                    iterator.remove();
                 }
             }
         }
-        super.unregisterPaintable(p);
 
     }
 
@@ -133,7 +142,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String getStreamVariableTargetUrl(VariableOwner owner, String name,
+    String getStreamVariableTargetUrl(Connector owner, String name,
             StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
@@ -147,7 +156,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * NAME and PID from URI forms a key to fetch StreamVariable when
          * handling post
          */
-        String paintableId = getPaintableId((Paintable) owner);
+        String paintableId = owner.getConnectorId();
         String key = paintableId + "/" + name;
 
         if (pidToNameToStreamVariable == null) {
@@ -176,12 +185,12 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void cleanStreamVariable(VariableOwner owner, String name) {
+    protected void cleanStreamVariable(Connector owner, String name) {
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
-                .get(getPaintableId((Paintable) owner));
+                .get(owner.getConnectorId());
         nameToStreamVar.remove("name");
         if (nameToStreamVar.isEmpty()) {
-            pidToNameToStreamVariable.remove(getPaintableId((Paintable) owner));
+            pidToNameToStreamVariable.remove(owner.getConnectorId());
         }
     }
 

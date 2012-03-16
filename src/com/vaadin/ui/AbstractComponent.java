@@ -147,6 +147,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
 
+    private String connectorId;
+
     /* Constructor */
 
     /**
@@ -651,6 +653,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * interface.
      */
     public void attach() {
+        getRoot().componentAttached(this);
         requestRepaint();
         if (!getState().isVisible()) {
             /*
@@ -676,6 +679,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // compiler happy
             actionManager.setViewer((Root) null);
         }
+        getRoot().componentDetached(this);
     }
 
     /**
@@ -1752,7 +1756,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     public String getConnectorId() {
-        throw new RuntimeException(
-                "TODO: Move connector id handling to AbstractComponent");
+        if (connectorId == null) {
+            if (getApplication() == null) {
+                throw new RuntimeException(
+                        "Component must be attached to an application when getConnectorId() is called for the first time");
+            }
+            connectorId = getApplication().createConnectorId(this);
+        }
+        return connectorId;
     }
 }

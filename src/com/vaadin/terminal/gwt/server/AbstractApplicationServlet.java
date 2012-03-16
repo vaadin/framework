@@ -472,7 +472,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload(request, response);
+                applicationManager.handleFileUpload(application, request,
+                        response);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 // Handles AJAX UIDL requests

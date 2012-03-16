@@ -18,6 +18,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
@@ -47,11 +48,13 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
@@ -2265,5 +2268,68 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Collection<Root> getRoots() {
         return Collections.unmodifiableCollection(roots.values());
+    }
+
+    private final HashMap<String, Connector> connectorIdToConnector = new HashMap<String, Connector>();
+
+    private int connectorIdSequence = 0;
+
+    /**
+     * Generate an id for the given Connector. Connectors must not call this
+     * method more than once, the first time they need an id.
+     * 
+     * @param connector
+     *            A connector that has not yet been assigned an id.
+     * @return A new id for the connector
+     */
+    public String createConnectorId(Connector connector) {
+        // String connectorId = "C_" + connectorIdSequence++;
+        String connectorId = String.valueOf(connectorIdSequence++);
+        Connector oldReference = connectorIdToConnector.put(connectorId,
+                connector);
+        if (oldReference != null) {
+            throw new RuntimeException(
+                    "An error occured while generating connector ids. A connector with id "
+                            + connectorId + " was already found!");
+        }
+        return connectorId;
+    }
+
+    /**
+     * Gets a connector by its id.
+     * 
+     * @param connectorId
+     *            The connector id to look for
+     * @return The connector with the given id or null if no connector has the
+     *         given id
+     */
+    public Connector getConnector(String connectorId) {
+        return connectorIdToConnector.get(connectorId);
+    }
+
+    /**
+     * Cleans the connector map from all connectors that are no longer attached
+     * to the application. This should only be called by the framework.
+     */
+    public void cleanConnectorMap() {
+        // remove detached components from paintableIdMap so they
+        // can be GC'ed
+        Iterator<String> iterator = connectorIdToConnector.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            String connectorId = iterator.next();
+            Connector connector = connectorIdToConnector.get(connectorId);
+            if (connector instanceof Component) {
+                Component component = (Component) connector;
+                if (component.getApplication() != this) {
+                    // If component is no longer part of this application,
+                    // remove it from the map. If it is re-attached to the
+                    // application at some point it will be re-added to this
+                    // collection when sent to the client.
+                    iterator.remove();
+                }
+            }
+        }
+
     }
 }

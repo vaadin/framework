@@ -223,7 +223,7 @@ public class VDragAndDropManager {
         ENTER, LEAVE, OVER, DROP
     }
 
-    private static final String DD_SERVICE = "DD";
+    public static final String DD_SERVICE = "DD";
 
     private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;

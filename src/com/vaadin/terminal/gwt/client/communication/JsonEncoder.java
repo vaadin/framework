@@ -14,8 +14,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
  */
 public class JsonEncoder {
 
-    public static final String VTYPE_PAINTABLE = "p";
+    public static final String VTYPE_CONNECTOR = "c";
     public static final String VTYPE_BOOLEAN = "b";
     public static final String VTYPE_DOUBLE = "d";
     public static final String VTYPE_FLOAT = "f";
@@ -38,7 +38,7 @@ public class JsonEncoder {
     public static final String VTYPE_INTEGER = "i";
     public static final String VTYPE_STRING = "s";
     public static final String VTYPE_ARRAY = "a";
-    public static final String VTYPE_STRINGARRAY = "c";
+    public static final String VTYPE_STRINGARRAY = "S";
     public static final String VTYPE_MAP = "m";
     public static final String VTYPE_LIST = "L";
     public static final String VTYPE_NULL = "n";
@@ -88,10 +88,10 @@ public class JsonEncoder {
                 jsonMap.put(mapKey, encode(mapValue, connectorMap, connection));
             }
             return combineTypeAndValue(VTYPE_MAP, jsonMap);
-        } else if (value instanceof ServerConnector) {
-            ServerConnector paintable = (ServerConnector) value;
-            return combineTypeAndValue(VTYPE_PAINTABLE, new JSONString(
-                    connectorMap.getConnectorId(paintable)));
+        } else if (value instanceof Connector) {
+            Connector connector = (Connector) value;
+            return combineTypeAndValue(VTYPE_CONNECTOR, new JSONString(
+                    connector.getConnectorId()));
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
@@ -123,8 +123,8 @@ public class JsonEncoder {
             return VTYPE_NULL;
         } else if (value instanceof String) {
             return VTYPE_STRING;
-        } else if (value instanceof ServerConnector) {
-            return VTYPE_PAINTABLE;
+        } else if (value instanceof Connector) {
+            return VTYPE_CONNECTOR;
         } else if (value instanceof Boolean) {
             return VTYPE_BOOLEAN;
         } else if (value instanceof Integer) {

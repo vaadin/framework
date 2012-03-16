@@ -185,7 +185,7 @@ public class ComponentSizeValidator implements Serializable {
             clientJSON.write("{");
 
             Component parent = component.getParent();
-            String paintableId = communicationManager.getPaintableId(component);
+            String paintableId = component.getConnectorId();
 
             clientJSON.print("id:\"" + paintableId + "\"");
 

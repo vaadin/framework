@@ -34,9 +34,9 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Root;
 
@@ -89,7 +89,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
-    private Collection<Paintable> identifiersCreatedDueRefPaint;
+    // private Collection<Paintable> identifiersCreatedDueRefPaint;
 
     private Collection<Paintable> deferredPaintables;
 
@@ -687,49 +687,46 @@ public class JsonPaintTarget implements PaintTarget {
      */
     public PaintStatus startPaintable(Paintable paintable, String tagName)
             throws PaintException {
+        boolean topLevelPaintable = openPaintables.isEmpty();
+
+        System.out.println("startPaintable for "
+                + paintable.getClass().getName() + "@"
+                + Integer.toHexString(paintable.hashCode()));
         startTag(tagName, true);
-        final boolean isPreviouslyPainted = manager.hasPaintableId(paintable)
-                && (identifiersCreatedDueRefPaint == null || !identifiersCreatedDueRefPaint
-                        .contains(paintable))
-                && !deferredPaintables.contains(paintable);
+
+        openPaintables.push(paintable);
+        openPaintableTags.push(tagName);
+
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
 
         // queue for painting later if already painting a paintable
-        boolean topLevelPaintableTag = openPaintables.isEmpty();
-
-        openPaintables.push(paintable);
-        openPaintableTags.push(tagName);
-
-        if (!topLevelPaintableTag) {
+        if (!topLevelPaintable) {
+            // if (!deferredPaintables.contains(paintable)) {
             // notify manager: add to paint queue instead of painting now
-            manager.queuePaintable(paintable);
-            deferredPaintables.add(paintable);
+            // manager.queuePaintable(paintable);
+            // deferredPaintables.add(paintable);
+            // }
             return PaintStatus.DEFER;
-        } else if (cacheEnabled && isPreviouslyPainted) {
-            // cached (unmodified) paintable, paint the it now
-            paintedComponents.add(paintable);
-            deferredPaintables.remove(paintable);
-            return PaintStatus.CACHED;
-        } else {
-            // not a nested paintable, paint the it now
-            paintedComponents.add(paintable);
-            deferredPaintables.remove(paintable);
-
-            if (paintable instanceof CustomLayout) {
-                customLayoutArgumentsOpen = true;
-            }
-            return PaintStatus.PAINTING;
         }
+
+        // not a nested paintable, paint the it now
+        paintedComponents.add(paintable);
+        // deferredPaintables.remove(paintable);
+
+        if (paintable instanceof CustomLayout) {
+            customLayoutArgumentsOpen = true;
+        }
+        return PaintStatus.PAINTING;
     }
 
     public void endPaintable(Paintable paintable) throws PaintException {
         Paintable openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {
             throw new PaintException("Invalid UIDL: closing wrong paintable: '"
-                    + getPaintIdentifier(paintable) + "' expected: '"
-                    + getPaintIdentifier(openPaintable) + "'.");
+                    + manager.getPaintableId(paintable) + "' expected: '"
+                    + manager.getPaintableId(openPaintable) + "'.");
         }
         // remove paintable from the stack
         openPaintables.pop();
@@ -738,12 +735,12 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {
-        if (!manager.hasPaintableId(paintable)) {
-            if (identifiersCreatedDueRefPaint == null) {
-                identifiersCreatedDueRefPaint = new HashSet<Paintable>();
-            }
-            identifiersCreatedDueRefPaint.add(paintable);
-        }
+        // if (!manager.hasPaintableId(paintable)) {
+        // if (identifiersCreatedDueRefPaint == null) {
+        // identifiersCreatedDueRefPaint = new HashSet<Paintable>();
+        // }
+        // identifiersCreatedDueRefPaint.add(paintable);
+        // }
         return manager.getPaintableId(paintable);
     }
 
@@ -1021,22 +1018,22 @@ public class JsonPaintTarget implements PaintTarget {
         return usedResources;
     }
 
-    /**
-     * Method to check if paintable is already painted into this target.
-     * 
-     * @param p
-     * @return true if is not yet painted into this target and is connected to
-     *         app
-     */
-    public boolean needsToBePainted(Paintable p) {
-        if (paintedComponents.contains(p)) {
-            return false;
-        } else if (((Component) p).getApplication() == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    // /**
+    // * Method to check if paintable is already painted into this target.
+    // *
+    // * @param p
+    // * @return true if is not yet painted into this target and is connected to
+    // * app
+    // */
+    // public boolean needsToBePainted(Paintable p) {
+    // if (paintedComponents.contains(p)) {
+    // return false;
+    // } else if (((Component) p).getApplication() == null) {
+    // return false;
+    // } else {
+    // return true;
+    // }
+    // }
 
     private static final Map<Class<? extends Paintable>, Class<? extends Paintable>> widgetMappingCache = new HashMap<Class<? extends Paintable>, Class<? extends Paintable>>();
 
@@ -1195,7 +1192,8 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void addVariable(VariableOwner owner, String name,
             StreamVariable value) throws PaintException {
-        String url = manager.getStreamVariableTargetUrl(owner, name, value);
+        String url = manager.getStreamVariableTargetUrl((Connector) owner,
+                name, value);
         if (url != null) {
             addVariable(owner, name, url);
         } // else { //NOP this was just a cleanup by component }

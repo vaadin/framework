@@ -6,17 +6,15 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.Paintable;
-
 /**
  * Internal class for keeping track of pending server to client method
- * invocations for a Paintable.
+ * invocations for a Connector.
  * 
  * @since 7.0
  */
 public class ClientMethodInvocation implements Serializable,
         Comparable<ClientMethodInvocation> {
-    private final Paintable paintable;
+    private final ClientConnector connector;
     private final String interfaceName;
     private final String methodName;
     private final Object[] parameters;
@@ -26,17 +24,17 @@ public class ClientMethodInvocation implements Serializable,
     // TODO may cause problems when clustering etc.
     private static long counter = 0;
 
-    public ClientMethodInvocation(Paintable paintable, String interfaceName,
-            String methodName, Object[] parameters) {
-        this.paintable = paintable;
+    public ClientMethodInvocation(ClientConnector connector,
+            String interfaceName, String methodName, Object[] parameters) {
+        this.connector = connector;
         this.interfaceName = interfaceName;
         this.methodName = methodName;
         this.parameters = (null != parameters) ? parameters : new Object[0];
         sequenceNumber = ++counter;
     }
 
-    public Paintable getPaintable() {
-        return paintable;
+    public ClientConnector getConnector() {
+        return connector;
     }
 
     public String getInterfaceName() {
