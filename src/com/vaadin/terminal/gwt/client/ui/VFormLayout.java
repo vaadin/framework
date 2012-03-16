@@ -141,13 +141,6 @@ public class VFormLayout extends SimplePanel {
 
                 childPaintable.updateFromUIDL(childUidl, client);
 
-                // Update cell width when isRelativeWidth has been udpated
-                if (childPaintable.isRelativeWidth()) {
-                    getCellFormatter().setWidth(i, COLUMN_WIDGET, "100%");
-                } else {
-                    getCellFormatter().setWidth(i, COLUMN_WIDGET, null);
-                }
-
                 String rowstyles = CLASSNAME + "-row";
                 if (i == 0) {
                     rowstyles += " " + CLASSNAME + "-firstrow";
