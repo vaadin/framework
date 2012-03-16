@@ -329,7 +329,6 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * is attached to the application, {@link #detach()} is called for the
      * component.
      * </p>
-     * 
      * <p>
      * This method is rarely called directly. The
      * {@link ComponentContainer#addComponent(Component)} method is normally
@@ -620,6 +619,11 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * application, the {@code attach()} is called immediately from
      * {@link #setParent(Component)}.
      * </p>
+     * <p>
+     * This method must call {@link Root#componentAttached(Component)} to let
+     * the Root know that a new Component has been attached.
+     * </p>
+     * 
      * 
      * <pre>
      * public class AttachExample extends CustomComponent {
@@ -654,6 +658,11 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * <code>null</code> after this method is called.
      * </p>
      * 
+     * <p>
+     * This method must call {@link Root#componentDetached(Component)} to let
+     * the Root know that a new Component has been attached.
+     * </p>
+     * *
      * <p>
      * The caller of this method is {@link #setParent(Component)} if the parent
      * is in the application. When the parent is detached from the application
