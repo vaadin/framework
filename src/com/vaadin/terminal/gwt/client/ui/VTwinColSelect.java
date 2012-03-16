@@ -44,7 +44,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     private final DoubleClickListBox selections;
 
-    private FlowPanel captionWrapper;
+    FlowPanel captionWrapper;
 
     private HTML optionsCaption = null;
 
