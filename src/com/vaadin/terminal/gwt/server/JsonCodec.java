@@ -103,6 +103,8 @@ public class JsonCodec implements Serializable {
         } else if (JsonEncoder.VTYPE_PAINTABLE.equals(variableType)) {
             // TODO handle properly
             val = idMapper.getPaintable(String.valueOf(value));
+        } else if (JsonEncoder.VTYPE_NULL.equals(variableType)) {
+            val = null;
         } else {
             // Try to decode object using fields
             return decodeObject(variableType, (JSONObject) value, idMapper);
@@ -171,9 +173,7 @@ public class JsonCodec implements Serializable {
             PaintableIdMapper idMapper) throws JSONException {
 
         if (null == value) {
-            // TODO as undefined type?
-            return combineTypeAndValue(JsonEncoder.VTYPE_UNDEFINED,
-                    JSONObject.NULL);
+            return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -203,7 +203,7 @@ public class JsonCodec implements Serializable {
             Paintable paintable = (Paintable) value;
             return combineTypeAndValue(JsonEncoder.VTYPE_PAINTABLE,
                     idMapper.getPaintableId(paintable));
-        } else if (getTransportType(value) != JsonEncoder.VTYPE_UNDEFINED) {
+        } else if (getTransportType(value) != JsonEncoder.VTYPE_NULL) {
             return combineTypeAndValue(getTransportType(value),
                     String.valueOf(value));
         } else {
@@ -317,16 +317,16 @@ public class JsonCodec implements Serializable {
         return outerArray;
     }
 
-    private static String getTransportType(Object value) {
+    private static String getTransportType(Object value) throws JSONException {
         if (null == value) {
-            return JsonEncoder.VTYPE_UNDEFINED;
+            return JsonEncoder.VTYPE_NULL;
         }
         String transportType = typeToTransportType.get(value.getClass());
         if (null != transportType) {
             return transportType;
         }
-        // TODO throw exception?
-        return JsonEncoder.VTYPE_UNDEFINED;
+        throw new JSONException("Unknown object type "
+                + value.getClass().getName());
     }
 
 }

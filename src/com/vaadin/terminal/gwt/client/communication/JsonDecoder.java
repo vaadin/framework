@@ -55,7 +55,7 @@ public class JsonDecoder {
             ConnectorMap idMapper, ApplicationConnection connection) {
         Object val = null;
         // TODO type checks etc.
-        if (JsonEncoder.VTYPE_UNDEFINED.equals(variableType)) {
+        if (JsonEncoder.VTYPE_NULL.equals(variableType)) {
             val = null;
         } else if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
             val = decodeArray((JSONArray) value, idMapper, connection);

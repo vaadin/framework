@@ -14,8 +14,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -41,9 +41,7 @@ public class JsonEncoder {
     public static final String VTYPE_STRINGARRAY = "c";
     public static final String VTYPE_MAP = "m";
     public static final String VTYPE_LIST = "L";
-
-    // TODO is this needed?
-    public static final String VTYPE_UNDEFINED = "u";
+    public static final String VTYPE_NULL = "n";
 
     /**
      * Encode a value to a JSON representation for transport from the client to
@@ -59,8 +57,7 @@ public class JsonEncoder {
     public static JSONValue encode(Object value, ConnectorMap connectorMap,
             ApplicationConnection connection) {
         if (null == value) {
-            // TODO as undefined type?
-            return combineTypeAndValue(VTYPE_UNDEFINED, JSONNull.getInstance());
+            return combineTypeAndValue(VTYPE_NULL, JSONNull.getInstance());
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -96,18 +93,19 @@ public class JsonEncoder {
             return combineTypeAndValue(VTYPE_PAINTABLE, new JSONString(
                     connectorMap.getConnectorId(paintable)));
         } else {
-            if (getTransportType(value) != VTYPE_UNDEFINED) {
-                return combineTypeAndValue(getTransportType(value),
+            String transportType = getTransportType(value);
+            if (transportType != null) {
+                return combineTypeAndValue(transportType,
                         new JSONString(String.valueOf(value)));
             } else {
                 // Try to find a generated serializer object, class name is the
                 // type
-                String type = value.getClass().getName();
+                transportType = value.getClass().getName();
                 JSONSerializer serializer = JsonDecoder.serializerMap
-                        .getSerializer(type);
+                        .getSerializer(transportType);
 
                 // TODO handle case with no serializer found
-                return combineTypeAndValue(type,
+                return combineTypeAndValue(transportType,
                         serializer.serialize(value, connectorMap, connection));
             }
         }
@@ -121,7 +119,9 @@ public class JsonEncoder {
     }
 
     private static String getTransportType(Object value) {
-        if (value instanceof String) {
+        if (value == null) {
+            return VTYPE_NULL;
+        } else if (value instanceof String) {
             return VTYPE_STRING;
         } else if (value instanceof ServerConnector) {
             return VTYPE_PAINTABLE;
@@ -146,8 +146,6 @@ public class JsonEncoder {
         } else if (value instanceof Map) {
             return VTYPE_MAP;
         }
-        // TODO throw exception?
-        return VTYPE_UNDEFINED;
+        return null;
     }
-
 }
