@@ -64,6 +64,9 @@ public class RootConnector extends AbstractComponentContainerConnector
                 styles += style + " ";
             }
         }
+        if (!client.getConfiguration().isStandalone()) {
+            styles += getWidget().getStylePrimaryName() + "-embedded";
+        }
         getWidget().setStyleName(styles.trim());
 
         clickEventHandler.handleEventHandlerRegistration(client);

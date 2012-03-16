@@ -32,11 +32,12 @@ div.v-app-loading {
 	overflow: auto;
 	/* avoid scrollbars with margins in root layout */
 	outline: none;
+	position: relative;
+}
+/* Prevent margin collapse */
+.v-view.v-view-embedded {
 	margin-top: -1px;
 	border-top: 1px solid transparent;
-	position: relative;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
 }
 /**
  * Try to handle printing somehow. Reasonable printing support 
