@@ -127,9 +127,6 @@ public abstract class AbstractCommunicationManager implements
     private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
     /* Variable records indexes */
-    private static final int VAR_PID = 0;
-    private static final int VAR_METHOD = 1;
-
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
@@ -1162,7 +1159,7 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private boolean isVisible(Component child) {
-        HasComponents parent = (HasComponents) child.getParent();
+        HasComponents parent = child.getParent();
         if (parent == null || !child.isVisible()) {
             return child.isVisible();
         }
