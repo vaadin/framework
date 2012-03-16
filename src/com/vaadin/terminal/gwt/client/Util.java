@@ -835,8 +835,8 @@ public class Util {
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
                     String formattedValue = value instanceof ServerConnector ? c
-                            .getConnectorMap()
-                            .getConnectorId((ServerConnector) value) : String
+                            .getConnectorMap().getConnectorId(
+                                    (ServerConnector) value) : String
                             .valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }
@@ -1100,12 +1100,15 @@ public class Util {
     /**
      * Performs a shallow comparison of the collections.
      * 
-     * @param collection1 The first collection
-     * @param collection2 The second collection
+     * @param collection1
+     *            The first collection
+     * @param collection2
+     *            The second collection
      * @return true if the collections contain the same elements in the same
      *         order, false otherwise
      */
-    public static boolean collectionsEquals(Collection collection1, Collection collection2) {
+    public static boolean collectionsEquals(Collection collection1,
+            Collection collection2) {
         if (collection1 == null) {
             return collection2 == null;
         }
@@ -1130,5 +1133,12 @@ public class Util {
         }
 
         return true;
+    }
+
+    public static String getConnectorString(ServerConnector p) {
+        if (p == null) {
+            return "null";
+        }
+        return p.getClass().getName() + " (" + p.getConnectorId() + ")";
     }
 }

@@ -57,19 +57,16 @@ public abstract class AbstractComponentContainerConnector extends
      */
     public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
         // TODO Remove debug info
-        VConsole.log("Hierarchy changed for " + Util.getSimpleName(this) + " ("
-                + getConnectorId() + ")");
+        VConsole.log("Hierarchy changed for " + Util.getConnectorString(this));
         String oldChildren = "* Old children: ";
         for (ComponentConnector child : event.getOldChildren()) {
-            oldChildren += Util.getSimpleName(child) + " ("
-                    + child.getConnectorId() + ") ";
+            oldChildren += Util.getConnectorString(child) + " ";
         }
         VConsole.log(oldChildren);
 
         String newChildren = "* New children: ";
         for (ComponentConnector child : getChildren()) {
-            newChildren += Util.getSimpleName(child) + " ("
-                    + child.getConnectorId() + ") ";
+            newChildren += Util.getConnectorString(child) + " ";
         }
         VConsole.log(newChildren);
     }

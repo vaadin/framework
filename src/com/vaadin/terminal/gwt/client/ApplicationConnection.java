@@ -2220,7 +2220,7 @@ public class ApplicationConnection {
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
         System.out.println("unregisterPaintable (unnecessarily) called for "
-                + p.getConnectorId());
+                + Util.getConnectorString(p));
         // connectorMap.unregisterConnector(p);
     }
 
