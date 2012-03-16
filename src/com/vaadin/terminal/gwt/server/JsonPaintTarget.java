@@ -722,6 +722,9 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public void endPaintable(Paintable paintable) throws PaintException {
+        System.out.println("endPaintable for " + paintable.getClass().getName()
+                + "@" + Integer.toHexString(paintable.hashCode()));
+
         Paintable openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {
             throw new PaintException("Invalid UIDL: closing wrong paintable: '"

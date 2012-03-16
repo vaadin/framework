@@ -49,11 +49,6 @@ public interface PaintTarget extends Serializable {
          */
         PAINTING,
         /**
-         * Paintable is cached on the client side and unmodified - only an
-         * indication of that should be painted.
-         */
-        CACHED,
-        /**
          * A previously unpainted or painted {@link Paintable} has been queued
          * be created/update later in a separate change in the same set of
          * changes.

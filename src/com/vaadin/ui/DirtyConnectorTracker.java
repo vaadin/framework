@@ -7,11 +7,29 @@ import java.util.logging.Logger;
 
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.terminal.Paintable.RepaintRequestListener;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 
+/**
+ * A class that tracks dirty {@link ClientConnector}s. A {@link ClientConnector}
+ * is dirty when an operation has been performed on it on the server and as a
+ * result of this operation new information needs to be sent to its client side
+ * counterpart.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ * 
+ */
 public class DirtyConnectorTracker implements RepaintRequestListener {
     private Set<Component> dirtyComponents = new HashSet<Component>();
     private Root root;
 
+    /**
+     * Gets a logger for this class
+     * 
+     * @return A logger instance for logging within this class
+     * 
+     */
     public static Logger getLogger() {
         return Logger.getLogger(DirtyConnectorTracker.class.getName());
     }
@@ -48,9 +66,6 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
             debug(component, "is no longer dirty");
         }
         dirtyComponents.remove(component);
-
-        // TODO .... WTF ....
-        component.requestRepaintRequests();
 
     }
 

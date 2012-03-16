@@ -100,11 +100,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     private LinkedList<RepaintRequestListener> repaintRequestListeners = null;
 
-    /**
-     * Are all the repaint listeners notified about recent changes ?
-     */
-    private boolean repaintRequestListenersNotified = false;
-
     private String testingId;
 
     /* Sizeable fields */
@@ -726,9 +721,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Component painting */
 
-    /* Documented in super interface */
+    @Deprecated
     public void requestRepaintRequests() {
-        repaintRequestListenersNotified = false;
+        // This is no longer needed. Remove when Component no longer extends
+        // Paintable
     }
 
     /**
@@ -763,10 +759,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // nothing to do but flag as deferred and close the paintable tag
             // paint() will be called again later to paint the contents
             target.addAttribute("deferred", true);
-        } else if (PaintStatus.CACHED == status
-                && !repaintRequestListenersNotified) {
-            // Contents have not changed, only cached presentation can be used
-            target.addAttribute("cached", true);
         } else {
             // Paint the contents of the component
 
@@ -790,7 +782,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
         target.endPaintable(this);
 
-        repaintRequestListenersNotified = false;
     }
 
     /**
@@ -938,31 +929,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private void fireRequestRepaintEvent(
             Collection<RepaintRequestListener> alreadyNotified) {
         // Notify listeners only once
-        if (!repaintRequestListenersNotified) {
-            // Notify the listeners
-            if (repaintRequestListeners != null
-                    && !repaintRequestListeners.isEmpty()) {
-                final Object[] listeners = repaintRequestListeners.toArray();
-                final RepaintRequestEvent event = new RepaintRequestEvent(this);
-                for (int i = 0; i < listeners.length; i++) {
-                    if (alreadyNotified == null) {
-                        alreadyNotified = new LinkedList<RepaintRequestListener>();
-                    }
-                    if (!alreadyNotified.contains(listeners[i])) {
-                        ((RepaintRequestListener) listeners[i])
-                                .repaintRequested(event);
-                        alreadyNotified
-                                .add((RepaintRequestListener) listeners[i]);
-                        repaintRequestListenersNotified = true;
-                    }
+        // Notify the listeners
+        if (repaintRequestListeners != null
+                && !repaintRequestListeners.isEmpty()) {
+            final Object[] listeners = repaintRequestListeners.toArray();
+            final RepaintRequestEvent event = new RepaintRequestEvent(this);
+            for (int i = 0; i < listeners.length; i++) {
+                if (alreadyNotified == null) {
+                    alreadyNotified = new LinkedList<RepaintRequestListener>();
+                }
+                if (!alreadyNotified.contains(listeners[i])) {
+                    ((RepaintRequestListener) listeners[i])
+                            .repaintRequested(event);
+                    alreadyNotified.add((RepaintRequestListener) listeners[i]);
                 }
             }
+        }
 
-            // Notify the parent
-            final Component parent = getParent();
-            if (parent != null) {
-                parent.childRequestedRepaint(alreadyNotified);
-            }
+        // Notify the parent
+        final Component parent = getParent();
+        if (parent != null) {
+            parent.childRequestedRepaint(alreadyNotified);
         }
     }
 
