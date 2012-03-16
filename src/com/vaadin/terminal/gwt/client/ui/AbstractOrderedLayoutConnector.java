@@ -193,9 +193,9 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     private String getDefinedSize(boolean isVertical) {
         if (isVertical) {
-            return getDeclaredHeight();
+            return getState().getHeight();
         } else {
-            return getDeclaredWidth();
+            return getState().getWidth();
         }
     }
 
@@ -246,7 +246,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             layout.addOrMove(slot, currentIndex++);
         }
 
-        // TODO: Move this to layout and base it on DOM and "currentIndex" 
+        // TODO: Move this to layout and base it on DOM and "currentIndex"
         for (ComponentConnector child : previousChildren) {
             Widget widget = child.getWidget();
             if (child.getParent() != this) {

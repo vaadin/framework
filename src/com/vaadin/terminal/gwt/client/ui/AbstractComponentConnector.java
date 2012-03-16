@@ -45,8 +45,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     // shared state from the server to the client
     private ComponentState state;
 
-    private String declaredWidth = "";
-    private String declaredHeight = "";
+    private String lastKnownWidth = "";
+    private String lastKnownHeight = "";
 
     /**
      * Default constructor
@@ -205,75 +205,52 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     private void updateComponentSize() {
-        SharedState state = getState();
-
-        String w = "";
-        String h = "";
-        if (null != state || !(state instanceof ComponentState)) {
-            ComponentState componentState = (ComponentState) state;
-            // TODO move logging to VUIDLBrowser and VDebugConsole
-            // VConsole.log("Paintable state for "
-            // + getPaintableMap().getPid(paintable) + ": "
-            // + String.valueOf(state.getState()));
-            h = componentState.getHeight();
-            w = componentState.getWidth();
-        } else {
-            // TODO move logging to VUIDLBrowser and VDebugConsole
-            VConsole.log("No state for paintable " + getConnectorId()
-                    + " in VAbstractPaintableWidget.updateComponentSize()");
-        }
+        String newWidth = getState().getWidth();
+        String newHeight = getState().getHeight();
 
         // Parent should be updated if either dimension changed between relative
         // and non-relative
-        if (w.endsWith("%") != declaredWidth.endsWith("%")) {
+        if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
             ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setWidthNeedsUpdate((ManagedLayout) parent);
             }
         }
 
-        if (h.endsWith("%") != declaredHeight.endsWith("%")) {
+        if (newHeight.endsWith("%") != lastKnownHeight.endsWith("%")) {
             ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setHeightNeedsUpdate((ManagedLayout) parent);
             }
         }
 
-        declaredWidth = w;
-        declaredHeight = h;
+        lastKnownWidth = newWidth;
+        lastKnownHeight = newHeight;
 
         // Set defined sizes
-        Widget component = getWidget();
+        Widget widget = getWidget();
 
-        component.setStyleName("v-has-width", !isUndefinedWidth());
-        component.setStyleName("v-has-height", !isUndefinedHeight());
+        widget.setStyleName("v-has-width", !isUndefinedWidth());
+        widget.setStyleName("v-has-height", !isUndefinedHeight());
 
-        component.setHeight(h);
-        component.setWidth(w);
+        widget.setHeight(newHeight);
+        widget.setWidth(newWidth);
     }
 
     public boolean isRelativeHeight() {
-        return declaredHeight.endsWith("%");
+        return getState().getHeight().endsWith("%");
     }
 
     public boolean isRelativeWidth() {
-        return declaredWidth.endsWith("%");
+        return getState().getWidth().endsWith("%");
     }
 
     public boolean isUndefinedHeight() {
-        return declaredHeight.length() == 0;
+        return getState().getHeight().length() == 0;
     }
 
     public boolean isUndefinedWidth() {
-        return declaredWidth.length() == 0;
-    }
-
-    public String getDeclaredHeight() {
-        return declaredHeight;
-    }
-
-    public String getDeclaredWidth() {
-        return declaredWidth;
+        return getState().getWidth().length() == 0;
     }
 
     /*

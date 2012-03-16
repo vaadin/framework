@@ -71,20 +71,6 @@ public interface ComponentConnector extends ServerConnector {
     public boolean isRelativeHeight();
 
     /**
-     * Gets the width of this paintable as defined on the server.
-     * 
-     * @return the server side width definition
-     */
-    public String getDeclaredWidth();
-
-    /**
-     * Gets the height of this paintable as defined on the server.
-     * 
-     * @return the server side height definition
-     */
-    public String getDeclaredHeight();
-
-    /**
      * Returns the parent of this connector. Can be null for only the root
      * connector.
      * 

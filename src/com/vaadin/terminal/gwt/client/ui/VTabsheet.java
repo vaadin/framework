@@ -976,7 +976,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (!isDynamicWidth()) {
             ComponentConnector paintable = ConnectorMap.get(client)
                     .getConnector(this);
-            DOM.setStyleAttribute(tabs, "width", paintable.getDeclaredWidth());
+            DOM.setStyleAttribute(tabs, "width", paintable.getState()
+                    .getWidth());
         }
 
         // Make sure scrollerIndex is valid
