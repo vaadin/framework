@@ -15,6 +15,7 @@ import com.vaadin.ui.AbstractField;
  */
 public class AbstractFieldState extends ComponentState {
     private boolean propertyReadOnly = false;
+    private boolean hideErrors = false;
 
     /**
      * Checks if the property data source for the Field is in read only mode.
@@ -35,6 +36,30 @@ public class AbstractFieldState extends ComponentState {
      */
     public void setPropertyReadOnly(boolean propertyReadOnly) {
         this.propertyReadOnly = propertyReadOnly;
+    }
+
+    /**
+     * Returns true if the component will hide any errors even if the error
+     * message is set.
+     * 
+     * @return true if error messages are disabled
+     */
+    public boolean isHideErrors() {
+        return hideErrors;
+    }
+
+    /**
+     * Sets whether the component should hide any errors even if the error
+     * message is set.
+     * 
+     * This is used e.g. on forms to hide error messages for invalid fields
+     * before the first user actions.
+     * 
+     * @param hideErrors
+     *            true if error messages should be hidden
+     */
+    public void setHideErrors(boolean hideErrors) {
+        this.hideErrors = hideErrors;
     }
 
 }

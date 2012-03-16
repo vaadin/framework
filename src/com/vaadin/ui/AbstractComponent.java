@@ -862,6 +862,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         ErrorMessage error = getErrorMessage();
         if (null != error) {
             sharedState.setErrorMessage(error.getFormattedHtmlMessage());
+        } else {
+            sharedState.setErrorMessage(null);
         }
 
         return sharedState;

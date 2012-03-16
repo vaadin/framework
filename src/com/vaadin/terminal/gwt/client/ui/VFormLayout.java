@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -351,8 +352,13 @@ public class VFormLayout extends SimplePanel {
 
         public void updateFromUIDL(UIDL uidl, ComponentConnector component) {
             owner = component;
-            if (null != owner.getState().getErrorMessage()
-                    && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS)) {
+            boolean showError = null != owner.getState().getErrorMessage();
+            if (owner.getState() instanceof AbstractFieldState) {
+                showError = showError
+                        && !((AbstractFieldState) owner.getState())
+                                .isHideErrors();
+            }
+            if (showError) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");

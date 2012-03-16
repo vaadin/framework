@@ -178,12 +178,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             target.addAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED,
                     true);
         }
-
-        // Hide the error indicator if needed
-        if (shouldHideErrors()) {
-            target.addAttribute(
-                    AbstractComponentConnector.ATTRIBUTE_HIDEERRORS, true);
-        }
     }
 
     /**
@@ -1625,7 +1619,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     @Override
     public AbstractFieldState getState() {
-        return (AbstractFieldState) super.getState();
+        AbstractFieldState state = (AbstractFieldState) super.getState();
+
+        // Hide the error indicator if needed
+        state.setHideErrors(shouldHideErrors());
+
+        return state;
     }
 
     @Override

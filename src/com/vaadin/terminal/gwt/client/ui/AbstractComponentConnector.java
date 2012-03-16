@@ -35,7 +35,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     // Not all references to the string literals have been converted to use
     // these!
     public static final String ATTRIBUTE_REQUIRED = "required";
-    public static final String ATTRIBUTE_HIDEERRORS = "hideErrors";
 
     private Widget widget;
 

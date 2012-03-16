@@ -32,10 +32,7 @@ public class VCaption extends HTML {
 
     private int maxWidth = -1;
 
-    protected static final String ATTRIBUTE_CAPTION = "caption";
-    protected static final String ATTRIBUTE_DESCRIPTION = "description";
     protected static final String ATTRIBUTE_REQUIRED = AbstractComponentConnector.ATTRIBUTE_REQUIRED;
-    protected static final String ATTRIBUTE_HIDEERRORS = AbstractComponentConnector.ATTRIBUTE_HIDEERRORS;
 
     private enum InsertPosition {
         ICON, CAPTION, REQUIRED, ERROR
@@ -118,8 +115,11 @@ public class VCaption extends HTML {
         boolean hasIcon = owner.getState().getIcon() != null;
         boolean showRequired = uidl
                 .getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED);
-        boolean showError = owner.getState().getErrorMessage() != null
-                && !uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_HIDEERRORS);
+        boolean showError = owner.getState().getErrorMessage() != null;
+        if (owner.getState() instanceof AbstractFieldState) {
+            showError = showError
+                    && !((AbstractFieldState) owner.getState()).isHideErrors();
+        }
 
         if (hasIcon) {
             if (icon == null) {
