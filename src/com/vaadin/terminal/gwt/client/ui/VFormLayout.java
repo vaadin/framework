@@ -289,7 +289,9 @@ public class VFormLayout extends SimplePanel {
                 removeStyleDependentName("hasdescription");
             }
 
-            if (uidl.getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
+            boolean required = owner instanceof AbstractFieldConnector
+                    && ((AbstractFieldConnector) owner).isRequired();
+            if (required) {
                 if (requiredFieldIndicator == null) {
                     requiredFieldIndicator = DOM.createSpan();
                     DOM.setInnerText(requiredFieldIndicator, "*");

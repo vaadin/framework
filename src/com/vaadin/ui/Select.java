@@ -23,7 +23,6 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
 
 /**
@@ -146,12 +145,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         // If the field is modified, but not committed, set modified attribute
         if (isModified()) {
             target.addAttribute("modified", true);
-        }
-
-        // Adds the required attribute
-        if (!isReadOnly() && isRequired()) {
-            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED,
-                    true);
         }
 
         if (isNewItemsAllowed()) {

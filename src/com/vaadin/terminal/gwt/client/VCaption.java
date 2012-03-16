@@ -8,7 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 
@@ -31,8 +31,6 @@ public class VCaption extends HTML {
     private boolean placedAfterComponent = false;
 
     private int maxWidth = -1;
-
-    protected static final String ATTRIBUTE_REQUIRED = AbstractComponentConnector.ATTRIBUTE_REQUIRED;
 
     private enum InsertPosition {
         ICON, CAPTION, REQUIRED, ERROR
@@ -113,12 +111,16 @@ public class VCaption extends HTML {
         setStyleName(style);
 
         boolean hasIcon = owner.getState().getIcon() != null;
-        boolean showRequired = uidl
-                .getBooleanAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED);
+        boolean showRequired = false;
         boolean showError = owner.getState().getErrorMessage() != null;
         if (owner.getState() instanceof AbstractFieldState) {
-            showError = showError
-                    && !((AbstractFieldState) owner.getState()).isHideErrors();
+            AbstractFieldState abstractFieldState = (AbstractFieldState) owner
+                    .getState();
+            showError = showError && !abstractFieldState.isHideErrors();
+        }
+        if (owner instanceof AbstractFieldConnector) {
+            showRequired = ((AbstractFieldConnector) owner)
+                    .isRequired();
         }
 
         if (hasIcon) {
@@ -390,9 +392,6 @@ public class VCaption extends HTML {
             if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
                 return true;
             }
-        }
-        if (uidl.hasAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED)) {
-            return true;
         }
 
         return false;

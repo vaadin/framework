@@ -24,4 +24,16 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
         return super.isReadOnly() || getState().isPropertyReadOnly();
     }
 
+    /**
+     * Checks whether the required indicator should be shown for the field.
+     * 
+     * Required indicators are hidden if the field or its data source is
+     * read-only.
+     * 
+     * @return true if required indicator should be shown
+     */
+    public boolean isRequired() {
+        return getState().isRequired() && !isReadOnly();
+    }
+
 }

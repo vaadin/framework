@@ -27,15 +27,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private ComponentContainerConnector parent;
 
-    // Generic UIDL parameter names, to be moved to shared state.
-    // Attributes are here mainly if they apply to all paintable widgets or
-    // affect captions - otherwise, they are in the relevant subclasses.
-    // For e.g. item or context specific attributes, subclasses may use separate
-    // constants, which may refer to these.
-    // Not all references to the string literals have been converted to use
-    // these!
-    public static final String ATTRIBUTE_REQUIRED = "required";
-
     private Widget widget;
 
     /* State variables */
@@ -358,7 +349,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);
         }
         // add required style to required components
-        if (uidl.hasAttribute(ATTRIBUTE_REQUIRED)) {
+        if (connector instanceof AbstractFieldConnector
+                && ((AbstractFieldConnector) connector).isRequired()) {
             styleBuf.append(" ");
             styleBuf.append(primaryStyleName);
             styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);

@@ -859,6 +859,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             sharedState.setWidth("");
         }
 
+        // TODO this should be in a listener called before sending state
         ErrorMessage error = getErrorMessage();
         if (null != error) {
             sharedState.setErrorMessage(error.getFormattedHtmlMessage());

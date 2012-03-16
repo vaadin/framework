@@ -32,7 +32,6 @@ import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
  * <p>
@@ -134,6 +133,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /**
      * Required field.
      */
+    // TODO should be used directly from shared state, but requires a listener
+    // for updating state before it is sent
     private boolean required = false;
 
     /**
@@ -172,12 +173,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (isModified()) {
             target.addAttribute("modified", true);
         }
-
-        // Adds the required attribute
-        if (!isReadOnly() && isRequired()) {
-            target.addAttribute(AbstractComponentConnector.ATTRIBUTE_REQUIRED,
-                    true);
-        }
     }
 
     /**
@@ -192,8 +187,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *         to show it when there are errors
      */
     protected boolean shouldHideErrors() {
-        return isRequired() && isEmpty() && getComponentError() == null
-                && getErrorMessage() != null;
+        // getErrorMessage() can still return something else than null based on
+        // validation etc.
+        return isRequired() && isEmpty() && getComponentError() == null;
     }
 
     /**
@@ -1406,7 +1402,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * field isEmpty() regardless of any attached validators.
      * 
      * 
-     * @return <code>true</code> if the field is required .otherwise
+     * @return <code>true</code> if the field is required, otherwise
      *         <code>false</code>.
      */
     public boolean isRequired() {
@@ -1621,7 +1617,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public AbstractFieldState getState() {
         AbstractFieldState state = (AbstractFieldState) super.getState();
 
+        // TODO should be directly in state when listener for updates before
+        // sending state is implemented
+        state.setRequired(isRequired());
+
         // Hide the error indicator if needed
+        // TODO these should be in a listener called before sending state
         state.setHideErrors(shouldHideErrors());
 
         return state;

@@ -16,6 +16,7 @@ import com.vaadin.ui.AbstractField;
 public class AbstractFieldState extends ComponentState {
     private boolean propertyReadOnly = false;
     private boolean hideErrors = false;
+    private boolean required = false;
 
     /**
      * Checks if the property data source for the Field is in read only mode.
@@ -60,6 +61,30 @@ public class AbstractFieldState extends ComponentState {
      */
     public void setHideErrors(boolean hideErrors) {
         this.hideErrors = hideErrors;
+    }
+
+    /**
+     * Is the field required. Required fields must filled by the user.
+     * 
+     * See AbstractField#isRequired() for more information.
+     * 
+     * @return <code>true</code> if the field is required, otherwise
+     *         <code>false</code>.
+     */
+    public boolean isRequired() {
+        return required;
+    }
+
+    /**
+     * Sets the field required. Required fields must filled by the user.
+     * 
+     * See AbstractField#setRequired(boolean) for more information.
+     * 
+     * @param required
+     *            Is the field required.
+     */
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
 }
