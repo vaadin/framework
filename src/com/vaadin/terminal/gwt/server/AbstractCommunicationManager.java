@@ -766,7 +766,7 @@ public abstract class AbstractCommunicationManager implements
     public void writeUidlResponse(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
-        ArrayList<Connector> dirtyVisibleConnectors = new ArrayList<Connector>();
+        ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
         Application application = root.getApplication();
         // Paints components
         DirtyConnectorTracker rootConnectorTracker = root
@@ -805,6 +805,9 @@ public abstract class AbstractCommunicationManager implements
 
         for (Connector connector : dirtyVisibleConnectors) {
             if (connector instanceof Paintable) {
+                System.out.println("  * Painting legacy Paintable "
+                        + connector.getClass().getName() + "@"
+                        + Integer.toHexString(connector.hashCode()));
                 Paintable p = (Paintable) connector;
                 paintTarget.startTag("change");
                 final String pid = connector.getConnectorId();
@@ -926,8 +929,8 @@ public abstract class AbstractCommunicationManager implements
         // which they were performed, remove the calls from components
 
         LinkedList<ClientConnector> rpcPendingQueue = new LinkedList<ClientConnector>(
-                (Collection<? extends ClientConnector>) dirtyVisibleConnectors);
-        List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(rpcPendingQueue);
+                dirtyVisibleConnectors);
+        List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(dirtyVisibleConnectors);
 
         JSONArray rpcCalls = new JSONArray();
         for (ClientMethodInvocation invocation : pendingInvocations) {
@@ -1166,7 +1169,7 @@ public abstract class AbstractCommunicationManager implements
      * @return ordered list of pending RPC calls
      */
     private List<ClientMethodInvocation> collectPendingRpcCalls(
-            LinkedList<ClientConnector> rpcPendingQueue) {
+            List<ClientConnector> rpcPendingQueue) {
         List<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
         for (ClientConnector connector : rpcPendingQueue) {
             List<ClientMethodInvocation> paintablePendingRpc = connector
@@ -1395,11 +1398,11 @@ public abstract class AbstractCommunicationManager implements
                     applyInvocation(app, invocation);
                     continue;
                 }
-
-                final VariableOwner owner = (VariableOwner) getConnector(app,
+                final Connector connector = getConnector(app,
                         invocation.getConnectorId());
+                final VariableOwner owner = (VariableOwner) connector;
 
-                boolean connectorEnabled = owner.isEnabled();
+                boolean connectorEnabled = connector.isConnectorEnabled();
 
                 if (owner != null && connectorEnabled) {
                     VariableChange change = new VariableChange(invocation);
