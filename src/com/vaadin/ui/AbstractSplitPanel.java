@@ -69,7 +69,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
                 return (getFirstComponent() == null ? getSecondComponent()
                         : getFirstComponent());
             } else if (i == 2) {
-                return (Component) state.getSecondChild();
+                return getSecondComponent();
             }
             return null;
         }
