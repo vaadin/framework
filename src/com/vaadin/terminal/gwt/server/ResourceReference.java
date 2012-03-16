@@ -1,13 +1,14 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.terminal.gwt.client.communication;
+package com.vaadin.terminal.gwt.server;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.gwt.client.communication.URLReference;
 
 public class ResourceReference extends URLReference {
 
