@@ -100,8 +100,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     private LinkedList<RepaintRequestListener> repaintRequestListeners = null;
 
-    private String testingId;
-
     /* Sizeable fields */
 
     private float width = SIZE_UNDEFINED;
@@ -156,11 +154,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /* Get/Set component properties */
 
     public void setDebugId(String id) {
-        testingId = id;
+        getState().setDebugId(id);
     }
 
     public String getDebugId() {
-        return testingId;
+        return getState().getDebugId();
     }
 
     /**

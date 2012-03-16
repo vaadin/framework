@@ -30,6 +30,7 @@ public class ComponentState extends SharedState {
     private boolean visible = true;
     private URLReference icon = null;
     private List<String> styles = null;
+    private String debugId = null;
 
     /**
      * Returns the component height as set by the server.
@@ -294,6 +295,28 @@ public class ComponentState extends SharedState {
      */
     public void setStyles(List<String> styles) {
         this.styles = styles;
+    }
+
+    /**
+     * Gets the debug id for the component. The debugId is added as DOM id for
+     * the component.
+     * 
+     * @return The debug id for the component or null if not set
+     */
+    public String getDebugId() {
+        return debugId;
+    }
+
+    /**
+     * Sets the debug id for the component. The debugId is added as DOM id for
+     * the component.
+     * 
+     * @param debugId
+     *            The new debugId for the component or null for no debug id
+     * 
+     */
+    public void setDebugId(String debugId) {
+        this.debugId = debugId;
     }
 
 }

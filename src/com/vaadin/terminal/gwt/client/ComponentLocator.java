@@ -440,9 +440,23 @@ public class ComponentLocator {
             } else if (part.equals("")) {
                 w = client.getView().getWidget();
             } else if (w == null) {
-                // Must be static pid (PID_S*)
-                w = ((ComponentConnector) ConnectorMap.get(client)
-                        .getConnector(part)).getWidget();
+                String id = part;
+                // Must be old static pid (PID_S*)
+                ComponentConnector connector = (ComponentConnector) ConnectorMap
+                        .get(client).getConnector(id);
+                if (connector == null) {
+                    // Lookup by debugId
+                    // TODO Optimize this
+                    connector = findConnectorById(client.getView(),
+                            id.substring(5));
+                }
+
+                if (connector != null) {
+                    w = connector.getWidget();
+                } else {
+                    // Not found
+                    return null;
+                }
             } else if (part.startsWith("domChild[")) {
                 // The target widget has been found and the rest identifies the
                 // element
@@ -568,6 +582,25 @@ public class ComponentLocator {
         }
 
         return w;
+    }
+
+    private ComponentConnector findConnectorById(ComponentConnector root,
+            String id) {
+        if (root instanceof ComponentConnector
+                && id.equals(root.getState().getDebugId())) {
+            return root;
+        }
+        if (root instanceof ComponentContainerConnector) {
+            ComponentContainerConnector ccc = (ComponentContainerConnector) root;
+            for (ComponentConnector child : ccc.getChildren()) {
+                ComponentConnector found = findConnectorById(child, id);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
@@ -132,9 +131,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Visibility
         setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
 
-        if (uidl.getId().startsWith("PID_S")) {
-            DOM.setElementProperty(getWidget().getElement(), "id", uidl.getId()
-                    .substring(5));
+        if (getState().getDebugId() != null) {
+            getWidget().getElement().setId(getState().getDebugId());
+        } else {
+            getWidget().getElement().setId(null);
+
         }
 
         if (!isVisible()) {
