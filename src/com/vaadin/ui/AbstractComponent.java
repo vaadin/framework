@@ -241,6 +241,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (style == null || "".equals(style)) {
             return;
         }
+        if (style.contains(" ")) {
+            // Split space separated style names and add them one by one.
+            for (String realStyle : style.split(" ")) {
+                addStyleName(realStyle);
+            }
+            return;
+        }
+
         if (getState().getStyles() == null) {
             getState().setStyles(new ArrayList<String>());
         }
