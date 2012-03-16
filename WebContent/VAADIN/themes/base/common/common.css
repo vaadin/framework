@@ -35,6 +35,8 @@ div.v-app-loading {
 	margin-top: -1px;
 	border-top: 1px solid transparent;
 	position: relative;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 /**
  * Try to handle printing somehow. Reasonable printing support 
