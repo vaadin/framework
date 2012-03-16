@@ -131,7 +131,7 @@ public abstract class AbstractCommunicationManager implements
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
-    private final HashMap<Integer, OpenWindowCache> currentlyOpenWindowsInClient = new HashMap<Integer, OpenWindowCache>();
+    private final HashMap<Integer, ClientCache> rootToClientCache = new HashMap<Integer, ClientCache>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -799,13 +799,7 @@ public abstract class AbstractCommunicationManager implements
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
-        OpenWindowCache windowCache = currentlyOpenWindowsInClient.get(Integer
-                .valueOf(root.getRootId()));
-        if (windowCache == null) {
-            windowCache = new OpenWindowCache();
-            currentlyOpenWindowsInClient.put(Integer.valueOf(root.getRootId()),
-                    windowCache);
-        }
+        ClientCache clientCache = getClientCache(root);
 
         // TODO These seem unnecessary and could be removed/replaced by looping
         // through paintQueue without removing paintables from it
@@ -1130,7 +1124,7 @@ public abstract class AbstractCommunicationManager implements
                 .getUsedPaintableTypes();
         boolean typeMappingsOpen = false;
         for (Class<? extends Paintable> class1 : usedPaintableTypes) {
-            if (windowCache.cache(class1)) {
+            if (clientCache.cache(class1)) {
                 // client does not know the mapping key for this type, send
                 // mapping to client
                 if (!typeMappingsOpen) {
@@ -1156,6 +1150,16 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+    }
+
+    private ClientCache getClientCache(Root root) {
+        Integer rootId = Integer.valueOf(root.getRootId());
+        ClientCache cache = rootToClientCache.get(rootId);
+        if (cache == null) {
+            cache = new ClientCache();
+            rootToClientCache.put(rootId, cache);
+        }
+        return cache;
     }
 
     private boolean isVisible(Component child) {
@@ -1269,11 +1273,7 @@ public abstract class AbstractCommunicationManager implements
             }
         }
         // clean WindowCache
-        OpenWindowCache openWindowCache = currentlyOpenWindowsInClient
-                .get(Integer.valueOf(root.getRootId()));
-        if (openWindowCache != null) {
-            openWindowCache.clear();
-        }
+        getClientCache(root).clear();
     }
 
     /**
@@ -2191,7 +2191,7 @@ public abstract class AbstractCommunicationManager implements
      * 
      * TODO make customlayout templates (from theme) to be cached here.
      */
-    class OpenWindowCache implements Serializable {
+    class ClientCache implements Serializable {
 
         private final Set<Object> res = new HashSet<Object>();
 
