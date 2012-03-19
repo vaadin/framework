@@ -101,4 +101,7 @@ public interface ComponentConnector extends ServerConnector {
      */
     @Deprecated
     public boolean isReadOnly();
+
+    public boolean hasEventListener(String eventIdentifier);
+
 }

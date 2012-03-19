@@ -38,8 +38,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
         getWidget().immediate = getState().isImmediate();
 
-        getWidget().listenTextChangeEvents = client.hasEventListeners(this,
-                "ie");
+        getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
             getWidget().textChangeEventMode = uidl
                     .getStringAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE);

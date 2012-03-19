@@ -12,13 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,11 +72,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * The EventRouter used for the event model.
      */
     private EventRouter eventRouter = null;
-
-    /**
-     * A set of event identifiers with registered listeners.
-     */
-    private Set<String> eventIdentifiers = null;
 
     /**
      * The internal error message of the component.
@@ -763,11 +756,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // Only paint content of visible components.
             if (isVisibleInContext()) {
 
-                if (eventIdentifiers != null) {
-                    target.addAttribute("eventListeners",
-                            eventIdentifiers.toArray());
-                }
-
                 paintContent(target);
 
                 final ErrorMessage error = getErrorMessage();
@@ -1023,14 +1011,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        if (eventIdentifiers == null) {
-            eventIdentifiers = new HashSet<String>();
-        }
         boolean needRepaint = !eventRouter.hasListeners(eventType);
         eventRouter.addListener(eventType, target, method);
 
         if (needRepaint) {
-            eventIdentifiers.add(eventIdentifier);
+            getState().addRegisteredEventListener(eventIdentifier);
             requestRepaint();
         }
     }
@@ -1079,7 +1064,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target);
             if (!eventRouter.hasListeners(eventType)) {
-                eventIdentifiers.remove(eventIdentifier);
+                getState().removeRegisteredEventListener(eventIdentifier);
                 requestRepaint();
             }
         }

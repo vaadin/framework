@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.Set;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
@@ -124,10 +126,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-        // register the listened events by the server-side to the event-handler
-        // of the component
-        paintableMap.registerEventListenersFromUIDL(getConnectorId(), uidl);
-
         // Visibility
         setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
 
@@ -439,6 +437,20 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public void setParent(ComponentContainerConnector parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Checks if there is a registered server side listener for the given event
+     * identifier.
+     * 
+     * @param eventIdentifier
+     *            The identifier to check for
+     * @return true if an event listener has been registered with the given
+     *         event identifier on the server side, false otherwise
+     */
+    public boolean hasEventListener(String eventIdentifier) {
+        Set<String> reg = getState().getRegisteredEventListeners();
+        return (reg != null && reg.contains(eventIdentifier));
     }
 
 }

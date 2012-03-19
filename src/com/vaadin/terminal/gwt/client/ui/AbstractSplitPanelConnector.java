@@ -112,7 +112,7 @@ public abstract class AbstractSplitPanelConnector extends
         }
         getWidget().setEnabled(isEnabled());
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
         if (getState().hasStyles()) {
             getWidget().componentStyleNames = getState().getStyles();
         } else {

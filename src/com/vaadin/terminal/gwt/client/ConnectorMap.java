@@ -219,23 +219,6 @@ public class ConnectorMap {
     /**
      * FIXME: Should not be here
      * 
-     * @param pid
-     * @param uidl
-     */
-    @Deprecated
-    public void registerEventListenersFromUIDL(String pid, UIDL uidl) {
-        ComponentDetail cd = idToComponentDetail.get(pid);
-        if (cd == null) {
-            throw new IllegalArgumentException("Pid must not be null");
-        }
-
-        cd.registerEventListenersFromUIDL(uidl);
-
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
      * @param paintable
      * @return
      */
@@ -297,19 +280,6 @@ public class ConnectorMap {
         getComponentDetail(componentConnector).putAdditionalTooltip(key,
                 tooltip);
 
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param componentConnector
-     * @return
-     */
-    @Deprecated
-    public boolean hasEventListeners(ComponentConnector componentConnector,
-            String eventIdentifier) {
-        return getComponentDetail(componentConnector).hasEventListeners(
-                eventIdentifier);
     }
 
     /**

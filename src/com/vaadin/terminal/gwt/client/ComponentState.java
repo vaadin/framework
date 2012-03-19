@@ -4,7 +4,9 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.URLReference;
@@ -31,6 +33,10 @@ public class ComponentState extends SharedState {
     private URLReference icon = null;
     private List<String> styles = null;
     private String debugId = null;
+    /**
+     * A set of event identifiers with registered listeners.
+     */
+    private Set<String> registeredEventListeners = null;
 
     /**
      * Returns the component height as set by the server.
@@ -317,6 +323,60 @@ public class ComponentState extends SharedState {
      */
     public void setDebugId(String debugId) {
         this.debugId = debugId;
+    }
+
+    /**
+     * Gets the identifiers for the event listeners that have been registered
+     * for the component (using an event id)
+     * 
+     * @return A set of event identifiers or null if no identifiers have been
+     *         registered
+     */
+    public Set<String> getRegisteredEventListeners() {
+        return registeredEventListeners;
+    }
+
+    /**
+     * Sets the identifiers for the event listeners that have been registered
+     * for the component (using an event id)
+     * 
+     * @param registeredEventListeners
+     *            The new set of identifiers or null if no identifiers have been
+     *            registered
+     */
+    public void setRegisteredEventListeners(Set<String> registeredEventListeners) {
+        this.registeredEventListeners = registeredEventListeners;
+    }
+
+    /**
+     * Adds an event listener id.
+     * 
+     * @param eventListenerId
+     *            The event identifier to add
+     */
+    public void addRegisteredEventListener(String eventListenerId) {
+        if (registeredEventListeners == null) {
+            registeredEventListeners = new HashSet<String>();
+        }
+        registeredEventListeners.add(eventListenerId);
+
+    }
+
+    /**
+     * Removes an event listener id.
+     * 
+     * @param eventListenerId
+     *            The event identifier to remove
+     */
+    public void removeRegisteredEventListener(String eventIdentifier) {
+        if (registeredEventListeners == null) {
+            return;
+        }
+        registeredEventListeners.remove(eventIdentifier);
+        if (registeredEventListeners.size() == 0) {
+            registeredEventListeners = null;
+        }
+
     }
 
 }

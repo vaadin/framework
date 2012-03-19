@@ -132,7 +132,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
             return;
         }
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         getWidget().client = client;
         getWidget().id = uidl.getId();

@@ -38,7 +38,7 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector {
         if (!isRealUpdate(uidl)) {
             return;
         }
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         getWidget().setMarginAndSpacingStyles(
                 new VMarginInfo(uidl.getIntAttribute("margins")),

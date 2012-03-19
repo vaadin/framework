@@ -37,10 +37,6 @@ public class RootConnector extends AbstractComponentContainerConnector
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-        // register the listened events by the server-side to the event-handler
-        // of the component
-        paintableMap.registerEventListenersFromUIDL(getConnectorId(), uidl);
-
         getWidget().rendering = true;
         getWidget().id = getConnectorId();
         boolean firstPaint = getWidget().connection == null;
@@ -69,7 +65,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
         getWidget().setStyleName(styles.trim());
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         if (!getWidget().isEmbedded() && getState().getCaption() != null) {
             // only change window title if we're in charge of the whole page

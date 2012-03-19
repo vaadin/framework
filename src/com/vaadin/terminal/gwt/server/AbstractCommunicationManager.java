@@ -1189,6 +1189,7 @@ public abstract class AbstractCommunicationManager implements
     }
 
     public static Iterable<Component> getChildComponents(HasComponents cc) {
+        // TODO This must be moved to Root/Panel
         if (cc instanceof Root) {
             Root root = (Root) cc;
             List<Component> children = new ArrayList<Component>();

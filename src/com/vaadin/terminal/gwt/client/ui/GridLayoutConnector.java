@@ -54,7 +54,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         if (!isRealUpdate(uidl)) {
             return;
         }
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         int cols = uidl.getIntAttribute("w");
         int rows = uidl.getIntAttribute("h");

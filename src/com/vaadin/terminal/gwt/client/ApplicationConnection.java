@@ -2162,14 +2162,19 @@ public class ApplicationConnection {
      * before the component is updated so the value is correct if called from
      * updatedFromUIDL.
      * 
+     * @param paintable
+     *            The connector to register event listeners for
      * @param eventIdentifier
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
+     * @deprecated Use {@link ComponentState#hasEventListener(String)}
+     *             instead
      */
+    @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,
             String eventIdentifier) {
-        return connectorMap.hasEventListeners(paintable, eventIdentifier);
+        return paintable.hasEventListener(eventIdentifier);
     }
 
     /**

@@ -19,7 +19,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
@@ -32,7 +31,6 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
 
     protected String clickEventIdentifier;
     protected ComponentConnector paintable;
-    private ApplicationConnection client;
 
     public ClickEventHandler(ComponentConnector paintable,
             String clickEventIdentifier) {
@@ -40,8 +38,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
         this.clickEventIdentifier = clickEventIdentifier;
     }
 
-    public void handleEventHandlerRegistration(ApplicationConnection client) {
-        this.client = client;
+    public void handleEventHandlerRegistration() {
         // Handle registering/unregistering of click handler depending on if
         // server side listeners have been added or removed.
         if (hasEventListener()) {
@@ -73,25 +70,23 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
             final H handler, DomEvent.Type<H> type);
 
     protected ApplicationConnection getApplicationConnection() {
-        return client;
+        return paintable.getConnection();
     }
 
     public boolean hasEventListener() {
-        return getApplicationConnection().hasEventListeners(paintable,
-                clickEventIdentifier);
+        return paintable.hasEventListener(clickEventIdentifier);
     }
 
     protected void fireClick(NativeEvent event) {
-        ApplicationConnection client = getApplicationConnection();
-        String pid = ConnectorMap.get(getApplicationConnection())
-                .getConnectorId(paintable);
+        String pid = paintable.getConnectorId();
 
         MouseEventDetails mouseDetails = MouseEventDetailsBuilder
                 .buildMouseEventDetails(event, getRelativeToElement());
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("mouseDetails", mouseDetails.serialize());
-        client.updateVariable(pid, clickEventIdentifier, parameters, true);
+        paintable.getConnection().updateVariable(pid, clickEventIdentifier,
+                parameters, true);
 
     }
 

@@ -40,7 +40,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
 
         boolean clearBrowserElement = true;
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         if (uidl.hasAttribute("type")) {
             getWidget().type = uidl.getStringAttribute("type");

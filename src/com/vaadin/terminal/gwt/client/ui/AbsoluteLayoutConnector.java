@@ -48,7 +48,7 @@ public class AbsoluteLayoutConnector extends
             return;
         }
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         HashSet<String> unrenderedPids = new HashSet<String>(
                 getWidget().pidToComponentWrappper.keySet());

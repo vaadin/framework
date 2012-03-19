@@ -106,7 +106,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
         getWidget().visibilityChangesDisabled = false;
 
-        clickEventHandler.handleEventHandlerRegistration(client);
+        clickEventHandler.handleEventHandlerRegistration();
 
         getWidget().immediate = getState().isImmediate();
 
