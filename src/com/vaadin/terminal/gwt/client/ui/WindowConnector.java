@@ -315,4 +315,9 @@ public class WindowConnector extends AbstractComponentContainerConnector
     public WindowState getState() {
         return (WindowState) super.getState();
     }
+
+    @Override
+    protected WindowState createState() {
+        return GWT.create(WindowState.class);
+    }
 }

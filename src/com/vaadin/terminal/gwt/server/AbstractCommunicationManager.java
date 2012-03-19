@@ -1188,8 +1188,18 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    private Iterable<Component> getChildComponents(HasComponents cc) {
-        if (cc instanceof Panel) {
+    public static Iterable<Component> getChildComponents(HasComponents cc) {
+        if (cc instanceof Root) {
+            Root root = (Root) cc;
+            List<Component> children = new ArrayList<Component>();
+            if (root.getContent() != null) {
+                children.add(root.getContent());
+            }
+            for (Window w : root.getWindows()) {
+                children.add(w);
+            }
+            return children;
+        } else if (cc instanceof Panel) {
             // This is so wrong.. (#2924)
             if (((Panel) cc).getContent() == null) {
                 return Collections.emptyList();

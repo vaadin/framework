@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.terminal.Paintable.RepaintRequestListener;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -103,7 +104,8 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
         markDirty(c);
         if (c instanceof HasComponents) {
             HasComponents container = (HasComponents) c;
-            for (Component child : container) {
+            for (Component child : AbstractCommunicationManager
+                    .getChildComponents(container)) {
                 markComponentsDirtyRecursively(child);
             }
         }

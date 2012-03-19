@@ -403,6 +403,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void attach() {
+        getRoot().componentAttached(this);
         // can't call parent here as this is Panels hierarchy is a hack
         requestRepaint();
         if (content != null) {
@@ -421,6 +422,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         if (content != null) {
             content.detach();
         }
+        getRoot().componentDetached(this);
     }
 
     /**
