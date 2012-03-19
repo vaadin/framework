@@ -403,7 +403,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             if (tabIndex == 0) {
                 // Set the "first" style
                 t.setStyleNames(false, true);
-                t.setTabulatorIndex(-1);
             }
 
             t.addClickHandler(this);
