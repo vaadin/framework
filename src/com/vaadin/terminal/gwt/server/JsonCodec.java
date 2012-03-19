@@ -11,10 +11,13 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
@@ -38,16 +41,22 @@ public class JsonCodec implements Serializable {
         registerType(String.class, JsonEncoder.VTYPE_STRING);
         registerType(Connector.class, JsonEncoder.VTYPE_CONNECTOR);
         registerType(Boolean.class, JsonEncoder.VTYPE_BOOLEAN);
+        registerType(boolean.class, JsonEncoder.VTYPE_BOOLEAN);
         registerType(Integer.class, JsonEncoder.VTYPE_INTEGER);
+        registerType(int.class, JsonEncoder.VTYPE_INTEGER);
         registerType(Float.class, JsonEncoder.VTYPE_FLOAT);
+        registerType(float.class, JsonEncoder.VTYPE_FLOAT);
         registerType(Double.class, JsonEncoder.VTYPE_DOUBLE);
+        registerType(double.class, JsonEncoder.VTYPE_FLOAT);
         registerType(Long.class, JsonEncoder.VTYPE_LONG);
+        registerType(long.class, JsonEncoder.VTYPE_LONG);
         // transported as string representation
         registerType(Enum.class, JsonEncoder.VTYPE_STRING);
         registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
         registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
         registerType(Map.class, JsonEncoder.VTYPE_MAP);
         registerType(List.class, JsonEncoder.VTYPE_LIST);
+        registerType(Set.class, JsonEncoder.VTYPE_SET);
     }
 
     private static void registerType(Class<?> type, String transportType) {
@@ -80,6 +89,8 @@ public class JsonCodec implements Serializable {
             val = decodeArray((JSONArray) value, application);
         } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
             val = decodeList((JSONArray) value, application);
+        } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
+            val = decodeSet((JSONArray) value, application);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = decodeMap((JSONObject) value, application);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
@@ -141,8 +152,8 @@ public class JsonCodec implements Serializable {
         return list.toArray(new Object[list.size()]);
     }
 
-    private static List decodeList(JSONArray jsonArray, Application application)
-            throws JSONException {
+    private static List<Object> decodeList(JSONArray jsonArray,
+            Application application) throws JSONException {
         List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
@@ -150,6 +161,13 @@ public class JsonCodec implements Serializable {
             list.add(decode(entryArray, application));
         }
         return list;
+    }
+
+    private static Set<Object> decodeSet(JSONArray jsonArray,
+            Application application) throws JSONException {
+        HashSet<Object> set = new HashSet<Object>();
+        set.addAll(decodeList(jsonArray, application));
+        return set;
     }
 
     /**
@@ -174,7 +192,14 @@ public class JsonCodec implements Serializable {
 
         if (null == value) {
             return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
-        } else if (value instanceof String[]) {
+        }
+
+        if (valueType == null) {
+            valueType = value.getClass();
+        }
+
+        String transportType = getTransportType(valueType);
+        if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < array.length; ++i) {
@@ -186,11 +211,16 @@ public class JsonCodec implements Serializable {
         } else if (value instanceof Boolean) {
             return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
         } else if (value instanceof Number) {
-            return combineTypeAndValue(getTransportType(value), value);
-        } else if (value instanceof List) {
-            List list = (List) value;
-            JSONArray jsonArray = encodeList(list, application);
-            return combineTypeAndValue(JsonEncoder.VTYPE_LIST, jsonArray);
+            return combineTypeAndValue(transportType, value);
+        } else if (value instanceof Collection) {
+            if (transportType == null) {
+                throw new RuntimeException(
+                        "Unable to serialize unsupported type: " + valueType);
+            }
+            Collection<?> collection = (Collection<?>) value;
+            JSONArray jsonArray = encodeCollection(collection, application);
+
+            return combineTypeAndValue(transportType, jsonArray);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
             JSONArray jsonArray = encodeArrayContents(array, application);
@@ -203,16 +233,11 @@ public class JsonCodec implements Serializable {
             Connector connector = (Connector) value;
             return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
                     connector.getConnectorId());
-        } else if (getTransportType(value) != null) {
-            return combineTypeAndValue(getTransportType(value),
-                    String.valueOf(value));
+        } else if (transportType != null) {
+            return combineTypeAndValue(transportType, String.valueOf(value));
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            if (valueType == null) {
-                valueType = value.getClass();
-            }
-
             return combineTypeAndValue(valueType.getCanonicalName(),
                     encodeObject(value, application));
         }
@@ -290,10 +315,10 @@ public class JsonCodec implements Serializable {
         return jsonArray;
     }
 
-    private static JSONArray encodeList(List list, Application application)
-            throws JSONException {
+    private static JSONArray encodeCollection(Collection collection,
+            Application application) throws JSONException {
         JSONArray jsonArray = new JSONArray();
-        for (Object o : list) {
+        for (Object o : collection) {
             // TODO handle object graph loops?
             jsonArray.put(encode(o, application));
         }
@@ -312,6 +337,10 @@ public class JsonCodec implements Serializable {
     }
 
     private static JSONArray combineTypeAndValue(String type, Object value) {
+        if (type == null) {
+            throw new RuntimeException("Type for value " + value
+                    + " cannot be null!");
+        }
         JSONArray outerArray = new JSONArray();
         outerArray.put(type);
         outerArray.put(value);
@@ -326,12 +355,25 @@ public class JsonCodec implements Serializable {
      * @return
      * @throws JSONException
      */
-    private static String getTransportType(Object value) throws JSONException {
+    private static String getTransportType(Object value) {
         if (null == value) {
             return JsonEncoder.VTYPE_NULL;
         }
-        String transportType = typeToTransportType.get(value.getClass());
-        return transportType;
+        return getTransportType(value.getClass());
+    }
+
+    /**
+     * Gets the transport type for the given class. Returns null if no transport
+     * type can be found.
+     * 
+     * @param valueType
+     *            The type that should be transported
+     * @return
+     * @throws JSONException
+     */
+    private static String getTransportType(Class<?> valueType) {
+        return typeToTransportType.get(valueType);
+
     }
 
 }

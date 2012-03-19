@@ -6,9 +6,11 @@ package com.vaadin.terminal.gwt.client.communication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
@@ -63,6 +65,8 @@ public class JsonDecoder {
             val = decodeMap((JSONObject) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
             val = decodeList((JSONArray) value, idMapper, connection);
+        } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
+            val = decodeSet((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = decodeStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
@@ -128,6 +132,17 @@ public class JsonDecoder {
     private static List<Object> decodeList(JSONArray jsonArray,
             ConnectorMap idMapper, ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
+        for (int i = 0; i < jsonArray.size(); ++i) {
+            // each entry always has two elements: type and value
+            JSONArray entryArray = (JSONArray) jsonArray.get(i);
+            tokens.add(decodeValue(entryArray, idMapper, connection));
+        }
+        return tokens;
+    }
+
+    private static Set<Object> decodeSet(JSONArray jsonArray,
+            ConnectorMap idMapper, ApplicationConnection connection) {
+        Set<Object> tokens = new HashSet<Object>();
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);

@@ -230,8 +230,9 @@ public class SerializerGenerator extends Generator {
 
         List<JMethod> setterMethods = new ArrayList<JMethod>();
 
-        while (!beanType.getQualifiedSourceName()
-                .equals(Object.class.getName())) {
+        while (beanType != null
+                && !beanType.getQualifiedSourceName().equals(
+                        Object.class.getName())) {
             for (JMethod method : beanType.getMethods()) {
                 // Process all setters that have corresponding fields
                 if (!method.isPublic() || method.isStatic()

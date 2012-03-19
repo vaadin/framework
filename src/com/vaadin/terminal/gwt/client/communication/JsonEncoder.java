@@ -4,8 +4,10 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
@@ -41,6 +43,7 @@ public class JsonEncoder {
     public static final String VTYPE_STRINGARRAY = "S";
     public static final String VTYPE_MAP = "m";
     public static final String VTYPE_LIST = "L";
+    public static final String VTYPE_SET = "q";
     public static final String VTYPE_NULL = "n";
 
     /**
@@ -72,13 +75,7 @@ public class JsonEncoder {
             return combineTypeAndValue(VTYPE_BOOLEAN,
                     JSONBoolean.getInstance((Boolean) value));
         } else if (value instanceof Object[]) {
-            Object[] array = (Object[]) value;
-            JSONArray jsonArray = new JSONArray();
-            for (int i = 0; i < array.length; ++i) {
-                // TODO handle object graph loops?
-                jsonArray.set(i, encode(array[i], connectorMap, connection));
-            }
-            return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
+            return encodeObjectArray((Object[]) value, connectorMap, connection);
         } else if (value instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) value;
             JSONObject jsonMap = new JSONObject();
@@ -92,6 +89,9 @@ public class JsonEncoder {
             Connector connector = (Connector) value;
             return combineTypeAndValue(VTYPE_CONNECTOR, new JSONString(
                     connector.getConnectorId()));
+        } else if (value instanceof Collection) {
+            return encodeCollection((Collection) value, connectorMap,
+                    connection);
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
@@ -109,6 +109,35 @@ public class JsonEncoder {
                         serializer.serialize(value, connectorMap, connection));
             }
         }
+    }
+
+    private static JSONValue encodeObjectArray(Object[] array,
+            ConnectorMap connectorMap, ApplicationConnection connection) {
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < array.length; ++i) {
+            // TODO handle object graph loops?
+            jsonArray.set(i, encode(array[i], connectorMap, connection));
+        }
+        return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
+    }
+
+    private static JSONValue encodeCollection(Collection collection,
+            ConnectorMap connectorMap, ApplicationConnection connection) {
+        JSONArray jsonArray = new JSONArray();
+        int idx = 0;
+        for (Object o : collection) {
+            JSONValue encodedObject = encode(o, connectorMap, connection);
+            jsonArray.set(idx++, encodedObject);
+        }
+        if (collection instanceof Set) {
+            return combineTypeAndValue(VTYPE_SET, jsonArray);
+        } else if (collection instanceof List) {
+            return combineTypeAndValue(VTYPE_LIST, jsonArray);
+        } else {
+            throw new RuntimeException("Unsupport collection type: "
+                    + collection.getClass().getName());
+        }
+
     }
 
     private static JSONValue combineTypeAndValue(String type, JSONValue value) {
@@ -137,6 +166,8 @@ public class JsonEncoder {
             return VTYPE_LONG;
         } else if (value instanceof List) {
             return VTYPE_LIST;
+        } else if (value instanceof Set) {
+            return VTYPE_SET;
         } else if (value instanceof Enum) {
             return VTYPE_STRING; // transported as string representation
         } else if (value instanceof String[]) {

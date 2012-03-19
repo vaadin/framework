@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -199,7 +200,16 @@ public class SerializerMapGenerator extends Generator {
                 continue;
             }
             for (JType type : method.getParameterTypes()) {
-                types.add(type.isClass());
+                JClassType t = type.isClass();
+                JClassType interfaceType = type.isInterface();
+                if (t != null) {
+                    types.add(t);
+                } else if (interfaceType != null) {
+                    types.add(interfaceType);
+                } else {
+                    System.err.println("Unknown method parameter type: "
+                            + type.getQualifiedSourceName());
+                }
             }
         }
     }
@@ -242,6 +252,8 @@ public class SerializerMapGenerator extends Generator {
         frameworkHandledTypes.add(String[].class);
         frameworkHandledTypes.add(Object[].class);
         frameworkHandledTypes.add(Map.class);
+        frameworkHandledTypes.add(List.class);
+        frameworkHandledTypes.add(Set.class);
 
     }
 
