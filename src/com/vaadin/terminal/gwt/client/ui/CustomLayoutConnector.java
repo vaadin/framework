@@ -85,8 +85,8 @@ public class CustomLayoutConnector extends AbstractComponentContainerConnector
         return GWT.create(VCustomLayout.class);
     }
 
-    public void updateCaption(ComponentConnector paintable, UIDL uidl) {
-        getWidget().updateCaption(paintable, uidl);
+    public void updateCaption(ComponentConnector paintable) {
+        getWidget().updateCaption(paintable);
 
     }
 

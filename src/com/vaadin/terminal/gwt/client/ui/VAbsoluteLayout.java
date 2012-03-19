@@ -85,16 +85,15 @@ public class VAbsoluteLayout extends ComplexPanel {
             setStyleName(CLASSNAME + "-wrapper");
         }
 
-        public void updateCaption(UIDL uidl) {
+        public void updateCaption() {
 
-            boolean captionIsNeeded = VCaption.isNeeded(uidl,
-                    paintable.getState());
+            boolean captionIsNeeded = VCaption.isNeeded(paintable.getState());
             if (captionIsNeeded) {
                 if (caption == null) {
                     caption = new VCaption(paintable, client);
                     VAbsoluteLayout.this.add(caption);
                 }
-                caption.updateCaption(uidl);
+                caption.updateCaption();
                 updateCaptionPosition();
             } else {
                 if (caption != null) {

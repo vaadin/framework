@@ -45,7 +45,7 @@ public class CustomComponentConnector extends
         return (VCustomComponent) super.getWidget();
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // NOP, custom component dont render composition roots caption
     }
 

@@ -29,9 +29,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private Widget widget;
 
-    /* State variables */
-    private boolean visible = true;
-
     // shared state from the server to the client
     private ComponentState state;
 
@@ -115,8 +112,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-        // Visibility
-        setVisible(!uidl.getBooleanAttribute("invisible"), uidl);
 
         if (getState().getDebugId() != null) {
             getWidget().getElement().setId(getState().getDebugId());
@@ -163,7 +158,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (delegateCaptionHandling()) {
             ComponentContainerConnector parent = getParent();
             if (parent != null) {
-                parent.updateCaption(this, uidl);
+                parent.updateCaption(this);
             } else {
                 VConsole.error("Parent of connector "
                         + getClass().getName()
@@ -260,34 +255,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Deprecated
     protected boolean delegateCaptionHandling() {
         return true;
-    }
-
-    /**
-     * Sets the visible state for this paintable.
-     * 
-     * @param visible
-     *            true if the paintable should be made visible, false otherwise
-     * @param captionUidl
-     *            The UIDL that is passed to the parent and onwards to VCaption
-     *            if the caption needs to be updated as a result of the
-     *            visibility change.
-     */
-    protected void setVisible(boolean visible, UIDL captionUidl) {
-        boolean wasVisible = this.visible;
-        this.visible = visible;
-
-        getWidget().setVisible(visible);
-        if (wasVisible != visible) {
-            // Changed invisibile <-> visible
-            if (wasVisible && delegateCaptionHandling()) {
-                // Must hide caption when component is hidden
-                getParent().updateCaption(this, captionUidl);
-            }
-        }
-    }
-
-    protected boolean isVisible() {
-        return visible;
     }
 
     /**

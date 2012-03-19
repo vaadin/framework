@@ -306,7 +306,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
     };
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // NOP The main view never draws caption for its layout
     }
 

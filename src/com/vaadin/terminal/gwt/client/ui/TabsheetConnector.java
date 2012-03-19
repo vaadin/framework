@@ -71,7 +71,7 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         return (VTabsheet) super.getWidget();
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         /* Tabsheet does not render its children's captions */
     }
 

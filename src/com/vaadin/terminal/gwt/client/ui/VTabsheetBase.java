@@ -32,11 +32,7 @@ abstract class VTabsheetBase extends ComplexPanel {
     }
 
     /**
-     * @return a list of currently shown Paintables
-     * 
-     *         Apparently can be something else than Paintable as
-     *         {@link #updateFromUIDL(UIDL, ApplicationConnection)} checks if
-     *         instanceof Paintable. Therefore set to <Object>
+     * @return a list of currently shown Widgets
      */
     abstract protected Iterator<Widget> getWidgetIterator();
 

@@ -246,14 +246,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             this.tab = tab;
         }
 
-        @Override
         public boolean updateCaption(UIDL uidl) {
             if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)) {
                 TooltipInfo tooltipInfo = new TooltipInfo();
                 tooltipInfo
                         .setTitle(uidl
                                 .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
-                // TODO currently, there is no error indicator and message for a tab
+                // TODO currently, there is no error indicator and message for a
+                // tab
                 client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
             } else {
                 client.registerTooltip(getTabsheet(), getElement(), null);
@@ -262,7 +262,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             // TODO need to call this instead of super because the caption does
             // not have an owner
             boolean ret = updateCaptionWithoutOwner(
-                    uidl,
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),

@@ -144,10 +144,10 @@ public class VCssLayout extends SimplePanel {
             insert(child, index);
         }
 
-        public void updateCaption(ComponentConnector paintable, UIDL uidl) {
+        public void updateCaption(ComponentConnector paintable) {
             Widget widget = paintable.getWidget();
             VCaption caption = widgetToCaption.get(widget);
-            if (VCaption.isNeeded(uidl, paintable.getState())) {
+            if (VCaption.isNeeded(paintable.getState())) {
                 if (caption == null) {
                     caption = new VCaption(paintable, client);
                     widgetToCaption.put(widget, caption);
@@ -157,7 +157,7 @@ public class VCssLayout extends SimplePanel {
                     insert(caption, getWidgetIndex(widget));
                     lastIndex++;
                 }
-                caption.updateCaption(uidl);
+                caption.updateCaption();
             } else if (caption != null) {
                 remove(caption);
                 widgetToCaption.remove(widget);

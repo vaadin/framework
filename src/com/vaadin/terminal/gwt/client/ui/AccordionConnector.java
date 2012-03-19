@@ -59,7 +59,7 @@ public class AccordionConnector extends TabsheetBaseConnector implements
         return GWT.create(VAccordion.class);
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         /* Accordion does not render its children's captions */
     }
 

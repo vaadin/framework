@@ -72,10 +72,10 @@ public class AbsoluteLayoutConnector extends
         }
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         AbsoluteWrapper parent2 = (AbsoluteWrapper) (component.getWidget())
                 .getParent();
-        parent2.updateCaption(uidl);
+        parent2.updateCaption();
     }
 
     @Override

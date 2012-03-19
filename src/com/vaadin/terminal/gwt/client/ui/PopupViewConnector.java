@@ -77,15 +77,15 @@ public class PopupViewConnector extends AbstractComponentContainerConnector {
         }
     }// updateFromUIDL
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
-        if (VCaption.isNeeded(uidl, component.getState())) {
+    public void updateCaption(ComponentConnector component) {
+        if (VCaption.isNeeded(component.getState())) {
             if (getWidget().popup.captionWrapper != null) {
-                getWidget().popup.captionWrapper.updateCaption(uidl);
+                getWidget().popup.captionWrapper.updateCaption();
             } else {
                 getWidget().popup.captionWrapper = new VCaptionWrapper(
                         component, getConnection());
                 getWidget().popup.setWidget(getWidget().popup.captionWrapper);
-                getWidget().popup.captionWrapper.updateCaption(uidl);
+                getWidget().popup.captionWrapper.updateCaption();
             }
         } else {
             if (getWidget().popup.captionWrapper != null) {

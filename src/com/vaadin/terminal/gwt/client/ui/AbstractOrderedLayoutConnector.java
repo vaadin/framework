@@ -27,9 +27,9 @@ public abstract class AbstractOrderedLayoutConnector extends
                 getWidget().spacingMeasureElement);
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         VMeasuringOrderedLayout layout = getWidget();
-        if (VCaption.isNeeded(uidl, component.getState())) {
+        if (VCaption.isNeeded(component.getState())) {
             VLayoutSlot layoutSlot = layout.getSlotForChild(component
                     .getWidget());
             VCaption caption = layoutSlot.getCaption();
@@ -40,7 +40,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
                 layout.setCaption(widget, caption);
             }
-            caption.updateCaption(uidl);
+            caption.updateCaption();
         } else {
             layout.setCaption(component.getWidget(), null);
             getLayoutManager().setNeedsUpdate(this);

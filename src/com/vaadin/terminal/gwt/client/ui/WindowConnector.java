@@ -223,8 +223,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
-        // NOP, window has own caption, layout captio not rendered
+    public void updateCaption(ComponentConnector component) {
+        // NOP, window has own caption, layout caption not rendered
     }
 
     public void onBeforeShortcutAction(Event e) {

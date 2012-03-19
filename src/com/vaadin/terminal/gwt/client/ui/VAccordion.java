@@ -440,7 +440,6 @@ public class VAccordion extends VTabsheetBase {
         public void updateCaption(UIDL uidl) {
             // TODO need to call this because the caption does not have an owner
             caption.updateCaptionWithoutOwner(
-                    uidl,
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),

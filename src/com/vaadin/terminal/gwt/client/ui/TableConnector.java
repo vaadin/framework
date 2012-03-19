@@ -248,7 +248,7 @@ public class TableConnector extends AbstractComponentContainerConnector
         return (VScrollTable) super.getWidget();
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // NOP, not rendered
     }
 

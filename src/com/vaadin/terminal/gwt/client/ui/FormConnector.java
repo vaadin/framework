@@ -65,8 +65,8 @@ public class FormConnector extends AbstractComponentContainerConnector
         }
 
         if (null != getState().getErrorMessage()) {
-            getWidget().errorMessage.updateMessage(getState()
-                    .getErrorMessage());
+            getWidget().errorMessage
+                    .updateMessage(getState().getErrorMessage());
             getWidget().errorMessage.setVisible(true);
         } else {
             getWidget().errorMessage.setVisible(false);
@@ -154,7 +154,7 @@ public class FormConnector extends AbstractComponentContainerConnector
         }
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // NOP form don't render caption for neither field layout nor footer
         // layout
     }

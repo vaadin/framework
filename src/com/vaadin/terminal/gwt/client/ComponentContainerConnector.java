@@ -26,10 +26,8 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * 
      * @param connector
      *            Child component for which service is requested.
-     * @param uidl
-     *            UIDL of the child component.
      */
-    void updateCaption(ComponentConnector connector, UIDL uidl);
+    void updateCaption(ComponentConnector connector);
 
     /**
      * Returns the children for this connector.

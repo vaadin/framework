@@ -24,16 +24,16 @@ public class FormLayoutConnector extends AbstractComponentContainerConnector {
         getWidget().table.updateFromUIDL(uidl, client);
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         final Caption c = getWidget().table.widgetToCaption.get(component
                 .getWidget());
         if (c != null) {
-            c.updateCaption(uidl, component.getState(), component.isEnabled());
+            c.updateCaption(component.getState(), component.isEnabled());
         }
         final ErrorFlag e = getWidget().table.widgetToError.get(component
                 .getWidget());
         if (e != null) {
-            e.updateFromUIDL(uidl, component);
+            e.updateFromUIDL(component);
         }
     }
 

@@ -29,9 +29,8 @@ public class VCaptionWrapper extends FlowPanel {
         setStyleName(CLASSNAME);
     }
 
-    public void updateCaption(UIDL uidl) {
-        caption.updateCaption(uidl);
-        setVisible(!uidl.getBooleanAttribute("invisible"));
+    public void updateCaption() {
+        caption.updateCaption();
     }
 
     public ComponentConnector getPaintable() {

@@ -55,7 +55,7 @@ public abstract class AbstractSplitPanelConnector extends
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // TODO Implement caption handling
     }
 

@@ -241,10 +241,7 @@ public class VFormLayout extends SimplePanel {
             setStyleName(styleName);
         }
 
-        public void updateCaption(UIDL uidl, ComponentState state,
-                boolean enabled) {
-            setVisible(!uidl.getBooleanAttribute("invisible"));
-
+        public void updateCaption(ComponentState state, boolean enabled) {
             // Update styles as they might have changed when the caption changed
             setStyles(getStylesFromState(state, enabled));
 
@@ -352,7 +349,7 @@ public class VFormLayout extends SimplePanel {
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
-        public void updateFromUIDL(UIDL uidl, ComponentConnector component) {
+        public void updateFromUIDL(ComponentConnector component) {
             owner = component;
             boolean showError = null != owner.getState().getErrorMessage();
             if (owner.getState() instanceof AbstractFieldState) {

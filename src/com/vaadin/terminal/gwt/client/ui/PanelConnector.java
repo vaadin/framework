@@ -177,7 +177,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         getWidget().contentNode.setTabIndex(getState().getTabIndex());
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
+    public void updateCaption(ComponentConnector component) {
         // NOP: layouts caption, errors etc not rendered in Panel
     }
 

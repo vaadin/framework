@@ -86,13 +86,10 @@ public class VCaption extends HTML {
      * This method may only be called when the caption has an owner - otherwise,
      * use {@link #updateCaptionWithoutOwner(UIDL, String, boolean, boolean)}.
      * 
-     * @param uidl
      * @return true if the position where the caption should be placed has
      *         changed
      */
-    public boolean updateCaption(UIDL uidl) {
-        setVisible(!uidl.getBooleanAttribute("invisible"));
-
+    public boolean updateCaption() {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -119,8 +116,7 @@ public class VCaption extends HTML {
             showError = showError && !abstractFieldState.isHideErrors();
         }
         if (owner instanceof AbstractFieldConnector) {
-            showRequired = ((AbstractFieldConnector) owner)
-                    .isRequired();
+            showRequired = ((AbstractFieldConnector) owner).isRequired();
         }
 
         if (hasIcon) {
@@ -252,13 +248,8 @@ public class VCaption extends HTML {
     }
 
     @Deprecated
-    public boolean updateCaptionWithoutOwner(UIDL uidl, String caption,
-            boolean disabled, boolean hasDescription, String iconURL) {
-        // TODO temporary method, needed because some tabsheet and accordion
-        // internal captions do not have an owner or shared state. Simplified to
-        // only support those cases
-        setVisible(!uidl.getBooleanAttribute("invisible"));
-
+    public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
+            boolean hasDescription, String iconURL) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -372,26 +363,29 @@ public class VCaption extends HTML {
         }
     }
 
-    public static boolean isNeeded(UIDL uidl, ComponentState state) {
-        if (state != null) {
-            if (state.getCaption() != null) {
-                return true;
-            }
-            if (state.getIcon() != null) {
-                return true;
-            }
-            if (state.getErrorMessage() != null) {
-                return true;
-            }
-        } else {
-            // TODO fallback for cases where the caption has no owner (Tabsheet,
-            // Accordion)
-            if (uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION) != null) {
-                return true;
-            }
-            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
-                return true;
-            }
+    @Deprecated
+    public static boolean isNeeded(UIDL uidl) {
+        // TODO fallback for cases where the caption has no owner (Tabsheet,
+        // Accordion)
+        if (uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION) != null) {
+            return true;
+        }
+        if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isNeeded(ComponentState state) {
+        if (state.getCaption() != null) {
+            return true;
+        }
+        if (state.getIcon() != null) {
+            return true;
+        }
+        if (state.getErrorMessage() != null) {
+            return true;
         }
 
         return false;

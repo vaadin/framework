@@ -56,8 +56,8 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector {
         return GWT.create(VCssLayout.class);
     }
 
-    public void updateCaption(ComponentConnector component, UIDL uidl) {
-        getWidget().panel.updateCaption(component, uidl);
+    public void updateCaption(ComponentConnector component) {
+        getWidget().panel.updateCaption(component);
     }
 
 }
