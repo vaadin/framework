@@ -2,6 +2,8 @@ package com.vaadin.tests.components.embedded;
 
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Window;
 
@@ -19,12 +21,18 @@ public class EmbeddedPdf extends TestBase {
 
     @Override
     public void setup() {
-        Embedded player = new Embedded();
+        final Embedded player = new Embedded();
         player.setType(Embedded.TYPE_BROWSER);
         player.setWidth("400px");
         player.setHeight("300px");
         player.setSource(new ClassResource(getClass(), "test.pdf", this));
         addComponent(player);
+
+        addComponent(new Button("Remove pdf", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                removeComponent(player);
+            }
+        }));
 
         player.getWindow().addWindow(new Window("Testwindow"));
     }
