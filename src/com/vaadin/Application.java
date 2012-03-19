@@ -2155,6 +2155,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 }
             }
 
+            // Set thread local here so it is available in init
+            Root.setCurrentRoot(root);
+
             if (!initedRoots.contains(rootId)) {
                 boolean initRequiresBrowserDetails = isRootPreserved()
                         || !root.getClass()
@@ -2176,7 +2179,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         } // end synchronized block
 
-        Root.setCurrentRoot(root);
         return root;
     }
 
