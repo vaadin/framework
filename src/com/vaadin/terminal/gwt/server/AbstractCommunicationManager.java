@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -802,20 +803,7 @@ public abstract class AbstractCommunicationManager implements
 
         JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
                 !repaintAll);
-
-        for (Connector connector : dirtyVisibleConnectors) {
-            if (connector instanceof Paintable) {
-                System.out.println("  * Painting legacy Paintable "
-                        + connector.getClass().getName() + "@"
-                        + Integer.toHexString(connector.hashCode()));
-                Paintable p = (Paintable) connector;
-                paintTarget.startTag("change");
-                final String pid = connector.getConnectorId();
-                paintTarget.addAttribute("pid", pid);
-                p.paint(paintTarget);
-                paintTarget.endTag("change");
-            }
-        }
+        legacyPaint(paintTarget, dirtyVisibleConnectors);
 
         if (analyzeLayouts) {
             // TODO Check if this works
@@ -1111,6 +1099,59 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+    }
+
+    private void legacyPaint(PaintTarget paintTarget,
+            ArrayList<ClientConnector> dirtyVisibleConnectors)
+            throws PaintException {
+        List<Paintable> paintables = new ArrayList<Paintable>();
+        for (Connector connector : dirtyVisibleConnectors) {
+            if (connector instanceof Paintable) {
+                paintables.add((Paintable) connector);
+            }
+        }
+        sortByHierarchy(paintables);
+        for (Paintable p : paintables) {
+            System.out.println("  * Painting legacy Paintable "
+                    + p.getClass().getName() + "@"
+                    + Integer.toHexString(p.hashCode()));
+            paintTarget.startTag("change");
+            final String pid = ((Connector) p).getConnectorId();
+            paintTarget.addAttribute("pid", pid);
+            p.paint(paintTarget);
+            paintTarget.endTag("change");
+        }
+
+    }
+
+    private void sortByHierarchy(List<Paintable> paintables) {
+        // Vaadin 6 requires parents to be painted before children as component
+        // containers rely on that their updateFromUIDL method has been called
+        // before children start calling e.g. updateCaption
+        Collections.sort(paintables, new Comparator<Paintable>() {
+            public int compare(Paintable o1, Paintable o2) {
+                Component c1 = (Component) o1;
+                Component c2 = (Component) o2;
+                int depth1 = 0;
+                while (c1.getParent() != null) {
+                    depth1++;
+                    c1 = c1.getParent();
+                }
+                int depth2 = 0;
+                while (c2.getParent() != null) {
+                    depth2++;
+                    c2 = c2.getParent();
+                }
+                if (depth1 < depth2) {
+                    return -1;
+                }
+                if (depth1 > depth2) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
     }
 
     private ClientCache getClientCache(Root root) {
