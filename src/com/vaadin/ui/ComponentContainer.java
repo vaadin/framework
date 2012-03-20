@@ -69,15 +69,6 @@ public interface ComponentContainer extends HasComponents {
     public int getComponentCount();
 
     /**
-     * Causes a repaint of this component, and all components below it.
-     * 
-     * This should only be used in special cases, e.g when the state of a
-     * descendant depends on the state of a ancestor.
-     * 
-     */
-    public void requestRepaintAll();
-
-    /**
      * Moves all components from an another container into this container. The
      * components are removed from <code>source</code>.
      * 

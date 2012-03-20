@@ -367,18 +367,23 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     public void requestRepaintAll() {
-        requestRepaint();
-        for (Iterator<Component> childIterator = getComponentIterator(); childIterator
-                .hasNext();) {
+        requestRepaintAll(this);
+    }
+
+    /**
+     * Helper that implements the logic needed by requestRepaintAll. Calls
+     * requestRepaintAll/requestRepaint for the component container and all its
+     * children recursively.
+     * 
+     * @param container
+     */
+    public static void requestRepaintAll(HasComponents container) {
+        container.requestRepaint();
+        for (Iterator<Component> childIterator = container
+                .getComponentIterator(); childIterator.hasNext();) {
             Component c = childIterator.next();
-            if (c instanceof Form) {
-                // Form has children in layout, but is not ComponentContainer
-                c.requestRepaint();
-                ((Form) c).getLayout().requestRepaintAll();
-            } else if (c instanceof Table) {
-                ((Table) c).requestRepaintAll();
-            } else if (c instanceof ComponentContainer) {
-                ((ComponentContainer) c).requestRepaintAll();
+            if (c instanceof HasComponents) {
+                requestRepaintAll((HasComponents) c);
             } else {
                 c.requestRepaint();
             }

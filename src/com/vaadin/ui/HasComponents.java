@@ -42,4 +42,13 @@ public interface HasComponents extends Component, Iterable<Component> {
      *         otherwise
      */
     public boolean isComponentVisible(Component childComponent);
+
+    /**
+     * Causes a repaint of this component, and all components below it.
+     * 
+     * This should only be used in special cases, e.g when the state of a
+     * descendant depends on the state of a ancestor.
+     */
+    public void requestRepaintAll();
+
 }

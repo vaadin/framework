@@ -121,18 +121,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      */
     protected abstract Component initContent();
 
-    private void requestContentRepaint() {
-        if (getParent() == null) {
-            // skip repaint - not yet attached
-            return;
-        }
-        if (getContent() instanceof ComponentContainer) {
-            ((ComponentContainer) getContent()).requestRepaintAll();
-        } else {
-            getContent().requestRepaint();
-        }
-    }
-
     // Size related methods
     // TODO might not be necessary to override but following the pattern from
     // AbstractComponentContainer
@@ -140,13 +128,13 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     @Override
     public void setHeight(float height, Unit unit) {
         super.setHeight(height, unit);
-        requestContentRepaint();
+        requestRepaintAll();
     }
 
     @Override
     public void setWidth(float height, Unit unit) {
         super.setWidth(height, unit);
-        requestContentRepaint();
+        requestRepaintAll();
     }
 
     // ComponentContainer methods
@@ -182,9 +170,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     }
 
     public void requestRepaintAll() {
-        requestRepaint();
-
-        requestContentRepaint();
+        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**

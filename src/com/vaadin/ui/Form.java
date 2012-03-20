@@ -1417,6 +1417,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return new ComponentIterator();
     }
 
+    public void requestRepaintAll() {
+        AbstractComponentContainer.requestRepaintAll(this);
+    }
+
     public int getComponentCount() {
         int count = 0;
         if (layout != null) {

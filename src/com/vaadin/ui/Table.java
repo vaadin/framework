@@ -4460,27 +4460,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    // Virtually identical to AbstractCompoenentContainer.setEnabled();
     public void requestRepaintAll() {
-        requestRepaint();
-        if (visibleComponents != null) {
-            for (Iterator<Component> childIterator = visibleComponents
-                    .iterator(); childIterator.hasNext();) {
-                Component c = childIterator.next();
-                if (c instanceof Form) {
-                    // Form has children in layout, but is not
-                    // ComponentContainer
-                    c.requestRepaint();
-                    ((Form) c).getLayout().requestRepaintAll();
-                } else if (c instanceof Table) {
-                    ((Table) c).requestRepaintAll();
-                } else if (c instanceof ComponentContainer) {
-                    ((ComponentContainer) c).requestRepaintAll();
-                } else {
-                    c.requestRepaint();
-                }
-            }
-        }
+        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**
