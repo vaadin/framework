@@ -12,8 +12,10 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
 
 public class LayoutManager {
+    private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
     private final ApplicationConnection connection;
     private final Set<Element> nonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
@@ -221,7 +223,10 @@ public class LayoutManager {
             }
 
             if (passes > 100) {
-                VConsole.log("Aborting layout");
+                VConsole.log(LOOP_ABORT_MESSAGE);
+                VNotification.createNotification(VNotification.DELAY_FOREVER)
+                        .show(LOOP_ABORT_MESSAGE, VNotification.CENTERED,
+                                "error");
                 break;
             }
         }
