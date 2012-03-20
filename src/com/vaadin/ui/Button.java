@@ -667,9 +667,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
 
         @Override
         public void handleAction(Object sender, Object target) {
-            if (button.isEnabled() && !button.isReadOnly()) {
-                button.fireClick();
-            }
+            button.click();
         }
     }
 
