@@ -37,7 +37,7 @@ public class ActionManager implements Action.Container, Action.Handler,
     protected HashSet<Handler> actionHandlers = null;
 
     /** Action mapper */
-    protected KeyMapper actionMapper = null;
+    protected KeyMapper<Action> actionMapper = null;
 
     protected Component viewer;
 
@@ -151,7 +151,7 @@ public class ActionManager implements Action.Container, Action.Handler,
          * removed but still exist on client side
          */
         if (!actions.isEmpty() || clientHasActions) {
-            actionMapper = new KeyMapper();
+            actionMapper = new KeyMapper<Action>();
 
             paintTarget.addVariable(viewer, "action", "");
             paintTarget.startTag("actions");
@@ -195,7 +195,7 @@ public class ActionManager implements Action.Container, Action.Handler,
     public void handleActions(Map<String, Object> variables, Container sender) {
         if (variables.containsKey("action") && actionMapper != null) {
             final String key = (String) variables.get("action");
-            final Action action = (Action) actionMapper.get(key);
+            final Action action = actionMapper.get(key);
             final Object target = variables.get("actiontarget");
             if (action != null) {
                 handleAction(action, sender, target);

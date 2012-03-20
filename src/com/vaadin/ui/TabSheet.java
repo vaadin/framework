@@ -84,7 +84,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * Mapper between server-side component instances (tab contents) and keys
      * given to the client that identify tabs.
      */
-    private final KeyMapper keyMapper = new KeyMapper();
+    private final KeyMapper<Component> keyMapper = new KeyMapper<Component>();
 
     /**
      * When true, the tab selection area is not displayed to the user.
@@ -658,12 +658,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("selected")) {
-            setSelectedTab((Component) keyMapper.get((String) variables
-                    .get("selected")));
+            setSelectedTab(keyMapper.get((String) variables.get("selected")));
         }
         if (variables.containsKey("close")) {
-            final Component tab = (Component) keyMapper.get((String) variables
-                    .get("close"));
+            final Component tab = keyMapper
+                    .get((String) variables.get("close"));
             if (tab != null) {
                 closeHandler.onTabClose(this, tab);
             }

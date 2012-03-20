@@ -205,7 +205,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Keymapper used to map key values.
      */
-    protected KeyMapper itemIdMapper = new KeyMapper();
+    protected KeyMapper<Object> itemIdMapper = new KeyMapper<Object>();
 
     /**
      * Item icons.

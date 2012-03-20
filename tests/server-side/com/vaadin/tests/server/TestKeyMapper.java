@@ -10,7 +10,7 @@ import com.vaadin.terminal.KeyMapper;
 public class TestKeyMapper extends TestCase {
 
     public void testAdd() {
-        KeyMapper mapper = new KeyMapper();
+        KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
@@ -41,7 +41,7 @@ public class TestKeyMapper extends TestCase {
     }
 
     public void testRemoveAll() {
-        KeyMapper mapper = new KeyMapper();
+        KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
@@ -58,7 +58,7 @@ public class TestKeyMapper extends TestCase {
     }
 
     public void testRemove() {
-        KeyMapper mapper = new KeyMapper();
+        KeyMapper<Object> mapper = new KeyMapper<Object>();
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
@@ -82,7 +82,7 @@ public class TestKeyMapper extends TestCase {
 
     }
 
-    private void assertSize(KeyMapper mapper, int i) {
+    private void assertSize(KeyMapper<?> mapper, int i) {
         try {
             Field f1 = KeyMapper.class.getDeclaredField("objectKeyMap");
             Field f2 = KeyMapper.class.getDeclaredField("keyObjectMap");

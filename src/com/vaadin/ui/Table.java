@@ -349,7 +349,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Keymapper for column ids.
      */
-    private final KeyMapper columnIdMap = new KeyMapper();
+    private final KeyMapper<Object> columnIdMap = new KeyMapper<Object>();
 
     /**
      * Holds visible column propertyIds - in order.
@@ -451,7 +451,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Action mapper.
      */
-    private KeyMapper actionMapper = null;
+    private KeyMapper<Action> actionMapper = null;
 
     /**
      * Table cell editor factory.
@@ -2595,7 +2595,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     (String) variables.get("action"), ",");
             if (st.countTokens() == 2) {
                 final Object itemId = itemIdMapper.get(st.nextToken());
-                final Action action = (Action) actionMapper.get(st.nextToken());
+                final Action action = actionMapper.get(st.nextToken());
 
                 if (action != null && (itemId == null || containsId(itemId))
                         && actionHandlers != null) {
@@ -3605,7 +3605,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             if (actionHandlers == null) {
                 actionHandlers = new LinkedList<Handler>();
-                actionMapper = new KeyMapper();
+                actionMapper = new KeyMapper<Action>();
             }
 
             if (!actionHandlers.contains(actionHandler)) {

@@ -81,7 +81,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Action mapper.
      */
-    private KeyMapper actionMapper = null;
+    private KeyMapper<Action> actionMapper = null;
 
     /**
      * Is the tree selectable on the client side.
@@ -448,7 +448,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     (String) variables.get("action"), ",");
             if (st.countTokens() == 2) {
                 final Object itemId = itemIdMapper.get(st.nextToken());
-                final Action action = (Action) actionMapper.get(st.nextToken());
+                final Action action = actionMapper.get(st.nextToken());
                 if (action != null && (itemId == null || containsId(itemId))
                         && actionHandlers != null) {
                     for (Handler ah : actionHandlers) {
@@ -1027,7 +1027,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             if (actionHandlers == null) {
                 actionHandlers = new LinkedList<Action.Handler>();
-                actionMapper = new KeyMapper();
+                actionMapper = new KeyMapper<Action>();
             }
 
             if (!actionHandlers.contains(actionHandler)) {

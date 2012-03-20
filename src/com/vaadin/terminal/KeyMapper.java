@@ -5,7 +5,7 @@
 package com.vaadin.terminal;
 
 import java.io.Serializable;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * <code>KeyMapper</code> is the simple two-way map for generating textual keys
@@ -16,14 +16,13 @@ import java.util.Hashtable;
  * @VERSION@
  * @since 3.0
  */
-@SuppressWarnings("serial")
-public class KeyMapper implements Serializable {
+public class KeyMapper<V> implements Serializable {
 
     private int lastKey = 0;
 
-    private final Hashtable<Object, String> objectKeyMap = new Hashtable<Object, String>();
+    private final HashMap<V, String> objectKeyMap = new HashMap<V, String>();
 
-    private final Hashtable<String, Object> keyObjectMap = new Hashtable<String, Object>();
+    private final HashMap<String, V> keyObjectMap = new HashMap<String, V>();
 
     /**
      * Gets key for an object.
@@ -31,7 +30,7 @@ public class KeyMapper implements Serializable {
      * @param o
      *            the object.
      */
-    public String key(Object o) {
+    public String key(V o) {
 
         if (o == null) {
             return "null";
@@ -58,8 +57,7 @@ public class KeyMapper implements Serializable {
      *            the name with the desired value.
      * @return the object with the key.
      */
-    public Object get(String key) {
-
+    public V get(String key) {
         return keyObjectMap.get(key);
     }
 
@@ -69,7 +67,7 @@ public class KeyMapper implements Serializable {
      * @param removeobj
      *            the object to be removed.
      */
-    public void remove(Object removeobj) {
+    public void remove(V removeobj) {
         final String key = objectKeyMap.get(removeobj);
 
         if (key != null) {
