@@ -1164,6 +1164,16 @@ public abstract class AbstractCommunicationManager implements
         return cache;
     }
 
+    /**
+     * Checks if the component is visible in context, i.e. returns false if the
+     * child is hidden, the parent is hidden or the parent says the child should
+     * not be rendered (using
+     * {@link HasComponents#isComponentVisible(Component)}
+     * 
+     * @param child
+     *            The child to check
+     * @return true if the child is visible to the client, false otherwise
+     */
     private boolean isVisible(Component child) {
         HasComponents parent = child.getParent();
         if (parent == null || !child.isVisible()) {
