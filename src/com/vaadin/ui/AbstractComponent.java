@@ -438,14 +438,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @see com.vaadin.ui.Component#setVisible(boolean)
      */
     public void setVisible(boolean visible) {
-        if (getState().isVisible() != visible) {
-            getState().setVisible(visible);
-            requestRepaint();
-            if (getParent() != null) {
-                // Must always repaint the parent (at least the hierarchy) when
-                // visibility of a child component changes.
-                getParent().requestRepaint();
-            }
+        if (getState().isVisible() == visible) {
+            return;
+        }
+
+        getState().setVisible(visible);
+        requestRepaint();
+        if (getParent() != null) {
+            // Must always repaint the parent (at least the hierarchy) when
+            // visibility of a child component changes.
+            getParent().requestRepaint();
         }
     }
 
