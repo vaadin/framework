@@ -440,11 +440,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public void setVisible(boolean visible) {
         if (getState().isVisible() != visible) {
             getState().setVisible(visible);
-            // Instead of requesting repaint normally we
-            // fire the event directly to assure that the
-            // event goes through event in the component might
-            // now be invisible
-            fireRequestRepaintEvent(null);
+            requestRepaint();
+            if (getParent() != null) {
+                // Must always repaint the parent (at least the hierarchy) when
+                // visibility of a child component changes.
+                getParent().requestRepaint();
+            }
         }
     }
 
@@ -641,14 +642,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public void attach() {
         getRoot().componentAttached(this);
         requestRepaint();
-        if (!getState().isVisible()) {
-            /*
-             * Bypass the repaint optimization in childRequestedRepaint method
-             * when attaching. When reattaching (possibly moving) -> must
-             * repaint
-             */
-            fireRequestRepaintEvent(null);
-        }
         if (delayedFocus) {
             focus();
         }
@@ -889,22 +882,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Documentation copied from interface */
     public void requestRepaint() {
-
-        // The effect of the repaint request is identical to case where a
-        // child requests repaint
-        childRequestedRepaint(null);
-    }
-
-    /* Documentation copied from interface */
-    public void childRequestedRepaint(
-            Collection<RepaintRequestListener> alreadyNotified) {
         // Invisible components (by flag in this particular component) do not
         // need repaints
         if (!getState().isVisible()) {
             return;
         }
 
-        fireRequestRepaintEvent(alreadyNotified);
+        fireRequestRepaintEvent();
     }
 
     /**
@@ -912,30 +896,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @param alreadyNotified
      */
-    private void fireRequestRepaintEvent(
-            Collection<RepaintRequestListener> alreadyNotified) {
-        // Notify listeners only once
+    // Notify listeners only once
+    private void fireRequestRepaintEvent() {
         // Notify the listeners
         if (repaintRequestListeners != null
                 && !repaintRequestListeners.isEmpty()) {
             final Object[] listeners = repaintRequestListeners.toArray();
             final RepaintRequestEvent event = new RepaintRequestEvent(this);
             for (int i = 0; i < listeners.length; i++) {
-                if (alreadyNotified == null) {
-                    alreadyNotified = new LinkedList<RepaintRequestListener>();
-                }
-                if (!alreadyNotified.contains(listeners[i])) {
-                    ((RepaintRequestListener) listeners[i])
-                            .repaintRequested(event);
-                    alreadyNotified.add((RepaintRequestListener) listeners[i]);
-                }
+                ((RepaintRequestListener) listeners[i]).repaintRequested(event);
             }
-        }
-
-        // Notify the parent
-        final Component parent = getParent();
-        if (parent != null) {
-            parent.childRequestedRepaint(alreadyNotified);
         }
     }
 

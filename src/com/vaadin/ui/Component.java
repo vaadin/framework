@@ -5,7 +5,6 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Locale;
@@ -706,33 +705,6 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * @since 7.0
      */
     public ComponentState getState();
-
-    /**
-     * The child components of the component must call this method when they
-     * need repainting. The call must be made even in the case in which the
-     * children sent the repaint request themselves.
-     * 
-     * <p>
-     * A repaint request is ignored if the component is invisible.
-     * </p>
-     * 
-     * <p>
-     * This method is called automatically by {@link AbstractComponent}, which
-     * also provides a default implementation of it. As this is a somewhat
-     * internal feature, it is rarely necessary to reimplement this or call it
-     * explicitly.
-     * </p>
-     * 
-     * @param alreadyNotified
-     *            the collection of repaint request listeners that have been
-     *            already notified by the child. This component should not
-     *            re-notify the listed listeners again. The container given as
-     *            parameter must be modifiable as the component might modify it
-     *            and pass it forward. A {@code null} parameter is interpreted
-     *            as an empty collection.
-     */
-    public void childRequestedRepaint(
-            Collection<RepaintRequestListener> alreadyNotified);
 
     /* Component event framework */
 
