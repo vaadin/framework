@@ -241,7 +241,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                 // another AbstractOrderedLayout. In this case we discard it and
                 // create a new slot.
                 slot = new ComponentConnectorLayoutSlot(getWidget()
-                        .getStylePrimaryName(), child);
+                        .getStylePrimaryName(), child, this);
             }
             layout.addOrMove(slot, currentIndex++);
         }

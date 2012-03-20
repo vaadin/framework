@@ -10,77 +10,80 @@ import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class ComponentConnectorLayoutSlot extends VLayoutSlot {
 
-    final ComponentConnector paintable;
-    private LayoutManager layoutManager;
+    final ComponentConnector child;
+    final ManagedLayout layout;
 
     public ComponentConnectorLayoutSlot(String baseClassName,
-            ComponentConnector paintable) {
-        super(baseClassName, paintable.getWidget());
-        this.paintable = paintable;
-        layoutManager = paintable.getLayoutManager();
+            ComponentConnector child, ManagedLayout layout) {
+        super(baseClassName, child.getWidget());
+        this.child = child;
+        this.layout = layout;
     }
 
-    public ComponentConnector getPaintable() {
-        return paintable;
+    public ComponentConnector getChild() {
+        return child;
     }
 
     @Override
     protected int getCaptionHeight() {
         VCaption caption = getCaption();
-        return caption != null ? layoutManager.getOuterHeight(caption
-                .getElement()) : 0;
+        return caption != null ? getLayoutManager().getOuterHeight(
+                caption.getElement()) : 0;
     }
 
     @Override
     protected int getCaptionWidth() {
         VCaption caption = getCaption();
-        return caption != null ? layoutManager.getOuterWidth(caption
-                .getElement()) : 0;
+        return caption != null ? getLayoutManager().getOuterWidth(
+                caption.getElement()) : 0;
+    }
+
+    public LayoutManager getLayoutManager() {
+        return layout.getLayoutManager();
     }
 
     @Override
     public void setCaption(VCaption caption) {
         VCaption oldCaption = getCaption();
         if (oldCaption != null) {
-            layoutManager.unregisterDependency(
-                    (ManagedLayout) paintable.getParent(),
+            getLayoutManager().unregisterDependency(layout,
                     oldCaption.getElement());
         }
         super.setCaption(caption);
         if (caption != null) {
-            layoutManager
-                    .registerDependency((ManagedLayout) paintable.getParent(),
-                            caption.getElement());
+            getLayoutManager().registerDependency(
+                    (ManagedLayout) child.getParent(), caption.getElement());
         }
     }
 
     @Override
     public int getWidgetHeight() {
-        return layoutManager.getOuterHeight(paintable.getWidget().getElement());
+        return getLayoutManager()
+                .getOuterHeight(child.getWidget().getElement());
     }
 
     @Override
     public int getWidgetWidth() {
-        return layoutManager.getOuterWidth(paintable.getWidget().getElement());
+        return getLayoutManager().getOuterWidth(child.getWidget().getElement());
     }
 
     @Override
     public boolean isUndefinedHeight() {
-        return paintable.isUndefinedHeight();
+        return child.isUndefinedHeight();
     }
 
     @Override
     public boolean isUndefinedWidth() {
-        return paintable.isUndefinedWidth();
+        return child.isUndefinedWidth();
     }
 
     @Override
     public boolean isRelativeHeight() {
-        return paintable.isRelativeHeight();
+        return child.isRelativeHeight();
     }
 
     @Override
     public boolean isRelativeWidth() {
-        return paintable.isRelativeWidth();
+        return child.isRelativeWidth();
     }
 }

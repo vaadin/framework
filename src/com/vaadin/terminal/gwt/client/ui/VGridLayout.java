@@ -59,8 +59,9 @@ public class VGridLayout extends ComplexPanel {
         setStyleName(CLASSNAME);
     }
 
-    private ComponentConnector getPaintable() {
-        return ConnectorMap.get(client).getConnector(this);
+    private GridLayoutConnector getConnector() {
+        return (GridLayoutConnector) ConnectorMap.get(client)
+                .getConnector(this);
     }
 
     /**
@@ -235,11 +236,11 @@ public class VGridLayout extends ComplexPanel {
     }
 
     private boolean isUndefinedHeight() {
-        return getPaintable().isUndefinedHeight();
+        return getConnector().isUndefinedHeight();
     }
 
     private boolean isUndefinedWidth() {
-        return getPaintable().isUndefinedWidth();
+        return getConnector().isUndefinedWidth();
     }
 
     private void detectRowHeights() {
@@ -455,7 +456,7 @@ public class VGridLayout extends ComplexPanel {
 
         public boolean hasRelativeHeight() {
             if (slot != null) {
-                return slot.getPaintable().isRelativeHeight();
+                return slot.getChild().isRelativeHeight();
             } else {
                 return true;
             }
@@ -513,7 +514,7 @@ public class VGridLayout extends ComplexPanel {
 
         protected boolean hasRelativeWidth() {
             if (slot != null) {
-                return slot.getPaintable().isRelativeWidth();
+                return slot.getChild().isRelativeWidth();
             } else {
                 return true;
             }
@@ -551,15 +552,16 @@ public class VGridLayout extends ComplexPanel {
                                                        // about childUidl
             hasContent = childUidl != null;
             if (hasContent) {
-                ComponentConnector paintable = client.getPaintable(childUidl);
+                ComponentConnector childConnector = client
+                        .getPaintable(childUidl);
 
-                if (slot == null || slot.getPaintable() != paintable) {
+                if (slot == null || slot.getChild() != childConnector) {
                     slot = new ComponentConnectorLayoutSlot(CLASSNAME,
-                            paintable);
+                            childConnector, getConnector());
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 
-                    Widget widget = paintable.getWidget();
+                    Widget widget = childConnector.getWidget();
                     insert(widget, slotWrapper, getWidgetCount(), false);
                     Cell oldCell = widgetToCell.put(widget, this);
                     if (oldCell != null) {
@@ -568,7 +570,7 @@ public class VGridLayout extends ComplexPanel {
                     }
                 }
 
-                paintable.updateFromUIDL(childUidl, client);
+                childConnector.updateFromUIDL(childUidl, client);
             }
         }
 
