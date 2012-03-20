@@ -358,6 +358,22 @@ public class LayoutManager {
     }
 
     public int getPaddingRight(Element element) {
-        return getMeasuredSize(element, null).getPaddingRight();
+        return getMeasuredSize(element, nullSize).getPaddingRight();
+    }
+
+    public int getMarginTop(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginTop();
+    }
+
+    public int getMarginRight(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginRight();
+    }
+
+    public int getMarginBottom(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginBottom();
+    }
+
+    public int getMarginLeft(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginLeft();
     }
 }

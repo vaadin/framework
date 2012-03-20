@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public class FormConnector extends AbstractComponentContainerConnector
@@ -171,8 +172,9 @@ public class FormConnector extends AbstractComponentContainerConnector
     public void layout() {
         VForm form = getWidget();
 
-        int footerHeight = getLayoutManager().getOuterHeight(
-                form.footerContainer);
+        LayoutManager lm = getLayoutManager();
+        int footerHeight = lm.getOuterHeight(form.footerContainer)
+                - lm.getMarginTop(form.footerContainer);
 
         form.fieldContainer.getStyle().setPaddingBottom(footerHeight, Unit.PX);
         form.footerContainer.getStyle().setMarginTop(-footerHeight, Unit.PX);
