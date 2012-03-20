@@ -737,6 +737,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *             if the paint operation failed.
      */
     public void paint(PaintTarget target) throws PaintException {
+        if (!isVisibleInContext()) {
+            return;
+        }
+
         final String tag = target.getTag(this);
         final PaintStatus status = target.startPaintable(this, tag);
         if (PaintStatus.DEFER == status) {

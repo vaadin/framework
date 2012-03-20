@@ -100,7 +100,17 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
         System.out.println("All components are now clean");
     }
 
+    /**
+     * Marks all visible components dirty, starting from the given component and
+     * going downwards in the hierarchy.
+     * 
+     * @param c
+     *            The component to start iterating downwards from
+     */
     private void markComponentsDirtyRecursively(Component c) {
+        if (!c.isVisible()) {
+            return;
+        }
         markDirty(c);
         if (c instanceof HasComponents) {
             HasComponents container = (HasComponents) c;
