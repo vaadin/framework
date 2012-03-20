@@ -194,7 +194,14 @@ public class ConnectorMap {
         if (connector instanceof ComponentContainerConnector) {
             for (ComponentConnector child : ((ComponentContainerConnector) connector)
                     .getChildren()) {
-                unregisterConnector(child);
+                if (child.getParent() == connector) {
+                    // Only unregister children that are actually connected to
+                    // this parent. For instance when moving connectors from one
+                    // layout to another and removing the first layout it will
+                    // still contain references to its old children, which are
+                    // now attached to another connector.
+                    unregisterConnector(child);
+                }
             }
         }
     }
