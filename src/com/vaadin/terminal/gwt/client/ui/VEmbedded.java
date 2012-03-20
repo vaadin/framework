@@ -31,6 +31,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VEmbedded extends HTML implements Paintable {
     public static final String CLICK_EVENT_IDENTIFIER = "click";
+    public static final String ALTERNATE_TEXT = "alt";
 
     private static String CLASSNAME = "v-embedded";
 
@@ -107,6 +108,11 @@ public class VEmbedded extends HTML implements Paintable {
                 }
                 DOM.setElementProperty(el, "src", getSrc(uidl, client));
 
+                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
+                    el.setPropertyString(ALTERNATE_TEXT,
+                            uidl.getStringAttribute(ALTERNATE_TEXT));
+                }
+
                 if (created) {
                     // insert in dom late
                     getElement().appendChild(el);
@@ -138,7 +144,6 @@ public class VEmbedded extends HTML implements Paintable {
                 // Handle embedding of Flash
                 addStyleName(CLASSNAME + "-flash");
                 setHTML(createFlashEmbed(uidl));
-
             } else if (mime.equals("image/svg+xml")) {
                 addStyleName(CLASSNAME + "-svg");
                 String data;
@@ -179,7 +184,9 @@ public class VEmbedded extends HTML implements Paintable {
                             uidl.getStringAttribute("standby"));
                 }
                 getElement().appendChild(obj);
-
+                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
+                    obj.setInnerText(uidl.getStringAttribute(ALTERNATE_TEXT));
+                }
             } else {
                 VConsole.log("Unknown Embedded mimetype '" + mime + "'");
             }
@@ -305,6 +312,10 @@ public class VEmbedded extends HTML implements Paintable {
 
         // End embed tag
         html.append("></embed>");
+
+        if (uidl.hasAttribute(ALTERNATE_TEXT)) {
+            html.append(uidl.getStringAttribute(ALTERNATE_TEXT));
+        }
 
         // End object tag
         html.append("</object>");

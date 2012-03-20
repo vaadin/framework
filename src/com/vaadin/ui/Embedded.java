@@ -78,6 +78,8 @@ public class Embedded extends AbstractComponent {
 
     private String archive = null;
 
+    private String altText;
+
     /**
      * Creates a new empty Embedded object.
      */
@@ -146,6 +148,9 @@ public class Embedded extends AbstractComponent {
         if (archive != null && !"".equals(archive)) {
             target.addAttribute("archive", archive);
         }
+        if (altText != null && !"".equals(altText)) {
+            target.addAttribute(VEmbedded.ALTERNATE_TEXT, altText);
+        }
 
         // Params
         for (final Iterator<String> i = getParameterNames(); i.hasNext();) {
@@ -155,6 +160,34 @@ public class Embedded extends AbstractComponent {
             target.addAttribute("value", getParameter(key));
             target.endTag("embeddedparam");
         }
+    }
+
+    /**
+     * Sets this component's "alt-text", that is, an alternate text that can be
+     * presented instead of this component's normal content, for accessibility
+     * purposes. Does not work when {@link #setType(int)} has been called with
+     * {@link #TYPE_BROWSER}.
+     * 
+     * @param altText
+     *            A short, human-readable description of this component's
+     *            content.
+     * @since 6.8
+     */
+    public void setAlternateText(String altText) {
+        if (altText != this.altText
+                || (altText != null && !altText.equals(this.altText))) {
+            this.altText = altText;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Gets this component's "alt-text".
+     * 
+     * @see #setAlternateText(String)
+     */
+    public String getAlternateText() {
+        return altText;
     }
 
     /**
