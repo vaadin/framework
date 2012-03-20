@@ -516,6 +516,17 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     }
 
     /**
+     * Simulates a button click, notifying all server-side listeners.
+     * 
+     * No action is taken is the button is disabled.
+     */
+    public void click() {
+        if (isEnabled() && !isReadOnly()) {
+            fireClick();
+        }
+    }
+
+    /**
      * Fires a click event to all listeners without any event details.
      * 
      * In subclasses, override {@link #fireClick(MouseEventDetails)} instead of
