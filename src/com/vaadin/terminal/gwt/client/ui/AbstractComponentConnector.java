@@ -136,13 +136,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         }
 
-        if (!isVisible()) {
-            // component is invisible, delete old size to notify parent, if
-            // later made visible
-            paintableMap.setOffsetSize(this, null);
-            return;
-        }
-
         if (!isRealUpdate(uidl)) {
             return;
         }

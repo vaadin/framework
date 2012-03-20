@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.HashMap;
 
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
-
 class ComponentDetail {
 
     private TooltipInfo tooltipInfo = new TooltipInfo();
@@ -42,24 +40,7 @@ class ComponentDetail {
         this.tooltipInfo = tooltipInfo;
     }
 
-    private Size offsetSize;
     private HashMap<Object, TooltipInfo> additionalTooltips;
-
-    /**
-     * 
-     * @return the offsetSize
-     */
-    Size getOffsetSize() {
-        return offsetSize;
-    }
-
-    /**
-     * @param offsetSize
-     *            the offsetSize to set
-     */
-    void setOffsetSize(Size offsetSize) {
-        this.offsetSize = offsetSize;
-    }
 
     public void putAdditionalTooltip(Object key, TooltipInfo tooltip) {
         if (tooltip == null && additionalTooltips != null) {

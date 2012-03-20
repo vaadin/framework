@@ -13,7 +13,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 
 public class ConnectorMap {
 
@@ -221,29 +220,6 @@ public class ConnectorMap {
         }
 
         return result.toArray(new ComponentConnector[result.size()]);
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
-    public Size getOffsetSize(ComponentConnector paintable) {
-        return getComponentDetail(paintable).getOffsetSize();
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param componentConnector
-     * @return
-     */
-    @Deprecated
-    public void setOffsetSize(ComponentConnector componentConnector,
-            Size newSize) {
-        getComponentDetail(componentConnector).setOffsetSize(newSize);
     }
 
     private ComponentDetail getComponentDetail(
