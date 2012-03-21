@@ -141,8 +141,11 @@ public class VTabsheetPanel extends ComplexPanel {
                 hide(DOM.getParent(visibleWidget.getElement()));
             }
             visibleWidget = newVisible;
-            unHide(DOM.getParent(visibleWidget.getElement()));
         }
+        // Always ensure the selected tab is visible. If server prevents a tab
+        // change we might end up here with visibleWidget == newVisible but its
+        // parent is still hidden.
+        unHide(DOM.getParent(visibleWidget.getElement()));
     }
 
     private void hide(Element e) {
