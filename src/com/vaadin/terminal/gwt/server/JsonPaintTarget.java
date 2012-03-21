@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,10 +88,6 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
-    // private Collection<Paintable> identifiersCreatedDueRefPaint;
-
-    private Collection<Paintable> deferredPaintables;
-
     private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
@@ -122,8 +117,6 @@ public class JsonPaintTarget implements PaintTarget {
 
         openPaintables = new Stack<Paintable>();
         openPaintableTags = new Stack<String>();
-
-        deferredPaintables = new ArrayList<Paintable>();
 
         cacheEnabled = cachingRequired;
     }
@@ -689,31 +682,23 @@ public class JsonPaintTarget implements PaintTarget {
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
-        System.out.println("startPaintable for "
-                + paintable.getClass().getName() + "@"
-                + Integer.toHexString(paintable.hashCode()));
+        logger.fine("startPaintable for " + paintable.getClass().getName()
+                + "@" + Integer.toHexString(paintable.hashCode()));
         startTag(tagName, true);
 
         openPaintables.push(paintable);
         openPaintableTags.push(tagName);
 
-        final String id = manager.getPaintableId(paintable);
-        paintable.addListener(manager);
+        final String id = getPaintIdentifier(paintable);
         addAttribute("id", id);
 
         // queue for painting later if already painting a paintable
         if (!topLevelPaintable) {
-            // if (!deferredPaintables.contains(paintable)) {
-            // notify manager: add to paint queue instead of painting now
-            // manager.queuePaintable(paintable);
-            // deferredPaintables.add(paintable);
-            // }
             return PaintStatus.DEFER;
         }
 
         // not a nested paintable, paint the it now
         paintedComponents.add(paintable);
-        // deferredPaintables.remove(paintable);
 
         if (paintable instanceof CustomLayout) {
             customLayoutArgumentsOpen = true;
@@ -722,14 +707,14 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public void endPaintable(Paintable paintable) throws PaintException {
-        System.out.println("endPaintable for " + paintable.getClass().getName()
-                + "@" + Integer.toHexString(paintable.hashCode()));
+        logger.fine("endPaintable for " + paintable.getClass().getName() + "@"
+                + Integer.toHexString(paintable.hashCode()));
 
         Paintable openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {
             throw new PaintException("Invalid UIDL: closing wrong paintable: '"
-                    + manager.getPaintableId(paintable) + "' expected: '"
-                    + manager.getPaintableId(openPaintable) + "'.");
+                    + getPaintIdentifier(paintable) + "' expected: '"
+                    + getPaintIdentifier(openPaintable) + "'.");
         }
         // remove paintable from the stack
         openPaintables.pop();
@@ -738,13 +723,12 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {
-        // if (!manager.hasPaintableId(paintable)) {
-        // if (identifiersCreatedDueRefPaint == null) {
-        // identifiersCreatedDueRefPaint = new HashSet<Paintable>();
-        // }
-        // identifiersCreatedDueRefPaint.add(paintable);
-        // }
-        return manager.getPaintableId(paintable);
+        // TODO This should be unnecessary as Paintable must be a Connector
+        if (paintable instanceof Connector) {
+            return ((Connector) paintable).getConnectorId();
+        }
+        throw new RuntimeException("Paintable " + paintable
+                + " must implement Connector");
     }
 
     /*
@@ -1020,23 +1004,6 @@ public class JsonPaintTarget implements PaintTarget {
     public Set<Object> getUsedResources() {
         return usedResources;
     }
-
-    // /**
-    // * Method to check if paintable is already painted into this target.
-    // *
-    // * @param p
-    // * @return true if is not yet painted into this target and is connected to
-    // * app
-    // */
-    // public boolean needsToBePainted(Paintable p) {
-    // if (paintedComponents.contains(p)) {
-    // return false;
-    // } else if (((Component) p).getApplication() == null) {
-    // return false;
-    // } else {
-    // return true;
-    // }
-    // }
 
     private static final Map<Class<? extends Paintable>, Class<? extends Paintable>> widgetMappingCache = new HashMap<Class<? extends Paintable>, Class<? extends Paintable>>();
 

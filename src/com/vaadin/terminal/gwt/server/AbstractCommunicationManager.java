@@ -51,7 +51,6 @@ import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
@@ -93,8 +92,7 @@ import com.vaadin.ui.Window;
  * TODO Document better!
  */
 @SuppressWarnings("serial")
-public abstract class AbstractCommunicationManager implements
-        Paintable.RepaintRequestListener, Serializable {
+public abstract class AbstractCommunicationManager implements Serializable {
 
     private static final String DASHDASH = "--";
 
@@ -142,21 +140,6 @@ public abstract class AbstractCommunicationManager implements
     private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
-
-    // cannot combine with paint queue:
-    // this can contain dirty components from any Root
-    // TODO Remove, it is now in Root
-    // private final ArrayList<Paintable> dirtyPaintables = new
-    // ArrayList<Paintable>();
-
-    // queue used during painting to keep track of what still needs to be
-    // painted within the Root being painted
-    // private LinkedList<Connector> paintQueue = new LinkedList<Connector>();
-
-    // private final HashMap<String, Paintable> idPaintableMap = new
-    // HashMap<String, Paintable>();
-
-    private int idSequence = 0;
 
     private final Application application;
 
@@ -757,13 +740,6 @@ public abstract class AbstractCommunicationManager implements
         return seckey;
     }
 
-    // for internal use by JsonPaintTarget
-    public void queuePaintable(Paintable paintable) {
-        // if (!paintQueue.contains(paintable)) {
-        // paintQueue.add((Connector) paintable);
-        // }
-    }
-
     public void writeUidlResponse(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
@@ -774,10 +750,7 @@ public abstract class AbstractCommunicationManager implements
                 .getDirtyConnectorTracker();
         System.out.println("* Creating response to client");
         if (repaintAll) {
-            System.out.println("Full repaint");
-
             getClientCache(root).clear();
-
             rootConnectorTracker.markAllComponentsDirty();
 
             // Reset sent locales
@@ -801,7 +774,6 @@ public abstract class AbstractCommunicationManager implements
         legacyPaint(paintTarget, dirtyVisibleConnectors);
 
         if (analyzeLayouts) {
-            // TODO Check if this works
             invalidComponentRelativeSizes = ComponentSizeValidator
                     .validateComponentRelativeSizes(root.getContent(), null,
                             null);
@@ -853,7 +825,8 @@ public abstract class AbstractCommunicationManager implements
         outWriter.print(", "); // close states
 
         // TODO This should be optimized. The type only needs to be
-        // sent once for each connector id + on refresh
+        // sent once for each connector id + on refresh. Use the same cache as
+        // widget mapping
 
         JSONObject connectorTypes = new JSONObject();
         for (Connector connector : dirtyVisibleConnectors) {
@@ -1107,9 +1080,8 @@ public abstract class AbstractCommunicationManager implements
         }
         sortByHierarchy(paintables);
         for (Paintable p : paintables) {
-            System.out.println("  * Painting legacy Paintable "
-                    + p.getClass().getName() + "@"
-                    + Integer.toHexString(p.hashCode()));
+            logger.info("Painting legacy Paintable " + p.getClass().getName()
+                    + "@" + Integer.toHexString(p.hashCode()));
             paintTarget.startTag("change");
             final String pid = ((Connector) p).getConnectorId();
             paintTarget.addAttribute("pid", pid);
@@ -1967,27 +1939,6 @@ public abstract class AbstractCommunicationManager implements
     }
 
     /**
-     * @see com.vaadin.terminal.Paintable.RepaintRequestListener#repaintRequested(com.vaadin.terminal.Paintable.RepaintRequestEvent)
-     */
-    public void repaintRequested(RepaintRequestEvent event) {
-        // final Paintable p = event.getPaintable();
-        // if (!dirtyPaintables.contains(p)) {
-        // dirtyPaintables.add(p);
-        // }
-    }
-
-    /**
-     * Internally mark a {@link Paintable} as painted and start collecting new
-     * repaint requests for it.
-     * 
-     * @param paintable
-     */
-    private void paintablePainted(Paintable paintable) {
-        // dirtyPaintables.remove(paintable);
-        // paintable.requestRepaintRequests();
-    }
-
-    /**
      * Queues a locale to be sent to the client (browser) for date and time
      * entry etc. All locale specific information is derived from server-side
      * {@link Locale} instances and sent to the client when needed, eliminating
@@ -2328,12 +2279,4 @@ public abstract class AbstractCommunicationManager implements
         }
     }
 
-    @Deprecated
-    public String getPaintableId(Paintable paintable) {
-        if (paintable instanceof Connector) {
-            return ((Connector) paintable).getConnectorId();
-        }
-        throw new RuntimeException("Paintable " + paintable
-                + " must implement Connector");
-    }
 }

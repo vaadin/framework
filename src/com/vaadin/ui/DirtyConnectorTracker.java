@@ -3,6 +3,7 @@ package com.vaadin.ui;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.Paintable.RepaintRequestEvent;
@@ -49,25 +50,25 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
     }
 
     private void markDirty(Component component) {
-        // TODO Remove debug info
-        if (!dirtyComponents.contains(component)) {
-            debug(component, "is now dirty");
-
+        if (getLogger().isLoggable(Level.FINE)) {
+            if (!dirtyComponents.contains(component)) {
+                getLogger()
+                        .fine(getDebugInfo(component) + " " + "is now dirty");
+            }
         }
+
         dirtyComponents.add(component);
     }
 
-    private void debug(Component component, String string) {
-        getLogger().info(getDebugInfo(component) + " " + string);
-    }
-
     private void markClean(Component component) {
-        // TODO Remove debug info
-        if (dirtyComponents.contains(component)) {
-            debug(component, "is no longer dirty");
+        if (getLogger().isLoggable(Level.FINE)) {
+            if (dirtyComponents.contains(component)) {
+                getLogger().fine(
+                        getDebugInfo(component) + " " + "is no longer dirty");
+            }
         }
-        dirtyComponents.remove(component);
 
+        dirtyComponents.remove(component);
     }
 
     private String getDebugInfo(Component component) {
@@ -91,13 +92,12 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
 
     public void markAllComponentsDirty() {
         markComponentsDirtyRecursively(root);
-        System.out.println("All components are now dirty");
-
+        getLogger().fine("All components are now dirty");
     }
 
     public void markAllComponentsClean() {
         dirtyComponents.clear();
-        System.out.println("All components are now clean");
+        getLogger().fine("All components are now clean");
     }
 
     /**

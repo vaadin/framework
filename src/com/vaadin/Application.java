@@ -2285,7 +2285,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return A new id for the connector
      */
     public String createConnectorId(Connector connector) {
-        // String connectorId = "C_" + connectorIdSequence++;
         String connectorId = String.valueOf(connectorIdSequence++);
         Connector oldReference = connectorIdToConnector.put(connectorId,
                 connector);
