@@ -157,11 +157,23 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     protected void setLogVisible(boolean visible) {
-        log.setVisible(visible);
+        // This is only to be screenshot-compatible with Vaadin 6, where
+        // invisible components cause spacing
+        if (visible) {
+            log.setHeight(null);
+            log.setWidth(null);
+            log.setCaption((String) log.getData());
+        } else {
+            log.setHeight("0px");
+            log.setWidth("0px");
+            log.setCaption(null);
+        }
     }
 
     private void createLog() {
         log = new Log(5).setNumberLogRows(true);
+        log.setData(log.getCaption());
+        log.setStyleName("v-clip");
         getLayout().addComponent(log, 1);
     }
 
