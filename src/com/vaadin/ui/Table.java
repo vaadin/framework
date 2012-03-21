@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -5282,6 +5283,11 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     public Iterator<Component> getComponentIterator() {
+        if (visibleComponents == null) {
+            Collection<Component> empty = Collections.emptyList();
+            return empty.iterator();
+        }
+
         return visibleComponents.iterator();
     }
 
