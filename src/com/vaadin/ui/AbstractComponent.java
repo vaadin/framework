@@ -739,6 +739,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *             if the paint operation failed.
      */
     public void paint(PaintTarget target) throws PaintException {
+        // Only paint content of visible components.
         if (!isVisibleInContext()) {
             return;
         }
@@ -751,18 +752,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             target.addAttribute("deferred", true);
         } else {
             // Paint the contents of the component
+            paintContent(target);
 
-            // Only paint content of visible components.
-            if (isVisibleInContext()) {
-
-                paintContent(target);
-
-                final ErrorMessage error = getErrorMessage();
-                if (error != null) {
-                    error.paint(target);
-                }
-            } else {
-                target.addAttribute("invisible", true);
+            final ErrorMessage error = getErrorMessage();
+            if (error != null) {
+                error.paint(target);
             }
         }
         target.endPaintable(this);
@@ -786,6 +780,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             }
             p = p.getParent();
         }
+        if (getParent() != null && !getParent().isComponentVisible(this)) {
+            return false;
+        }
+
         // All parents visible, return this state
         return isVisible();
     }

@@ -780,18 +780,13 @@ public abstract class AbstractCommunicationManager implements
 
             rootConnectorTracker.markAllComponentsDirty();
 
-            dirtyVisibleConnectors.addAll(rootConnectorTracker
-                    .getDirtyComponents());
-
             // Reset sent locales
             locales = null;
             requireLocale(application.getLocale().toString());
-
-        } else {
-            // TODO second list/stack for those whose state needs to be sent?
-            dirtyVisibleConnectors
-                    .addAll(getDirtyVisibleComponents(rootConnectorTracker));
         }
+
+        dirtyVisibleConnectors
+                .addAll(getDirtyVisibleComponents(rootConnectorTracker));
 
         System.out.println("* Found " + dirtyVisibleConnectors.size()
                 + " dirty connectors to paint");
