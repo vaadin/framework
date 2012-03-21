@@ -1,3 +1,6 @@
+.v-datefield {
+	overflow: hidden;
+}
 input.v-textfield-readonly:focus{
 	background-color: transparent;	
 }
