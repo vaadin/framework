@@ -15,6 +15,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
@@ -562,8 +563,9 @@ public class ApplicationConfiguration implements EntryPoint {
 
                 try {
                     VNotification.createNotification(
-                            VNotification.DELAY_FOREVER).show(e.getMessage(),
-                            VNotification.CENTERED, "error");
+                            VNotification.DELAY_FOREVER).show(
+                            getExceptionMessage(e), VNotification.CENTERED,
+                            "error");
                 } catch (Exception e2) {
                     // Just swallow this exception
                 }
@@ -572,6 +574,19 @@ public class ApplicationConfiguration implements EntryPoint {
 
         registerCallback(GWT.getModuleName());
         deferredWidgetLoader = new DeferredWidgetLoader();
+    }
+
+    private static final String getExceptionMessage(Throwable e) {
+        if (e instanceof UmbrellaException) {
+            UmbrellaException ue = (UmbrellaException) e;
+            String message = "";
+            for (Throwable t : ue.getCauses()) {
+                message += getExceptionMessage(t) + "<br />";
+            }
+            return message;
+        } else {
+            return e.getMessage();
+        }
     }
 
     /**
