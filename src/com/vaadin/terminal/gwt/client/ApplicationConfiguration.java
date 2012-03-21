@@ -18,6 +18,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
 
 public class ApplicationConfiguration implements EntryPoint {
 
@@ -558,6 +559,14 @@ public class ApplicationConfiguration implements EntryPoint {
                  * especially end user. It does not work tells just as much.
                  */
                 VConsole.getImplementation().error(e);
+
+                try {
+                    VNotification.createNotification(
+                            VNotification.DELAY_FOREVER).show(e.getMessage(),
+                            VNotification.CENTERED, "error");
+                } catch (Exception e2) {
+                    // Just swallow this exception
+                }
             }
         });
 
