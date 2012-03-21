@@ -170,12 +170,15 @@ public class ApplicationConnection {
 
     private Set<ComponentConnector> zeroHeightComponents = null;
 
-    private final LayoutManager layoutManager = new LayoutManager(this);
+    private final LayoutManager layoutManager;
 
-    private final RpcManager rpcManager = GWT.create(RpcManager.class);
+    private final RpcManager rpcManager;
 
     public ApplicationConnection() {
         view = GWT.create(RootConnector.class);
+        rpcManager = GWT.create(RpcManager.class);
+        layoutManager = GWT.create(LayoutManager.class);
+        layoutManager.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -2168,8 +2171,7 @@ public class ApplicationConnection {
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
-     * @deprecated Use {@link ComponentState#hasEventListener(String)}
-     *             instead
+     * @deprecated Use {@link ComponentState#hasEventListener(String)} instead
      */
     @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,

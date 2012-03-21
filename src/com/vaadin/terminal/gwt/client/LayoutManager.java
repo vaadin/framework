@@ -16,12 +16,16 @@ import com.vaadin.terminal.gwt.client.ui.VNotification;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
-    private final ApplicationConnection connection;
+    private ApplicationConnection connection;
     private final Set<Element> nonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
     private boolean layoutRunning = false;
 
-    public LayoutManager(ApplicationConnection connection) {
+    public void setConnection(ApplicationConnection connection) {
+        if (this.connection != null) {
+            throw new RuntimeException(
+                    "LayoutManager connection can never be changed");
+        }
         this.connection = connection;
     }
 
@@ -65,7 +69,7 @@ public class LayoutManager {
         }
     }
 
-    private static native void setMeasuredSize(Element element,
+    protected native void setMeasuredSize(Element element,
             MeasuredSize measuredSize)
     /*-{
         if (measuredSize) {
@@ -81,8 +85,7 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private static final MeasuredSize getMeasuredSize(
-            ComponentConnector paintable) {
+    private final MeasuredSize getMeasuredSize(ComponentConnector paintable) {
         Element element = paintable.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {

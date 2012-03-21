@@ -12,6 +12,9 @@
 
 	<inherits name="com.google.gwt.json.JSON" />
 
+	<inherits
+		name="com.vaadin.terminal.gwt.DefaultWidgetSetBrowserSpecificOverrides" />
+
 	<source path="client" />
 
 	<!-- Use own Scheduler implementation to be able to track if commands are 
@@ -20,6 +23,9 @@
 		<when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
 	</replace-with>
 
+
+	<!-- Generators for serializators for classes used in communication between 
+		server and client -->
 	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.SerializerMapGenerator">
 		<when-type-is
@@ -54,41 +60,6 @@
 		<when-type-assignable
 			class="com.vaadin.terminal.gwt.client.communication.RpcManager" />
 	</generate-with>
-
-	<!-- Fall through to this rule for everything but IE -->
-	<replace-with
-		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">
-		<when-type-is
-			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
-	</replace-with>
-
-	<replace-with
-		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategyIE">
-		<when-type-is
-			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
-		<any>
-			<when-property-is name="user.agent" value="ie6" />
-			<when-property-is name="user.agent" value="ie8" />
-		</any>
-	</replace-with>
-
-	<!-- Fall through to this rule for everything but IE -->
-	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper">
-		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
-	</replace-with>
-
-	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapperIE">
-		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
-		<any>
-			<when-property-is name="user.agent" value="ie8" />
-		</any>
-	</replace-with>
-
-	<!-- Workaround for #6682. Remove when fixed in GWT. -->
-	<replace-with class="com.google.gwt.dom.client.VaadinDOMImplSafari">
-		<when-type-is class="com.google.gwt.dom.client.DOMImpl" />
-		<when-property-is name="user.agent" value="safari" />
-	</replace-with>
 
 	<entry-point class="com.vaadin.terminal.gwt.client.ApplicationConfiguration" />
 

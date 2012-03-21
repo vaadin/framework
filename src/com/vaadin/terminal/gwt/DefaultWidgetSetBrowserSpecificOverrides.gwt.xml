@@ -1,0 +1,53 @@
+<module>
+	<!-- This GWT module defines the browser specific overrides used by Vaadin -->
+
+	<!-- Hint for WidgetSetBuilder not to automatically update the file -->
+	<!-- WS Compiler: manually edited -->
+
+	<!-- Fall through to this rule for everything but IE -->
+	<replace-with
+		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">
+		<when-type-is
+			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+	</replace-with>
+
+	<replace-with
+		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategyIE">
+		<when-type-is
+			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+		<any>
+			<when-property-is name="user.agent" value="ie8" />
+		</any>
+	</replace-with>
+
+	<!-- Fall through to this rule for everything but IE -->
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
+	</replace-with>
+
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapperIE">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
+		<any>
+			<when-property-is name="user.agent" value="ie8" />
+		</any>
+	</replace-with>
+
+	<!-- Fall through to this rule for everything but IE -->
+	<replace-with class="com.vaadin.terminal.gwt.client.LayoutManager">
+		<when-type-is class="com.vaadin.terminal.gwt.client.LayoutManager" />
+	</replace-with>
+
+	<replace-with class="com.vaadin.terminal.gwt.client.LayoutManagerIE8">
+		<when-type-is class="com.vaadin.terminal.gwt.client.LayoutManager" />
+		<any>
+			<when-property-is name="user.agent" value="ie8" />
+		</any>
+	</replace-with>
+
+	<!-- Workaround for #6682. Remove when fixed in GWT. -->
+	<replace-with class="com.google.gwt.dom.client.VaadinDOMImplSafari">
+		<when-type-is class="com.google.gwt.dom.client.DOMImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
+
+</module>
