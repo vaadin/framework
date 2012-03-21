@@ -47,6 +47,9 @@ public class VAbsoluteLayout extends ComplexPanel {
         canvas.getStyle().setProperty("overflow", "hidden");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
+
+        canvas.setClassName(CLASSNAME + "-canvas");
+        canvas.setClassName(CLASSNAME + "-margin");
     }
 
     AbsoluteWrapper getWrapper(ApplicationConnection client, UIDL componentUIDL) {
@@ -64,22 +67,6 @@ public class VAbsoluteLayout extends ComplexPanel {
     @Override
     public void add(Widget child) {
         super.add(child, canvas);
-    }
-
-    @Override
-    public void setWidth(String width) {
-        super.setWidth(width);
-        // TODO do this so that canvas gets the sized properly (the area
-        // inside marginals)
-        canvas.getStyle().setProperty("width", width);
-    }
-
-    @Override
-    public void setHeight(String height) {
-        super.setHeight(height);
-        // TODO do this so that canvas gets the sized properly (the area
-        // inside marginals)
-        canvas.getStyle().setProperty("height", height);
     }
 
     public class AbsoluteWrapper extends SimplePanel {
