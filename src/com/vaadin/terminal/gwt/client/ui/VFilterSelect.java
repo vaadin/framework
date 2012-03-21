@@ -1605,9 +1605,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * Lock the textbox width to its current value if it's not already
              * locked
              */
-            if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
+            Style style = tb.getElement().getStyle();
+            if (!style.getWidth().endsWith("px")) {
+                boolean isIE8 = BrowserInfo.get().isIE8();
+                if (isIE8) {
+                    // Must do something to make IE8 realize that it should
+                    // reflow the component when the offset width is read
+                    style.setProperty("zoom", "1");
+                }
                 tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
                         .getOffsetWidth()) + "px");
+                if (isIE8) {
+                    // Restore old style property value
+                    style.clearProperty("zoom");
+                }
             }
         }
     }
