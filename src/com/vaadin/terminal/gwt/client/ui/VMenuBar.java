@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -945,8 +946,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
     /**
      * @author Jouni Koivuviita / Vaadin Ltd.
      */
-    private int paddingWidth = -1;
-
     public void iLayout() {
         iLayout(false);
         updateSize();
@@ -968,15 +967,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 removeItem(moreItem);
             }
 
-            // Measure available space
-            if (paddingWidth == -1) {
-                int widthBefore = getElement().getClientWidth();
-                getElement().getStyle().setProperty("padding", "0");
-                paddingWidth = widthBefore - getElement().getClientWidth();
-                getElement().getStyle().setProperty("padding", "");
-            }
-
-            int availableWidth = getElement().getClientWidth() - paddingWidth;
+            int availableWidth = LayoutManager.get(client).getInnerWidth(
+                    getElement());
 
             // Used width includes the "more" item if present
             int usedWidth = getConsumedWidth();
@@ -1020,7 +1012,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                         removeItem(expand);
                         collapsedRootItems.addItem(expand, 0);
                     } else {
-                        widthAvailable = diff;
+                        widthAvailable = diff + moreItemWidth;
                     }
                 }
             }

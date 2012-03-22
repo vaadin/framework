@@ -146,7 +146,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
             }
         }// while
 
-        getWidget().iLayout(false);
+        getLayoutManager().setWidthNeedsUpdate(this);
 
     }// updateFromUIDL
 
