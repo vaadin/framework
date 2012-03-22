@@ -561,6 +561,10 @@ public class ApplicationConfiguration implements EntryPoint {
                  */
                 VConsole.getImplementation().error(e);
 
+                if (!GWT.isProdMode()) {
+                    e.printStackTrace();
+                }
+
                 try {
                     VNotification.createNotification(
                             VNotification.DELAY_FOREVER).show(
