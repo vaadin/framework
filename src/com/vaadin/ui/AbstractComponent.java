@@ -841,33 +841,39 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (null == sharedState) {
             sharedState = createState();
         }
+        return sharedState;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component#updateState()
+     */
+    public void updateState() {
         // TODO This logic should be on the client side and the state should
         // simply be a data object with "width" and "height".
         if (getHeight() >= 0
                 && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineHeight(this))) {
-            sharedState.setHeight("" + getCSSHeight());
+            getState().setHeight("" + getCSSHeight());
         } else {
-            sharedState.setHeight("");
+            getState().setHeight("");
         }
 
         if (getWidth() >= 0
                 && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineWidth(this))) {
-            sharedState.setWidth("" + getCSSWidth());
+            getState().setWidth("" + getCSSWidth());
         } else {
-            sharedState.setWidth("");
+            getState().setWidth("");
         }
 
-        // TODO this should be in a listener called before sending state
         ErrorMessage error = getErrorMessage();
         if (null != error) {
-            sharedState.setErrorMessage(error.getFormattedHtmlMessage());
+            getState().setErrorMessage(error.getFormattedHtmlMessage());
         } else {
-            sharedState.setErrorMessage(null);
+            getState().setErrorMessage(null);
         }
-
-        return sharedState;
     }
 
     /**

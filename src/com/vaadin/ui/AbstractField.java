@@ -131,13 +131,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private int tabIndex = 0;
 
     /**
-     * Required field.
-     */
-    // TODO should be used directly from shared state, but requires a listener
-    // for updating state before it is sent
-    private boolean required = false;
-
-    /**
      * The error message for the exception that is thrown when the field is
      * required but empty.
      */
@@ -1406,7 +1399,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *         <code>false</code>.
      */
     public boolean isRequired() {
-        return required;
+        return getState().isRequired();
     }
 
     /**
@@ -1425,7 +1418,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            Is the field required.
      */
     public void setRequired(boolean required) {
-        this.required = required;
+        getState().setRequired(required);
         requestRepaint();
     }
 
@@ -1615,17 +1608,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     @Override
     public AbstractFieldState getState() {
-        AbstractFieldState state = (AbstractFieldState) super.getState();
+        return (AbstractFieldState) super.getState();
+    }
 
-        // TODO should be directly in state when listener for updates before
-        // sending state is implemented
-        state.setRequired(isRequired());
+    @Override
+    public void updateState() {
+        super.updateState();
 
         // Hide the error indicator if needed
-        // TODO these should be in a listener called before sending state
-        state.setHideErrors(shouldHideErrors());
-
-        return state;
+        getState().setHideErrors(shouldHideErrors());
     }
 
     @Override

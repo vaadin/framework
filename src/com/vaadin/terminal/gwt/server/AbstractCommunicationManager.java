@@ -763,6 +763,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         System.out.println("* Found " + dirtyVisibleConnectors.size()
                 + " dirty connectors to paint");
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            if (connector instanceof Component) {
+                ((Component) connector).updateState();
+            }
+        }
         rootConnectorTracker.markAllComponentsClean();
 
         outWriter.print("\"changes\":[");
