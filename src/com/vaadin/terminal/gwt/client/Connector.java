@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.io.Serializable;
+
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
@@ -13,7 +15,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
  * @since 7.0.0
  * 
  */
-public interface Connector {
+public interface Connector extends Serializable {
     /**
      * Gets the current shared state of the connector.
      * 

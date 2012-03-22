@@ -5,6 +5,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -1636,22 +1637,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         // create, initialize and return a dynamic proxy for RPC
         try {
             if (!rpcProxyMap.containsKey(rpcInterface)) {
-                InvocationHandler handler = new InvocationHandler() {
-                    public Object invoke(Object proxy, Method method,
-                            Object[] args) throws Throwable {
-                        addMethodInvocationToQueue(rpcInterface.getName()
-                                .replaceAll("\\$", "."), method.getName(), args);
-                        // TODO no need to do full repaint if only RPC calls
-                        requestRepaint();
-                        return null;
-                    }
-                };
-                Class<?> proxyClass = Proxy.getProxyClass(
-                        rpcInterface.getClassLoader(),
-                        new Class[] { rpcInterface });
-                T rpcProxy = (T) proxyClass.getConstructor(
-                        new Class[] { InvocationHandler.class }).newInstance(
-                        new Object[] { handler });
+                Class<T> proxyClass = (Class) Proxy.getProxyClass(
+                        rpcInterface.getClassLoader(), rpcInterface);
+                Constructor<T> constructor = proxyClass
+                        .getConstructor(InvocationHandler.class);
+                T rpcProxy = constructor.newInstance(new RpcInvoicationHandler(
+                        rpcInterface));
                 // cache the proxy
                 rpcProxyMap.put(rpcInterface, rpcProxy);
             }
@@ -1660,6 +1651,25 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             // TODO exception handling?
             throw new RuntimeException(e);
         }
+    }
+
+    private class RpcInvoicationHandler implements InvocationHandler,
+            Serializable {
+
+        private String rpcInterfaceName;
+
+        public RpcInvoicationHandler(Class<?> rpcInterface) {
+            rpcInterfaceName = rpcInterface.getName().replaceAll("\\$", ".");
+        }
+
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable {
+            addMethodInvocationToQueue(rpcInterfaceName, method.getName(), args);
+            // TODO no need to do full repaint if only RPC calls
+            requestRepaint();
+            return null;
+        }
+
     }
 
     /**

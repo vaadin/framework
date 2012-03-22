@@ -3,7 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.communication;
 
-public class URLReference {
+import java.io.Serializable;
+
+public class URLReference implements Serializable {
 
     private String URL;
 
