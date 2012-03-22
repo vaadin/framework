@@ -144,6 +144,9 @@ public abstract class VLayoutSlot {
         } else {
             captionHeight = getCaptionHeight();
             contentHeight -= captionHeight;
+            if (contentHeight < 0) {
+                contentHeight = 0;
+            }
             style.setPaddingTop(captionHeight, Unit.PX);
         }
 
