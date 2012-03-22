@@ -1,7 +1,7 @@
 package com.vaadin.tests.server;
 
 import java.lang.reflect.Field;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -89,8 +89,8 @@ public class TestKeyMapper extends TestCase {
             f1.setAccessible(true);
             f2.setAccessible(true);
 
-            Hashtable<?, ?> h1 = (Hashtable<?, ?>) f1.get(mapper);
-            Hashtable<?, ?> h2 = (Hashtable<?, ?>) f2.get(mapper);
+            HashMap<?, ?> h1 = (HashMap<?, ?>) f1.get(mapper);
+            HashMap<?, ?> h2 = (HashMap<?, ?>) f2.get(mapper);
 
             assertEquals(i, h1.size());
             assertEquals(i, h2.size());
