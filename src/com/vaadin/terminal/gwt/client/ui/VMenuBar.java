@@ -1435,12 +1435,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 }
 
                 root.setSelected(selected);
-                root.showChildMenu(selected);
-                VMenuBar submenu = selected.getSubMenu();
-
-                // Select the first item in the newly open submenu
-                submenu.setSelected(submenu.getItems().get(0));
-
+                openMenuAndFocusFirstIfPossible(selected);
             } else {
                 getParentMenu().getSelected().getSubMenu().setSelected(null);
                 getParentMenu().hideChildren();
@@ -1498,12 +1493,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 }
 
                 root.setSelected(selected);
-                root.showChildMenu(selected);
-                VMenuBar submenu = selected.getSubMenu();
-
-                // Select the first item in the newly open submenu
-                submenu.setSelected(submenu.getItems().get(0));
-
+                openMenuAndFocusFirstIfPossible(selected);
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
@@ -1542,16 +1532,11 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
-                setSelected(items.get(0));
-                if (!getSelected().isSelectable()) {
-                    handleNavigation(keycode, ctrl, shift);
-                }
+                selectFirstItem();
             } else if (visibleChildMenu == null && getParentMenu() == null) {
                 // If this is the root menu the show the child menu with arrow
-                // down
-                showChildMenu(getSelected());
-                menuVisible = true;
-                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+                // down, if there is a child menu
+                openMenuAndFocusFirstIfPossible(getSelected());
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
@@ -1576,17 +1561,18 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             menuVisible = false;
 
         } else if (keycode == getNavigationSelectKey()) {
-            if (visibleChildMenu != null) {
+            if (getSelected() == null) {
+                // If nothing is selected then select the first item
+                selectFirstItem();
+            } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
                 menuVisible = false;
             } else if (visibleChildMenu == null
                     && getSelected().getSubMenu() != null) {
-                // If the item has a submenu then show it and move the selection
-                // there
-                showChildMenu(getSelected());
-                menuVisible = true;
-                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+                // If the item has a sub menu then show it and move the
+                // selection there
+                openMenuAndFocusFirstIfPossible(getSelected());
             } else {
                 Command command = getSelected().getCommand();
                 if (command != null) {
@@ -1599,6 +1585,34 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
 
         return false;
+    }
+
+    private void selectFirstItem() {
+        for (int i = 0; i < items.size(); i++) {
+            CustomMenuItem item = items.get(i);
+            if (!item.isSelectable()) {
+                continue;
+            }
+
+            setSelected(item);
+            break;
+        }
+    }
+
+    private void openMenuAndFocusFirstIfPossible(CustomMenuItem menuItem) {
+        VMenuBar subMenu = menuItem.getSubMenu();
+        if (subMenu == null) {
+            // No child menu? Nothing to do
+            return;
+        }
+
+        VMenuBar parentMenu = menuItem.getParentMenu();
+        parentMenu.showChildMenu(menuItem);
+
+        menuVisible = true;
+        // Select the first item in the newly open submenu
+        subMenu.setSelected(subMenu.getItems().get(0));
+
     }
 
     /*
