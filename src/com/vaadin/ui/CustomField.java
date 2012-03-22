@@ -141,7 +141,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
 
     private class ComponentIterator implements Iterator<Component>,
             Serializable {
-        boolean first = getContent() != null;
+        boolean first = (root != null);
 
         public boolean hasNext() {
             return first;
