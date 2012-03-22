@@ -958,7 +958,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
         }
 
         public void setSelected(boolean selected) {
-            if (selected && !isSeparator) {
+            if (selected && isSelectable()) {
                 addStyleDependentName("selected");
                 // needed for IE6 to have a single style name to match for an
                 // element
@@ -1134,6 +1134,15 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             }
 
             return menubar;
+        }
+
+        /**
+         * Checks if the item can be selected.
+         * 
+         * @return true if it is possible to select this item, false otherwise
+         */
+        public boolean isSelectable() {
+            return !isSeparator() && isEnabled();
         }
 
     }
@@ -1389,11 +1398,11 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (getSelected() == null) {
                 // If nothing is selected then select the last item
                 setSelected(items.get(items.size() - 1));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null && getParentMenu() == null) {
-                // If this is the root menu then move to the right
+                // If this is the root menu then move to the left
                 int idx = items.indexOf(getSelected());
                 if (idx > 0) {
                     setSelected(items.get(idx - 1));
@@ -1401,7 +1410,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     setSelected(items.get(items.size() - 1));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu != null) {
@@ -1409,8 +1418,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
 
             } else if (getParentMenu().getParentMenu() == null) {
-
-                // Get the root menu
+                // Inside a sub menu, whose parent is a root menu item
                 VMenuBar root = getParentMenu();
 
                 root.getSelected().getSubMenu().setSelected(null);
@@ -1445,7 +1453,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 setSelected(items.get(0));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null && getParentMenu() == null) {
@@ -1458,7 +1466,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     setSelected(items.get(0));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null
@@ -1508,7 +1516,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (getSelected() == null) {
                 // If nothing is selected then select the last item
                 setSelected(items.get(items.size() - 1));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu != null) {
@@ -1523,7 +1531,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     setSelected(items.get(items.size() - 1));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             }
@@ -1535,7 +1543,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 setSelected(items.get(0));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null && getParentMenu() == null) {
@@ -1556,7 +1564,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                     setSelected(items.get(0));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             }
