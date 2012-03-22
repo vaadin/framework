@@ -443,6 +443,7 @@ public class VAccordion extends VTabsheetBase {
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE),
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON));
         }
 

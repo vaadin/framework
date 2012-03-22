@@ -252,8 +252,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 tooltipInfo
                         .setTitle(uidl
                                 .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
-                // TODO currently, there is no error indicator and message for a
-                // tab
+                tooltipInfo
+                        .setErrorMessage(uidl
+                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE));
                 client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
             } else {
                 client.registerTooltip(getTabsheet(), getElement(), null);
@@ -265,6 +266,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
+                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE),
                     uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON));
 
             setClosable(uidl.hasAttribute("closable"));

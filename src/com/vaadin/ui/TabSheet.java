@@ -403,7 +403,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 target.addAttribute(
                         TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION, caption);
             }
-
+            ErrorMessage tabError = tab.getComponentError();
+            if (tabError != null) {
+                target.addAttribute(
+                        TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE,
+                        tabError.getFormattedHtmlMessage());
+            }
             final String description = tab.getDescription();
             if (description != null) {
                 target.addAttribute(

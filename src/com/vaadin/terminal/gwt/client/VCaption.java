@@ -10,7 +10,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
 
 public class VCaption extends HTML {
 
@@ -249,7 +248,7 @@ public class VCaption extends HTML {
 
     @Deprecated
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
-            boolean hasDescription, String iconURL) {
+            boolean hasDescription, boolean hasError, String iconURL) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -311,7 +310,7 @@ public class VCaption extends HTML {
                 // browsers when it is set to the empty string. If there is an
                 // icon, error indicator or required indicator they will ensure
                 // that space is reserved.
-                if (!hasIcon) {
+                if (!hasIcon && !hasError) {
                     captionText.setInnerHTML("&nbsp;");
                 }
             } else {
@@ -322,6 +321,22 @@ public class VCaption extends HTML {
             // Remove existing
             DOM.removeChild(getElement(), captionText);
             captionText = null;
+        }
+
+        if (hasError) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = DOM.createDiv();
+                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
+                DOM.setElementProperty(errorIndicatorElement, "className",
+                        "v-errorindicator");
+
+                DOM.insertChild(getElement(), errorIndicatorElement,
+                        getInsertPosition(InsertPosition.ERROR));
+            }
+        } else if (errorIndicatorElement != null) {
+            // Remove existing
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -361,20 +376,6 @@ public class VCaption extends HTML {
                 VConsole.log("Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
-    }
-
-    @Deprecated
-    public static boolean isNeeded(UIDL uidl) {
-        // TODO fallback for cases where the caption has no owner (Tabsheet,
-        // Accordion)
-        if (uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION) != null) {
-            return true;
-        }
-        if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON)) {
-            return true;
-        }
-
-        return false;
     }
 
     public static boolean isNeeded(ComponentState state) {

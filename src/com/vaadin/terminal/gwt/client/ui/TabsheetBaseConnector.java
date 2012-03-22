@@ -16,6 +16,7 @@ public abstract class TabsheetBaseConnector extends
 
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
     public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
+    public static final String ATTRIBUTE_TAB_ERROR_MESSAGE = "error";
     public static final String ATTRIBUTE_TAB_CAPTION = "caption";
     public static final String ATTRIBUTE_TAB_ICON = "icon";
 
