@@ -108,13 +108,14 @@ public abstract class VLayoutSlot {
             if (alignment.isHorizontalCenter()) {
                 currentLocation += (allocatedSpace - usedWidth) / 2d;
                 if (captionAboveCompnent) {
-                    captionStyle.setLeft((usedWidth - captionWidth) / 2,
-                            Unit.PX);
+                    captionStyle.setLeft(
+                            Math.round(usedWidth - captionWidth) / 2, Unit.PX);
                 }
             } else {
                 currentLocation += (allocatedSpace - usedWidth);
                 if (captionAboveCompnent) {
-                    captionStyle.setLeft(usedWidth - captionWidth, Unit.PX);
+                    captionStyle.setLeft(Math.round(usedWidth - captionWidth),
+                            Unit.PX);
                 }
             }
         } else {
@@ -123,7 +124,7 @@ public abstract class VLayoutSlot {
             }
         }
 
-        style.setLeft(currentLocation, Unit.PX);
+        style.setLeft(Math.round(currentLocation), Unit.PX);
     }
 
     private double parsePercent(String size) {
