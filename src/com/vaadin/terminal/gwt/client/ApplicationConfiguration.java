@@ -564,7 +564,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 try {
                     VNotification.createNotification(
                             VNotification.DELAY_FOREVER).show(
-                            getExceptionMessage(e), VNotification.CENTERED,
+                            getExceptionText(e), VNotification.CENTERED,
                             "error");
                 } catch (Exception e2) {
                     // Just swallow this exception
@@ -576,16 +576,21 @@ public class ApplicationConfiguration implements EntryPoint {
         deferredWidgetLoader = new DeferredWidgetLoader();
     }
 
-    private static final String getExceptionMessage(Throwable e) {
+    private static final String getExceptionText(Throwable e) {
         if (e instanceof UmbrellaException) {
             UmbrellaException ue = (UmbrellaException) e;
-            String message = "";
+            String text = "";
             for (Throwable t : ue.getCauses()) {
-                message += getExceptionMessage(t) + "<br />";
+                text += getExceptionText(t) + "<br />";
             }
-            return message;
+            return text;
         } else {
-            return e.getMessage();
+            String text = e.getClass().getName();
+            String message = e.getMessage();
+            if (message != null) {
+                text += ": " + message;
+            }
+            return text;
         }
     }
 
