@@ -6,13 +6,18 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
+import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
@@ -20,6 +25,22 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
+
+    private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
+            this, EventId.LAYOUT_CLICK) {
+
+        @Override
+        protected ComponentConnector getChildComponent(Element element) {
+            return Util.getPaintableForElement(getConnection(), getWidget(),
+                    element);
+        }
+
+        @Override
+        protected <H extends EventHandler> HandlerRegistration registerHandler(
+                H handler, Type<H> type) {
+            return getWidget().addDomHandler(handler, type);
+        }
+    };
 
     @Override
     public void init() {
@@ -58,6 +79,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         if (!isRealUpdate(uidl)) {
             return;
         }
+        clickEventHandler.handleEventHandlerRegistration();
 
         VMeasuringOrderedLayout layout = getWidget();
 
