@@ -205,9 +205,6 @@ public class ComponentState extends SharedState {
      * @return component description (not null, can be empty string)
      */
     public String getDescription() {
-        if (description == null) {
-            return "";
-        }
         return description;
     }
 
@@ -229,7 +226,7 @@ public class ComponentState extends SharedState {
      * @return true if the component has a description
      */
     public boolean hasDescription() {
-        return !"".equals(getDescription());
+        return getDescription() != null && !"".equals(getDescription());
     }
 
     /**
