@@ -74,6 +74,11 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                 DOM.setElementProperty(el, "src",
                         getWidget().getSrc(uidl, client));
 
+                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
+                    el.setPropertyString(ALTERNATE_TEXT,
+                            uidl.getStringAttribute(ALTERNATE_TEXT));
+                }
+
                 if (created) {
                     // insert in dom late
                     getWidget().getElement().appendChild(el);
@@ -149,7 +154,9 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                             uidl.getStringAttribute("standby"));
                 }
                 getWidget().getElement().appendChild(obj);
-
+                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
+                    obj.setInnerText(uidl.getStringAttribute(ALTERNATE_TEXT));
+                }
             } else {
                 VConsole.log("Unknown Embedded mimetype '" + mime + "'");
             }
