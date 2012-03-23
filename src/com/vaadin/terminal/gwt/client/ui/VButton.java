@@ -191,6 +191,12 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
                 if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
                     removeStyleName(CLASSNAME_PRESSED);
                 }
+                // Explicitly prevent IE 6 to 8 from propagating mouseup events
+                // upward (fixes #6753)
+                if (BrowserInfo.get().isIE()
+                        && BrowserInfo.get().getIEVersion() < 9) {
+                    event.stopPropagation();
+                }
             }
             break;
         case Event.ONMOUSEMOVE:

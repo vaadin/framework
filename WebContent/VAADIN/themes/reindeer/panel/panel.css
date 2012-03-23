@@ -44,7 +44,7 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-wekit .v-panel-deco,
+.v-webkit .v-panel-deco,
 .v-gecko .v-panel-deco,
 .v-ie9 .v-panel-deco {
 	border-top-color: rgba(0,0,0,.1);
