@@ -3,6 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
@@ -19,6 +22,8 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     final boolean isVertical;
 
     final DivElement spacingMeasureElement;
+
+    private Map<Widget, VLayoutSlot> widgetToSlot = new HashMap<Widget, VLayoutSlot>();
 
     protected VMeasuringOrderedLayout(String className, boolean isVertical) {
         DivElement element = Document.get().createDivElement();
@@ -45,7 +50,7 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
             insert(widget, wrapperElement, index, false);
         }
 
-        widget.setLayoutData(layoutSlot);
+        widgetToSlot.put(widget, layoutSlot);
     }
 
     private void togglePrefixedStyleName(String name, boolean enabled) {
@@ -74,7 +79,8 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
         }
     }
 
-    public void removeSlot(VLayoutSlot slot) {
+    public void removeSlotForWidget(Widget widget) {
+        VLayoutSlot slot = getSlotForChild(widget);
         VCaption caption = slot.getCaption();
         if (caption != null) {
             // Must remove using setCaption to ensure dependencies (layout ->
@@ -84,15 +90,11 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
 
         remove(slot.getWidget());
         getElement().removeChild(slot.getWrapperElement());
+        widgetToSlot.remove(widget);
     }
 
     public VLayoutSlot getSlotForChild(Widget widget) {
-        Object o = widget.getLayoutData();
-        if (o instanceof VLayoutSlot) {
-            return (VLayoutSlot) o;
-        }
-
-        return null;
+        return widgetToSlot.get(widget);
     }
 
     public void setCaption(Widget child, VCaption caption) {
