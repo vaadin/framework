@@ -45,6 +45,8 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -53,6 +55,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -442,6 +445,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private int serverCacheFirst = -1;
     private int serverCacheLast = -1;
 
+    /**
+     * Used to recall the position of an open context menu if we need to close
+     * and reopen it during a row update.
+     */
+    private class ContextMenuDetails {
+        String rowKey;
+        int left;
+        int top;
+
+        ContextMenuDetails(String rowKey, int left, int top) {
+            this.rowKey = rowKey;
+            this.left = left;
+            this.top = top;
+        }
+    }
+
+    ContextMenuDetails contextMenu;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -817,6 +838,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
+        if (this.client == null) {
+            client.getContextMenu().addCloseHandler(
+                    new CloseHandler<PopupPanel>() {
+                        public void onClose(CloseEvent<PopupPanel> event) {
+                            contextMenu = null;
+                        }
+                    });
+        }
+
+        ContextMenuDetails savedContextMenu = contextMenu;
+
         if (uidl.hasAttribute(ATTRIBUTE_PAGEBUFFER_FIRST)) {
             serverCacheFirst = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_FIRST);
             serverCacheLast = uidl.getIntAttribute(ATTRIBUTE_PAGEBUFFER_LAST);
@@ -1009,6 +1041,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         rendering = false;
         headerChangedDuringUpdate = false;
 
+        if (savedContextMenu != null) {
+            for (Widget w : scrollBody.renderedRows) {
+                VScrollTableRow row = (VScrollTableRow) w;
+                if (row.getKey().equals(savedContextMenu.rowKey)) {
+                    contextMenu = savedContextMenu;
+                    client.getContextMenu().showAt(row, savedContextMenu.left,
+                            savedContextMenu.top);
+                }
+            }
+        }
     }
 
     private void initializeRows(UIDL uidl, UIDL rowData) {
@@ -5369,6 +5411,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
+                    contextMenu = new ContextMenuDetails(this.getKey(),
+                            left, top);
                     client.getContextMenu().showAt(this, left, top);
                 }
             }
