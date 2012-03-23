@@ -946,16 +946,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         selectedItemIcon.setStyleName("v-icon");
         selectedItemIcon.addLoadHandler(new LoadHandler() {
             public void onLoad(LoadEvent event) {
+                if (BrowserInfo.get().isIE8()) {
+                    // IE8 needs some help to discover it should reposition the
+                    // text field
+                    forceReflow();
+                }
                 updateRootWidth();
                 updateSelectedIconPosition();
-                /*
-                 * Workaround for an IE bug where the text is positioned below
-                 * the icon (#3991)
-                 */
-                if (BrowserInfo.get().isIE()) {
-                    Util.setStyleTemporarily(tb.getElement(), "paddingLeft",
-                            "0");
-                }
             }
         });
 
@@ -1151,32 +1148,22 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             if (selectedItemIcon.isAttached()) {
                 panel.remove(selectedItemIcon);
                 if (BrowserInfo.get().isIE8()) {
+                    // IE8 needs some help to discover it should reposition the
+                    // text field
                     forceReflow();
                 }
                 updateRootWidth();
             }
         } else {
-            selectedItemIcon.setUrl(iconUri);
             panel.insert(selectedItemIcon, 0);
-            if (BrowserInfo.get().isIE8()) {
-                forceReflow();
-            }
+            selectedItemIcon.setUrl(iconUri);
             updateRootWidth();
             updateSelectedIconPosition();
         }
     }
 
     private void forceReflow() {
-        Style style = tb.getElement().getStyle();
-
-        String oldZoom = style.getProperty("zoom");
-        style.setProperty("zoom", "1");
-
-        // Forces reflow because style has changed
-        tb.getOffsetWidth();
-
-        // Restore old style
-        style.setProperty("zoom", oldZoom);
+        Util.setStyleTemporarily(tb.getElement(), "zoom", "1");
     }
 
     /**
