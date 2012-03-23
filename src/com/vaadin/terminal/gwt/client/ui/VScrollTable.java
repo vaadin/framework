@@ -1810,15 +1810,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         isNewBody = false;
 
         if (firstvisible > 0) {
-            // Deferred due some Firefox oddities. IE & Safari could survive
-            // without
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    scrollBodyPanel
-                            .setScrollPosition(measureRowHeightOffset(firstvisible));
-                    firstRowInViewPort = firstvisible;
-                }
-            });
+            scrollBodyPanel
+                    .setScrollPosition(measureRowHeightOffset(firstvisible));
+            firstRowInViewPort = firstvisible;
         }
 
         if (enabled) {

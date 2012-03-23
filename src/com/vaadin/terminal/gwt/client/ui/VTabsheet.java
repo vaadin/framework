@@ -161,14 +161,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          *            true if the Tab is the first visible Tab
          */
         public void setStyleNames(boolean selected, boolean first) {
-            // TODO #5100 doesn't belong here
-            focusImpl.setTabIndex(td, selected ? getTabsheet().tabulatorIndex
-                    : -1);
-
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
             setStyleName(td, TD_SELECTED_FIRST_CLASSNAME, selected && first);
             setStyleName(div, DIV_SELECTED_CLASSNAME, selected);
+        }
+
+        public void setTabulatorIndex(int tabIndex) {
+            focusImpl.setTabIndex(td, tabIndex);
         }
 
         public boolean isClosable() {
@@ -414,10 +414,12 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             final Tab oldSelected = selected;
 
             newSelected.setStyleNames(true, isFirstVisibleTab(index));
+            newSelected.setTabulatorIndex(getTabsheet().tabulatorIndex);
 
             if (oldSelected != null && oldSelected != newSelected) {
                 oldSelected.setStyleNames(false,
                         isFirstVisibleTab(getWidgetIndex(oldSelected)));
+                oldSelected.setTabulatorIndex(-1);
             }
 
             // Update the field holding the currently selected tab
@@ -529,6 +531,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     final Element tabs; // tabbar and 'scroller' container
     Tab focusedTab;
+    /**
+     * The tabindex property (position in the browser's focus cycle.) Named like
+     * this to avoid confusion with activeTabIndex.
+     */
     int tabulatorIndex = 0;
 
     private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
