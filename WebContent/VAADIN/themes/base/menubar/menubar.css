@@ -1,6 +1,7 @@
 .v-menubar {
 	float: left; /* Force minimum width */
 	white-space: nowrap;
+	overflow: hidden;
 }
 .v-menubar .v-menubar-menuitem {
 	cursor: default;
