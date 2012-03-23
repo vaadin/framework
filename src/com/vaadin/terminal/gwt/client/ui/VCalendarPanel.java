@@ -1196,14 +1196,19 @@ public class VCalendarPanel extends FocusableFlexTable implements
             displayedMonth = new Date(value.getYear(), value.getMonth(), 1);
         }
 
-        // Re-render calendar if month or year of focused date has changed
-        if (oldDisplayedMonth == null || value == null
+        // Re-render calendar if the displayed month is changed,
+        // or if a time selector is needed but does not exist.
+        if ((isTimeSelectorNeeded() && time == null)
+                || oldDisplayedMonth == null || value == null
                 || oldDisplayedMonth.getYear() != value.getYear()
                 || oldDisplayedMonth.getMonth() != value.getMonth()) {
             renderCalendar();
         } else {
             focusDay(focusedDate);
             selectFocused();
+            if (isTimeSelectorNeeded()) {
+                time.updateTimes();
+            }
         }
 
         if (!hasFocus) {
