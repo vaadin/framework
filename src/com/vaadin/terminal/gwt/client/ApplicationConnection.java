@@ -229,7 +229,7 @@ public class ApplicationConnection {
             incrementActiveRequests();
 
             // initial UIDL provided in DOM, continue as if returned by request
-            handleJSONText(jsonText);
+            handleJSONText(jsonText, -1);
         }
     }
 
@@ -501,7 +501,7 @@ public class ApplicationConnection {
         if (!synchronous) {
             RequestCallback requestCallback = new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
-                    showCommunicationError(exception.getMessage());
+                    showCommunicationError(exception.getMessage(), -1);
                     endRequest();
                 }
 
@@ -515,7 +515,9 @@ public class ApplicationConnection {
 
                     switch (statusCode) {
                     case 0:
-                        showCommunicationError("Invalid status code 0 (server down?)");
+                        showCommunicationError(
+                                "Invalid status code 0 (server down?)",
+                                statusCode);
                         endRequest();
                         return;
 
@@ -548,8 +550,9 @@ public class ApplicationConnection {
                     if ((statusCode / 100) == 4) {
                         // Handle all 4xx errors the same way as (they are
                         // all permanent errors)
-                        showCommunicationError("UIDL could not be read from server. Check servlets mappings. Error code: "
-                                + statusCode);
+                        showCommunicationError(
+                                "UIDL could not be read from server. Check servlets mappings. Error code: "
+                                        + statusCode, statusCode);
                         endRequest();
                         return;
                     }
@@ -576,7 +579,7 @@ public class ApplicationConnection {
                     // for(;;);[realjson]
                     final String jsonText = response.getText().substring(9,
                             response.getText().length() - 1);
-                    handleJSONText(jsonText);
+                    handleJSONText(jsonText, statusCode);
                 }
 
             };
@@ -605,8 +608,9 @@ public class ApplicationConnection {
      * appropriate handlers, while logging timiing information.
      * 
      * @param jsonText
+     * @param statusCode
      */
-    private void handleJSONText(String jsonText) {
+    private void handleJSONText(String jsonText, int statusCode) {
         final Date start = new Date();
         final ValueMap json;
         try {
@@ -614,7 +618,7 @@ public class ApplicationConnection {
         } catch (final Exception e) {
             endRequest();
             showCommunicationError(e.getMessage() + " - Original JSON-text:"
-                    + jsonText);
+                    + jsonText, statusCode);
             return;
         }
 
@@ -693,8 +697,11 @@ public class ApplicationConnection {
      * 
      * @param details
      *            Optional details for debugging.
+     * @param statusCode
+     *            The status code returned for the request
+     * 
      */
-    protected void showCommunicationError(String details) {
+    protected void showCommunicationError(String details, int statusCode) {
         VConsole.error("Communication error: " + details);
         ErrorMessage communicationError = configuration.getCommunicationError();
         showError(details, communicationError.getCaption(),
