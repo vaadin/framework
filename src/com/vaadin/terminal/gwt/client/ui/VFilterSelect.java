@@ -1150,14 +1150,33 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (iconUri == null || iconUri.length() == 0) {
             if (selectedItemIcon.isAttached()) {
                 panel.remove(selectedItemIcon);
+                if (BrowserInfo.get().isIE8()) {
+                    forceReflow();
+                }
                 updateRootWidth();
             }
         } else {
-            panel.insert(selectedItemIcon, 0);
             selectedItemIcon.setUrl(iconUri);
+            panel.insert(selectedItemIcon, 0);
+            if (BrowserInfo.get().isIE8()) {
+                forceReflow();
+            }
             updateRootWidth();
             updateSelectedIconPosition();
         }
+    }
+
+    private void forceReflow() {
+        Style style = tb.getElement().getStyle();
+
+        String oldZoom = style.getProperty("zoom");
+        style.setProperty("zoom", "1");
+
+        // Forces reflow because style has changed
+        tb.getOffsetWidth();
+
+        // Restore old style
+        style.setProperty("zoom", oldZoom);
     }
 
     /**
@@ -1605,20 +1624,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              * Lock the textbox width to its current value if it's not already
              * locked
              */
-            Style style = tb.getElement().getStyle();
-            if (!style.getWidth().endsWith("px")) {
-                boolean isIE8 = BrowserInfo.get().isIE8();
-                if (isIE8) {
-                    // Must do something to make IE8 realize that it should
-                    // reflow the component when the offset width is read
-                    style.setProperty("zoom", "1");
-                }
+            if (!tb.getElement().getStyle().getWidth().endsWith("px")) {
                 tb.setWidth((tb.getOffsetWidth() - selectedItemIcon
                         .getOffsetWidth()) + "px");
-                if (isIE8) {
-                    // Restore old style property value
-                    style.clearProperty("zoom");
-                }
             }
         }
     }
