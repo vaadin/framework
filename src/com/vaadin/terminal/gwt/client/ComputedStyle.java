@@ -88,7 +88,7 @@ public class ComputedStyle {
                 var left = style.left, rsLeft = elem.runtimeStyle.left;
 
                 // Put in the new values to get a computed value out
-                elem.runtimeStyle.left = this.left;
+                elem.runtimeStyle.left = cs.left;
                 style.left = ret || 0;
                 ret = style.pixelLeft + "px";
 
