@@ -2096,6 +2096,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // Leave room for the sort indicator
                 captionContainerWidth -= sortIndicator.getOffsetWidth();
             }
+
+            if (captionContainerWidth < 0) {
+                rightSpacing += captionContainerWidth;
+                captionContainerWidth = 0;
+            }
+
             captionContainer.getStyle().setPropertyPx("width",
                     captionContainerWidth);
 

@@ -144,7 +144,7 @@ public class ApplicationConnection {
 
     protected boolean applicationRunning = false;
 
-    private int activeRequests = 0;
+    private boolean hasActiveRequest = false;
 
     protected boolean cssLoaded = false;
 
@@ -226,7 +226,7 @@ public class ApplicationConnection {
             repaintAll();
         } else {
             // Update counter so TestBench knows something is still going on
-            incrementActiveRequests();
+            hasActiveRequest = true;
 
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText, -1);
@@ -372,26 +372,12 @@ public class ApplicationConnection {
 
     /**
      * Indicates whether or not there are currently active UIDL requests. Used
-     * internally to squence requests properly, seldom needed in Widgets.
+     * internally to sequence requests properly, seldom needed in Widgets.
      * 
      * @return true if there are active requests
      */
     public boolean hasActiveRequest() {
-        return (activeRequests > 0);
-    }
-
-    public void incrementActiveRequests() {
-        if (activeRequests < 0) {
-            activeRequests = 1;
-        } else {
-            activeRequests++;
-        }
-    }
-
-    public void decrementActiveRequests() {
-        if (activeRequests > 0) {
-            activeRequests--;
-        }
+        return hasActiveRequest;
     }
 
     private String getRepaintAllParameters() {
@@ -539,7 +525,9 @@ public class ApplicationConnection {
                         (new Timer() {
                             @Override
                             public void run() {
-                                decrementActiveRequests();
+                                // TODO why? Here used to be "activeRequests--;"
+                                // but can't see why exactly
+                                hasActiveRequest = false;
                                 doUidlRequest(uri, payload, synchronous);
                             }
                         }).schedule(delay);
@@ -759,7 +747,7 @@ public class ApplicationConnection {
     }
 
     protected void startRequest() {
-        incrementActiveRequests();
+        hasActiveRequest = true;
         requestStartTime = new Date();
         // show initial throbber
         if (loadTimer == null) {
@@ -787,7 +775,7 @@ public class ApplicationConnection {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
-        decrementActiveRequests();
+        hasActiveRequest = false;
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
@@ -1538,10 +1526,6 @@ public class ApplicationConnection {
         }
 
         makeUidlRequest(req.toString(), extraParams, forceSync);
-    }
-
-    private void makeUidlRequest(String string) {
-        makeUidlRequest(string, "", false);
     }
 
     /**
