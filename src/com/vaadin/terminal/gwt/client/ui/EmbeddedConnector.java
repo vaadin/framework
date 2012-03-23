@@ -27,6 +27,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 public class EmbeddedConnector extends AbstractComponentConnector {
 
     public static final String CLICK_EVENT_IDENTIFIER = "click";
+    public static final String ALTERNATE_TEXT = "alt";
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

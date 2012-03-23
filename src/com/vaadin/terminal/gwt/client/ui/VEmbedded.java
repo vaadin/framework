@@ -152,6 +152,11 @@ public class VEmbedded extends HTML {
         // End embed tag
         html.append("></embed>");
 
+        if (uidl.hasAttribute(EmbeddedConnector.ALTERNATE_TEXT)) {
+            html.append(uidl
+                    .getStringAttribute(EmbeddedConnector.ALTERNATE_TEXT));
+        }
+
         // End object tag
         html.append("</object>");
 
@@ -207,8 +212,14 @@ public class VEmbedded extends HTML {
             // Force browser to fire unload event when component is detached
             // from the view (IE doesn't do this automatically)
             if (browserElement != null) {
-                DOM.setElementAttribute(browserElement, "src",
-                        "javascript:false");
+                /*
+                 * src was previously set to javascript:false, but this was not
+                 * enough to overcome a bug when detaching an iframe with a pdf
+                 * loaded in IE9. about:blank seems to cause the adobe reader
+                 * plugin to unload properly before the iframe is removed. See
+                 * #7855
+                 */
+                DOM.setElementAttribute(browserElement, "src", "about:blank");
             }
         }
         super.onDetach();

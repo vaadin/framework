@@ -760,7 +760,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         public void setSelected(boolean selected) {
-            if (selected && !isSeparator) {
+            if (selected && isSelectable()) {
                 addStyleDependentName("selected");
                 // needed for IE6 to have a single style name to match for an
                 // element
@@ -939,6 +939,15 @@ public class VMenuBar extends SimpleFocusablePanel implements
             }
 
             return menubar;
+        }
+
+        /**
+         * Checks if the item can be selected.
+         * 
+         * @return true if it is possible to select this item, false otherwise
+         */
+        public boolean isSelectable() {
+            return !isSeparator() && isEnabled();
         }
 
     }
@@ -1163,11 +1172,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
             if (getSelected() == null) {
                 // If nothing is selected then select the last item
                 setSelected(items.get(items.size() - 1));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null && getParentMenu() == null) {
-                // If this is the root menu then move to the right
+                // If this is the root menu then move to the left
                 int idx = items.indexOf(getSelected());
                 if (idx > 0) {
                     setSelected(items.get(idx - 1));
@@ -1175,7 +1184,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                     setSelected(items.get(items.size() - 1));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu != null) {
@@ -1183,8 +1192,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
 
             } else if (getParentMenu().getParentMenu() == null) {
-
-                // Get the root menu
+                // Inside a sub menu, whose parent is a root menu item
                 VMenuBar root = getParentMenu();
 
                 root.getSelected().getSubMenu().setSelected(null);
@@ -1201,12 +1209,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 }
 
                 root.setSelected(selected);
-                root.showChildMenu(selected);
-                VMenuBar submenu = selected.getSubMenu();
-
-                // Select the first item in the newly open submenu
-                submenu.setSelected(submenu.getItems().get(0));
-
+                openMenuAndFocusFirstIfPossible(selected);
             } else {
                 getParentMenu().getSelected().getSubMenu().setSelected(null);
                 getParentMenu().hideChildren();
@@ -1219,7 +1222,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 setSelected(items.get(0));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null && getParentMenu() == null) {
@@ -1232,7 +1235,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                     setSelected(items.get(0));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu == null
@@ -1264,12 +1267,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 }
 
                 root.setSelected(selected);
-                root.showChildMenu(selected);
-                VMenuBar submenu = selected.getSubMenu();
-
-                // Select the first item in the newly open submenu
-                submenu.setSelected(submenu.getItems().get(0));
-
+                openMenuAndFocusFirstIfPossible(selected);
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
@@ -1282,7 +1280,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             if (getSelected() == null) {
                 // If nothing is selected then select the last item
                 setSelected(items.get(items.size() - 1));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             } else if (visibleChildMenu != null) {
@@ -1297,7 +1295,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                     setSelected(items.get(items.size() - 1));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             }
@@ -1308,16 +1306,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
-                setSelected(items.get(0));
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
-                    handleNavigation(keycode, ctrl, shift);
-                }
+                selectFirstItem();
             } else if (visibleChildMenu == null && getParentMenu() == null) {
                 // If this is the root menu the show the child menu with arrow
-                // down
-                showChildMenu(getSelected());
-                menuVisible = true;
-                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+                // down, if there is a child menu
+                openMenuAndFocusFirstIfPossible(getSelected());
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
@@ -1330,7 +1323,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                     setSelected(items.get(0));
                 }
 
-                if (getSelected().isSeparator() || !getSelected().isEnabled()) {
+                if (!getSelected().isSelectable()) {
                     handleNavigation(keycode, ctrl, shift);
                 }
             }
@@ -1342,17 +1335,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
             menuVisible = false;
 
         } else if (keycode == getNavigationSelectKey()) {
-            if (visibleChildMenu != null) {
+            if (getSelected() == null) {
+                // If nothing is selected then select the first item
+                selectFirstItem();
+            } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
                 menuVisible = false;
             } else if (visibleChildMenu == null
                     && getSelected().getSubMenu() != null) {
-                // If the item has a submenu then show it and move the selection
-                // there
-                showChildMenu(getSelected());
-                menuVisible = true;
-                visibleChildMenu.handleNavigation(keycode, ctrl, shift);
+                // If the item has a sub menu then show it and move the
+                // selection there
+                openMenuAndFocusFirstIfPossible(getSelected());
             } else {
                 Command command = getSelected().getCommand();
                 if (command != null) {
@@ -1365,6 +1359,34 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         return false;
+    }
+
+    private void selectFirstItem() {
+        for (int i = 0; i < items.size(); i++) {
+            CustomMenuItem item = items.get(i);
+            if (!item.isSelectable()) {
+                continue;
+            }
+
+            setSelected(item);
+            break;
+        }
+    }
+
+    private void openMenuAndFocusFirstIfPossible(CustomMenuItem menuItem) {
+        VMenuBar subMenu = menuItem.getSubMenu();
+        if (subMenu == null) {
+            // No child menu? Nothing to do
+            return;
+        }
+
+        VMenuBar parentMenu = menuItem.getParentMenu();
+        parentMenu.showChildMenu(menuItem);
+
+        menuVisible = true;
+        // Select the first item in the newly open submenu
+        subMenu.setSelected(subMenu.getItems().get(0));
+
     }
 
     /*

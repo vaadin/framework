@@ -168,6 +168,8 @@ public class VDragAndDropManager {
                     // ApplicationConnection.getConsole().log(
                     // "DropHandler now"
                     // + currentDropHandler.getPaintable());
+                    currentDrag
+                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
                     target.dragEnter(currentDrag);
                 } else if (target == null && currentDropHandler != null) {
                     // ApplicationConnection.getConsole().log("Invalid state!?");
@@ -198,6 +200,8 @@ public class VDragAndDropManager {
             case Event.ONMOUSEMOVE:
             case Event.ONTOUCHMOVE:
                 if (currentDropHandler != null) {
+                    currentDrag
+                            .setElementOver((com.google.gwt.user.client.Element) targetElement);
                     currentDropHandler.dragOver(currentDrag);
                 }
                 nativeEvent.preventDefault();
