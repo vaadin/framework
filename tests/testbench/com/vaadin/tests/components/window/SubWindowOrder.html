@@ -16,11 +16,13 @@
 	<td>/run/com.vaadin.tests.components.window.SubWindowOrder?restartApplication</td>
 	<td></td>
 </tr>
+<!--Activate Dialog 1 - should be on top after this-->
 <tr>
 	<td>click</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Open combobox in bottom left and select dialog 3-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -36,6 +38,7 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item3</td>
 	<td>93,10</td>
 </tr>
+<!--Make dialog 3 modal and centered-->
 <tr>
 	<td>click</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VHorizontalLayout[0]/ChildComponentContainer[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
@@ -46,6 +49,7 @@
 	<td></td>
 	<td>dialog-3-modal</td>
 </tr>
+<!--Make dialog 4 modal and centered. Dialog 3 still stays on top-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -61,6 +65,7 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Make dialog 5 modal and centered-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -76,21 +81,25 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Close window 5, which is not the topmost window (???)-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[4]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
 	<td>11,15</td>
 </tr>
+<!--The screenshot should really be ...-window-4-modal-->
 <tr>
 	<td>screenCapture</td>
 	<td></td>
 	<td>window5closed-window-5-modal</td>
 </tr>
+<!--Close Dialog 4 (topmost)-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
 	<td>6,8</td>
 </tr>
+<!--Make Dialog 3 (topmost) non-modal-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -106,6 +115,7 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Bring dialog 2 to front-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -121,6 +131,7 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
+<!--Close dialog 3-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
