@@ -12,7 +12,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.Paintable;
 
 public class ConnectorMap {
 
@@ -130,7 +129,7 @@ public class ConnectorMap {
      * root element for a connector, otherwise no id will be found. Use
      * {@link #getConnectorId(ServerConnector)} instead whenever possible.
      * 
-     * @see #getConnectorId(Paintable)
+     * @see #getConnectorId(ServerConnector)
      * @param el
      *            element of the connector whose id is desired
      * @return the id of the element's connector, if it's a connector

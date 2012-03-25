@@ -23,7 +23,6 @@ import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 
@@ -70,7 +69,7 @@ public class JsonCodec implements Serializable {
      * @param value
      *            JSON array with two elements
      * @param application
-     *            mapper between paintable ID and {@link Paintable} objects
+     *            mapper between connector ID and {@link Connector} objects
      * @return converted value (does not contain JSON types)
      * @throws JSONException
      *             if the conversion fails
@@ -177,7 +176,7 @@ public class JsonCodec implements Serializable {
      * @param value
      *            value to convert
      * @param application
-     *            mapper between paintable ID and {@link Paintable} objects
+     *            mapper between connector ID and {@link Connector} objects
      * @return JSON representation of the value
      * @throws JSONException
      *             if encoding a value fails (e.g. NaN or infinite number)

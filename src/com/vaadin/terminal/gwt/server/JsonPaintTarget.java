@@ -1023,7 +1023,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         usedPaintableTypes.add(class1);
-        return manager.getTagForType(class1);
+        return manager.getTagForType((Class<? extends ClientConnector>) class1);
 
     }
 

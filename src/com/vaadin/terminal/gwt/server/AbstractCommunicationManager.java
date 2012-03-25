@@ -1059,7 +1059,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 outWriter.print("\"");
                 outWriter.print(canonicalName);
                 outWriter.print("\" : ");
-                outWriter.print(getTagForType(class1));
+                outWriter
+                        .print(getTagForType((Class<? extends ClientConnector>) class1));
             }
         }
         if (typeMappingsOpen) {
@@ -1077,33 +1078,33 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private void legacyPaint(PaintTarget paintTarget,
             ArrayList<ClientConnector> dirtyVisibleConnectors)
             throws PaintException {
-        List<Paintable> paintables = new ArrayList<Paintable>();
+        List<Component> legacyComponents = new ArrayList<Component>();
         for (Connector connector : dirtyVisibleConnectors) {
             if (connector instanceof Paintable) {
-                paintables.add((Paintable) connector);
+                // All legacy Components must be Paintables as Component extends
+                // Paintable in Vaadin 6
+                legacyComponents.add((Component) connector);
             }
         }
-        sortByHierarchy(paintables);
-        for (Paintable p : paintables) {
-            logger.info("Painting legacy Paintable " + p.getClass().getName()
-                    + "@" + Integer.toHexString(p.hashCode()));
+        sortByHierarchy(legacyComponents);
+        for (Component c : legacyComponents) {
+            logger.info("Painting legacy Component " + c.getClass().getName()
+                    + "@" + Integer.toHexString(c.hashCode()));
             paintTarget.startTag("change");
-            final String pid = ((Connector) p).getConnectorId();
+            final String pid = c.getConnectorId();
             paintTarget.addAttribute("pid", pid);
-            p.paint(paintTarget);
+            c.paint(paintTarget);
             paintTarget.endTag("change");
         }
 
     }
 
-    private void sortByHierarchy(List<Paintable> paintables) {
+    private void sortByHierarchy(List<Component> paintables) {
         // Vaadin 6 requires parents to be painted before children as component
         // containers rely on that their updateFromUIDL method has been called
         // before children start calling e.g. updateCaption
-        Collections.sort(paintables, new Comparator<Paintable>() {
-            public int compare(Paintable o1, Paintable o2) {
-                Component c1 = (Component) o1;
-                Component c2 = (Component) o2;
+        Collections.sort(paintables, new Comparator<Component>() {
+            public int compare(Component c1, Component c2) {
                 int depth1 = 0;
                 while (c1.getParent() != null) {
                     depth1++;
@@ -1195,11 +1196,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     /**
-     * Collects all pending RPC calls from listed {@link Paintable}s and clears
-     * their RPC queues.
+     * Collects all pending RPC calls from listed {@link ClientConnector}s and
+     * clears their RPC queues.
      * 
      * @param rpcPendingQueue
-     *            list of {@link Paintable} of interest
+     *            list of {@link ClientConnector} of interest
      * @return ordered list of pending RPC calls
      */
     private List<ClientMethodInvocation> collectPendingRpcCalls(
@@ -1994,12 +1995,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     }
 
-    private final HashMap<Class<? extends Paintable>, Integer> typeToKey = new HashMap<Class<? extends Paintable>, Integer>();
+    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<Class<? extends ClientConnector>, Integer>();
     private int nextTypeKey = 0;
 
     private BootstrapHandler bootstrapHandler;
 
-    String getTagForType(Class<? extends Paintable> class1) {
+    String getTagForType(Class<? extends ClientConnector> class1) {
         Integer object = typeToKey.get(class1);
         if (object == null) {
             object = nextTypeKey++;

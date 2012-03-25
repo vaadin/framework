@@ -57,13 +57,10 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * communication with its server side counterpart
  * {@link AbstractCommunicationManager}.
  * 
- * Client-side widgets receive updates from the corresponding server-side
- * components as calls to
- * {@link ComponentConnector#updateFromUIDL(UIDL, ApplicationConnection)} (not
- * to be confused with the server side interface
- * {@link com.vaadin.terminal.Paintable} ). Any client-side changes (typically
- * resulting from user actions) are sent back to the server as variable changes
- * (see {@link #updateVariable()}).
+ * Client-side connectors receive updates from the corresponding server-side
+ * connector (typically component) as state updates or RPC calls. The connector
+ * has the possibility to communicate back with its server side counter part
+ * through RPC calls.
  * 
  * TODO document better
  * 

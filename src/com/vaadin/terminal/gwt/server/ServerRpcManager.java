@@ -10,15 +10,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
 /**
  * Server side RPC manager that handles RPC calls coming from the client.
  * 
- * Each {@link RpcTarget} (typically a {@link Paintable}) should have its own
- * instance of {@link ServerRpcManager} if it wants to receive RPC calls from
- * the client.
+ * Each {@link RpcTarget} (typically a {@link ClientConnector}) should have its
+ * own instance of {@link ServerRpcManager} if it wants to receive RPC calls
+ * from the client.
  * 
  * @since 7.0
  */
@@ -51,7 +51,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * Create a RPC manager for an RPC target.
      * 
      * @param target
-     *            RPC call target (normally a {@link Paintable})
+     *            RPC call target (normally a {@link Connector})
      * @param implementation
      *            RPC interface implementation for the target
      * @param rpcInterface
@@ -96,7 +96,7 @@ public class ServerRpcManager<T> implements RpcManager {
     /**
      * Returns the RPC target of this RPC manager instance.
      * 
-     * @return RpcTarget, typically a {@link Paintable}
+     * @return RpcTarget, typically a {@link Connector}
      */
     public RpcTarget getTarget() {
         return target;
