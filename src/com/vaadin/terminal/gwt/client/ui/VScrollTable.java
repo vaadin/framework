@@ -6648,6 +6648,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private boolean isDynamicHeight() {
         ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
+        if (paintable == null) {
+            // This should be refactored. As isDynamicHeight can be called from
+            // a timer it is possible that the connector has been unregistered
+            // when this method is called, causing getConnector to return null.
+            return false;
+        }
         return paintable.isUndefinedHeight();
     }
 
