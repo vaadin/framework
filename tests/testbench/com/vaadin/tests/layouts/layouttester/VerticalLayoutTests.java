@@ -291,7 +291,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
 
             public void buttonClick(ClickEvent event) {
                 vlo2.setSizeUndefined();
-                vlo2.addComponent(new Label("--- NEW LABEL ---"));
+                Label newLabel = new Label("--- NEW LABEL ---");
+                newLabel.setSizeUndefined();
+                vlo2.addComponent(newLabel);
                 button2.setEnabled(false);
                 button3.setEnabled(true);
             }
