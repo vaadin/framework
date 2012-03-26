@@ -50,4 +50,10 @@ public class BaseTheme {
      */
     public static final String TREE_CONNECTORS = "connectors";
 
+    /**
+     * Clips the component so it will be constrained to its given size and not
+     * overflow.
+     */
+    public static final String CLIP = "v-clip";
+
 }

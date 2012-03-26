@@ -21,6 +21,7 @@ import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.themes.BaseTheme;
 
 public abstract class AbstractComponentTest<T extends AbstractComponent>
         extends AbstractComponentTestCase<T> implements FocusListener,
@@ -173,7 +174,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     private void createLog() {
         log = new Log(5).setNumberLogRows(true);
         log.setData(log.getCaption());
-        log.setStyleName("v-clip");
+        log.setStyleName(BaseTheme.CLIP);
         getLayout().addComponent(log, 1);
     }
 
