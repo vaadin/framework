@@ -838,6 +838,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
+        // On the first rendering, add a handler to clear saved context menu
+        // details when the menu closes. See #8526.
         if (this.client == null) {
             client.getContextMenu().addCloseHandler(
                     new CloseHandler<PopupPanel>() {
@@ -846,7 +848,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         }
                     });
         }
-
+        // If a row has an open context menu, it will be closed as the row is
+        // detached. Retain a reference here so we can restore the menu if
+        // required.
         ContextMenuDetails savedContextMenu = contextMenu;
 
         if (uidl.hasAttribute(ATTRIBUTE_PAGEBUFFER_FIRST)) {
@@ -985,6 +989,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
+        // If a row had an open context menu before the update, and after the
+        // update there's a row with the same key as that row, restore the
+        // context menu. See #8526.
+        if (enabled && savedContextMenu != null) {
+            for (Widget w : scrollBody.renderedRows) {
+                VScrollTableRow row = (VScrollTableRow) w;
+                if (row.isVisible()
+                        && row.getKey().equals(savedContextMenu.rowKey)) {
+                    contextMenu = savedContextMenu;
+                    client.getContextMenu().showAt(row, savedContextMenu.left,
+                            savedContextMenu.top);
+                }
+            }
+        }
+
         if (!isSelectable()) {
             scrollBody.addStyleName(CLASSNAME + "-body-noselection");
         } else {
@@ -1040,17 +1059,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         rendering = false;
         headerChangedDuringUpdate = false;
-
-        if (savedContextMenu != null) {
-            for (Widget w : scrollBody.renderedRows) {
-                VScrollTableRow row = (VScrollTableRow) w;
-                if (row.getKey().equals(savedContextMenu.rowKey)) {
-                    contextMenu = savedContextMenu;
-                    client.getContextMenu().showAt(row, savedContextMenu.left,
-                            savedContextMenu.top);
-                }
-            }
-        }
     }
 
     private void initializeRows(UIDL uidl, UIDL rowData) {
@@ -5411,8 +5419,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
-                    contextMenu = new ContextMenuDetails(this.getKey(),
-                            left, top);
+                    contextMenu = new ContextMenuDetails(this.getKey(), left,
+                            top);
                     client.getContextMenu().showAt(this, left, top);
                 }
             }
