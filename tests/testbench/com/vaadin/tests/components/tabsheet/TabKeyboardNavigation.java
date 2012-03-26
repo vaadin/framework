@@ -7,6 +7,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -25,7 +26,7 @@ public class TabKeyboardNavigation extends TestBase {
     int index = 1;
     ArrayList<Component> tabs = new ArrayList<Component>();
     TabSheet ts = new TabSheet();
-    Label focusblur = new Label("No focus");
+    Log focusblur = new Log(10);
 
     @Override
     protected void setup() {
@@ -35,13 +36,13 @@ public class TabKeyboardNavigation extends TestBase {
 
         ts.addListener(new FocusListener() {
             public void focus(FocusEvent event) {
-                focusblur.setValue("Tabsheet focused!");
+                focusblur.log("Tabsheet focused!");
             }
         });
 
         ts.addListener(new BlurListener() {
             public void blur(BlurEvent event) {
-                focusblur.setValue("Tabsheet blurred!");
+                focusblur.log("Tabsheet blurred!");
             }
         });
 
