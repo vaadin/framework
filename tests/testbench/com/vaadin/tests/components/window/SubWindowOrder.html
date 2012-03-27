@@ -65,10 +65,16 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
-<!--Make dialog 5 modal and centered-->
+<!--Bring dialog 4 to front-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--Make dialog 5 modal and centered. Dialog 4 still stays on top-->
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
 	<td>11,11</td>
 </tr>
 <tr>
@@ -78,28 +84,27 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/FocusableScrollPanel[0]/VVerticalLayout[0]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[1]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
-<!--Close window 5, which is not the topmost window (???)-->
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[4]/domChild[0]/domChild[0]/domChild[1]</td>
-	<td>11,15</td>
-</tr>
-<!--The screenshot should really be ...-window-4-modal-->
-<tr>
-	<td>screenCapture</td>
-	<td></td>
-	<td>window5closed-window-5-modal</td>
-</tr>
-<!--Close Dialog 4 (topmost)-->
+<!--Close window 4, which is the topmost window-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[3]/domChild[0]/domChild[0]/domChild[1]</td>
+	<td>11,15</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>window4-closed-window-3-modal</td>
+</tr>
+<!--Close Dialog 3 (topmost)-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/domChild[0]/domChild[0]/domChild[1]</td>
 	<td>6,8</td>
 </tr>
-<!--Make Dialog 3 (topmost) non-modal-->
+<!--Make Dialog 5 (topmost) non-modal-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VFilterSelect[0]/domChild[1]</td>
@@ -107,7 +112,7 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item3</td>
+	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::Root/VFilterSelect$SuggestionPopup[0]/VFilterSelect$SuggestionMenu[0]#item5</td>
 	<td>97,6</td>
 </tr>
 <tr>
@@ -131,7 +136,7 @@
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VCssLayout[0]/VCssLayout$FlowPane[0]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
-<!--Close dialog 3-->
+<!--Close dialog 5-->
 <tr>
 	<td>mouseClick</td>
 	<td>vaadin=runcomvaadintestscomponentswindowSubWindowOrder::/VWindow[2]/domChild[0]/domChild[0]/domChild[1]</td>

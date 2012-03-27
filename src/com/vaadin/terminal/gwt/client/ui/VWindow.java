@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Console;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -174,7 +175,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * @return
      */
     private boolean isActive() {
-        return windowOrder.get(windowOrder.size() - 1).equals(this);
+        return equals(getTopmostWindow());
+    }
+
+    private static VWindow getTopmostWindow() {
+        return windowOrder.get(windowOrder.size() - 1);
     }
 
     void setWindowOrderAndPosition() {
@@ -360,6 +365,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void show() {
+        if (!windowOrder.contains(this)) {
+            windowOrder.add(this);
+        }
+
         if (vaadinModality) {
             showModalityCurtain();
         }
@@ -372,6 +381,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             hideModalityCurtain();
         }
         super.hide();
+
+        windowOrder.remove(this);
     }
 
     void setVaadinModality(boolean modality) {
@@ -784,22 +795,34 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         } else if (resizing) {
             onResizeEvent(event);
             return false;
-        } else if (vaadinModality) {
-            // return false when modal and outside window
-            final Element target = event.getEventTarget().cast();
+        }
+
+        // TODO This is probably completely unnecessary as the modality curtain
+        // prevents events from reaching other windows and any security check
+        // must be done on the server side and not here.
+        // The code here is also run many times as each VWindow has an event
+        // preview but we cannot check only the current VWindow here (e.g.
+        // if(isTopMost) {...}) because PopupPanel will cause all events that
+        // are not cancelled here and target this window to be consume():d
+        // meaning the event won't be sent to the rest of the preview handlers.
+
+        if (getTopmostWindow().vaadinModality) {
+            // Topmost window is modal. Cancel the event if it targets something
+            // outside that window (except debug console...)
             if (DOM.getCaptureElement() != null) {
                 // Allow events when capture is set
                 return true;
             }
 
-            if (!DOM.isOrHasChild(getElement(), target)) {
+            final Element target = event.getEventTarget().cast();
+            if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
                 Widget w = Util.findWidget(target, null);
                 while (w != null) {
                     if (w instanceof Console) {
                         return true; // allow debug-window clicks
-                    } else if (w instanceof ComponentConnector) {
+                    } else if (ConnectorMap.get(client).isConnector(w)) {
                         return false;
                     }
                     w = w.getParent();
