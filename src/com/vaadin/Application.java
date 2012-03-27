@@ -333,7 +333,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @since 7.0
      */
-    public static class ApplicationStartEvent {
+    public static class ApplicationStartEvent implements Serializable {
         private final URL applicationUrl;
 
         private final Properties applicationProperties;
