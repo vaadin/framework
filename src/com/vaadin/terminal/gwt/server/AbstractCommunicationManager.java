@@ -1437,7 +1437,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         invocation.getConnectorId());
                 final VariableOwner owner = (VariableOwner) connector;
 
-                boolean connectorEnabled = connector.isConnectorEnabled();
+                boolean connectorEnabled = (connector != null && connector
+                        .isConnectorEnabled());
 
                 if (owner != null && connectorEnabled) {
                     VariableChange change = new VariableChange(invocation);
