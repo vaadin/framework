@@ -1590,12 +1590,10 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
     private void selectFirstItem() {
         for (int i = 0; i < items.size(); i++) {
             CustomMenuItem item = items.get(i);
-            if (!item.isSelectable()) {
-                continue;
+            if (item.isSelectable()) {
+                setSelected(item);
+                break;
             }
-
-            setSelected(item);
-            break;
         }
     }
 
@@ -1611,7 +1609,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
 
         menuVisible = true;
         // Select the first item in the newly open submenu
-        subMenu.setSelected(subMenu.getItems().get(0));
+        subMenu.selectFirstItem();
 
     }
 
