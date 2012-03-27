@@ -19,6 +19,10 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
+        if (!isRealUpdate(uidl)) {
+            return;
+        }
+
         getWidget().calendarPanel.setShowISOWeekNumbers(getWidget()
                 .isShowISOWeekNumbers());
         getWidget().calendarPanel.setDateTimeService(getWidget()
