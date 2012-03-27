@@ -45,6 +45,8 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -54,6 +56,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
@@ -457,6 +460,24 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private boolean sizeNeedsInit = true;
 
+    /**
+     * Used to recall the position of an open context menu if we need to close
+     * and reopen it during a row update.
+     */
+    class ContextMenuDetails {
+        String rowKey;
+        int left;
+        int top;
+
+        ContextMenuDetails(String rowKey, int left, int top) {
+            this.rowKey = rowKey;
+            this.left = left;
+            this.top = top;
+        }
+    }
+
+    protected ContextMenuDetails contextMenu = null;
+
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
@@ -500,6 +521,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         add(tFoot);
 
         rowRequestHandler = new RowRequestHandler();
+    }
+
+    public void init(ApplicationConnection client) {
+        this.client = client;
+        // Add a handler to clear saved context menu details when the menu
+        // closes. See #8526.
+        client.getContextMenu().addCloseHandler(new CloseHandler<PopupPanel>() {
+            public void onClose(CloseEvent<PopupPanel> event) {
+                contextMenu = null;
+            }
+        });
     }
 
     protected TouchScrollDelegate getTouchScrollDelegate() {
@@ -5151,6 +5183,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
+                    contextMenu = new ContextMenuDetails(getKey(), left, top);
                     client.getContextMenu().showAt(this, left, top);
                 }
             }

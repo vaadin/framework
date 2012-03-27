@@ -8,10 +8,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -21,41 +18,16 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.VScrollTable.ContextMenuDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 
 public class TableConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout, PostLayoutListener {
 
-    /**
-     * Used to recall the position of an open context menu if we need to close
-     * and reopen it during a row update.
-     */
-    class ContextMenuDetails {
-        String rowKey;
-        int left;
-        int top;
-
-        ContextMenuDetails(String rowKey, int left, int top) {
-            this.rowKey = rowKey;
-            this.left = left;
-            this.top = top;
-        }
-    }
-
-    protected ContextMenuDetails contextMenu = null;
-
     @Override
     protected void init() {
         super.init();
-
-        // Add a handler to clear saved context menu details when the menu
-        // closes. See #8526.
-        getConnection().getContextMenu().addCloseHandler(
-                new CloseHandler<PopupPanel>() {
-                    public void onClose(CloseEvent<PopupPanel> event) {
-                        contextMenu = null;
-                    }
-                });
+        getWidget().init(getConnection());
     }
 
     /*
@@ -72,7 +44,7 @@ public class TableConnector extends AbstractComponentContainerConnector
         // If a row has an open context menu, it will be closed as the row is
         // detached. Retain a reference here so we can restore the menu if
         // required.
-        ContextMenuDetails contextMenuBeforeUpdate = contextMenu;
+        ContextMenuDetails contextMenuBeforeUpdate = getWidget().contextMenu;
 
         if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST)) {
             getWidget().serverCacheFirst = uidl
@@ -114,7 +86,6 @@ public class TableConnector extends AbstractComponentContainerConnector
                     .setPosition(Position.RELATIVE);
         }
 
-        getWidget().client = client;
         getWidget().paintableId = uidl.getStringAttribute("id");
         getWidget().immediate = getState().isImmediate();
 
@@ -340,7 +311,7 @@ public class TableConnector extends AbstractComponentContainerConnector
                 Widget w = iterator.next();
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (row.getKey().equals(savedContextMenu.rowKey)) {
-                    contextMenu = savedContextMenu;
+                    getWidget().contextMenu = savedContextMenu;
                     getConnection().getContextMenu().showAt(row,
                             savedContextMenu.left, savedContextMenu.top);
                 }

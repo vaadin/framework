@@ -123,8 +123,8 @@ final public class ColumnProperty implements Property {
 
         /* Set the new value and notify container of the change. */
         changedValue = newValue;
-        owner.getContainer().itemChangeNotification(owner);
         modified = true;
+        owner.getContainer().itemChangeNotification(owner);
     }
 
     private boolean isValueAlreadySet(Object newValue) {
