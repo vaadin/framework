@@ -150,12 +150,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Different style of shadow for windows
         setShadowStyle("window");
 
-        final int order = windowOrder.size();
-        setWindowOrder(order);
-        windowOrder.add(this);
         constructDOM();
-        setPopupPosition(order * STACKING_OFFSET_PIXELS, order
-                * STACKING_OFFSET_PIXELS);
         contentPanel.addScrollHandler(this);
         contentPanel.addKeyDownHandler(this);
         contentPanel.addFocusHandler(this);
@@ -180,6 +175,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      */
     private boolean isActive() {
         return windowOrder.get(windowOrder.size() - 1).equals(this);
+    }
+
+    void setWindowOrderAndPosition() {
+        // This cannot be done in the constructor as the widgets are created in
+        // a different order than on they should appear on screen
+        if (windowOrder.contains(this)) {
+            // Already set
+            return;
+        }
+        final int order = windowOrder.size();
+        setWindowOrder(order);
+        windowOrder.add(this);
+        setPopupPosition(order * STACKING_OFFSET_PIXELS, order
+                * STACKING_OFFSET_PIXELS);
+
     }
 
     private void setWindowOrder(int order) {

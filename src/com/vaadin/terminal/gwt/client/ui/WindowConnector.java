@@ -320,4 +320,13 @@ public class WindowConnector extends AbstractComponentContainerConnector
     protected WindowState createState() {
         return GWT.create(WindowState.class);
     }
+
+    /**
+     * Gives the WindowConnector an order number. As a side effect, moves the
+     * window according to its order number so the windows are stacked. This
+     * method should be called for each window in the order they should appear.
+     */
+    public void setWindowOrderAndPosition() {
+        getWidget().setWindowOrderAndPosition();
+    }
 }

@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -350,4 +351,14 @@ public class RootConnector extends AbstractComponentContainerConnector
         return getWidget().subWindows.contains(wc.getWidget());
     }
 
+    @Override
+    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
+        super.connectorHierarchyChanged(event);
+        for (ComponentConnector c : getChildren()) {
+            if (c instanceof WindowConnector) {
+                WindowConnector wc = (WindowConnector) c;
+                wc.setWindowOrderAndPosition();
+            }
+        }
+    }
 }
