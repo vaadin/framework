@@ -583,7 +583,7 @@ public class VDragAndDropManager {
         if (currentDropHandler == null) {
             return;
         }
-        ComponentConnector paintable = currentDropHandler.getPaintable();
+        ComponentConnector paintable = currentDropHandler.getConnector();
         ApplicationConnection client = currentDropHandler
                 .getApplicationConnection();
         /*

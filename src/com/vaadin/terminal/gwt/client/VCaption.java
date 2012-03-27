@@ -70,8 +70,7 @@ public class VCaption extends HTML {
         owner = component;
 
         if (client != null && owner != null) {
-            setOwnerPid(getElement(),
-                    ConnectorMap.get(client).getConnectorId(owner));
+            setOwnerPid(getElement(), owner.getConnectorId());
         }
 
         setStyleName(CLASSNAME);

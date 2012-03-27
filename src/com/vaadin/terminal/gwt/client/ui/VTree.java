@@ -359,7 +359,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 }
 
                 @Override
-                public ComponentConnector getPaintable() {
+                public ComponentConnector getConnector() {
                     return ConnectorMap.get(client).getConnector(VTree.this);
                 }
 

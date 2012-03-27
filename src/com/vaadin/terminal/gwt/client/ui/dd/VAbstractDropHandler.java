@@ -129,6 +129,6 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * side counterpart of the Paintable is expected to implement
      * {@link DropTarget} interface.
      */
-    public abstract ComponentConnector getPaintable();
+    public abstract ComponentConnector getConnector();
 
 }

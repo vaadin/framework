@@ -94,18 +94,17 @@ public class VDebugConsole extends VOverlay implements Console {
 
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    ComponentConnector paintable = Util.getPaintableForElement(
+                    ComponentConnector connector = Util.getConnectorForElement(
                             a, a.getView().getWidget(), eventTarget);
-                    if (paintable == null) {
-                        paintable = Util.getPaintableForElement(a,
+                    if (connector == null) {
+                        connector = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
                     }
-                    if (paintable != null) {
-                        String pid = ConnectorMap.get(a).getConnectorId(
-                                paintable);
-                        VUIDLBrowser.highlight(paintable);
+                    if (connector != null) {
+                        String pid = connector.getConnectorId();
+                        VUIDLBrowser.highlight(connector);
                         label.setText("Currently focused  :"
-                                + paintable.getClass() + " ID:" + pid);
+                                + connector.getClass() + " ID:" + pid);
                         event.cancel();
                         event.consume();
                         event.getNativeEvent().stopPropagation();
@@ -124,10 +123,10 @@ public class VDebugConsole extends VOverlay implements Console {
                         .getClientY());
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
-                    ComponentConnector paintable = Util.getPaintableForElement(
+                    ComponentConnector paintable = Util.getConnectorForElement(
                             a, a.getView().getWidget(), eventTarget);
                     if (paintable == null) {
-                        paintable = Util.getPaintableForElement(a,
+                        paintable = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
                     }
 

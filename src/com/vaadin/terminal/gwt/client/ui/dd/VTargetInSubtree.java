@@ -17,7 +17,7 @@ final public class VTargetInSubtree extends VAcceptCriterion {
     protected boolean accept(VDragEvent drag, UIDL configuration) {
 
         VTree tree = (VTree) VDragAndDropManager.get().getCurrentDropHandler()
-                .getPaintable();
+                .getConnector();
         TreeNode treeNode = tree.getNodeByKey((String) drag.getDropDetails()
                 .get("itemIdOver"));
         if (treeNode != null) {

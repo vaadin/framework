@@ -24,7 +24,6 @@ import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.RenderInformation;
@@ -419,10 +418,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         files.add(file);
     }
 
-    private String getPid() {
-        return ConnectorMap.get(client).getConnectorId((ServerConnector) this);
-    }
-
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -499,7 +494,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }
 
         @Override
-        public ComponentConnector getPaintable() {
+        public ComponentConnector getConnector() {
             return ConnectorMap.get(client).getConnector(
                     VDragAndDropWrapper.this);
         }

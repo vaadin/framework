@@ -59,9 +59,9 @@ public interface VDropHandler {
     public void dragOver(VDragEvent currentDrag);
 
     /**
-     * Returns the Paintable into which this DragHandler is associated
+     * Returns the ComponentConnector with which this DropHandler is associated
      */
-    public ComponentConnector getPaintable();
+    public ComponentConnector getConnector();
 
     /**
      * Returns the application connection to which this {@link VDropHandler}

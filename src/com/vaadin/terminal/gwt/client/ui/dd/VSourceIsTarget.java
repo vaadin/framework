@@ -15,7 +15,7 @@ final public class VSourceIsTarget extends VAcceptCriterion {
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         ComponentConnector dragSource = drag.getTransferable().getDragSource();
         ComponentConnector paintable = VDragAndDropManager.get()
-                .getCurrentDropHandler().getPaintable();
+                .getCurrentDropHandler().getConnector();
 
         return paintable == dragSource;
     }

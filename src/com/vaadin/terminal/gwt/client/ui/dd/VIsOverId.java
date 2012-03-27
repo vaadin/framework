@@ -19,11 +19,12 @@ final public class VIsOverId extends VAcceptCriterion {
             String pid = configuration.getStringAttribute("s");
             VDropHandler currentDropHandler = VDragAndDropManager.get()
                     .getCurrentDropHandler();
-            ComponentConnector paintable = currentDropHandler.getPaintable();
+            ComponentConnector dropHandlerConnector = currentDropHandler
+                    .getConnector();
             ConnectorMap paintableMap = ConnectorMap.get(currentDropHandler
                     .getApplicationConnection());
 
-            String pid2 = paintableMap.getConnectorId(paintable);
+            String pid2 = dropHandlerConnector.getConnectorId();
             if (pid2.equals(pid)) {
                 Object searchedId = drag.getDropDetails().get("itemIdOver");
                 String[] stringArrayAttribute = configuration

@@ -6116,7 +6116,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         @Override
-        public ComponentConnector getPaintable() {
+        public ComponentConnector getConnector() {
             return ConnectorMap.get(client).getConnector(VScrollTable.this);
         }
 
@@ -6472,7 +6472,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (BrowserInfo.get().isIE()) {
             // IE sometimes moves focus to a clicked table cell...
             Element focusedElement = Util.getIEFocusedElement();
-            if (Util.getPaintableForElement(client, getParent(), focusedElement) == this) {
+            if (Util.getConnectorForElement(client, getParent(), focusedElement) == this) {
                 // ..in that case, steal the focus back to the focus handler
                 // but not if focus is in a child component instead (#7965)
                 focus();

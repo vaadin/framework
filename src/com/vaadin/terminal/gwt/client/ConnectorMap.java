@@ -79,6 +79,14 @@ public class ConnectorMap {
         idToComponentDetail.clear();
     }
 
+    /**
+     * Retrieves the connector whose widget matches the parameter.
+     * 
+     * @param widget
+     *            The widget
+     * @return A connector with {@literal widget} as its root widget or null if
+     *         no connector was found
+     */
     public ComponentConnector getConnector(Widget widget) {
         return getConnector(widget.getElement());
     }
@@ -97,32 +105,6 @@ public class ConnectorMap {
     /*-{
         el.tkPid = id;
     }-*/;
-
-    /**
-     * Gets the id for a specific connector.
-     * <p>
-     * The id is used in the UIDL to identify a specific widget instance,
-     * effectively linking the widget with it's server side Component.
-     * </p>
-     * 
-     * @param connector
-     *            the connector whose id is needed
-     * @return the id for the given connector or null if the connector could not
-     *         be found
-     * @deprecated use {@link ServerConnector#getConnectorId()} instead
-     */
-    @Deprecated
-    public String getConnectorId(ServerConnector connector) {
-        if (connector == null) {
-            return null;
-        }
-        return connector.getConnectorId();
-    }
-
-    @Deprecated
-    public String getConnectorId(Widget widget) {
-        return getConnectorId(widget.getElement());
-    }
 
     /**
      * Gets the connector id using a DOM element - the element should be the
@@ -221,9 +203,10 @@ public class ConnectorMap {
         return result.toArray(new ComponentConnector[result.size()]);
     }
 
+    @Deprecated
     private ComponentDetail getComponentDetail(
             ComponentConnector componentConnector) {
-        return idToComponentDetail.get(getConnectorId(componentConnector));
+        return idToComponentDetail.get(componentConnector.getConnectorId());
     }
 
     public int size() {
@@ -273,7 +256,7 @@ public class ConnectorMap {
      *         {@link ComponentConnector}, false otherwise
      */
     public boolean isConnector(Widget w) {
-        return getConnectorId(w) != null;
+        return getConnectorId(w.getElement()) != null;
     }
 
 }

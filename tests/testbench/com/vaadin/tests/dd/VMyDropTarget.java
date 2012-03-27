@@ -34,7 +34,7 @@ public class VMyDropTarget extends Composite implements VHasDropHandler,
         return this;
     }
 
-    public ComponentConnector getPaintable() {
+    public ComponentConnector getConnector() {
         // TODO Auto-generated method stub
         return null;
     }

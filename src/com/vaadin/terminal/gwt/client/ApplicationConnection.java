@@ -423,11 +423,11 @@ public class ApplicationConnection {
      * Sends a request to the server to print details to console that will help
      * developer to locate component in the source code.
      * 
-     * @param paintable
+     * @param componentConnector
      */
-    void highlightComponent(ComponentConnector paintable) {
+    void highlightComponent(ComponentConnector componentConnector) {
         String params = getRepaintAllParameters() + "&highlightComponent="
-                + connectorMap.getConnectorId(paintable);
+                + componentConnector.getConnectorId();
         makeUidlRequest("", params, false);
     }
 

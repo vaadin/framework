@@ -99,17 +99,13 @@ public class Util {
         List<ApplicationConnection> runningApplications = ApplicationConfiguration
                 .getRunningApplications();
         for (ApplicationConnection applicationConnection : runningApplications) {
-            ConnectorMap paintableMap = applicationConnection.getConnectorMap();
-            ComponentConnector paintable = paintableMap.getConnector(widget);
-            if (paintable == null) {
+            ConnectorMap connectorMap = applicationConnection.getConnectorMap();
+            ComponentConnector connector = connectorMap.getConnector(widget);
+            if (connector == null) {
                 continue;
             }
-            String pid = paintableMap.getConnectorId(paintable);
-            if (pid != null) {
-                ServerConnector otherPaintable = paintableMap.getConnector(pid);
-                if (otherPaintable == paintable) {
-                    return applicationConnection;
-                }
+            if (connector.getConnection() == applicationConnection) {
+                return applicationConnection;
             }
         }
 
@@ -645,7 +641,7 @@ public class Util {
      * @return The VPaintableWidget which the element is a part of. Null if the
      *         element does not belong to a child.
      */
-    public static ComponentConnector getPaintableForElement(
+    public static ComponentConnector getConnectorForElement(
             ApplicationConnection client, Widget parent, Element element) {
         Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
@@ -834,10 +830,8 @@ public class Util {
                     Object value = parameters[1];
                     // TODO paintables inside lists/maps get rendered as
                     // components in the debug console
-                    String formattedValue = value instanceof ServerConnector ? c
-                            .getConnectorMap().getConnectorId(
-                                    (ServerConnector) value) : String
-                            .valueOf(value);
+                    String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
+                            .getConnectorId() : String.valueOf(value);
                     formattedParams = parameters[0] + " : " + formattedValue;
                 }
                 if (null == formattedParams) {

@@ -166,7 +166,7 @@ public class VCssLayout extends SimplePanel {
 
         ComponentConnector getComponent(Element element) {
             return Util
-                    .getPaintableForElement(client, VCssLayout.this, element);
+                    .getConnectorForElement(client, VCssLayout.this, element);
         }
 
     }

@@ -31,7 +31,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         @Override
         protected ComponentConnector getChildComponent(Element element) {
-            return Util.getPaintableForElement(getConnection(), getWidget(),
+            return Util.getConnectorForElement(getConnection(), getWidget(),
                     element);
         }
 

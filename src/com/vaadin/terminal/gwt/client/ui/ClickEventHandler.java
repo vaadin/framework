@@ -30,11 +30,11 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
     private HandlerRegistration contextMenuHandlerRegistration;
 
     protected String clickEventIdentifier;
-    protected ComponentConnector paintable;
+    protected ComponentConnector connector;
 
-    public ClickEventHandler(ComponentConnector paintable,
+    public ClickEventHandler(ComponentConnector connector,
             String clickEventIdentifier) {
-        this.paintable = paintable;
+        this.connector = connector;
         this.clickEventIdentifier = clickEventIdentifier;
     }
 
@@ -70,22 +70,22 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
             final H handler, DomEvent.Type<H> type);
 
     protected ApplicationConnection getApplicationConnection() {
-        return paintable.getConnection();
+        return connector.getConnection();
     }
 
     public boolean hasEventListener() {
-        return paintable.hasEventListener(clickEventIdentifier);
+        return connector.hasEventListener(clickEventIdentifier);
     }
 
     protected void fireClick(NativeEvent event) {
-        String pid = paintable.getConnectorId();
+        String pid = connector.getConnectorId();
 
         MouseEventDetails mouseDetails = MouseEventDetailsBuilder
                 .buildMouseEventDetails(event, getRelativeToElement());
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("mouseDetails", mouseDetails.serialize());
-        paintable.getConnection().updateVariable(pid, clickEventIdentifier,
+        connector.getConnection().updateVariable(pid, clickEventIdentifier,
                 parameters, true);
 
     }
@@ -124,7 +124,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
      *         or null if no relative coordinates can be calculated.
      */
     protected Element getRelativeToElement() {
-        return paintable.getWidget().getElement();
+        return connector.getWidget().getElement();
     }
 
 }

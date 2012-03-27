@@ -197,7 +197,7 @@ public class VAbsoluteLayout extends ComplexPanel {
      *         belongs to the layout and not to a child.
      */
     ComponentConnector getComponent(Element element) {
-        return Util.getPaintableForElement(client, this, element);
+        return Util.getConnectorForElement(client, this, element);
     }
 
 }
