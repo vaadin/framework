@@ -11,7 +11,10 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 
-public class PopupViewConnector extends AbstractComponentContainerConnector {
+public class PopupViewConnector extends AbstractComponentContainerConnector
+        implements PostLayoutListener {
+
+    private boolean centerAfterLayout = false;
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -70,6 +73,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector {
                         .getStylePrimaryName());
             }
             getWidget().showPopup(getWidget().popup);
+            centerAfterLayout = true;
 
             // The popup shouldn't be visible, try to hide it.
         } else {
@@ -103,6 +107,13 @@ public class PopupViewConnector extends AbstractComponentContainerConnector {
     @Override
     protected Widget createWidget() {
         return GWT.create(VPopupView.class);
+    }
+
+    public void postLayout() {
+        if (centerAfterLayout) {
+            centerAfterLayout = false;
+            getWidget().center();
+        }
     }
 
 }

@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,16 +24,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.Container;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
-import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
-public class VPopupView extends HTML implements Container, Iterable<Widget> {
+public class VPopupView extends HTML {
 
     public static final String CLASSNAME = "v-popupview";
 
@@ -110,6 +105,12 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
      * @param popup
      */
     protected void showPopup(final CustomPopup popup) {
+        popup.setPopupPosition(0, 0);
+
+        popup.setVisible(true);
+    }
+
+    void center() {
         int windowTop = RootPanel.get().getAbsoluteTop();
         int windowLeft = RootPanel.get().getAbsoluteLeft();
         int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
@@ -144,8 +145,6 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         }
 
         popup.setPopupPosition(left, top);
-
-        popup.setVisible(true);
     }
 
     /**
@@ -346,82 +345,12 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
     }// class CustomPopup
 
-    // Container methods
-
-    public RenderSpace getAllocatedSpace(Widget child) {
-        Size popupExtra = calculatePopupExtra();
-
-        return new RenderSpace(RootPanel.get().getOffsetWidth()
-                - popupExtra.getWidth(), RootPanel.get().getOffsetHeight()
-                - popupExtra.getHeight());
-    }
-
-    /**
-     * Calculate extra space taken by the popup decorations
-     * 
-     * @return
-     */
-    protected Size calculatePopupExtra() {
-        Element pe = popup.getElement();
-        Element ipe = popup.getContainerElement();
-
-        // border + padding
-        int width = Util.getRequiredWidth(pe) - Util.getRequiredWidth(ipe);
-        int height = Util.getRequiredHeight(pe) - Util.getRequiredHeight(ipe);
-
-        return new Size(width, height);
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        if (popup.popupComponentWidget != null) {
-            return popup.popupComponentWidget == component;
-        } else {
-            return false;
-        }
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        popup.setWidget(newComponent);
-        popup.popupComponentWidget = newComponent;
-    }
-
-    public boolean requestLayout(Set<Widget> children) {
-        popup.updateShadowSizeAndPosition();
-        return true;
-    }
-
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
-    }
-
-    public Iterator<Widget> iterator() {
-        return new Iterator<Widget>() {
-
-            int pos = 0;
-
-            public boolean hasNext() {
-                // There is a child widget only if next() has not been called.
-                return (pos == 0);
-            }
-
-            public Widget next() {
-                // Next can be called only once to return the popup.
-                if (pos != 0) {
-                    throw new NoSuchElementException();
-                }
-                pos++;
-                return popup;
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-
-        };
     }
 
 }// class VPopupView
