@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
+import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.DeploymentConfiguration;
@@ -855,8 +856,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             Locale locale = request.getLocale();
             application.setLocale(locale);
             // No application URL when running inside a portlet
-            application.start(null, applicationProperties, context,
-                    isProductionMode());
+            application.start(new ApplicationStartEvent(null,
+                    applicationProperties, context, isProductionMode(), null));
         }
     }
 

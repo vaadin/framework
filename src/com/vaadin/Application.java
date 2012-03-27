@@ -327,6 +327,110 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    /**
+     * An event sent to {@link #start(ApplicationStartEvent)} when a new
+     * Application is being started.
+     * 
+     * @since 7.0
+     */
+    public static class ApplicationStartEvent {
+        private final URL applicationUrl;
+
+        private final Properties applicationProperties;
+
+        private final ApplicationContext context;
+
+        private final boolean productionMode;
+
+        private final ClassLoader classLoader;
+
+        /**
+         * @param applicationUrl
+         *            the URL the application should respond to.
+         * @param applicationProperties
+         *            the Application properties as specified by the deployment
+         *            configuration.
+         * @param context
+         *            the context application will be running in.
+         * @param productionMode
+         *            flag indicating whether the application is running in
+         *            production mode.
+         * @param classLoader
+         *            class loader to use for loading Root classes,
+         *            <code>null</code> indicates that the default class loader
+         *            should be used.
+         */
+        public ApplicationStartEvent(URL applicationUrl,
+                Properties applicationProperties, ApplicationContext context,
+                boolean productionMode, ClassLoader classLoader) {
+            this.applicationUrl = applicationUrl;
+            this.applicationProperties = applicationProperties;
+            this.context = context;
+            this.productionMode = productionMode;
+            this.classLoader = classLoader;
+        }
+
+        /**
+         * Gets the URL the application should respond to.
+         * 
+         * @return the URL the application should respond to or
+         *         <code>null</code> if the URL is not defined.
+         * 
+         * @see Application#getURL()
+         */
+        public URL getApplicationUrl() {
+            return applicationUrl;
+        }
+
+        /**
+         * Gets the Application properties as specified by the deployment
+         * configuration.
+         * 
+         * @return the properties configured for the applciation.
+         * 
+         * @see Application#getProperty(String)
+         */
+        public Properties getApplicationProperties() {
+            return applicationProperties;
+        }
+
+        /**
+         * Gets the context application will be running in.
+         * 
+         * @return the context application will be running in.
+         * 
+         * @see Application#getContext()
+         */
+        public ApplicationContext getContext() {
+            return context;
+        }
+
+        /**
+         * Checks whether the application is running in production mode.
+         * 
+         * @return <code>true</code> if in production mode, else
+         *         <code>false</code>
+         * 
+         * @see Application#isProductionMode()
+         */
+        public boolean isProductionMode() {
+            return productionMode;
+        }
+
+        /**
+         * Gets the class loader to use for loading Root classes,
+         * <code>null</code> indicates that the default class loader should be
+         * used.
+         * 
+         * @return the class loader, or <code>null</code> if not defined.
+         * 
+         * @see Application#getClassLoader()
+         */
+        public ClassLoader getClassLoader() {
+            return classLoader;
+        }
+    }
+
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
 
@@ -415,6 +519,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      */
     private Set<Integer> initedRoots = new HashSet<Integer>();
+
+    /**
+     * The classloader that is used to load {@link Root} classes.
+     */
+    private ClassLoader classLoader;
 
     /**
      * Gets the user of the application.
@@ -520,22 +629,17 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * {@link javax.servlet.ServletContext}.
      * </p>
      * 
-     * @param applicationUrl
-     *            the URL the application should respond to.
-     * @param applicationProperties
-     *            the Application properties as specified by the servlet
-     *            configuration.
-     * @param context
-     *            the context application will be running in.
-     * @param productionMode
+     * @param event
+     *            the application start event containing details required for
+     *            starting the application.
      * 
      */
-    public void start(URL applicationUrl, Properties applicationProperties,
-            ApplicationContext context, boolean productionMode) {
-        this.applicationUrl = applicationUrl;
-        this.productionMode = productionMode;
-        properties = applicationProperties;
-        this.context = context;
+    public void start(ApplicationStartEvent event) {
+        applicationUrl = event.getApplicationUrl();
+        productionMode = event.isProductionMode();
+        properties = event.getApplicationProperties();
+        context = event.getContext();
+        classLoader = event.getClassLoader();
         init();
         applicationIsRunning = true;
     }
@@ -1760,8 +1864,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * <p>
      * The default implementation in {@link Application} creates a new instance
-     * of the Root class returned by {@link #getRootClassName(WrappedRequest},
+     * of the Root class returned by {@link #getRootClassName(WrappedRequest)},
      * which in turn uses the {@value #ROOT_PARAMETER} parameter from web.xml.
+     * If {@link #getClassLoader()} returns a {@link ClassLoader}, it is used
+     * for loading the Root class. Otherwise the {@link ClassLoader} used to
+     * load this class is used.
      * </p>
      * 
      * @param request
@@ -1782,8 +1889,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
             throws RootRequiresMoreInformationException {
         String rootClassName = getRootClassName(request);
         try {
-            Class<? extends Root> rootClass = Class.forName(rootClassName)
-                    .asSubclass(Root.class);
+            ClassLoader classLoader = getClassLoader();
+            if (classLoader == null) {
+                classLoader = getClass().getClassLoader();
+            }
+            Class<? extends Root> rootClass = Class.forName(rootClassName,
+                    true, classLoader).asSubclass(Root.class);
             try {
                 Root root = rootClass.newInstance();
                 return root;
@@ -1795,6 +1906,16 @@ public class Application implements Terminal.ErrorListener, Serializable {
             throw new RuntimeException("Could not load root class "
                     + rootClassName, e);
         }
+    }
+
+    /**
+     * Get the class loader to use for loading Root classes. <code>null</code>
+     * indicates that the default class loader should be used.
+     * 
+     * @return the class loader to use, or <code>null</code>
+     */
+    protected ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     /**

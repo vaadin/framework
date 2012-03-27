@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
+import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
@@ -1033,8 +1034,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Initial locale comes from the request
             Locale locale = request.getLocale();
             application.setLocale(locale);
-            application.start(applicationUrl, applicationProperties,
-                    webApplicationContext, isProductionMode());
+            application.start(new ApplicationStartEvent(applicationUrl,
+                    applicationProperties, webApplicationContext,
+                    isProductionMode(), getClassLoader()));
         }
     }
 

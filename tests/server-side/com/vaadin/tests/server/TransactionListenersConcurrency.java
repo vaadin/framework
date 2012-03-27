@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import com.vaadin.Application;
+import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.service.ApplicationContext.TransactionListener;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
@@ -70,8 +71,9 @@ public class TransactionListenersConcurrency extends TestCase {
                     // called later on.
                     try {
 
-                        app.start(new URL("http://localhost/"),
-                                new Properties(), context, true);
+                        app.start(new ApplicationStartEvent(new URL(
+                                "http://localhost/"), new Properties(),
+                                context, true, null));
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
