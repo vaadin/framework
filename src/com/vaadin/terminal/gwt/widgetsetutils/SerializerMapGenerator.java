@@ -134,7 +134,7 @@ public class SerializerMapGenerator extends Generator {
         // TODO cache serializer instances in a map
         for (JClassType type : typesNeedingSerializers) {
             sourceWriter.println("if (type.equals(\""
-                    + type.getQualifiedSourceName() + "\")) {");
+                    + type.getQualifiedBinaryName() + "\")) {");
             sourceWriter.indent();
             String serializerName = SerializerGenerator
                     .getFullyQualifiedSerializerClassName(type);

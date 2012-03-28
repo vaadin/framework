@@ -237,7 +237,7 @@ public class JsonCodec implements Serializable {
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return combineTypeAndValue(valueType.getCanonicalName(),
+            return combineTypeAndValue(valueType.getName(),
                     encodeObject(value, application));
         }
     }
