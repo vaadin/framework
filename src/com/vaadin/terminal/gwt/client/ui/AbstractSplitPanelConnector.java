@@ -23,9 +23,50 @@ import com.vaadin.terminal.gwt.client.UIDL;
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
 
+    public static class SplitterState {
+        private int position;
+        private String positionUnit;
+        private boolean positionReversed;
+        private boolean locked;
+
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public String getPositionUnit() {
+            return positionUnit;
+        }
+
+        public void setPositionUnit(String positionUnit) {
+            this.positionUnit = positionUnit;
+        }
+
+        public boolean isPositionReversed() {
+            return positionReversed;
+        }
+
+        public void setPositionReversed(boolean positionReversed) {
+            this.positionReversed = positionReversed;
+        }
+
+        public boolean isLocked() {
+            return locked;
+        }
+
+        public void setLocked(boolean locked) {
+            this.locked = locked;
+        }
+
+    }
+
     public static class AbstractSplitPanelState extends ComponentState {
         private Connector firstChild = null;
         private Connector secondChild = null;
+        private SplitterState splitterState = new SplitterState();
 
         public boolean hasFirstChild() {
             return firstChild != null;
@@ -51,9 +92,25 @@ public abstract class AbstractSplitPanelConnector extends
             this.secondChild = secondChild;
         }
 
+        public SplitterState getSplitterState() {
+            return splitterState;
+        }
+
+        public void setSplitterState(SplitterState splitterState) {
+            this.splitterState = splitterState;
+        }
+
     }
 
     public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
+
+    @Override
+    protected void init() {
+        super.init();
+        // TODO Remove
+        getWidget().client = getConnection();
+        getWidget().id = getConnectorId();
+    }
 
     public void updateCaption(ComponentConnector component) {
         // TODO Implement caption handling
@@ -101,36 +158,35 @@ public abstract class AbstractSplitPanelConnector extends
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
-        getWidget().id = uidl.getId();
-
-        getWidget().immediate = getState().isImmediate();
-
         super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
+
+        getWidget().immediate = getState().isImmediate();
+
+        // TODO Should be handled by framework
         getWidget().setEnabled(isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration();
+
+        // TODO Move to stateChangeListener
         if (getState().hasStyles()) {
             getWidget().componentStyleNames = getState().getStyles();
         } else {
             getWidget().componentStyleNames = new LinkedList<String>();
         }
 
-        getWidget().setLocked(uidl.getBooleanAttribute("locked"));
+        // Splitter updates
+        SplitterState splitterState = getState().getSplitterState();
 
-        getWidget().setPositionReversed(uidl.getBooleanAttribute("reversed"));
+        getWidget().setLocked(splitterState.isLocked());
+        getWidget().setPositionReversed(splitterState.isPositionReversed());
 
         getWidget().setStylenames();
 
-        getWidget().position = uidl.getStringAttribute("position");
-
-        for (int childIndex = 0; childIndex < getChildren().size(); childIndex++) {
-            getChildren().get(childIndex).updateFromUIDL(
-                    uidl.getChildUIDL(childIndex++), client);
-        }
+        getWidget().position = splitterState.getPosition()
+                + splitterState.getPositionUnit();
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.

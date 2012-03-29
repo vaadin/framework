@@ -11,13 +11,12 @@ import java.util.Map;
 
 import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector.AbstractSplitPanelState;
+import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector.SplitterState;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -33,15 +32,13 @@ import com.vaadin.tools.ReflectTools;
  */
 public abstract class AbstractSplitPanel extends AbstractLayout {
 
-    private int pos = 50;
-
-    private Unit posUnit = Unit.PERCENTAGE;
-
-    private boolean posReversed = false;
-
-    private boolean locked = false;
+    private Unit posUnit;
 
     private static final String SPLITTER_CLICK_EVENT = AbstractSplitPanelConnector.SPLITTER_CLICK_EVENT_IDENTIFIER;
+
+    public AbstractSplitPanel() {
+        setSplitPosition(50, Unit.PERCENTAGE, false);
+    }
 
     /**
      * Modifiable and Serializable Iterator for the components, used by
@@ -219,36 +216,6 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         return count;
     }
 
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        final String position = pos + posUnit.getSymbol();
-
-        target.addAttribute("position", position);
-
-        if (isLocked()) {
-            target.addAttribute("locked", true);
-        }
-
-        target.addAttribute("reversed", posReversed);
-
-        if (getFirstComponent() != null) {
-            getFirstComponent().paint(target);
-        }
-        if (getSecondComponent() != null) {
-            getSecondComponent().paint(target);
-        }
-    }
-
     /* Documented in superclass */
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (oldComponent == getFirstComponent()) {
@@ -267,7 +234,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            used (default is percentage)
      */
     public void setSplitPosition(int pos) {
-        setSplitPosition(pos, posUnit, true, false);
+        setSplitPosition(pos, posUnit, false);
     }
 
     /**
@@ -281,7 +248,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            second region else it is measured by the first region
      */
     public void setSplitPosition(int pos, boolean reverse) {
-        setSplitPosition(pos, posUnit, true, reverse);
+        setSplitPosition(pos, posUnit, reverse);
     }
 
     /**
@@ -293,7 +260,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
     public void setSplitPosition(int pos, Unit unit) {
-        setSplitPosition(pos, unit, true, false);
+        setSplitPosition(pos, unit, false);
     }
 
     /**
@@ -309,7 +276,17 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      */
     public void setSplitPosition(int pos, Unit unit, boolean reverse) {
-        setSplitPosition(pos, unit, true, reverse);
+        if (unit != Unit.PERCENTAGE && unit != Unit.PIXELS) {
+            throw new IllegalArgumentException(
+                    "Only percentage and pixel units are allowed");
+        }
+        SplitterState splitterState = getState().getSplitterState();
+        splitterState.setPosition(pos);
+        splitterState.setPositionUnit(unit.getSymbol());
+        splitterState.setPositionReversed(reverse);
+        posUnit = unit;
+
+        requestRepaint();
     }
 
     /**
@@ -319,7 +296,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * @return position of the splitter
      */
     public int getSplitPosition() {
-        return pos;
+        return getState().getSplitterState().getPosition();
     }
 
     /**
@@ -332,32 +309,6 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     }
 
     /**
-     * Moves the position of the splitter.
-     * 
-     * @param pos
-     *            the new size of the first region
-     * @param unit
-     *            the unit (from {@link Sizeable}) in which the size is given.
-     * @param repaintNotNeeded
-     *            true if client side needs to be updated. Use false if the
-     *            position info has come from the client side, thus it already
-     *            knows the position.
-     */
-    private void setSplitPosition(int pos, Unit unit, boolean repaintNeeded,
-            boolean reverse) {
-        if (unit != Unit.PERCENTAGE && unit != Unit.PIXELS) {
-            throw new IllegalArgumentException(
-                    "Only percentage and pixel units are allowed");
-        }
-        this.pos = pos;
-        posUnit = unit;
-        posReversed = reverse;
-        if (repaintNeeded) {
-            requestRepaint();
-        }
-    }
-
-    /**
      * Lock the SplitPanels position, disabling the user from dragging the split
      * handle.
      * 
@@ -365,7 +316,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            Set <code>true</code> if locked, <code>false</code> otherwise.
      */
     public void setLocked(boolean locked) {
-        this.locked = locked;
+        getState().getSplitterState().setLocked(locked);
         requestRepaint();
     }
 
@@ -376,7 +327,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * @return <code>true</code> if locked, <code>false</code> otherwise.
      */
     public boolean isLocked() {
-        return locked;
+        return getState().getSplitterState().isLocked();
     }
 
     /*
@@ -392,7 +343,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
         if (variables.containsKey("position") && !isLocked()) {
             Integer newPos = (Integer) variables.get("position");
-            setSplitPosition(newPos, posUnit, posReversed);
+            getState().getSplitterState().setPosition(newPos);
         }
 
         if (variables.containsKey(SPLITTER_CLICK_EVENT)) {
