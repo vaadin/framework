@@ -21,11 +21,22 @@ import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent.SplitterMoveHandler;
 
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
 
     public interface AbstractSplitPanelRPC extends ServerRpc {
+
+        /**
+         * Called when the position has been updated by the user.
+         * 
+         * @param position
+         *            The new position in % if the current unit is %, in px
+         *            otherwise
+         */
+        public void setSplitterPosition(int position);
 
         /**
          * Called when a click event has occurred on the splitter.
@@ -125,6 +136,23 @@ public abstract class AbstractSplitPanelConnector extends
         // TODO Remove
         getWidget().client = getConnection();
         getWidget().id = getConnectorId();
+        getWidget().addHandler(new SplitterMoveHandler() {
+
+            public void splitterMoved(SplitterMoveEvent event) {
+                String position = getWidget().getSplitterPosition();
+                int pos = 0;
+                if (position.indexOf("%") > 0) {
+                    pos = Math.round(Float.valueOf(position.substring(0,
+                            position.length() - 1)));
+                } else {
+                    pos = Integer.parseInt(position.substring(0,
+                            position.length() - 2));
+                }
+
+                rpc.setSplitterPosition(pos);
+            }
+
+        }, SplitterMoveEvent.TYPE);
     }
 
     public void updateCaption(ComponentConnector component) {

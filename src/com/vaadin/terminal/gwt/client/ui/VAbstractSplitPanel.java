@@ -16,6 +16,8 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -25,6 +27,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent.SplitterMoveHandler;
 
 public class VAbstractSplitPanel extends ComplexPanel {
 
@@ -514,7 +517,36 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (!Util.isTouchEvent(event)) {
             onMouseMove(event);
         }
-        updateSplitPositionToServer();
+        fireEvent(new SplitterMoveEvent(this));
+    }
+
+    public static class SplitterMoveEvent extends GwtEvent<SplitterMoveHandler> {
+        public interface SplitterMoveHandler extends EventHandler {
+            public void splitterMoved(SplitterMoveEvent event);
+        }
+
+        public static final Type<SplitterMoveHandler> TYPE = new Type<SplitterMoveHandler>();
+
+        private Widget splitPanel;
+
+        public SplitterMoveEvent(Widget splitPanel) {
+            this.splitPanel = splitPanel;
+        }
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<SplitterMoveHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(SplitterMoveHandler handler) {
+            handler.splitterMoved(this);
+        }
+
+    }
+
+    String getSplitterPosition() {
+        return position;
     }
 
     /**
@@ -577,21 +609,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }
         return splitterSize;
-    }
-
-    /**
-     * Updates the new split position back to server.
-     */
-    private void updateSplitPositionToServer() {
-        int pos = 0;
-        if (position.indexOf("%") > 0) {
-            pos = Math.round(Float.valueOf(position.substring(0,
-                    position.length() - 1)));
-        } else {
-            pos = Integer
-                    .parseInt(position.substring(0, position.length() - 2));
-        }
-        client.updateVariable(id, "position", pos, immediate);
     }
 
     void setStylenames() {
