@@ -13,12 +13,11 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
@@ -157,20 +156,15 @@ public abstract class AbstractSplitPanelConnector extends
     };
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         getWidget().immediate = getState().isImmediate();
 
-        // TODO Should be handled by framework
         getWidget().setEnabled(isEnabled());
-
+        
         clickEventHandler.handleEventHandlerRegistration();
 
-        // TODO Move to stateChangeListener
         if (getState().hasStyles()) {
             getWidget().componentStyleNames = getState().getStyles();
         } else {
@@ -190,9 +184,10 @@ public abstract class AbstractSplitPanelConnector extends
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
-        client.runDescendentsLayout(getWidget());
+        getConnection().runDescendentsLayout(getWidget());
 
         getLayoutManager().setNeedsUpdate(this);
+
     }
 
     public void layout() {
