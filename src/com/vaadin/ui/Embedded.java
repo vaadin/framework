@@ -90,6 +90,7 @@ public class Embedded extends AbstractComponent {
      * Creates a new empty Embedded object.
      */
     public Embedded() {
+        registerRpcImplementation(rpc, EmbeddedServerRPC.class);
     }
 
     /**
@@ -98,6 +99,7 @@ public class Embedded extends AbstractComponent {
      * @param caption
      */
     public Embedded(String caption) {
+        this();
         setCaption(caption);
     }
 
@@ -111,7 +113,7 @@ public class Embedded extends AbstractComponent {
      *            the Source of the embedded object.
      */
     public Embedded(String caption, Resource source) {
-        setCaption(caption);
+        this(caption);
         setSource(source);
     }
 
