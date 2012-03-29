@@ -15,13 +15,23 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
 
-    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
+    private AbstractOrderedLayoutServerRPC rpc = new AbstractOrderedLayoutServerRPC() {
+
+        public void layoutClick(MouseEventDetails mouseDetails,
+                Connector clickedConnector) {
+            fireEvent(LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
+                    mouseDetails, clickedConnector));
+        }
+    };
 
     public static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
@@ -43,6 +53,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * Is spacing between contained components enabled. Defaults to false.
      */
     private boolean spacing = false;
+
+    public AbstractOrderedLayout() {
+        registerRpcImplementation(rpc, AbstractOrderedLayoutServerRPC.class);
+    }
 
     /**
      * Add a component into this container. The component is added to the right
@@ -367,12 +381,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     public void addListener(LayoutClickListener listener) {
-        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+        addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
+        removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
     /**

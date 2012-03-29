@@ -7,25 +7,23 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
+
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
-            this, EventId.LAYOUT_CLICK) {
+            this) {
 
         @Override
         protected ComponentConnector getChildComponent(Element element) {
@@ -33,14 +31,21 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         }
 
         @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return getWidget().addDomHandler(handler, type);
-        }
+        protected LayoutClickRPC getLayoutClickRPC() {
+            return rpc;
+        };
+
     };
+
+    public interface GridLayoutServerRPC extends LayoutClickRPC, ServerRpc {
+
+    }
+
+    private GridLayoutServerRPC rpc = GWT.create(GridLayoutServerRPC.class);
 
     @Override
     public void init() {
+        initRPC(rpc);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

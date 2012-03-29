@@ -8,11 +8,9 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -26,14 +24,26 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public class RootConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout {
 
-    private static final String CLICK_EVENT_IDENTIFIER = PanelConnector.CLICK_EVENT_IDENTIFIER;
+    public interface RootServerRPC extends ClickRPC, ServerRpc {
+
+    }
+
+    private RootServerRPC rpc = GWT.create(RootServerRPC.class);
+
+    @Override
+    protected void init() {
+        super.init();
+        initRPC(rpc);
+    }
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -297,14 +307,14 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
     }
 
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            CLICK_EVENT_IDENTIFIER) {
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
 
         @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return getWidget().addDomHandler(handler, type);
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            rpc.click(mouseDetails);
         }
+
     };
 
     public void updateCaption(ComponentConnector component) {

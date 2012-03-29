@@ -3,128 +3,48 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
-import com.google.gwt.event.dom.client.DomEvent;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
-public abstract class ClickEventHandler implements DoubleClickHandler,
-        ContextMenuHandler, MouseUpHandler {
+public abstract class ClickEventHandler extends AbstractClickEventHandler {
 
-    private HandlerRegistration doubleClickHandlerRegistration;
-    private HandlerRegistration mouseUpHandlerRegistration;
-    private HandlerRegistration contextMenuHandlerRegistration;
+    public static final String CLICK_EVENT_IDENTIFIER = "click";
 
-    protected String clickEventIdentifier;
-    protected ComponentConnector connector;
+    public ClickEventHandler(ComponentConnector connector) {
+        this(connector, CLICK_EVENT_IDENTIFIER);
+    }
 
     public ClickEventHandler(ComponentConnector connector,
             String clickEventIdentifier) {
-        this.connector = connector;
-        this.clickEventIdentifier = clickEventIdentifier;
-    }
-
-    public void handleEventHandlerRegistration() {
-        // Handle registering/unregistering of click handler depending on if
-        // server side listeners have been added or removed.
-        if (hasEventListener()) {
-            if (mouseUpHandlerRegistration == null) {
-                mouseUpHandlerRegistration = registerHandler(this,
-                        MouseUpEvent.getType());
-                contextMenuHandlerRegistration = registerHandler(this,
-                        ContextMenuEvent.getType());
-                doubleClickHandlerRegistration = registerHandler(this,
-                        DoubleClickEvent.getType());
-            }
-        } else {
-            if (mouseUpHandlerRegistration != null) {
-                // Remove existing handlers
-                doubleClickHandlerRegistration.removeHandler();
-                mouseUpHandlerRegistration.removeHandler();
-                contextMenuHandlerRegistration.removeHandler();
-
-                contextMenuHandlerRegistration = null;
-                mouseUpHandlerRegistration = null;
-                doubleClickHandlerRegistration = null;
-
-            }
-        }
-
-    }
-
-    protected abstract <H extends EventHandler> HandlerRegistration registerHandler(
-            final H handler, DomEvent.Type<H> type);
-
-    protected ApplicationConnection getApplicationConnection() {
-        return connector.getConnection();
-    }
-
-    public boolean hasEventListener() {
-        return connector.hasEventListener(clickEventIdentifier);
-    }
-
-    protected void fireClick(NativeEvent event) {
-        String pid = connector.getConnectorId();
-
-        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event, getRelativeToElement());
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("mouseDetails", mouseDetails.serialize());
-        connector.getConnection().updateVariable(pid, clickEventIdentifier,
-                parameters, true);
-
-    }
-
-    public void onContextMenu(ContextMenuEvent event) {
-        if (hasEventListener()) {
-            // Prevent showing the browser's context menu when there is a right
-            // click listener.
-            event.preventDefault();
-        }
-
-    }
-
-    public void onMouseUp(MouseUpEvent event) {
-        // TODO For perfect accuracy we should check that a mousedown has
-        // occured on this element before this mouseup and that no mouseup
-        // has occured anywhere after that.
-        if (hasEventListener()) {
-            // "Click" with left, right or middle button
-            fireClick(event.getNativeEvent());
-        }
-    }
-
-    public void onDoubleClick(DoubleClickEvent event) {
-        if (hasEventListener()) {
-            fireClick(event.getNativeEvent());
-        }
+        super(connector, clickEventIdentifier);
     }
 
     /**
-     * Click event calculates and returns coordinates relative to the element
-     * returned by this method. Default implementation uses the root element of
-     * the widget. Override to provide a different relative element.
+     * Sends the click event based on the given native event. Delegates actual
+     * sending to {@link #fireClick(MouseEventDetails)}.
      * 
-     * @return The Element used for calculating relative coordinates for a click
-     *         or null if no relative coordinates can be calculated.
+     * @param event
+     *            The native event that caused this click event
      */
-    protected Element getRelativeToElement() {
-        return connector.getWidget().getElement();
+    protected void fireClick(NativeEvent event) {
+        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event, getRelativeToElement());
+        fireClick(event, mouseDetails);
     }
+
+    /**
+     * Sends the click event to the server. Must be implemented by sub classes,
+     * typically by calling an RPC method.
+     * 
+     * @param event
+     *            The event that caused this click to be fired
+     * 
+     * @param mouseDetails
+     *            The mouse details for the event
+     */
+    protected abstract void fireClick(NativeEvent event,
+            MouseEventDetails mouseDetails);
 
 }

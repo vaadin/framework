@@ -30,6 +30,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.RootConnector.RootServerRPC;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.tools.ReflectTools;
@@ -412,12 +413,18 @@ public abstract class Root extends AbstractComponentContainer implements
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
 
+    private RootServerRPC rpc = new RootServerRPC() {
+        public void click(MouseEventDetails mouseDetails) {
+            fireEvent(new ClickEvent(Root.this, mouseDetails));
+        }
+    };
+
     /**
      * Creates a new empty root without a caption. This root will have a
      * {@link VerticalLayout} with margins enabled as its content.
      */
     public Root() {
-        // Nothing to do here?
+        registerRpcImplementation(rpc, RootServerRPC.class);
     }
 
     /**
@@ -429,6 +436,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setContent(ComponentContainer)
      */
     public Root(ComponentContainer content) {
+        this();
         setContent(content);
     }
 
@@ -443,6 +451,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setCaption(String)
      */
     public Root(String caption) {
+        this();
         setCaption(caption);
     }
 

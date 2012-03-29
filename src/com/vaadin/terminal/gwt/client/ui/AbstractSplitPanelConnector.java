@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -17,10 +18,24 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
+
+    public interface AbstractSplitPanelRPC extends ServerRpc {
+
+        /**
+         * Called when a click event has occurred on the splitter.
+         * 
+         * @param mouseDetails
+         *            Details about the mouse when the event took place
+         */
+        public void splitterClick(MouseEventDetails mouseDetails);
+
+    }
 
     public static class SplitterState {
         private int position;
@@ -101,11 +116,12 @@ public abstract class AbstractSplitPanelConnector extends
 
     }
 
-    public static final String SPLITTER_CLICK_EVENT_IDENTIFIER = "sp_click";
+    private AbstractSplitPanelRPC rpc = GWT.create(AbstractSplitPanelRPC.class);
 
     @Override
     protected void init() {
         super.init();
+        initRPC(rpc);
         // TODO Remove
         getWidget().client = getConnection();
         getWidget().id = getConnectorId();
@@ -115,8 +131,7 @@ public abstract class AbstractSplitPanelConnector extends
         // TODO Implement caption handling
     }
 
-    ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            SPLITTER_CLICK_EVENT_IDENTIFIER) {
+    ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
 
         @Override
         protected <H extends EventHandler> HandlerRegistration registerHandler(
@@ -132,25 +147,24 @@ public abstract class AbstractSplitPanelConnector extends
         }
 
         @Override
-        public void onContextMenu(
-                com.google.gwt.event.dom.client.ContextMenuEvent event) {
+        protected boolean shouldFireEvent(DomEvent<?> event) {
             Element target = event.getNativeEvent().getEventTarget().cast();
-            if (getWidget().splitter.isOrHasChild(target)) {
-                super.onContextMenu(event);
+            if (!getWidget().splitter.isOrHasChild(target)) {
+                return false;
             }
+
+            return super.shouldFireEvent(event);
         };
 
         @Override
-        protected void fireClick(NativeEvent event) {
-            Element target = event.getEventTarget().cast();
-            if (getWidget().splitter.isOrHasChild(target)) {
-                super.fireClick(event);
-            }
-        }
+        protected Element getRelativeToElement() {
+            return getWidget().splitter;
+        };
 
         @Override
-        protected Element getRelativeToElement() {
-            return null;
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            rpc.splitterClick(mouseDetails);
         }
 
     };

@@ -4,22 +4,26 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public class PanelConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout, PostLayoutListener {
+
+    public interface PanelServerRPC extends ClickRPC, ServerRpc {
+
+    }
 
     public static class PanelState extends ComponentState {
         private int tabIndex;
@@ -51,24 +55,24 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     }
 
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
-
     private Integer uidlScrollTop;
 
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            CLICK_EVENT_IDENTIFIER) {
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
 
         @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return getWidget().addDomHandler(handler, type);
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            rpc.click(mouseDetails);
         }
     };
 
     private Integer uidlScrollLeft;
 
+    private PanelServerRPC rpc = GWT.create(PanelServerRPC.class);
+
     @Override
     public void init() {
+        initRPC(rpc);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
 

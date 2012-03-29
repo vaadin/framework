@@ -17,8 +17,11 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
@@ -51,8 +54,15 @@ import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector;
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
 
-    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
+    private GridLayoutServerRPC rpc = new GridLayoutServerRPC() {
 
+        public void layoutClick(MouseEventDetails mouseDetails,
+                Connector clickedConnector) {
+            fireEvent(LayoutClickEvent.createEvent(GridLayout.this,
+                    mouseDetails, clickedConnector));
+
+        }
+    };
     /**
      * Initial grid columns.
      */
@@ -121,6 +131,7 @@ public class GridLayout extends AbstractLayout implements
     public GridLayout(int columns, int rows) {
         setColumns(columns);
         setRows(rows);
+        registerRpcImplementation(rpc, GridLayoutServerRPC.class);
     }
 
     /**
@@ -1414,12 +1425,14 @@ public class GridLayout extends AbstractLayout implements
     }
 
     public void addListener(LayoutClickListener listener) {
-        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+        addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
+        removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
 }

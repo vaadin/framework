@@ -16,8 +16,11 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
@@ -29,8 +32,14 @@ import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector;
 public class AbsoluteLayout extends AbstractLayout implements
         LayoutClickNotifier {
 
-    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
+    private AbsoluteLayoutServerRPC rpc = new AbsoluteLayoutServerRPC() {
 
+        public void layoutClick(MouseEventDetails mouseDetails,
+                Connector clickedConnector) {
+            fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
+                    mouseDetails, clickedConnector));
+        }
+    };
     // The components in the layout
     private Collection<Component> components = new LinkedHashSet<Component>();
 
@@ -41,6 +50,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * Creates an AbsoluteLayout with full size.
      */
     public AbsoluteLayout() {
+        registerRpcImplementation(rpc, AbsoluteLayoutServerRPC.class);
         setSizeFull();
     }
 
@@ -562,12 +572,14 @@ public class AbsoluteLayout extends AbstractLayout implements
     }
 
     public void addListener(LayoutClickListener listener) {
-        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+        addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
+        removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
 }

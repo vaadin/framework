@@ -3,17 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector.LayoutClickRPC;
 
-public abstract class LayoutClickEventHandler extends ClickEventHandler {
+public abstract class LayoutClickEventHandler extends AbstractClickEventHandler {
+
+    public static final String LAYOUT_CLICK_EVENT_IDENTIFIER = "lClick";
+
+    public LayoutClickEventHandler(ComponentConnector connector) {
+        this(connector, LAYOUT_CLICK_EVENT_IDENTIFIER);
+    }
 
     public LayoutClickEventHandler(ComponentConnector connector,
             String clickEventIdentifier) {
@@ -22,21 +25,16 @@ public abstract class LayoutClickEventHandler extends ClickEventHandler {
 
     protected abstract ComponentConnector getChildComponent(Element element);
 
-    @Override
-    protected void fireClick(NativeEvent event) {
-        ApplicationConnection client = getApplicationConnection();
-        String pid = connector.getConnectorId();
-
-        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event, getRelativeToElement());
-        ComponentConnector childComponent = getChildComponent((Element) event
-                .getEventTarget().cast());
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("mouseDetails", mouseDetails.serialize());
-        parameters.put("component", childComponent);
-
-        client.updateVariable(pid, clickEventIdentifier, parameters, true);
+    protected ComponentConnector getChildComponent(NativeEvent event) {
+        return getChildComponent((Element) event.getEventTarget().cast());
     }
 
+    @Override
+    protected void fireClick(NativeEvent event) {
+        MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event, getRelativeToElement());
+        getLayoutClickRPC().layoutClick(mouseDetails, getChildComponent(event));
+    }
+
+    protected abstract LayoutClickRPC getLayoutClickRPC();
 }

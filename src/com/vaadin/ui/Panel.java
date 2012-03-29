@@ -16,7 +16,9 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector;
+import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelServerRPC;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.ui.Component.Focusable;
 
@@ -34,8 +36,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable {
 
-    private static final String CLICK_EVENT = PanelConnector.CLICK_EVENT_IDENTIFIER;
-
     /**
      * Content of the panel.
      */
@@ -46,6 +46,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * painting and handling as well.
      */
     protected ActionManager actionManager;
+
+    private PanelServerRPC rpc = new PanelServerRPC() {
+        public void click(MouseEventDetails mouseDetails) {
+            fireEvent(new ClickEvent(Panel.this, mouseDetails));
+        }
+    };
 
     /**
      * Creates a new empty panel. A VerticalLayout is used as content.
@@ -62,6 +68,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            the content for the panel.
      */
     public Panel(ComponentContainer content) {
+        registerRpcImplementation(rpc, PanelServerRPC.class);
         setContent(content);
         setWidth(100, Unit.PERCENTAGE);
         getState().setTabIndex(-1);
@@ -287,10 +294,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void changeVariables(Object source, Map<String, Object> variables) {
         super.changeVariables(source, variables);
 
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");
@@ -489,8 +492,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(CLICK_EVENT, ClickEvent.class, listener,
-                ClickListener.clickMethod);
+        addListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
@@ -501,19 +504,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(CLICK_EVENT, ClickEvent.class, listener);
-    }
-
-    /**
-     * Fire a click event to all click listeners.
-     * 
-     * @param object
-     *            The raw "value" of the variable change from the client side.
-     */
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-        fireEvent(new ClickEvent(this, mouseDetails));
+        removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
+                ClickEvent.class, listener);
     }
 
     /**

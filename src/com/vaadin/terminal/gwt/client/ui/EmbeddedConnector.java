@@ -8,26 +8,36 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public class EmbeddedConnector extends AbstractComponentConnector {
 
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
+    public interface EmbeddedServerRPC extends ClickRPC, ServerRpc {
+    }
+
     public static final String ALTERNATE_TEXT = "alt";
+
+    EmbeddedServerRPC rpc = GWT.create(EmbeddedServerRPC.class);
+
+    @Override
+    protected void init() {
+        super.init();
+        initRPC(rpc);
+    }
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -180,12 +190,12 @@ public class EmbeddedConnector extends AbstractComponentConnector {
     }
 
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(
-            this, CLICK_EVENT_IDENTIFIER) {
+            this) {
 
         @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return getWidget().addDomHandler(handler, type);
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            rpc.click(mouseDetails);
         }
 
     };

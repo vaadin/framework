@@ -7,9 +7,11 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 
 public interface LayoutEvents {
 
@@ -120,5 +122,17 @@ public interface LayoutEvents {
             return childComponent;
         }
 
+        public static LayoutClickEvent createEvent(ComponentContainer layout,
+                MouseEventDetails mouseDetails, Connector clickedConnector) {
+            Component clickedComponent = (Component) clickedConnector;
+            Component childComponent = clickedComponent;
+            while (childComponent != null
+                    && childComponent.getParent() != layout) {
+                childComponent = childComponent.getParent();
+            }
+
+            return new LayoutClickEvent(layout, mouseDetails, clickedComponent,
+                    childComponent);
+        }
     }
 }

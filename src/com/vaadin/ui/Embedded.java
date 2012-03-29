@@ -14,7 +14,9 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector;
+import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector.EmbeddedServerRPC;
 
 /**
  * Component for embedding external objects.
@@ -27,8 +29,6 @@ import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector;
 @SuppressWarnings("serial")
 @ClientWidget(EmbeddedConnector.class)
 public class Embedded extends AbstractComponent {
-
-    private static final String CLICK_EVENT = EmbeddedConnector.CLICK_EVENT_IDENTIFIER;
 
     /**
      * General object type.
@@ -79,6 +79,12 @@ public class Embedded extends AbstractComponent {
     private String archive = null;
 
     private String altText;
+
+    private EmbeddedServerRPC rpc = new EmbeddedServerRPC() {
+        public void click(MouseEventDetails mouseDetails) {
+            fireEvent(new ClickEvent(Embedded.this, mouseDetails));
+        }
+    };
 
     /**
      * Creates a new empty Embedded object.
@@ -498,8 +504,8 @@ public class Embedded extends AbstractComponent {
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(CLICK_EVENT, ClickEvent.class, listener,
-                ClickListener.clickMethod);
+        addListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener, ClickListener.clickMethod);
     }
 
     /**
@@ -510,35 +516,8 @@ public class Embedded extends AbstractComponent {
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(CLICK_EVENT, ClickEvent.class, listener);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     * java.util.Map)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-        if (variables.containsKey(CLICK_EVENT)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT));
-        }
-
-    }
-
-    /**
-     * Notifies click-listeners that a mouse click event has occurred.
-     * 
-     * @param parameters
-     */
-    private void fireClick(Map<String, Object> parameters) {
-        MouseEventDetails mouseDetails = MouseEventDetails
-                .deSerialize((String) parameters.get("mouseDetails"));
-
-        fireEvent(new ClickEvent(this, mouseDetails));
+        removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
+                ClickEvent.class, listener);
     }
 
 }

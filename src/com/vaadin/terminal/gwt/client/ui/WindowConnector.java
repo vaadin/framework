@@ -5,12 +5,10 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
@@ -20,8 +18,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
@@ -29,21 +29,22 @@ public class WindowConnector extends AbstractComponentContainerConnector
         implements BeforeShortcutActionListener, SimpleManagedLayout,
         PostLayoutListener {
 
+    public interface WindowServerRPC extends ClickRPC, ServerRpc {
+    }
+
     public static class WindowState extends PanelState {
 
     }
 
-    private static final String CLICK_EVENT_IDENTIFIER = PanelConnector.CLICK_EVENT_IDENTIFIER;
-
-    private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
-            CLICK_EVENT_IDENTIFIER) {
-
+    private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
-        protected <H extends EventHandler> HandlerRegistration registerHandler(
-                H handler, Type<H> type) {
-            return getWidget().addDomHandler(handler, type);
+        protected void fireClick(NativeEvent event,
+                MouseEventDetails mouseDetails) {
+            rpc.click(mouseDetails);
         }
     };
+
+    private WindowServerRPC rpc = GWT.create(WindowServerRPC.class);
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -53,6 +54,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
+        initRPC(rpc);
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());
         getLayoutManager().registerDependency(this, getWidget().header);

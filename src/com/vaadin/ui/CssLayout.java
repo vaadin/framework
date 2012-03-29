@@ -13,8 +13,11 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector.CssLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.
@@ -60,12 +63,22 @@ import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector;
 @ClientWidget(CssLayoutConnector.class)
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
-    private static final String CLICK_EVENT = EventId.LAYOUT_CLICK;
+    private CssLayoutServerRPC rpc = new CssLayoutServerRPC() {
 
+        public void layoutClick(MouseEventDetails mouseDetails,
+                Connector clickedConnector) {
+            fireEvent(LayoutClickEvent.createEvent(CssLayout.this,
+                    mouseDetails, clickedConnector));
+        }
+    };
     /**
      * Custom layout slots containing the components.
      */
     protected LinkedList<Component> components = new LinkedList<Component>();
+
+    public CssLayout() {
+        registerRpcImplementation(rpc, CssLayoutServerRPC.class);
+    }
 
     /**
      * Add a component into this container. The component is added to the right
@@ -267,12 +280,14 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     public void addListener(LayoutClickListener listener) {
-        addListener(CLICK_EVENT, LayoutClickEvent.class, listener,
+        addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
     public void removeListener(LayoutClickListener listener) {
-        removeListener(CLICK_EVENT, LayoutClickEvent.class, listener);
+        removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
+                LayoutClickEvent.class, listener);
     }
 
     /**

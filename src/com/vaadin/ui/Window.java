@@ -15,14 +15,17 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowServerRPC;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
 
 /**
@@ -113,6 +116,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private boolean resizeLazy = false;
 
+    private WindowServerRPC rpc = new WindowServerRPC() {
+
+        public void click(MouseEventDetails mouseDetails) {
+            fireEvent(new ClickEvent(Window.this, mouseDetails));
+        }
+    };
+
     /**
      * Creates a new unnamed window with a default layout.
      */
@@ -140,6 +150,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     public Window(String caption, ComponentContainer content) {
         super(caption, content);
+        registerRpcImplementation(rpc, WindowServerRPC.class);
         setSizeUndefined();
     }
 
