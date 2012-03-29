@@ -77,8 +77,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     ApplicationConnection client;
 
-    String id;
-
     boolean immediate;
 
     /* The current position of the split handle in either percentages or pixels */

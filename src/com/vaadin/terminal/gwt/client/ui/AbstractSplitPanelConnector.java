@@ -135,7 +135,7 @@ public abstract class AbstractSplitPanelConnector extends
         initRPC(rpc);
         // TODO Remove
         getWidget().client = getConnection();
-        getWidget().id = getConnectorId();
+
         getWidget().addHandler(new SplitterMoveHandler() {
 
             public void splitterMoved(SplitterMoveEvent event) {
@@ -204,7 +204,7 @@ public abstract class AbstractSplitPanelConnector extends
         getWidget().immediate = getState().isImmediate();
 
         getWidget().setEnabled(isEnabled());
-        
+
         clickEventHandler.handleEventHandlerRegistration();
 
         if (getState().hasStyles()) {
