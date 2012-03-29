@@ -737,6 +737,10 @@ public class ApplicationConnection {
     }
 
     protected void startRequest() {
+        if (hasActiveRequest) {
+            throw new IllegalStateException(
+                    "Trying to start a new request while another is active");
+        }
         hasActiveRequest = true;
         requestStartTime = new Date();
         // show initial throbber
@@ -761,11 +765,14 @@ public class ApplicationConnection {
     }
 
     protected void endRequest() {
+        if (!hasActiveRequest) {
+            throw new IllegalStateException("No active request");
+        }
+        hasActiveRequest = false;
         if (applicationRunning) {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
-        hasActiveRequest = false;
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
