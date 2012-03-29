@@ -81,7 +81,7 @@ public class RpcProxyGenerator extends Generator {
 
             // actual proxy methods forwarding calls to the server
             writeRemoteProxyMethods(logger, writer, typeOracle, requestedType,
-                    requestedType.isClassOrInterface().getMethods());
+                    requestedType.isClassOrInterface().getInheritableMethods());
 
             // End of class
             writer.outdent();
