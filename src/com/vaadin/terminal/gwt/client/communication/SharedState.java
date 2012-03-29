@@ -6,43 +6,34 @@ package com.vaadin.terminal.gwt.client.communication;
 
 import java.io.Serializable;
 
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
  * Interface to be implemented by all shared state classes used to communicate
- * basic information about a paintable from server to client. These typically
- * replace most of the semi-static information sent via the paintContent() and
- * updateFromUIDL() mechanism in Vaadin 6 (component sizes, captions, tooltips,
- * etc.).
+ * basic information about a {@link Connector} from server to client.
  * 
  * Shared state classes have to be declared in client side packages to be
  * accessible both for server and client code. They can be static nested classes
- * of the client side widget.
+ * of a {@link ServerConnector}.
  * 
  * Shared state objects are only sent from the server to the client, and any
  * modifications from the client should be performed via an RPC call that
  * modifies the authoritative state on the server.
  * 
- * In current Vaadin versions, the whole shared state is sent every time the
- * component is painted. Future versions may optimize this so that only the
- * necessary (changed or missing on the client side) parts are re-sent to the
- * client, but the client will have access to the whole state.
- * 
  * A shared state class should be a bean with getters and setters for each
- * field, and should only contain simple data types, or arrays or maps of
- * supported data types.
+ * field. Supported data types are simple Java types, other beans and maps and
+ * arrays of these.
  * 
- * On the client side, for most widgets,
- * {@link AbstractComponentConnector#createState()} and
- * {@link AbstractComponentConnector#getState()} methods should be overridden to
- * create and use a shared state instance of the correct type.
+ * On the client side the connector should override
+ * {@link AbstractComponentConnector#createState()} to create the correct state
+ * class and {@link AbstractComponentConnector#getState()} override the return
+ * type.
  * 
- * Subclasses of a paintable using shared state should also provide a subclass
- * of the shared state class of the parent class to extend the state - a single
- * paintable can only have one shared state object.
- * 
- * Future versions of the shared state mechanism may also support custom data
- * types as fields of a shared state class.
+ * Subclasses of a {@link Connector} using shared state should also provide a
+ * subclass of the shared state class of the parent class to extend the state. A
+ * single {@link Connector} can only have one shared state object.
  * 
  * @since 7.0
  */
