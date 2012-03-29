@@ -5,8 +5,11 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.Collection;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 /**
  * Interface implemented by all client side classes that can be communicate with
@@ -79,4 +82,20 @@ public interface ServerConnector extends Connector {
     public <T extends ClientRpc> Collection<T> getRpcImplementations(
             String rpcInterfaceId);
 
+    /**
+     * Adds a handler that is called whenever some part of the state has been
+     * updated by the server.
+     * 
+     * @param handler
+     *            The handler that should be added.
+     */
+    public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
+
+    /**
+     * Sends the given event to all registered handlers.
+     * 
+     * @param event
+     *            The event to send.
+     */
+    public void fireEvent(GwtEvent<?> event);
 }

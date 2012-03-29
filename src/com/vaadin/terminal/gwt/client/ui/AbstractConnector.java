@@ -9,9 +9,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 /**
  * An abstract implementation of Connector.
@@ -21,11 +27,13 @@ import com.vaadin.terminal.gwt.client.communication.ClientRpc;
  * @since 7.0.0
  * 
  */
-public abstract class AbstractConnector implements ServerConnector {
+public abstract class AbstractConnector implements ServerConnector,
+        StateChangeHandler {
 
     private ApplicationConnection connection;
     private String id;
 
+    private HandlerManager handlerManager;
     private Map<String, Collection<ClientRpc>> rpcImplementations;
 
     /*
@@ -59,6 +67,7 @@ public abstract class AbstractConnector implements ServerConnector {
         this.connection = connection;
         id = connectorId;
 
+        addStateChangeHandler(this);
         init();
     }
 
@@ -132,4 +141,31 @@ public abstract class AbstractConnector implements ServerConnector {
         // Client side can always receive message from the server
         return true;
     }
+
+    public void fireEvent(GwtEvent<?> event) {
+        if (handlerManager != null) {
+            handlerManager.fireEvent(event);
+        }
+    }
+
+    protected HandlerManager ensureHandlerManager() {
+        if (handlerManager == null) {
+            handlerManager = new HandlerManager(this);
+        }
+
+        return handlerManager;
+    }
+
+    public HandlerRegistration addStateChangeHandler(StateChangeHandler handler) {
+        return ensureHandlerManager()
+                .addHandler(StateChangeEvent.TYPE, handler);
+    }
+
+    // TODO Should be abstract as all connectors need it
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        System.out.println("State change event for "
+                + Util.getConnectorString(stateChangeEvent.getConnector())
+                + " received by " + Util.getConnectorString(this));
+    }
+
 }

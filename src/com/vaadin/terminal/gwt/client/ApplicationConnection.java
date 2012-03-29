@@ -44,6 +44,7 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
@@ -1003,7 +1004,7 @@ public class ApplicationConnection {
                 createConnectorsIfNeeded(json);
 
                 // Update states, do not fire events
-                updateConnectorState(json);
+                Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(json);
 
                 // Update hierarchy, do not fire events
                 Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
@@ -1011,12 +1012,8 @@ public class ApplicationConnection {
                 // Fire hierarchy change events
                 sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
 
-                // (TODO) Fire state change events. Should be after hierarchy
-                // change listeners: At least caption updates for the parent are
-                // strange if fired from state change listeners and thus calls
-                // the parent BEFORE the parent is aware of the child (through a
-                // hierarchy change event)
-                VConsole.log(" * Sending state change events");
+                // Fire state change events.
+                sendStateChangeEvents(pendingStateChangeEvents);
 
                 // Update of legacy (UIDL) style connectors
                 updateVaadin6StyleConnectors(json);
@@ -1088,6 +1085,29 @@ public class ApplicationConnection {
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
                 endRequest();
+
+            }
+
+            /**
+             * Sends the state change events created while updating the state
+             * information.
+             * 
+             * This must be called after hierarchy change listeners have been
+             * called. At least caption updates for the parent are strange if
+             * fired from state change listeners and thus calls the parent
+             * BEFORE the parent is aware of the child (through a
+             * ConnectorHierarchyChangedEvent)
+             * 
+             * @param pendingStateChangeEvents
+             *            The events to send
+             */
+            private void sendStateChangeEvents(
+                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                VConsole.log(" * Sending state change events");
+
+                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                    sce.getConnector().fireEvent(sce);
+                }
 
             }
 
@@ -1204,10 +1224,12 @@ public class ApplicationConnection {
 
             }
 
-            private void updateConnectorState(ValueMap json) {
+            private Collection<StateChangeEvent> updateConnectorState(
+                    ValueMap json) {
+                ArrayList<StateChangeEvent> events = new ArrayList<StateChangeEvent>();
                 VConsole.log(" * Updating connector states");
                 if (!json.containsKey("state")) {
-                    return;
+                    return events;
                 }
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
@@ -1215,9 +1237,9 @@ public class ApplicationConnection {
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String connectorId = keyArray.get(i);
-                        ServerConnector paintable = connectorMap
+                        ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
-                        if (null != paintable) {
+                        if (null != connector) {
 
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(connectorId));
@@ -1226,12 +1248,15 @@ public class ApplicationConnection {
                                     stateDataAndType, connectorMap,
                                     ApplicationConnection.this);
 
-                            paintable.setState((SharedState) state);
+                            connector.setState((SharedState) state);
+                            events.add(new StateChangeEvent(connector));
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
                 }
+
+                return events;
             }
 
             /**
