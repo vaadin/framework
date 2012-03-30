@@ -5,35 +5,11 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 
 public class CustomComponentConnector extends
         AbstractComponentContainerConnector {
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-        final UIDL child = uidl.getChildUIDL(0);
-        if (child != null) {
-            final ComponentConnector paintable = client.getPaintable(child);
-            Widget widget = paintable.getWidget();
-            if (widget != getWidget().getWidget()) {
-                if (getWidget().getWidget() != null) {
-                    client.unregisterPaintable(ConnectorMap.get(client)
-                            .getConnector(getWidget().getWidget()));
-                    getWidget().clear();
-                }
-                getWidget().setWidget(widget);
-            }
-            paintable.updateFromUIDL(child, client);
-        }
-    }
 
     @Override
     protected Widget createWidget() {
@@ -49,4 +25,17 @@ public class CustomComponentConnector extends
         // NOP, custom component dont render composition roots caption
     }
 
+    @Override
+    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
+        super.connectorHierarchyChanged(event);
+
+        ComponentConnector newChild = null;
+        if (getChildren().size() == 1) {
+            newChild = getChildren().get(0);
+        }
+
+        VCustomComponent customComponent = getWidget();
+        customComponent.setWidget(newChild.getWidget());
+
+    }
 }

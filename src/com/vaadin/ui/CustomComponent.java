@@ -7,8 +7,6 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.CustomComponentConnector;
 import com.vaadin.ui.ClientWidget.LoadStyle;
 
@@ -101,17 +99,6 @@ public class CustomComponent extends AbstractComponentContainer {
     }
 
     /* Basic component features ------------------------------------------ */
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        if (root == null) {
-            throw new IllegalStateException("Composition root must be set to"
-                    + " non-null value before the " + getClass().getName()
-                    + " can be painted");
-        }
-
-        root.paint(target);
-    }
 
     private class ComponentIterator implements Iterator<Component>,
             Serializable {
