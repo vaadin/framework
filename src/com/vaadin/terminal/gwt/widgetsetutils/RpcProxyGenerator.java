@@ -36,9 +36,7 @@ public class RpcProxyGenerator extends Generator {
     @Override
     public String generate(TreeLogger logger, GeneratorContext ctx,
             String requestedClassName) throws UnableToCompleteException {
-        Type logType = TreeLogger.INFO;
-
-        logger.log(TreeLogger.INFO, "Running RpcProxyGenerator", null);
+        logger.log(TreeLogger.DEBUG, "Running RpcProxyGenerator", null);
 
         TypeOracle typeOracle = ctx.getTypeOracle();
         assert (typeOracle != null);
@@ -64,13 +62,12 @@ public class RpcProxyGenerator extends Generator {
                 .getQualifiedSourceName());
         composer.addImport(MethodInvocation.class.getCanonicalName());
 
-        logger.log(logType,
-                "Generating client proxy for remote service interface '"
-                        + requestedType.getQualifiedSourceName() + "'");
         PrintWriter printWriter = ctx.tryCreate(logger,
                 composer.getCreatedPackage(),
                 composer.getCreatedClassShortName());
         if (printWriter != null) {
+            logger.log(Type.INFO, "Generating client proxy for RPC interface '"
+                    + requestedType.getQualifiedSourceName() + "'");
             SourceWriter writer = composer.createSourceWriter(ctx, printWriter);
 
             // constructor

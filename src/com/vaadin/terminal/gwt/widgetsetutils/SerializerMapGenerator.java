@@ -70,6 +70,7 @@ public class SerializerMapGenerator extends Generator {
         } catch (Exception e) {
             logger.log(TreeLogger.ERROR,
                     "SerializerMapGenerator creation failed", e);
+            throw new UnableToCompleteException();
         }
         // return the fully qualifed name of the class generated
         return packageName + "." + className;
@@ -163,7 +164,7 @@ public class SerializerMapGenerator extends Generator {
 
     public Set<JClassType> findTypesNeedingSerializers(TypeOracle typeOracle,
             TreeLogger logger) {
-        logger.log(Type.INFO, "Detecting serializable data types...");
+        logger.log(Type.DEBUG, "Detecting serializable data types...");
 
         HashSet<JClassType> types = new HashSet<JClassType>();
 
@@ -180,7 +181,7 @@ public class SerializerMapGenerator extends Generator {
             JClassType rpcType = typeOracle.findType(cls.getName());
             JClassType[] serverRpcSubtypes = rpcType.getSubtypes();
             for (JClassType type : serverRpcSubtypes) {
-                addMethodParameterTypes(type, types);
+                addMethodParameterTypes(type, types, logger);
             }
         }
 
@@ -188,28 +189,19 @@ public class SerializerMapGenerator extends Generator {
         for (Object t : types.toArray()) {
             findSubTypesNeedingSerializers((JClassType) t, types);
         }
-        logger.log(Type.INFO, "Serializable data types: " + types.toString());
+        logger.log(Type.DEBUG, "Serializable data types: " + types.toString());
 
         return types;
     }
 
     private void addMethodParameterTypes(JClassType classContainingMethods,
-            HashSet<JClassType> types) {
+            Set<JClassType> types, TreeLogger logger) {
         for (JMethod method : classContainingMethods.getMethods()) {
             if (method.getName().equals("initRpc")) {
                 continue;
             }
             for (JType type : method.getParameterTypes()) {
-                JClassType t = type.isClass();
-                JClassType interfaceType = type.isInterface();
-                if (t != null) {
-                    types.add(t);
-                } else if (interfaceType != null) {
-                    types.add(interfaceType);
-                } else {
-                    System.err.println("Unknown method parameter type: "
-                            + type.getQualifiedSourceName());
-                }
+                addTypeIfNeeded(types, type);
             }
         }
     }
@@ -221,22 +213,28 @@ public class SerializerMapGenerator extends Generator {
         for (JMethod setterMethod : SerializerGenerator.getSetters(type)) {
             // The one and only parameter for the setter
             JType setterType = setterMethod.getParameterTypes()[0];
+            addTypeIfNeeded(serializableTypes, setterType);
+        }
+    }
 
-            if (serializableTypes.contains(setterType)) {
-                continue;
-            }
-            if (serializationHandledByFramework(setterType)) {
-                continue;
-            }
+    private void addTypeIfNeeded(Set<JClassType> serializableTypes, JType type) {
+        if (serializableTypes.contains(type)) {
+            return;
+        }
+        if (serializationHandledByFramework(type)) {
+            return;
+        }
 
-            JClassType setterTypeClass = setterType.isClass();
-            if (setterTypeClass != null) {
-                // setterTypeClass is null at least for List<String>. It is
-                // possible that we need to handle the cases somehow, for
-                // instance for List<MyObject>.
-                serializableTypes.add(setterTypeClass);
-                findSubTypesNeedingSerializers(type, serializableTypes);
-            }
+        if (serializableTypes.contains(type))
+            return;
+
+        JClassType typeClass = type.isClass();
+        if (typeClass != null) {
+            // setterTypeClass is null at least for List<String>. It is
+            // possible that we need to handle the cases somehow, for
+            // instance for List<MyObject>.
+            serializableTypes.add(typeClass);
+            findSubTypesNeedingSerializers(typeClass, serializableTypes);
         }
     }
 

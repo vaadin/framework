@@ -57,10 +57,10 @@ public class SerializerGenerator extends Generator {
         } catch (Exception e) {
             logger.log(TreeLogger.ERROR, "SerializerGenerator failed for "
                     + beanType.getQualifiedSourceName(), e);
+            throw new UnableToCompleteException();
         }
+
         // return the fully qualifed name of the class generated
-        logger.log(TreeLogger.INFO, "Generated Serializer class "
-                + getFullyQualifiedSerializerClassName(beanType));
         return getFullyQualifiedSerializerClassName(beanType);
     }
 
@@ -135,7 +135,7 @@ public class SerializerGenerator extends Generator {
             String getterName = findGetter(beanType, setterMethod);
 
             if (getterName == null) {
-                logger.log(TreeLogger.WARN, "No getter found for " + fieldName
+                logger.log(TreeLogger.ERROR, "No getter found for " + fieldName
                         + ". Serialization will likely fail");
             }
             // json.put("button",
@@ -166,7 +166,7 @@ public class SerializerGenerator extends Generator {
             String fieldName = decapitalize(capitalizedFieldName);
             JType setterParameterType = method.getParameterTypes()[0];
 
-            logger.log(Type.INFO, "* Processing field " + fieldName + " in "
+            logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
                     + beanQualifiedSourceName + " (" + beanType.getName() + ")");
 
             String jsonFieldName = "json" + capitalizedFieldName;
@@ -202,9 +202,8 @@ public class SerializerGenerator extends Generator {
 
         // commit generated class
         context.commit(logger, printWriter);
-        logger.log(Type.INFO,
-                "Done. (" + (new Date().getTime() - date.getTime()) / 1000
-                        + "seconds)");
+        logger.log(TreeLogger.INFO, "Generated Serializer class "
+                + getFullyQualifiedSerializerClassName(beanType));
 
     }
 
