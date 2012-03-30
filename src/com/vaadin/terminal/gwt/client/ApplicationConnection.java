@@ -745,6 +745,10 @@ public class ApplicationConnection {
     }
 
     protected void startRequest() {
+        if (hasActiveRequest) {
+            throw new IllegalStateException(
+                    "Trying to start a new request while another is active");
+        }
         hasActiveRequest = true;
         requestStartTime = new Date();
         // show initial throbber
@@ -769,11 +773,18 @@ public class ApplicationConnection {
     }
 
     protected void endRequest() {
+        if (!hasActiveRequest) {
+            throw new IllegalStateException("No active request");
+        }
+        // After checkForPendingVariableBursts() there may be a new active
+        // request, so we must set hasActiveRequest to false before, not after,
+        // the call. Active requests used to be tracked with an integer counter,
+        // so setting it after used to work but not with the #8505 changes.
+        hasActiveRequest = false;
         if (applicationRunning) {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
-        hasActiveRequest = false;
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
