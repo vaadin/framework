@@ -21,8 +21,8 @@ import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent;
-import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent.SplitterMoveHandler;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {

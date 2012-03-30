@@ -27,7 +27,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveEvent.SplitterMoveHandler;
+import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
 public class VAbstractSplitPanel extends ComplexPanel {
 
@@ -518,29 +518,31 @@ public class VAbstractSplitPanel extends ComplexPanel {
         fireEvent(new SplitterMoveEvent(this));
     }
 
-    public static class SplitterMoveEvent extends GwtEvent<SplitterMoveHandler> {
-        public interface SplitterMoveHandler extends EventHandler {
-            public void splitterMoved(SplitterMoveEvent event);
+    public interface SplitterMoveHandler extends EventHandler {
+        public void splitterMoved(SplitterMoveEvent event);
+
+        public static class SplitterMoveEvent extends
+                GwtEvent<SplitterMoveHandler> {
+
+            public static final Type<SplitterMoveHandler> TYPE = new Type<SplitterMoveHandler>();
+
+            private Widget splitPanel;
+
+            public SplitterMoveEvent(Widget splitPanel) {
+                this.splitPanel = splitPanel;
+            }
+
+            @Override
+            public com.google.gwt.event.shared.GwtEvent.Type<SplitterMoveHandler> getAssociatedType() {
+                return TYPE;
+            }
+
+            @Override
+            protected void dispatch(SplitterMoveHandler handler) {
+                handler.splitterMoved(this);
+            }
+
         }
-
-        public static final Type<SplitterMoveHandler> TYPE = new Type<SplitterMoveHandler>();
-
-        private Widget splitPanel;
-
-        public SplitterMoveEvent(Widget splitPanel) {
-            this.splitPanel = splitPanel;
-        }
-
-        @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<SplitterMoveHandler> getAssociatedType() {
-            return TYPE;
-        }
-
-        @Override
-        protected void dispatch(SplitterMoveHandler handler) {
-            handler.splitterMoved(this);
-        }
-
     }
 
     String getSplitterPosition() {
