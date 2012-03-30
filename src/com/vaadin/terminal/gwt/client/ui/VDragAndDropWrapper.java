@@ -26,8 +26,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.RenderInformation;
-import com.vaadin.terminal.gwt.client.RenderInformation.Size;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -571,8 +569,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     protected void emphasis(VDragEvent drag) {
-        Size size = new RenderInformation.Size(getOffsetWidth(),
-                getOffsetHeight());
         deEmphasis(false);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"

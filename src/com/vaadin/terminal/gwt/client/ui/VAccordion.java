@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.RenderInformation;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -33,8 +32,6 @@ public class VAccordion extends VTabsheetBase {
     StackItem openTab = null;
 
     int selectedUIDLItemIndex = -1;
-
-    RenderInformation renderInformation = new RenderInformation();
 
     public VAccordion() {
         super(CLASSNAME);

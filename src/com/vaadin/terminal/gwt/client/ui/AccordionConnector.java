@@ -46,7 +46,6 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             getWidget().lazyUpdateMap.clear();
         }
 
-        getWidget().renderInformation.updateSize(getWidget().getElement());
     }
 
     @Override
