@@ -747,10 +747,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         final String tag = target.getTag(this);
         final PaintStatus status = target.startPaintable(this, tag);
-        if (PaintStatus.DEFER == status) {
-            // nothing to do but flag as deferred and close the paintable tag
-            // paint() will be called again later to paint the contents
-            target.addAttribute("deferred", true);
+        if (PaintStatus.CACHED == status) {
+            // nothing to do but flag as cached and close the paintable tag
+            target.addAttribute("cached", true);
         } else {
             // Paint the contents of the component
             paintContent(target);

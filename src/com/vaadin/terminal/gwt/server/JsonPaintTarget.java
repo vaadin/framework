@@ -674,9 +674,10 @@ public class JsonPaintTarget implements PaintTarget {
         final String id = getPaintIdentifier(paintable);
         addAttribute("id", id);
 
-        // queue for painting later if already painting a paintable
+        // Only paint top level paintables. All sub paintables are marked as
+        // queued and painted separately later.
         if (!topLevelPaintable) {
-            return PaintStatus.DEFER;
+            return PaintStatus.CACHED;
         }
 
         // not a nested paintable, paint the it now

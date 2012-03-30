@@ -109,17 +109,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return GWT.create(ComponentState.class);
     }
 
-    protected static boolean isRealUpdate(UIDL uidl) {
-        return !isCachedUpdate(uidl) && !uidl.getBooleanAttribute("invisible")
-                && !uidl.hasAttribute("deferred");
-    }
-
-    protected static boolean isCachedUpdate(UIDL uidl) {
-        return uidl.getBooleanAttribute("cached");
+    public static boolean isRealUpdate(UIDL uidl) {
+        return !uidl.hasAttribute("cached");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (isCachedUpdate(uidl)) {
+        if (!isRealUpdate(uidl)) {
             return;
         }
 
@@ -130,10 +125,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         } else {
             getWidget().getElement().setId(null);
 
-        }
-
-        if (!isRealUpdate(uidl)) {
-            return;
         }
 
         /*

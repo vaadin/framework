@@ -53,7 +53,7 @@ public interface PaintTarget extends Serializable {
          * be created/update later in a separate change in the same set of
          * changes.
          */
-        DEFER
+        CACHED
     };
 
     /**
@@ -80,8 +80,9 @@ public interface PaintTarget extends Serializable {
      *            the paintable to start.
      * @param tag
      *            the name of the start tag.
-     * @return {@link PaintStatus} - ready to paint, already cached on the
-     *         client or defer painting to another change
+     * @return {@link PaintStatus} - ready to paint or already cached on the
+     *         client (also used for sub paintables that are painted later
+     *         separately)
      * @throws PaintException
      *             if the paint operation failed.
      * @see #startTag(String)
