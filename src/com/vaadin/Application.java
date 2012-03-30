@@ -50,6 +50,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -2388,7 +2389,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return Collections.unmodifiableCollection(roots.values());
     }
 
-    private final HashMap<String, Connector> connectorIdToConnector = new HashMap<String, Connector>();
+    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
 
     private int connectorIdSequence = 0;
 
@@ -2400,7 +2401,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      *            A connector that has not yet been assigned an id.
      * @return A new id for the connector
      */
-    public String createConnectorId(Connector connector) {
+    public String createConnectorId(ClientConnector connector) {
         String connectorId = String.valueOf(connectorIdSequence++);
         Connector oldReference = connectorIdToConnector.put(connectorId,
                 connector);
@@ -2420,7 +2421,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return The connector with the given id or null if no connector has the
      *         given id
      */
-    public Connector getConnector(String connectorId) {
+    public ClientConnector getConnector(String connectorId) {
         return connectorIdToConnector.get(connectorId);
     }
 

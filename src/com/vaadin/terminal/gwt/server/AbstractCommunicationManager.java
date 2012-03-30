@@ -1433,7 +1433,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     applyInvocation(app, invocation);
                     continue;
                 }
-                final Connector connector = getConnector(app,
+                final ClientConnector connector = getConnector(app,
                         invocation.getConnectorId());
                 final VariableOwner owner = (VariableOwner) connector;
 
@@ -1579,8 +1579,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         owner.changeVariables(source, m);
     }
 
-    protected Connector getConnector(Application app, String connectorId) {
-        Connector c = app.getConnector(connectorId);
+    protected ClientConnector getConnector(Application app, String connectorId) {
+        ClientConnector c = app.getConnector(connectorId);
         if (c == null
                 && connectorId.equals(getDragAndDropService().getConnectorId())) {
             return getDragAndDropService();

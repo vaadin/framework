@@ -28,4 +28,11 @@ public interface ClientConnector extends Connector {
      */
     public List<ClientMethodInvocation> retrievePendingRpcCalls();
 
+    /**
+     * Checks if the communicator is enabled. An enabled communicator is allowed
+     * to receive messages from its counter-part.
+     * 
+     * @return true if the connector can receive messages, false otherwise
+     */
+    public boolean isConnectorEnabled();
 }
