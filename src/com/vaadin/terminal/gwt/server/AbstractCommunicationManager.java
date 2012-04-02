@@ -1560,9 +1560,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (c instanceof RpcTarget) {
             ServerRpcManager.applyInvocation((RpcTarget) c, invocation);
         } else {
-            // TODO better exception?
-            throw new RuntimeException("No RPC target for connector "
-                    + invocation.getConnectorId());
+            logger.log(Level.WARNING, "RPC call received for connector "
+                    + c.getClass().getName() + " (" + c.getConnectorId()
+                    + ") but the connector is not a ServerRpcTarget");
         }
     }
 
