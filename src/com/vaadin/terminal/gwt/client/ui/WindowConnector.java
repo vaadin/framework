@@ -35,6 +35,69 @@ public class WindowConnector extends AbstractComponentContainerConnector
     }
 
     public static class WindowState extends PanelState {
+        private boolean modal = false;
+        private boolean resizable = true;
+        private boolean resizeLazy = false;
+        private boolean draggable = true;
+        private boolean centered = false;;
+        private int positionX = -1;
+        private int positionY = -1;
+
+        public boolean isModal() {
+            return modal;
+        }
+
+        public void setModal(boolean modal) {
+            this.modal = modal;
+        }
+
+        public boolean isResizable() {
+            return resizable;
+        }
+
+        public void setResizable(boolean resizable) {
+            this.resizable = resizable;
+        }
+
+        public boolean isResizeLazy() {
+            return resizeLazy;
+        }
+
+        public void setResizeLazy(boolean resizeLazy) {
+            this.resizeLazy = resizeLazy;
+        }
+
+        public boolean isDraggable() {
+            return draggable;
+        }
+
+        public void setDraggable(boolean draggable) {
+            this.draggable = draggable;
+        }
+
+        public boolean isCentered() {
+            return centered;
+        }
+
+        public void setCentered(boolean centered) {
+            this.centered = centered;
+        }
+
+        public int getPositionX() {
+            return positionX;
+        }
+
+        public void setPositionX(int positionX) {
+            this.positionX = positionX;
+        }
+
+        public int getPositionY() {
+            return positionY;
+        }
+
+        public void setPositionY(int positionY) {
+            this.positionY = positionY;
+        }
 
     }
 
@@ -74,13 +137,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         DOM.setElementProperty(getWidget().closeBox, "id", getConnectorId()
                 + "_window_close");
 
-        if (uidl.hasAttribute("invisible")) {
-            getWidget().hide();
-            return;
-        }
-
         if (isRealUpdate(uidl)) {
-            if (uidl.getBooleanAttribute("modal") != getWidget().vaadinModality) {
+            if (getState().isModal() != getWidget().vaadinModality) {
                 getWidget().setVaadinModality(!getWidget().vaadinModality);
             }
             if (!getWidget().isAttached()) {
@@ -88,12 +146,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
                                                // possible centering
                 getWidget().show();
             }
-            if (uidl.getBooleanAttribute("resizable") != getWidget().resizable) {
-                getWidget().setResizable(!getWidget().resizable);
+            if (getState().isResizable() != getWidget().resizable) {
+                getWidget().setResizable(getState().isResizable());
             }
-            getWidget().resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
+            getWidget().resizeLazy = getState().isResizeLazy();
 
-            getWidget().setDraggable(!uidl.hasAttribute("fixedposition"));
+            getWidget().setDraggable(getState().isDraggable());
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
@@ -118,8 +176,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getWidget().setClosable(!isReadOnly());
 
         // Initialize the position form UIDL
-        int positionx = uidl.getIntVariable("positionx");
-        int positiony = uidl.getIntVariable("positiony");
+        int positionx = getState().getPositionX();
+        int positiony = getState().getPositionY();
         if (positionx >= 0 || positiony >= 0) {
             if (positionx < 0) {
                 positionx = 0;
@@ -196,13 +254,9 @@ public class WindowConnector extends AbstractComponentContainerConnector
         // Center this window on screen if requested
         // This had to be here because we might not know the content size before
         // everything is painted into the window
-        if (uidl.getBooleanAttribute("center")) {
-            // mark as centered - this is unset on move/resize
-            getWidget().centered = true;
-        } else {
-            // don't try to center the window anymore
-            getWidget().centered = false;
-        }
+
+        // centered is this is unset on move/resize
+        getWidget().centered = getState().isCentered();
         getWidget().setVisible(true);
 
         // ensure window is not larger than browser window

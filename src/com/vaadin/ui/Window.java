@@ -23,7 +23,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowServerRPC;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
@@ -105,12 +104,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     private boolean draggable = true;
 
     /**
-     * <b>Sub window only</b>. Flag which is true if the window is centered on
-     * the screen.
-     */
-    private boolean centerRequested = false;
-
-    /**
      * Should resize recalculate layouts lazily (as opposed to immediately)
      */
     private boolean resizeLazy = false;
@@ -178,39 +171,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
     @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
-
-        if (modal) {
-            target.addAttribute("modal", true);
-        }
-
-        if (resizable) {
-            target.addAttribute("resizable", true);
-        }
-        if (resizeLazy) {
-            target.addAttribute(VView.RESIZE_LAZY, resizeLazy);
-        }
-
-        if (!draggable) {
-            // Inverted to prevent an extra attribute for almost all sub windows
-            target.addAttribute("fixedposition", true);
-        }
-
         if (bringToFront != null) {
             target.addAttribute("bringToFront", bringToFront.intValue());
             bringToFront = null;
         }
 
-        if (centerRequested) {
-            target.addAttribute("center", true);
-            centerRequested = false;
-        }
-
         // Contents of the window panel is painted
         super.paintContent(target);
-
-        // Window position
-        target.addVariable(this, "positionx", getPositionX());
-        target.addVariable(this, "positiony", getPositionY());
 
         // Window closing
         target.addVariable(this, "close", false);
@@ -344,7 +311,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private void setPositionX(int positionX, boolean repaintRequired) {
         this.positionX = positionX;
-        centerRequested = false;
+        getState().setCentered(false);
         if (repaintRequired) {
             requestRepaint();
         }
@@ -391,7 +358,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     private void setPositionY(int positionY, boolean repaintRequired) {
         this.positionY = positionY;
-        centerRequested = false;
+        getState().setCentered(false);
         if (repaintRequired) {
             requestRepaint();
         }
@@ -676,7 +643,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * sub-windows only.
      */
     public void center() {
-        centerRequested = true;
+        getState().setCentered(true);
         requestRepaint();
     }
 
