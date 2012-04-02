@@ -580,7 +580,7 @@ public class VWindow extends VOverlay implements Container,
     }
 
     private void setCursorProperties() {
-        if (!this.draggable) {
+        if (!draggable) {
             header.getStyle().setProperty("cursor", "default");
             footer.getStyle().setProperty("cursor", "default");
         } else {
@@ -686,6 +686,13 @@ public class VWindow extends VOverlay implements Container,
 
     @Override
     public void show() {
+        if (!windowOrder.contains(this)) {
+            // This is needed if the window is hidden and then shown again.
+            // Otherwise this VWindow is added to windowOrder in the
+            // constructor.
+            windowOrder.add(this);
+        }
+
         if (vaadinModality) {
             showModalityCurtain();
         }
@@ -734,6 +741,10 @@ public class VWindow extends VOverlay implements Container,
             hideModalityCurtain();
         }
         super.hide();
+
+        // Remove window from windowOrder to avoid references being left
+        // hanging.
+        windowOrder.remove(this);
     }
 
     private void setVaadinModality(boolean modality) {
