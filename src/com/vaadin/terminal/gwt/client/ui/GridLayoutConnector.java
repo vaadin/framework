@@ -11,12 +11,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.ui.GridLayout;
@@ -24,6 +26,37 @@ import com.vaadin.ui.GridLayout;
 @Component(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
+
+    public static class GridLayoutState extends ComponentState {
+        private boolean spacing = false;
+        private int rows = 0;
+        private int columns = 0;
+
+        public boolean isSpacing() {
+            return spacing;
+        }
+
+        public void setSpacing(boolean spacing) {
+            this.spacing = spacing;
+        }
+
+        public int getRows() {
+            return rows;
+        }
+
+        public void setRows(int rows) {
+            this.rows = rows;
+        }
+
+        public int getColumns() {
+            return columns;
+        }
+
+        public void setColumns(int cols) {
+            columns = cols;
+        }
+
+    }
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -54,6 +87,19 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     @Override
+    public GridLayoutState getState() {
+        return (GridLayoutState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        clickEventHandler.handleEventHandlerRegistration();
+
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         VGridLayout layout = getWidget();
         layout.client = client;
@@ -62,10 +108,9 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         if (!isRealUpdate(uidl)) {
             return;
         }
-        clickEventHandler.handleEventHandlerRegistration();
 
-        int cols = uidl.getIntAttribute("w");
-        int rows = uidl.getIntAttribute("h");
+        int cols = getState().getColumns();
+        int rows = getState().getRows();
 
         layout.columnWidths = new int[cols];
         layout.rowHeights = new int[rows];
@@ -128,7 +173,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         int bitMask = uidl.getIntAttribute("margins");
         layout.updateMarginStyleNames(new VMarginInfo(bitMask));
 
-        layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
+        layout.updateSpacingStyleName(getState().isSpacing());
 
         getLayoutManager().setNeedsUpdate(this);
     }
