@@ -7,15 +7,34 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 
 public class MeasuredSize {
+    public static class MeasureResult {
+        private final boolean widthChanged;
+        private final boolean heightChanged;
+
+        private MeasureResult(boolean widthChanged, boolean heightChanged) {
+            this.widthChanged = widthChanged;
+            this.heightChanged = heightChanged;
+        }
+
+        public boolean isHeightChanged() {
+            return heightChanged;
+        }
+
+        public boolean isWidthChanged() {
+            return widthChanged;
+        }
+
+        public boolean isChanged() {
+            return heightChanged || widthChanged;
+        }
+    }
+
     private int width = -1;
     private int height = -1;
 
     private int[] paddings = new int[4];
     private int[] borders = new int[4];
     private int[] margins = new int[4];
-
-    private boolean heightChanged = true;
-    private boolean widthChanged = true;
 
     private FastStringSet dependents = FastStringSet.create();
 
@@ -61,17 +80,21 @@ public class MeasuredSize {
                 - sumWidths(paddings);
     }
 
-    public void setOuterHeight(int height) {
+    public boolean setOuterHeight(int height) {
         if (this.height != height) {
-            heightChanged = true;
             this.height = height;
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void setOuterWidth(int width) {
+    public boolean setOuterWidth(int width) {
         if (this.width != width) {
-            widthChanged = true;
             this.width = width;
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -147,9 +170,9 @@ public class MeasuredSize {
         return paddings[3];
     }
 
-    boolean measure(Element element) {
-        boolean wasHeightChanged = heightChanged;
-        boolean wasWidthChanged = widthChanged;
+    public MeasureResult measure(Element element) {
+        boolean heightChanged = false;
+        boolean widthChanged = false;
 
         ComputedStyle computedStyle = new ComputedStyle(element);
         int[] paddings = computedStyle.getPadding();
@@ -181,26 +204,17 @@ public class MeasuredSize {
 
         int requiredHeight = Util.getRequiredHeight(element);
         int marginHeight = sumHeights(margins);
-        setOuterHeight(requiredHeight + marginHeight);
+        if (setOuterHeight(requiredHeight + marginHeight)) {
+            heightChanged = true;
+        }
 
         int requiredWidth = Util.getRequiredWidth(element);
         int marginWidth = sumWidths(margins);
-        setOuterWidth(requiredWidth + marginWidth);
+        if (setOuterWidth(requiredWidth + marginWidth)) {
+            widthChanged = true;
+        }
 
-        return wasHeightChanged != heightChanged
-                || wasWidthChanged != widthChanged;
-    }
-
-    void clearDirtyState() {
-        heightChanged = widthChanged = false;
-    }
-
-    public boolean isHeightNeedsUpdate() {
-        return heightChanged;
-    }
-
-    public boolean isWidthNeedsUpdate() {
-        return widthChanged;
+        return new MeasureResult(widthChanged, heightChanged);
     }
 
     private static boolean hasWidthChanged(int[] sizes1, int[] sizes2) {
@@ -211,11 +225,4 @@ public class MeasuredSize {
         return sizes1[0] != sizes2[0] || sizes1[2] != sizes2[2];
     }
 
-    public void setWidthNeedsUpdate() {
-        widthChanged = true;
-    }
-
-    public void setHeightNeedsUpdate() {
-        heightChanged = true;
-    }
 }

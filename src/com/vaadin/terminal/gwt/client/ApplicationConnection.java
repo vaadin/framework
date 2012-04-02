@@ -1842,7 +1842,7 @@ public class ApplicationConnection {
     public void forceLayout() {
         Duration duration = new Duration();
 
-        layoutManager.foceLayout();
+        layoutManager.forceLayout();
 
         VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }

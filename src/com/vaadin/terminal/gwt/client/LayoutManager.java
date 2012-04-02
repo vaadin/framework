@@ -3,16 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
+import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
@@ -20,6 +24,9 @@ public class LayoutManager {
     private final Set<Element> nonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
     private boolean layoutRunning = false;
+
+    private final Collection<ManagedLayout> needsHorizontalLayout = new HashSet<ManagedLayout>();
+    private final Collection<ManagedLayout> needsVerticalLayout = new HashSet<ManagedLayout>();
 
     public void setConnection(ApplicationConnection connection) {
         if (this.connection != null) {
@@ -35,14 +42,7 @@ public class LayoutManager {
 
     public void registerDependency(ManagedLayout owner, Element element) {
         MeasuredSize measuredSize = ensureMeasured(element);
-
-        MeasuredSize ownerSize = getMeasuredSize(owner);
-        if (measuredSize.isHeightNeedsUpdate()) {
-            ownerSize.setHeightNeedsUpdate();
-        }
-        if (measuredSize.isWidthNeedsUpdate()) {
-            ownerSize.setWidthNeedsUpdate();
-        }
+        setNeedsUpdate(owner);
         measuredSize.addDependent(owner.getConnectorId());
     }
 
@@ -126,77 +126,72 @@ public class LayoutManager {
         int passes = 0;
         Duration totalDuration = new Duration();
 
+        LayoutDependencyTree layoutDependencyTree = new LayoutDependencyTree();
+
+        for (ComponentConnector componentConnector : paintableWidgets) {
+            layoutDependencyTree.setNeedsMeasure(componentConnector, true);
+            if (needsHorizontalLayout.contains(componentConnector)) {
+                layoutDependencyTree.setNeedsHorizontalLayout(
+                        componentConnector, true);
+            }
+            if (needsVerticalLayout.contains(componentConnector)) {
+                layoutDependencyTree.setNeedsVerticalLayout(componentConnector,
+                        true);
+            }
+        }
+        needsHorizontalLayout.clear();
+        needsVerticalLayout.clear();
+        measureNonPaintables(layoutDependencyTree);
+
+        VConsole.log("Layout init in " + totalDuration.elapsedMillis() + " ms");
+
         while (true) {
             Duration passDuration = new Duration();
             passes++;
-            measureElements(paintableWidgets);
 
-            FastStringSet needsHeightUpdate = FastStringSet.create();
-            FastStringSet needsWidthUpdate = FastStringSet.create();
-
-            for (ComponentConnector paintable : paintableWidgets) {
-                MeasuredSize measuredSize = getMeasuredSize(paintable);
-                boolean managed = isManagedLayout(paintable);
-
-                ComponentContainerConnector parent = paintable.getParent();
-                boolean managedParent = parent != null
-                        && isManagedLayout(parent);
-
-                if (measuredSize.isHeightNeedsUpdate()) {
-                    if (managed) {
-                        needsHeightUpdate.add(paintable.getConnectorId());
-                    }
-                    if (!paintable.isRelativeHeight() && managedParent) {
-                        needsHeightUpdate.add(parent.getConnectorId());
-                    }
-                }
-                if (measuredSize.isWidthNeedsUpdate()) {
-                    if (managed) {
-                        needsWidthUpdate.add(paintable.getConnectorId());
-                    }
-                    if (!paintable.isRelativeWidth() && managedParent) {
-                        needsWidthUpdate.add(parent.getConnectorId());
-                    }
-                }
-                measuredSize.clearDirtyState();
-            }
+            int measuredConnectorCount = measureConnectors(
+                    layoutDependencyTree, passes == 1);
 
             int measureTime = passDuration.elapsedMillis();
-            VConsole.log("Measure in " + measureTime + " ms");
+            VConsole.log("Measured " + measuredConnectorCount + " elements in "
+                    + measureTime + " ms");
 
             FastStringSet updatedSet = FastStringSet.create();
 
-            JsArrayString needsWidthUpdateArray = needsWidthUpdate.dump();
-
-            for (int i = 0; i < needsWidthUpdateArray.length(); i++) {
-                String pid = needsWidthUpdateArray.get(i);
-
-                ServerConnector paintable = paintableMap.getConnector(pid);
-                if (paintable instanceof DirectionalManagedLayout) {
-                    DirectionalManagedLayout cl = (DirectionalManagedLayout) paintable;
+            for (ComponentConnector connector : layoutDependencyTree
+                    .getHorizontalLayoutTargets()) {
+                if (connector instanceof DirectionalManagedLayout) {
+                    DirectionalManagedLayout cl = (DirectionalManagedLayout) connector;
                     cl.layoutHorizontally();
-                } else if (paintable instanceof SimpleManagedLayout) {
-                    SimpleManagedLayout rr = (SimpleManagedLayout) paintable;
+                    layoutDependencyTree.markAsHorizontallyLayouted(connector);
+                } else if (connector instanceof SimpleManagedLayout) {
+                    SimpleManagedLayout rr = (SimpleManagedLayout) connector;
                     rr.layout();
-                    needsHeightUpdate.remove(pid);
+                    layoutDependencyTree.markAsHorizontallyLayouted(connector);
+                    layoutDependencyTree.markAsVerticallyLayouted(connector);
+                } else {
+                    layoutDependencyTree.markAsHorizontallyLayouted(connector);
+                    layoutDependencyTree.markAsVerticallyLayouted(connector);
                 }
-                updatedSet.add(pid);
+                updatedSet.add(connector.getConnectorId());
             }
 
-            JsArrayString needsHeightUpdateArray = needsHeightUpdate.dump();
-            for (int i = 0; i < needsHeightUpdateArray.length(); i++) {
-                String pid = needsHeightUpdateArray.get(i);
-
-                ComponentConnector paintable = (ComponentConnector) paintableMap
-                        .getConnector(pid);
-                if (paintable instanceof DirectionalManagedLayout) {
-                    DirectionalManagedLayout cl = (DirectionalManagedLayout) paintable;
+            for (ComponentConnector connector : layoutDependencyTree
+                    .getVerticalLayoutTargets()) {
+                if (connector instanceof DirectionalManagedLayout) {
+                    DirectionalManagedLayout cl = (DirectionalManagedLayout) connector;
                     cl.layoutVertically();
-                } else if (paintable instanceof SimpleManagedLayout) {
-                    SimpleManagedLayout rr = (SimpleManagedLayout) paintable;
+                    layoutDependencyTree.markAsVerticallyLayouted(connector);
+                } else if (connector instanceof SimpleManagedLayout) {
+                    SimpleManagedLayout rr = (SimpleManagedLayout) connector;
                     rr.layout();
+                    layoutDependencyTree.markAsHorizontallyLayouted(connector);
+                    layoutDependencyTree.markAsVerticallyLayouted(connector);
+                } else {
+                    layoutDependencyTree.markAsHorizontallyLayouted(connector);
+                    layoutDependencyTree.markAsVerticallyLayouted(connector);
                 }
-                updatedSet.add(pid);
+                updatedSet.add(connector.getConnectorId());
             }
 
             JsArrayString changed = updatedSet.dump();
@@ -248,68 +243,93 @@ public class LayoutManager {
                 + totalDuration.elapsedMillis() + "ms");
     }
 
-    private void measureElements(ComponentConnector[] paintableWidgets) {
+    private int measureConnectors(LayoutDependencyTree layoutDependencyTree,
+            boolean measureAll) {
 
-        for (ComponentConnector paintableWidget : paintableWidgets) {
+        Collection<ComponentConnector> measureTargets;
+        if (measureAll) {
+            measureTargets = Arrays.asList(ConnectorMap.get(connection)
+                    .getComponentConnectors());
+        } else {
+            measureTargets = layoutDependencyTree.getMeasureTargets();
+        }
+        for (ComponentConnector paintableWidget : measureTargets) {
             Element element = paintableWidget.getWidget().getElement();
             MeasuredSize measuredSize = getMeasuredSize(paintableWidget);
-            measuredAndUpdate(element, measuredSize);
-        }
+            MeasureResult measureResult = measuredAndUpdate(element,
+                    measuredSize, layoutDependencyTree);
 
+            if (measureResult.isHeightChanged()) {
+                layoutDependencyTree.markHeightAsChanged(paintableWidget);
+            }
+            if (measureResult.isWidthChanged()) {
+                layoutDependencyTree.markWidthAsChanged(paintableWidget);
+            }
+
+            layoutDependencyTree.setNeedsMeasure(paintableWidget, false);
+        }
+        return measureTargets.size();
+    }
+
+    private void measureNonPaintables(LayoutDependencyTree layoutDependencyTree) {
         for (Element element : nonPaintableElements) {
             MeasuredSize measuredSize = getMeasuredSize(element, null);
-            measuredAndUpdate(element, measuredSize);
-            measuredSize.clearDirtyState();
+            measuredAndUpdate(element, measuredSize, layoutDependencyTree);
         }
     }
 
-    private void measuredAndUpdate(Element element, MeasuredSize measuredSize) {
-        if (measuredSize.measure(element)) {
+    private MeasureResult measuredAndUpdate(Element element,
+            MeasuredSize measuredSize, LayoutDependencyTree layoutDependencyTree) {
+        MeasureResult measureResult = measuredSize.measure(element);
+        if (measureResult.isChanged()) {
             JsArrayString dependents = measuredSize.getDependents();
             for (int i = 0; i < dependents.length(); i++) {
                 String pid = dependents.get(i);
                 ComponentConnector dependent = (ComponentConnector) connection
                         .getConnectorMap().getConnector(pid);
                 if (dependent != null) {
-                    MeasuredSize dependentSize = getMeasuredSize(dependent);
-                    if (measuredSize.isHeightNeedsUpdate()) {
-                        dependentSize.setHeightNeedsUpdate();
+                    if (measureResult.isHeightChanged()) {
+                        layoutDependencyTree.setNeedsVerticalLayout(dependent,
+                                true);
                     }
-                    if (measuredSize.isWidthNeedsUpdate()) {
-                        dependentSize.setWidthNeedsUpdate();
+                    if (measureResult.isWidthChanged()) {
+                        layoutDependencyTree.setNeedsHorizontalLayout(
+                                dependent, true);
                     }
                 }
             }
         }
+        return measureResult;
     }
 
     private static boolean isManagedLayout(ComponentConnector paintable) {
         return paintable instanceof ManagedLayout;
     }
 
-    public void foceLayout() {
+    public void forceLayout() {
         ConnectorMap paintableMap = connection.getConnectorMap();
         ComponentConnector[] paintableWidgets = paintableMap
                 .getComponentConnectors();
-        for (ComponentConnector vPaintableWidget : paintableWidgets) {
-            MeasuredSize measuredSize = getMeasuredSize(vPaintableWidget);
-            measuredSize.setHeightNeedsUpdate();
-            measuredSize.setWidthNeedsUpdate();
+        for (ComponentConnector connector : paintableWidgets) {
+            if (connector instanceof ManagedLayout) {
+                setNeedsUpdate((ManagedLayout) connector);
+            }
         }
         doLayout();
     }
 
+    // TODO Rename to setNeedsLayout
     public final void setNeedsUpdate(ManagedLayout layout) {
         setWidthNeedsUpdate(layout);
         setHeightNeedsUpdate(layout);
     }
 
     public final void setWidthNeedsUpdate(ManagedLayout layout) {
-        getMeasuredSize(layout).setWidthNeedsUpdate();
+        needsHorizontalLayout.add(layout);
     }
 
     public final void setHeightNeedsUpdate(ManagedLayout layout) {
-        getMeasuredSize(layout).setHeightNeedsUpdate();
+        needsVerticalLayout.add(layout);
     }
 
     public boolean isMeasured(Element element) {
