@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.LinkedList;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -250,11 +249,6 @@ public abstract class AbstractSplitPanelConnector extends
     @Override
     public AbstractSplitPanelState getState() {
         return (AbstractSplitPanelState) super.getState();
-    }
-
-    @Override
-    protected AbstractSplitPanelState createState() {
-        return GWT.create(AbstractSplitPanelState.class);
     }
 
     private ComponentConnector getFirstChild() {

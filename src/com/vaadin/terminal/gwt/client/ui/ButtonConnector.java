@@ -8,7 +8,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -124,8 +123,4 @@ public class ButtonConnector extends AbstractComponentConnector {
         return (ButtonState) super.getState();
     }
 
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(ButtonState.class);
-    }
 }

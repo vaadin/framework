@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -190,11 +189,6 @@ public class FormConnector extends AbstractComponentContainerConnector
     @Override
     public AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
     }
 
 }

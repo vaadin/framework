@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
@@ -76,10 +75,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * Returns the shared state object for a paintable widget.
-     * 
-     * A new state instance is created using {@link #createState()} if none has
-     * been set by the server.
+     * Returns the shared state object for this connector.
      * 
      * If overriding this method to return a more specific type, also
      * {@link #createState()} must be overridden.
@@ -87,26 +83,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @return current shared state (not null)
      */
     public ComponentState getState() {
-        if (state == null) {
-            state = createState();
-        }
-
         return state;
-    }
-
-    /**
-     * Creates a new instance of a shared state object for the widget. Normally,
-     * the state instance is created by the server and sent to the client before
-     * being used - this method is used if no shared state has been sent by the
-     * server.
-     * 
-     * When overriding {@link #getState()}, also {@link #createState()} should
-     * be overridden to match it.
-     * 
-     * @return newly created component shared state instance
-     */
-    protected ComponentState createState() {
-        return GWT.create(ComponentState.class);
     }
 
     public static boolean isRealUpdate(UIDL uidl) {

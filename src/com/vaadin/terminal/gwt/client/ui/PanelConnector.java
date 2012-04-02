@@ -250,11 +250,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    protected PanelState createState() {
-        return GWT.create(PanelState.class);
-    }
-
-    @Override
     public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
         super.connectorHierarchyChanged(event);
         // We always have 1 child, unless the child is hidden

@@ -14,7 +14,6 @@ import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -292,11 +291,6 @@ public class TableConnector extends AbstractComponentContainerConnector
     @Override
     public AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
     }
 
     /**

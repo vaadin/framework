@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
@@ -248,11 +247,6 @@ public class TreeConnector extends AbstractComponentConnector {
     @Override
     public AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
     }
 
 }
