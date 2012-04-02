@@ -425,6 +425,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public Root() {
         registerRpcImplementation(rpc, RootServerRPC.class);
+        setSizeFull();
     }
 
     /**

@@ -11,6 +11,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -29,15 +30,26 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
-public class RootConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout {
+public class RootConnector extends AbstractComponentContainerConnector {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 
     }
 
     private RootServerRPC rpc = GWT.create(RootServerRPC.class);
+
+    private HandlerRegistration childStateChangeHandlerRegistration;
+
+    private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
+        public void onStateChanged(StateChangeEvent stateChangeEvent) {
+            // TODO Should use a more specific handler that only reacts to
+            // size changes
+            onChildSizeChange();
+        }
+    };
 
     @Override
     protected void init() {
@@ -149,11 +161,19 @@ public class RootConnector extends AbstractComponentContainerConnector
             if (getWidget().layout != lo) {
                 // remove old
                 client.unregisterPaintable(getWidget().layout);
+                if (childStateChangeHandlerRegistration != null) {
+                    childStateChangeHandlerRegistration.removeHandler();
+                    childStateChangeHandlerRegistration = null;
+                }
                 // add new
                 getWidget().setWidget(lo.getWidget());
                 getWidget().layout = lo;
             }
         } else {
+            if (getWidget().layout != lo) {
+                childStateChangeHandlerRegistration = lo
+                        .addStateChangeHandler(childStateChangeHandler);
+            }
             getWidget().setWidget(lo.getWidget());
             getWidget().layout = lo;
         }
@@ -331,7 +351,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         return GWT.create(VView.class);
     }
 
-    public void layout() {
+    protected void onChildSizeChange() {
         ComponentConnector child = getWidget().layout;
         Style childStyle = child.getWidget().getElement().getStyle();
         /*
