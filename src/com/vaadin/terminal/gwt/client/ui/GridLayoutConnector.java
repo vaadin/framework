@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -43,11 +44,11 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
-    private GridLayoutServerRPC rpc = GWT.create(GridLayoutServerRPC.class);
+    private GridLayoutServerRPC rpc;
 
     @Override
     public void init() {
-        initRPC(rpc);
+        rpc = RpcProxy.create(GridLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

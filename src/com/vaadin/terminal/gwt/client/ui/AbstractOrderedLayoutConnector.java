@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,6 +16,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -24,13 +24,12 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
 
-    public interface AbstractOrderedLayoutServerRPC extends
-            LayoutClickRPC, ServerRpc {
+    public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
+            ServerRpc {
 
     }
 
-    AbstractOrderedLayoutServerRPC rpc = GWT
-            .create(AbstractOrderedLayoutServerRPC.class);
+    AbstractOrderedLayoutServerRPC rpc;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -50,7 +49,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     @Override
     public void init() {
-        initRPC(rpc);
+        rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
@@ -45,7 +46,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private WindowServerRPC rpc = GWT.create(WindowServerRPC.class);
+    private WindowServerRPC rpc;
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -55,7 +56,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(WindowServerRPC.class, this);
+
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());
         getLayoutManager().registerDependency(this, getWidget().header);

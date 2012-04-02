@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.ui.Embedded;
 
@@ -33,12 +34,12 @@ public class EmbeddedConnector extends AbstractComponentConnector {
 
     public static final String ALTERNATE_TEXT = "alt";
 
-    EmbeddedServerRPC rpc = GWT.create(EmbeddedServerRPC.class);
+    EmbeddedServerRPC rpc;
 
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(EmbeddedServerRPC.class, this);
     }
 
     @Override

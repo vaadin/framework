@@ -29,6 +29,7 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
@@ -42,7 +43,7 @@ public class RootConnector extends AbstractComponentContainerConnector {
 
     }
 
-    private RootServerRPC rpc = GWT.create(RootServerRPC.class);
+    private RootServerRPC rpc;
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -57,7 +58,7 @@ public class RootConnector extends AbstractComponentContainerConnector {
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(RootServerRPC.class, this);
     }
 
     @Override

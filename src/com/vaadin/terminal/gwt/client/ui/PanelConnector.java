@@ -16,6 +16,7 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.ui.Panel;
 
@@ -70,11 +71,11 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     private Integer uidlScrollLeft;
 
-    private PanelServerRPC rpc = GWT.create(PanelServerRPC.class);
+    private PanelServerRPC rpc;
 
     @Override
     public void init() {
-        initRPC(rpc);
+        rpc = RpcProxy.create(PanelServerRPC.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
 

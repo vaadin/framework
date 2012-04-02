@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.ui.AbsoluteLayout;
@@ -42,13 +43,12 @@ public class AbsoluteLayoutConnector extends
 
     };
 
-    private AbsoluteLayoutServerRPC rpc = GWT
-            .create(AbsoluteLayoutServerRPC.class);
+    private AbsoluteLayoutServerRPC rpc;
 
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(AbsoluteLayoutServerRPC.class, this);
     }
 
     @Override

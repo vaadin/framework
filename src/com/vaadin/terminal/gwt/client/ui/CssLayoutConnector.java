@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.ui.CssLayout;
 
@@ -33,12 +34,12 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector {
 
     }
 
-    private CssLayoutServerRPC rpc = GWT.create(CssLayoutServerRPC.class);
+    private CssLayoutServerRPC rpc;
 
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(CssLayoutServerRPC.class, this);
     }
 
     @Override

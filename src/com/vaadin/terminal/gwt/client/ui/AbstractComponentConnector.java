@@ -20,7 +20,6 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 
@@ -355,20 +354,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public final void setState(SharedState state) {
         this.state = (ComponentState) state;
-    }
-
-    /**
-     * Initialize the given RPC proxy object so it is connected to this
-     * paintable.
-     * 
-     * @param clientToServerRpc
-     *            The RPC instance to initialize. Must have been created using
-     *            GWT.create().
-     */
-    protected <T extends ServerRpc> T initRPC(T clientToServerRpc) {
-        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(
-                getConnectorId(), getConnection());
-        return clientToServerRpc;
     }
 
     public LayoutManager getLayoutManager() {

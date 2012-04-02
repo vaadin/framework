@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.Button;
@@ -48,8 +49,8 @@ public class ButtonConnector extends AbstractComponentConnector {
     @Override
     public void init() {
         super.init();
-        ButtonServerRpc rpcProxy = GWT.create(ButtonServerRpc.class);
-        getWidget().buttonRpcProxy = initRPC(rpcProxy);
+        getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
+                this);
     }
 
     @Override

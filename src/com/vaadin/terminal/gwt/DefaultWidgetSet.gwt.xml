@@ -54,6 +54,13 @@
 			class="com.vaadin.terminal.gwt.client.communication.ServerRpc" />
 	</generate-with>
 
+	<!-- Generate client side proxies for client to server RPC interfaces -->
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyCreatorGenerator">
+		<when-type-assignable
+			class="com.vaadin.terminal.gwt.client.communication.RpcProxy.RpcProxyCreator" />
+	</generate-with>
+
 	<!-- Generate client side RPC manager for server to client RPC -->
 	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.RpcManagerGenerator">

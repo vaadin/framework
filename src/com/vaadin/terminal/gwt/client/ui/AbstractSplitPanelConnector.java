@@ -19,6 +19,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler;
@@ -127,12 +128,12 @@ public abstract class AbstractSplitPanelConnector extends
 
     }
 
-    private AbstractSplitPanelRPC rpc = GWT.create(AbstractSplitPanelRPC.class);
+    private AbstractSplitPanelRPC rpc;
 
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(AbstractSplitPanelRPC.class, this);
         // TODO Remove
         getWidget().client = getConnection();
 
