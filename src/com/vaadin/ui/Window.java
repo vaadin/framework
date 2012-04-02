@@ -149,7 +149,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      */
     public Window(String caption, ComponentContainer content) {
         super(caption, content);
-        registerRpcImplementation(rpc, WindowServerRPC.class);
+        registerRpc(rpc);
         setSizeUndefined();
     }
 

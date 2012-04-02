@@ -76,7 +76,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     protected LinkedList<Component> components = new LinkedList<Component>();
 
     public CssLayout() {
-        registerRpcImplementation(rpc, CssLayoutServerRPC.class);
+        registerRpc(rpc);
     }
 
     /**

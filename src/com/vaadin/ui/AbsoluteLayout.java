@@ -49,7 +49,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * Creates an AbsoluteLayout with full size.
      */
     public AbsoluteLayout() {
-        registerRpcImplementation(rpc, AbsoluteLayoutServerRPC.class);
+        registerRpc(rpc);
         setSizeFull();
     }
 

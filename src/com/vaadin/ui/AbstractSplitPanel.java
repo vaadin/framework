@@ -47,7 +47,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     };
 
     public AbstractSplitPanel() {
-        registerRpcImplementation(rpc, AbstractSplitPanelRPC.class);
+        registerRpc(rpc);
         setSplitPosition(50, Unit.PERCENTAGE, false);
     }
 

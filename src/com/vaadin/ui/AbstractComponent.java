@@ -1615,10 +1615,30 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            RPC interface class for which the implementation should be
      *            registered
      */
-    protected <T> void registerRpcImplementation(T implementation,
-            Class<T> rpcInterfaceType) {
+    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
         rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(this,
                 implementation, rpcInterfaceType));
+    }
+
+    /**
+     * Registers an RPC interface implementation for this component.
+     * 
+     * A component can listen to multiple RPC interfaces, and subclasses can
+     * register additional implementations.
+     * 
+     * @since 7.0
+     * 
+     * @param implementation
+     *            RPC interface implementation. Also used to deduce the type.
+     */
+    protected <T> void registerRpc(T implementation) {
+        Class<?>[] interfaces = implementation.getClass().getInterfaces();
+        if (interfaces.length != 1) {
+            throw new RuntimeException(
+                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+        }
+        Class<T> type = (Class<T>) interfaces[0];
+        registerRpc(implementation, type);
     }
 
     /**

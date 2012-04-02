@@ -422,7 +422,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * {@link VerticalLayout} with margins enabled as its content.
      */
     public Root() {
-        registerRpcImplementation(rpc, RootServerRPC.class);
+        registerRpc(rpc);
         setSizeFull();
     }
 

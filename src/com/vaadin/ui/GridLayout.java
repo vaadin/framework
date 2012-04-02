@@ -130,7 +130,7 @@ public class GridLayout extends AbstractLayout implements
     public GridLayout(int columns, int rows) {
         setColumns(columns);
         setRows(rows);
-        registerRpcImplementation(rpc, GridLayoutServerRPC.class);
+        registerRpc(rpc);
     }
 
     /**

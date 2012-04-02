@@ -55,7 +55,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     private boolean spacing = false;
 
     public AbstractOrderedLayout() {
-        registerRpcImplementation(rpc, AbstractOrderedLayoutServerRPC.class);
+        registerRpc(rpc);
     }
 
     /**

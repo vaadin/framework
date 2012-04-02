@@ -54,7 +54,7 @@ public class Button extends AbstractComponent implements
      * Creates a new push button.
      */
     public Button() {
-        registerRpcImplementation(rpc, ButtonServerRpc.class);
+        registerRpc(rpc);
     }
 
     /**
