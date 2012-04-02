@@ -11,12 +11,15 @@ public abstract class AbstractServerConnectorEvent<H extends EventHandler>
         extends GwtEvent<H> {
     private ServerConnector connector;
 
-    protected AbstractServerConnectorEvent(ServerConnector connector) {
-        this.connector = connector;
+    protected AbstractServerConnectorEvent() {
     }
 
     public ServerConnector getConnector() {
         return connector;
+    }
+
+    public void setConnector(ServerConnector connector) {
+        this.connector = connector;
     }
 
     /**

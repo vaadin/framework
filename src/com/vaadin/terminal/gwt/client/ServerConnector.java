@@ -36,6 +36,10 @@ public interface ServerConnector extends Connector {
      *            The new state
      * @deprecated This should be removed. Framework should update what is
      *             returned by getState() instead of setting a new state object.
+     *             Note that this must be done either so that setState accepts a
+     *             state object once (first time received from the server) or
+     *             getState() in AbstractConnector uses a generated class to
+     *             create the state object (like RpcProy.craete())
      */
     @Deprecated
     public void setState(SharedState state);
@@ -88,6 +92,8 @@ public interface ServerConnector extends Connector {
      * 
      * @param handler
      *            The handler that should be added.
+     * @return A handler registration reference that can be used to unregister
+     *         the handler
      */
     public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
 

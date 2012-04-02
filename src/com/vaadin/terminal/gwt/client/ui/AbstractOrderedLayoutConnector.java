@@ -252,9 +252,9 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     @Override
-    public void connectorHierarchyChanged(
-            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(
+            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;
         VMeasuringOrderedLayout layout = getWidget();

@@ -1023,7 +1023,7 @@ public class ApplicationConnection {
                 Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(json);
 
                 // Update hierarchy, do not fire events
-                Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
+                Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
 
                 // Fire hierarchy change events
                 sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
@@ -1232,14 +1232,14 @@ public class ApplicationConnection {
             }
 
             private void sendHierarchyChangeEvents(
-                    Collection<ConnectorHierarchyChangedEvent> pendingHierarchyChangeEvents) {
+                    Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents) {
                 if (pendingHierarchyChangeEvents.isEmpty()) {
                     return;
                 }
 
                 VConsole.log(" * Sending hierarchy change events");
-                for (ConnectorHierarchyChangedEvent event : pendingHierarchyChangeEvents) {
-                    event.getParent().connectorHierarchyChanged(event);
+                for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
+                    event.getConnector().fireEvent(event);
                 }
 
             }
@@ -1269,7 +1269,10 @@ public class ApplicationConnection {
                                     ApplicationConnection.this);
 
                             connector.setState((SharedState) state);
-                            events.add(new StateChangeEvent(connector));
+                            StateChangeEvent event = GWT
+                                    .create(StateChangeEvent.class);
+                            event.setConnector(connector);
+                            events.add(event);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1289,9 +1292,9 @@ public class ApplicationConnection {
              * @return A collection of events that should be fired when update
              *         of hierarchy and state is complete
              */
-            private Collection<ConnectorHierarchyChangedEvent> updateConnectorHierarchy(
+            private Collection<ConnectorHierarchyChangeEvent> updateConnectorHierarchy(
                     ValueMap json) {
-                List<ConnectorHierarchyChangedEvent> events = new LinkedList<ConnectorHierarchyChangedEvent>();
+                List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
 
                 VConsole.log(" * Updating connector hierarchy");
                 if (!json.containsKey("hierarchy")) {
@@ -1353,10 +1356,10 @@ public class ApplicationConnection {
                         }
 
                         // Fire change event if the hierarchy has changed
-                        ConnectorHierarchyChangedEvent event = GWT
-                                .create(ConnectorHierarchyChangedEvent.class);
+                        ConnectorHierarchyChangeEvent event = GWT
+                                .create(ConnectorHierarchyChangeEvent.class);
                         event.setOldChildren(oldChildren);
-                        event.setParent(ccc);
+                        event.setConnector(ccc);
                         ccc.setChildren((List) newChildren);
                         events.add(event);
 

@@ -6,17 +6,20 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public abstract class AbstractComponentContainerConnector extends
-        AbstractComponentConnector implements ComponentContainerConnector {
+        AbstractComponentConnector implements ComponentContainerConnector,
+        ConnectorHierarchyChangeHandler {
 
     public interface LayoutClickRPC extends ServerRpc {
         /**
@@ -38,6 +41,7 @@ public abstract class AbstractComponentContainerConnector extends
      * Default constructor
      */
     public AbstractComponentContainerConnector() {
+        addConnectorHierarchyChangeHandler(this);
     }
 
     /*
@@ -72,7 +76,7 @@ public abstract class AbstractComponentContainerConnector extends
      * connectorHierarchyChanged
      * (com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent)
      */
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // TODO Remove debug info
         VConsole.log("Hierarchy changed for " + Util.getConnectorString(this));
         String oldChildren = "* Old children: ";
@@ -87,4 +91,11 @@ public abstract class AbstractComponentContainerConnector extends
         }
         VConsole.log(newChildren);
     }
+
+    public HandlerRegistration addConnectorHierarchyChangeHandler(
+            ConnectorHierarchyChangeHandler handler) {
+        return ensureHandlerManager().addHandler(
+                ConnectorHierarchyChangeEvent.TYPE, handler);
+    }
+
 }

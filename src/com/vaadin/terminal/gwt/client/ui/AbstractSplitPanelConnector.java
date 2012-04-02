@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
@@ -260,8 +260,8 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
 
         Widget newFirstChildWidget = null;
         if (getFirstChild() != null) {

@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -250,8 +250,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
         // We always have 1 child, unless the child is hidden
         Widget newChildWidget = null;
         if (getChildren().size() == 1) {

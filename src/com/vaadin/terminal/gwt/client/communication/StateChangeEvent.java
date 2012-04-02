@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.communication;
 import java.io.Serializable;
 
 import com.google.gwt.event.shared.EventHandler;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 public class StateChangeEvent extends
@@ -21,8 +20,7 @@ public class StateChangeEvent extends
         return TYPE;
     }
 
-    public StateChangeEvent(ServerConnector connector) {
-        super(connector);
+    public StateChangeEvent() {
     }
 
     @Override

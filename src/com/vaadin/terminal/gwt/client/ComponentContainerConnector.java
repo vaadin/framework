@@ -6,7 +6,9 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.List;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 
 /**
  * An interface used by client-side connectors whose widget is a component
@@ -48,7 +50,7 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * side and the server side are in sync.
      * <p>
      * Note that calling this method does not call
-     * {@link #connectorHierarchyChanged(ConnectorHierarchyChangedEvent)}. The
+     * {@link #connectorHierarchyChanged(ConnectorHierarchyChangeEvent)}. The
      * event method is called only when the hierarchy has been updated for all
      * connectors.
      * 
@@ -58,15 +60,15 @@ public interface ComponentContainerConnector extends ComponentConnector {
     public void setChildren(List<ComponentConnector> children);
 
     /**
-     * Called when the child connector hierarchy of this connector has changed.
-     * When this method is called the full hierarchy has been updated so
-     * {@link #getChildren()} returns the new child connectors of this
-     * connector.
+     * Adds a handler that is called whenever the child hierarchy of this
+     * connector has been updated by the server.
      * 
-     * @param event
-     *            An event containing additional information about how the
-     *            hierarchy has changed.
+     * @param handler
+     *            The handler that should be added.
+     * @return A handler registration reference that can be used to unregister
+     *         the handler
      */
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event);
+    public HandlerRegistration addConnectorHierarchyChangeHandler(
+            ConnectorHierarchyChangeHandler handler);
 
 }
