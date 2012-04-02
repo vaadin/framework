@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -330,6 +332,7 @@ public class VDebugConsole extends VOverlay implements Console {
         if (msg == null) {
             msg = "null";
         }
+        msg = addTimestamp(msg);
         // remoteLog(msg);
 
         logToDebugWindow(msg, false);
@@ -421,13 +424,22 @@ public class VDebugConsole extends VOverlay implements Console {
         if (msg == null) {
             msg = "null";
         }
-
+        msg = addTimestamp(msg);
         logToDebugWindow(msg, true);
 
         GWT.log(msg);
         consoleErr(msg);
         System.out.println(msg);
 
+    }
+
+    DateTimeFormat timestampFormat = DateTimeFormat.getFormat("HH:mm:ss:SSS");
+
+    @SuppressWarnings("deprecation")
+    private String addTimestamp(String msg) {
+        Date date = new Date();
+        String timestamp = timestampFormat.format(date);
+        return timestamp + " " + msg;
     }
 
     /*
