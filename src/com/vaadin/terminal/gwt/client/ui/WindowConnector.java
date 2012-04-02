@@ -12,7 +12,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -191,25 +190,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         boolean showingUrl = false;
         int childIndex = 0;
         UIDL childUidl = uidl.getChildUIDL(childIndex++);
-        while ("open".equals(childUidl.getTag())) {
-            // TODO multiple opens with the same target will in practice just
-            // open the last one - should we fix that somehow?
-            final String parsedUri = client.translateVaadinUri(childUidl
-                    .getStringAttribute("src"));
-            if (!childUidl.hasAttribute("name")) {
-                final Frame frame = new Frame();
-                DOM.setStyleAttribute(frame.getElement(), "width", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "height", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "border", "0px");
-                frame.setUrl(parsedUri);
-                getWidget().contentPanel.setWidget(frame);
-                showingUrl = true;
-            } else {
-                final String target = childUidl.getStringAttribute("name");
-                Window.open(parsedUri, target, "");
-            }
-            childUidl = uidl.getChildUIDL(childIndex++);
-        }
 
         final ComponentConnector lo = client.getPaintable(childUidl);
         if (getWidget().layout != null) {
