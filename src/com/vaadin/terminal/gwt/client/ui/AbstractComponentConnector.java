@@ -22,6 +22,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
@@ -113,10 +114,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return !uidl.hasAttribute("cached");
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
@@ -131,9 +131,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
          */
-        if (uidl.hasAttribute("tabindex") && getWidget() instanceof Focusable) {
-            ((Focusable) getWidget()).setTabIndex(uidl
-                    .getIntAttribute("tabindex"));
+        if (state instanceof TabIndexState && getWidget() instanceof Focusable) {
+            ((Focusable) getWidget()).setTabIndex(((TabIndexState) state)
+                    .getTabIndex());
         }
 
         if (getWidget() instanceof FocusWidget) {
@@ -142,8 +142,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         // Style names
-        String styleName = getStyleNameFromUIDL(getWidget()
-                .getStylePrimaryName(), uidl, getWidget() instanceof Field,
+        String styleName = getStyleNames(getWidget().getStylePrimaryName(),
                 this);
         getWidget().setStyleName(styleName);
 
@@ -177,6 +176,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          */
 
         updateComponentSize();
+    }
+
+    @Deprecated
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // TODO Remove this method
     }
 
     private void updateComponentSize() {
@@ -273,8 +277,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @param field
      * @return
      */
-    protected static String getStyleNameFromUIDL(String primaryStyleName,
-            UIDL uidl, boolean field, ComponentConnector connector) {
+    protected static String getStyleNames(String primaryStyleName,
+            ComponentConnector connector) {
         ComponentState state = connector.getState();
 
         StringBuffer styleBuf = new StringBuffer();
@@ -305,11 +309,21 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }
 
-        // TODO Move to AbstractFieldConnector
-        // add modified classname to Fields
-        if (field && uidl.hasAttribute("modified")) {
-            styleBuf.append(" ");
-            styleBuf.append(ApplicationConnection.MODIFIED_CLASSNAME);
+        if (connector instanceof AbstractFieldConnector) {
+            // TODO Move to AbstractFieldConnector
+            AbstractFieldConnector afc = ((AbstractFieldConnector) connector);
+            if (afc.isModified()) {
+                // add modified classname to Fields
+                styleBuf.append(" ");
+                styleBuf.append(ApplicationConnection.MODIFIED_CLASSNAME);
+            }
+
+            if (afc.isRequired()) {
+                // add required classname to required fields
+                styleBuf.append(" ");
+                styleBuf.append(primaryStyleName);
+                styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
+            }
         }
 
         // add error classname to components w/ error
@@ -317,13 +331,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             styleBuf.append(" ");
             styleBuf.append(primaryStyleName);
             styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);
-        }
-        // add required style to required components
-        if (connector instanceof AbstractFieldConnector
-                && ((AbstractFieldConnector) connector).isRequired()) {
-            styleBuf.append(" ");
-            styleBuf.append(primaryStyleName);
-            styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
         }
 
         return styleBuf.toString();

@@ -24,6 +24,10 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
         return super.isReadOnly() || getState().isPropertyReadOnly();
     }
 
+    public boolean isModified() {
+        return getState().isModified();
+    }
+
     /**
      * Checks whether the required indicator should be shown for the field.
      * 

@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import com.vaadin.terminal.gwt.client.ui.TabIndexState;
 import com.vaadin.ui.AbstractField;
 
 /**
@@ -13,10 +14,16 @@ import com.vaadin.ui.AbstractField;
  * @since 7.0.0
  * 
  */
-public class AbstractFieldState extends ComponentState {
+public class AbstractFieldState extends ComponentState implements TabIndexState {
     private boolean propertyReadOnly = false;
     private boolean hideErrors = false;
     private boolean required = false;
+    private boolean modified = false;
+
+    /**
+     * The tab order number of this field.
+     */
+    private int tabIndex = 0;
 
     /**
      * Checks if the property data source for the Field is in read only mode.
@@ -85,6 +92,46 @@ public class AbstractFieldState extends ComponentState {
      */
     public void setRequired(boolean required) {
         this.required = required;
+    }
+
+    /**
+     * Has the contents of the field been modified, i.e. has the value been
+     * updated after it was read from the data source.
+     * 
+     * @return true if the field has been modified, false otherwise
+     */
+    public boolean isModified() {
+        return modified;
+    }
+
+    /**
+     * Setter for the modified flag, toggled when the contents of the field is
+     * modified by the user.
+     * 
+     * @param modified
+     *            the new modified state
+     * 
+     */
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ComponentState#getTabIndex()
+     */
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#setTabIndex(int)
+     */
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 
 }
