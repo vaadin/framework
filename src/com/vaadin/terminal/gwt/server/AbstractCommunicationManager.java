@@ -749,7 +749,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Paints components
         DirtyConnectorTracker rootConnectorTracker = root
                 .getDirtyConnectorTracker();
-        System.out.println("* Creating response to client");
+        logger.log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
             getClientCache(root).clear();
             rootConnectorTracker.markAllComponentsDirty();
@@ -762,7 +762,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         dirtyVisibleConnectors
                 .addAll(getDirtyVisibleComponents(rootConnectorTracker));
 
-        System.out.println("* Found " + dirtyVisibleConnectors.size()
+        logger.log(Level.FINE, "Found " + dirtyVisibleConnectors.size()
                 + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
             if (connector instanceof Component) {
@@ -2158,8 +2158,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         writeUidlResponse(true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
-        System.out.println("Initial UIDL:");
-        System.out.println(initialUIDL);
+        logger.log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
     }
 
