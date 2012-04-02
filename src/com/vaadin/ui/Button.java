@@ -38,22 +38,23 @@ public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
         Action.ShortcutNotifier {
 
+    private ButtonServerRpc rpc = new ButtonServerRpc() {
+        public void click(MouseEventDetails mouseEventDetails) {
+            fireClick(mouseEventDetails);
+        }
+
+        public void disableOnClick() {
+            // Could be optimized so the button is not repainted because of
+            // this (client side has already disabled the button)
+            setEnabled(false);
+        }
+    };
+
     /**
      * Creates a new push button.
      */
     public Button() {
-        // TODO take the implementation out of an anonymous class?
-        registerRpcImplementation(new ButtonServerRpc() {
-            public void click(MouseEventDetails mouseEventDetails) {
-                fireClick(mouseEventDetails);
-            }
-
-            public void disableOnClick() {
-                // Could be optimized so the button is not repainted because of
-                // this (client side has already disabled the button)
-                setEnabled(false);
-            }
-        }, ButtonServerRpc.class);
+        registerRpcImplementation(rpc, ButtonServerRpc.class);
     }
 
     /**
