@@ -18,7 +18,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
@@ -494,11 +493,6 @@ public class Button extends AbstractComponent implements
     public void focus() {
         // Overridden only to make public
         super.focus();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return new ButtonState();
     }
 
     @Override

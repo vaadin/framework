@@ -1592,8 +1592,4 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         getState().setHideErrors(shouldHideErrors());
     }
 
-    @Override
-    protected AbstractFieldState createState() {
-        return new AbstractFieldState();
-    }
 }
