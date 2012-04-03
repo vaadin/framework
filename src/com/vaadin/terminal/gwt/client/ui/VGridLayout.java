@@ -209,6 +209,8 @@ public class VGridLayout extends ComplexPanel {
                     + layoutManager.getPaddingBottom(element)
                     + layoutManager.getBorderHeight(element);
             element.getStyle().setHeight(outerHeight, Unit.PX);
+            getConnector().getLayoutManager().reportOuterHeight(getConnector(),
+                    outerHeight);
         }
     }
 
@@ -232,6 +234,8 @@ public class VGridLayout extends ComplexPanel {
                     + layoutManager.getPaddingRight(element)
                     + layoutManager.getBorderWidth(element);
             element.getStyle().setWidth(outerWidth, Unit.PX);
+            getConnector().getLayoutManager().reportOuterWidth(getConnector(),
+                    outerWidth);
         }
     }
 
