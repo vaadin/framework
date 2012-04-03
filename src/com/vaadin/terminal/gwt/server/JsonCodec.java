@@ -225,7 +225,7 @@ public class JsonCodec implements Serializable {
             JSONArray jsonArray = encodeArrayContents(array, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) value;
+            Map<Object, Object> map = (Map<Object, Object>) value;
             JSONObject jsonMap = encodeMapContents(map, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
         } else if (value instanceof Connector) {
@@ -324,13 +324,17 @@ public class JsonCodec implements Serializable {
         return jsonArray;
     }
 
-    private static JSONObject encodeMapContents(Map<String, Object> map,
+    private static JSONObject encodeMapContents(Map<Object, Object> map,
             Application application) throws JSONException {
         JSONObject jsonMap = new JSONObject();
-        for (String mapKey : map.keySet()) {
-            // TODO handle object graph loops?
+        for (Object mapKey : map.keySet()) {
+            if (!(mapKey instanceof String)) {
+                throw new JSONException(
+                        "Only maps with String keys are currently supported (#8602)");
+            }
+
             Object mapValue = map.get(mapKey);
-            jsonMap.put(mapKey, encode(mapValue, application));
+            jsonMap.put((String) mapKey, encode(mapValue, application));
         }
         return jsonMap;
     }

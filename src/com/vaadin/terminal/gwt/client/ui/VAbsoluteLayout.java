@@ -3,9 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
@@ -16,8 +13,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 
@@ -35,8 +30,6 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     private Object previousStyleName;
 
-    Map<String, AbsoluteWrapper> pidToComponentWrappper = new HashMap<String, AbsoluteWrapper>();
-
     protected ApplicationConnection client;
 
     public VAbsoluteLayout() {
@@ -52,24 +45,12 @@ public class VAbsoluteLayout extends ComplexPanel {
         canvas.setClassName(CLASSNAME + "-margin");
     }
 
-    AbsoluteWrapper getWrapper(ApplicationConnection client, UIDL componentUIDL) {
-        AbsoluteWrapper wrapper = pidToComponentWrappper.get(componentUIDL
-                .getId());
-        if (wrapper == null) {
-            wrapper = new AbsoluteWrapper(client.getPaintable(componentUIDL));
-            pidToComponentWrappper.put(componentUIDL.getId(), wrapper);
-            add(wrapper);
-        }
-        return wrapper;
-
-    }
-
     @Override
     public void add(Widget child) {
         super.add(child, canvas);
     }
 
-    public class AbsoluteWrapper extends SimplePanel {
+    public static class AbsoluteWrapper extends SimplePanel {
         private String css;
         String left;
         String top;
@@ -77,60 +58,26 @@ public class VAbsoluteLayout extends ComplexPanel {
         String bottom;
         private String zIndex;
 
-        private ComponentConnector paintable;
         private VCaption caption;
 
-        public AbsoluteWrapper(ComponentConnector paintable) {
-            this.paintable = paintable;
+        public AbsoluteWrapper(Widget child) {
+            setWidget(child);
             setStyleName(CLASSNAME + "-wrapper");
         }
 
-        public void updateCaption() {
-
-            boolean captionIsNeeded = VCaption.isNeeded(paintable.getState());
-            if (captionIsNeeded) {
-                if (caption == null) {
-                    caption = new VCaption(paintable, client);
-                    VAbsoluteLayout.this.add(caption);
-                }
-                caption.updateCaption();
-                updateCaptionPosition();
-            } else {
-                if (caption != null) {
-                    caption.removeFromParent();
-                    caption = null;
-                }
-            }
+        public VCaption getCaption() {
+            return caption;
         }
 
-        @Override
-        public void setWidget(Widget w) {
-            // this fixes #5457 (Widget implementation can change on-the-fly)
-            paintable = ConnectorMap.get(client).getConnector(w);
-            super.setWidget(w);
+        public void setCaption(VCaption caption) {
+            this.caption = caption;
         }
 
         public void destroy() {
             if (caption != null) {
                 caption.removeFromParent();
             }
-            client.unregisterPaintable(paintable);
             removeFromParent();
-        }
-
-        public void updateFromUIDL(UIDL componentUIDL) {
-            setPosition(componentUIDL.getStringAttribute("css"));
-            if (getWidget() != paintable.getWidget()) {
-                setWidget(paintable.getWidget());
-            }
-            UIDL childUIDL = componentUIDL.getChildUIDL(0);
-            paintable.updateFromUIDL(childUIDL, client);
-            if (childUIDL.hasAttribute("cached")) {
-                // child may need relative size adjustment if wrapper details
-                // have changed this could be optimized (check if wrapper size
-                // has changed)
-                client.handleComponentRelativeSize(paintable.getWidget());
-            }
         }
 
         public void setPosition(String stringAttribute) {

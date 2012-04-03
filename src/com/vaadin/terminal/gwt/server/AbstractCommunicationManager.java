@@ -821,7 +821,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 } catch (JSONException e) {
                     throw new PaintException(
                             "Failed to serialize shared state for connector "
-                                    + connector.getConnectorId() + ": "
+                                    + connector.getClass().getName() + " ("
+                                    + connector.getConnectorId() + "): "
                                     + e.getMessage());
                 }
             }
