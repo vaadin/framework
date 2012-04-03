@@ -465,7 +465,7 @@ public class GridLayout extends AbstractLayout implements
 
         final String[] alignmentsArray = new String[components.size()];
         final Integer[] columnExpandRatioArray = new Integer[getColumns()];
-        final Integer[] rowExpandRatioArray = new Integer[getColumns()];
+        final Integer[] rowExpandRatioArray = new Integer[getRows()];
 
         int realColExpandRatioSum = 0;
         float colSum = getExpandRatioSum(columnExpandRatio);
