@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
@@ -236,6 +237,27 @@ public abstract class AbstractSplitPanelConnector extends
         VAbstractSplitPanel splitPanel = getWidget();
         splitPanel.setSplitPosition(splitPanel.position);
         splitPanel.updateSizes();
+        // Report relative sizes in other direction for quicker propagation
+        for (ComponentConnector child : children) {
+            reportOtherDimension(child);
+        }
+    }
+
+    private void reportOtherDimension(ComponentConnector child) {
+        LayoutManager layoutManager = getLayoutManager();
+        if (this instanceof HorizontalSplitPanelConnector) {
+            if (child.isRelativeHeight()) {
+                int height = layoutManager.getInnerHeight(getWidget()
+                        .getElement());
+                layoutManager.reportHeightAssignedToRelative(child, height);
+            }
+        } else {
+            if (child.isRelativeWidth()) {
+                int width = layoutManager.getInnerWidth(getWidget()
+                        .getElement());
+                layoutManager.reportWidthAssignedToRelative(child, width);
+            }
+        }
     }
 
     @Override

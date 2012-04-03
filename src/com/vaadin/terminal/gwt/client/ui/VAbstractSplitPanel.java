@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
@@ -297,6 +299,20 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(secondContainer, "left",
                     (pixelPosition + getSplitterSize()) + "px");
 
+            LayoutManager layoutManager = LayoutManager.get(client);
+            if (layoutManager.isLayoutRunning()) {
+                ConnectorMap connectorMap = ConnectorMap.get(client);
+                if (firstChild != null) {
+                    layoutManager.reportWidthAssignedToRelative(
+                            connectorMap.getConnector(firstChild),
+                            pixelPosition);
+                }
+                if (secondChild != null) {
+                    layoutManager.reportWidthAssignedToRelative(
+                            connectorMap.getConnector(secondChild),
+                            secondContainerWidth);
+                }
+            }
             break;
         case ORIENTATION_VERTICAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
@@ -324,9 +340,23 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
 
+            layoutManager = LayoutManager.get(client);
+            if (layoutManager.isLayoutRunning()) {
+                ConnectorMap connectorMap = ConnectorMap.get(client);
+                if (firstChild != null) {
+                    layoutManager.reportHeightAssignedToRelative(
+                            connectorMap.getConnector(firstChild),
+                            pixelPosition);
+                }
+                if (secondChild != null) {
+                    layoutManager.reportHeightAssignedToRelative(
+                            connectorMap.getConnector(secondChild),
+                            secondContainerHeight);
+                }
+            }
+
             break;
         }
-
     }
 
     void setFirstWidget(Widget w) {
