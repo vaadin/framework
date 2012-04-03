@@ -4,7 +4,9 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.Duration;
@@ -111,12 +113,29 @@ public class LayoutManager {
         return currentDependencyTree != null;
     }
 
+    private void countLayout(Map<ManagedLayout, Integer> layoutCounts,
+            ManagedLayout layout) {
+        Integer count = layoutCounts.get(layout);
+        if (count == null) {
+            count = Integer.valueOf(0);
+        } else {
+            count = Integer.valueOf(count.intValue() + 1);
+        }
+        layoutCounts.put(layout, count);
+        if (count.intValue() > 2) {
+            VConsole.error(Util.getConnectorString(layout)
+                    + " has been layouted " + count.intValue() + " times");
+        }
+    }
+
     public void doLayout() {
         if (isLayoutRunning()) {
             throw new IllegalStateException(
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
         VConsole.log("Starting layout phase");
+
+        Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
 
         int passes = 0;
         Duration totalDuration = new Duration();
@@ -143,8 +162,8 @@ public class LayoutManager {
                     currentDependencyTree, passes == 1);
 
             int measureTime = passDuration.elapsedMillis();
-            VConsole.log("Measured " + measuredConnectorCount + " elements in "
-                    + measureTime + " ms");
+            VConsole.log("  Measured " + measuredConnectorCount
+                    + " elements in " + measureTime + " ms");
 
             FastStringSet updatedSet = FastStringSet.create();
 
@@ -157,12 +176,14 @@ public class LayoutManager {
                                 .markAsHorizontallyLayouted(layout);
                         DirectionalManagedLayout cl = (DirectionalManagedLayout) layout;
                         cl.layoutHorizontally();
+                        countLayout(layoutCounts, cl);
                     } else {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         SimpleManagedLayout rr = (SimpleManagedLayout) layout;
                         rr.layout();
+                        countLayout(layoutCounts, rr);
                     }
                     updatedSet.add(layout.getConnectorId());
                 }
@@ -173,34 +194,40 @@ public class LayoutManager {
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         DirectionalManagedLayout cl = (DirectionalManagedLayout) layout;
                         cl.layoutVertically();
+                        countLayout(layoutCounts, cl);
                     } else {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         SimpleManagedLayout rr = (SimpleManagedLayout) layout;
                         rr.layout();
+                        countLayout(layoutCounts, rr);
                     }
                     updatedSet.add(layout.getConnectorId());
                 }
             }
 
             JsArrayString changed = updatedSet.dump();
-            VConsole.log(changed.length() + " requestLayout invocations in "
-                    + (passDuration.elapsedMillis() - measureTime) + "ms");
 
-            StringBuilder b = new StringBuilder();
+            StringBuilder b = new StringBuilder("  ");
             b.append(changed.length());
-            b.append(" changed widgets in pass ");
-            b.append(passes);
-            b.append(" in ");
-            b.append(passDuration.elapsedMillis());
-            b.append(" ms: ");
-            if (changed.length() < 10) {
+            b.append(" requestLayout invocations in ");
+            b.append(passDuration.elapsedMillis() - measureTime);
+            b.append(" ms");
+            if (changed.length() < 30) {
                 for (int i = 0; i < changed.length(); i++) {
                     if (i != 0) {
                         b.append(", ");
+                    } else {
+                        b.append(": ");
                     }
-                    b.append(changed.get(i));
+                    String connectorString = changed.get(i);
+                    if (changed.length() < 10) {
+                        ServerConnector connector = ConnectorMap
+                                .get(connection).getConnector(connectorString);
+                        connectorString = Util.getConnectorString(connector);
+                    }
+                    b.append(connectorString);
                 }
             }
             VConsole.log(b.toString());
@@ -209,6 +236,9 @@ public class LayoutManager {
                 VConsole.log("No more changes in pass " + passes);
                 break;
             }
+
+            VConsole.log("Pass " + passes + " completed in "
+                    + passDuration.elapsedMillis() + " ms");
 
             if (passes > 100) {
                 VConsole.log(LOOP_ABORT_MESSAGE);
@@ -254,11 +284,11 @@ public class LayoutManager {
                     .getMeasureTargets();
             for (ComponentConnector connector : measureTargets) {
                 measueConnector(layoutDependencyTree, connector);
+                measureCount++;
             }
             for (ComponentConnector connector : measureTargets) {
                 layoutDependencyTree.setNeedsMeasure(connector, false);
             }
-            measureCount++;
         }
         return measureCount;
     }
