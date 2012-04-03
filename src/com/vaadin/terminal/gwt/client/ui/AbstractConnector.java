@@ -168,4 +168,13 @@ public abstract class AbstractConnector implements ServerConnector,
                 + " received by " + Util.getConnectorString(this));
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ServerConnector#onUnregister()
+     */
+    public void onUnregister() {
+        VConsole.log("Unregistered connector " + Util.getConnectorString(this));
+
+    }
 }

@@ -104,4 +104,10 @@ public interface ServerConnector extends Connector {
      *            The event to send.
      */
     public void fireEvent(GwtEvent<?> event);
+
+    /**
+     * Event called when connector has been unregistered.
+     */
+    public void onUnregister();
+
 }

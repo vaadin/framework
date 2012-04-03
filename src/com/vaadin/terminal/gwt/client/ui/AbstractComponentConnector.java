@@ -17,6 +17,7 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
@@ -371,4 +372,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return (reg != null && reg.contains(eventIdentifier));
     }
 
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+
+        // Warn if widget is still attached to DOM. It should never be at this
+        // point.
+        if (getWidget() != null && getWidget().isAttached()) {
+            VConsole.log("Widget for unregistered connector "
+                    + Util.getConnectorString(this)
+                    + " is still attached to the DOM.");
+        }
+    }
 }
