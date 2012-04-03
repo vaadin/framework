@@ -202,19 +202,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
     void updateSizes() {
         VPanel panel = getWidget();
 
-        Style contentStyle = panel.contentNode.getStyle();
-        if (isUndefinedHeight()) {
-            contentStyle.clearHeight();
-        } else {
-            contentStyle.setHeight(100, Unit.PCT);
-        }
-
-        if (isUndefinedWidth()) {
-            contentStyle.clearWidth();
-        } else {
-            contentStyle.setWidth(100, Unit.PCT);
-        }
-
         LayoutManager layoutManager = getLayoutManager();
         int top = layoutManager.getInnerHeight(panel.captionNode);
         int bottom = layoutManager.getInnerHeight(panel.bottomDecoration);
