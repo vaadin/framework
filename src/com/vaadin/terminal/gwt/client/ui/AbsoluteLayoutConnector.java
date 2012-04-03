@@ -12,7 +12,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
@@ -20,6 +19,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.ui.AbsoluteLayout;
 
@@ -27,7 +27,7 @@ import com.vaadin.ui.AbsoluteLayout;
 public class AbsoluteLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
 
-    public static class AbsoluteLayoutState extends ComponentState {
+    public static class AbsoluteLayoutState extends AbstractLayoutState {
         // Maps each component to a position
         private Map<String, String> connectorToCssPosition = new HashMap<String, String>();
 

@@ -10,13 +10,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
@@ -26,10 +22,9 @@ import com.vaadin.terminal.gwt.client.ui.VCssLayout.FlowPane;
 import com.vaadin.ui.CssLayout;
 
 @Component(CssLayout.class)
-public class CssLayoutConnector extends AbstractComponentContainerConnector
-        implements Paintable {
+public class CssLayoutConnector extends AbstractLayoutConnector {
 
-    public static class CssLayoutState extends ComponentState {
+    public static class CssLayoutState extends AbstractLayoutState {
         private Map<String, String> childCss = new HashMap<String, String>();
 
         public Map<String, String> getChildCss() {
@@ -80,6 +75,9 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        getWidget().setMarginStyles(
+                new VMarginInfo(getState().getMarginsBitmask()));
+
         for (ComponentConnector child : getChildren()) {
             if (!getState().getChildCss().containsKey(child.getConnectorId())) {
                 continue;
@@ -128,18 +126,6 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector
                 cssLayoutWidgetContainer.remove(vCaption);
             }
         }
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().setMarginAndSpacingStyles(
-                new VMarginInfo(uidl.getIntAttribute("margins")),
-                uidl.hasAttribute("spacing"));
-
     }
 
     private static final String makeCamelCase(String cssProperty) {

@@ -3,10 +3,13 @@ package com.vaadin.tests.layouts;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.NativeButton;
@@ -31,6 +34,21 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
         layout.addComponent(createButton("color:red"));
         layout.addComponent(createButton("color: blue"));
         layout.addComponent(createButton("color: green"));
+
+        layout.addComponent(createMarginsToggle());
+    }
+
+    private Component createMarginsToggle() {
+        final CheckBox cb = new CheckBox("Margins");
+        cb.setImmediate(true);
+        cb.addListener(new ValueChangeListener() {
+
+            public void valueChange(ValueChangeEvent event) {
+                layout.setMargin(cb.getValue());
+            }
+        });
+
+        return cb;
     }
 
     private Component createButton(String string) {

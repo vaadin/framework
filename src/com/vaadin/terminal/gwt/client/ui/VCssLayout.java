@@ -52,16 +52,13 @@ public class VCssLayout extends SimplePanel {
     }
 
     /**
-     * Sets CSS classes for margin and spacing based on the given parameters.
+     * Sets CSS classes for margin based on the given parameters.
      * 
      * @param margins
      *            A {@link VMarginInfo} object that provides info on
      *            top/left/bottom/right margins
-     * @param spacing
-     *            true to enable spacing, false otherwise
      */
-    protected void setMarginAndSpacingStyles(VMarginInfo margins,
-            boolean spacing) {
+    protected void setMarginStyles(VMarginInfo margins) {
         setStyleName(margin, VCssLayout.CLASSNAME + "-"
                 + StyleConstants.MARGIN_TOP, margins.hasTop());
         setStyleName(margin, VCssLayout.CLASSNAME + "-"
@@ -70,8 +67,5 @@ public class VCssLayout extends SimplePanel {
                 + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
         setStyleName(margin, VCssLayout.CLASSNAME + "-"
                 + StyleConstants.MARGIN_LEFT, margins.hasLeft());
-
-        setStyleName(margin, VCssLayout.CLASSNAME + "-" + "spacing", spacing);
-
     }
 }

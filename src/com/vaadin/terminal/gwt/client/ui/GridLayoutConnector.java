@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -20,6 +19,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.ui.GridLayout;
@@ -28,7 +28,7 @@ import com.vaadin.ui.GridLayout;
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements Paintable, DirectionalManagedLayout {
 
-    public static class GridLayoutState extends ComponentState {
+    public static class GridLayoutState extends AbstractLayoutState {
         private boolean spacing = false;
         private int rows = 0;
         private int columns = 0;
@@ -169,8 +169,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             cell.slot = null;
         }
 
-        int bitMask = uidl.getIntAttribute("margins");
-        layout.updateMarginStyleNames(new VMarginInfo(bitMask));
+        layout.updateMarginStyleNames(new VMarginInfo(getState()
+                .getMarginsBitmask()));
 
         layout.updateSpacingStyleName(getState().isSpacing());
 

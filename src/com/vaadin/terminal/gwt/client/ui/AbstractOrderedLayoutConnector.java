@@ -23,8 +23,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
-        AbstractComponentContainerConnector implements Paintable,
-        DirectionalManagedLayout {
+        AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
 
     public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
             ServerRpc {
@@ -113,8 +112,8 @@ public abstract class AbstractOrderedLayoutConnector extends
             slot.setExpandRatio(expandRatio);
         }
 
-        int bitMask = uidl.getIntAttribute("margins");
-        layout.updateMarginStyleNames(new VMarginInfo(bitMask));
+        layout.updateMarginStyleNames(new VMarginInfo(getState()
+                .getMarginsBitmask()));
 
         layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
 
