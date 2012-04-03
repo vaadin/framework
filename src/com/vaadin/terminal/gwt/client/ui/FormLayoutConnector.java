@@ -5,38 +5,87 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.Caption;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.ErrorFlag;
+import com.vaadin.terminal.gwt.client.ui.VFormLayout.VFormLayoutTable;
 import com.vaadin.ui.FormLayout;
 
 @Component(FormLayout.class)
-public class FormLayoutConnector extends AbstractComponentContainerConnector
-        implements Paintable {
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
+public class FormLayoutConnector extends AbstractLayoutConnector {
 
-        if (!isRealUpdate(uidl)) {
-            return;
+    @Override
+    public AbstractOrderedLayoutState getState() {
+        return (AbstractOrderedLayoutState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        VFormLayoutTable formLayoutTable = getWidget().table;
+
+        formLayoutTable.setMargins(new VMarginInfo(getState()
+                .getMarginsBitmask()));
+        formLayoutTable.setSpacing(getState().isSpacing());
+
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
+
+        VFormLayout formLayout = getWidget();
+        VFormLayoutTable formLayoutTable = getWidget().table;
+
+        int childId = 0;
+
+        formLayoutTable.setRowCount(getChildren().size());
+
+        for (ComponentConnector child : getChildren()) {
+            Widget childWidget = child.getWidget();
+
+            Caption caption = formLayoutTable.getCaption(childWidget);
+            if (caption == null) {
+                caption = formLayout.new Caption(child);
+                caption.addClickHandler(formLayoutTable);
+            }
+
+            ErrorFlag error = formLayoutTable.getError(childWidget);
+            if (error == null) {
+                error = formLayout.new ErrorFlag(child);
+            }
+
+            formLayoutTable.setChild(childId, childWidget, caption, error);
+            childId++;
         }
 
-        getWidget().table.updateFromUIDL(uidl, client);
+        for (ComponentConnector oldChild : event.getOldChildren()) {
+            if (oldChild.getParent() == this) {
+                continue;
+            }
+
+            formLayoutTable.cleanReferences(oldChild.getWidget());
+        }
+
     }
 
     public void updateCaption(ComponentConnector component) {
-        final Caption c = getWidget().table.widgetToCaption.get(component
-                .getWidget());
-        if (c != null) {
-            c.updateCaption(component.getState(), component.isEnabled());
+        getWidget().table.updateCaption(component.getWidget(),
+                component.getState(), component.isEnabled());
+        boolean hideErrors = false;
+
+        // FIXME This incorrectly depends on AbstractFieldConnector
+        if (component instanceof AbstractFieldConnector) {
+            hideErrors = ((AbstractFieldConnector) component).getState()
+                    .isHideErrors();
         }
-        final ErrorFlag e = getWidget().table.widgetToError.get(component
-                .getWidget());
-        if (e != null) {
-            e.updateFromUIDL(component);
-        }
+
+        getWidget().table.updateError(component.getWidget(), component
+                .getState().getErrorMessage(), hideErrors);
     }
 
     @Override

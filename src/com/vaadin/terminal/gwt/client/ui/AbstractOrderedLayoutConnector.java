@@ -25,6 +25,19 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
 
+    public static class AbstractOrderedLayoutState extends AbstractLayoutState {
+        private boolean spacing = true;
+
+        public boolean isSpacing() {
+            return spacing;
+        }
+
+        public void setSpacing(boolean spacing) {
+            this.spacing = spacing;
+        }
+
+    }
+
     public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
             ServerRpc {
 
@@ -53,6 +66,11 @@ public abstract class AbstractOrderedLayoutConnector extends
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
+    }
+
+    @Override
+    public AbstractOrderedLayoutState getState() {
+        return (AbstractOrderedLayoutState) super.getState();
     }
 
     public void updateCaption(ComponentConnector component) {
@@ -115,7 +133,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         layout.updateMarginStyleNames(new VMarginInfo(getState()
                 .getMarginsBitmask()));
 
-        layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
+        layout.updateSpacingStyleName(getState().isSpacing());
 
         getLayoutManager().setNeedsUpdate(this);
     }
