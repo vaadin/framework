@@ -21,6 +21,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.http.client.Request;
@@ -816,15 +818,26 @@ public class VDebugConsole extends VOverlay implements Console {
         log("Connector hierarchy for Root: " + root.getState().getCaption()
                 + " (" + root.getConnectorId() + ")");
         Set<ComponentConnector> connectorsInHierarchy = new HashSet<ComponentConnector>();
-        dumpConnectorHierarchy(root, "", connectorsInHierarchy);
+        SimpleTree rootHierachy = dumpConnectorHierarchy(root, "",
+                connectorsInHierarchy);
+        if (panel.isAttached()) {
+            rootHierachy.open(true);
+            panel.add(rootHierachy);
+        }
+
         ConnectorMap connectorMap = a.getConnectorMap();
         Collection<? extends ServerConnector> registeredConnectors = connectorMap
                 .getConnectors();
         log("Sub windows:");
         Set<ComponentConnector> subWindowHierarchyConnectors = new HashSet<ComponentConnector>();
         for (VWindow w : root.getWidget().getSubWindowList()) {
-            dumpConnectorHierarchy(connectorMap.getConnector(w), "",
+            SimpleTree windowHierachy = dumpConnectorHierarchy(
+                    connectorMap.getConnector(w), "",
                     subWindowHierarchyConnectors);
+            if (panel.isAttached()) {
+                windowHierachy.open(true);
+                panel.add(windowHierachy);
+            }
         }
         log("Registered connectors not in hierarchy (should be empty):");
         for (ServerConnector registeredConnector : registeredConnectors) {
@@ -851,22 +864,40 @@ public class VDebugConsole extends VOverlay implements Console {
 
     }
 
-    private void dumpConnectorHierarchy(ComponentConnector connector,
-            String indent, Set<ComponentConnector> connectors) {
+    private SimpleTree dumpConnectorHierarchy(
+            final ComponentConnector connector, String indent,
+            Set<ComponentConnector> connectors) {
+        SimpleTree simpleTree = new SimpleTree(getConnectorString(connector)) {
+            @Override
+            protected void select(ClickEvent event) {
+                super.select(event);
+                VUIDLBrowser.highlight(connector);
+            }
+        };
+        simpleTree.addDomHandler(new MouseOutHandler() {
+            public void onMouseOut(MouseOutEvent event) {
+                VUIDLBrowser.deHiglight();
+            }
+        }, MouseOutEvent.getType());
         connectors.add(connector);
-        log(indent + "* " + getConnectorString(connector));
+
+        String msg = indent + "* " + getConnectorString(connector);
+        GWT.log(msg);
+        consoleLog(msg);
+        System.out.println(msg);
+
         if (connector instanceof ComponentContainerConnector) {
             for (ComponentConnector c : ((ComponentContainerConnector) connector)
                     .getChildren()) {
-                dumpConnectorHierarchy(c, indent + " ", connectors);
+                simpleTree.add(dumpConnectorHierarchy(c, indent + " ",
+                        connectors));
             }
         }
-
+        return simpleTree;
     }
 
-    private String getConnectorString(ServerConnector connector) {
-        return Util.getSimpleName(connector) + " ("
-                + connector.getConnectorId() + ")";
+    private static String getConnectorString(ServerConnector connector) {
+        return Util.getConnectorString(connector);
     }
 
     public void setQuietMode(boolean quietDebugMode) {
