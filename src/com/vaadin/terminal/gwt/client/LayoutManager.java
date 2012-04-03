@@ -453,6 +453,30 @@ public class LayoutManager {
         currentDependencyTree.setNeedsVerticalMeasure(component, false);
     }
 
+    public void reportHeightAssignedToRelative(ComponentConnector component,
+            int assignedHeight) {
+        assert component.isRelativeHeight();
+
+        float percentSize = parsePercent(component.getState().getHeight());
+        int effectiveHeight = Math.round(assignedHeight * (percentSize / 100));
+
+        reportOuterHeight(component, effectiveHeight);
+    }
+
+    public void reportWidthAssignedToRelative(ComponentConnector component,
+            int assignedWidth) {
+        assert component.isRelativeWidth();
+
+        float percentSize = parsePercent(component.getState().getWidth());
+        int effectiveWidth = Math.round(assignedWidth * (percentSize / 100));
+
+        reportOuterWidth(component, effectiveWidth);
+    }
+
+    private static float parsePercent(String size) {
+        return Float.parseFloat(size.substring(0, size.length() - 1));
+    }
+
     public void reportOuterWidth(ComponentConnector component, int outerWidth) {
         if (!isLayoutRunning()) {
             throw new IllegalStateException(

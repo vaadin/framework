@@ -121,21 +121,13 @@ public class AbsoluteLayoutConnector extends
                             - wrapper.getElement().getOffsetTop();
                 }
                 wrapperStyle.setHeight(h, Unit.PX);
-                float percentSize = parsePercent(paintable.getState()
-                        .getHeight());
-                int effectiveHeight = Math.round(h * (percentSize / 100));
-                getLayoutManager()
-                        .reportOuterHeight(paintable, effectiveHeight);
+                getLayoutManager().reportHeightAssignedToRelative(paintable, h);
             } else {
                 wrapperStyle.clearHeight();
             }
 
             wrapper.updateCaptionPosition();
         }
-    }
-
-    private static float parsePercent(String size) {
-        return Float.parseFloat(size.substring(0, size.length() - 1));
     }
 
     public void layoutHorizontally() {
@@ -162,10 +154,7 @@ public class AbsoluteLayoutConnector extends
                             - wrapper.getElement().getOffsetLeft();
                 }
                 wrapperStyle.setWidth(w, Unit.PX);
-                float percentSize = parsePercent(paintable.getState()
-                        .getWidth());
-                int effectiveWidth = Math.round(w * (percentSize / 100));
-                getLayoutManager().reportOuterWidth(paintable, effectiveWidth);
+                getLayoutManager().reportWidthAssignedToRelative(paintable, w);
             } else {
                 wrapperStyle.clearWidth();
             }
