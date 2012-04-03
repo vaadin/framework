@@ -1133,6 +1133,6 @@ public class Util {
         if (p == null) {
             return "null";
         }
-        return p.getClass().getName() + " (" + p.getConnectorId() + ")";
+        return getSimpleName(p) + " (" + p.getConnectorId() + ")";
     }
 }
