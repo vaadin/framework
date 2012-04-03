@@ -570,7 +570,6 @@ public class VGridLayout extends ComplexPanel {
                     }
                 }
 
-                childConnector.updateFromUIDL(childUidl, client);
             }
         }
 

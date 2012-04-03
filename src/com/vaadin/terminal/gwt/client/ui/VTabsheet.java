@@ -866,7 +866,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 if (tp.getWidgetIndex(tabContentWidget) < 0) {
                     tp.insert(tabContentWidget, index);
                 }
-                tabContentPaintable.updateFromUIDL(tabContentUIDL, client);
             } else if (tp.getWidgetCount() <= index) {
                 tp.add(new PlaceHolder());
             }
@@ -909,7 +908,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         tp.showWidget(activeTabIndex);
 
         VTabsheet.this.iLayout();
-        content.updateFromUIDL(contentUIDL, client);
         /*
          * The size of a cached, relative sized component must be updated to
          * report correct size to updateOpenTabSize().

@@ -56,7 +56,6 @@ public class CustomLayoutConnector extends AbstractComponentContainerConnector
                 Widget childWidget = childPaintable.getWidget();
                 try {
                     getWidget().setWidget(childWidget, location);
-                    childPaintable.updateFromUIDL(childUIDL, client);
                 } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
                 }

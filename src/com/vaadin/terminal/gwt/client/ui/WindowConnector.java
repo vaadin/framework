@@ -208,8 +208,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().layout = lo;
         }
 
-        getWidget().layout.updateFromUIDL(childUidl, client);
-
         // we may have actions and notifications
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();

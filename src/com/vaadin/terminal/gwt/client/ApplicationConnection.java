@@ -1212,10 +1212,11 @@ public class ApplicationConnection {
                         final UIDL uidl = change.getChildUIDL(0);
                         String connectorId = uidl.getId();
 
-                        final ComponentConnector paintable = (ComponentConnector) connectorMap
+                        final ComponentConnector legacyConnector = (ComponentConnector) connectorMap
                                 .getConnector(connectorId);
-                        if (paintable != null) {
-                            paintable.updateFromUIDL(uidl,
+                        if (legacyConnector != null
+                                && legacyConnector instanceof Paintable) {
+                            ((Paintable) legacyConnector).updateFromUIDL(uidl,
                                     ApplicationConnection.this);
                         } else {
                             VConsole.error("Received update for "

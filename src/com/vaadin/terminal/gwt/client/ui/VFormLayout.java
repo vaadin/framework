@@ -140,8 +140,6 @@ public class VFormLayout extends SimplePanel {
                         CLASSNAME + "-errorcell");
                 setWidget(i, COLUMN_ERRORFLAG, error);
 
-                childPaintable.updateFromUIDL(childUidl, client);
-
                 String rowstyles = CLASSNAME + "-row";
                 if (i == 0) {
                     rowstyles += " " + CLASSNAME + "-firstrow";

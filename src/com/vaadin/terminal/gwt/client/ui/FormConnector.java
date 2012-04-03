@@ -106,7 +106,6 @@ public class FormConnector extends AbstractComponentContainerConnector
                         getWidget().footerContainer);
             }
             getWidget().footer = newFooterWidget;
-            newFooter.updateFromUIDL(uidl.getChildUIDL(1), client);
         } else {
             if (getWidget().footer != null) {
                 getWidget().remove(getWidget().footer);
@@ -130,7 +129,6 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().lo = newLayoutWidget;
             getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         }
-        newLayout.updateFromUIDL(layoutUidl, client);
 
         // also recalculates size of the footer if undefined size form - see
         // #3710

@@ -186,8 +186,6 @@ public class RootConnector extends AbstractComponentContainerConnector {
             }
         }
 
-        getWidget().layout.updateFromUIDL(childUidl, client);
-
         // Save currently open subwindows to track which will need to be closed
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
                 getWidget().subWindows);

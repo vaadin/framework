@@ -112,9 +112,6 @@ public class VCssLayout extends SimplePanel {
                     }
                 }
 
-                if (!r.getBooleanAttribute("cached")) {
-                    child.updateFromUIDL(r, client);
-                }
             }
 
             // loop oldWidgetWrappers that where not re-attached and unregister

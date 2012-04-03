@@ -20,14 +20,8 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * @version @VERSION@
  * @since 7.0.0
  */
-public interface ServerConnector extends Connector {
-    /**
-     * TODO
-     * 
-     * @param uidl
-     * @param client
-     */
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client);
+// TODO Remove "implements Paintable"
+public interface ServerConnector extends Connector, Paintable {
 
     /**
      * Sets a new state for the connector.

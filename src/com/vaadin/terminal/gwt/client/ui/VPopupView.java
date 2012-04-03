@@ -299,8 +299,6 @@ public class VPopupView extends HTML {
                 popupComponentPaintable = newPopupComponent;
             }
 
-            popupComponentPaintable
-                    .updateFromUIDL(uidl.getChildUIDL(0), client);
         }
 
         public void unregisterPaintables() {
