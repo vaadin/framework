@@ -3,20 +3,17 @@
  */
 package com.vaadin.ui;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector.CssLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector.CssLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
@@ -185,33 +182,23 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         return components.size();
     }
 
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-        HashMap<Paintable, String> componentCss = null;
-        // Adds all items in all the locations
-        for (Component c : components) {
-            // Paint child component UIDL
-            c.paint(target);
-            String componentCssString = getCss(c);
+    public void updateState() {
+        super.updateState();
+        getState().getChildCss().clear();
+        for (Component child : this) {
+            String componentCssString = getCss(child);
             if (componentCssString != null) {
-                if (componentCss == null) {
-                    componentCss = new HashMap<Paintable, String>();
-                }
-                componentCss.put(c, componentCssString);
+                getState().getChildCss().put(child.getConnectorId(),
+                        componentCssString);
             }
+
         }
-        if (componentCss != null) {
-            target.addAttribute("css", componentCss);
-        }
+    }
+
+    @Override
+    public CssLayoutState getState() {
+        return (CssLayoutState) super.getState();
     }
 
     /**
