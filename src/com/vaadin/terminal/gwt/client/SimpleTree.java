@@ -28,6 +28,7 @@ public class SimpleTree extends ComplexPanel {
         Style style = getElement().getStyle();
         style.setProperty("whiteSpace", "nowrap");
         style.setPadding(3, Unit.PX);
+        style.setPaddingLeft(12, Unit.PX);
 
         style = handle.getStyle();
         style.setDisplay(Display.NONE);
@@ -43,7 +44,7 @@ public class SimpleTree extends ComplexPanel {
         getElement().appendChild(handle);
         getElement().appendChild(text);
         style = children.getStyle();
-        style.setPaddingLeft(20, Unit.PX);
+        style.setPaddingLeft(9, Unit.PX);
         style.setDisplay(Display.NONE);
 
         getElement().appendChild(children);
@@ -109,7 +110,7 @@ public class SimpleTree extends ComplexPanel {
     protected void add(Widget child, Element container) {
         super.add(child, container);
         handle.getStyle().setDisplay(Display.INLINE_BLOCK);
-
+        getElement().getStyle().setPaddingLeft(3, Unit.PX);
     }
 
 }
