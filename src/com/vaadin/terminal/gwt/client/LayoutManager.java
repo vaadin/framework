@@ -264,6 +264,12 @@ public class LayoutManager {
                 + totalDuration.elapsedMillis() + "ms");
     }
 
+    private void logConnectorStatus(int connectorId) {
+        currentDependencyTree
+                .logDependencyStatus((ComponentConnector) ConnectorMap.get(
+                        connection).getConnector(Integer.toString(connectorId)));
+    }
+
     private int measureConnectors(LayoutDependencyTree layoutDependencyTree,
             boolean measureAll) {
         int measureCount = 0;

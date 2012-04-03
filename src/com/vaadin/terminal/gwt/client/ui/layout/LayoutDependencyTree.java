@@ -11,6 +11,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class LayoutDependencyTree {
@@ -439,5 +440,11 @@ public class LayoutDependencyTree {
                 getMeasureQueue(HORIZONTAL));
         measureTargets.addAll(getMeasureQueue(VERTICAL));
         return measureTargets;
+    }
+
+    public void logDependencyStatus(ComponentConnector connector) {
+        VConsole.log("====");
+        VConsole.log(getDependency(connector, HORIZONTAL).toString());
+        VConsole.log(getDependency(connector, VERTICAL).toString());
     }
 }
