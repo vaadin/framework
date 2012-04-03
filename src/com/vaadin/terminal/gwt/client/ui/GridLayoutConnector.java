@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
@@ -25,7 +26,7 @@ import com.vaadin.ui.GridLayout;
 
 @Component(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
-        implements DirectionalManagedLayout {
+        implements Paintable, DirectionalManagedLayout {
 
     public static class GridLayoutState extends ComponentState {
         private boolean spacing = false;
@@ -99,12 +100,10 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         VGridLayout layout = getWidget();
         layout.client = client;
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

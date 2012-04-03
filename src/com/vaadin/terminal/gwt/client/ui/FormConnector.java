@@ -12,12 +12,13 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.Form;
 
 @Component(Form.class)
 public class FormConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout {
+        implements Paintable, SimpleManagedLayout {
 
     @Override
     public void init() {
@@ -30,12 +31,10 @@ public class FormConnector extends AbstractComponentContainerConnector
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         getWidget().id = uidl.getId();
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

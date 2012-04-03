@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
@@ -14,7 +15,7 @@ import com.vaadin.ui.PopupView;
 
 @Component(PopupView.class)
 public class PopupViewConnector extends AbstractComponentContainerConnector
-        implements PostLayoutListener {
+        implements Paintable, PostLayoutListener {
 
     private boolean centerAfterLayout = false;
 
@@ -29,11 +30,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
      * @see com.vaadin.terminal.gwt.client.ComponentConnector#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // This call should be made first. Ensure correct implementation,
-        // and don't let the containing layout manage caption.
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

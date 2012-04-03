@@ -7,18 +7,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.Caption;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.ErrorFlag;
 import com.vaadin.ui.FormLayout;
 
 @Component(FormLayout.class)
-public class FormLayoutConnector extends AbstractComponentContainerConnector {
-    @Override
+public class FormLayoutConnector extends AbstractComponentContainerConnector
+        implements Paintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

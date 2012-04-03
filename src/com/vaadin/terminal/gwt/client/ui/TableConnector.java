@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.ContextMenuDetails;
@@ -22,7 +23,7 @@ import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTa
 
 @Component(com.vaadin.ui.Table.class)
 public class TableConnector extends AbstractComponentContainerConnector
-        implements DirectionalManagedLayout, PostLayoutListener {
+        implements Paintable, DirectionalManagedLayout, PostLayoutListener {
 
     @Override
     protected void init() {
@@ -37,7 +38,6 @@ public class TableConnector extends AbstractComponentContainerConnector
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().rendering = true;
 
@@ -66,7 +66,6 @@ public class TableConnector extends AbstractComponentContainerConnector
 
         getWidget().tFoot.setVisible(getWidget().showColFooters);
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             getWidget().rendering = false;
             return;

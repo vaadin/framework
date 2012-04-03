@@ -153,11 +153,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         updateComponentSize();
     }
 
-    @Deprecated
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // TODO Remove this method
-    }
-
     private void updateComponentSize() {
         String newWidth = getState().getWidth();
         String newHeight = getState().getHeight();

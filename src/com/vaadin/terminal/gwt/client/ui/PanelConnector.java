@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
@@ -22,7 +23,7 @@ import com.vaadin.ui.Panel;
 
 @Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout, PostLayoutListener {
+        implements Paintable, SimpleManagedLayout, PostLayoutListener {
 
     public interface PanelServerRPC extends ClickRPC, ServerRpc {
 
@@ -89,7 +90,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (isRealUpdate(uidl)) {
 
@@ -132,8 +132,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
             getWidget().contentNode.setClassName(contentClass);
             getWidget().bottomDecoration.setClassName(decoClass);
         }
-        // Ensure correct implementation
-        super.updateFromUIDL(uidl, client);
 
         if (!isRealUpdate(uidl)) {
             return;

@@ -20,8 +20,7 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * @version @VERSION@
  * @since 7.0.0
  */
-// TODO Remove "implements Paintable"
-public interface ServerConnector extends Connector, Paintable {
+public interface ServerConnector extends Connector {
 
     /**
      * Sets a new state for the connector.

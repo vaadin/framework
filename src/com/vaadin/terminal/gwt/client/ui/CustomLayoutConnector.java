@@ -12,19 +12,16 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.CustomLayout;
 
 @Component(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout {
+        implements Paintable, SimpleManagedLayout {
 
-    /** Update the layout from UIDL */
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
-        // ApplicationConnection manages generic component features
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

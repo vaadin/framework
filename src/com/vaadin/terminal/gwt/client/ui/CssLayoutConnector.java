@@ -8,13 +8,15 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.ui.CssLayout;
 
 @Component(CssLayout.class)
-public class CssLayoutConnector extends AbstractComponentContainerConnector {
+public class CssLayoutConnector extends AbstractComponentContainerConnector
+        implements Paintable {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -42,10 +44,8 @@ public class CssLayoutConnector extends AbstractComponentContainerConnector {
         rpc = RpcProxy.create(CssLayoutServerRPC.class, this);
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

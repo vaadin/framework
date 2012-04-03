@@ -9,16 +9,16 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.DragAndDropWrapper;
 
 @Component(DragAndDropWrapper.class)
-public class DragAndDropWrapperConnector extends CustomComponentConnector {
+public class DragAndDropWrapperConnector extends CustomComponentConnector
+        implements Paintable {
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
-        super.updateFromUIDL(uidl, client);
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {

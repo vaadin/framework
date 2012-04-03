@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -22,7 +23,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
-        AbstractComponentContainerConnector implements DirectionalManagedLayout {
+        AbstractComponentContainerConnector implements Paintable,
+        DirectionalManagedLayout {
 
     public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
             ServerRpc {
@@ -79,9 +81,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         return (VMeasuringOrderedLayout) super.getWidget();
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
@@ -27,8 +28,8 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutAct
 
 @Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
-        implements BeforeShortcutActionListener, SimpleManagedLayout,
-        PostLayoutListener {
+        implements Paintable, BeforeShortcutActionListener,
+        SimpleManagedLayout, PostLayoutListener {
 
     public interface WindowServerRPC extends ClickRPC, ServerRpc {
     }
@@ -126,7 +127,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getLayoutManager().registerDependency(this, getWidget().footer);
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().id = getConnectorId();
         getWidget().client = client;
@@ -162,7 +162,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().visibilityChangesDisabled = true;
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

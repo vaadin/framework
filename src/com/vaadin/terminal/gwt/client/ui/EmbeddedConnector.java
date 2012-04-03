@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
@@ -27,7 +28,8 @@ import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.ui.Embedded;
 
 @Component(Embedded.class)
-public class EmbeddedConnector extends AbstractComponentConnector {
+public class EmbeddedConnector extends AbstractComponentConnector implements
+        Paintable {
 
     public interface EmbeddedServerRPC extends ClickRPC, ServerRpc {
     }
@@ -42,9 +44,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         rpc = RpcProxy.create(EmbeddedServerRPC.class, this);
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

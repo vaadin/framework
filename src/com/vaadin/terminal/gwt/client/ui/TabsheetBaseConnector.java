@@ -9,10 +9,11 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 public abstract class TabsheetBaseConnector extends
-        AbstractComponentContainerConnector {
+        AbstractComponentContainerConnector implements Paintable {
 
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
     public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
@@ -20,12 +21,9 @@ public abstract class TabsheetBaseConnector extends
     public static final String ATTRIBUTE_TAB_CAPTION = "caption";
     public static final String ATTRIBUTE_TAB_ICON = "icon";
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
 
-        // Ensure correct implementation
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

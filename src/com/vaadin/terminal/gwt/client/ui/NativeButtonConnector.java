@@ -8,13 +8,15 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.ui.NativeButton;
 
 @Component(NativeButton.class)
-public class NativeButtonConnector extends AbstractComponentConnector {
+public class NativeButtonConnector extends AbstractComponentConnector implements
+        Paintable {
 
     @Override
     public void init() {
@@ -29,12 +31,8 @@ public class NativeButtonConnector extends AbstractComponentConnector {
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        // Ensure correct implementation,
-        // but don't let container manage caption etc.
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

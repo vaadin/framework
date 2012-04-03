@@ -1214,16 +1214,18 @@ public class ApplicationConnection {
 
                         final ComponentConnector legacyConnector = (ComponentConnector) connectorMap
                                 .getConnector(connectorId);
-                        if (legacyConnector != null
-                                && legacyConnector instanceof Paintable) {
+                        if (legacyConnector instanceof Paintable) {
                             ((Paintable) legacyConnector).updateFromUIDL(uidl,
                                     ApplicationConnection.this);
-                        } else {
+                        } else if (legacyConnector == null) {
                             VConsole.error("Received update for "
                                     + uidl.getTag()
                                     + ", but there is no such paintable ("
                                     + connectorId + ") rendered.");
-
+                        } else {
+                            VConsole.error("Server sent Vaadin 6 style updates for "
+                                    + Util.getConnectorString(legacyConnector)
+                                    + " but this is not a Vaadin 6 Paintable");
                         }
 
                     } catch (final Throwable e) {

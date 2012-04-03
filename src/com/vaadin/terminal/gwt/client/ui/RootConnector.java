@@ -26,6 +26,7 @@ import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -37,7 +38,8 @@ import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
-public class RootConnector extends AbstractComponentContainerConnector {
+public class RootConnector extends AbstractComponentContainerConnector
+        implements Paintable {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 
@@ -61,7 +63,6 @@ public class RootConnector extends AbstractComponentContainerConnector {
         rpc = RpcProxy.create(RootServerRPC.class, this);
     }
 
-    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         getWidget().rendering = true;
