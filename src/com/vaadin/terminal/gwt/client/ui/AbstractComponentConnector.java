@@ -100,7 +100,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (getState().getDebugId() != null) {
             getWidget().getElement().setId(getState().getDebugId());
         } else {
-            getWidget().getElement().setId(null);
+            getWidget().getElement().removeAttribute("id");
 
         }
 
