@@ -138,12 +138,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ComponentContainerConnector parent = getParent();
             if (parent != null) {
                 parent.updateCaption(this);
-            } else {
+            } else if (!(this instanceof RootConnector)) {
                 VConsole.error("Parent of connector "
-                        + getClass().getName()
-                        + " ("
-                        + getConnectorId()
-                        + ") is null. This is typically an indication of a broken component hierarchy");
+                        + Util.getConnectorString(this)
+                        + " is null. This is typically an indication of a broken component hierarchy");
             }
         }
 
