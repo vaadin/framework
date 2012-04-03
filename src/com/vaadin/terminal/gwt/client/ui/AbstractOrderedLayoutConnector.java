@@ -24,8 +24,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
 
-    public interface AbstractOrderedLayoutServerRPC extends
-            LayoutClickRPC, ServerRpc {
+    public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
+            ServerRpc {
 
     }
 
@@ -174,11 +174,20 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         Style ownStyle = getWidget().getElement().getStyle();
         if (isUndefined) {
-            ownStyle.setPropertyPx(getSizeProperty(isVertical),
-                    getSizeForInnerSize(allocatedSize, isVertical));
+            int outerSize = getSizeForInnerSize(allocatedSize, isVertical);
+            ownStyle.setPropertyPx(getSizeProperty(isVertical), outerSize);
+            reportUndefinedSize(outerSize, isVertical);
         } else {
             ownStyle.setProperty(getSizeProperty(isVertical),
                     getDefinedSize(isVertical));
+        }
+    }
+
+    private void reportUndefinedSize(int outerSize, boolean isVertical) {
+        if (isVertical) {
+            getLayoutManager().reportOuterHeight(this, outerSize);
+        } else {
+            getLayoutManager().reportOuterWidth(this, outerSize);
         }
     }
 
@@ -212,8 +221,11 @@ public abstract class AbstractOrderedLayoutConnector extends
         Style ownStyle = getWidget().getElement().getStyle();
 
         if (isUndefined) {
+            int outerSize = getSizeForInnerSize(allocatedSize,
+                    !getWidget().isVertical);
             ownStyle.setPropertyPx(getSizeProperty(!getWidget().isVertical),
-                    getSizeForInnerSize(allocatedSize, !getWidget().isVertical));
+                    outerSize);
+            reportUndefinedSize(outerSize, !isVertical);
         } else {
             ownStyle.setProperty(getSizeProperty(!getWidget().isVertical),
                     getDefinedSize(!getWidget().isVertical));

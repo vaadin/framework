@@ -11,6 +11,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 
 public class LayoutDependencyTree {
     private class LayoutDependency {
@@ -44,7 +45,7 @@ public class LayoutDependencyTree {
             boolean removed = layoutBlockers.remove(blocker);
             if (removed && layoutBlockers.isEmpty()) {
                 if (needsLayout) {
-                    getLayoutQueue(direction).add(connector);
+                    getLayoutQueue(direction).add((ManagedLayout) connector);
                 } else {
                     propagateNoUpcomingLayout();
                 }
@@ -97,13 +98,17 @@ public class LayoutDependencyTree {
         }
 
         public void setNeedsLayout(boolean needsLayout) {
+            if (!(connector instanceof ManagedLayout)) {
+                throw new IllegalStateException(
+                        "Only managed layouts can need layout");
+            }
             if (needsLayout && !this.needsLayout) {
                 // If enabling needsLayout
                 this.needsLayout = needsLayout;
 
                 if (layoutBlockers.isEmpty()) {
                     // Add to queue if there are no blockers
-                    getLayoutQueue(direction).add(connector);
+                    getLayoutQueue(direction).add((ManagedLayout) connector);
                     // Only need to propagate if not already propagated when
                     // setting blockers
                     propagatePotentialLayout();
@@ -204,7 +209,13 @@ public class LayoutDependencyTree {
             for (ComponentConnector connector : getNeedsSizeForLayout()) {
                 LayoutDependency layoutDependency = getDependency(connector,
                         direction);
-                layoutDependency.setNeedsLayout(true);
+                if (connector instanceof ManagedLayout) {
+                    layoutDependency.setNeedsLayout(true);
+                } else {
+                    // Should simulate setNeedsLayout(true) + markAsLayouted ->
+                    // propagate needs measure
+                    layoutDependency.propagatePostLayoutMeasure();
+                }
             }
         }
 
@@ -216,6 +227,10 @@ public class LayoutDependencyTree {
                 return;
             }
             setNeedsLayout(false);
+            propagatePostLayoutMeasure();
+        }
+
+        private void propagatePostLayoutMeasure() {
             for (ComponentConnector resized : getResizedByLayout()) {
                 LayoutDependency layoutDependency = getDependency(resized,
                         direction);
@@ -281,10 +296,19 @@ public class LayoutDependencyTree {
 
     public void setNeedsMeasure(ComponentConnector connector,
             boolean needsMeasure) {
+        setNeedsHorizontalMeasure(connector, needsMeasure);
+        setNeedsVerticalMeasure(connector, needsMeasure);
+    }
+
+    public void setNeedsHorizontalMeasure(ComponentConnector connector,
+            boolean needsMeasure) {
         LayoutDependency dependency = getDependency(connector, HORIZONTAL);
         dependency.setNeedsMeasure(needsMeasure);
+    }
 
-        dependency = getDependency(connector, VERTICAL);
+    public void setNeedsVerticalMeasure(ComponentConnector connector,
+            boolean needsMeasure) {
+        LayoutDependency dependency = getDependency(connector, VERTICAL);
         dependency.setNeedsMeasure(needsMeasure);
     }
 
@@ -301,8 +325,8 @@ public class LayoutDependencyTree {
     }
 
     @SuppressWarnings("unchecked")
-    private Collection<ComponentConnector> getLayoutQueue(int direction) {
-        return (Collection<ComponentConnector>) layoutQueueInDirection[direction];
+    private Collection<ManagedLayout> getLayoutQueue(int direction) {
+        return (Collection<ManagedLayout>) layoutQueueInDirection[direction];
     }
 
     @SuppressWarnings("unchecked")
@@ -310,25 +334,24 @@ public class LayoutDependencyTree {
         return (Collection<ComponentConnector>) measureQueueInDirection[direction];
     }
 
-    public void setNeedsHorizontalLayout(ComponentConnector connector,
+    public void setNeedsHorizontalLayout(ManagedLayout layout,
             boolean needsLayout) {
-        LayoutDependency dependency = getDependency(connector, HORIZONTAL);
+        LayoutDependency dependency = getDependency(layout, HORIZONTAL);
         dependency.setNeedsLayout(needsLayout);
     }
 
-    public void setNeedsVerticalLayout(ComponentConnector connector,
-            boolean needsLayout) {
-        LayoutDependency dependency = getDependency(connector, VERTICAL);
+    public void setNeedsVerticalLayout(ManagedLayout layout, boolean needsLayout) {
+        LayoutDependency dependency = getDependency(layout, VERTICAL);
         dependency.setNeedsLayout(needsLayout);
     }
 
-    public void markAsHorizontallyLayouted(ComponentConnector connector) {
-        LayoutDependency dependency = getDependency(connector, HORIZONTAL);
+    public void markAsHorizontallyLayouted(ManagedLayout layout) {
+        LayoutDependency dependency = getDependency(layout, HORIZONTAL);
         dependency.markAsLayouted();
     }
 
-    public void markAsVerticallyLayouted(ComponentConnector connector) {
-        LayoutDependency dependency = getDependency(connector, VERTICAL);
+    public void markAsVerticallyLayouted(ManagedLayout layout) {
+        LayoutDependency dependency = getDependency(layout, VERTICAL);
         dependency.markAsLayouted();
     }
 
@@ -388,14 +411,27 @@ public class LayoutDependencyTree {
         return b.toString();
     }
 
-    public ComponentConnector[] getHorizontalLayoutTargets() {
-        Collection<ComponentConnector> queue = getLayoutQueue(HORIZONTAL);
-        return queue.toArray(new ComponentConnector[queue.size()]);
+    public boolean hasConnectorsToMeasure() {
+        return !measureQueueInDirection[HORIZONTAL].isEmpty()
+                || !measureQueueInDirection[VERTICAL].isEmpty();
     }
 
-    public ComponentConnector[] getVerticalLayoutTargets() {
-        Collection<ComponentConnector> queue = getLayoutQueue(VERTICAL);
-        return queue.toArray(new ComponentConnector[queue.size()]);
+    public boolean hasHorizontalConnectorToLayout() {
+        return !getLayoutQueue(HORIZONTAL).isEmpty();
+    }
+
+    public boolean hasVerticaConnectorToLayout() {
+        return !getLayoutQueue(VERTICAL).isEmpty();
+    }
+
+    public ManagedLayout[] getHorizontalLayoutTargets() {
+        Collection<ManagedLayout> queue = getLayoutQueue(HORIZONTAL);
+        return queue.toArray(new ManagedLayout[queue.size()]);
+    }
+
+    public ManagedLayout[] getVerticalLayoutTargets() {
+        Collection<ManagedLayout> queue = getLayoutQueue(VERTICAL);
+        return queue.toArray(new ManagedLayout[queue.size()]);
     }
 
     public Collection<ComponentConnector> getMeasureTargets() {

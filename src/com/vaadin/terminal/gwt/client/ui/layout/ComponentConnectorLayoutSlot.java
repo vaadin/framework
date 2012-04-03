@@ -57,6 +57,16 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
     }
 
     @Override
+    protected void reportActualRelativeHeight(int allocatedHeight) {
+        getLayoutManager().reportOuterHeight(child, allocatedHeight);
+    }
+
+    @Override
+    protected void reportActualRelativeWidth(int allocatedWidth) {
+        getLayoutManager().reportOuterWidth(child, allocatedWidth);
+    }
+
+    @Override
     public int getWidgetHeight() {
         return getLayoutManager()
                 .getOuterHeight(child.getWidget().getElement());
