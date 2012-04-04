@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -285,6 +286,9 @@ public abstract class AbstractOrderedLayoutConnector extends
                         .getStylePrimaryName(), child, this);
             }
             layout.addOrMove(slot, currentIndex++);
+            if (child.isRelativeWidth()) {
+                slot.getWrapperElement().getStyle().setWidth(100, Unit.PCT);
+            }
         }
 
         for (ComponentConnector child : previousChildren) {

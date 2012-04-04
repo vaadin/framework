@@ -562,6 +562,10 @@ public class VGridLayout extends ComplexPanel {
                 if (slot == null || slot.getChild() != childConnector) {
                     slot = new ComponentConnectorLayoutSlot(CLASSNAME,
                             childConnector, getConnector());
+                    if (childConnector.isRelativeWidth()) {
+                        slot.getWrapperElement().getStyle()
+                                .setWidth(100, Unit.PCT);
+                    }
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 
