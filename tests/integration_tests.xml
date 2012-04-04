@@ -260,6 +260,14 @@
 			<param name="target-server" value="weblogic9" />
 		</antcall>
 	</target>
+	
+    <target name="integration-test-websphere8">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="600" />
+            <param name="target-port" value="9080" />
+            <param name="target-server" value="websphere8" />
+        </antcall>
+    </target>	
 
 	<target name="integration-test-weblogic10">
 		<antcall target="run-generic-integration-test">
@@ -344,6 +352,7 @@
 			<antcall target="integration-test-tomcat5" />
 			<antcall target="integration-test-tomcat6" />
 			<antcall target="integration-test-tomcat7" />
+			<antcall target="integration-test-websphere8" />
 
 		</parallel>
 
