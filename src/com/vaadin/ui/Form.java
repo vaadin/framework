@@ -30,6 +30,7 @@ import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
+import com.vaadin.terminal.gwt.client.ui.FormConnector.FormState;
 
 /**
  * Form component provides easy way of creating and managing sets fields.
@@ -69,11 +70,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         Buffered, Item, Validatable, Action.Notifier, HasComponents {
 
     private Object propertyValue;
-
-    /**
-     * Layout of the form.
-     */
-    private Layout layout;
 
     /**
      * Item connected to this form as datasource.
@@ -133,8 +129,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     };
 
-    private Layout formFooter;
-
     /**
      * If this is true, commit implicitly calls setValidationVisible(true).
      */
@@ -191,15 +185,15 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         setWidth(100, UNITS_PERCENTAGE);
     }
 
+    @Override
+    public FormState getState() {
+        return (FormState) super.getState();
+    }
+
     /* Documented in interface */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
-
-        layout.paint(target);
-        if (formFooter != null) {
-            formFooter.paint(target);
-        }
 
         if (ownActionManager != null) {
             ownActionManager.paintActions(null, target);
@@ -587,6 +581,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             return;
         }
 
+        Layout layout = getLayout();
         if (layout instanceof CustomLayout) {
             ((CustomLayout) layout).addComponent(field, propertyId.toString());
         } else {
@@ -729,8 +724,8 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      */
     public void setItemDataSource(Item newDataSource, Collection<?> propertyIds) {
 
-        if (layout instanceof GridLayout) {
-            GridLayout gl = (GridLayout) layout;
+        if (getLayout() instanceof GridLayout) {
+            GridLayout gl = (GridLayout) getLayout();
             if (gridlayoutCursorX == -1) {
                 // first setItemDataSource, remember initial cursor
                 gridlayoutCursorX = gl.getCursorX();
@@ -806,25 +801,24 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return the Layout of the form.
      */
     public Layout getLayout() {
-        return layout;
+        return (Layout) getState().getLayout();
     }
 
     /**
      * Sets the layout of the form.
      * 
      * <p>
-     * By default form uses <code>OrderedLayout</code> with <code>form</code>
-     * -style.
+     * If set to null then Form uses a FormLayout by default.
      * </p>
      * 
-     * @param newLayout
-     *            the Layout of the form.
+     * @param layout
+     *            the layout of the form.
      */
-    public void setLayout(Layout newLayout) {
+    public void setLayout(Layout layout) {
 
         // Use orderedlayout by default
-        if (newLayout == null) {
-            newLayout = new FormLayout();
+        if (layout == null) {
+            layout = new FormLayout();
         }
 
         // reset cursor memory
@@ -832,25 +826,25 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         gridlayoutCursorY = -1;
 
         // Move fields from previous layout
-        if (layout != null) {
+        if (getLayout() != null) {
             final Object[] properties = propertyIds.toArray();
             for (int i = 0; i < properties.length; i++) {
                 Field<?> f = getField(properties[i]);
                 detachField(f);
-                if (newLayout instanceof CustomLayout) {
-                    ((CustomLayout) newLayout).addComponent(f,
+                if (layout instanceof CustomLayout) {
+                    ((CustomLayout) layout).addComponent(f,
                             properties[i].toString());
                 } else {
-                    newLayout.addComponent(f);
+                    layout.addComponent(f);
                 }
             }
 
-            layout.setParent(null);
+            getLayout().setParent(null);
         }
 
         // Replace the previous layout
-        newLayout.setParent(this);
-        layout = newLayout;
+        layout.setParent(this);
+        getState().setLayout(layout);
 
         // Hierarchy has changed so we need to repaint (this could be a
         // hierarchy repaint only)
@@ -968,7 +962,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         newField.setPropertyDataSource(property);
 
         // Replaces the old field with new one
-        layout.replaceComponent(oldField, newField);
+        getLayout().replaceComponent(oldField, newField);
         fields.put(propertyId, newField);
         newField.addListener(fieldValueChangeListener);
         oldField.removeListener(fieldValueChangeListener);
@@ -984,9 +978,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public void attach() {
         super.attach();
-        layout.attach();
-        if (formFooter != null) {
-            formFooter.attach();
+        getLayout().attach();
+        if (getFooter() != null) {
+            getFooter().attach();
         }
     }
 
@@ -998,9 +992,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     @Override
     public void detach() {
         super.detach();
-        layout.detach();
-        if (formFooter != null) {
-            formFooter.detach();
+        getLayout().detach();
+        if (getFooter() != null) {
+            getFooter().detach();
         }
     }
 
@@ -1278,25 +1272,27 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return layout rendered below normal form contents.
      */
     public Layout getFooter() {
-        if (formFooter == null) {
-            formFooter = new HorizontalLayout();
-            formFooter.setParent(this);
-        }
-        return formFooter;
+        return (Layout) getState().getFooter();
     }
 
     /**
-     * Sets the layout that is rendered below normal form contens.
+     * Sets the layout that is rendered below normal form contents. Setting this
+     * to null will cause an empty HorizontalLayout to be rendered in the
+     * footer.
      * 
-     * @param newFormFooter
-     *            the new Layout
+     * @param footer
+     *            the new footer layout
      */
-    public void setFooter(Layout newFormFooter) {
-        if (formFooter != null) {
-            formFooter.setParent(null);
+    public void setFooter(Layout footer) {
+        if (getFooter() != null) {
+            getFooter().setParent(null);
         }
-        formFooter = newFormFooter;
-        formFooter.setParent(this);
+        if (footer == null) {
+            footer = new HorizontalLayout();
+        }
+
+        getState().setFooter(footer);
+        footer.setParent(this);
 
         // Hierarchy has changed so we need to repaint (this could be a
         // hierarchy repaint only)
@@ -1393,16 +1389,16 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             }
             i++;
             if (i == 1) {
-                return layout != null ? layout : formFooter;
+                return getLayout() != null ? getLayout() : getFooter();
             } else if (i == 2) {
-                return formFooter;
+                return getFooter();
             }
             return null;
         }
 
         public void remove() {
             if (i == 1) {
-                if (layout != null) {
+                if (getLayout() != null) {
                     setLayout(null);
                     i = 0;
                 } else {
@@ -1424,10 +1420,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
     public int getComponentCount() {
         int count = 0;
-        if (layout != null) {
+        if (getLayout() != null) {
             count++;
         }
-        if (formFooter != null) {
+        if (getFooter() != null) {
             count++;
         }
 
