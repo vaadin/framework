@@ -10,8 +10,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.CustomLayoutConnector.CustomLayoutState;
 
 /**
  * <p>
@@ -52,10 +51,6 @@ public class CustomLayout extends AbstractLayout {
      */
     private final HashMap<String, Component> slots = new HashMap<String, Component>();
 
-    private String templateContents = null;
-
-    private String templateName = null;
-
     /**
      * Default constructor only used by subclasses. Subclasses are responsible
      * for setting the appropriate fields. Either
@@ -88,7 +83,7 @@ public class CustomLayout extends AbstractLayout {
      */
     public CustomLayout(String template) {
         this();
-        templateName = template;
+        setTemplateName(template);
     }
 
     protected void initTemplateContentsFromInputStream(
@@ -108,7 +103,12 @@ public class CustomLayout extends AbstractLayout {
             }
         }
 
-        templateContents = b.toString();
+        setTemplateContents(b.toString());
+    }
+
+    @Override
+    public CustomLayoutState getState() {
+        return (CustomLayoutState) super.getState();
     }
 
     /**
@@ -126,6 +126,7 @@ public class CustomLayout extends AbstractLayout {
             removeComponent(old);
         }
         slots.put(location, c);
+        getState().getChildLocations().put(c, location);
         c.setParent(this);
         fireComponentAttachEvent(c);
         requestRepaint();
@@ -157,6 +158,7 @@ public class CustomLayout extends AbstractLayout {
             return;
         }
         slots.values().remove(c);
+        getState().getChildLocations().remove(c);
         super.removeComponent(c);
         requestRepaint();
     }
@@ -203,37 +205,6 @@ public class CustomLayout extends AbstractLayout {
         return slots.get(location);
     }
 
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        if (templateName != null) {
-            target.addAttribute("template", templateName);
-        } else {
-            target.addAttribute("templateContents", templateContents);
-        }
-        // Adds all items in all the locations
-        for (final Iterator<String> i = slots.keySet().iterator(); i.hasNext();) {
-            // Gets the (location,component)
-            final String location = i.next();
-            final Component c = slots.get(location);
-            if (c != null) {
-                // Writes the item
-                target.startTag("location");
-                target.addAttribute("name", location);
-                c.paint(target);
-                target.endTag("location");
-            }
-        }
-    }
-
     /* Documented in superclass */
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
@@ -259,32 +230,20 @@ public class CustomLayout extends AbstractLayout {
         } else {
             slots.put(newLocation, oldComponent);
             slots.put(oldLocation, newComponent);
+            getState().getChildLocations().put(newComponent, oldLocation);
+            getState().getChildLocations().put(oldComponent, newLocation);
             requestRepaint();
         }
     }
 
-    /**
-     * CustomLayout's template selecting was previously implemented with
-     * setStyle. Overriding to improve backwards compatibility.
-     * 
-     * @param name
-     *            template name
-     * @deprecated Use {@link #setTemplateName(String)} instead
-     */
-    @Deprecated
-    @Override
-    public void setStyle(String name) {
-        setTemplateName(name);
-    }
-
     /** Get the name of the template */
     public String getTemplateName() {
-        return templateName;
+        return getState().getTemplateName();
     }
 
     /** Get the contents of the template */
     public String getTemplateContents() {
-        return templateContents;
+        return getState().getTemplateContents();
     }
 
     /**
@@ -297,8 +256,8 @@ public class CustomLayout extends AbstractLayout {
      * @param templateName
      */
     public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-        templateContents = null;
+        getState().setTemplateName(templateName);
+        getState().setTemplateContents(null);
         requestRepaint();
     }
 
@@ -308,8 +267,8 @@ public class CustomLayout extends AbstractLayout {
      * @param templateContents
      */
     public void setTemplateContents(String templateContents) {
-        this.templateContents = templateContents;
-        templateName = null;
+        getState().setTemplateContents(templateContents);
+        getState().setTemplateName(null);
         requestRepaint();
     }
 
