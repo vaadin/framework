@@ -238,8 +238,10 @@ public abstract class AbstractSplitPanelConnector extends
         splitPanel.setSplitPosition(splitPanel.position);
         splitPanel.updateSizes();
         // Report relative sizes in other direction for quicker propagation
-        for (ComponentConnector child : children) {
-            reportOtherDimension(child);
+        if (children != null) {
+            for (ComponentConnector child : children) {
+                reportOtherDimension(child);
+            }
         }
     }
 
