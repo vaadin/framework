@@ -1,13 +1,18 @@
 package com.vaadin.data.util.sqlcontainer;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
+
+import com.vaadin.data.Property.ReadOnlyException;
+import com.vaadin.data.util.sqlcontainer.ColumnProperty.NotNullableException;
+import com.vaadin.data.util.sqlcontainer.query.QueryDelegate;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.vaadin.data.Property.ReadOnlyException;
-import com.vaadin.data.util.sqlcontainer.ColumnProperty.NotNullableException;
 
 public class ColumnPropertyTest {
 
@@ -174,5 +179,54 @@ public class ColumnPropertyTest {
         Assert.assertEquals("asdf", cp.getValue());
         cp.setValue(null);
         Assert.assertNull(cp.getValue());
+    }
+
+    @Test
+    public void setValue_sendsItemChangeNotification() throws SQLException {
+
+        class TestContainer extends SQLContainer {
+            Object value = null;
+            boolean modified = false;
+
+            public TestContainer(QueryDelegate delegate) throws SQLException {
+                super(delegate);
+            }
+
+            @Override
+            public void itemChangeNotification(RowItem changedItem) {
+                ColumnProperty cp = (ColumnProperty) changedItem
+                        .getItemProperty("NAME");
+                value = cp.getValue();
+                modified = cp.isModified();
+            }
+        }
+
+        ColumnProperty property = new ColumnProperty("NAME", false, true, true,
+                "Ville", String.class);
+
+        Statement statement = EasyMock.createNiceMock(Statement.class);
+        EasyMock.replay(statement);
+
+        ResultSetMetaData metadata = EasyMock
+                .createNiceMock(ResultSetMetaData.class);
+        EasyMock.replay(metadata);
+
+        ResultSet resultSet = EasyMock.createNiceMock(ResultSet.class);
+        EasyMock.expect(resultSet.getStatement()).andReturn(statement);
+        EasyMock.expect(resultSet.getMetaData()).andReturn(metadata);
+        EasyMock.replay(resultSet);
+
+        QueryDelegate delegate = EasyMock.createNiceMock(QueryDelegate.class);
+        EasyMock.expect(delegate.getResults(0, 1)).andReturn(resultSet);
+        EasyMock.replay(delegate);
+
+        TestContainer container = new TestContainer(delegate);
+
+        new RowItem(container, new RowId(new Object[] { 1 }),
+                Arrays.asList(property));
+
+        property.setValue("Kalle");
+        Assert.assertEquals("Kalle", container.value);
+        Assert.assertTrue(container.modified);
     }
 }
