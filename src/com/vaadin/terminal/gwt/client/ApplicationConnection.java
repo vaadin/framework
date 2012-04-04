@@ -946,6 +946,7 @@ public class ApplicationConnection {
         if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
             uidlSecurityKey = json.getString(UIDL_SECURITY_TOKEN_ID);
         }
+        VConsole.log(" * Handling resources from server");
 
         if (json.containsKey("resources")) {
             ValueMap resources = json.getValueMap("resources");
@@ -956,11 +957,13 @@ public class ApplicationConnection {
                 resourcesMap.put(key, resources.getAsString(key));
             }
         }
+        VConsole.log("Handling type inheritance map from server");
 
         if (json.containsKey("typeInheritanceMap")) {
             configuration.addComponentInheritanceInfo(json
                     .getValueMap("typeInheritanceMap"));
         }
+        VConsole.log("Handling type mappings from server");
 
         if (json.containsKey("typeMappings")) {
             configuration.addComponentMappings(
@@ -969,6 +972,7 @@ public class ApplicationConnection {
 
         Command c = new Command() {
             public void execute() {
+                VConsole.log(" * Dumping UIDL");
                 VConsole.dirUIDL(json, configuration);
 
                 if (json.containsKey("locales")) {
