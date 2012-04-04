@@ -10,7 +10,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.ui.TabSheet;
 
+@Component(TabSheet.class)
 public class TabsheetConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout, RequiresOverflowAutoFix {
 

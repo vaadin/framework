@@ -33,5 +33,11 @@
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 }
+.v-panel.v-has-width > .v-panel-content {
+	width: 100%;
+}
+.v-panel.v-has-height > .v-panel-content {
+	height: 100%;
+}
 .v-panel-deco {
 }

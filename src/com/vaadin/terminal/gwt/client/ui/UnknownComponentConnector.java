@@ -23,15 +23,16 @@ public class UnknownComponentConnector extends AbstractComponentConnector {
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidget().setCaption(
-                "Widgetset does not contain implementation for "
-                        + getWidget().serverClassName
-                        + ". Check its @ClientWidget mapping, widgetsets "
-                        + "GWT module description file and re-compile your"
-                        + " widgetset. In case you have downloaded a vaadin"
-                        + " add-on package, you might want to refer to "
-                        + "<a href='http://vaadin.com/using-addons'>add-on "
-                        + "instructions</a>. Unrendered UIDL:");
+        getWidget()
+                .setCaption(
+                        "Widgetset does not contain implementation for "
+                                + getWidget().serverClassName
+                                + ". Check its component connector's @Component mapping, widgetsets "
+                                + "GWT module description file and re-compile your"
+                                + " widgetset. In case you have downloaded a vaadin"
+                                + " add-on package, you might want to refer to "
+                                + "<a href='http://vaadin.com/using-addons'>add-on "
+                                + "instructions</a>. Unrendered UIDL:");
         if (getWidget().uidlTree != null) {
             getWidget().uidlTree.removeFromParent();
         }

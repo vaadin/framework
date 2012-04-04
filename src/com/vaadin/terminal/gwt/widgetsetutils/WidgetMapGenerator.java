@@ -22,21 +22,20 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
-import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.ClientWidget.LoadStyle;
-import com.vaadin.ui.Root;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically
- * based on {@link ClientWidget} annotations available in workspace. By
- * modifying the generator it is possible to do some fine tuning for the
- * generated widgetset (aka client side engine). The components to be included
- * in the client side engine can modified be overriding
- * {@link #getUsedPaintables()}.
+ * based on {@link Component} annotations available in workspace. By modifying
+ * the generator it is possible to do some fine tuning for the generated
+ * widgetset (aka client side engine). The components to be included in the
+ * client side engine can modified be overriding {@link #getUsedConnectors()}.
  * <p>
  * The generator also decides how the client side component implementations are
  * loaded to the browser. The default generator is
@@ -44,7 +43,7 @@ import com.vaadin.ui.Root;
  * that loads all widget implementation on application initialization. This has
  * been the only option until Vaadin 6.4.
  * <p>
- * This generator uses the loadStyle hints from the {@link ClientWidget}
+ * This generator uses the loadStyle hints from the {@link Component}
  * annotations. Depending on the {@link LoadStyle} used, the widget may be
  * included in the initially loaded JavaScript, loaded when the application has
  * started and there is no communication to server or lazy loaded when the
@@ -72,7 +71,7 @@ import com.vaadin.ui.Root;
  */
 public class WidgetMapGenerator extends Generator {
 
-    private static String paintableClassName = ComponentConnector.class
+    private static String componentConnectorClassName = ComponentConnector.class
             .getName();
 
     private String packageName;
@@ -129,15 +128,15 @@ public class WidgetMapGenerator extends Generator {
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 
-        Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation = getUsedPaintables();
+        Collection<Class<? extends ComponentConnector>> connectors = getUsedConnectors(context
+                .getTypeOracle());
 
-        validatePaintables(logger, context, paintablesHavingWidgetAnnotation);
+        validateConnectors(logger, connectors);
+        logConnectors(logger, context, connectors);
 
         // generator constructor source code
-        generateImplementationDetector(sourceWriter,
-                paintablesHavingWidgetAnnotation);
-        generateInstantiatorMethod(sourceWriter,
-                paintablesHavingWidgetAnnotation);
+        generateImplementationDetector(sourceWriter, connectors);
+        generateInstantiatorMethod(sourceWriter, connectors);
         // close generated class
         sourceWriter.outdent();
         sourceWriter.println("}");
@@ -149,45 +148,44 @@ public class WidgetMapGenerator extends Generator {
 
     }
 
-    /**
-     * Verifies that all client side components are available for client side
-     * GWT module.
-     * 
-     * @param logger
-     * @param context
-     * @param paintablesHavingWidgetAnnotation
-     */
-    private void validatePaintables(
-            TreeLogger logger,
-            GeneratorContext context,
-            Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
-        TypeOracle typeOracle = context.getTypeOracle();
+    private void validateConnectors(TreeLogger logger,
+            Collection<Class<? extends ComponentConnector>> connectors) {
 
-        for (Iterator<Class<? extends Paintable>> iterator = paintablesHavingWidgetAnnotation
-                .iterator(); iterator.hasNext();) {
-            Class<? extends Paintable> class1 = iterator.next();
-
-            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
-            if (typeOracle.findType(clientClass.getName()) == null) {
-                // GWT widget not inherited
-                logger.log(Type.WARN, "Widget class " + clientClass.getName()
-                        + " was not found. The component " + class1.getName()
-                        + " will not be included in the widgetset.");
-                iterator.remove();
+        Iterator<Class<? extends ComponentConnector>> iter = connectors
+                .iterator();
+        while (iter.hasNext()) {
+            Class<? extends ComponentConnector> connectorClass = iter.next();
+            Component annotation = connectorClass
+                    .getAnnotation(Component.class);
+            if (!ClientConnector.class.isAssignableFrom(annotation.value())) {
+                logger.log(
+                        Type.WARN,
+                        "Connector class "
+                                + annotation.value().getName()
+                                + " defined in @Component annotation is not a subclass of "
+                                + ClientConnector.class.getName()
+                                + ". The component connector "
+                                + connectorClass.getName()
+                                + " will not be included in the widgetset.");
+                iter.remove();
             }
-
         }
+
+    }
+
+    private void logConnectors(TreeLogger logger, GeneratorContext context,
+            Collection<Class<? extends ComponentConnector>> connectors) {
         logger.log(Type.INFO,
-                "Widget set will contain implementations for following components: ");
+                "Widget set will contain implementations for following component connectors: ");
 
         TreeSet<String> classNames = new TreeSet<String>();
         HashMap<String, String> loadStyle = new HashMap<String, String>();
-        for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            String className = class1.getCanonicalName();
+        for (Class<? extends ComponentConnector> connectorClass : connectors) {
+            String className = connectorClass.getCanonicalName();
             classNames.add(className);
-            if (getLoadStyle(class1) == LoadStyle.DEFERRED) {
+            if (getLoadStyle(connectorClass) == LoadStyle.DEFERRED) {
                 loadStyle.put(className, "DEFERRED");
-            } else if (getLoadStyle(class1) == LoadStyle.LAZY) {
+            } else if (getLoadStyle(connectorClass) == LoadStyle.LAZY) {
                 loadStyle.put(className, "LAZY");
             }
 
@@ -210,36 +208,50 @@ public class WidgetMapGenerator extends Generator {
      * @return a collections of Vaadin components that will be added to
      *         widgetset
      */
-    protected Collection<Class<? extends Paintable>> getUsedPaintables() {
-        return ClassPathExplorer.getPaintablesHavingWidgetAnnotation();
+    @SuppressWarnings("unchecked")
+    private Collection<Class<? extends ComponentConnector>> getUsedConnectors(
+            TypeOracle typeOracle) {
+        JClassType connectorType = typeOracle.findType(Connector.class
+                .getName());
+        Collection<Class<? extends ComponentConnector>> connectors = new HashSet<Class<? extends ComponentConnector>>();
+        for (JClassType jClassType : connectorType.getSubtypes()) {
+            Component annotation = jClassType.getAnnotation(Component.class);
+            if (annotation != null) {
+                try {
+                    Class<? extends ComponentConnector> clazz = (Class<? extends ComponentConnector>) Class
+                            .forName(jClassType.getQualifiedSourceName());
+                    connectors.add(clazz);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return connectors;
     }
 
     /**
      * Returns true if the widget for given component will be lazy loaded by the
      * client. The default implementation reads the information from the
-     * {@link ClientWidget} annotation.
+     * {@link Component} annotation.
      * <p>
      * The method can be overridden to optimize the widget loading mechanism. If
      * the Widgetset is wanted to be optimized for a network with a high latency
      * or for a one with a very fast throughput, it may be good to return false
      * for every component.
      * 
-     * @param paintableType
+     * @param connector
      * @return true iff the widget for given component should be lazy loaded by
      *         the client side engine
      */
-    protected LoadStyle getLoadStyle(Class<? extends Paintable> paintableType) {
-        if (Root.class == paintableType) {
-            return LoadStyle.EAGER;
-        }
-        ClientWidget annotation = paintableType
-                .getAnnotation(ClientWidget.class);
+    protected LoadStyle getLoadStyle(
+            Class<? extends ComponentConnector> connector) {
+        Component annotation = connector.getAnnotation(Component.class);
         return annotation.loadStyle();
     }
 
     private void generateInstantiatorMethod(
             SourceWriter sourceWriter,
-            Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
+            Collection<Class<? extends ComponentConnector>> connectorsHavingComponentAnnotation) {
 
         Collection<Class<?>> deferredWidgets = new LinkedList<Class<?>>();
 
@@ -247,17 +259,17 @@ public class WidgetMapGenerator extends Generator {
         // lookup with index than with the hashmap
 
         sourceWriter.println("public void ensureInstantiator(Class<? extends "
-                + paintableClassName + "> classType) {");
+                + componentConnectorClassName + "> classType) {");
         sourceWriter.println("if(!instmap.containsKey(classType)){");
         boolean first = true;
 
-        ArrayList<Class<? extends Paintable>> lazyLoadedWidgets = new ArrayList<Class<? extends Paintable>>();
+        ArrayList<Class<? extends ComponentConnector>> lazyLoadedWidgets = new ArrayList<Class<? extends ComponentConnector>>();
 
-        HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>> widgetsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>>();
+        HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>> connectorsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>>();
 
-        for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
-            if (widgetsWithInstantiator.contains(clientClass)) {
+        for (Class<? extends ComponentConnector> class1 : connectorsHavingComponentAnnotation) {
+            Class<? extends ComponentConnector> clientClass = class1;
+            if (connectorsWithInstantiator.contains(clientClass)) {
                 continue;
             }
             if (clientClass == RootConnector.class) {
@@ -273,8 +285,9 @@ public class WidgetMapGenerator extends Generator {
                     + ".class) {");
 
             String instantiator = "new WidgetInstantiator() {\n public "
-                    + paintableClassName + " get() {\n return GWT.create("
-                    + clientClass.getName() + ".class );\n}\n}\n";
+                    + componentConnectorClassName
+                    + " get() {\n return GWT.create(" + clientClass.getName()
+                    + ".class );\n}\n}\n";
 
             LoadStyle loadStyle = getLoadStyle(class1);
 
@@ -301,14 +314,15 @@ public class WidgetMapGenerator extends Generator {
                 sourceWriter.print(");");
             }
             sourceWriter.print("}");
-            widgetsWithInstantiator.add(clientClass);
+            connectorsWithInstantiator.add(clientClass);
         }
 
         sourceWriter.println("}");
 
         sourceWriter.println("}");
 
-        sourceWriter.println("public Class<? extends " + paintableClassName
+        sourceWriter.println("public Class<? extends "
+                + componentConnectorClassName
                 + ">[] getDeferredLoadedWidgets() {");
 
         sourceWriter.println("return new Class[] {");
@@ -318,10 +332,7 @@ public class WidgetMapGenerator extends Generator {
                 sourceWriter.println(",");
             }
             first = false;
-            ClientWidget annotation = class2.getAnnotation(ClientWidget.class);
-            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> value = annotation
-                    .value();
-            sourceWriter.print(value.getName() + ".class");
+            sourceWriter.print(class2.getName() + ".class");
         }
 
         sourceWriter.println("};");
@@ -334,11 +345,11 @@ public class WidgetMapGenerator extends Generator {
 
         // TODO an index of last ensured widget in array
 
-        sourceWriter.println("public " + paintableClassName
-                + " instantiate(Class<? extends " + paintableClassName
+        sourceWriter.println("public " + componentConnectorClassName
+                + " instantiate(Class<? extends " + componentConnectorClassName
                 + "> classType) {");
         sourceWriter.indent();
-        sourceWriter.println(paintableClassName
+        sourceWriter.println(componentConnectorClassName
                 + " p = super.instantiate(classType); if(p!= null) return p;");
         sourceWriter.println("return instmap.get(classType).get();");
 
@@ -355,23 +366,23 @@ public class WidgetMapGenerator extends Generator {
      */
     private void generateImplementationDetector(
             SourceWriter sourceWriter,
-            Collection<Class<? extends Paintable>> paintablesHavingWidgetAnnotation) {
+            Collection<Class<? extends ComponentConnector>> paintablesHavingWidgetAnnotation) {
         sourceWriter
                 .println("public Class<? extends "
-                        + paintableClassName
+                        + componentConnectorClassName
                         + "> "
-                        + "getImplementationByServerSideClassName(String fullyQualifiedName) {");
+                        + "getConnectorClassForServerSideClassName(String fullyQualifiedName) {");
         sourceWriter.indent();
         sourceWriter
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
 
-        for (Class<? extends Paintable> class1 : paintablesHavingWidgetAnnotation) {
-            Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass = getClientClass(class1);
+        for (Class<? extends ComponentConnector> connectorClass : paintablesHavingWidgetAnnotation) {
+            Class<? extends ClientConnector> clientConnectorClass = getClientConnectorClass(connectorClass);
             sourceWriter.print("if ( fullyQualifiedName == \"");
-            sourceWriter.print(class1.getName());
+            sourceWriter.print(clientConnectorClass.getName());
             sourceWriter.print("\" ) { ensureInstantiator("
-                    + clientClass.getName() + ".class); return ");
-            sourceWriter.print(clientClass.getName());
+                    + connectorClass.getName() + ".class); return ");
+            sourceWriter.print(connectorClass.getName());
             sourceWriter.println(".class;}");
             sourceWriter.print("else ");
         }
@@ -382,15 +393,9 @@ public class WidgetMapGenerator extends Generator {
 
     }
 
-    private static Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> getClientClass(
-            Class<? extends Paintable> class1) {
-        Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector> clientClass;
-        if (Root.class == class1) {
-            clientClass = RootConnector.class;
-        } else {
-            ClientWidget annotation = class1.getAnnotation(ClientWidget.class);
-            clientClass = annotation.value();
-        }
-        return clientClass;
+    private static Class<? extends ClientConnector> getClientConnectorClass(
+            Class<? extends ComponentConnector> connectorClass) {
+        Component annotation = connectorClass.getAnnotation(Component.class);
+        return (Class<? extends ClientConnector>) annotation.value();
     }
 }

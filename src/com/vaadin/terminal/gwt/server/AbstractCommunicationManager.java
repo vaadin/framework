@@ -740,6 +740,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         return seckey;
     }
 
+    @SuppressWarnings("unchecked")
     public void writeUidlResponse(boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
@@ -1040,12 +1041,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         outWriter.print("}");
 
-        Collection<Class<? extends Paintable>> usedPaintableTypes = paintTarget
-                .getUsedPaintableTypes();
+        Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
+                .getUsedClientConnectors();
         boolean typeMappingsOpen = false;
         ClientCache clientCache = getClientCache(root);
 
-        for (Class<? extends Paintable> class1 : usedPaintableTypes) {
+        for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
             if (clientCache.cache(class1)) {
                 // client does not know the mapping key for this type, send
                 // mapping to client
@@ -1059,12 +1060,37 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 outWriter.print("\"");
                 outWriter.print(canonicalName);
                 outWriter.print("\" : ");
-                outWriter
-                        .print(getTagForType((Class<? extends ClientConnector>) class1));
+                outWriter.print(getTagForType(class1));
             }
         }
         if (typeMappingsOpen) {
             outWriter.print(" }");
+        }
+
+        boolean typeInheritanceMapOpen = false;
+        if (typeMappingsOpen) {
+            // send the whole type inheritance map if any new mappings
+            for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
+                if (!ClientConnector.class.isAssignableFrom(class1
+                        .getSuperclass())) {
+                    continue;
+                }
+                if (!typeInheritanceMapOpen) {
+                    typeInheritanceMapOpen = true;
+                    outWriter.print(", \"typeInheritanceMap\" : { ");
+                } else {
+                    outWriter.print(" , ");
+                }
+                outWriter.print("\"");
+                outWriter.print(getTagForType(class1));
+                outWriter.print("\" : ");
+                outWriter
+                        .print(getTagForType((Class<? extends ClientConnector>) class1
+                                .getSuperclass()));
+            }
+            if (typeInheritanceMapOpen) {
+                outWriter.print(" }");
+            }
         }
 
         // add any pending locale definitions requested by the client
@@ -2002,12 +2028,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private BootstrapHandler bootstrapHandler;
 
     String getTagForType(Class<? extends ClientConnector> class1) {
-        Integer object = typeToKey.get(class1);
-        if (object == null) {
-            object = nextTypeKey++;
-            typeToKey.put(class1, object);
+        Integer id = typeToKey.get(class1);
+        if (id == null) {
+            id = nextTypeKey++;
+            typeToKey.put(class1, id);
+            logger.log(Level.FINE, "Mapping " + class1.getName() + " to " + id);
         }
-        return object.toString();
+        return id.toString();
     }
 
     /**

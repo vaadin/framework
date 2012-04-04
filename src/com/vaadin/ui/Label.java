@@ -10,8 +10,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.label.LabelConnector;
-import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Label component for showing non-editable short texts.
@@ -38,7 +36,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = LabelConnector.class, loadStyle = LoadStyle.EAGER)
 // TODO generics for interface Property
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,

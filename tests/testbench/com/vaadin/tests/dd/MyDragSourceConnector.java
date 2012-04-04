@@ -8,7 +8,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.tests.dd.CustomDDImplementation.MyDragSource;
 
+@Component(MyDragSource.class)
 public class MyDragSourceConnector extends AbstractComponentConnector {
 
     @Override

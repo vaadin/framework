@@ -74,7 +74,6 @@ import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(WindowConnector.class)
 public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
     /**

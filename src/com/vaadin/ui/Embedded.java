@@ -27,7 +27,6 @@ import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector.EmbeddedServerRPC;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(EmbeddedConnector.class)
 public class Embedded extends AbstractComponent {
 
     /**

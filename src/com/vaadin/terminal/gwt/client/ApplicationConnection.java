@@ -957,6 +957,11 @@ public class ApplicationConnection {
             }
         }
 
+        if (json.containsKey("typeInheritanceMap")) {
+            configuration.addComponentInheritanceInfo(json
+                    .getValueMap("typeInheritanceMap"));
+        }
+
         if (json.containsKey("typeMappings")) {
             configuration.addComponentMappings(
                     json.getValueMap("typeMappings"), widgetSet);
@@ -1166,15 +1171,19 @@ public class ApplicationConnection {
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String connectorId = keyArray.get(i);
-                        String connectorType = types.getString(connectorId);
+                        int connectorType = Integer.parseInt(types
+                                .getString((connectorId)));
                         ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (connector != null) {
                             continue;
                         }
+
+                        Class<? extends ComponentConnector> connectorClass = configuration
+                                .getWidgetClassByEncodedTag(connectorType);
+
                         // Connector does not exist so we must create it
-                        if (!connectorType.equals(configuration
-                                .getEncodedWindowTag())) {
+                        if (connectorClass != RootConnector.class) {
                             // create, initialize and register the paintable
                             getConnector(connectorId, connectorType);
                         } else {
@@ -1902,7 +1911,7 @@ public class ApplicationConnection {
 
     @Deprecated
     public ComponentConnector getPaintable(UIDL uidl) {
-        return getConnector(uidl.getId(), uidl.getTag());
+        return getConnector(uidl.getId(), Integer.parseInt(uidl.getTag()));
     }
 
     /**
@@ -1921,8 +1930,7 @@ public class ApplicationConnection {
      * @return Either an existing ComponentConnector or a new ComponentConnector
      *         of the given type
      */
-    public ComponentConnector getConnector(String connectorId,
-            String connectorType) {
+    public ComponentConnector getConnector(String connectorId, int connectorType) {
         if (!connectorMap.hasConnector(connectorId)) {
             return createAndRegisterConnector(connectorId, connectorType);
         }
@@ -1943,7 +1951,7 @@ public class ApplicationConnection {
      * @return A new ComponentConnector of the given type
      */
     private ComponentConnector createAndRegisterConnector(String connectorId,
-            String connectorType) {
+            int connectorType) {
         // Create and register a new connector with the given type
         ComponentConnector p = widgetSet.createWidget(connectorType,
                 configuration);

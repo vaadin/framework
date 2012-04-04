@@ -1,10 +1,7 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-/**
- * 
- */
-package com.vaadin.ui;
+package com.vaadin.terminal.gwt.client.ui;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -12,31 +9,30 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.widgetsetutils.CustomWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.LazyWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator;
 
 /**
- * Annotation defining the default client side counterpart in GWT terminal for
- * {@link Component}.
+ * Annotation defining the default server side counterpart in GWT terminal for
+ * {@link ComponentConnector}.
  * <p>
- * With this annotation server side Vaadin component is marked to have a client
- * side counterpart. The value of the annotation is the class of client side
+ * With this annotation client side Vaadin connector is marked to have a server
+ * side counterpart. The value of the annotation is the class of server side
  * implementation.
- * <p>
- * Note, even though client side implementation is needed during development,
- * one may safely remove them from the classpath of the production server.
  * 
- * @since 6.2
+ * @since 7.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ClientWidget {
+public @interface Component {
+
     /**
-     * @return the client side counterpart for the annotated component
+     * @return the server side counterpart for the annotated component connector
      */
-    Class<? extends ComponentConnector> value();
+    Class<? extends ClientConnector> value();
 
     /**
      * Depending on the used WidgetMap generator, these optional hints may be
@@ -49,7 +45,7 @@ public @interface ClientWidget {
      * is not included in the initial JavaScript application loaded when the
      * application starts. Instead the implementation is loaded to the client
      * when it is first needed. Lazy loaded widget can be achieved by giving
-     * {@link LoadStyle#LAZY} value in ClientWidget annotation.
+     * {@link LoadStyle#LAZY} value in {@link Component} annotation.
      * <p>
      * Lazy loaded widgets don't stress the size and startup time of the client
      * side as much as eagerly loaded widgets. On the other hand there is a
@@ -93,5 +89,4 @@ public @interface ClientWidget {
          */
         LAZY
     }
-
 }

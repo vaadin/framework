@@ -12,8 +12,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
 
+@Component(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBarConnector extends AbstractComponentConnector implements
         SimpleManagedLayout {
     /**

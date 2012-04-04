@@ -61,7 +61,6 @@ import com.vaadin.tools.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-@ClientWidget(TreeConnector.class)
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container, ItemClickSource, ItemClickNotifier, DragSource,
         DropTarget {

@@ -32,7 +32,10 @@ import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.ui.Root;
 
+@Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
         implements RequiresOverflowAutoFix {
 
@@ -158,8 +161,9 @@ public class RootConnector extends AbstractComponentContainerConnector
         UIDL childUidl = uidl.getChildUIDL(childIndex);
         final ComponentConnector lo = client.getPaintable(childUidl);
 
+        boolean layoutChanged = getWidget().layout != lo;
         if (getWidget().layout != null) {
-            if (getWidget().layout != lo) {
+            if (layoutChanged) {
                 // remove old
                 client.unregisterPaintable(getWidget().layout);
                 if (childStateChangeHandlerRegistration != null) {
@@ -171,12 +175,15 @@ public class RootConnector extends AbstractComponentContainerConnector
                 getWidget().layout = lo;
             }
         } else {
-            if (getWidget().layout != lo) {
-                childStateChangeHandlerRegistration = lo
-                        .addStateChangeHandler(childStateChangeHandler);
-            }
             getWidget().setWidget(lo.getWidget());
             getWidget().layout = lo;
+            if (layoutChanged) {
+                childStateChangeHandlerRegistration = lo
+                        .addStateChangeHandler(childStateChangeHandler);
+                // Must handle new child here as state change events are already
+                // fired
+                onChildSizeChange();
+            }
         }
 
         getWidget().layout.updateFromUIDL(childUidl, client);

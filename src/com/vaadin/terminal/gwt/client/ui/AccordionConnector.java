@@ -12,7 +12,9 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VAccordion.StackItem;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.ui.Accordion;
 
+@Component(Accordion.class)
 public class AccordionConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout, RequiresOverflowAutoFix {
 

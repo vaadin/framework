@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.gwt.user.client.ui.Tree;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.ItemSetChangeEvent;
@@ -48,7 +47,6 @@ import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
  * share UI state in the container.
  */
 @SuppressWarnings({ "serial" })
-@ClientWidget(TreeTableConnector.class)
 public class TreeTable extends Table implements Hierarchical {
 
     private static final Logger logger = Logger.getLogger(TreeTable.class

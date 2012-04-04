@@ -3,8 +3,6 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.HorizontalLayoutConnector;
-import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Horizontal layout
@@ -18,7 +16,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 5.3
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = HorizontalLayoutConnector.class, loadStyle = LoadStyle.EAGER)
 public class HorizontalLayout extends AbstractOrderedLayout {
 
     public HorizontalLayout() {

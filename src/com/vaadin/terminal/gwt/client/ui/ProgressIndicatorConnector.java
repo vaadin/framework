@@ -9,7 +9,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.ProgressIndicator;
 
+@Component(ProgressIndicator.class)
 public class ProgressIndicatorConnector extends AbstractFieldConnector {
 
     @Override

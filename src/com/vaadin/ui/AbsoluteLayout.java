@@ -28,7 +28,6 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(AbsoluteLayoutConnector.class)
 public class AbsoluteLayout extends AbstractLayout implements
         LayoutClickNotifier {
 

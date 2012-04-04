@@ -10,7 +10,9 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.Caption;
 import com.vaadin.terminal.gwt.client.ui.VFormLayout.ErrorFlag;
+import com.vaadin.ui.FormLayout;
 
+@Component(FormLayout.class)
 public class FormLayoutConnector extends AbstractComponentContainerConnector {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

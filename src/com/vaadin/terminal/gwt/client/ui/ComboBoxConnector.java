@@ -11,7 +11,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect.FilterSelectSuggestion;
+import com.vaadin.ui.Select;
 
+@Component(Select.class)
 public class ComboBoxConnector extends AbstractFieldConnector implements
         SimpleManagedLayout {
 

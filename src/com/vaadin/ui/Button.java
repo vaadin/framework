@@ -20,11 +20,9 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.ButtonConnector;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
 import com.vaadin.tools.ReflectTools;
-import com.vaadin.ui.ClientWidget.LoadStyle;
 import com.vaadin.ui.Component.Focusable;
 
 /**
@@ -36,7 +34,6 @@ import com.vaadin.ui.Component.Focusable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = ButtonConnector.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
         Action.ShortcutNotifier {

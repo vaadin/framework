@@ -7,7 +7,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.ui.CustomComponent;
 
+@Component(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponentConnector extends
         AbstractComponentContainerConnector {
 

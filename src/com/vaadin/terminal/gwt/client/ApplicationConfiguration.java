@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -206,11 +207,9 @@ public class ApplicationConfiguration implements EntryPoint {
     private boolean usePortletURLs = false;
     private String portletUidlURLBase;
 
-    private HashMap<String, String> unknownComponents;
+    private HashMap<Integer, String> unknownComponents;
 
     private Class<? extends ComponentConnector>[] classes = new Class[1024];
-
-    private String windowId;
 
     private boolean browserDetailsSent = false;
 
@@ -220,6 +219,9 @@ public class ApplicationConfiguration implements EntryPoint {
     private static int widgetsLoading;
 
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
+
+    private Map<Integer, Integer> componentInheritanceMap = new HashMap<Integer, Integer>();
+    private Map<Integer, String> tagToServerSideClassName = new HashMap<Integer, String>();
 
     public boolean usePortletURLs() {
         return usePortletURLs;
@@ -391,13 +393,21 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public Class<? extends ComponentConnector> getWidgetClassByEncodedTag(
-            String tag) {
+            int tag) {
         try {
-            int parseInt = Integer.parseInt(tag);
-            return classes[parseInt];
+            return classes[tag];
         } catch (Exception e) {
             // component was not present in mappings
             return UnknownComponentConnector.class;
+        }
+    }
+
+    public void addComponentInheritanceInfo(ValueMap valueMap) {
+        JsArrayString keyArray = valueMap.getKeyArray();
+        for (int i = 0; i < keyArray.length(); i++) {
+            String key = keyArray.get(i);
+            int value = valueMap.getInt(key);
+            componentInheritanceMap.put(Integer.parseInt(key), value);
         }
     }
 
@@ -406,27 +416,31 @@ public class ApplicationConfiguration implements EntryPoint {
         for (int i = 0; i < keyArray.length(); i++) {
             String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
-            classes[value] = widgetSet.getImplementationByClassName(key);
+            tagToServerSideClassName.put(value, key);
+        }
+
+        for (int i = 0; i < keyArray.length(); i++) {
+            String key = keyArray.get(i).intern();
+            int value = valueMap.getInt(key);
+            classes[value] = widgetSet.getConnectorClassByTag(value, this);
             if (classes[value] == UnknownComponentConnector.class) {
                 if (unknownComponents == null) {
-                    unknownComponents = new HashMap<String, String>();
+                    unknownComponents = new HashMap<Integer, String>();
                 }
-                unknownComponents.put("" + value, key);
-            } else if (key == "com.vaadin.ui.Root") {
-                windowId = "" + value;
+                unknownComponents.put(value, key);
             }
         }
     }
 
-    /**
-     * @return the integer value that is used to code top level windows
-     *         "com.vaadin.ui.Window"
-     */
-    String getEncodedWindowTag() {
-        return windowId;
+    public Integer getParentTag(int tag) {
+        return componentInheritanceMap.get(tag);
     }
 
-    String getUnknownServerClassNameByEncodedTagName(String tag) {
+    public String getServerSideClassNameForTag(Integer tag) {
+        return tagToServerSideClassName.get(tag);
+    }
+
+    String getUnknownServerClassNameByTag(int tag) {
         if (unknownComponents != null) {
             return unknownComponents.get(tag);
         }

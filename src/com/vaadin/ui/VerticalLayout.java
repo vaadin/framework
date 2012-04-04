@@ -3,9 +3,6 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.VerticalLayoutConnector;
-import com.vaadin.ui.ClientWidget.LoadStyle;
-
 /**
  * Vertical layout
  * 
@@ -19,7 +16,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 5.3
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = VerticalLayoutConnector.class, loadStyle = LoadStyle.EAGER)
 public class VerticalLayout extends AbstractOrderedLayout {
 
     public VerticalLayout() {

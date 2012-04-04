@@ -4,7 +4,10 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.ui.HorizontalLayout;
 
+@Component(value = HorizontalLayout.class, loadStyle = LoadStyle.EAGER)
 public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {
 
     @Override
