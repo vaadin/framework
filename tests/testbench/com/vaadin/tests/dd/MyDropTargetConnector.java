@@ -9,8 +9,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-
-<<<<<<< HEAD
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.tests.dd.CustomDDImplementation.MyDropTarget;
 
