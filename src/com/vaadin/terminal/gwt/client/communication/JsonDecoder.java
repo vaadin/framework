@@ -17,6 +17,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 
@@ -63,6 +64,8 @@ public class JsonDecoder {
             val = decodeArray((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = decodeMap((JSONObject) value, idMapper, connection);
+        } else if (JsonEncoder.VTYPE_MAP_CONNECTOR.equals(variableType)) {
+            val = decodeConnectorMap((JSONObject) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
             val = decodeList((JSONArray) value, idMapper, connection);
         } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
@@ -109,6 +112,21 @@ public class JsonDecoder {
             String key = it.next();
             map.put(key,
                     decodeValue((JSONArray) jsonMap.get(key), idMapper,
+                            connection));
+        }
+        return map;
+    }
+
+    private static Map<Connector, Object> decodeConnectorMap(
+            JSONObject jsonMap, ConnectorMap idMapper,
+            ApplicationConnection connection) {
+        HashMap<Connector, Object> map = new HashMap<Connector, Object>();
+        Iterator<String> it = jsonMap.keySet().iterator();
+        while (it.hasNext()) {
+            String connectorId = it.next();
+            Connector connector = idMapper.getConnector(connectorId);
+            map.put(connector,
+                    decodeValue((JSONArray) jsonMap.get(connectorId), idMapper,
                             connection));
         }
         return map;

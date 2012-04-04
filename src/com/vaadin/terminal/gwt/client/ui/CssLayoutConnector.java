@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
@@ -25,13 +26,13 @@ import com.vaadin.ui.CssLayout;
 public class CssLayoutConnector extends AbstractLayoutConnector {
 
     public static class CssLayoutState extends AbstractLayoutState {
-        private Map<String, String> childCss = new HashMap<String, String>();
+        private Map<Connector, String> childCss = new HashMap<Connector, String>();
 
-        public Map<String, String> getChildCss() {
+        public Map<Connector, String> getChildCss() {
             return childCss;
         }
 
-        public void setChildCss(Map<String, String> childCss) {
+        public void setChildCss(Map<Connector, String> childCss) {
             this.childCss = childCss;
         }
 
@@ -79,10 +80,10 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 new VMarginInfo(getState().getMarginsBitmask()));
 
         for (ComponentConnector child : getChildren()) {
-            if (!getState().getChildCss().containsKey(child.getConnectorId())) {
+            if (!getState().getChildCss().containsKey(child)) {
                 continue;
             }
-            String css = getState().getChildCss().get(child.getConnectorId());
+            String css = getState().getChildCss().get(child);
             Style style = child.getWidget().getElement().getStyle();
             // should we remove styles also? How can we know what we have added
             // as it is added directly to the child component?
