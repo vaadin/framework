@@ -11,7 +11,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -79,6 +79,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     private GridLayoutServerRPC rpc;
+    private boolean needCaptionUpdate = false;
 
     @Override
     public void init() {
@@ -139,9 +140,12 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             final UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
                 for (final Iterator<?> j = r.getChildIterator(); j.hasNext();) {
-                    final UIDL c = (UIDL) j.next();
-                    if ("gc".equals(c.getTag())) {
-                        Cell cell = layout.getCell(c);
+                    final UIDL cellUidl = (UIDL) j.next();
+                    if ("gc".equals(cellUidl.getTag())) {
+                        int row = cellUidl.getIntAttribute("y");
+                        int col = cellUidl.getIntAttribute("x");
+
+                        Cell cell = layout.getCell(row, col, cellUidl);
                         if (cell.hasContent()) {
                             cell.setAlignment(new AlignmentInfo(
                                     alignments[alignmentIndex++]));
@@ -155,32 +159,54 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
         layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
 
-        // clean non rendered components
-        for (Widget w : nonRenderedWidgets) {
-            Cell cell = layout.widgetToCell.remove(w);
-            cell.slot.setCaption(null);
-
-            if (w.getParent() == layout) {
-                w.removeFromParent();
-                ConnectorMap paintableMap = ConnectorMap.get(client);
-                paintableMap.unregisterConnector(paintableMap.getConnector(w));
-            }
-            cell.slot.getWrapperElement().removeFromParent();
-            cell.slot = null;
-        }
-
         layout.updateMarginStyleNames(new VMarginInfo(getState()
                 .getMarginsBitmask()));
 
         layout.updateSpacingStyleName(getState().isSpacing());
 
+        if (needCaptionUpdate) {
+            needCaptionUpdate = false;
+
+            for (ComponentConnector child : getChildren()) {
+                updateCaption(child);
+            }
+        }
         getLayoutManager().setNeedsUpdate(this);
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
+
+        VGridLayout layout = getWidget();
+
+        // clean non rendered components
+        for (ComponentConnector oldChild : event.getOldChildren()) {
+            if (oldChild.getParent() == this) {
+                continue;
+            }
+
+            Widget childWidget = oldChild.getWidget();
+            layout.remove(childWidget);
+
+            Cell cell = layout.widgetToCell.remove(childWidget);
+            cell.slot.setCaption(null);
+            cell.slot.getWrapperElement().removeFromParent();
+            cell.slot = null;
+        }
+
     }
 
     public void updateCaption(ComponentConnector childConnector) {
         VGridLayout layout = getWidget();
+        Cell cell = layout.widgetToCell.get(childConnector.getWidget());
+        if (cell == null) {
+            // workaround before updateFromUidl is removed. Update the
+            // captions at the end of updateFromUidl instead of immediately
+            needCaptionUpdate = true;
+            return;
+        }
         if (VCaption.isNeeded(childConnector.getState())) {
-            Cell cell = layout.widgetToCell.get(childConnector.getWidget());
             VLayoutSlot layoutSlot = cell.slot;
             VCaption caption = layoutSlot.getCaption();
             if (caption == null) {
