@@ -194,7 +194,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         if (getWidget().layout != null) {
             if (getWidget().layout != lo) {
                 // remove old
-                client.unregisterPaintable(getWidget().layout);
                 getWidget().contentPanel.remove(getWidget().layout.getWidget());
                 // add new
                 if (!showingUrl) {

@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -99,8 +98,6 @@ public class FormConnector extends AbstractComponentContainerConnector
                 getWidget().footer = newFooterWidget;
             } else if (newFooter != getWidget().footer) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(ConnectorMap.get(getConnection())
-                        .getConnector(getWidget().footer));
                 getWidget().add(newFooter.getWidget(),
                         getWidget().footerContainer);
             }
@@ -108,8 +105,6 @@ public class FormConnector extends AbstractComponentContainerConnector
         } else {
             if (getWidget().footer != null) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(ConnectorMap.get(getConnection())
-                        .getConnector(getWidget().footer));
             }
         }
 
@@ -122,8 +117,6 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         } else if (getWidget().lo != newLayoutWidget) {
             // Layout has changed
-            client.unregisterPaintable(ConnectorMap.get(getConnection())
-                    .getConnector(getWidget().lo));
             getWidget().remove(getWidget().lo);
             getWidget().lo = newLayoutWidget;
             getWidget().add(newLayoutWidget, getWidget().fieldContainer);

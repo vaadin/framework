@@ -166,7 +166,6 @@ public class RootConnector extends AbstractComponentContainerConnector
         if (getWidget().layout != null) {
             if (layoutChanged) {
                 // remove old
-                client.unregisterPaintable(getWidget().layout);
                 if (childStateChangeHandlerRegistration != null) {
                     childStateChangeHandlerRegistration.removeHandler();
                     childStateChangeHandlerRegistration = null;
@@ -227,8 +226,6 @@ public class RootConnector extends AbstractComponentContainerConnector
         for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
                 .hasNext();) {
             final VWindow w = rem.next();
-            client.unregisterPaintable(ConnectorMap.get(getConnection())
-                    .getConnector(w));
             getWidget().subWindows.remove(w);
             w.hide();
         }

@@ -228,7 +228,6 @@ public class VPopupView extends HTML {
         public void hide(boolean autoClosed) {
             hiding = true;
             syncChildren();
-            unregisterPaintables();
             if (popupComponentWidget != null && popupComponentWidget != loading) {
                 remove(popupComponentWidget);
             }
@@ -299,12 +298,6 @@ public class VPopupView extends HTML {
                 popupComponentPaintable = newPopupComponent;
             }
 
-        }
-
-        public void unregisterPaintables() {
-            if (popupComponentPaintable != null) {
-                client.unregisterPaintable(popupComponentPaintable);
-            }
         }
 
         public void setHideOnMouseOut(boolean hideOnMouseOut) {
