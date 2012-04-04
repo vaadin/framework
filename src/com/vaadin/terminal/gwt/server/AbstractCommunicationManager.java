@@ -1071,6 +1071,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (typeMappingsOpen) {
             // send the whole type inheritance map if any new mappings
             for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
+                if (!ClientConnector.class.isAssignableFrom(class1
+                        .getSuperclass())) {
+                    continue;
+                }
                 if (!typeInheritanceMapOpen) {
                     typeInheritanceMapOpen = true;
                     outWriter.print(", \"typeInheritanceMap\" : { ");
@@ -1080,8 +1084,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 outWriter.print("\"");
                 outWriter.print(getTagForType(class1));
                 outWriter.print("\" : ");
-                // note that if the superclass is not in typeMappings, a "dummy"
-                // tag is used
                 outWriter
                         .print(getTagForType((Class<? extends ClientConnector>) class1
                                 .getSuperclass()));
@@ -2026,12 +2028,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private BootstrapHandler bootstrapHandler;
 
     String getTagForType(Class<? extends ClientConnector> class1) {
-        Integer object = typeToKey.get(class1);
-        if (object == null) {
-            object = nextTypeKey++;
-            typeToKey.put(class1, object);
+        Integer id = typeToKey.get(class1);
+        if (id == null) {
+            id = nextTypeKey++;
+            typeToKey.put(class1, id);
+            logger.log(Level.FINE, "Mapping " + class1.getName() + " to " + id);
         }
-        return object.toString();
+        return id.toString();
     }
 
     /**

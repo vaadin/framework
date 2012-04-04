@@ -44,8 +44,7 @@ public class WidgetSet {
                 conf, tag);
 
         if (classType == null || classType == UnknownComponentConnector.class) {
-            String serverSideName = conf
-                    .getUnknownServerClassNameByTag(tag);
+            String serverSideName = conf.getUnknownServerClassNameByTag(tag);
             UnknownComponentConnector c = GWT
                     .create(UnknownComponentConnector.class);
             c.setServerSideClassName(serverSideName);
@@ -91,9 +90,9 @@ public class WidgetSet {
         Class<? extends ComponentConnector> connectorClass = null;
         Integer t = tag;
         do {
+            String serverSideClassName = conf.getServerSideClassNameForTag(t);
             connectorClass = widgetMap
-                    .getConnectorClassForServerSideClassName(conf
-                            .getServerSideClassNameForTag(t));
+                    .getConnectorClassForServerSideClassName(serverSideClassName);
             t = conf.getParentTag(t);
         } while (connectorClass == UnknownComponentConnector.class && t != null);
 

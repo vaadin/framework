@@ -984,17 +984,20 @@ public class JsonPaintTarget implements PaintTarget {
             throw new IllegalArgumentException(
                     "Tags are only available for ClientConnectors");
         }
-        Class<?> clazz = paintable.getClass();
+        Class<? extends Paintable> paintableClass = paintable.getClass();
+        while (paintableClass.isAnonymousClass()) {
+            paintableClass = (Class<? extends Paintable>) paintableClass
+                    .getSuperclass();
+        }
+        Class<?> clazz = paintableClass;
         while (!usedClientConnectors.contains(clazz)
                 && clazz.getSuperclass() != null
-                && ClientConnector.class
-                        .isAssignableFrom(clazz.getSuperclass())) {
+                && ClientConnector.class.isAssignableFrom(clazz)) {
             usedClientConnectors.add((Class<? extends ClientConnector>) clazz);
             clazz = clazz.getSuperclass();
         }
         return manager
-                .getTagForType((Class<? extends ClientConnector>) paintable
-                        .getClass());
+                .getTagForType((Class<? extends ClientConnector>) paintableClass);
     }
 
     Collection<Class<? extends ClientConnector>> getUsedClientConnectors() {
