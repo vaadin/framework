@@ -494,6 +494,7 @@
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
             <arg value="${widgetset-style}" />
+            <arg value="-strict" />
             <arg value="-localWorkers" />
             <arg value="${widgetset-localWorkers}" />
         	<arg line="${widgetset-extraParams}" />
