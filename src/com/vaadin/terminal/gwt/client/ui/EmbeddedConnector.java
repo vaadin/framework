@@ -23,7 +23,9 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.ui.Embedded;
 
+@Component(Embedded.class)
 public class EmbeddedConnector extends AbstractComponentConnector {
 
     public interface EmbeddedServerRPC extends ClickRPC, ServerRpc {

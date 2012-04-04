@@ -32,8 +32,6 @@ import java.util.logging.Logger;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.terminal.Paintable;
-import com.vaadin.ui.ClientWidget;
-import com.vaadin.ui.Root;
 
 /**
  * Utility class to collect widgetset related information from classpath.
@@ -94,8 +92,8 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Finds server side widgets with {@link ClientWidget} annotation on the
-     * class path (entries that can contain widgets/widgetsets - see
+     * Finds server side widgets with ClientWidget annotation on the class path
+     * (entries that can contain widgets/widgetsets - see
      * getRawClasspathEntries()).
      * 
      * As a side effect, also accept criteria are searched under the same class
@@ -450,7 +448,7 @@ public class ClassPathExplorer {
 
     /**
      * Searches for all paintable classes and accept criteria under a location
-     * based on {@link ClientWidget} and {@link ClientCriterion} annotations.
+     * based on {@link ClientCriterion} annotations.
      * 
      * Note that client criteria are updated directly to the
      * {@link #acceptCriterion} field, whereas paintables are added to the
@@ -543,13 +541,13 @@ public class ClassPathExplorer {
     private static Set<Class<? extends AcceptCriterion>> acceptCriterion = new HashSet<Class<? extends AcceptCriterion>>();
 
     /**
-     * Checks a class for the {@link ClientWidget} and {@link ClientCriterion}
-     * annotations, and adds it to the appropriate collection if it has either.
+     * Checks a class for the {@link ClientCriterion} annotations, and adds it
+     * to the appropriate collection if it has either.
      * 
      * @param fullclassName
      * @param paintables
      *            the collection to which to add server side classes with
-     *            {@link ClientWidget} annotation
+     *            {@link ClientCriterion} annotation
      */
     @SuppressWarnings("unchecked")
     private static void tryToAdd(final String fullclassName,
@@ -564,10 +562,7 @@ public class ClassPathExplorer {
 
             Class<?> c = Class.forName(fullclassName);
 
-            if (c.getAnnotation(ClientWidget.class) != null || Root.class == c) {
-                paintables.add((Class<? extends Paintable>) c);
-                // System.out.println("Found paintable " + fullclassName);
-            } else if (c.getAnnotation(ClientCriterion.class) != null) {
+            if (c.getAnnotation(ClientCriterion.class) != null) {
                 acceptCriterion.add((Class<? extends AcceptCriterion>) c);
             }
         } catch (UnsupportedClassVersionError e) {

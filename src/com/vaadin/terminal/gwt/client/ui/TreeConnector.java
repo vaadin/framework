@@ -13,7 +13,9 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
+import com.vaadin.ui.Tree;
 
+@Component(Tree.class)
 public class TreeConnector extends AbstractComponentConnector {
 
     public static final String ATTRIBUTE_NODE_STYLE = "style";

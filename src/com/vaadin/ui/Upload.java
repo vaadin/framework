@@ -15,10 +15,8 @@ import java.util.Map;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
-import com.vaadin.terminal.gwt.client.ui.UploadConnector;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
-import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * Component for uploading files from client to server.
@@ -61,7 +59,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = UploadConnector.class, loadStyle = LoadStyle.LAZY)
 public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**

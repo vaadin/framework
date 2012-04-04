@@ -9,7 +9,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.TextArea;
 
+@Component(TextArea.class)
 public class TextAreaConnector extends TextFieldConnector {
 
     @Override

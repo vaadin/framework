@@ -4,13 +4,11 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.gwt.client.ui.PasswordFieldConnector;
 
 /**
  * A field that is used to enter secret text information like passwords. The
  * entered text is not displayed on the screen.
  */
-@ClientWidget(PasswordFieldConnector.class)
 public class PasswordField extends AbstractTextField {
 
     /**

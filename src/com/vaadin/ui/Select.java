@@ -23,7 +23,6 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
 
 /**
  * <p>
@@ -44,7 +43,6 @@ import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(ComboBoxConnector.class)
 public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 

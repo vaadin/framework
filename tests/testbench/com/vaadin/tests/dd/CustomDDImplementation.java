@@ -9,7 +9,6 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -38,7 +37,6 @@ public class CustomDDImplementation extends CustomComponent {
      * Check the @ClientWidget
      * 
      */
-    @ClientWidget(MyDropTargetConnector.class)
     class MyDropTarget extends AbstractComponent implements DropTarget {
         public DropHandler getDropHandler() {
             return new DropHandler() {
@@ -76,7 +74,6 @@ public class CustomDDImplementation extends CustomComponent {
      * operations that are controlled via server side api.
      * 
      */
-    @ClientWidget(MyDragSourceConnector.class)
     public class MyDragSource extends AbstractComponent implements Component {
 
     }

@@ -3,8 +3,6 @@
  */
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.AccordionConnector;
-
 /**
  * An accordion is a component similar to a {@link TabSheet}, but with a
  * vertical orientation and the selected component presented between tabs.
@@ -16,7 +14,6 @@ import com.vaadin.terminal.gwt.client.ui.AccordionConnector;
  * 
  * @see TabSheet
  */
-@ClientWidget(AccordionConnector.class)
 public class Accordion extends TabSheet {
 
 }

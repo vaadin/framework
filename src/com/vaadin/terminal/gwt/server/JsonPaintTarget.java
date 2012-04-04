@@ -4,23 +4,15 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.Application;
@@ -35,9 +27,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.ClientWidget;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.Root;
 
 /**
  * User Interface Description Language Target.
@@ -86,7 +76,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
-    private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
+    private final Set<Class<? extends ClientConnector>> usedClientConnectors = new HashSet<Class<? extends ClientConnector>>();
 
     /**
      * Creates a new JsonPaintTarget.
@@ -988,159 +978,27 @@ public class JsonPaintTarget implements PaintTarget {
         return usedResources;
     }
 
-    private static final Map<Class<? extends Paintable>, Class<? extends Paintable>> widgetMappingCache = new HashMap<Class<? extends Paintable>, Class<? extends Paintable>>();
-
     @SuppressWarnings("unchecked")
     public String getTag(Paintable paintable) {
-        Class<? extends Paintable> class1;
-        synchronized (widgetMappingCache) {
-            class1 = widgetMappingCache.get(paintable.getClass());
+        if (!(paintable instanceof ClientConnector)) {
+            throw new IllegalArgumentException(
+                    "Tags are only available for ClientConnectors");
         }
-        if (class1 == null) {
-            /*
-             * Client widget annotation is searched from component hierarchy to
-             * detect the component that presumably has client side
-             * implementation. The server side name is used in the
-             * transportation, but encoded into integer strings to optimized
-             * transferred data.
-             */
-            class1 = paintable.getClass();
-            while (!hasClientWidgetMapping(class1)) {
-                Class<?> superclass = class1.getSuperclass();
-                if (superclass != null
-                        && Paintable.class.isAssignableFrom(superclass)) {
-                    class1 = (Class<? extends Paintable>) superclass;
-                } else {
-                    logger.warning("No superclass of "
-                            + paintable.getClass().getName()
-                            + " has a @ClientWidget"
-                            + " annotation. Component will not be mapped correctly on client side.");
-                    break;
-                }
-            }
-            synchronized (widgetMappingCache) {
-                widgetMappingCache.put(paintable.getClass(), class1);
-            }
+        Class<?> clazz = paintable.getClass();
+        while (!usedClientConnectors.contains(clazz)
+                && clazz.getSuperclass() != null
+                && ClientConnector.class
+                        .isAssignableFrom(clazz.getSuperclass())) {
+            usedClientConnectors.add((Class<? extends ClientConnector>) clazz);
+            clazz = clazz.getSuperclass();
         }
-
-        usedPaintableTypes.add(class1);
-        return manager.getTagForType((Class<? extends ClientConnector>) class1);
-
+        return manager
+                .getTagForType((Class<? extends ClientConnector>) paintable
+                        .getClass());
     }
 
-    private boolean hasClientWidgetMapping(Class<? extends Paintable> class1) {
-        if (Root.class == class1) {
-            return true;
-        }
-        try {
-            return class1.isAnnotationPresent(ClientWidget.class);
-        } catch (NoClassDefFoundError e) {
-            String stacktrace = getStacktraceString(e);
-            if (stacktrace
-                    .contains("com.ibm.oti.reflect.AnnotationParser.parseClass")) {
-                // #7479 IBM JVM apparently tries to eagerly load the classes
-                // referred to by annotations. Checking the annotation from byte
-                // code to be sure that we are dealing the this case and not
-                // some other class loading issue.
-                if (bytecodeContainsClientWidgetAnnotation(class1)) {
-                    return true;
-                }
-            } else {
-                // throw exception forward
-                throw e;
-            }
-        } catch (LinkageError e) {
-            String stacktrace = getStacktraceString(e);
-            if (stacktrace
-                    .contains("org.jboss.modules.ModuleClassLoader.defineClass")) {
-                // #7822 JBoss AS 7 apparently tries to eagerly load the classes
-                // referred to by annotations. Checking the annotation from byte
-                // code to be sure that we are dealing the this case and not
-                // some other class loading issue.
-                if (bytecodeContainsClientWidgetAnnotation(class1)) {
-                    // Seems that JBoss still prints a stacktrace to the logs
-                    // even though the LinkageError has been caught
-                    return true;
-                }
-            } else {
-                // throw exception forward
-                throw e;
-            }
-        } catch (RuntimeException e) {
-            if (e.getStackTrace()[0].getClassName().equals(
-                    "org.glassfish.web.loader.WebappClassLoader")) {
-
-                // See #3920
-                // Glassfish 3 is darn eager to load the value class, even
-                // though we just want to check if the annotation exists.
-
-                // In some situations (depending on class loading order) it
-                // would be enough to return true here, but it is safer to check
-                // the annotation from byte code
-
-                if (bytecodeContainsClientWidgetAnnotation(class1)) {
-                    return true;
-                }
-            } else {
-                // throw exception forward
-                throw e;
-            }
-        }
-        return false;
-    }
-
-    private static String getStacktraceString(Throwable e) {
-        StringWriter writer = new StringWriter();
-        e.printStackTrace(new PrintWriter(writer));
-        String stacktrace = writer.toString();
-        return stacktrace;
-    }
-
-    private boolean bytecodeContainsClientWidgetAnnotation(
-            Class<? extends Paintable> class1) {
-
-        try {
-            String name = class1.getName().replace('.', '/') + ".class";
-
-            InputStream stream = class1.getClassLoader().getResourceAsStream(
-                    name);
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(stream));
-            try {
-                String line;
-                boolean atSourcefile = false;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.startsWith("SourceFile")) {
-                        atSourcefile = true;
-                    }
-                    if (atSourcefile) {
-                        if (line.contains("ClientWidget")) {
-                            return true;
-                        }
-                    }
-                    // TODO could optimize to quit at the end attribute
-                }
-            } catch (IOException e1) {
-                logger.log(Level.SEVERE,
-                        "An error occurred while finding widget mapping.", e1);
-            } finally {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e1) {
-                    logger.log(Level.SEVERE, "Could not close reader.", e1);
-
-                }
-            }
-        } catch (Throwable t) {
-            logger.log(Level.SEVERE,
-                    "An error occurred while finding widget mapping.", t);
-        }
-
-        return false;
-    }
-
-    Collection<Class<? extends Paintable>> getUsedPaintableTypes() {
-        return usedPaintableTypes;
+    Collection<Class<? extends ClientConnector>> getUsedClientConnectors() {
+        return usedClientConnectors;
     }
 
     public void addVariable(VariableOwner owner, String name,

@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.ContextMenuDetails;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 
+@Component(com.vaadin.ui.Table.class)
 public class TableConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout, PostLayoutListener {
 

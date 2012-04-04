@@ -9,7 +9,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.TabSheet;
 
+@Component(TabSheet.class)
 public class TabsheetConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout {
 

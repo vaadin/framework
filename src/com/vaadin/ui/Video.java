@@ -30,7 +30,6 @@ import com.vaadin.terminal.gwt.client.ui.VideoConnector;
  * @author Vaadin Ltd
  * @since 6.7.0
  */
-@ClientWidget(VideoConnector.class)
 public class Video extends AbstractMedia {
 
     private Resource poster;

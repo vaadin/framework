@@ -17,7 +17,9 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.ui.Panel;
 
+@Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
         implements SimpleManagedLayout, PostLayoutListener {
 

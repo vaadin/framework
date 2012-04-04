@@ -78,8 +78,7 @@ public class VUIDLBrowser extends SimpleTree {
             try {
                 String name = uidl.getTag();
                 try {
-                    Integer.parseInt(name);
-                    name = getNodeName(uidl, conf, name);
+                    name = getNodeName(uidl, conf, Integer.parseInt(name));
                 } catch (Exception e) {
                     // NOP
                 }
@@ -98,11 +97,11 @@ public class VUIDLBrowser extends SimpleTree {
         }
 
         private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
-                String name) {
+                int tag) {
             Class<? extends ComponentConnector> widgetClassByDecodedTag = conf
-                    .getWidgetClassByEncodedTag(name);
+                    .getWidgetClassByEncodedTag(tag);
             if (widgetClassByDecodedTag == UnknownComponentConnector.class) {
-                return conf.getUnknownServerClassNameByEncodedTagName(name)
+                return conf.getUnknownServerClassNameByTag(tag)
                         + "(NO CLIENT IMPLEMENTATION FOUND)";
             } else {
                 return widgetClassByDecodedTag.getName();
@@ -144,8 +143,7 @@ public class VUIDLBrowser extends SimpleTree {
 
             String nodeName = uidl.getTag();
             try {
-                Integer.parseInt(nodeName);
-                nodeName = getNodeName(uidl, conf, nodeName);
+                nodeName = getNodeName(uidl, conf, Integer.parseInt(nodeName));
             } catch (Exception e) {
                 // NOP
             }

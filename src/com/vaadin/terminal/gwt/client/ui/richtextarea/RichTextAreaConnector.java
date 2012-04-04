@@ -9,8 +9,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
+import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.vaadin.ui.RichTextArea;
 
+@Component(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector implements
         BeforeShortcutActionListener {
 

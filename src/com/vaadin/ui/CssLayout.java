@@ -60,7 +60,6 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
  * @since 6.1 brought in from "FastLayouts" incubator project
  * 
  */
-@ClientWidget(CssLayoutConnector.class)
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     private CssLayoutServerRPC rpc = new CssLayoutServerRPC() {

@@ -9,7 +9,6 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.ComboBoxConnector;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
 
 /**
@@ -21,7 +20,6 @@ import com.vaadin.terminal.gwt.client.ui.VFilterSelect;
  * 
  */
 @SuppressWarnings("serial")
-@ClientWidget(ComboBoxConnector.class)
 public class ComboBox extends Select {
 
     private String inputPrompt = null;

@@ -13,7 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.OptionGroup;
 
+@Component(OptionGroup.class)
 public class OptionGroupConnector extends OptionGroupBaseConnector {
 
     @Override

@@ -9,7 +9,9 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.Slider;
 
+@Component(Slider.class)
 public class SliderConnector extends AbstractFieldConnector {
 
     @Override

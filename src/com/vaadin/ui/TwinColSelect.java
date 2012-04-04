@@ -9,7 +9,6 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.TwinColSelectConnector;
 import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
 
 /**
@@ -17,7 +16,6 @@ import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
  * side for selected items.
  */
 @SuppressWarnings("serial")
-@ClientWidget(TwinColSelectConnector.class)
 public class TwinColSelect extends AbstractSelect {
 
     private int columns = 0;

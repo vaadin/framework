@@ -3,8 +3,9 @@
  */
 package com.vaadin.terminal.gwt.widgetsetutils;
 
-import com.vaadin.terminal.Paintable;
-import com.vaadin.ui.ClientWidget.LoadStyle;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+
 
 /**
  * WidgetMap generator that builds a widgetset that optimizes the transferred
@@ -16,7 +17,7 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  */
 public class LazyWidgetMapGenerator extends WidgetMapGenerator {
     @Override
-    protected LoadStyle getLoadStyle(Class<? extends Paintable> paintableType) {
+    protected LoadStyle getLoadStyle(Class<? extends ComponentConnector> connector) {
         return LoadStyle.LAZY;
     }
 

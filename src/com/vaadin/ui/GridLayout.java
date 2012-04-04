@@ -50,7 +50,6 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(GridLayoutConnector.class)
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
 

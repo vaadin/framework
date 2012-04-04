@@ -17,7 +17,9 @@ import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VAbsoluteLayout.AbsoluteWrapper;
+import com.vaadin.ui.AbsoluteLayout;
 
+@Component(AbsoluteLayout.class)
 public class AbsoluteLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
 

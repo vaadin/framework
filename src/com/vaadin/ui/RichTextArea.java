@@ -10,8 +10,6 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.richtextarea.RichTextAreaConnector;
-import com.vaadin.ui.ClientWidget.LoadStyle;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -20,7 +18,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-@ClientWidget(value = RichTextAreaConnector.class, loadStyle = LoadStyle.LAZY)
 public class RichTextArea extends AbstractField<String> {
 
     /**

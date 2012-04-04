@@ -32,7 +32,10 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.ui.Root;
 
+@Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {

@@ -24,7 +24,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
-import com.vaadin.terminal.gwt.client.ui.TabsheetConnector;
 import com.vaadin.terminal.gwt.client.ui.VTabsheet;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
@@ -59,7 +58,6 @@ import com.vaadin.ui.themes.Runo;
  * @VERSION@
  * @since 3.0
  */
-@ClientWidget(TabsheetConnector.class)
 public class TabSheet extends AbstractComponentContainer implements Focusable,
         FocusNotifier, BlurNotifier {
 

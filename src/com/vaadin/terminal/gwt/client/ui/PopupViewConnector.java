@@ -10,7 +10,9 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.ui.PopupView;
 
+@Component(PopupView.class)
 public class PopupViewConnector extends AbstractComponentContainerConnector
         implements PostLayoutListener {
 

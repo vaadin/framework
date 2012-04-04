@@ -11,7 +11,11 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.ui.Label;
 
+@Component(value = Label.class, loadStyle = LoadStyle.EAGER)
 public class LabelConnector extends AbstractComponentConnector {
     public LabelConnector() {
     }

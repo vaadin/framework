@@ -31,7 +31,6 @@ import com.vaadin.ui.Component.Focusable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(PanelConnector.class)
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable {

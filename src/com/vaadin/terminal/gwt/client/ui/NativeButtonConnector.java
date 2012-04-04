@@ -11,7 +11,9 @@ import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
+import com.vaadin.ui.NativeButton;
 
+@Component(NativeButton.class)
 public class NativeButtonConnector extends AbstractComponentConnector {
 
     @Override

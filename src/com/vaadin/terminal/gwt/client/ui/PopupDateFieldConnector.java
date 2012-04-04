@@ -13,7 +13,9 @@ import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.ui.DateField;
 
+@Component(DateField.class)
 public class PopupDateFieldConnector extends TextualDateConnector {
 
     /*

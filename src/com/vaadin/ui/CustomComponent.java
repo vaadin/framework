@@ -7,9 +7,6 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import com.vaadin.terminal.gwt.client.ui.CustomComponentConnector;
-import com.vaadin.ui.ClientWidget.LoadStyle;
-
 /**
  * Custom component provides simple implementation of Component interface for
  * creation of new UI components by composition of existing components.
@@ -25,7 +22,6 @@ import com.vaadin.ui.ClientWidget.LoadStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-@ClientWidget(value = CustomComponentConnector.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponent extends AbstractComponentContainer {
 
     /**

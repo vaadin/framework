@@ -9,7 +9,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.VTreeTable.PendingNavigationEvent;
+import com.vaadin.ui.TreeTable;
 
+@Component(TreeTable.class)
 public class TreeTableConnector extends TableConnector {
     public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
 

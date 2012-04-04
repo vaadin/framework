@@ -12,7 +12,9 @@ import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.ui.InlineDateField;
 
+@Component(InlineDateField.class)
 public class InlineDateFieldConnector extends AbstractDateFieldConnector {
 
     @Override

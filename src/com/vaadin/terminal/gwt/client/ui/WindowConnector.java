@@ -25,6 +25,7 @@ import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 
+@Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
         implements BeforeShortcutActionListener, SimpleManagedLayout,
         PostLayoutListener {

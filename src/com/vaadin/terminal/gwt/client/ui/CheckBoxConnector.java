@@ -11,7 +11,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
+import com.vaadin.ui.CheckBox;
 
+@Component(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector {
 
     @Override

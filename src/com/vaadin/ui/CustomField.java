@@ -11,7 +11,6 @@ import java.util.Iterator;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.CustomComponentConnector;
 
 /**
  * A {@link Field} whose UI content can be constructed by the user, enabling the
@@ -35,7 +34,6 @@ import com.vaadin.terminal.gwt.client.ui.CustomComponentConnector;
  * 
  * @since 7.0
  */
-@ClientWidget(CustomComponentConnector.class)
 public abstract class CustomField<T> extends AbstractField<T> implements
         ComponentContainer {
 

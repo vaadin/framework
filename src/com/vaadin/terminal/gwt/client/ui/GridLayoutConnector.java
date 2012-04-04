@@ -18,7 +18,9 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
+import com.vaadin.ui.GridLayout;
 
+@Component(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
 

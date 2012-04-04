@@ -30,7 +30,7 @@ public class WidgetSet {
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public ComponentConnector createWidget(String tag,
+    public ComponentConnector createWidget(int tag,
             ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
@@ -40,12 +40,12 @@ public class WidgetSet {
          * has no "native" counterpart on client side.
          */
 
-        Class<? extends ComponentConnector> classType = resolveWidgetType(tag,
-                conf);
+        Class<? extends ComponentConnector> classType = resolveInheritedWidgetType(
+                conf, tag);
 
         if (classType == null || classType == UnknownComponentConnector.class) {
             String serverSideName = conf
-                    .getUnknownServerClassNameByEncodedTagName(tag);
+                    .getUnknownServerClassNameByTag(tag);
             UnknownComponentConnector c = GWT
                     .create(UnknownComponentConnector.class);
             c.setServerSideClassName(serverSideName);
@@ -56,16 +56,25 @@ public class WidgetSet {
              */
             return widgetMap.instantiate(classType);
         }
-
     }
 
-    protected Class<? extends ComponentConnector> resolveWidgetType(String tag,
+    private Class<? extends ComponentConnector> resolveInheritedWidgetType(
+            ApplicationConfiguration conf, int tag) {
+        Class<? extends ComponentConnector> classType = null;
+        Integer t = tag;
+        do {
+            classType = resolveWidgetType(t, conf);
+            t = conf.getParentTag(t);
+        } while (classType == null && t != null);
+        return classType;
+    }
+
+    protected Class<? extends ComponentConnector> resolveWidgetType(int tag,
             ApplicationConfiguration conf) {
         Class<? extends ComponentConnector> widgetClass = conf
                 .getWidgetClassByEncodedTag(tag);
 
         return widgetClass;
-
     }
 
     /**
@@ -73,20 +82,22 @@ public class WidgetSet {
      * limitation, widgetset must have function that returns Class by its fully
      * qualified name.
      * 
-     * @param fullyQualifiedName
+     * @param tag
      * @param applicationConfiguration
      * @return
      */
-    public Class<? extends ComponentConnector> getImplementationByClassName(
-            String fullyqualifiedName) {
-        if (fullyqualifiedName == null) {
-            return UnknownComponentConnector.class;
-        }
-        Class<? extends ComponentConnector> implementationByServerSideClassName = widgetMap
-                .getImplementationByServerSideClassName(fullyqualifiedName);
+    public Class<? extends ComponentConnector> getConnectorClassByTag(int tag,
+            ApplicationConfiguration conf) {
+        Class<? extends ComponentConnector> connectorClass = null;
+        Integer t = tag;
+        do {
+            connectorClass = widgetMap
+                    .getConnectorClassForServerSideClassName(conf
+                            .getServerSideClassNameForTag(t));
+            t = conf.getParentTag(t);
+        } while (connectorClass == UnknownComponentConnector.class && t != null);
 
-        return implementationByServerSideClassName;
-
+        return connectorClass;
     }
 
     public Class<? extends ComponentConnector>[] getDeferredLoadedWidgets() {
