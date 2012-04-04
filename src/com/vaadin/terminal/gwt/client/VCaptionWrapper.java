@@ -10,7 +10,7 @@ public class VCaptionWrapper extends FlowPanel {
 
     public static final String CLASSNAME = "v-captionwrapper";
     VCaption caption;
-    ComponentConnector paintable;
+    ComponentConnector wrappedConnector;
 
     /**
      * Creates a new caption wrapper panel.
@@ -24,8 +24,8 @@ public class VCaptionWrapper extends FlowPanel {
             ApplicationConnection client) {
         caption = new VCaption(toBeWrapped, client);
         add(caption);
-        paintable = toBeWrapped;
-        add(paintable.getWidget());
+        wrappedConnector = toBeWrapped;
+        add(wrappedConnector.getWidget());
         setStyleName(CLASSNAME);
     }
 
@@ -33,7 +33,7 @@ public class VCaptionWrapper extends FlowPanel {
         caption.updateCaption();
     }
 
-    public ComponentConnector getPaintable() {
-        return paintable;
+    public ComponentConnector getWrappedConnector() {
+        return wrappedConnector;
     }
 }
