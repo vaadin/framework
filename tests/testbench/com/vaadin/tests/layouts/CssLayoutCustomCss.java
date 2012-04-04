@@ -31,10 +31,13 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
         layout.setSizeFull();
         addComponent(layout);
 
-        layout.addComponent(createButton("color:red"));
+        Button red, green;
+        layout.addComponent(red = createButton("color:red"));
         layout.addComponent(createButton("color: blue"));
-        layout.addComponent(createButton("color: green"));
+        layout.addComponent(green = createButton("color: green"));
 
+        red.click();
+        green.click();
         layout.addComponent(createMarginsToggle());
     }
 
@@ -51,7 +54,7 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
         return cb;
     }
 
-    private Component createButton(String string) {
+    private Button createButton(String string) {
         NativeButton button = new NativeButton(string);
         css.put(button, string);
         button.addListener(this);
