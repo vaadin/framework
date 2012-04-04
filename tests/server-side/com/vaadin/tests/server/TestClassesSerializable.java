@@ -47,7 +47,6 @@ public class TestClassesSerializable extends TestCase {
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.terminal\\.gwt\\.server\\.AbstractCommunicationManager.*", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.ApplicationRunnerServlet.*", //
             "com\\.vaadin\\.terminal\\.gwt\\.server\\.CommunicationManager.*", //
             "com\\.vaadin\\.terminal\\.gwt\\.server\\.PortletCommunicationManager.*", //
     };

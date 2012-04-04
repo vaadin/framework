@@ -1,7 +1,7 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.terminal.gwt.server;
+package com.vaadin.launcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Root;
 
