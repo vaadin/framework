@@ -290,6 +290,15 @@ public class LayoutManager {
                 componentConnector.getWidget().getElement().getParentElement()
                         .getStyle().setTop(0, Unit.PX);
                 layoutDependencyTree.setNeedsMeasure(componentConnector, true);
+                ComponentContainerConnector parent = componentConnector
+                        .getParent();
+                if (parent instanceof ManagedLayout) {
+                    ManagedLayout managedParent = (ManagedLayout) parent;
+                    layoutDependencyTree.setNeedsHorizontalLayout(
+                            managedParent, true);
+                    layoutDependencyTree.setNeedsVerticalLayout(managedParent,
+                            true);
+                }
             }
             VConsole.log("Did overflow fix for " + pendingOverflowFixes.size()
                     + " elements  in " + duration.elapsedMillis() + " ms");
