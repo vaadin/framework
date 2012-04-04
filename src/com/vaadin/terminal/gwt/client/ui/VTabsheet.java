@@ -760,10 +760,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         // tabs; push or not
         if (!isDynamicWidth()) {
-            // FIXME: This makes tab sheet tabs go to 1px width on every update
-            // and then back to original width
-            // update width later, in updateTabScroller();
-            DOM.setStyleAttribute(tabs, "width", "1px");
             DOM.setStyleAttribute(tabs, "overflow", "hidden");
         } else {
             showAllTabs();
