@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
@@ -303,14 +304,20 @@ public class VAbstractSplitPanel extends ComplexPanel {
             if (layoutManager.isLayoutRunning()) {
                 ConnectorMap connectorMap = ConnectorMap.get(client);
                 if (firstChild != null) {
-                    layoutManager.reportWidthAssignedToRelative(
-                            connectorMap.getConnector(firstChild),
-                            pixelPosition);
+                    ComponentConnector connector = connectorMap
+                            .getConnector(firstChild);
+                    if (connector.isRelativeWidth()) {
+                        layoutManager.reportWidthAssignedToRelative(connector,
+                                pixelPosition);
+                    }
                 }
                 if (secondChild != null) {
-                    layoutManager.reportWidthAssignedToRelative(
-                            connectorMap.getConnector(secondChild),
-                            secondContainerWidth);
+                    ComponentConnector connector = connectorMap
+                            .getConnector(secondChild);
+                    if (connector.isRelativeWidth()) {
+                        layoutManager.reportWidthAssignedToRelative(connector,
+                                secondContainerWidth);
+                    }
                 }
             }
             break;
@@ -344,14 +351,20 @@ public class VAbstractSplitPanel extends ComplexPanel {
             if (layoutManager.isLayoutRunning()) {
                 ConnectorMap connectorMap = ConnectorMap.get(client);
                 if (firstChild != null) {
-                    layoutManager.reportHeightAssignedToRelative(
-                            connectorMap.getConnector(firstChild),
-                            pixelPosition);
+                    ComponentConnector connector = connectorMap
+                            .getConnector(firstChild);
+                    if (connector.isRelativeHeight()) {
+                        layoutManager.reportHeightAssignedToRelative(connector,
+                                pixelPosition);
+                    }
                 }
                 if (secondChild != null) {
-                    layoutManager.reportHeightAssignedToRelative(
-                            connectorMap.getConnector(secondChild),
-                            secondContainerHeight);
+                    ComponentConnector connector = connectorMap
+                            .getConnector(secondChild);
+                    if (connector.isRelativeHeight()) {
+                        layoutManager.reportHeightAssignedToRelative(connector,
+                                secondContainerHeight);
+                    }
                 }
             }
 
