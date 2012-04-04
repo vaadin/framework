@@ -12,12 +12,14 @@ import java.util.Set;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
 import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
@@ -29,6 +31,8 @@ public class LayoutManager {
 
     private final Collection<ManagedLayout> needsHorizontalLayout = new HashSet<ManagedLayout>();
     private final Collection<ManagedLayout> needsVerticalLayout = new HashSet<ManagedLayout>();
+
+    private final Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
 
     public void setConnection(ApplicationConnection connection) {
         if (this.connection != null) {
@@ -272,6 +276,26 @@ public class LayoutManager {
 
     private int measureConnectors(LayoutDependencyTree layoutDependencyTree,
             boolean measureAll) {
+        if (!pendingOverflowFixes.isEmpty()) {
+            Duration duration = new Duration();
+            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+                componentConnector.getWidget().getElement().getParentElement()
+                        .getStyle().setTop(1, Unit.PX);
+            }
+            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+                componentConnector.getWidget().getElement().getParentElement()
+                        .getOffsetHeight();
+            }
+            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+                componentConnector.getWidget().getElement().getParentElement()
+                        .getStyle().setTop(0, Unit.PX);
+                layoutDependencyTree.setNeedsMeasure(componentConnector, true);
+            }
+            VConsole.log("Did overflow fix for " + pendingOverflowFixes.size()
+                    + " elements  in " + duration.elapsedMillis() + " ms");
+            pendingOverflowFixes.clear();
+        }
+
         int measureCount = 0;
         if (measureAll) {
             ComponentConnector[] connectors = ConnectorMap.get(connection)
@@ -306,11 +330,23 @@ public class LayoutManager {
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize,
                 layoutDependencyTree);
 
+        if (measureResult.isChanged()) {
+            doOverflowAutoFix(connector);
+        }
         if (measureResult.isHeightChanged()) {
             layoutDependencyTree.markHeightAsChanged(connector);
         }
         if (measureResult.isWidthChanged()) {
             layoutDependencyTree.markWidthAsChanged(connector);
+        }
+    }
+
+    private void doOverflowAutoFix(ComponentConnector connector) {
+        if (connector.getParent() instanceof RequiresOverflowAutoFix
+                && BrowserInfo.get().requiresOverflowAutoFix()
+                && !"absolute".equals(connector.getWidget().getElement()
+                        .getStyle().getPosition())) {
+            pendingOverflowFixes.add(connector);
         }
     }
 
@@ -455,6 +491,7 @@ public class LayoutManager {
 
         if (heightChanged) {
             currentDependencyTree.markHeightAsChanged(component);
+            doOverflowAutoFix(component);
         }
         currentDependencyTree.setNeedsVerticalMeasure(component, false);
     }
@@ -494,6 +531,7 @@ public class LayoutManager {
 
         if (widthChanged) {
             currentDependencyTree.markWidthAsChanged(component);
+            doOverflowAutoFix(component);
         }
         currentDependencyTree.setNeedsHorizontalMeasure(component, false);
     }

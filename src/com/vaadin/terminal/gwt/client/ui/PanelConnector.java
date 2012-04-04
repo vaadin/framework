@@ -15,11 +15,12 @@ import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 public class PanelConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout, PostLayoutListener {
+        implements SimpleManagedLayout, PostLayoutListener,
+        RequiresOverflowAutoFix {
 
     public interface PanelServerRPC extends ClickRPC, ServerRpc {
 
@@ -231,8 +232,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
         // Read actual value back to ensure update logic is correct
         panel.scrollTop = panel.contentNode.getScrollTop();
         panel.scrollLeft = panel.contentNode.getScrollLeft();
-
-        Util.runWebkitOverflowAutoFix(panel.contentNode);
     }
 
     public void postLayout() {

@@ -939,7 +939,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     public void iLayout() {
         updateTabScroller();
-        tp.runWebkitOverflowAutoFix();
     }
 
     /**

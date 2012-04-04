@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 
@@ -168,8 +167,6 @@ public class VView extends SimplePanel implements ResizeHandler,
         }
         if (changed) {
             VConsole.log("Running layout functions due to window resize");
-            Util.runWebkitOverflowAutoFix(getElement());
-
             sendClientResized();
 
             connection.doLayout(false);

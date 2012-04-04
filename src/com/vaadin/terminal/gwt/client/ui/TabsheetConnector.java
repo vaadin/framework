@@ -9,9 +9,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 public class TabsheetConnector extends TabsheetBaseConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, RequiresOverflowAutoFix {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

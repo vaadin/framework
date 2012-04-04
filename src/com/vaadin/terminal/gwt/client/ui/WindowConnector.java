@@ -20,14 +20,14 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 public class WindowConnector extends AbstractComponentContainerConnector
         implements BeforeShortcutActionListener, SimpleManagedLayout,
-        PostLayoutListener {
+        PostLayoutListener, RequiresOverflowAutoFix {
 
     public interface WindowServerRPC extends ClickRPC, ServerRpc {
     }
@@ -301,8 +301,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         } else {
             childStyle.clearPosition();
         }
-
-        Util.runWebkitOverflowAutoFix(window.contentPanel.getElement());
     }
 
     public void postLayout() {

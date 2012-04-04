@@ -27,13 +27,14 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
-public class RootConnector extends AbstractComponentContainerConnector {
+public class RootConnector extends AbstractComponentContainerConnector
+        implements RequiresOverflowAutoFix {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 
@@ -269,12 +270,6 @@ public class RootConnector extends AbstractComponentContainerConnector {
                     getWidget().scrollLeft);
         } else {
             getWidget().scrollable = false;
-        }
-
-        // Safari workaround must be run after scrollTop is updated as it sets
-        // scrollTop using a deferred command.
-        if (BrowserInfo.get().isSafari()) {
-            Util.runWebkitOverflowAutoFix(getWidget().getElement());
         }
 
         getWidget().scrollIntoView(uidl);

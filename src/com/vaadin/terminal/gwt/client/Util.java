@@ -433,8 +433,7 @@ public class Util {
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // Add max version if fix lands sometime to Webkit
         // Starting from Opera 11.00, also a problem in Opera
-        if ((BrowserInfo.get().getWebkitVersion() > 0 || BrowserInfo.get()
-                .getOperaVersion() >= 11) && getNativeScrollbarSize() > 0) {
+        if (BrowserInfo.get().requiresOverflowAutoFix()) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
             if ("hidden".equals(originalOverflow)) {
