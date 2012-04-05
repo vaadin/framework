@@ -139,6 +139,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     private boolean valueWasModifiedByDataSourceDuringCommit;
 
+    /**
+     * Whether this field currently listens to Property events.
+     */
+    private boolean isListening = false;
+
     /* Component basics */
 
     /*
@@ -593,18 +598,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Saves the old value
         final Object oldValue = value;
 
-        // Stops listening the old data source changes
-        if (dataSource != null
-                && Property.ValueChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
-            ((Property.ValueChangeNotifier) dataSource).removeListener(this);
-        }
-        if (dataSource != null
-                && Property.ReadOnlyStatusChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
-            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
-                    .removeListener(this);
-        }
+        // Stop listening to the old data source
+        removePropertyListeners();
 
         // Sets the new data source
         dataSource = newDataSource;
@@ -622,14 +617,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             modified = true;
         }
 
-        // Listens the new data source if possible
-        if (dataSource instanceof Property.ValueChangeNotifier) {
-            ((Property.ValueChangeNotifier) dataSource).addListener(this);
-        }
-        if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
-            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
-                    .addListener(this);
-        }
+        // Listen to new data source if possible
+        addPropertyListeners();
 
         // Copy the validators from the data source
         if (dataSource instanceof Validatable) {
@@ -1121,6 +1110,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (actionManager != null) {
             actionManager.setViewer(getWindow());
         }
+        // No-op if listeners already registered
+        addPropertyListeners();
     }
 
     @Override
@@ -1129,6 +1120,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (actionManager != null) {
             actionManager.setViewer((Window) null);
         }
+        // Stop listening to data source events on detach to avoid a potential
+        // memory leak. See #6155.
+        removePropertyListeners();
     }
 
     /**
@@ -1327,6 +1321,33 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         @Override
         public void handleAction(Object sender, Object target) {
             focusable.focus();
+        }
+    }
+
+    private void addPropertyListeners() {
+        if (!isListening) {
+            if (dataSource instanceof Property.ValueChangeNotifier) {
+                ((Property.ValueChangeNotifier) dataSource).addListener(this);
+            }
+            if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
+                ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                        .addListener(this);
+            }
+            isListening = true;
+        }
+    }
+
+    private void removePropertyListeners() {
+        if (isListening) {
+            if (dataSource instanceof Property.ValueChangeNotifier) {
+                ((Property.ValueChangeNotifier) dataSource)
+                        .removeListener(this);
+            }
+            if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
+                ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                        .removeListener(this);
+            }
+            isListening = false;
         }
     }
 }
