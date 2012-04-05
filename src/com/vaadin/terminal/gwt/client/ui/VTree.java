@@ -1442,7 +1442,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                         selectedIds.add(child.key);
                     }
                     return false;
-                } else if (child.isLeaf()) {
+                } else {
                     child.setSelected(true);
                     selectedIds.add(child.key);
                 }
