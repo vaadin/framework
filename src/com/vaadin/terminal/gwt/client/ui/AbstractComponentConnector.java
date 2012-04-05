@@ -219,18 +219,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    /**
-     * Return true if parent handles caption, false if the paintable handles the
-     * caption itself.
+    /*
+     * (non-Javadoc)
      * 
-     * 
-     * @deprecated This should always return true and all components should let
-     *             the parent handle the caption and use other attributes for
-     *             internal texts in the component
-     * @return
+     * @see
+     * com.vaadin.terminal.gwt.client.ComponentConnector#delegateCaptionHandling
+     * ()
      */
-    @Deprecated
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return true;
     }
 

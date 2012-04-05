@@ -88,7 +88,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     }
 

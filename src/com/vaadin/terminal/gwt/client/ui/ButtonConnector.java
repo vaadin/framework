@@ -43,7 +43,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     }
 

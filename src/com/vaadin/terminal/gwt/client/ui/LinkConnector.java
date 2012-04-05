@@ -17,7 +17,7 @@ public class LinkConnector extends AbstractComponentConnector implements
         Paintable {
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     }
 
