@@ -581,7 +581,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
     /**
      * Sets the selected tab. The tab is identified by the tab content
-     * component.
+     * component. Does nothing if the tabsheet doesn't contain the component.
      * 
      * @param c
      */
@@ -592,6 +592,27 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             fireSelectedTabChange();
             requestRepaint();
         }
+    }
+
+    /**
+     * Sets the selected tab. The tab is identified by the corresponding
+     * {@link Tab Tab} instance. Does nothing if the tabsheet doesn't contain
+     * the given tab.
+     * 
+     * @param tab
+     */
+    public void setSelectedTab(Tab tab) {
+        setSelectedTab(tab.getComponent());
+    }
+
+    /**
+     * Sets the selected tab, identified by its position. Does nothing if
+     * <code>index &lt; 0 || index &gt; {@link #getComponentCount()}</code>.
+     * 
+     * @param index
+     */
+    public void setSelectedTab(int index) {
+        setSelectedTab(getTab(index));
     }
 
     /**
