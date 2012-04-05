@@ -551,7 +551,9 @@ public class TreeTable extends Table implements Hierarchical {
     public void setContainerDataSource(Container newDataSource) {
         cStrategy = null;
 
-        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier);
+        // FIXME: This disables partial updates until TreeTable is fixed so it
+        // does not change component hierarchy during paint
+        containerSupportsPartialUpdates = (newDataSource instanceof ItemSetChangeNotifier) && false;
 
         if (!(newDataSource instanceof Hierarchical)) {
             newDataSource = new ContainerHierarchicalWrapper(newDataSource);
