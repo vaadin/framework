@@ -23,7 +23,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowServerRPC;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
 
@@ -74,39 +73,6 @@ import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
  */
 @SuppressWarnings("serial")
 public class Window extends Panel implements FocusNotifier, BlurNotifier {
-
-    /**
-     * <b>Sub window only</b>. Top offset in pixels for the sub window (relative
-     * to the parent application window) or -1 if unspecified.
-     */
-    private int positionY = -1;
-
-    /**
-     * <b>Sub window only</b>. Left offset in pixels for the sub window
-     * (relative to the parent application window) or -1 if unspecified.
-     */
-    private int positionX = -1;
-
-    /**
-     * <b>Sub window only</b>. Modality flag for sub window.
-     */
-    private boolean modal = false;
-
-    /**
-     * <b>Sub window only</b>. Controls if the end user can resize the window.
-     */
-    private boolean resizable = true;
-
-    /**
-     * <b>Sub window only</b>. Controls if the end user can move the window by
-     * dragging.
-     */
-    private boolean draggable = true;
-
-    /**
-     * Should resize recalculate layouts lazily (as opposed to immediately)
-     */
-    private boolean resizeLazy = false;
 
     private WindowServerRPC rpc = new WindowServerRPC() {
 
@@ -178,9 +144,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
         // Contents of the window panel is painted
         super.paintContent(target);
-
-        // Window closing
-        target.addVariable(this, "close", false);
     }
 
     /*
@@ -282,7 +245,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @since 4.0.0
      */
     public int getPositionX() {
-        return positionX;
+        return getState().getPositionX();
     }
 
     /**
@@ -310,7 +273,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @since 6.3.4
      */
     private void setPositionX(int positionX, boolean repaintRequired) {
-        this.positionX = positionX;
+        getState().setPositionX(positionX);
         getState().setCentered(false);
         if (repaintRequired) {
             requestRepaint();
@@ -327,7 +290,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @since 4.0.0
      */
     public int getPositionY() {
-        return positionY;
+        return getState().getPositionY();
     }
 
     /**
@@ -357,7 +320,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @since 6.3.4
      */
     private void setPositionY(int positionY, boolean repaintRequired) {
-        this.positionY = positionY;
+        getState().setPositionY(positionY);
         getState().setCentered(false);
         if (repaintRequired) {
             requestRepaint();
@@ -577,11 +540,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * Sets sub-window modal, so that widgets behind it cannot be accessed.
      * <b>Note:</b> affects sub-windows only.
      * 
-     * @param modality
+     * @param modal
      *            true if modality is to be turned on
      */
-    public void setModal(boolean modality) {
-        modal = modality;
+    public void setModal(boolean modal) {
+        getState().setModal(modal);
         center();
         requestRepaint();
     }
@@ -590,7 +553,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @return true if this window is modal.
      */
     public boolean isModal() {
-        return modal;
+        return getState().isModal();
     }
 
     /**
@@ -599,8 +562,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @param resizable
      *            true if resizability is to be turned on
      */
-    public void setResizable(boolean resizeability) {
-        resizable = resizeability;
+    public void setResizable(boolean resizable) {
+        getState().setResizable(resizable);
         requestRepaint();
     }
 
@@ -609,7 +572,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @return true if window is resizable by the end-user, otherwise false.
      */
     public boolean isResizable() {
-        return resizable;
+        return getState().isResizable();
     }
 
     /**
@@ -618,7 +581,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      *         sizes are recalculated immediately.
      */
     public boolean isResizeLazy() {
-        return resizeLazy;
+        return getState().isResizeLazy();
     }
 
     /**
@@ -634,7 +597,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      *            calculate immediately.
      */
     public void setResizeLazy(boolean resizeLazy) {
-        this.resizeLazy = resizeLazy;
+        getState().setResizeLazy(resizeLazy);
         requestRepaint();
     }
 
@@ -695,7 +658,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      *            true if the sub window can be dragged by the user
      */
     public boolean isDraggable() {
-        return draggable;
+        return getState().isDraggable();
     }
 
     /**
@@ -708,7 +671,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      *            true if the sub window can be dragged by the user
      */
     public void setDraggable(boolean draggable) {
-        this.draggable = draggable;
+        getState().setDraggable(draggable);
         requestRepaint();
     }
 
