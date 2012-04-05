@@ -683,6 +683,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
+     * Removes all validators from the field.
+     */
+    public void removeAllValidators() {
+        if (validators != null) {
+            validators.clear();
+        }
+        requestRepaint();
+    }
+
+    /**
      * Tests the current value against registered validators if the field is not
      * empty. If the field is empty it is considered valid if it is not required
      * and invalid otherwise. Validators are never checked for empty fields.
