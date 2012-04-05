@@ -19,7 +19,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutServerRPC;
 import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
@@ -90,11 +89,6 @@ public class GridLayout extends AbstractLayout implements
      * Mapping from components to alignments (horizontal + vertical).
      */
     private Map<Component, Alignment> componentToAlignment = new HashMap<Component, Alignment>();
-
-    /**
-     * Is spacing between contained components enabled. Defaults to false.
-     */
-    private boolean spacing = false;
 
     private static final Alignment ALIGNMENT_DEFAULT = Alignment.TOP_LEFT;
 
@@ -1164,8 +1158,8 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
-    public void setSpacing(boolean enabled) {
-        spacing = enabled;
+    public void setSpacing(boolean spacing) {
+        getState().setSpacing(spacing);
         requestRepaint();
     }
 
@@ -1174,18 +1168,8 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
-    @Deprecated
-    public boolean isSpacingEnabled() {
-        return spacing;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
-     */
     public boolean isSpacing() {
-        return spacing;
+        return getState().isSpacing();
     }
 
     /**

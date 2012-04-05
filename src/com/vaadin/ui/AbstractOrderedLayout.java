@@ -50,11 +50,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
 
     private final Map<Component, Float> componentToExpandRatio = new HashMap<Component, Float>();
 
-    /**
-     * Is spacing between contained components enabled. Defaults to false.
-     */
-    private boolean spacing = false;
-
     public AbstractOrderedLayout() {
         registerRpc(rpc);
     }
@@ -184,17 +179,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        // Add spacing attribute (omitted if false)
-        if (spacing) {
-            target.addAttribute("spacing", spacing);
-        }
-
-        // Adds all items in all the locations
-        for (Component c : components) {
-            // Paint child component UIDL
-            c.paint(target);
-        }
-
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", componentToAlignment);
         target.addAttribute("expandRatios", componentToExpandRatio);
@@ -295,8 +279,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
-    public void setSpacing(boolean enabled) {
-        spacing = enabled;
+    public void setSpacing(boolean spacing) {
+        getState().setSpacing(spacing);
         requestRepaint();
     }
 
@@ -305,18 +289,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
-    @Deprecated
-    public boolean isSpacingEnabled() {
-        return spacing;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
-     */
     public boolean isSpacing() {
-        return spacing;
+        return getState().isSpacing();
     }
 
     /**

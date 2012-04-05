@@ -1,18 +1,20 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.ui.treetable;
+package com.vaadin.data.util;
 
 import java.util.Collection;
 
 import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.data.util.ContainerOrderedWrapper;
 
-@SuppressWarnings({ "serial", "unchecked" })
 /**
- * Helper for TreeTable. Does the same thing as ContainerOrderedWrapper 
- * to fit into table but retains Hierarchical feature.
+ * A wrapper class for adding external ordering to containers not implementing
+ * the {@link com.vaadin.data.Container.Ordered} interface while retaining
+ * {@link Hierarchical} features.
+ * 
+ * @see ContainerOrderedWrapper
  */
+@SuppressWarnings({ "serial" })
 public class HierarchicalContainerOrderedWrapper extends
         ContainerOrderedWrapper implements Hierarchical {
 

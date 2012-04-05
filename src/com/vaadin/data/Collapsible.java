@@ -1,15 +1,14 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.ui.treetable;
+package com.vaadin.data;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.Ordered;
-import com.vaadin.data.Item;
 
 /**
- * Container needed by large lazy loading hierarchies displayed in TreeTable.
+ * Container needed by large lazy loading hierarchies displayed e.g. in
+ * TreeTable.
  * <p>
  * Container of this type gets notified when a subtree is opened/closed in a
  * component displaying its content. This allows container to lazy load subtrees

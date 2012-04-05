@@ -180,6 +180,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
         setLayout(formLayout);
+        setFooter(null);
         setFormFieldFactory(fieldFactory);
         setValidationVisible(false);
         setWidth(100, UNITS_PERCENTAGE);
