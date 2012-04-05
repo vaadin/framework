@@ -168,7 +168,9 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             needCaptionUpdate = false;
 
             for (ComponentConnector child : getChildren()) {
-                updateCaption(child);
+                if (child.delegateCaptionHandling()) {
+                    updateCaption(child);
+                }
             }
         }
         getLayoutManager().setNeedsUpdate(this);

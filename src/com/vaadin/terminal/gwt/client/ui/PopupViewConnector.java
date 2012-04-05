@@ -20,7 +20,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
     private boolean centerAfterLayout = false;
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     }
 

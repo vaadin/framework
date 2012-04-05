@@ -104,4 +104,19 @@ public interface ComponentConnector extends ServerConnector {
 
     public boolean hasEventListener(String eventIdentifier);
 
+    /**
+     * Return true if parent handles caption, false if the paintable handles the
+     * caption itself.
+     * 
+     * <p>
+     * This should always return true and all components should let the parent
+     * handle the caption and use other attributes for internal texts in the
+     * component
+     * </p>
+     * 
+     * @return true if caption handling is delegated to the parent, false if
+     *         parent should not be allowed to render caption
+     */
+    public boolean delegateCaptionHandling();
+
 }

@@ -112,7 +112,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
     private WindowServerRPC rpc;
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     };
 

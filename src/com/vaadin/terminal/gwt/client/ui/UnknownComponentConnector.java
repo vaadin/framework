@@ -15,7 +15,7 @@ public class UnknownComponentConnector extends AbstractComponentConnector
         implements Paintable {
 
     @Override
-    protected boolean delegateCaptionHandling() {
+    public boolean delegateCaptionHandling() {
         return false;
     }
 
