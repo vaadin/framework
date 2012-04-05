@@ -172,6 +172,23 @@ public class ApplicationConnection {
 
     private final RpcManager rpcManager;
 
+    public static class MultiStepDuration extends Duration {
+        private int previousStep = elapsedMillis();
+
+        public void logDuration(String message) {
+            logDuration(message, 0);
+        }
+
+        public void logDuration(String message, int minDuration) {
+            int currentTime = elapsedMillis();
+            int stepDuration = currentTime - previousStep;
+            if (stepDuration >= minDuration) {
+                VConsole.log(message + ": " + stepDuration + " ms");
+            }
+            previousStep = currentTime;
+        }
+    }
+
     public ApplicationConnection() {
         view = GWT.create(RootConnector.class);
         rpcManager = GWT.create(RpcManager.class);
@@ -942,6 +959,8 @@ public class ApplicationConnection {
             return;
         }
 
+        MultiStepDuration handleUIDLDuration = new MultiStepDuration();
+
         // Get security key
         if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
             uidlSecurityKey = json.getString(UIDL_SECURITY_TOKEN_ID);
@@ -957,12 +976,18 @@ public class ApplicationConnection {
                 resourcesMap.put(key, resources.getAsString(key));
             }
         }
-        VConsole.log("Handling type inheritance map from server");
+        handleUIDLDuration.logDuration(
+                " * Handling resources from server completed", 10);
+
+        VConsole.log(" * Handling type inheritance map from server");
 
         if (json.containsKey("typeInheritanceMap")) {
             configuration.addComponentInheritanceInfo(json
                     .getValueMap("typeInheritanceMap"));
         }
+        handleUIDLDuration.logDuration(
+                " * Handling type inheritance map from server completed", 10);
+
         VConsole.log("Handling type mappings from server");
 
         if (json.containsKey("typeMappings")) {
@@ -970,10 +995,18 @@ public class ApplicationConnection {
                     json.getValueMap("typeMappings"), widgetSet);
         }
 
+        handleUIDLDuration.logDuration(
+                " * Handling type mappings from server completed", 10);
+
         Command c = new Command() {
             public void execute() {
-                VConsole.log(" * Dumping UIDL");
+                MultiStepDuration updateDuration = new MultiStepDuration();
+
+                VConsole.log(" * Dumping UIDL to the console");
                 VConsole.dirUIDL(json, configuration);
+
+                updateDuration.logDuration(
+                        " * Dumping UIDL to the console completed", 10);
 
                 if (json.containsKey("locales")) {
                     VConsole.log(" * Handling locales");
@@ -982,6 +1015,8 @@ public class ApplicationConnection {
                             .getJSValueMapArray("locales");
                     LocaleService.addLocales(valueMapArray);
                 }
+
+                updateDuration.logDuration(" * Handling locales completed", 10);
 
                 boolean repaintAll = false;
                 ValueMap meta = null;
@@ -1012,34 +1047,61 @@ public class ApplicationConnection {
                     }
                 }
 
+                updateDuration.logDuration(
+                        " * Handling meta information completed", 10);
+
                 if (redirectTimer != null) {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
                 componentCaptionSizeChanges.clear();
 
-                Duration updateDuration = new Duration();
+                int startProcessing = updateDuration.elapsedMillis();
 
                 // Ensure that all connectors that we are about to update exist
                 createConnectorsIfNeeded(json);
 
+                updateDuration.logDuration(" * Creating connectors completed",
+                        10);
+
                 // Update states, do not fire events
                 Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(json);
+
+                updateDuration.logDuration(
+                        " * Update of connector states completed", 10);
 
                 // Update hierarchy, do not fire events
                 Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
 
+                updateDuration.logDuration(
+                        " * Update of connector hierarchy completed", 10);
+
                 // Fire hierarchy change events
                 sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
+
+                updateDuration.logDuration(
+                        " * Hierarchy state change event processing completed",
+                        10);
 
                 // Fire state change events.
                 sendStateChangeEvents(pendingStateChangeEvents);
 
+                updateDuration.logDuration(
+                        " * State change event processing completed", 10);
+
                 // Update of legacy (UIDL) style connectors
                 updateVaadin6StyleConnectors(json);
 
+                updateDuration
+                        .logDuration(
+                                " * Vaadin 6 style connector updates (updateFromUidl) completed",
+                                10);
+
                 // Handle any RPC invocations done on the server side
                 handleRpcInvocations(json);
+
+                updateDuration.logDuration(
+                        " * Processing of RPC invocations completed", 10);
 
                 if (json.containsKey("dd")) {
                     // response contains data for drag and drop service
@@ -1047,11 +1109,24 @@ public class ApplicationConnection {
                             json.getValueMap("dd"));
                 }
 
+                updateDuration
+                        .logDuration(
+                                " * Processing of drag and drop server response completed",
+                                10);
+
                 unregisterRemovedConnectors();
-                VConsole.log("updateFromUidl: "
-                        + updateDuration.elapsedMillis() + " ms");
+
+                updateDuration.logDuration(
+                        " * Unregistering of removed components completed", 10);
+
+                VConsole.log("handleUIDLMessage: "
+                        + (updateDuration.elapsedMillis() - startProcessing)
+                        + " ms");
 
                 doLayout(false);
+
+                updateDuration
+                        .logDuration(" * Layout processing completed", 10);
 
                 if (meta != null) {
                     if (meta.containsKey("appError")) {
@@ -1094,6 +1169,8 @@ public class ApplicationConnection {
 
                     }
                 }
+
+                updateDuration.logDuration(" * Error handling completed", 10);
 
                 // TODO build profiling for widget impl loading time
 
