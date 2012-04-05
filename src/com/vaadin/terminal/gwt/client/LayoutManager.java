@@ -18,13 +18,15 @@ import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
+import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
     private ApplicationConnection connection;
-    private final Set<Element> nonPaintableElements = new HashSet<Element>();
+    private final Set<Element> measuredNonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
 
     private LayoutDependencyTree currentDependencyTree;
@@ -33,6 +35,9 @@ public class LayoutManager {
     private final Collection<ManagedLayout> needsVerticalLayout = new HashSet<ManagedLayout>();
 
     private final Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
+
+    private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<Element, Collection<ElementResizeListener>>();
+    private final Set<Element> listenersToFire = new HashSet<Element>();
 
     public void setConnection(ApplicationConnection connection) {
         if (this.connection != null) {
@@ -58,7 +63,7 @@ public class LayoutManager {
             measuredSize = new MeasuredSize();
 
             if (ConnectorMap.get(connection).getConnector(element) == null) {
-                nonPaintableElements.add(element);
+                measuredNonPaintableElements.add(element);
             }
             setMeasuredSize(element, measuredSize);
         }
@@ -67,6 +72,8 @@ public class LayoutManager {
 
     private boolean needsMeasure(Element e) {
         if (connection.getConnectorMap().getConnectorId(e) != null) {
+            return true;
+        } else if (elementResizeListeners.containsKey(e)) {
             return true;
         } else if (getMeasuredSize(e, nullSize).hasDependents()) {
             return true;
@@ -91,8 +98,8 @@ public class LayoutManager {
         return element.vMeasuredSize || defaultSize;
     }-*/;
 
-    private final MeasuredSize getMeasuredSize(ComponentConnector paintable) {
-        Element element = paintable.getWidget().getElement();
+    private final MeasuredSize getMeasuredSize(ComponentConnector connector) {
+        Element element = connector.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
             measuredSize = new MeasuredSize();
@@ -107,10 +114,7 @@ public class LayoutManager {
             return;
         }
         measuredSize.removeDependent(owner.getConnectorId());
-        if (!needsMeasure(element)) {
-            nonPaintableElements.remove(element);
-            setMeasuredSize(element, null);
-        }
+        stopMeasuringIfUnecessary(element);
     }
 
     public boolean isLayoutRunning() {
@@ -154,7 +158,7 @@ public class LayoutManager {
         }
         needsHorizontalLayout.clear();
         needsVerticalLayout.clear();
-        measureNonPaintables(currentDependencyTree);
+        measureNonPaintables();
 
         VConsole.log("Layout init in " + totalDuration.elapsedMillis() + " ms");
 
@@ -168,6 +172,26 @@ public class LayoutManager {
             int measureTime = passDuration.elapsedMillis();
             VConsole.log("  Measured " + measuredConnectorCount
                     + " elements in " + measureTime + " ms");
+
+            if (!listenersToFire.isEmpty()) {
+                for (Element element : listenersToFire) {
+                    Collection<ElementResizeListener> listeners = elementResizeListeners
+                            .get(element);
+                    ElementResizeListener[] array = listeners
+                            .toArray(new ElementResizeListener[listeners.size()]);
+                    ElementResizeEvent event = new ElementResizeEvent(this,
+                            element);
+                    for (ElementResizeListener listener : array) {
+                        listener.onElementResize(event);
+                    }
+                }
+                int measureListenerTime = passDuration.elapsedMillis();
+                VConsole.log("  Fired resize listeners for  "
+                        + listenersToFire.size() + " elements in "
+                        + (measureListenerTime - measureTime) + " ms");
+                measureTime = measuredConnectorCount;
+                listenersToFire.clear();
+            }
 
             FastStringSet updatedSet = FastStringSet.create();
 
@@ -310,7 +334,7 @@ public class LayoutManager {
             ComponentConnector[] connectors = ConnectorMap.get(connection)
                     .getComponentConnectors();
             for (ComponentConnector connector : connectors) {
-                measueConnector(layoutDependencyTree, connector);
+                measueConnector(connector);
             }
             for (ComponentConnector connector : connectors) {
                 layoutDependencyTree.setNeedsMeasure(connector, false);
@@ -322,7 +346,7 @@ public class LayoutManager {
             Collection<ComponentConnector> measureTargets = layoutDependencyTree
                     .getMeasureTargets();
             for (ComponentConnector connector : measureTargets) {
-                measueConnector(layoutDependencyTree, connector);
+                measueConnector(connector);
                 measureCount++;
             }
             for (ComponentConnector connector : measureTargets) {
@@ -332,21 +356,25 @@ public class LayoutManager {
         return measureCount;
     }
 
-    private void measueConnector(LayoutDependencyTree layoutDependencyTree,
-            ComponentConnector connector) {
+    private void measueConnector(ComponentConnector connector) {
         Element element = connector.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(connector);
-        MeasureResult measureResult = measuredAndUpdate(element, measuredSize,
-                layoutDependencyTree);
+        MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
-            doOverflowAutoFix(connector);
+            onConnectorChange(connector, measureResult.isWidthChanged(),
+                    measureResult.isHeightChanged());
         }
-        if (measureResult.isHeightChanged()) {
-            layoutDependencyTree.markHeightAsChanged(connector);
+    }
+
+    private void onConnectorChange(ComponentConnector connector,
+            boolean widthChanged, boolean heightChanged) {
+        doOverflowAutoFix(connector);
+        if (heightChanged) {
+            currentDependencyTree.markHeightAsChanged(connector);
         }
-        if (measureResult.isWidthChanged()) {
-            layoutDependencyTree.markWidthAsChanged(connector);
+        if (widthChanged) {
+            currentDependencyTree.markWidthAsChanged(connector);
         }
     }
 
@@ -359,37 +387,49 @@ public class LayoutManager {
         }
     }
 
-    private void measureNonPaintables(LayoutDependencyTree layoutDependencyTree) {
-        for (Element element : nonPaintableElements) {
-            MeasuredSize measuredSize = getMeasuredSize(element, null);
-            measuredAndUpdate(element, measuredSize, layoutDependencyTree);
+    private void measureNonPaintables() {
+        for (Element element : measuredNonPaintableElements) {
+            measuredAndUpdate(element, getMeasuredSize(element, null));
         }
-        VConsole.log("Measured " + nonPaintableElements.size()
+        VConsole.log("Measured " + measuredNonPaintableElements.size()
                 + " non paintable elements");
     }
 
     private MeasureResult measuredAndUpdate(Element element,
-            MeasuredSize measuredSize, LayoutDependencyTree layoutDependencyTree) {
+            MeasuredSize measuredSize) {
         MeasureResult measureResult = measuredSize.measure(element);
         if (measureResult.isChanged()) {
-            JsArrayString dependents = measuredSize.getDependents();
-            for (int i = 0; i < dependents.length(); i++) {
-                String pid = dependents.get(i);
-                ManagedLayout dependent = (ManagedLayout) connection
-                        .getConnectorMap().getConnector(pid);
-                if (dependent != null) {
-                    if (measureResult.isHeightChanged()) {
-                        layoutDependencyTree.setNeedsVerticalLayout(dependent,
-                                true);
-                    }
-                    if (measureResult.isWidthChanged()) {
-                        layoutDependencyTree.setNeedsHorizontalLayout(
-                                dependent, true);
-                    }
+            notifyListenersAndDepdendents(element,
+                    measureResult.isWidthChanged(),
+                    measureResult.isHeightChanged());
+        }
+        return measureResult;
+    }
+
+    private void notifyListenersAndDepdendents(Element element,
+            boolean widthChanged, boolean heightChanged) {
+        assert widthChanged || heightChanged;
+
+        MeasuredSize measuredSize = getMeasuredSize(element, nullSize);
+        JsArrayString dependents = measuredSize.getDependents();
+        for (int i = 0; i < dependents.length(); i++) {
+            String pid = dependents.get(i);
+            ManagedLayout dependent = (ManagedLayout) connection
+                    .getConnectorMap().getConnector(pid);
+            if (dependent != null) {
+                if (heightChanged) {
+                    currentDependencyTree.setNeedsVerticalLayout(dependent,
+                            true);
+                }
+                if (widthChanged) {
+                    currentDependencyTree.setNeedsHorizontalLayout(dependent,
+                            true);
                 }
             }
         }
-        return measureResult;
+        if (elementResizeListeners.containsKey(element)) {
+            listenersToFire.add(element);
+        }
     }
 
     private static boolean isManagedLayout(ComponentConnector paintable) {
@@ -499,8 +539,9 @@ public class LayoutManager {
         boolean heightChanged = measuredSize.setOuterHeight(outerHeight);
 
         if (heightChanged) {
-            currentDependencyTree.markHeightAsChanged(component);
-            doOverflowAutoFix(component);
+            onConnectorChange(component, false, true);
+            notifyListenersAndDepdendents(component.getWidget().getElement(),
+                    false, true);
         }
         currentDependencyTree.setNeedsVerticalMeasure(component, false);
     }
@@ -539,9 +580,42 @@ public class LayoutManager {
         boolean widthChanged = measuredSize.setOuterWidth(outerWidth);
 
         if (widthChanged) {
-            currentDependencyTree.markWidthAsChanged(component);
-            doOverflowAutoFix(component);
+            onConnectorChange(component, true, false);
+            notifyListenersAndDepdendents(component.getWidget().getElement(),
+                    true, false);
         }
         currentDependencyTree.setNeedsHorizontalMeasure(component, false);
+    }
+
+    public void addElementResizeListener(Element element,
+            ElementResizeListener listener) {
+        Collection<ElementResizeListener> listeners = elementResizeListeners
+                .get(element);
+        if (listeners == null) {
+            listeners = new HashSet<ElementResizeListener>();
+            elementResizeListeners.put(element, listeners);
+            ensureMeasured(element);
+        }
+        listeners.add(listener);
+    }
+
+    public void removeElementResizeListener(Element element,
+            ElementResizeListener listener) {
+        Collection<ElementResizeListener> listeners = elementResizeListeners
+                .get(element);
+        if (listeners != null) {
+            listeners.remove(listener);
+            if (listeners.isEmpty()) {
+                elementResizeListeners.remove(element);
+                stopMeasuringIfUnecessary(element);
+            }
+        }
+    }
+
+    private void stopMeasuringIfUnecessary(Element element) {
+        if (!needsMeasure(element)) {
+            measuredNonPaintableElements.remove(element);
+            setMeasuredSize(element, null);
+        }
     }
 }

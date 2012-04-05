@@ -14,11 +14,13 @@ import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
+import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.ui.Form;
 
 @Component(Form.class)
 public class FormConnector extends AbstractComponentContainerConnector
-        implements Paintable, SimpleManagedLayout {
+        implements Paintable {
 
     public static class FormState extends AbstractFieldState {
         private Connector layout;
@@ -42,10 +44,32 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     }
 
+    private final ElementResizeListener footerResizeListener = new ElementResizeListener() {
+        public void onElementResize(ElementResizeEvent e) {
+            VForm form = getWidget();
+
+            int footerHeight;
+            if (form.footer != null) {
+                LayoutManager lm = getLayoutManager();
+                footerHeight = lm.getOuterHeight(form.footer.getElement());
+            } else {
+                footerHeight = 0;
+            }
+
+            form.fieldContainer.getStyle().setPaddingBottom(footerHeight,
+                    Unit.PX);
+            form.footerContainer.getStyle()
+                    .setMarginTop(-footerHeight, Unit.PX);
+        }
+    };
+
     @Override
-    public void init() {
+    public void onUnregister() {
         VForm form = getWidget();
-        getLayoutManager().registerDependency(this, form.footerContainer);
+        if (form.footer != null) {
+            getLayoutManager().removeElementResizeListener(
+                    form.footer.getElement(), footerResizeListener);
+        }
     }
 
     @Override
@@ -115,10 +139,16 @@ public class FormConnector extends AbstractComponentContainerConnector
                     .getFooter();
             Widget newFooterWidget = newFooter.getWidget();
             if (getWidget().footer == null) {
+                getLayoutManager().addElementResizeListener(
+                        newFooterWidget.getElement(), footerResizeListener);
                 getWidget().add(newFooter.getWidget(),
                         getWidget().footerContainer);
                 getWidget().footer = newFooterWidget;
             } else if (newFooter != getWidget().footer) {
+                getLayoutManager().removeElementResizeListener(
+                        getWidget().footer.getElement(), footerResizeListener);
+                getLayoutManager().addElementResizeListener(
+                        newFooterWidget.getElement(), footerResizeListener);
                 getWidget().remove(getWidget().footer);
                 getWidget().add(newFooter.getWidget(),
                         getWidget().footerContainer);
@@ -126,7 +156,10 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().footer = newFooterWidget;
         } else {
             if (getWidget().footer != null) {
+                getLayoutManager().removeElementResizeListener(
+                        getWidget().footer.getElement(), footerResizeListener);
                 getWidget().remove(getWidget().footer);
+                getWidget().footer = null;
             }
         }
 
@@ -180,17 +213,6 @@ public class FormConnector extends AbstractComponentContainerConnector
     @Override
     protected Widget createWidget() {
         return GWT.create(VForm.class);
-    }
-
-    public void layout() {
-        VForm form = getWidget();
-
-        LayoutManager lm = getLayoutManager();
-        int footerHeight = lm.getOuterHeight(form.footerContainer)
-                - lm.getMarginTop(form.footerContainer);
-
-        form.fieldContainer.getStyle().setPaddingBottom(footerHeight, Unit.PX);
-        form.footerContainer.getStyle().setMarginTop(-footerHeight, Unit.PX);
     }
 
     @Override
