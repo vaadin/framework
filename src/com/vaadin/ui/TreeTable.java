@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Collapsible;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.data.util.HierarchicalContainerOrderedWrapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -26,8 +28,6 @@ import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
 import com.vaadin.ui.Tree.ExpandListener;
-import com.vaadin.ui.treetable.Collapsible;
-import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a
