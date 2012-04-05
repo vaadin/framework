@@ -9,15 +9,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
-public class AbstractDateFieldConnector extends AbstractFieldConnector {
+public class AbstractDateFieldConnector extends AbstractFieldConnector
+        implements Paintable {
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Ensure correct implementation and let layout manage caption
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

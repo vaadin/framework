@@ -18,7 +18,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
@@ -38,22 +37,23 @@ public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
         Action.ShortcutNotifier {
 
+    private ButtonServerRpc rpc = new ButtonServerRpc() {
+        public void click(MouseEventDetails mouseEventDetails) {
+            fireClick(mouseEventDetails);
+        }
+
+        public void disableOnClick() {
+            // Could be optimized so the button is not repainted because of
+            // this (client side has already disabled the button)
+            setEnabled(false);
+        }
+    };
+
     /**
      * Creates a new push button.
      */
     public Button() {
-        // TODO take the implementation out of an anonymous class?
-        registerRpcImplementation(new ButtonServerRpc() {
-            public void click(MouseEventDetails mouseEventDetails) {
-                fireClick(mouseEventDetails);
-            }
-
-            public void disableOnClick() {
-                // Could be optimized so the button is not repainted because of
-                // this (client side has already disabled the button)
-                setEnabled(false);
-            }
-        }, ButtonServerRpc.class);
+        registerRpc(rpc);
     }
 
     /**
@@ -493,11 +493,6 @@ public class Button extends AbstractComponent implements
     public void focus() {
         // Overridden only to make public
         super.focus();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return new ButtonState();
     }
 
     @Override

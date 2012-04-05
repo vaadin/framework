@@ -11,7 +11,6 @@ import java.util.Iterator;
 import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector.AbstractSplitPanelRPC;
 import com.vaadin.terminal.gwt.client.ui.AbstractSplitPanelConnector.AbstractSplitPanelState;
@@ -30,7 +29,7 @@ import com.vaadin.tools.ReflectTools;
  * @VERSION@
  * @since 6.5
  */
-public abstract class AbstractSplitPanel extends AbstractLayout {
+public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     private Unit posUnit;
 
@@ -47,7 +46,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     };
 
     public AbstractSplitPanel() {
-        registerRpcImplementation(rpc, AbstractSplitPanelRPC.class);
+        registerRpc(rpc);
         setSplitPosition(50, Unit.PERCENTAGE, false);
     }
 
@@ -388,8 +387,4 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         return (AbstractSplitPanelState) super.getState();
     }
 
-    @Override
-    protected ComponentState createState() {
-        return new AbstractSplitPanelState();
-    }
 }

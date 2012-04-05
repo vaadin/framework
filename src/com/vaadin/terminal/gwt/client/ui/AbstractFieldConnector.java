@@ -3,9 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
-import com.vaadin.terminal.gwt.client.ComponentState;
 
 public abstract class AbstractFieldConnector extends AbstractComponentConnector {
 
@@ -15,13 +13,12 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
     }
 
     @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
-    }
-
-    @Override
     public boolean isReadOnly() {
         return super.isReadOnly() || getState().isPropertyReadOnly();
+    }
+
+    public boolean isModified() {
+        return getState().isModified();
     }
 
     /**

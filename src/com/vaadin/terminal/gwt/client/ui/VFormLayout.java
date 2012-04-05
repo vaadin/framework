@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -18,15 +17,12 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.StyleConstants;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 /**
@@ -75,101 +71,12 @@ public class VFormLayout extends SimplePanel {
         private static final int COLUMN_ERRORFLAG = 1;
         private static final int COLUMN_WIDGET = 2;
 
-        HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
-        HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
+        private HashMap<Widget, Caption> widgetToCaption = new HashMap<Widget, Caption>();
+        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<Widget, ErrorFlag>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
             DOM.setElementProperty(getElement(), "cellSpacing", "0");
-        }
-
-        public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            final VMarginInfo margins = new VMarginInfo(
-                    uidl.getIntAttribute("margins"));
-
-            Element margin = getElement();
-            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
-                    margins.hasTop());
-            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
-                    margins.hasRight());
-            setStyleName(margin,
-                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                    margins.hasBottom());
-            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
-                    margins.hasLeft());
-
-            setStyleName(margin, CLASSNAME + "-" + "spacing",
-                    uidl.hasAttribute("spacing"));
-
-            int i = 0;
-            for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext(); i++) {
-                prepareCell(i, 1);
-                final UIDL childUidl = (UIDL) it.next();
-                final ComponentConnector childPaintable = client
-                        .getPaintable(childUidl);
-                Widget childWidget = childPaintable.getWidget();
-                Caption caption = widgetToCaption.get(childWidget);
-                if (caption == null) {
-                    caption = new Caption(childPaintable, client);
-                    caption.addClickHandler(this);
-                    widgetToCaption.put(childWidget, caption);
-                }
-                ErrorFlag error = widgetToError.get(childWidget);
-                if (error == null) {
-                    error = new ErrorFlag();
-                    widgetToError.put(childWidget, error);
-                }
-                prepareCell(i, COLUMN_WIDGET);
-
-                Widget oldWidget = getWidget(i, COLUMN_WIDGET);
-                if (oldWidget == null) {
-                    setWidget(i, COLUMN_WIDGET, childWidget);
-                } else if (oldWidget != childWidget) {
-                    final ComponentConnector oldPaintable = ConnectorMap.get(
-                            client).getConnector(oldWidget);
-                    client.unregisterPaintable(oldPaintable);
-                    setWidget(i, COLUMN_WIDGET, childWidget);
-                }
-                getCellFormatter().setStyleName(i, COLUMN_WIDGET,
-                        CLASSNAME + "-contentcell");
-                getCellFormatter().setStyleName(i, COLUMN_CAPTION,
-                        CLASSNAME + "-captioncell");
-                setWidget(i, COLUMN_CAPTION, caption);
-
-                getCellFormatter().setStyleName(i, COLUMN_ERRORFLAG,
-                        CLASSNAME + "-errorcell");
-                setWidget(i, COLUMN_ERRORFLAG, error);
-
-                childPaintable.updateFromUIDL(childUidl, client);
-
-                String rowstyles = CLASSNAME + "-row";
-                if (i == 0) {
-                    rowstyles += " " + CLASSNAME + "-firstrow";
-                }
-                if (!it.hasNext()) {
-                    rowstyles += " " + CLASSNAME + "-lastrow";
-                }
-
-                getRowFormatter().setStyleName(i, rowstyles);
-
-            }
-
-            while (getRowCount() > i) {
-                Widget w = getWidget(i, COLUMN_WIDGET);
-                final ComponentConnector p = ConnectorMap.get(client)
-                        .getConnector(w);
-                client.unregisterPaintable(p);
-                widgetToCaption.remove(w);
-                removeRow(i);
-            }
-
-            /*
-             * Must update relative sized fields last when it is clear how much
-             * space they are allowed to use
-             */
-            for (Widget p : widgetToCaption.keySet()) {
-                client.handleComponentRelativeSize(p);
-            }
         }
 
         /*
@@ -190,6 +97,98 @@ public class VFormLayout extends SimplePanel {
                 }
             }
         }
+
+        public void setMargins(VMarginInfo margins) {
+            Element margin = getElement();
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
+                    margins.hasTop());
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
+                    margins.hasRight());
+            setStyleName(margin,
+                    CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
+                    margins.hasBottom());
+            setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
+                    margins.hasLeft());
+
+        }
+
+        public void setSpacing(boolean spacing) {
+            setStyleName(getElement(), CLASSNAME + "-" + "spacing", spacing);
+
+        }
+
+        public void setRowCount(int rowNr) {
+            for (int i = 0; i < rowNr; i++) {
+                prepareCell(i, COLUMN_CAPTION);
+                getCellFormatter().setStyleName(i, COLUMN_CAPTION,
+                        CLASSNAME + "-captioncell");
+
+                prepareCell(i, 1);
+                getCellFormatter().setStyleName(i, COLUMN_ERRORFLAG,
+                        CLASSNAME + "-errorcell");
+
+                prepareCell(i, 2);
+                getCellFormatter().setStyleName(i, COLUMN_WIDGET,
+                        CLASSNAME + "-contentcell");
+
+                String rowstyles = CLASSNAME + "-row";
+                if (i == 0) {
+                    rowstyles += " " + CLASSNAME + "-firstrow";
+                }
+                if (i == rowNr - 1) {
+                    rowstyles += " " + CLASSNAME + "-lastrow";
+                }
+
+                getRowFormatter().setStyleName(i, rowstyles);
+
+            }
+            while (getRowCount() != rowNr) {
+                removeRow(rowNr);
+            }
+        }
+
+        public void setChild(int rowNr, Widget childWidget, Caption caption,
+                ErrorFlag error) {
+            setWidget(rowNr, COLUMN_WIDGET, childWidget);
+            setWidget(rowNr, COLUMN_CAPTION, caption);
+            setWidget(rowNr, COLUMN_ERRORFLAG, error);
+
+            widgetToCaption.put(childWidget, caption);
+            widgetToError.put(childWidget, error);
+
+        }
+
+        public Caption getCaption(Widget childWidget) {
+            return widgetToCaption.get(childWidget);
+        }
+
+        public ErrorFlag getError(Widget childWidget) {
+            return widgetToError.get(childWidget);
+        }
+
+        public void cleanReferences(Widget oldChildWidget) {
+            widgetToError.remove(oldChildWidget);
+            widgetToCaption.remove(oldChildWidget);
+
+        }
+
+        public void updateCaption(Widget widget, ComponentState state,
+                boolean enabled) {
+            final Caption c = widgetToCaption.get(widget);
+            if (c != null) {
+                c.updateCaption(state, enabled);
+            }
+        }
+
+        public void updateError(Widget widget, String errorMessage,
+                boolean hideErrors) {
+            final ErrorFlag e = widgetToError.get(widget);
+            if (e != null) {
+                e.updateError(errorMessage, hideErrors);
+            }
+
+        }
+
     }
 
     // TODO why duplicated here?
@@ -205,19 +204,14 @@ public class VFormLayout extends SimplePanel {
 
         private Element captionText;
 
-        private final ApplicationConnection client;
-
         /**
          * 
          * @param component
          *            optional owner of caption. If not set, getOwner will
          *            return null
-         * @param client
          */
-        public Caption(ComponentConnector component,
-                ApplicationConnection client) {
+        public Caption(ComponentConnector component) {
             super();
-            this.client = client;
             owner = component;
 
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -249,7 +243,7 @@ public class VFormLayout extends SimplePanel {
 
             if (state.getIcon() != null) {
                 if (icon == null) {
-                    icon = new Icon(client);
+                    icon = new Icon(owner.getConnection());
 
                     DOM.insertChild(getElement(), icon.getElement(), 0);
                 }
@@ -332,9 +326,7 @@ public class VFormLayout extends SimplePanel {
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
-            if (client != null) {
-                client.handleTooltipEvent(event, owner);
-            }
+            owner.getConnection().handleTooltipEvent(event, owner);
         }
     }
 
@@ -342,21 +334,21 @@ public class VFormLayout extends SimplePanel {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;
+
         private ComponentConnector owner;
 
-        public ErrorFlag() {
+        public ErrorFlag(ComponentConnector owner) {
             setStyleName(CLASSNAME);
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
+            this.owner = owner;
         }
 
-        public void updateFromUIDL(ComponentConnector component) {
-            owner = component;
-            boolean showError = null != owner.getState().getErrorMessage();
-            if (owner.getState() instanceof AbstractFieldState) {
-                showError = showError
-                        && !((AbstractFieldState) owner.getState())
-                                .isHideErrors();
+        public void updateError(String errorMessage, boolean hideErrors) {
+            boolean showError = null != errorMessage;
+            if (hideErrors) {
+                showError = false;
             }
+
             if (showError) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();

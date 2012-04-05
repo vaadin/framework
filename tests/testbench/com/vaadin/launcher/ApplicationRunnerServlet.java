@@ -1,11 +1,15 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.terminal.gwt.server;
+package com.vaadin.launcher;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
+import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
@@ -45,7 +52,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
      * The name of the application class currently used. Only valid within one
      * request.
      */
-    private String[] defaultPackages;
+    private LinkedHashSet<String> defaultPackages = new LinkedHashSet<String>();
+
     private final ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
 
     @Override
@@ -54,7 +62,27 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         String initParameter = servletConfig
                 .getInitParameter("defaultPackages");
         if (initParameter != null) {
-            defaultPackages = initParameter.split(",");
+            Collections.addAll(defaultPackages, initParameter.split(","));
+        }
+        String str = TestBase.class.getName().replace('.', '/') + ".class";
+        URL url = getClassLoader().getResource(str);
+        if ("file".equals(url.getProtocol())) {
+            File comVaadinTests = new File(url.getPath()).getParentFile()
+                    .getParentFile();
+            addDirectories(comVaadinTests, defaultPackages, "com.vaadin.tests");
+
+        }
+    }
+
+    private void addDirectories(File parent, LinkedHashSet<String> packages,
+            String parentPackage) {
+        packages.add(parentPackage);
+
+        for (File f : parent.listFiles()) {
+            if (f.isDirectory()) {
+                String newPackage = parentPackage + "." + f.getName();
+                addDirectories(f, packages, newPackage);
+            }
         }
     }
 
@@ -205,23 +233,19 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             return appClass;
         } catch (Exception e) {
             //
-            if (defaultPackages != null) {
-                for (int i = 0; i < defaultPackages.length; i++) {
-                    try {
-                        appClass = getClass().getClassLoader().loadClass(
-                                defaultPackages[i] + "." + baseName);
-                    } catch (ClassNotFoundException ee) {
-                        // Ignore as this is expected for many packages
-                    } catch (Exception e2) {
-                        // TODO: handle exception
-                        logger.log(
-                                Level.FINE,
-                                "Failed to find application class in the default package.",
-                                e2);
-                    }
-                    if (appClass != null) {
-                        return appClass;
-                    }
+            for (String pkg : defaultPackages) {
+                try {
+                    appClass = getClass().getClassLoader().loadClass(
+                            pkg + "." + baseName);
+                } catch (ClassNotFoundException ee) {
+                    // Ignore as this is expected for many packages
+                } catch (Exception e2) {
+                    // TODO: handle exception
+                    logger.log(Level.FINE, "Failed to find application class "
+                            + pkg + "." + baseName, e2);
+                }
+                if (appClass != null) {
+                    return appClass;
                 }
             }
 

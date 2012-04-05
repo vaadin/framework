@@ -89,7 +89,7 @@ public class Embedded extends AbstractComponent {
      * Creates a new empty Embedded object.
      */
     public Embedded() {
-        registerRpcImplementation(rpc, EmbeddedServerRPC.class);
+        registerRpc(rpc);
     }
 
     /**

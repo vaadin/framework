@@ -154,22 +154,10 @@ public class ConnectorMap {
         }
 
         String connectorId = connector.getConnectorId();
-        VConsole.log("Unregistering connector " + connectorId + " ("
-                + connector.getClass().getName() + ")");
 
-        // Warn if widget is still attached to DOM. It should never be at this
-        // point.
-        Widget widget = null;
-        if (connector instanceof ComponentConnector) {
-            widget = ((ComponentConnector) connector).getWidget();
-        }
-
-        if (widget != null && widget.isAttached()) {
-            VConsole.log("Widget for unregistered connector " + connectorId
-                    + " is still attached to the DOM.");
-        }
         idToComponentDetail.remove(connectorId);
         idToConnector.remove(connectorId);
+        connector.onUnregister();
 
         if (connector instanceof ComponentContainerConnector) {
             for (ComponentConnector child : ((ComponentContainerConnector) connector)

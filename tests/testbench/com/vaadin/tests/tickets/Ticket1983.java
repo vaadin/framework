@@ -34,7 +34,6 @@ public class Ticket1983 extends Application.LegacyApplication {
         public TestLayout() {
 
             setSplitPosition(200, Sizeable.UNITS_PIXELS);
-            setMargin(false);
             setLocked(true);
 
             final HorizontalSplitPanel leftSide = initLeftSide();

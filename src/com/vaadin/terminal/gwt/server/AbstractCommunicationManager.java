@@ -749,7 +749,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Paints components
         DirtyConnectorTracker rootConnectorTracker = root
                 .getDirtyConnectorTracker();
-        System.out.println("* Creating response to client");
+        logger.log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
             getClientCache(root).clear();
             rootConnectorTracker.markAllComponentsDirty();
@@ -762,7 +762,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         dirtyVisibleConnectors
                 .addAll(getDirtyVisibleComponents(rootConnectorTracker));
 
-        System.out.println("* Found " + dirtyVisibleConnectors.size()
+        logger.log(Level.FINE, "Found " + dirtyVisibleConnectors.size()
                 + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
             if (connector instanceof Component) {
@@ -821,7 +821,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 } catch (JSONException e) {
                     throw new PaintException(
                             "Failed to serialize shared state for connector "
-                                    + connector.getConnectorId() + ": "
+                                    + connector.getClass().getName() + " ("
+                                    + connector.getConnectorId() + "): "
                                     + e.getMessage());
                 }
             }
@@ -1560,9 +1561,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (c instanceof RpcTarget) {
             ServerRpcManager.applyInvocation((RpcTarget) c, invocation);
         } else {
-            // TODO better exception?
-            throw new RuntimeException("No RPC target for connector "
-                    + invocation.getConnectorId());
+            logger.log(Level.WARNING, "RPC call received for connector "
+                    + c.getClass().getName() + " (" + c.getConnectorId()
+                    + ") but the connector is not a ServerRpcTarget");
         }
     }
 
@@ -2158,8 +2159,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         writeUidlResponse(true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
-        System.out.println("Initial UIDL:");
-        System.out.println(initialUIDL);
+        logger.log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
     }
 

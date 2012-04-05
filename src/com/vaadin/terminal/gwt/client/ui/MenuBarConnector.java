@@ -10,6 +10,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
@@ -17,7 +18,7 @@ import com.vaadin.terminal.gwt.client.ui.VMenuBar.CustomMenuItem;
 
 @Component(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBarConnector extends AbstractComponentConnector implements
-        SimpleManagedLayout {
+        Paintable, SimpleManagedLayout {
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
@@ -25,11 +26,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
      * This method is called when the page is loaded for the first time, and
      * every time UI changes in the component are received from the server.
      */
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // This call should be made first. Ensure correct implementation,
-        // and let the containing layout manage caption, etc.
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

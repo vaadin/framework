@@ -42,6 +42,10 @@ public class JsonEncoder {
     public static final String VTYPE_ARRAY = "a";
     public static final String VTYPE_STRINGARRAY = "S";
     public static final String VTYPE_MAP = "m";
+    // Hack to support Map<Connector,?>. Should be replaced by generic support
+    // for any object as key (#8602)
+    @Deprecated
+    public static final String VTYPE_MAP_CONNECTOR = "M";
     public static final String VTYPE_LIST = "L";
     public static final String VTYPE_SET = "q";
     public static final String VTYPE_NULL = "n";
@@ -77,14 +81,26 @@ public class JsonEncoder {
         } else if (value instanceof Object[]) {
             return encodeObjectArray((Object[]) value, connectorMap, connection);
         } else if (value instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) value;
+            Map<Object, Object> map = (Map<Object, Object>) value;
             JSONObject jsonMap = new JSONObject();
-            for (String mapKey : map.keySet()) {
-                // TODO handle object graph loops?
+            String type = VTYPE_MAP;
+            for (Object mapKey : map.keySet()) {
                 Object mapValue = map.get(mapKey);
-                jsonMap.put(mapKey, encode(mapValue, connectorMap, connection));
+                if (mapKey instanceof Connector) {
+                    mapKey = ((Connector) mapKey).getConnectorId();
+                    type = VTYPE_MAP_CONNECTOR;
+                }
+
+                if (!(mapKey instanceof String)) {
+                    throw new RuntimeException(
+                            "Only Map<String,?> and Map<Connector,?> is currently supported."
+                                    + " Failed map used "
+                                    + mapKey.getClass().getName() + " as keys");
+                }
+                jsonMap.put((String) mapKey,
+                        encode(mapValue, connectorMap, connection));
             }
-            return combineTypeAndValue(VTYPE_MAP, jsonMap);
+            return combineTypeAndValue(type, jsonMap);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return combineTypeAndValue(VTYPE_CONNECTOR, new JSONString(

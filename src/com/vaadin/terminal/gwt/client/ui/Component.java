@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.widgetsetutils.CustomWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.LazyWidgetMapGenerator;
@@ -32,7 +32,7 @@ public @interface Component {
     /**
      * @return the server side counterpart for the annotated component connector
      */
-    Class<? extends ClientConnector> value();
+    Class<? extends Connector> value();
 
     /**
      * Depending on the used WidgetMap generator, these optional hints may be

@@ -17,8 +17,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
@@ -40,7 +38,7 @@ public class VCustomLayout extends ComplexPanel {
     final HashMap<String, Widget> locationToWidget = new HashMap<String, Widget>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<ComponentConnector, VCaptionWrapper> paintableToCaptionWrapper = new HashMap<ComponentConnector, VCaptionWrapper>();
+    private final HashMap<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<Widget, VCaptionWrapper>();
 
     /** Name of the currently rendered style */
     String currentTemplateName;
@@ -53,8 +51,7 @@ public class VCustomLayout extends ComplexPanel {
 
     ApplicationConnection client;
 
-    /** Has the template been loaded from contents passed in UIDL **/
-    private boolean hasTemplateContents = false;
+    private boolean htmlInitialized = false;
 
     private Element elementWithNativeResizeFunction;
 
@@ -124,37 +121,13 @@ public class VCustomLayout extends ComplexPanel {
     }
 
     /** Initialize HTML-layout. */
-    void initializeHTML(UIDL uidl, ApplicationConnection client) {
-
-        final String newTemplateContents = uidl
-                .getStringAttribute("templateContents");
-        final String newTemplate = uidl.getStringAttribute("template");
-
-        currentTemplateName = null;
-        hasTemplateContents = false;
-
-        String template = "";
-        if (newTemplate != null) {
-            // Get the HTML-template from client
-            template = client.getResource("layouts/" + newTemplate + ".html");
-            if (template == null) {
-                template = "<em>Layout file layouts/"
-                        + newTemplate
-                        + ".html is missing. Components will be drawn for debug purposes.</em>";
-            } else {
-                currentTemplateName = newTemplate;
-            }
-        } else {
-            hasTemplateContents = true;
-            template = newTemplateContents;
-        }
+    public void initializeHTML(String template, String themeUri) {
 
         // Connect body of the template to DOM
         template = extractBodyAndScriptsFromTemplate(template);
 
         // TODO prefix img src:s here with a regeps, cannot work further with IE
 
-        String themeUri = client.getThemeUri();
         String relImgPrefix = themeUri + "/layouts/";
 
         // prefix all relative image elements to point to theme dir with a
@@ -187,6 +160,7 @@ public class VCustomLayout extends ComplexPanel {
         }
         publishResizedFunction(elementWithNativeResizeFunction);
 
+        htmlInitialized = true;
     }
 
     private native boolean uriEndsWithSlash()
@@ -198,11 +172,7 @@ public class VCustomLayout extends ComplexPanel {
     }-*/;
 
     boolean hasTemplate() {
-        if (currentTemplateName == null && !hasTemplateContents) {
-            return false;
-        } else {
-            return true;
-        }
+        return htmlInitialized;
     }
 
     /** Collect locations from template */
@@ -301,8 +271,8 @@ public class VCustomLayout extends ComplexPanel {
 
     /** Update caption for given widget */
     public void updateCaption(ComponentConnector paintable) {
-        VCaptionWrapper wrapper = paintableToCaptionWrapper.get(paintable);
         Widget widget = paintable.getWidget();
+        VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
         if (VCaption.isNeeded(paintable.getState())) {
             if (wrapper == null) {
                 // Add a wrapper between the layout and the child widget
@@ -310,7 +280,7 @@ public class VCustomLayout extends ComplexPanel {
                 super.remove(widget);
                 wrapper = new VCaptionWrapper(paintable, client);
                 super.add(wrapper, locationToElement.get(loc));
-                paintableToCaptionWrapper.put(paintable, wrapper);
+                childWidgetToCaptionWrapper.put(widget, wrapper);
             }
             wrapper.updateCaption();
         } else {
@@ -319,7 +289,7 @@ public class VCustomLayout extends ComplexPanel {
                 final String loc = getLocation(widget);
                 super.remove(wrapper);
                 super.add(widget, locationToElement.get(loc));
-                paintableToCaptionWrapper.remove(paintable);
+                childWidgetToCaptionWrapper.remove(widget);
             }
         }
     }
@@ -339,15 +309,13 @@ public class VCustomLayout extends ComplexPanel {
     /** Removes given widget from the layout */
     @Override
     public boolean remove(Widget w) {
-        ComponentConnector paintable = ConnectorMap.get(client).getConnector(w);
-        client.unregisterPaintable(paintable);
         final String location = getLocation(w);
         if (location != null) {
             locationToWidget.remove(location);
         }
-        final VCaptionWrapper cw = paintableToCaptionWrapper.get(paintable);
+        final VCaptionWrapper cw = childWidgetToCaptionWrapper.get(w);
         if (cw != null) {
-            paintableToCaptionWrapper.remove(paintable);
+            childWidgetToCaptionWrapper.remove(w);
             return super.remove(cw);
         } else if (w != null) {
             return super.remove(w);
@@ -366,7 +334,7 @@ public class VCustomLayout extends ComplexPanel {
     public void clear() {
         super.clear();
         locationToWidget.clear();
-        paintableToCaptionWrapper.clear();
+        childWidgetToCaptionWrapper.clear();
     }
 
     /**

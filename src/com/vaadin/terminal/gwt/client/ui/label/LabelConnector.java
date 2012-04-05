@@ -8,6 +8,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
@@ -16,13 +17,10 @@ import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.Label;
 
 @Component(value = Label.class, loadStyle = LoadStyle.EAGER)
-public class LabelConnector extends AbstractComponentConnector {
-    public LabelConnector() {
-    }
+public class LabelConnector extends AbstractComponentConnector implements
+        Paintable {
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         getWidget().setConnection(client);
         if (!isRealUpdate(uidl)) {
             return;

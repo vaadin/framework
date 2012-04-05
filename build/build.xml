@@ -435,7 +435,7 @@
                 	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
     </target>
     
-    <target name="defaulttheme" depends="init, compile-helpers">
+    <target name="defaulttheme" depends="init, compile-helpers" description="Compile all included themes">
         <echo>Combining default themes css files</echo>
         <java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
             <arg value="-version" />
@@ -476,7 +476,8 @@
     <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
     <target name="compile-widgetset-generator" depends="compile-core"/>
 
-    <target name="compile-widgetset" depends="init-deps" description="Compiles the widgetset given as the first parameter">
+	<!--  Compiles the widgetset given as the first parameter -->
+    <target name="compile-widgetset" depends="init-deps">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <property name="widgetset-style" value="OBF" />
     	<property name="widgetset-localWorkers" value="4" />
@@ -493,6 +494,7 @@
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
             <arg value="${widgetset-style}" />
+            <arg value="-strict" />
             <arg value="-localWorkers" />
             <arg value="${widgetset-localWorkers}" />
         	<arg line="${widgetset-extraParams}" />
@@ -545,7 +547,7 @@
     <target name="widgetsets" depends="init-nonpackage, init, compile-widgetset-generator, compile-client-side"/>
 
     <!-- Build each widgetset locally, i.e., not for an installation package. -->
-    <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default"/>
+    <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default" description="Compile the DefaultWidgetSet"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
 
     <!-- ================================================================== -->

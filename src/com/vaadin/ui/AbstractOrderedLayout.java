@@ -18,6 +18,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 @SuppressWarnings("serial")
@@ -55,7 +56,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     private boolean spacing = false;
 
     public AbstractOrderedLayout() {
-        registerRpcImplementation(rpc, AbstractOrderedLayoutServerRPC.class);
+        registerRpc(rpc);
+    }
+
+    @Override
+    public AbstractOrderedLayoutState getState() {
+        return (AbstractOrderedLayoutState) super.getState();
     }
 
     /**

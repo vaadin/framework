@@ -448,10 +448,9 @@ public class VGridLayout extends ComplexPanel {
      * Private helper class.
      */
     class Cell {
-        public Cell(UIDL c) {
-            row = c.getIntAttribute("y");
-            col = c.getIntAttribute("x");
-            updateFromUidl(c);
+        public Cell(int row, int col) {
+            this.row = row;
+            this.col = col;
         }
 
         public boolean hasContent() {
@@ -578,7 +577,6 @@ public class VGridLayout extends ComplexPanel {
                     }
                 }
 
-                childConnector.updateFromUIDL(childUidl, client);
             }
         }
 
@@ -587,16 +585,21 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    Cell getCell(UIDL c) {
-        int row = c.getIntAttribute("y");
-        int col = c.getIntAttribute("x");
+    /**
+     * Returns the Cell with the given coordinates. Creates a new Cell if an
+     * existing was not found and also updates the Cell based on the given UIDL.
+     * 
+     * @param row
+     * @param col
+     * @return
+     */
+    Cell getCell(int row, int col, UIDL c) {
         Cell cell = cells[col][row];
         if (cell == null) {
-            cell = new Cell(c);
+            cell = new Cell(row, col);
             cells[col][row] = cell;
-        } else {
-            cell.updateFromUidl(c);
         }
+        cell.updateFromUidl(c);
         return cell;
     }
 

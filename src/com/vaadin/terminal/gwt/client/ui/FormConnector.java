@@ -10,15 +10,37 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.Form;
 
 @Component(Form.class)
 public class FormConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout {
+        implements Paintable, SimpleManagedLayout {
+
+    public static class FormState extends AbstractFieldState {
+        private Connector layout;
+        private Connector footer;
+
+        public Connector getLayout() {
+            return layout;
+        }
+
+        public void setLayout(Connector layout) {
+            this.layout = layout;
+        }
+
+        public Connector getFooter() {
+            return footer;
+        }
+
+        public void setFooter(Connector footer) {
+            this.footer = footer;
+        }
+
+    }
 
     @Override
     public void init() {
@@ -31,12 +53,10 @@ public class FormConnector extends AbstractComponentContainerConnector
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         getWidget().id = uidl.getId();
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -89,11 +109,10 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         // first render footer so it will be easier to handle relative height of
         // main layout
-        if (uidl.getChildCount() > 1
-                && !uidl.getChildUIDL(1).getTag().equals("actions")) {
+        if (getState().getFooter() != null) {
             // render footer
-            ComponentConnector newFooter = client.getPaintable(uidl
-                    .getChildUIDL(1));
+            ComponentConnector newFooter = (ComponentConnector) getState()
+                    .getFooter();
             Widget newFooterWidget = newFooter.getWidget();
             if (getWidget().footer == null) {
                 getWidget().add(newFooter.getWidget(),
@@ -101,23 +120,18 @@ public class FormConnector extends AbstractComponentContainerConnector
                 getWidget().footer = newFooterWidget;
             } else if (newFooter != getWidget().footer) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(ConnectorMap.get(getConnection())
-                        .getConnector(getWidget().footer));
                 getWidget().add(newFooter.getWidget(),
                         getWidget().footerContainer);
             }
             getWidget().footer = newFooterWidget;
-            newFooter.updateFromUIDL(uidl.getChildUIDL(1), client);
         } else {
             if (getWidget().footer != null) {
                 getWidget().remove(getWidget().footer);
-                client.unregisterPaintable(ConnectorMap.get(getConnection())
-                        .getConnector(getWidget().footer));
             }
         }
 
-        final UIDL layoutUidl = uidl.getChildUIDL(0);
-        ComponentConnector newLayout = client.getPaintable(layoutUidl);
+        ComponentConnector newLayout = (ComponentConnector) getState()
+                .getLayout();
         Widget newLayoutWidget = newLayout.getWidget();
         if (getWidget().lo == null) {
             // Layout not rendered before
@@ -125,20 +139,17 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         } else if (getWidget().lo != newLayoutWidget) {
             // Layout has changed
-            client.unregisterPaintable(ConnectorMap.get(getConnection())
-                    .getConnector(getWidget().lo));
             getWidget().remove(getWidget().lo);
             getWidget().lo = newLayoutWidget;
             getWidget().add(newLayoutWidget, getWidget().fieldContainer);
         }
-        newLayout.updateFromUIDL(layoutUidl, client);
 
         // also recalculates size of the footer if undefined size form - see
         // #3710
         client.runDescendentsLayout(getWidget());
 
         // We may have actions attached
-        if (uidl.getChildCount() > 1) {
+        if (uidl.getChildCount() >= 1) {
             UIDL childUidl = uidl.getChildByTagName("actions");
             if (childUidl != null) {
                 if (getWidget().shortcutHandler == null) {
@@ -188,13 +199,8 @@ public class FormConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public AbstractFieldState getState() {
-        return (AbstractFieldState) super.getState();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
+    public FormState getState() {
+        return (FormState) super.getState();
     }
 
 }

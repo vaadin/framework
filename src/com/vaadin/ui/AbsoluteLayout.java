@@ -4,22 +4,20 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
@@ -39,18 +37,20 @@ public class AbsoluteLayout extends AbstractLayout implements
                     mouseDetails, clickedConnector));
         }
     };
-    // The components in the layout
-    private Collection<Component> components = new LinkedHashSet<Component>();
-
     // Maps each component to a position
-    private Map<Component, ComponentPosition> componentToCoordinates = new HashMap<Component, ComponentPosition>();
+    private LinkedHashMap<Component, ComponentPosition> componentToCoordinates = new LinkedHashMap<Component, ComponentPosition>();
 
     /**
      * Creates an AbsoluteLayout with full size.
      */
     public AbsoluteLayout() {
-        registerRpcImplementation(rpc, AbsoluteLayoutServerRPC.class);
+        registerRpc(rpc);
         setSizeFull();
+    }
+
+    @Override
+    public AbsoluteLayoutState getState() {
+        return (AbsoluteLayoutState) super.getState();
     }
 
     /**
@@ -58,7 +58,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * absolute layout.
      */
     public Iterator<Component> getComponentIterator() {
-        return components.iterator();
+        return componentToCoordinates.keySet().iterator();
     }
 
     /**
@@ -68,7 +68,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * @return the number of contained components
      */
     public int getComponentCount() {
-        return components.size();
+        return componentToCoordinates.size();
     }
 
     /**
@@ -78,8 +78,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void replaceComponent(Component oldComponent, Component newComponent) {
         ComponentPosition position = getPosition(oldComponent);
         removeComponent(oldComponent);
-        addComponent(newComponent);
-        componentToCoordinates.put(newComponent, position);
+        addComponent(newComponent, position);
     }
 
     /*
@@ -91,29 +90,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      */
     @Override
     public void addComponent(Component c) {
-        components.add(c);
-        try {
-            super.addComponent(c);
-            requestRepaint();
-        } catch (IllegalArgumentException e) {
-            components.remove(c);
-            throw e;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui
-     * .Component)
-     */
-    @Override
-    public void removeComponent(Component c) {
-        components.remove(c);
-        componentToCoordinates.remove(c);
-        super.removeComponent(c);
-        requestRepaint();
+        addComponent(c, new ComponentPosition());
     }
 
     /**
@@ -131,28 +108,90 @@ public class AbsoluteLayout extends AbstractLayout implements
      *            The css position string
      */
     public void addComponent(Component c, String cssPosition) {
+        ComponentPosition position = new ComponentPosition();
+        position.setCSSString(cssPosition);
+        addComponent(c, position);
+    }
+
+    /**
+     * Adds the component using the given position. Ensures the position is only
+     * set if the component is added correctly.
+     * 
+     * @param c
+     *            The component to add
+     * @param position
+     *            The position info for the component. Must not be null.
+     * @throws IllegalArgumentException
+     *             If adding the component failed
+     */
+    private void addComponent(Component c, ComponentPosition position)
+            throws IllegalArgumentException {
         /*
          * Create position instance and add it to componentToCoordinates map. We
          * need to do this before we call addComponent so the attachListeners
          * can access this position. #6368
          */
-        ComponentPosition position = new ComponentPosition();
-        position.setCSSString(cssPosition);
-        componentToCoordinates.put(c, position);
-
+        internalSetPosition(c, position);
         try {
-            addComponent(c);
-
+            super.addComponent(c);
         } catch (IllegalArgumentException e) {
-            // Remove component coordinates if adding fails
-            componentToCoordinates.remove(c);
+            internalRemoveComponent(c);
             throw e;
         }
+        requestRepaint();
+    }
+
+    /**
+     * Removes the component from all internal data structures. Does not
+     * actually remove the component from the layout (this is assumed to have
+     * been done by the caller).
+     * 
+     * @param c
+     *            The component to remove
+     */
+    private void internalRemoveComponent(Component c) {
+        componentToCoordinates.remove(c);
+    }
+
+    @Override
+    public void updateState() {
+        super.updateState();
+
+        // This could be in internalRemoveComponent and internalSetComponent if
+        // Map<Connector,String> was supported. We cannot get the child
+        // connectorId unless the component is attached to the application so
+        // the String->String map cannot be populated in internal* either.
+        Map<String, String> connectorToPosition = new HashMap<String, String>();
+        for (Component c : this) {
+            connectorToPosition.put(c.getConnectorId(), getPosition(c)
+                    .getCSSString());
+        }
+        getState().setConnectorToCssPosition(connectorToPosition);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui
+     * .Component)
+     */
+    @Override
+    public void removeComponent(Component c) {
+        super.removeComponent(c);
+        internalRemoveComponent(c);
+        requestRepaint();
     }
 
     /**
      * Gets the position of a component in the layout. Returns null if component
      * is not attached to the layout.
+     * <p>
+     * Note that you cannot update the position by updating this object. Call
+     * {@link #setPosition(Component, ComponentPosition)} with the updated
+     * {@link ComponentPosition} object.
+     * </p>
      * 
      * @param component
      *            The component which position is needed
@@ -161,15 +200,36 @@ public class AbsoluteLayout extends AbstractLayout implements
      *         layout.
      */
     public ComponentPosition getPosition(Component component) {
-        if (component.getParent() != this) {
-            return null;
-        } else if (componentToCoordinates.containsKey(component)) {
-            return componentToCoordinates.get(component);
-        } else {
-            ComponentPosition coords = new ComponentPosition();
-            componentToCoordinates.put(component, coords);
-            return coords;
+        return componentToCoordinates.get(component);
+    }
+
+    /**
+     * Sets the position of a component in the layout.
+     * 
+     * @param component
+     * @param position
+     */
+    public void setPosition(Component component, ComponentPosition position) {
+        if (!componentToCoordinates.containsKey(component)) {
+            throw new IllegalArgumentException(
+                    "Component must be a child of this layout");
         }
+        internalSetPosition(component, position);
+    }
+
+    /**
+     * Updates the position for a component. Caller must ensure component is a
+     * child of this layout.
+     * 
+     * @param component
+     *            The component. Must be a child for this layout. Not enforced.
+     * @param position
+     *            New position. Must not be null.
+     */
+    private void internalSetPosition(Component component,
+            ComponentPosition position) {
+        componentToCoordinates.put(component, position);
+        requestRepaint();
     }
 
     /**
@@ -550,24 +610,6 @@ public class AbsoluteLayout extends AbstractLayout implements
             return getCSSString();
         }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.AbstractLayout#paintContent(com.vaadin.terminal.PaintTarget
-     * )
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-        for (Component component : components) {
-            target.startTag("cc");
-            target.addAttribute("css", getPosition(component).getCSSString());
-            component.paint(target);
-            target.endTag("cc");
-        }
     }
 
     public void addListener(LayoutClickListener listener) {

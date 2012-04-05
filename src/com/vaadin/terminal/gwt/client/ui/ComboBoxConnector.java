@@ -8,6 +8,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VFilterSelect.FilterSelectSuggestion;
@@ -15,7 +16,7 @@ import com.vaadin.ui.Select;
 
 @Component(Select.class)
 public class ComboBoxConnector extends AbstractFieldConnector implements
-        SimpleManagedLayout {
+        Paintable, SimpleManagedLayout {
 
     /*
      * (non-Javadoc)
@@ -24,8 +25,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
-    @Override
-    @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
@@ -37,7 +36,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().tb.setEnabled(getWidget().enabled);
         getWidget().updateReadOnly();
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

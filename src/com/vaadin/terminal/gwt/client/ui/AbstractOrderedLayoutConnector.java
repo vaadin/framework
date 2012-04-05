@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
@@ -14,24 +13,38 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
-        AbstractComponentContainerConnector implements DirectionalManagedLayout {
+        AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
+
+    public static class AbstractOrderedLayoutState extends AbstractLayoutState {
+        private boolean spacing = true;
+
+        public boolean isSpacing() {
+            return spacing;
+        }
+
+        public void setSpacing(boolean spacing) {
+            this.spacing = spacing;
+        }
+
+    }
 
     public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
             ServerRpc {
 
     }
 
-    AbstractOrderedLayoutServerRPC rpc = GWT
-            .create(AbstractOrderedLayoutServerRPC.class);
+    AbstractOrderedLayoutServerRPC rpc;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -51,9 +64,14 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     @Override
     public void init() {
-        initRPC(rpc);
+        rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
+    }
+
+    @Override
+    public AbstractOrderedLayoutState getState() {
+        return (AbstractOrderedLayoutState) super.getState();
     }
 
     public void updateCaption(ComponentConnector component) {
@@ -81,9 +99,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         return (VMeasuringOrderedLayout) super.getWidget();
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -115,10 +131,10 @@ public abstract class AbstractOrderedLayoutConnector extends
             slot.setExpandRatio(expandRatio);
         }
 
-        int bitMask = uidl.getIntAttribute("margins");
-        layout.updateMarginStyleNames(new VMarginInfo(bitMask));
+        layout.updateMarginStyleNames(new VMarginInfo(getState()
+                .getMarginsBitmask()));
 
-        layout.updateSpacingStyleName(uidl.getBooleanAttribute("spacing"));
+        layout.updateSpacingStyleName(getState().isSpacing());
 
         getLayoutManager().setNeedsUpdate(this);
     }
@@ -266,9 +282,9 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     @Override
-    public void connectorHierarchyChanged(
-            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(
+            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;
         VMeasuringOrderedLayout layout = getWidget();

@@ -9,26 +9,25 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.ui.CheckBox;
 
 @Component(CheckBox.class)
-public class CheckBoxConnector extends AbstractFieldConnector {
+public class CheckBoxConnector extends AbstractFieldConnector implements
+        Paintable {
 
     @Override
     protected boolean delegateCaptionHandling() {
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
         getWidget().id = uidl.getId();
 
-        // Ensure correct implementation
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

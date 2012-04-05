@@ -90,6 +90,8 @@ public class JsonCodec implements Serializable {
             val = decodeList((JSONArray) value, application);
         } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
             val = decodeSet((JSONArray) value, application);
+        } else if (JsonEncoder.VTYPE_MAP_CONNECTOR.equals(variableType)) {
+            val = decodeConnectorMap((JSONObject) value, application);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
             val = decodeMap((JSONObject) value, application);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
@@ -131,6 +133,19 @@ public class JsonCodec implements Serializable {
         while (it.hasNext()) {
             String key = it.next();
             map.put(key, decode(jsonMap.getJSONArray(key), application));
+        }
+        return map;
+    }
+
+    private static Object decodeConnectorMap(JSONObject jsonMap,
+            Application application) throws JSONException {
+        HashMap<Connector, Object> map = new HashMap<Connector, Object>();
+        Iterator<String> it = jsonMap.keys();
+        while (it.hasNext()) {
+            String connectorId = it.next();
+            Connector connector = application.getConnector(connectorId);
+            map.put(connector,
+                    decode(jsonMap.getJSONArray(connectorId), application));
         }
         return map;
     }
@@ -225,9 +240,16 @@ public class JsonCodec implements Serializable {
             JSONArray jsonArray = encodeArrayContents(array, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) value;
+            Map<Object, Object> map = (Map<Object, Object>) value;
             JSONObject jsonMap = encodeMapContents(map, application);
-            return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
+            // Hack to support Connector as map key. Should be fixed by #
+            if (!map.isEmpty()
+                    && map.keySet().iterator().next() instanceof Connector) {
+                return combineTypeAndValue(JsonEncoder.VTYPE_MAP_CONNECTOR,
+                        jsonMap);
+            } else {
+                return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
+            }
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
@@ -324,13 +346,21 @@ public class JsonCodec implements Serializable {
         return jsonArray;
     }
 
-    private static JSONObject encodeMapContents(Map<String, Object> map,
+    private static JSONObject encodeMapContents(Map<Object, Object> map,
             Application application) throws JSONException {
         JSONObject jsonMap = new JSONObject();
-        for (String mapKey : map.keySet()) {
-            // TODO handle object graph loops?
+        for (Object mapKey : map.keySet()) {
             Object mapValue = map.get(mapKey);
-            jsonMap.put(mapKey, encode(mapValue, application));
+
+            if (mapKey instanceof ClientConnector) {
+                mapKey = ((ClientConnector) mapKey).getConnectorId();
+            }
+            if (!(mapKey instanceof String)) {
+                throw new JSONException(
+                        "Only maps with String/Connector keys are currently supported (#8602)");
+            }
+
+            jsonMap.put((String) mapKey, encode(mapValue, application));
         }
         return jsonMap;
     }

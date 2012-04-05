@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Component;
@@ -16,9 +17,8 @@ import com.vaadin.ui.RichTextArea;
 
 @Component(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector implements
-        BeforeShortcutActionListener {
+        Paintable, BeforeShortcutActionListener {
 
-    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         getWidget().id = uidl.getId();
@@ -35,7 +35,6 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
             getWidget().setEnabled(isEnabled());
         }
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

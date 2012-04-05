@@ -22,12 +22,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
@@ -37,13 +39,13 @@ import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
-        implements RequiresOverflowAutoFix {
+        implements Paintable, RequiresOverflowAutoFix {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 
     }
 
-    private RootServerRPC rpc = GWT.create(RootServerRPC.class);
+    private RootServerRPC rpc;
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -58,10 +60,9 @@ public class RootConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(RootServerRPC.class, this);
     }
 
-    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         getWidget().rendering = true;
@@ -165,7 +166,6 @@ public class RootConnector extends AbstractComponentContainerConnector
         if (getWidget().layout != null) {
             if (layoutChanged) {
                 // remove old
-                client.unregisterPaintable(getWidget().layout);
                 if (childStateChangeHandlerRegistration != null) {
                     childStateChangeHandlerRegistration.removeHandler();
                     childStateChangeHandlerRegistration = null;
@@ -185,8 +185,6 @@ public class RootConnector extends AbstractComponentContainerConnector
                 onChildSizeChange();
             }
         }
-
-        getWidget().layout.updateFromUIDL(childUidl, client);
 
         // Save currently open subwindows to track which will need to be closed
         final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
@@ -228,8 +226,6 @@ public class RootConnector extends AbstractComponentContainerConnector
         for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
                 .hasNext();) {
             final VWindow w = rem.next();
-            client.unregisterPaintable(ConnectorMap.get(getConnection())
-                    .getConnector(w));
             getWidget().subWindows.remove(w);
             w.hide();
         }
@@ -384,8 +380,8 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
         for (ComponentConnector c : getChildren()) {
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;

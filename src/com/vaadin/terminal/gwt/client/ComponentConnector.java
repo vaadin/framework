@@ -85,7 +85,7 @@ public interface ComponentConnector extends ServerConnector {
      * and the server side are in sync.
      * <p>
      * Note that calling this method does not fire a
-     * {@link ConnectorHierarchyChangedEvent}. The event is fired only when the
+     * {@link ConnectorHierarchyChangeEvent}. The event is fired only when the
      * whole hierarchy has been updated.
      * 
      * @param parent

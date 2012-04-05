@@ -4,8 +4,7 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
 import com.vaadin.ui.Layout.MarginHandler;
 
 /**
@@ -23,6 +22,11 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 
     protected MarginInfo margins = new MarginInfo(false);
 
+    @Override
+    public AbstractLayoutState getState() {
+        return (AbstractLayoutState) super.getState();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -30,6 +34,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     public void setMargin(boolean enabled) {
         margins.setMargins(enabled);
+        getState().setMarginsBitmask(margins.getBitMask());
         requestRepaint();
     }
 
@@ -49,6 +54,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     public void setMargin(MarginInfo marginInfo) {
         margins.setMargins(marginInfo);
+        getState().setMarginsBitmask(margins.getBitMask());
         requestRepaint();
     }
 
@@ -60,21 +66,8 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
         margins.setMargins(topEnabled, rightEnabled, bottomEnabled, leftEnabled);
+        getState().setMarginsBitmask(margins.getBitMask());
         requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin
-     * .terminal.PaintTarget)
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-
-        // Add margin info. Defaults to false.
-        target.addAttribute("margins", margins.getBitMask());
-
     }
 
 }

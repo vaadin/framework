@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
@@ -62,16 +63,6 @@ public class GridLayout extends AbstractLayout implements
 
         }
     };
-    /**
-     * Initial grid columns.
-     */
-    private int cols = 0;
-
-    /**
-     * Initial grid rows.
-     */
-    private int rows = 0;
-
     /**
      * Cursor X position: this is where the next component with unspecified x,y
      * is inserted
@@ -130,7 +121,7 @@ public class GridLayout extends AbstractLayout implements
     public GridLayout(int columns, int rows) {
         setColumns(columns);
         setRows(rows);
-        registerRpcImplementation(rpc, GridLayoutServerRPC.class);
+        registerRpc(rpc);
     }
 
     /**
@@ -138,6 +129,11 @@ public class GridLayout extends AbstractLayout implements
      */
     public GridLayout() {
         this(1, 1);
+    }
+
+    @Override
+    public GridLayoutState getState() {
+        return (GridLayoutState) super.getState();
     }
 
     /**
@@ -195,7 +191,8 @@ public class GridLayout extends AbstractLayout implements
             throw new IllegalArgumentException(
                     "Illegal coordinates for the component");
         }
-        if (column1 < 0 || row1 < 0 || column2 >= cols || row2 >= rows) {
+        if (column1 < 0 || row1 < 0 || column2 >= getColumns()
+                || row2 >= getRows()) {
             throw new OutOfBoundsException(area);
         }
 
@@ -238,7 +235,7 @@ public class GridLayout extends AbstractLayout implements
                 && cursorY <= row2) {
             // cursor within area
             cursorX = column2 + 1; // one right of area
-            if (cursorX >= cols) {
+            if (cursorX >= getColumns()) {
                 // overflowed columns
                 cursorX = 0; // first col
                 // move one row down, or one row under the area
@@ -320,7 +317,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void space() {
         cursorX++;
-        if (cursorX >= cols) {
+        if (cursorX >= getColumns()) {
             cursorX = 0;
             cursorY++;
         }
@@ -352,8 +349,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         // Extends the grid if needed
-        cols = cursorX >= cols ? cursorX + 1 : cols;
-        rows = cursorY >= rows ? cursorY + 1 : rows;
+        if (cursorX >= getColumns()) {
+            setColumns(cursorX + 1);
+        }
+        if (cursorY >= getRows()) {
+            setRows(cursorY + 1);
+        }
 
         addComponent(component, cursorX, cursorY);
     }
@@ -447,15 +448,8 @@ public class GridLayout extends AbstractLayout implements
         super.paintContent(target);
 
         // TODO refactor attribute names in future release.
-        target.addAttribute("h", rows);
-        target.addAttribute("w", cols);
-
         target.addAttribute("structuralChange", structuralChange);
         structuralChange = false;
-
-        if (spacing) {
-            target.addAttribute("spacing", spacing);
-        }
 
         // Area iterator
         final Iterator<Area> areaiterator = areas.iterator();
@@ -470,22 +464,22 @@ public class GridLayout extends AbstractLayout implements
         int emptyCells = 0;
 
         final String[] alignmentsArray = new String[components.size()];
-        final Integer[] columnExpandRatioArray = new Integer[cols];
-        final Integer[] rowExpandRatioArray = new Integer[rows];
+        final Integer[] columnExpandRatioArray = new Integer[getColumns()];
+        final Integer[] rowExpandRatioArray = new Integer[getRows()];
 
         int realColExpandRatioSum = 0;
         float colSum = getExpandRatioSum(columnExpandRatio);
         if (colSum == 0) {
             // no columns has been expanded, all cols have same expand
             // rate
-            float equalSize = 1 / (float) cols;
+            float equalSize = 1 / (float) getColumns();
             int myRatio = Math.round(equalSize * 1000);
-            for (int i = 0; i < cols; i++) {
+            for (int i = 0; i < getColumns(); i++) {
                 columnExpandRatioArray[i] = myRatio;
             }
-            realColExpandRatioSum = myRatio * cols;
+            realColExpandRatioSum = myRatio * getColumns();
         } else {
-            for (int i = 0; i < cols; i++) {
+            for (int i = 0; i < getColumns(); i++) {
                 int myRatio = Math
                         .round((getColumnExpandRatio(i) / colSum) * 1000);
                 columnExpandRatioArray[i] = myRatio;
@@ -499,18 +493,18 @@ public class GridLayout extends AbstractLayout implements
         if (rowSum == 0) {
             // no rows have been expanded
             equallyDividedRows = true;
-            float equalSize = 1 / (float) rows;
+            float equalSize = 1 / (float) getRows();
             int myRatio = Math.round(equalSize * 1000);
-            for (int i = 0; i < rows; i++) {
+            for (int i = 0; i < getRows(); i++) {
                 rowExpandRatioArray[i] = myRatio;
             }
-            realRowExpandRatioSum = myRatio * rows;
+            realRowExpandRatioSum = myRatio * getRows();
         }
 
         int index = 0;
 
         // Iterates every applicable row
-        for (int cury = 0; cury < rows; cury++) {
+        for (int cury = 0; cury < getRows(); cury++) {
             target.startTag("gr");
 
             if (!equallyDividedRows) {
@@ -521,7 +515,7 @@ public class GridLayout extends AbstractLayout implements
 
             }
             // Iterates every applicable column
-            for (int curx = 0; curx < cols; curx++) {
+            for (int curx = 0; curx < getColumns(); curx++) {
 
                 // Checks if current item is located at curx,cury
                 if (area != null && (area.row1 == cury)
@@ -631,7 +625,7 @@ public class GridLayout extends AbstractLayout implements
             // Checks if empty cell needs to be rendered
             if (emptyCells > 0) {
                 target.startTag("gc");
-                target.addAttribute("x", cols - emptyCells);
+                target.addAttribute("x", getColumns() - emptyCells);
                 target.addAttribute("y", cury);
                 if (emptyCells > 1) {
                     target.addAttribute("w", emptyCells);
@@ -977,12 +971,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         // In case of no change
-        if (cols == columns) {
+        if (getColumns() == columns) {
             return;
         }
 
         // Checks for overlaps
-        if (cols > columns) {
+        if (getColumns() > columns) {
             for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
                 final Area area = i.next();
                 if (area.column2 >= columns) {
@@ -991,7 +985,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        cols = columns;
+        getState().setColumns(columns);
 
         requestRepaint();
     }
@@ -1002,7 +996,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of columns in the grid.
      */
     public int getColumns() {
-        return cols;
+        return getState().getColumns();
     }
 
     /**
@@ -1021,12 +1015,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         // In case of no change
-        if (this.rows == rows) {
+        if (getRows() == rows) {
             return;
         }
 
         // Checks for overlaps
-        if (this.rows > rows) {
+        if (getRows() > rows) {
             for (final Iterator<Area> i = areas.iterator(); i.hasNext();) {
                 final Area area = i.next();
                 if (area.row2 >= rows) {
@@ -1035,7 +1029,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        this.rows = rows;
+        getState().setRows(rows);
 
         requestRepaint();
     }
@@ -1046,7 +1040,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of rows in the grid.
      */
     public int getRows() {
-        return rows;
+        return getState().getRows();
     }
 
     /**
@@ -1202,9 +1196,9 @@ public class GridLayout extends AbstractLayout implements
      *            The leftmost row has index 0.
      */
     public void insertRow(int row) {
-        if (row > rows) {
+        if (row > getRows()) {
             throw new IllegalArgumentException("Cannot insert row at " + row
-                    + " in a gridlayout with height " + rows);
+                    + " in a gridlayout with height " + getRows());
         }
 
         for (Iterator<Area> i = areas.iterator(); i.hasNext();) {
@@ -1225,7 +1219,7 @@ public class GridLayout extends AbstractLayout implements
             cursorY++;
         }
 
-        setRows(rows + 1);
+        setRows(getRows() + 1);
         structuralChange = true;
         requestRepaint();
     }
@@ -1248,9 +1242,9 @@ public class GridLayout extends AbstractLayout implements
      *            Index of the row to remove. The leftmost row has index 0.
      */
     public void removeRow(int row) {
-        if (row >= rows) {
+        if (row >= getRows()) {
             throw new IllegalArgumentException("Cannot delete row " + row
-                    + " from a gridlayout with height " + rows);
+                    + " from a gridlayout with height " + getRows());
         }
 
         // Remove all components in row
@@ -1270,7 +1264,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        if (rows == 1) {
+        if (getRows() == 1) {
             /*
              * Removing the last row means that the dimensions of the Grid
              * layout will be truncated to 1 empty row and the cursor is moved
@@ -1279,7 +1273,7 @@ public class GridLayout extends AbstractLayout implements
             cursorX = 0;
             cursorY = 0;
         } else {
-            setRows(rows - 1);
+            setRows(getRows() - 1);
             if (cursorY > row) {
                 cursorY--;
             }

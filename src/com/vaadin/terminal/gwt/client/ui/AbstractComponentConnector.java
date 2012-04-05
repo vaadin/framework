@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,10 +17,11 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
@@ -76,10 +76,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * Returns the shared state object for a paintable widget.
-     * 
-     * A new state instance is created using {@link #createState()} if none has
-     * been set by the server.
+     * Returns the shared state object for this connector.
      * 
      * If overriding this method to return a more specific type, also
      * {@link #createState()} must be overridden.
@@ -87,43 +84,23 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @return current shared state (not null)
      */
     public ComponentState getState() {
-        if (state == null) {
-            state = createState();
-        }
-
         return state;
-    }
-
-    /**
-     * Creates a new instance of a shared state object for the widget. Normally,
-     * the state instance is created by the server and sent to the client before
-     * being used - this method is used if no shared state has been sent by the
-     * server.
-     * 
-     * When overriding {@link #getState()}, also {@link #createState()} should
-     * be overridden to match it.
-     * 
-     * @return newly created component shared state instance
-     */
-    protected ComponentState createState() {
-        return GWT.create(ComponentState.class);
     }
 
     public static boolean isRealUpdate(UIDL uidl) {
         return !uidl.hasAttribute("cached");
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
         if (getState().getDebugId() != null) {
             getWidget().getElement().setId(getState().getDebugId());
         } else {
-            getWidget().getElement().setId(null);
+            getWidget().getElement().removeAttribute("id");
 
         }
 
@@ -131,9 +108,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
          */
-        if (uidl.hasAttribute("tabindex") && getWidget() instanceof Focusable) {
-            ((Focusable) getWidget()).setTabIndex(uidl
-                    .getIntAttribute("tabindex"));
+        if (state instanceof TabIndexState && getWidget() instanceof Focusable) {
+            ((Focusable) getWidget()).setTabIndex(((TabIndexState) state)
+                    .getTabIndex());
         }
 
         if (getWidget() instanceof FocusWidget) {
@@ -142,8 +119,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         // Style names
-        String styleName = getStyleNameFromUIDL(getWidget()
-                .getStylePrimaryName(), uidl, getWidget() instanceof Field,
+        String styleName = getStyleNames(getWidget().getStylePrimaryName(),
                 this);
         getWidget().setStyleName(styleName);
 
@@ -162,12 +138,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ComponentContainerConnector parent = getParent();
             if (parent != null) {
                 parent.updateCaption(this);
-            } else {
+            } else if (!(this instanceof RootConnector)) {
                 VConsole.error("Parent of connector "
-                        + getClass().getName()
-                        + " ("
-                        + getConnectorId()
-                        + ") is null. This is typically an indication of a broken component hierarchy");
+                        + Util.getConnectorString(this)
+                        + " is null. This is typically an indication of a broken component hierarchy");
             }
         }
 
@@ -273,8 +247,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @param field
      * @return
      */
-    protected static String getStyleNameFromUIDL(String primaryStyleName,
-            UIDL uidl, boolean field, ComponentConnector connector) {
+    protected static String getStyleNames(String primaryStyleName,
+            ComponentConnector connector) {
         ComponentState state = connector.getState();
 
         StringBuffer styleBuf = new StringBuffer();
@@ -305,11 +279,21 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }
 
-        // TODO Move to AbstractFieldConnector
-        // add modified classname to Fields
-        if (field && uidl.hasAttribute("modified")) {
-            styleBuf.append(" ");
-            styleBuf.append(ApplicationConnection.MODIFIED_CLASSNAME);
+        if (connector instanceof AbstractFieldConnector) {
+            // TODO Move to AbstractFieldConnector
+            AbstractFieldConnector afc = ((AbstractFieldConnector) connector);
+            if (afc.isModified()) {
+                // add modified classname to Fields
+                styleBuf.append(" ");
+                styleBuf.append(ApplicationConnection.MODIFIED_CLASSNAME);
+            }
+
+            if (afc.isRequired()) {
+                // add required classname to required fields
+                styleBuf.append(" ");
+                styleBuf.append(primaryStyleName);
+                styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
+            }
         }
 
         // add error classname to components w/ error
@@ -317,13 +301,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             styleBuf.append(" ");
             styleBuf.append(primaryStyleName);
             styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);
-        }
-        // add required style to required components
-        if (connector instanceof AbstractFieldConnector
-                && ((AbstractFieldConnector) connector).isRequired()) {
-            styleBuf.append(" ");
-            styleBuf.append(primaryStyleName);
-            styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
         }
 
         return styleBuf.toString();
@@ -348,20 +325,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public final void setState(SharedState state) {
         this.state = (ComponentState) state;
-    }
-
-    /**
-     * Initialize the given RPC proxy object so it is connected to this
-     * paintable.
-     * 
-     * @param clientToServerRpc
-     *            The RPC instance to initialize. Must have been created using
-     *            GWT.create().
-     */
-    protected <T extends ServerRpc> T initRPC(T clientToServerRpc) {
-        ((InitializableClientToServerRpc) clientToServerRpc).initRpc(
-                getConnectorId(), getConnection());
-        return clientToServerRpc;
     }
 
     public LayoutManager getLayoutManager() {
@@ -402,4 +365,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return (reg != null && reg.contains(eventIdentifier));
     }
 
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+
+        // Warn if widget is still attached to DOM. It should never be at this
+        // point.
+        if (getWidget() != null && getWidget().isAttached()) {
+            VConsole.log("Widget for unregistered connector "
+                    + Util.getConnectorString(this)
+                    + " is still attached to the DOM.");
+        }
+    }
 }

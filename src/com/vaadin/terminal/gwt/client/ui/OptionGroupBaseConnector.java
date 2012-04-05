@@ -5,18 +5,18 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-public abstract class OptionGroupBaseConnector extends AbstractFieldConnector {
+public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
+        implements Paintable {
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Save details
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
 
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

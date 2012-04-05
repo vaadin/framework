@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -879,18 +881,34 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Creates the shared state bean to be used in server to client
      * communication.
-     * 
-     * Subclasses should implement this method and return a new instance of the
-     * correct state class.
-     * 
-     * All configuration of the values of the state should be performed in
-     * {@link #getState()}, not in {@link #createState()}.
+     * <p>
+     * By default a state object of the defined return type of
+     * {@link #getState()} is created. Subclasses can override this method and
+     * return a new instance of the correct state class but this should rarely
+     * be necessary.
+     * </p>
+     * <p>
+     * No configuration of the values of the state should be performed in
+     * {@link #createState()}.
      * 
      * @since 7.0
      * 
      * @return new shared state object
      */
     protected ComponentState createState() {
+        try {
+            Method m = getClass().getMethod("getState", (Class[]) null);
+            Class<? extends ComponentState> type = (Class<? extends ComponentState>) m
+                    .getReturnType();
+            return type.newInstance();
+        } catch (Exception e) {
+            getLogger().log(
+                    Level.INFO,
+                    "Error determining state object class for "
+                            + getClass().getName());
+        }
+
+        // Fall back to ComponentState if detection fails for some reason.
         return new ComponentState();
     }
 
@@ -1615,10 +1633,30 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            RPC interface class for which the implementation should be
      *            registered
      */
-    protected <T> void registerRpcImplementation(T implementation,
-            Class<T> rpcInterfaceType) {
+    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
         rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(this,
                 implementation, rpcInterfaceType));
+    }
+
+    /**
+     * Registers an RPC interface implementation for this component.
+     * 
+     * A component can listen to multiple RPC interfaces, and subclasses can
+     * register additional implementations.
+     * 
+     * @since 7.0
+     * 
+     * @param implementation
+     *            RPC interface implementation. Also used to deduce the type.
+     */
+    protected <T> void registerRpc(T implementation) {
+        Class<?>[] interfaces = implementation.getClass().getInterfaces();
+        if (interfaces.length != 1) {
+            throw new RuntimeException(
+                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
+        }
+        Class<T> type = (Class<T>) interfaces[0];
+        registerRpc(implementation, type);
     }
 
     /**
@@ -1722,5 +1760,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             connectorId = getApplication().createConnectorId(this);
         }
         return connectorId;
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(AbstractComponent.class.getName());
     }
 }

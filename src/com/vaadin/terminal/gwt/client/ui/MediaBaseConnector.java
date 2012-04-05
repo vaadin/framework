@@ -4,11 +4,13 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
-public abstract class MediaBaseConnector extends AbstractComponentConnector {
+public abstract class MediaBaseConnector extends AbstractComponentConnector
+        implements Paintable {
 
     public static final String TAG_SOURCE = "src";
 
@@ -52,9 +54,7 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         });
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

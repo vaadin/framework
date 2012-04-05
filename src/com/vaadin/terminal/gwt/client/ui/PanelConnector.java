@@ -11,17 +11,20 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 import com.vaadin.ui.Panel;
 
 @Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
-        implements SimpleManagedLayout, PostLayoutListener,
+        implements Paintable, SimpleManagedLayout, PostLayoutListener,
         RequiresOverflowAutoFix {
 
     public interface PanelServerRPC extends ClickRPC, ServerRpc {
@@ -71,11 +74,11 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     private Integer uidlScrollLeft;
 
-    private PanelServerRPC rpc = GWT.create(PanelServerRPC.class);
+    private PanelServerRPC rpc;
 
     @Override
     public void init() {
-        initRPC(rpc);
+        rpc = RpcProxy.create(PanelServerRPC.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
 
@@ -89,7 +92,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return false;
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (isRealUpdate(uidl)) {
 
@@ -132,8 +134,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
             getWidget().contentNode.setClassName(contentClass);
             getWidget().bottomDecoration.setClassName(decoClass);
         }
-        // Ensure correct implementation
-        super.updateFromUIDL(uidl, client);
 
         if (!isRealUpdate(uidl)) {
             return;
@@ -248,13 +248,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    protected PanelState createState() {
-        return GWT.create(PanelState.class);
-    }
-
-    @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
         // We always have 1 child, unless the child is hidden
         Widget newChildWidget = null;
         if (getChildren().size() == 1) {

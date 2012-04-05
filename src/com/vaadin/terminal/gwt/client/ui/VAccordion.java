@@ -414,7 +414,6 @@ public class VAccordion extends VTabsheetBase {
             } else if (getChildWidget() != newWidget) {
                 replaceWidget(newWidget);
             }
-            newPntbl.updateFromUIDL(contentUidl, client);
             if (contentUidl.getBooleanAttribute("cached")) {
                 /*
                  * The size of a cached, relative sized component must be

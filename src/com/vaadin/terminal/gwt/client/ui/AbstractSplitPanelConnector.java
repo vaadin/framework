@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.LinkedList;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.DomEvent.Type;
@@ -17,9 +16,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.VAbstractSplitPanel.SplitterMoveHandler;
@@ -128,12 +128,12 @@ public abstract class AbstractSplitPanelConnector extends
 
     }
 
-    private AbstractSplitPanelRPC rpc = GWT.create(AbstractSplitPanelRPC.class);
+    private AbstractSplitPanelRPC rpc;
 
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(AbstractSplitPanelRPC.class, this);
         // TODO Remove
         getWidget().client = getConnection();
 
@@ -275,11 +275,6 @@ public abstract class AbstractSplitPanelConnector extends
         return (AbstractSplitPanelState) super.getState();
     }
 
-    @Override
-    protected AbstractSplitPanelState createState() {
-        return GWT.create(AbstractSplitPanelState.class);
-    }
-
     private ComponentConnector getFirstChild() {
         return (ComponentConnector) getState().getFirstChild();
     }
@@ -289,8 +284,8 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
 
         Widget newFirstChildWidget = null;
         if (getFirstChild() != null) {

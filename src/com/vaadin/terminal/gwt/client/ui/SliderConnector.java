@@ -8,20 +8,19 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.Slider;
 
 @Component(Slider.class)
-public class SliderConnector extends AbstractFieldConnector {
+public class SliderConnector extends AbstractFieldConnector implements
+        Paintable {
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         getWidget().client = client;
         getWidget().id = uidl.getId();
 
-        // Ensure correct implementation
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }

@@ -67,7 +67,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            the content for the panel.
      */
     public Panel(ComponentContainer content) {
-        registerRpcImplementation(rpc, PanelServerRPC.class);
+        registerRpc(rpc);
         setContent(content);
         setWidth(100, Unit.PERCENTAGE);
         getState().setTabIndex(-1);
@@ -546,8 +546,4 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         return (PanelState) super.getState();
     }
 
-    @Override
-    protected PanelState createState() {
-        return new PanelState();
-    }
 }

@@ -100,11 +100,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private boolean readThroughMode = true;
 
     /**
-     * Is the field modified but not committed.
-     */
-    private boolean modified = false;
-
-    /**
      * Flag to indicate that the field is currently committing its value to the
      * datasource.
      */
@@ -124,11 +119,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Are the invalid values committed ?
      */
     private boolean invalidCommitted = false;
-
-    /**
-     * The tab order number of this field.
-     */
-    private int tabIndex = 0;
 
     /**
      * The error message for the exception that is thrown when the field is
@@ -154,19 +144,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Paints the field. Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-
-        // The tab ordering number
-        if (getTabIndex() != 0) {
-            target.addAttribute("tabindex", getTabIndex());
-        }
-
-        // If the field is modified, but not committed, set modified attribute
-        if (isModified()) {
-            target.addAttribute("modified", true);
-        }
-    }
 
     /**
      * Returns true if the error indicator be hidden when painting the component
@@ -266,12 +243,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
         }
 
-        boolean repaintNeeded = false;
-
         // The abstract field is not modified anymore
         if (isModified()) {
             setModified(false);
-            repaintNeeded = true;
         }
 
         // If successful, remove set the buffering state to be ok
@@ -282,8 +256,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (valueWasModifiedByDataSourceDuringCommit) {
             valueWasModifiedByDataSourceDuringCommit = false;
             fireValueChange(false);
-        } else if (repaintNeeded) {
-            requestRepaint();
         }
 
     }
@@ -365,11 +337,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * interface.
      */
     public boolean isModified() {
-        return modified;
+        return getState().isModified();
     }
 
     private void setModified(boolean modified) {
-        this.modified = modified;
+        getState().setModified(modified);
+        requestRepaint();
     }
 
     /*
@@ -1334,7 +1307,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @see com.vaadin.ui.Component.Focusable#getTabIndex()
      */
     public int getTabIndex() {
-        return tabIndex;
+        return getState().getTabIndex();
     }
 
     /*
@@ -1343,7 +1316,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
     public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
+        getState().setTabIndex(tabIndex);
         requestRepaint();
     }
 
@@ -1619,8 +1592,4 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         getState().setHideErrors(shouldHideErrors());
     }
 
-    @Override
-    protected AbstractFieldState createState() {
-        return new AbstractFieldState();
-    }
 }

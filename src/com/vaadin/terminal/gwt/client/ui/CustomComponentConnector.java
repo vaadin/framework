@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.CustomComponent;
 
@@ -29,8 +29,8 @@ public class CustomComponentConnector extends
     }
 
     @Override
-    public void connectorHierarchyChanged(ConnectorHierarchyChangedEvent event) {
-        super.connectorHierarchyChanged(event);
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
 
         ComponentConnector newChild = null;
         if (getChildren().size() == 1) {

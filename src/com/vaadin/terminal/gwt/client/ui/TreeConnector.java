@@ -9,14 +9,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
 import com.vaadin.ui.Tree;
 
 @Component(Tree.class)
-public class TreeConnector extends AbstractComponentConnector {
+public class TreeConnector extends AbstractComponentConnector implements
+        Paintable {
 
     public static final String ATTRIBUTE_NODE_STYLE = "style";
     public static final String ATTRIBUTE_NODE_CAPTION = "caption";
@@ -25,10 +26,7 @@ public class TreeConnector extends AbstractComponentConnector {
     public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
     public static final String ATTRIBUTE_ACTION_ICON = ATTRIBUTE_NODE_ICON;
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Ensure correct implementation and let container manage caption
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -248,11 +246,6 @@ public class TreeConnector extends AbstractComponentConnector {
     @Override
     public AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
-    }
-
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(AbstractFieldState.class);
     }
 
 }

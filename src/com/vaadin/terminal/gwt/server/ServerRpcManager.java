@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
@@ -82,14 +84,18 @@ public class ServerRpcManager<T> implements RpcManager {
             if (manager != null) {
                 manager.applyInvocation(invocation);
             } else {
-                throw new RuntimeException(
-                        "RPC call to a target without an RPC manager.");
+                getLogger()
+                        .log(Level.WARNING,
+                                "RPC call received for RpcTarget "
+                                        + target.getClass().getName()
+                                        + " ("
+                                        + invocation.getConnectorId()
+                                        + ") but the target has not registered any RPC interfaces");
             }
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(
-                    "No RPC manager registered for RPC interface "
-                            + invocation.getInterfaceName() + " of the target "
-                            + target + ".");
+            throw new RuntimeException("Class for RPC interface "
+                    + invocation.getInterfaceName() + " of the target "
+                    + target + " could not be found.");
         }
     }
 
@@ -188,6 +194,10 @@ public class ServerRpcManager<T> implements RpcManager {
             }
         }
         return null;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ServerRpcManager.class.getName());
     }
 
 }

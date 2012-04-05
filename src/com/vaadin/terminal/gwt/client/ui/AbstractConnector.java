@@ -15,6 +15,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
@@ -161,11 +162,19 @@ public abstract class AbstractConnector implements ServerConnector,
                 .addHandler(StateChangeEvent.TYPE, handler);
     }
 
-    // TODO Should be abstract as all connectors need it
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        System.out.println("State change event for "
+        VConsole.log("State change event for "
                 + Util.getConnectorString(stateChangeEvent.getConnector())
                 + " received by " + Util.getConnectorString(this));
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ServerConnector#onUnregister()
+     */
+    public void onUnregister() {
+        VConsole.log("Unregistered connector " + Util.getConnectorString(this));
+
+    }
 }

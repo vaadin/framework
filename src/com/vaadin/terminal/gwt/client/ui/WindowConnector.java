@@ -12,14 +12,16 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
@@ -27,13 +29,76 @@ import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 
 @Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
-        implements BeforeShortcutActionListener, SimpleManagedLayout,
+        implements Paintable, BeforeShortcutActionListener, SimpleManagedLayout,
         PostLayoutListener, RequiresOverflowAutoFix {
 
     public interface WindowServerRPC extends ClickRPC, ServerRpc {
     }
 
     public static class WindowState extends PanelState {
+        private boolean modal = false;
+        private boolean resizable = true;
+        private boolean resizeLazy = false;
+        private boolean draggable = true;
+        private boolean centered = false;;
+        private int positionX = -1;
+        private int positionY = -1;
+
+        public boolean isModal() {
+            return modal;
+        }
+
+        public void setModal(boolean modal) {
+            this.modal = modal;
+        }
+
+        public boolean isResizable() {
+            return resizable;
+        }
+
+        public void setResizable(boolean resizable) {
+            this.resizable = resizable;
+        }
+
+        public boolean isResizeLazy() {
+            return resizeLazy;
+        }
+
+        public void setResizeLazy(boolean resizeLazy) {
+            this.resizeLazy = resizeLazy;
+        }
+
+        public boolean isDraggable() {
+            return draggable;
+        }
+
+        public void setDraggable(boolean draggable) {
+            this.draggable = draggable;
+        }
+
+        public boolean isCentered() {
+            return centered;
+        }
+
+        public void setCentered(boolean centered) {
+            this.centered = centered;
+        }
+
+        public int getPositionX() {
+            return positionX;
+        }
+
+        public void setPositionX(int positionX) {
+            this.positionX = positionX;
+        }
+
+        public int getPositionY() {
+            return positionY;
+        }
+
+        public void setPositionY(int positionY) {
+            this.positionY = positionY;
+        }
 
     }
 
@@ -45,7 +110,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private WindowServerRPC rpc = GWT.create(WindowServerRPC.class);
+    private WindowServerRPC rpc;
 
     @Override
     protected boolean delegateCaptionHandling() {
@@ -55,14 +120,14 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        initRPC(rpc);
+        rpc = RpcProxy.create(WindowServerRPC.class, this);
+
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());
         getLayoutManager().registerDependency(this, getWidget().header);
         getLayoutManager().registerDependency(this, getWidget().footer);
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().id = getConnectorId();
         getWidget().client = client;
@@ -72,13 +137,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         DOM.setElementProperty(getWidget().closeBox, "id", getConnectorId()
                 + "_window_close");
 
-        if (uidl.hasAttribute("invisible")) {
-            getWidget().hide();
-            return;
-        }
-
         if (isRealUpdate(uidl)) {
-            if (uidl.getBooleanAttribute("modal") != getWidget().vaadinModality) {
+            if (getState().isModal() != getWidget().vaadinModality) {
                 getWidget().setVaadinModality(!getWidget().vaadinModality);
             }
             if (!getWidget().isAttached()) {
@@ -86,12 +146,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
                                                // possible centering
                 getWidget().show();
             }
-            if (uidl.getBooleanAttribute("resizable") != getWidget().resizable) {
-                getWidget().setResizable(!getWidget().resizable);
+            if (getState().isResizable() != getWidget().resizable) {
+                getWidget().setResizable(getState().isResizable());
             }
-            getWidget().resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
+            getWidget().resizeLazy = getState().isResizeLazy();
 
-            getWidget().setDraggable(!uidl.hasAttribute("fixedposition"));
+            getWidget().setDraggable(getState().isDraggable());
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
@@ -103,7 +163,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().visibilityChangesDisabled = true;
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -116,8 +175,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getWidget().setClosable(!isReadOnly());
 
         // Initialize the position form UIDL
-        int positionx = uidl.getIntVariable("positionx");
-        int positiony = uidl.getIntVariable("positiony");
+        int positionx = getState().getPositionX();
+        int positiony = getState().getPositionY();
         if (positionx >= 0 || positiony >= 0) {
             if (positionx < 0) {
                 positionx = 0;
@@ -131,31 +190,11 @@ public class WindowConnector extends AbstractComponentContainerConnector
         boolean showingUrl = false;
         int childIndex = 0;
         UIDL childUidl = uidl.getChildUIDL(childIndex++);
-        while ("open".equals(childUidl.getTag())) {
-            // TODO multiple opens with the same target will in practice just
-            // open the last one - should we fix that somehow?
-            final String parsedUri = client.translateVaadinUri(childUidl
-                    .getStringAttribute("src"));
-            if (!childUidl.hasAttribute("name")) {
-                final Frame frame = new Frame();
-                DOM.setStyleAttribute(frame.getElement(), "width", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "height", "100%");
-                DOM.setStyleAttribute(frame.getElement(), "border", "0px");
-                frame.setUrl(parsedUri);
-                getWidget().contentPanel.setWidget(frame);
-                showingUrl = true;
-            } else {
-                final String target = childUidl.getStringAttribute("name");
-                Window.open(parsedUri, target, "");
-            }
-            childUidl = uidl.getChildUIDL(childIndex++);
-        }
 
         final ComponentConnector lo = client.getPaintable(childUidl);
         if (getWidget().layout != null) {
             if (getWidget().layout != lo) {
                 // remove old
-                client.unregisterPaintable(getWidget().layout);
                 getWidget().contentPanel.remove(getWidget().layout.getWidget());
                 // add new
                 if (!showingUrl) {
@@ -167,8 +206,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().contentPanel.setWidget(lo.getWidget());
             getWidget().layout = lo;
         }
-
-        getWidget().layout.updateFromUIDL(childUidl, client);
 
         // we may have actions and notifications
         if (uidl.getChildCount() > 1) {
@@ -194,13 +231,9 @@ public class WindowConnector extends AbstractComponentContainerConnector
         // Center this window on screen if requested
         // This had to be here because we might not know the content size before
         // everything is painted into the window
-        if (uidl.getBooleanAttribute("center")) {
-            // mark as centered - this is unset on move/resize
-            getWidget().centered = true;
-        } else {
-            // don't try to center the window anymore
-            getWidget().centered = false;
-        }
+
+        // centered is this is unset on move/resize
+        getWidget().centered = getState().isCentered();
         getWidget().setVisible(true);
 
         // ensure window is not larger than browser window
@@ -315,11 +348,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     public WindowState getState() {
         return (WindowState) super.getState();
-    }
-
-    @Override
-    protected WindowState createState() {
-        return GWT.create(WindowState.class);
     }
 
     /**

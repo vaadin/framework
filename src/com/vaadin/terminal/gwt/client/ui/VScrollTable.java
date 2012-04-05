@@ -4364,7 +4364,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
             protected final int rowKey;
-            private List<UIDL> pendingComponentPaints;
 
             private String[] actionKeys = null;
             private final TableRowElement rowElement;
@@ -4491,7 +4490,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                         addCell(uidl, cellContent.getWidget(), aligns[col++],
                                 style, sorted);
-                        paintComponent(cellContent, (UIDL) cell);
                     }
                 }
             }
@@ -4562,30 +4560,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             public int getIndex() {
                 return index;
-            }
-
-            protected void paintComponent(ComponentConnector p, UIDL uidl) {
-                if (isAttached()) {
-                    p.updateFromUIDL(uidl, client);
-                } else {
-                    if (pendingComponentPaints == null) {
-                        pendingComponentPaints = new LinkedList<UIDL>();
-                    }
-                    pendingComponentPaints.add(uidl);
-                }
-            }
-
-            @Override
-            protected void onAttach() {
-                super.onAttach();
-                if (pendingComponentPaints != null) {
-                    for (UIDL uidl : pendingComponentPaints) {
-                        ComponentConnector paintable = (ComponentConnector) ConnectorMap
-                                .get(client).getConnector(uidl.getId());
-                        paintable.updateFromUIDL(uidl, client);
-                    }
-                    pendingComponentPaints.clear();
-                }
             }
 
             @Override

@@ -1,9 +1,15 @@
-/* 
+/*
 @VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.client;
 
+import java.io.Serializable;
 import java.util.List;
+
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
+import com.vaadin.terminal.gwt.client.communication.AbstractServerConnectorEvent;
 
 /**
  * Event for containing data related to a change in the {@link ServerConnector}
@@ -16,11 +22,17 @@ import java.util.List;
  * @since 7.0.0
  * 
  */
-public class ConnectorHierarchyChangedEvent {
+public class ConnectorHierarchyChangeEvent extends
+        AbstractServerConnectorEvent<ConnectorHierarchyChangeHandler> {
+    /**
+     * Type of this event, used by the event bus.
+     */
+    public static final Type<ConnectorHierarchyChangeHandler> TYPE = new Type<ConnectorHierarchyChangeHandler>();
+
     List<ComponentConnector> oldChildren;
     private ComponentContainerConnector parent;
 
-    public ConnectorHierarchyChangedEvent() {
+    public ConnectorHierarchyChangeEvent() {
     }
 
     /**
@@ -64,6 +76,22 @@ public class ConnectorHierarchyChangedEvent {
      */
     public void setParent(ComponentContainerConnector parent) {
         this.parent = parent;
+    }
+
+    public interface ConnectorHierarchyChangeHandler extends Serializable,
+            EventHandler {
+        public void onConnectorHierarchyChange(
+                ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent);
+    }
+
+    @Override
+    public void dispatch(ConnectorHierarchyChangeHandler handler) {
+        handler.onConnectorHierarchyChange(this);
+    }
+
+    @Override
+    public GwtEvent.Type<ConnectorHierarchyChangeHandler> getAssociatedType() {
+        return TYPE;
     }
 
 }

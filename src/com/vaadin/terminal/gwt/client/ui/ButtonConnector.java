@@ -8,16 +8,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.Button;
 
 @Component(value = Button.class, loadStyle = LoadStyle.EAGER)
-public class ButtonConnector extends AbstractComponentConnector {
+public class ButtonConnector extends AbstractComponentConnector implements
+        Paintable {
 
     /**
      * RPC interface for calls from client to server.
@@ -48,16 +50,14 @@ public class ButtonConnector extends AbstractComponentConnector {
     @Override
     public void init() {
         super.init();
-        ButtonServerRpc rpcProxy = GWT.create(ButtonServerRpc.class);
-        getWidget().buttonRpcProxy = initRPC(rpcProxy);
+        getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
+                this);
     }
 
-    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Ensure correct implementation,
         // but don't let container manage caption etc.
-        super.updateFromUIDL(uidl, client);
         if (!isRealUpdate(uidl)) {
             return;
         }
@@ -123,8 +123,4 @@ public class ButtonConnector extends AbstractComponentConnector {
         return (ButtonState) super.getState();
     }
 
-    @Override
-    protected ComponentState createState() {
-        return GWT.create(ButtonState.class);
-    }
 }
