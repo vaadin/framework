@@ -26,7 +26,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
 
     public static class AbstractOrderedLayoutState extends AbstractLayoutState {
-        private boolean spacing = true;
+        private boolean spacing = false;
 
         public boolean isSpacing() {
             return spacing;
