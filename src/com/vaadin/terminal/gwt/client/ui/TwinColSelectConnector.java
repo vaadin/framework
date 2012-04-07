@@ -34,6 +34,12 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
     }
 
     @Override
+    public void onUnregister() {
+        getLayoutManager().unregisterDependency(this,
+                getWidget().captionWrapper.getElement());
+    }
+
+    @Override
     protected Widget createWidget() {
         return GWT.create(VTwinColSelect.class);
     }

@@ -70,6 +70,20 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     @Override
+    public void onUnregister() {
+        LayoutManager lm = getLayoutManager();
+
+        VMeasuringOrderedLayout layout = getWidget();
+        lm.unregisterDependency(this, layout.spacingMeasureElement);
+
+        // Unregister child caption listeners
+        for (ComponentConnector child : getChildren()) {
+            VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
+            slot.setCaption(null);
+        }
+    }
+
+    @Override
     public AbstractOrderedLayoutState getState() {
         return (AbstractOrderedLayoutState) super.getState();
     }

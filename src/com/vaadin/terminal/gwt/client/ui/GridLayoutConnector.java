@@ -89,6 +89,19 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     @Override
+    public void onUnregister() {
+        VGridLayout layout = getWidget();
+        getLayoutManager().unregisterDependency(this,
+                layout.spacingMeasureElement);
+
+        // Unregister caption size dependencies
+        for (ComponentConnector child : getChildren()) {
+            Cell cell = layout.widgetToCell.get(child.getWidget());
+            cell.slot.setCaption(null);
+        }
+    }
+
+    @Override
     public GridLayoutState getState() {
         return (GridLayoutState) super.getState();
     }
