@@ -16,6 +16,14 @@
 		name="com.vaadin.terminal.gwt.DefaultWidgetSetBrowserSpecificOverrides" />
 
 	<source path="client" />
+	
+	<!-- TODO only for development -->
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.VerticalBoxLayoutConnector">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VerticalLayoutConnector" />
+	</replace-with>
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.HorizontalBoxLayoutConnector">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.HorizontalLayoutConnector" />
+	</replace-with>
 
 	<!-- Use own Scheduler implementation to be able to track if commands are 
 		running -->

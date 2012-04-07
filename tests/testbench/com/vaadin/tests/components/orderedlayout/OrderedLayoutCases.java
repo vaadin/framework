@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.WrappedRequest;
@@ -20,6 +21,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.VerticalLayout;
 
+@Theme("tests-components")
 public class OrderedLayoutCases extends AbstractTestRoot {
     private static final String[] dimensionValues = { "-1px", "5px", "350px",
             "800px", "100%", "50%" };
