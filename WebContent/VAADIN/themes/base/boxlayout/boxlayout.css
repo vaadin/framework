@@ -1,0 +1,143 @@
+.v-boxlayout.v-margin-top 		{padding-top: 		18px;}
+.v-boxlayout.v-margin-right 	{padding-right: 	18px;}
+.v-boxlayout.v-margin-bottom 	{padding-bottom: 	18px;}
+.v-boxlayout.v-margin-left 		{padding-left: 		18px;}
+
+.v-spacing {
+	width: 7px;
+	height: 7px;
+}
+
+.v-boxlayout {
+	display: inline-block;
+}
+
+.v-boxlayout.v-horizontal {
+	white-space: nowrap;
+}
+
+.v-boxlayout > .v-expand {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+}
+
+.v-slot,
+.v-spacing {
+	display: inline-block;
+	white-space: normal;
+	vertical-align: top;
+}
+
+.v-vertical > .v-slot,
+.v-vertical > .v-expand > .v-slot {
+	display: block;
+}
+
+.v-horizontal > .v-slot,
+.v-horizontal > .v-expand > .v-slot {
+	height: 100%;
+}
+
+.v-vertical > .v-spacing,
+.v-vertical > .v-expand > .v-spacing {
+	width: 0;
+}
+
+.v-horizontal > .v-spacing,
+.v-horizontal > .v-expand > .v-spacing {
+	height: 0;
+}
+
+.v-align-middle:before,
+.v-align-bottom:before,
+.v-expand > .v-align-middle:before,
+.v-expand > .v-align-bottom:before {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+	width: 0;
+}
+
+.v-align-middle,
+.v-align-bottom {
+	white-space: nowrap;;
+}
+
+.v-align-middle > .v-paintable,
+.v-align-bottom > .v-paintable {
+	display: inline-block;
+	/* TODO this is a bit tricky, since it will override component defaults in some cases */
+	white-space: normal;
+}
+
+.v-align-middle > .v-paintable {
+	vertical-align: middle;
+}
+
+.v-align-bottom > .v-paintable {
+	vertical-align: bottom;
+}
+
+.v-align-center {
+	text-align: center;
+}
+
+.v-align-center > .v-paintable {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.v-align-right {
+	text-align: right;
+}
+
+.v-align-right > .v-paintable {
+	margin-left: auto;
+}
+
+.v-has-caption {
+	display: inline-block;
+}
+
+.v-caption {
+	overflow: visible;
+	vertical-align: middle;
+}
+
+.v-caption-on-left,
+.v-caption-on-right {
+	white-space: nowrap;
+}
+
+.v-caption-on-left > .v-caption,
+.v-caption-on-right > .v-caption {
+	display: inline-block;
+}
+
+.v-caption-on-left > .v-caption {
+	padding-right: .5em;
+}
+
+.v-caption-on-right > .v-caption {
+	padding-left: .5em;
+}
+
+.v-caption-on-left > .v-paintable,
+.v-caption-on-right > .v-paintable {
+	display: inline-block;
+	vertical-align: middle;
+	/* TODO this is a bit tricky, since it will override component defaults in some cases */
+	white-space: normal;
+}
+
+.v-has-caption.v-has-width > .v-paintable {
+	width: 100% !important;
+}
+
+.v-has-caption.v-has-height > .v-paintable {
+	height: 100% !important;
+}

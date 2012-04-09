@@ -111,6 +111,7 @@ public abstract class AbstractBoxLayoutConnector extends
                 icon != null ? icon.getURL() : null, connector.getState()
                         .getStyles());
         // Description is handled from somewhere else?
+        // TODO handle error indication
     }
 
     @Override
@@ -163,6 +164,8 @@ public abstract class AbstractBoxLayoutConnector extends
         super.onStateChanged(stateChangeEvent);
         getWidget().setMargin(new VMarginInfo(getState().getMarginsBitmask()));
         getWidget().setSpacing(getState().isSpacing());
+
+        // If height is set to undefined we need to run this
         getWidget().recalculateLayoutHeight();
     }
 
@@ -177,6 +180,8 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     public void onElementResize(ElementResizeEvent e) {
+        // The following needs to be run every time a child components size
+        // changes
         getWidget().recalculateUsedSpace();
         getWidget().recalculateLayoutHeight();
     }

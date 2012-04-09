@@ -13,10 +13,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 public class VBoxLayout extends FlowPanel {
 
@@ -27,13 +27,12 @@ public class VBoxLayout extends FlowPanel {
     private Map<Widget, Slot> widgetToSlot = new HashMap<Widget, Slot>();
 
     public VBoxLayout() {
-        setStylePrimaryName("v-layout");
+        setStylePrimaryName("v-boxlayout");
         setVertical(true);
     }
 
     public void setVertical(boolean isVertical) {
         vertical = isVertical;
-        addStyleName("v-box");
         if (vertical) {
             addStyleName("v-vertical");
             removeStyleName("v-horizontal");
@@ -172,6 +171,8 @@ public class VBoxLayout extends FlowPanel {
             if (spacer == null) {
                 return 0;
             }
+            // TODO place for optimization (in expense of theme flexibility):
+            // only measure one of the elements and cache the value
             if (vertical) {
                 return spacer.getOffsetHeight();
             } else {
@@ -245,9 +246,14 @@ public class VBoxLayout extends FlowPanel {
             }
 
             // Styles
-            caption.setClassName("v-caption");
-            for (String style : styles) {
-                caption.addClassName("v-caption-" + style);
+            if (caption != null) {
+                caption.setClassName("v-caption");
+
+                if (styles != null) {
+                    for (String style : styles) {
+                        caption.addClassName("v-caption-" + style);
+                    }
+                }
             }
 
             // TODO add extra styles to captionWrap as well?
@@ -256,12 +262,19 @@ public class VBoxLayout extends FlowPanel {
 
         }
 
+        @Override
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (DOM.eventGetType(event) == Event.ONLOAD
+                    && icon == DOM.eventGetTarget(event)) {
+                updateSize();
+            }
+        }
+
         public void updateSize() {
             if (caption == null) {
                 return;
             }
-
-            VConsole.log("####################### updateSize");
 
             Style style = captionWrap.getStyle();
 
@@ -413,7 +426,7 @@ public class VBoxLayout extends FlowPanel {
             if (isExpanding) {
                 if (expandWrapper == null) {
                     expandWrapper = DOM.createDiv();
-                    expandWrapper.setClassName("v-box-expand");
+                    expandWrapper.setClassName("v-expand");
                     for (; getElement().getChildCount() > 0;) {
                         Node el = getElement().getChild(0);
                         expandWrapper.appendChild(el);
@@ -428,6 +441,7 @@ public class VBoxLayout extends FlowPanel {
                         totalSize += vertical ? slot.getOffsetHeight() : slot
                                 .getOffsetWidth();
                     }
+                    // TODO fails in Opera, always returns 0
                     totalSize += slot.getSpacingSize(vertical);
                 }
 
