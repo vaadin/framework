@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
@@ -12,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -115,26 +115,10 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.columnWidths = new int[cols];
         layout.rowHeights = new int[rows];
 
-        if (layout.cells == null) {
-            layout.cells = new Cell[cols][rows];
-        } else if (layout.cells.length != cols
-                || layout.cells[0].length != rows) {
-            Cell[][] newCells = new Cell[cols][rows];
-            for (int i = 0; i < layout.cells.length; i++) {
-                for (int j = 0; j < layout.cells[i].length; j++) {
-                    if (i < cols && j < rows) {
-                        newCells[i][j] = layout.cells[i][j];
-                    }
-                }
-            }
-            layout.cells = newCells;
-        }
+        layout.setSize(rows, cols);
 
         final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
-
-        HashSet<Widget> nonRenderedWidgets = new HashSet<Widget>(
-                layout.widgetToCell.keySet());
 
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL r = (UIDL) i.next();
@@ -145,11 +129,34 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
                         int row = cellUidl.getIntAttribute("y");
                         int col = cellUidl.getIntAttribute("x");
 
-                        Cell cell = layout.getCell(row, col, cellUidl);
+                        Widget previousWidget = null;
+
+                        Cell cell = layout.getCell(row, col);
+                        if (cell != null && cell.slot != null) {
+                            // This is an update. Track if the widget changes
+                            // and update the caption if that happens. This
+                            // workaround can be removed once the DOM update is
+                            // done in onContainerHierarchyChange
+                            previousWidget = cell.slot.getWidget();
+                        }
+
+                        cell = layout.createCell(row, col);
+
+                        cell.updateFromUidl(cellUidl);
+
                         if (cell.hasContent()) {
                             cell.setAlignment(new AlignmentInfo(
                                     alignments[alignmentIndex++]));
-                            nonRenderedWidgets.remove(cell.slot.getWidget());
+                            if (cell.slot.getWidget() != previousWidget) {
+                                // Widget changed or widget moved from another
+                                // slot. Update its caption as the widget might
+                                // have called updateCaption when the widget was
+                                // still in its old slot. This workaround can be
+                                // removed once the DOM update
+                                // is done in onContainerHierarchyChange
+                                updateCaption(ConnectorMap.get(getConnection())
+                                        .getConnector(cell.slot.getWidget()));
+                            }
                         }
                     }
                 }
@@ -168,9 +175,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             needCaptionUpdate = false;
 
             for (ComponentConnector child : getChildren()) {
-                if (child.delegateCaptionHandling()) {
-                    updateCaption(child);
-                }
+                updateCaption(child);
             }
         }
         getLayoutManager().setNeedsUpdate(this);
@@ -200,11 +205,19 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     }
 
     public void updateCaption(ComponentConnector childConnector) {
+        if (!childConnector.delegateCaptionHandling()) {
+            // Check not required by interface but by workarounds in this class
+            // when updateCaption is explicitly called for all children.
+            return;
+        }
+
         VGridLayout layout = getWidget();
         Cell cell = layout.widgetToCell.get(childConnector.getWidget());
         if (cell == null) {
-            // workaround before updateFromUidl is removed. Update the
-            // captions at the end of updateFromUidl instead of immediately
+            // workaround before updateFromUidl is removed. We currently update
+            // the captions at the end of updateFromUidl instead of immediately
+            // because the DOM has not been set up at this point (as it is done
+            // in updateFromUidl)
             needCaptionUpdate = true;
             return;
         }
