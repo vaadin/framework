@@ -15,8 +15,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -32,7 +30,6 @@ public class TabKeyboardNavigation extends TestBase {
     protected void setup() {
         ts.setWidth("500px");
         ts.setHeight("500px");
-        // ts.setTabIndex(0);
 
         ts.addListener(new FocusListener() {
             public void focus(FocusEvent event) {
@@ -43,14 +40,6 @@ public class TabKeyboardNavigation extends TestBase {
         ts.addListener(new BlurListener() {
             public void blur(BlurEvent event) {
                 focusblur.log("Tabsheet blurred!");
-            }
-        });
-
-        ts.addListener(new SelectedTabChangeListener() {
-
-            public void selectedTabChange(SelectedTabChangeEvent event) {
-                // ts.setSelectedTab(tabs.get(Math.max(0,
-                // tabs.indexOf(ts.getSelectedTab()) - 1)));
             }
         });
 

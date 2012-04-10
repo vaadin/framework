@@ -395,6 +395,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         public void onClick(ClickEvent event) {
             Widget caption = (Widget) event.getSource();
             int index = getWidgetIndex(caption.getParent());
+            // IE needs explicit focus()
+            if (BrowserInfo.get().isIE()) {
+                getTabsheet().focus();
+            }
             getTabsheet().onTabSelected(index);
         }
 
@@ -562,18 +566,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      * @return Whether the tab could be selected or not.
      */
     private boolean onTabSelected(final int tabIndex) {
-        if (disabled || waitingForResponse) {
+        Tab tab = tb.getTab(tabIndex);
+        if (client == null || disabled || waitingForResponse) {
             return false;
         }
-        final Object tabKey = tabKeys.get(tabIndex);
-        if (disabledTabKeys.contains(tabKey)) {
+        if (!tab.isEnabledOnServer() || tab.isHiddenOnServer()) {
             return false;
         }
-        if (client != null && activeTabIndex != tabIndex) {
+        if (activeTabIndex != tabIndex) {
             tb.selectTab(tabIndex);
 
+            // If this TabSheet already has focus, set the new selected tab
+            // as focused.
             if (focusedTab != null) {
-                focusedTab = tb.getTab(tabIndex);
+                focusedTab = tab;
             }
 
             addStyleDependentName("loading");
@@ -586,10 +592,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             client.updateVariable(id, "selected", tabKeys.get(tabIndex)
                     .toString(), true);
             waitingForResponse = true;
-
-            return true;
         }
-        return false;
+        // Note that we return true when tabIndex == activeTabIndex; the active
+        // tab could be selected, it's just a no-op.
+        return true;
     }
 
     public ApplicationConnection getApplicationConnection() {
@@ -1044,6 +1050,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
     }
 
+    private boolean isClipped(Tab tab) {
+        return tab.getAbsoluteLeft() + tab.getOffsetWidth() > getAbsoluteLeft()
+                + getOffsetWidth() - scroller.getOffsetWidth();
+    }
+
     @Override
     protected void clearPaintables() {
 
@@ -1126,60 +1137,83 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             int keycode = event.getNativeEvent().getKeyCode();
 
             if (keycode == getPreviousTabKey()) {
-                int newTabIndex = activeTabIndex;
-                // Find the previous non-disabled tab with wraparound.
-                do {
-                    newTabIndex = (newTabIndex != 0) ? newTabIndex - 1 : tb
-                            .getTabCount() - 1;
-                } while (newTabIndex != activeTabIndex
-                        && !onTabSelected(newTabIndex));
-                activeTabIndex = newTabIndex;
-
-                // Tab scrolling
-                if (isScrolledTabs()) {
-                    int newFirstIndex = tb.scrollLeft(scrollerIndex);
-                    if (newFirstIndex != -1) {
-                        scrollerIndex = newFirstIndex;
-                        updateTabScroller();
-                    }
-                }
-
+                selectPreviousTab();
             } else if (keycode == getNextTabKey()) {
-                int newTabIndex = activeTabIndex;
-                // Find the next non-disabled tab with wraparound.
-                do {
-                    newTabIndex = (newTabIndex + 1) % tb.getTabCount();
-                } while (newTabIndex != activeTabIndex
-                        && !onTabSelected(newTabIndex));
-                activeTabIndex = newTabIndex;
-
-                if (isClippedTabs()) {
-                    int newFirstIndex = tb.scrollRight(scrollerIndex);
-                    if (newFirstIndex != -1) {
-                        scrollerIndex = newFirstIndex;
-                        updateTabScroller();
-                    }
-                }
-
+                selectNextTab();
             } else if (keycode == getCloseTabKey()) {
                 Tab tab = tb.getTab(activeTabIndex);
                 if (tab.isClosable()) {
                     tab.onClose();
-                    removeTab(activeTabIndex);
                 }
             }
         }
     }
 
+    /**
+     * @return The key code of the keyboard shortcut that selects the previous
+     *         tab in a focused tabsheet.
+     */
     protected int getPreviousTabKey() {
         return KeyCodes.KEY_LEFT;
     }
 
+    /**
+     * @return The key code of the keyboard shortcut that selects the next tab
+     *         in a focused tabsheet.
+     */
     protected int getNextTabKey() {
         return KeyCodes.KEY_RIGHT;
     }
 
+    /**
+     * @return The key code of the keyboard shortcut that closes the currently
+     *         selected tab in a focused tabsheet.
+     */
     protected int getCloseTabKey() {
         return KeyCodes.KEY_DELETE;
+    }
+
+    private void selectPreviousTab() {
+        int newTabIndex = activeTabIndex;
+        // Find the previous visible and enabled tab if any.
+        do {
+            newTabIndex--;
+        } while (newTabIndex >= 0 && !onTabSelected(newTabIndex));
+
+        if (newTabIndex >= 0) {
+            activeTabIndex = newTabIndex;
+            if (isScrolledTabs()) {
+                // Scroll until the new active tab is visible
+                int newScrollerIndex = scrollerIndex;
+                while (tb.getTab(activeTabIndex).getAbsoluteLeft() < getAbsoluteLeft()
+                        && newScrollerIndex != -1) {
+                    newScrollerIndex = tb.scrollLeft(newScrollerIndex);
+                }
+                scrollerIndex = newScrollerIndex;
+                updateTabScroller();
+            }
+        }
+    }
+
+    private void selectNextTab() {
+        int newTabIndex = activeTabIndex;
+        // Find the next visible and enabled tab if any.
+        do {
+            newTabIndex++;
+        } while (newTabIndex < getTabCount() && !onTabSelected(newTabIndex));
+
+        if (newTabIndex < getTabCount()) {
+            activeTabIndex = newTabIndex;
+            if (isClippedTabs()) {
+                // Scroll until the new active tab is completely visible
+                int newScrollerIndex = scrollerIndex;
+                while (isClipped(tb.getTab(activeTabIndex))
+                        && newScrollerIndex != -1) {
+                    newScrollerIndex = tb.scrollRight(newScrollerIndex);
+                }
+                scrollerIndex = newScrollerIndex;
+                updateTabScroller();
+            }
+        }
     }
 }

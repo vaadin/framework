@@ -366,6 +366,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     @Override
     public void show() {
         if (!windowOrder.contains(this)) {
+            // This is needed if the window is hidden and then shown again.
+            // Otherwise this VWindow is added to windowOrder in the
+            // constructor.
             windowOrder.add(this);
         }
 
@@ -382,6 +385,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
         super.hide();
 
+        // Remove window from windowOrder to avoid references being left
+        // hanging.
         windowOrder.remove(this);
     }
 

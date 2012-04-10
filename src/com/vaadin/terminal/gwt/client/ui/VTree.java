@@ -67,7 +67,14 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 
+    /**
+     * Click selects the current node, ctrl/shift toggles multi selection
+     */
     public static final int MULTISELECT_MODE_DEFAULT = 0;
+
+    /**
+     * Click/touch on node toggles its selected status
+     */
     public static final int MULTISELECT_MODE_SIMPLE = 1;
 
     private static final int CHARCODE_SPACE = 32;
@@ -1197,7 +1204,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         selectedIds.add(child.key);
                     }
                     return false;
-                } else if (child.isLeaf()) {
+                } else {
                     child.setSelected(true);
                     selectedIds.add(child.key);
                 }
