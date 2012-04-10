@@ -36,7 +36,7 @@ public abstract class AbstractSplitPanelConnector extends
          *            The new position in % if the current unit is %, in px
          *            otherwise
          */
-        public void setSplitterPosition(int position);
+        public void setSplitterPosition(float position);
 
         /**
          * Called when a click event has occurred on the splitter.
@@ -49,16 +49,16 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     public static class SplitterState {
-        private int position;
+        private float position;
         private String positionUnit;
-        private boolean positionReversed;
-        private boolean locked;
+        private boolean positionReversed = false;
+        private boolean locked = false;
 
-        public int getPosition() {
+        public float getPosition() {
             return position;
         }
 
-        public void setPosition(int position) {
+        public void setPosition(float position) {
             this.position = position;
         }
 
@@ -140,10 +140,13 @@ public abstract class AbstractSplitPanelConnector extends
 
             public void splitterMoved(SplitterMoveEvent event) {
                 String position = getWidget().getSplitterPosition();
-                int pos = 0;
+                float pos = 0;
                 if (position.indexOf("%") > 0) {
-                    pos = Math.round(Float.valueOf(position.substring(0,
-                            position.length() - 1)));
+                    // Send % values as a fraction to avoid that the splitter
+                    // "jumps" when server responds with the integer pct value
+                    // (e.g. dragged 16.6% -> should not jump to 17%)
+                    pos = Float.valueOf(position.substring(0,
+                            position.length() - 1));
                 } else {
                     pos = Integer.parseInt(position.substring(0,
                             position.length() - 2));
