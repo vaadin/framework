@@ -25,6 +25,7 @@ import com.google.gwt.xhr.client.XMLHttpRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -564,8 +565,13 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     + emphasizedHDrop.toString().toLowerCase(), false);
         }
         if (doLayout) {
-            client.doLayout(false);
+            notifySizePotentiallyChanged();
         }
+    }
+
+    private void notifySizePotentiallyChanged() {
+        LayoutManager.get(client).setNeedsMeasure(
+                ConnectorMap.get(client).getConnector(getElement()));
     }
 
     protected void emphasis(VDragEvent drag) {
@@ -578,9 +584,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;
 
-        // TODO build (to be an example) an emphasis mode where drag image
-        // is fitted before or after the content
-        client.doLayout(false);
+        notifySizePotentiallyChanged();
     }
 
 }

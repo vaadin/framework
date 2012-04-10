@@ -1123,7 +1123,9 @@ public class ApplicationConnection {
                         + (updateDuration.elapsedMillis() - startProcessing)
                         + " ms");
 
-                doLayout(false);
+                LayoutManager layoutManager = getLayoutManager();
+                layoutManager.setEverythingNeedsMeasure();
+                layoutManager.layoutNow();
 
                 updateDuration
                         .logDuration(" * Layout processing completed", 10);
@@ -2182,39 +2184,7 @@ public class ApplicationConnection {
 
     }
 
-    /*
-     * Helper to run layout functions triggered by child components with a
-     * decent interval.
-     */
-    private final Timer layoutTimer = new Timer() {
-
-        private boolean isPending = false;
-
-        @Override
-        public void schedule(int delayMillis) {
-            if (!isPending) {
-                super.schedule(delayMillis);
-                isPending = true;
-            }
-        }
-
-        @Override
-        public void run() {
-            VConsole.log("Running re-layout of " + view.getClass().getName());
-            runDescendentsLayout(view.getWidget());
-            isPending = false;
-        }
-    };
-
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
-
-    /**
-     * Components can call this function to run all layout functions. This is
-     * usually done, when component knows that its size has changed.
-     */
-    public void requestLayoutPhase() {
-        layoutTimer.schedule(500);
-    }
 
     protected String getUidlSecurityKey() {
         return uidlSecurityKey;
@@ -2375,36 +2345,6 @@ public class ApplicationConnection {
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getConnectorMap().getConnector(widget),
                 eventIdentifier);
-    }
-
-    private boolean layoutPending = false;
-    private ScheduledCommand layoutCommand = new ScheduledCommand() {
-        public void execute() {
-            /*
-             * Layout again if a new layout is requested while the current one
-             * is running.
-             */
-            while (layoutPending) {
-                layoutPending = false;
-                layoutManager.doLayout();
-            }
-        }
-    };
-
-    public void doLayout(boolean lazy) {
-        if (!lazy) {
-            layoutPending = true;
-            layoutCommand.execute();
-        } else if (!layoutPending) {
-            layoutPending = true;
-            /*
-             * Current layoutCommand will do layouts again if layoutScheduled is
-             * set to true -> no need to schedule another command
-             */
-            if (!layoutManager.isLayoutRunning()) {
-                Scheduler.get().scheduleDeferred(layoutCommand);
-            }
-        }
     }
 
     LayoutManager getLayoutManager() {

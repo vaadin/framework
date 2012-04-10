@@ -13,6 +13,7 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
@@ -34,10 +35,22 @@ public class LayoutManager {
     private final Collection<ManagedLayout> needsHorizontalLayout = new HashSet<ManagedLayout>();
     private final Collection<ManagedLayout> needsVerticalLayout = new HashSet<ManagedLayout>();
 
+    private final Collection<ComponentConnector> needsMeasure = new HashSet<ComponentConnector>();
+
     private final Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
 
     private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<Element, Collection<ElementResizeListener>>();
     private final Set<Element> listenersToFire = new HashSet<Element>();
+
+    private boolean layoutPending = false;
+    private Timer layoutTimer = new Timer() {
+        @Override
+        public void run() {
+            cancel();
+            layoutNow();
+        }
+    };
+    private boolean everythingNeedsMeasure = false;
 
     public void setConnection(ApplicationConnection connection) {
         if (this.connection != null) {
@@ -136,19 +149,34 @@ public class LayoutManager {
         }
     }
 
-    public void doLayout() {
+    private void layoutLater() {
+        if (!layoutPending) {
+            layoutPending = true;
+            layoutTimer.schedule(100);
+        }
+    }
+
+    public void layoutNow() {
         if (isLayoutRunning()) {
             throw new IllegalStateException(
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
+        layoutPending = false;
+        try {
+            currentDependencyTree = new LayoutDependencyTree();
+            doLayout();
+        } finally {
+            currentDependencyTree = null;
+        }
+    }
+
+    private void doLayout() {
         VConsole.log("Starting layout phase");
 
         Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
 
         int passes = 0;
         Duration totalDuration = new Duration();
-
-        currentDependencyTree = new LayoutDependencyTree();
 
         for (ManagedLayout layout : needsHorizontalLayout) {
             currentDependencyTree.setNeedsHorizontalLayout(layout, true);
@@ -158,6 +186,12 @@ public class LayoutManager {
         }
         needsHorizontalLayout.clear();
         needsVerticalLayout.clear();
+
+        for (ComponentConnector connector : needsMeasure) {
+            currentDependencyTree.setNeedsMeasure(connector, true);
+        }
+        needsMeasure.clear();
+
         measureNonPaintables();
 
         VConsole.log("Layout init in " + totalDuration.elapsedMillis() + " ms");
@@ -167,7 +201,8 @@ public class LayoutManager {
             passes++;
 
             int measuredConnectorCount = measureConnectors(
-                    currentDependencyTree, passes == 1);
+                    currentDependencyTree, everythingNeedsMeasure);
+            everythingNeedsMeasure = false;
 
             int measureTime = passDuration.elapsedMillis();
             VConsole.log("  Measured " + measuredConnectorCount
@@ -287,7 +322,6 @@ public class LayoutManager {
         VConsole.log("Invoke post layout listeners in "
                 + (totalDuration.elapsedMillis() - postLayoutStart) + " ms");
 
-        currentDependencyTree = null;
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
     }
@@ -445,7 +479,8 @@ public class LayoutManager {
                 setNeedsUpdate((ManagedLayout) connector);
             }
         }
-        doLayout();
+        setEverythingNeedsMeasure();
+        layoutNow();
     }
 
     // TODO Rename to setNeedsLayout
@@ -531,19 +566,19 @@ public class LayoutManager {
     }
 
     public void reportOuterHeight(ComponentConnector component, int outerHeight) {
-        if (!isLayoutRunning()) {
-            throw new IllegalStateException(
-                    "Can only report sizes when layout is running");
-        }
         MeasuredSize measuredSize = getMeasuredSize(component);
-        boolean heightChanged = measuredSize.setOuterHeight(outerHeight);
+        if (isLayoutRunning()) {
+            boolean heightChanged = measuredSize.setOuterHeight(outerHeight);
 
-        if (heightChanged) {
-            onConnectorChange(component, false, true);
-            notifyListenersAndDepdendents(component.getWidget().getElement(),
-                    false, true);
+            if (heightChanged) {
+                onConnectorChange(component, false, true);
+                notifyListenersAndDepdendents(component.getWidget()
+                        .getElement(), false, true);
+            }
+            currentDependencyTree.setNeedsVerticalMeasure(component, false);
+        } else if (measuredSize.getOuterHeight() != outerHeight) {
+            setNeedsMeasure(component);
         }
-        currentDependencyTree.setNeedsVerticalMeasure(component, false);
     }
 
     public void reportHeightAssignedToRelative(ComponentConnector component,
@@ -571,20 +606,19 @@ public class LayoutManager {
     }
 
     public void reportOuterWidth(ComponentConnector component, int outerWidth) {
-        if (!isLayoutRunning()) {
-            throw new IllegalStateException(
-                    "Can only report sizes when layout is running");
-        }
-
         MeasuredSize measuredSize = getMeasuredSize(component);
-        boolean widthChanged = measuredSize.setOuterWidth(outerWidth);
+        if (isLayoutRunning()) {
+            boolean widthChanged = measuredSize.setOuterWidth(outerWidth);
 
-        if (widthChanged) {
-            onConnectorChange(component, true, false);
-            notifyListenersAndDepdendents(component.getWidget().getElement(),
-                    true, false);
+            if (widthChanged) {
+                onConnectorChange(component, true, false);
+                notifyListenersAndDepdendents(component.getWidget()
+                        .getElement(), true, false);
+            }
+            currentDependencyTree.setNeedsHorizontalMeasure(component, false);
+        } else if (measuredSize.getOuterWidth() != outerWidth) {
+            setNeedsMeasure(component);
         }
-        currentDependencyTree.setNeedsHorizontalMeasure(component, false);
     }
 
     public void addElementResizeListener(Element element,
@@ -617,5 +651,18 @@ public class LayoutManager {
             measuredNonPaintableElements.remove(element);
             setMeasuredSize(element, null);
         }
+    }
+
+    public void setNeedsMeasure(ComponentConnector component) {
+        if (isLayoutRunning()) {
+            currentDependencyTree.setNeedsMeasure(component, true);
+        } else {
+            needsMeasure.add(component);
+            layoutLater();
+        }
+    }
+
+    public void setEverythingNeedsMeasure() {
+        everythingNeedsMeasure = true;
     }
 }

@@ -301,23 +301,25 @@ public class VAbstractSplitPanel extends ComplexPanel {
                     (pixelPosition + getSplitterSize()) + "px");
 
             LayoutManager layoutManager = LayoutManager.get(client);
-            if (layoutManager.isLayoutRunning()) {
-                ConnectorMap connectorMap = ConnectorMap.get(client);
-                if (firstChild != null) {
-                    ComponentConnector connector = connectorMap
-                            .getConnector(firstChild);
-                    if (connector.isRelativeWidth()) {
-                        layoutManager.reportWidthAssignedToRelative(connector,
-                                pixelPosition);
-                    }
+            ConnectorMap connectorMap = ConnectorMap.get(client);
+            if (firstChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(firstChild);
+                if (connector.isRelativeWidth()) {
+                    layoutManager.reportWidthAssignedToRelative(connector,
+                            pixelPosition);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
                 }
-                if (secondChild != null) {
-                    ComponentConnector connector = connectorMap
-                            .getConnector(secondChild);
-                    if (connector.isRelativeWidth()) {
-                        layoutManager.reportWidthAssignedToRelative(connector,
-                                secondContainerWidth);
-                    }
+            }
+            if (secondChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(secondChild);
+                if (connector.isRelativeWidth()) {
+                    layoutManager.reportWidthAssignedToRelative(connector,
+                            secondContainerWidth);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
                 }
             }
             break;
@@ -348,23 +350,25 @@ public class VAbstractSplitPanel extends ComplexPanel {
                     (pixelPosition + getSplitterSize()) + "px");
 
             layoutManager = LayoutManager.get(client);
-            if (layoutManager.isLayoutRunning()) {
-                ConnectorMap connectorMap = ConnectorMap.get(client);
-                if (firstChild != null) {
-                    ComponentConnector connector = connectorMap
-                            .getConnector(firstChild);
-                    if (connector.isRelativeHeight()) {
-                        layoutManager.reportHeightAssignedToRelative(connector,
-                                pixelPosition);
-                    }
+            connectorMap = ConnectorMap.get(client);
+            if (firstChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(firstChild);
+                if (connector.isRelativeHeight()) {
+                    layoutManager.reportHeightAssignedToRelative(connector,
+                            pixelPosition);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
                 }
-                if (secondChild != null) {
-                    ComponentConnector connector = connectorMap
-                            .getConnector(secondChild);
-                    if (connector.isRelativeHeight()) {
-                        layoutManager.reportHeightAssignedToRelative(connector,
-                                secondContainerHeight);
-                    }
+            }
+            if (secondChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(secondChild);
+                if (connector.isRelativeHeight()) {
+                    layoutManager.reportHeightAssignedToRelative(connector,
+                            secondContainerHeight);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
                 }
             }
 
@@ -504,7 +508,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newX + "px");
-        client.doLayout(false);
     }
 
     private void onVerticalMouseMove(int y) {
@@ -548,7 +551,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newY + "px");
-        client.doLayout(false);
     }
 
     public void onMouseUp(Event event) {

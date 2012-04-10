@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -155,13 +156,18 @@ public class VView extends SimplePanel implements ResizeHandler,
      */
     protected void windowSizeMaybeChanged(int newWidth, int newHeight) {
         boolean changed = false;
+        ComponentConnector connector = ConnectorMap.get(connection)
+                .getConnector(this);
         if (width != newWidth) {
             width = newWidth;
             changed = true;
+            connector.getLayoutManager().reportOuterWidth(connector, newWidth);
             VConsole.log("New window width: " + width);
         }
         if (height != newHeight) {
             height = newHeight;
+            connector.getLayoutManager()
+                    .reportOuterHeight(connector, newHeight);
             changed = true;
             VConsole.log("New window height: " + height);
         }
@@ -169,7 +175,7 @@ public class VView extends SimplePanel implements ResizeHandler,
             VConsole.log("Running layout functions due to window resize");
             sendClientResized();
 
-            connection.doLayout(false);
+            connector.getLayoutManager().layoutNow();
         }
     }
 
