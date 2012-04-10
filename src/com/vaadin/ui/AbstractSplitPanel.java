@@ -35,7 +35,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
     private Component secondComponent;
 
-    private int pos = 50;
+    private float pos = 50;
 
     private int posUnit = UNITS_PERCENTAGE;
 
@@ -250,9 +250,10 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @param pos
      *            the new size of the first region in the unit that was last
-     *            used (default is percentage)
+     *            used (default is percentage). Fractions are only allowed when
+     *            unit is percentage.
      */
-    public void setSplitPosition(int pos) {
+    public void setSplitPosition(float pos) {
         setSplitPosition(pos, posUnit, true, false);
     }
 
@@ -261,12 +262,14 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @param pos
      *            the new size of the region in the unit that was last used
-     *            (default is percentage)
+     *            (default is percentage). Fractions are only allowed when unit
+     *            is percentage.
+     * 
      * @param reverse
      *            if set to true the split splitter position is measured by the
      *            second region else it is measured by the first region
      */
-    public void setSplitPosition(int pos, boolean reverse) {
+    public void setSplitPosition(float pos, boolean reverse) {
         setSplitPosition(pos, posUnit, true, reverse);
     }
 
@@ -274,11 +277,12 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * Moves the position of the splitter with given position and unit.
      * 
      * @param pos
-     *            size of the first region
+     *            the new size of the first region. Fractions are only allowed
+     *            when unit is percentage.
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
-    public void setSplitPosition(int pos, int unit) {
+    public void setSplitPosition(float pos, int unit) {
         setSplitPosition(pos, unit, true, false);
     }
 
@@ -286,7 +290,8 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * Moves the position of the splitter with given position and unit.
      * 
      * @param pos
-     *            size of the first region
+     *            the new size of the first region. Fractions are only allowed
+     *            when unit is percentage.
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      * @param reverse
@@ -294,7 +299,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            second region else it is measured by the first region
      * 
      */
-    public void setSplitPosition(int pos, int unit, boolean reverse) {
+    public void setSplitPosition(float pos, int unit, boolean reverse) {
         setSplitPosition(pos, unit, true, reverse);
     }
 
@@ -304,7 +309,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @return position of the splitter
      */
-    public int getSplitPosition() {
+    public float getSplitPosition() {
         return pos;
     }
 
@@ -321,7 +326,8 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * Moves the position of the splitter.
      * 
      * @param pos
-     *            the new size of the first region
+     *            the new size of the first region. Fractions are only allowed
+     *            when unit is percentage.
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      * @param repaintNotNeeded
@@ -329,11 +335,14 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            position info has come from the client side, thus it already
      *            knows the position.
      */
-    private void setSplitPosition(int pos, int unit, boolean repaintNeeded,
+    private void setSplitPosition(float pos, int unit, boolean repaintNeeded,
             boolean reverse) {
         if (unit != UNITS_PERCENTAGE && unit != UNITS_PIXELS) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
+        }
+        if (unit != UNITS_PERCENTAGE) {
+            pos = Math.round(pos);
         }
         this.pos = pos;
         posUnit = unit;
@@ -377,7 +386,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         super.changeVariables(source, variables);
 
         if (variables.containsKey("position") && !isLocked()) {
-            Integer newPos = (Integer) variables.get("position");
+            Float newPos = (Float) variables.get("position");
             setSplitPosition(newPos, posUnit, posReversed);
         }
 

@@ -804,10 +804,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
      * Updates the new split position back to server.
      */
     private void updateSplitPositionToServer() {
-        int pos = 0;
+        float pos = 0;
         if (position.indexOf("%") > 0) {
-            pos = Math.round(Float.valueOf(position.substring(0,
-                    position.length() - 1)));
+            pos = Float.valueOf(position.substring(0, position.length() - 1));
         } else {
             pos = Integer
                     .parseInt(position.substring(0, position.length() - 2));
