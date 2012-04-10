@@ -43,8 +43,9 @@
 		<ul>
 			<li><a href="#overview">Package contents</a>
 			</li>
-			<li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a>
+			<!-- <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a>
 			</li>
+			 -->
 			<li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a>
 			</li>
 			<li><a href="#fixes">Fixes in Vaadin @version@</a>
@@ -85,167 +86,17 @@
 			</ul>
 		</p>
 
-		<h2 id="security-fixes">Security fixes in Vaadin @version-minor@</h2>
-		<p>Vaadin 6.7.0 and later incorporates fixes for the following security issues:</p>
-    <ul>
-        <li><a href="http://dev.vaadin.com/ticket/7669">#7669</a> CSRF/XSS vulnerability through separator injection</li>
-        <li><a href="http://dev.vaadin.com/ticket/7670">#7670</a> Directory traversal vulnerability</li>
-        <li><a href="http://dev.vaadin.com/ticket/7671">#7671</a> Contributory XSS: Possibility to inject HTML/JavaScript in system error messages</li>
-        <li><a href="http://dev.vaadin.com/ticket/7672">#7672</a> Contributory XSS: possibility for injection in certain components</li>
-    </ul>
-
-		<p>
-		These issues were discovered by Wouter Coekaerts (<a href="http://wouter.coekaerts.be/">http://wouter.coekaerts.be/</a>) and an internal review.
-		Immediate upgrade to a version containing the fixes (6.6.7 or later or 6.7.0 or later) is strongly recommended for all users.
-		</p>
-
-		<p>
-		The most serious of these issues is the directory traversal attack that can allow read access to the class files of an application as well as some configuration information. 
-		</p> 
-
-		<p>
-		If unable to immediately upgrade Vaadin to a version containing the fixes, the directory traversal vulnerability can be mitigated by not mapping the context path
-		"/VAADIN" to a Vaadin servlet in web.xml but instead deploying such static resources (themes and widgetsets) directly on the server and serving them as files. 
-		</p>
-
-		<p>
-		The other vulnerabilities typically require user actions (pasting text crafted by the attacker into the application or following a link crafted by the attacker)
-		for a successful attack, but may be exploitable more directly in certain applications. They can allow the attacker to control the user session for the application
-		in the browser.
-		</p>
+		<!--  <h2 id="security-fixes">Security fixes in Vaadin @version-minor@</h2>-->
     
 		<h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 		<p>
-			<b>SQLContainer</b>
+			<b>TODO: Enhancements</b>
 		</p>
-		<p>SQLContainer connects your application to an SQL database using
-			JDBC. SQLContainer allows you to easily bind data stored in a SQL
-			database to Table and Select components, as well as edit the data
-			using Forms. Compared to many object-relational tools this provides
-			you with fast, low-level database access.</p>
-		<p>SQLContainer was previously distributed as an add-on and has
-			now been integrated into the framework.</p>
-		<p>
-			<b>TreeTable</b>
-		</p>
-		<p>TreeTable is an extended Table component that can show
-			hierarchical structures in its first column. Users can show or hide
-			children from a small icon before the actual column value in the
-			first column.</p>
-		<p>TreeTable is, similarly to Table, designed to scale well with
-			large number of rows by only sending the needed rows to the browser.
-			With the Collapsible Container extension, a developer can build the
-			data provider so that it does not consume too much memory on the
-			server side either.</p>
-		<p>
-			<b>Chameleon Theme</b>
-		</p>
-		<p>Chameleon Theme provides a completely new look and feel for
-			your application.</p>
-		<p>
-			The theme is built on top of the Vaadin Base theme and tries to keep
-			out of the way where appropriate, so small modifications are easy to
-			do with CSS.
-			<p>
-				The theme contains several different useful styles for many of the
-				basic components like <i>big</i> and <i>warning</i> for a Label. You
-				can even combine many styles together, like <i>big warning</i>
-			</p>
-			If the default color scheme does not suit your taste, feel free to
-			use the online color scheme editor at <a
-				href="http://demo.vaadin.com/">http://demo.vaadin.com</a> to build a
-			customized theme.You can also change the base font size for the whole
-			theme with the same editor.
-			<p>
-				<i>Note that the theme is intentionally simplified for some
-					browsers, most notably old Internet Explorer versions.</i>
-			</p>
-		</p>
-		<p>
-			<b>Notification</b> now supports a plain text mode for its contents
-		</p>
-		<p>
-			<b>OptionGroup</b> now supports a HTML mode for the item captions
-		</p>
-        <p>
-            <b>OptionGroup</b> now supports item icons
-        </p>        
-		<p>
-			<b>MenuBar</b> now supports a HTML mode for the item captions
-		</p>
-		<p>
-			<b>ComboBox</b> now supports scrolling using the mouse wheel
-		</p>
-		<p>
-			<b>Table ColumnGenerator</b> can now generate plain text in addition
-			to Components
-		</p>
-		<p>
-			<b>TabSheet</b> tabs can be styled individually
-		</p>
-		<p>
-			<b>Button</b> can be automatically disabled when clicked
-		</p>
-		<p>
-			<b>Tree, Table</b> and <b>TreeTable</b> support tooltips for
-			individual items or cells
-		</p>
-		<p>
-			<b>Table</b> and <b>TreeTable</b> now support GeneratedRows that can
-			be used for grouping or summary rows
-		</p>
-		<p>
-			<b>TreeTable</b> supports animation for expand and collapse
-			operations
-		</p>
-		<p>
-			<b>TreeTable</b> supports expand and collapse listeners
-		</p>
-		<p>
-			<b>PopupDateField</b> and <b>InlineDateField</b> now support time
-			zones
-		</p>
-        <p>
-            <b>ComboBox</b> can now be used as a replacement for NativeSelect
-        </p>
-        <p>
-            <b>Audio</b> and <b>Video</b> components implement support for HTML5 &lt;audio&gt; and &lt;video&gt; elements.
-        </p>
-        <p>
-            <b>CDI</b> can now also be used with @SessionScoped beans.
-        </p>
-		<p>
-			<b>Sampler</b> is no longer distributed as part of Vaadin @version@.
-			It will be available as a separate download
-		</p>
-		<p>
-			<b>Book of Vaadin</b> is no longer distributed with Vaadin @version@.
-			It is available as a separate download from <a
-				href="http://vaadin.com/book">http://vaadin.com/book</a>
-		</p>
-		<p>
-			The <a
-				href="http://dev.vaadin.com/query?status=closed&type=enhancement&milestone=Vaadin+6.7.0.rc1&or&status=closed&type=enhancement&milestone=Vaadin+6.7.0.beta1&or&status=closed&type=enhancement&milestone=Vaadin+6.7.0&group=status&col=id&col=summary&col=type&col=owner&col=priority&col=component&col=version&order=priority">full
-				details of the enhancements</a> can be found at dev.vaadin.com.</a>
-		</p>
+		<p>TOdO: Enhancements.</p>
 		<h2 id="fixes">Fixes in Vaadin @version@</h2>
 		
-	<p>
-    #7788   Field.setProperyDatasource() does not reflect value for 6.7.0<br/>
-    #7479   Vaadin apps cannot current be deployed on IBM WebSphere v8<br/>
-    #7724   TextField with PropertyFormatter did not repaint in 6.7.0 (event with requestRepaint() call)<br/>
-    #7731   Javascript error when adding an item to an empty Table when setColumnWidth is used<br/>
-    #7776   AbstractField don't respect value change events from property during commit<br/>
-    #7778   Table rendering problem<br/>
-    #6588   Repainting in TextChangeListener will send wrong value to client.<br/>
-    #7720   TreeTable doesn't get refreshed if all entries are removed<br/>
-    #7738   Slashes or backslahes in ApplicationResources URLs should not be encoded<br/>
-    #7753   TreeTable gets into a state that causes internal error when getChildren throws an exception.<br/>
-    #3710   Width is miscalculated for the footer layouts in forms of undefined size<br/>
-    #7548   TestBench pressSpecialKey (arrows) doesn't work on Tree in IE6<br/>
-    #7708   DragAndDropWrapper.setDescription("foo") does not work<br/>
-    #7736   Logging level of SqlContainer is too high<br/>
-    #7755   Debug window "highlight component" does not work with sub windows<br/>
+		<p>
+			TODO: Ticket list
     	</p>
 		<p>
 			The <a href="http://dev.vaadin.com/query?status=closed&type=defect&milestone=Vaadin%20@version@">full
@@ -254,21 +105,7 @@
 
 		<h2 id="backwardsincompatibilities">Backwards incompatible
 			changes in Vaadin @version-minor@</h2>
-		<p>Table.ColumnGenerator.generateCell has been changed to return
-			Object instead of Component to enable generation of plain text.</p>
-		<p>Package names for SQLContainer, TreeTable and Chameleon Theme
-			java files have been changed from com.vaadin.addons.* to com.vaadin.*</p>
-		</p>
-		<p>If you have been using SQLContainer, TreeTable or Chameleon
-			Theme as add-ons, remove the add-on jars from the project.</p>
-		<p>The DOM structure of Forms without descriptions has changed, which means
-		    that any TestBench scripts testing this kind of Form need to be updated.
-		    If your tests start failing, subtract one from the index in the test script,
-		    e.g. change
-		    <pre class="codeblock">VForm[0]/domChild[0]/domChild[3]</pre>
-		    into
-		    <pre class="codeblock">VForm[0]/domChild[0]/domChild[2]</pre>
-		    and your tests will pass again.</p>
+		<p>VerticalSplitPanel and HorizontalSplitPanel position is now a float instead of an int to enable defining an exact position when using percentages.</p>
 
 		<h2 id="dependencies">Vaadin @version@ dependencies</h2>
 		Vaadin uses GWT @gwt-version@ for widget set compilation. GWT can be
