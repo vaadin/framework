@@ -7,7 +7,9 @@ import org.junit.Test;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Root;
 
 public class RemoveListenersOnDetach {
 
@@ -15,6 +17,15 @@ public class RemoveListenersOnDetach {
     int numReadOnlyChanges = 0;
 
     AbstractField field = new AbstractField() {
+        private Root root = new Root() {
+
+            @Override
+            protected void init(WrappedRequest request) {
+
+            }
+
+        };
+
         @Override
         public Class<?> getType() {
             return null;
@@ -32,6 +43,11 @@ public class RemoveListenersOnDetach {
             super.readOnlyStatusChange(event);
             numReadOnlyChanges++;
         }
+
+        @Override
+        public com.vaadin.ui.Root getRoot() {
+            return root;
+        };
     };
 
     Property property = new AbstractProperty() {
