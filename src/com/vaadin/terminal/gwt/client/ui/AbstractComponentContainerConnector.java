@@ -37,7 +37,7 @@ public abstract class AbstractComponentContainerConnector extends
 
     List<ComponentConnector> children;
 
-    private boolean debugLogging = false;
+    private final boolean debugLogging = false;
 
     /**
      * Default constructor
