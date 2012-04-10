@@ -584,7 +584,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             }
             // Reversed position
             if (positionReversed) {
-                pos = getOffsetWidth() - pos;
+                pos = getOffsetWidth() - pos - getSplitterSize();
             }
             position = (pos / getOffsetWidth() * 100) + "%";
         } else {
