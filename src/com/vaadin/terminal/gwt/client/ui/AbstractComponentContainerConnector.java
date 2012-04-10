@@ -37,6 +37,8 @@ public abstract class AbstractComponentContainerConnector extends
 
     List<ComponentConnector> children;
 
+    private final boolean debugLogging = false;
+
     /**
      * Default constructor
      */
@@ -77,19 +79,21 @@ public abstract class AbstractComponentContainerConnector extends
      * (com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent)
      */
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        // TODO Remove debug info
-        VConsole.log("Hierarchy changed for " + Util.getConnectorString(this));
-        String oldChildren = "* Old children: ";
-        for (ComponentConnector child : event.getOldChildren()) {
-            oldChildren += Util.getConnectorString(child) + " ";
-        }
-        VConsole.log(oldChildren);
+        if (debugLogging) {
+            VConsole.log("Hierarchy changed for "
+                    + Util.getConnectorString(this));
+            String oldChildren = "* Old children: ";
+            for (ComponentConnector child : event.getOldChildren()) {
+                oldChildren += Util.getConnectorString(child) + " ";
+            }
+            VConsole.log(oldChildren);
 
-        String newChildren = "* New children: ";
-        for (ComponentConnector child : getChildren()) {
-            newChildren += Util.getConnectorString(child) + " ";
+            String newChildren = "* New children: ";
+            for (ComponentConnector child : getChildren()) {
+                newChildren += Util.getConnectorString(child) + " ";
+            }
+            VConsole.log(newChildren);
         }
-        VConsole.log(newChildren);
     }
 
     public HandlerRegistration addConnectorHierarchyChangeHandler(

@@ -35,8 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import sun.net.www.protocol.file.FileURLConnection;
-
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
@@ -1146,7 +1144,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     "Failed to find out last modified timestamp. Continuing without it.",
                     e);
         } finally {
-            if (connection instanceof FileURLConnection) {
+            if (connection instanceof URLConnection) {
                 try {
                     // Explicitly close the input stream to prevent it
                     // from remaining hanging
@@ -1157,7 +1155,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     }
                 } catch (IOException e) {
                     logger.log(Level.INFO,
-                            "Error closing FileURLConnection input stream", e);
+                            "Error closing URLConnection input stream", e);
                 }
             }
         }
