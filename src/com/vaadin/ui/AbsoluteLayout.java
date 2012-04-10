@@ -15,7 +15,6 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutServerRPC;
 import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
@@ -179,8 +178,8 @@ public class AbsoluteLayout extends AbstractLayout implements
      */
     @Override
     public void removeComponent(Component c) {
-        super.removeComponent(c);
         internalRemoveComponent(c);
+        super.removeComponent(c);
         requestRepaint();
     }
 
