@@ -16,11 +16,9 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
 
 public class ApplicationConfiguration implements EntryPoint {
 
@@ -574,42 +572,11 @@ public class ApplicationConfiguration implements EntryPoint {
                  * especially end user. It does not work tells just as much.
                  */
                 VConsole.getImplementation().error(e);
-
-                if (!GWT.isProdMode()) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    VNotification.createNotification(
-                            VNotification.DELAY_FOREVER).show(
-                            getExceptionText(e), VNotification.CENTERED,
-                            "error");
-                } catch (Exception e2) {
-                    // Just swallow this exception
-                }
             }
         });
 
         registerCallback(GWT.getModuleName());
         deferredWidgetLoader = new DeferredWidgetLoader();
-    }
-
-    private static final String getExceptionText(Throwable e) {
-        if (e instanceof UmbrellaException) {
-            UmbrellaException ue = (UmbrellaException) e;
-            String text = "";
-            for (Throwable t : ue.getCauses()) {
-                text += getExceptionText(t) + "<br />";
-            }
-            return text;
-        } else {
-            String text = e.getClass().getName();
-            String message = e.getMessage();
-            if (message != null) {
-                text += ": " + message;
-            }
-            return text;
-        }
     }
 
     /**

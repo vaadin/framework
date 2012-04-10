@@ -54,6 +54,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 
@@ -632,12 +633,23 @@ public class VDebugConsole extends VOverlay implements Console {
             }
             return;
         }
-        error(Util.getSimpleName(e) + ": " + e.getMessage());
+        String exceptionText = Util.getSimpleName(e);
+        String message = e.getMessage();
+        if (message != null && message.length() != 0) {
+            exceptionText += ": " + e.getMessage();
+        }
+        error(exceptionText);
         GWT.log(e.getMessage(), e);
         if (!GWT.isProdMode()) {
             e.printStackTrace();
         }
-
+        try {
+            VNotification.createNotification(VNotification.DELAY_FOREVER).show(
+                    "<h1>Uncaught client side exception</h1><br />"
+                            + exceptionText, VNotification.CENTERED, "error");
+        } catch (Exception e2) {
+            // Just swallow this exception
+        }
     }
 
     public void init() {
