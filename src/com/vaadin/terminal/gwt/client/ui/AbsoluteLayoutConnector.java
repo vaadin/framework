@@ -103,6 +103,7 @@ public class AbsoluteLayoutConnector extends
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
                 absoluteLayoutWidget.add(caption);
+                componentWrapper.setCaption(caption);
             }
             caption.updateCaption();
             componentWrapper.updateCaptionPosition();
