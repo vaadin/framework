@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
@@ -55,7 +56,7 @@ public class AbsoluteLayoutConnector extends
 
         @Override
         protected ComponentConnector getChildComponent(Element element) {
-            return getWidget().getComponent(element);
+            return getConnectorForElement(element);
         }
 
         @Override
@@ -75,6 +76,21 @@ public class AbsoluteLayoutConnector extends
         rpc = RpcProxy.create(AbsoluteLayoutServerRPC.class, this);
     }
 
+    /**
+     * Returns the deepest nested child component which contains "element". The
+     * child component is also returned if "element" is part of its caption.
+     * 
+     * @param element
+     *            An element that is a nested sub element of the root element in
+     *            this layout
+     * @return The Paintable which the element is a part of. Null if the element
+     *         belongs to the layout and not to a child.
+     */
+    protected ComponentConnector getConnectorForElement(Element element) {
+        return Util.getConnectorForElement(getConnection(), getWidget(),
+                element);
+    }
+
     public void updateCaption(ComponentConnector component) {
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
         AbsoluteWrapper componentWrapper = getWrapper(component);
@@ -87,6 +103,7 @@ public class AbsoluteLayoutConnector extends
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
                 absoluteLayoutWidget.add(caption);
+                componentWrapper.setCaption(caption);
             }
             caption.updateCaption();
             componentWrapper.updateCaptionPosition();

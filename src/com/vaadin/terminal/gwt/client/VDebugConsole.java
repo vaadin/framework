@@ -634,6 +634,10 @@ public class VDebugConsole extends VOverlay implements Console {
         }
         error(Util.getSimpleName(e) + ": " + e.getMessage());
         GWT.log(e.getMessage(), e);
+        if (!GWT.isProdMode()) {
+            e.printStackTrace();
+        }
+
     }
 
     public void init() {

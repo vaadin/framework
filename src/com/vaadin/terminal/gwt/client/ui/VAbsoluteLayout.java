@@ -12,8 +12,6 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 
 public class VAbsoluteLayout extends ComplexPanel {
@@ -131,20 +129,6 @@ public class VAbsoluteLayout extends ComplexPanel {
                         - caption.getHeight());
             }
         }
-    }
-
-    /**
-     * Returns the deepest nested child component which contains "element". The
-     * child component is also returned if "element" is part of its caption.
-     * 
-     * @param element
-     *            An element that is a nested sub element of the root element in
-     *            this layout
-     * @return The Paintable which the element is a part of. Null if the element
-     *         belongs to the layout and not to a child.
-     */
-    ComponentConnector getComponent(Element element) {
-        return Util.getConnectorForElement(client, this, element);
     }
 
 }

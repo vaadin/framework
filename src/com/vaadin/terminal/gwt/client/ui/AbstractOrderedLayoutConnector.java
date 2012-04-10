@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -296,8 +297,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(
-            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;

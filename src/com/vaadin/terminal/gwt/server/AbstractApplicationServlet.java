@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import sun.net.www.protocol.file.FileURLConnection;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
@@ -1123,8 +1126,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         // Find the modification timestamp
         long lastModifiedTime = 0;
+        URLConnection connection = null;
         try {
-            lastModifiedTime = resourceUrl.openConnection().getLastModified();
+            connection = resourceUrl.openConnection();
+            lastModifiedTime = connection.getLastModified();
             // Remove milliseconds to avoid comparison problems (milliseconds
             // are not returned by the browser in the "If-Modified-Since"
             // header).
@@ -1140,6 +1145,21 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     Level.FINEST,
                     "Failed to find out last modified timestamp. Continuing without it.",
                     e);
+        } finally {
+            if (connection instanceof FileURLConnection) {
+                try {
+                    // Explicitly close the input stream to prevent it
+                    // from remaining hanging
+                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4257700
+                    InputStream is = connection.getInputStream();
+                    if (is != null) {
+                        is.close();
+                    }
+                } catch (IOException e) {
+                    logger.log(Level.INFO,
+                            "Error closing FileURLConnection input stream", e);
+                }
+            }
         }
 
         // Set type mime type if we can determine it based on the filename
