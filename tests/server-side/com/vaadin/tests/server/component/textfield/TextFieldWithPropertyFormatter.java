@@ -81,7 +81,9 @@ public class TextFieldWithPropertyFormatter extends TestCase {
 
     private void checkEndState() {
         assertEquals(1, listenerCalled);
-        assertEquals(1, repainted);
+        // setModified triggers repaint, this is done 2 times. A
+        // ValueChangeEvent triggers the third
+        assertEquals(3, repainted);
         assertEquals(FORMATTED_VALUE, field.getValue());
         assertEquals(FORMATTED_VALUE, formatter.getValue());
         assertEquals(PARSED_VALUE, property.getValue());
