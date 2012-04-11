@@ -36,6 +36,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     private HandlerManager handlerManager;
     private Map<String, Collection<ClientRpc>> rpcImplementations;
+    private final boolean debugLogging = false;
 
     /*
      * (non-Javadoc)
@@ -163,9 +164,11 @@ public abstract class AbstractConnector implements ServerConnector,
     }
 
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        VConsole.log("State change event for "
-                + Util.getConnectorString(stateChangeEvent.getConnector())
-                + " received by " + Util.getConnectorString(this));
+        if (debugLogging) {
+            VConsole.log("State change event for "
+                    + Util.getConnectorString(stateChangeEvent.getConnector())
+                    + " received by " + Util.getConnectorString(this));
+        }
     }
 
     /*
@@ -174,7 +177,10 @@ public abstract class AbstractConnector implements ServerConnector,
      * @see com.vaadin.terminal.gwt.client.ServerConnector#onUnregister()
      */
     public void onUnregister() {
-        VConsole.log("Unregistered connector " + Util.getConnectorString(this));
+        if (debugLogging) {
+            VConsole.log("Unregistered connector "
+                    + Util.getConnectorString(this));
+        }
 
     }
 }

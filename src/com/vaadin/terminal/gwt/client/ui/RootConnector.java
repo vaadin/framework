@@ -34,12 +34,12 @@ import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
-        implements Paintable, RequiresOverflowAutoFix {
+        implements Paintable, MayScrollChildren {
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 

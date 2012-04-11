@@ -221,6 +221,41 @@ public class LayoutDependencyTree {
                     layoutDependency.propagatePostLayoutMeasure();
                 }
             }
+
+            // Should also go through the hierarchy to discover appeared or
+            // disappeared scrollbars
+            LayoutDependency potentiallyChangedScrollbar = findPotentiallyChangedScrollbar();
+            if (potentiallyChangedScrollbar != null) {
+                potentiallyChangedScrollbar.setNeedsMeasure(true);
+            }
+
+        }
+
+        /**
+         * Go up the hierarchy to find a component whose size might have changed
+         * in the other direction because changes to this component causes
+         * scrollbars to appear or disappear.
+         * 
+         * @return
+         */
+        private LayoutDependency findPotentiallyChangedScrollbar() {
+            ComponentConnector currentConnector = connector;
+            while (true) {
+                ComponentContainerConnector parent = currentConnector
+                        .getParent();
+                if (parent == null) {
+                    return null;
+                }
+                if (parent instanceof MayScrollChildren) {
+                    return getDependency(currentConnector,
+                            getOppositeDirection());
+                }
+                currentConnector = parent;
+            }
+        }
+
+        private int getOppositeDirection() {
+            return direction == HORIZONTAL ? VERTICAL : HORIZONTAL;
         }
 
         public void markAsLayouted() {

@@ -122,6 +122,8 @@ public class ApplicationConnection {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
+    private final boolean debugLogging = false;
+
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
 
@@ -959,7 +961,7 @@ public class ApplicationConnection {
             return;
         }
 
-        MultiStepDuration handleUIDLDuration = new MultiStepDuration();
+        final MultiStepDuration handleUIDLDuration = new MultiStepDuration();
 
         // Get security key
         if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
@@ -1000,13 +1002,18 @@ public class ApplicationConnection {
 
         Command c = new Command() {
             public void execute() {
+                handleUIDLDuration.logDuration(" * Loading widgets completed",
+                        10);
+
                 MultiStepDuration updateDuration = new MultiStepDuration();
 
-                VConsole.log(" * Dumping UIDL to the console");
-                VConsole.dirUIDL(json, configuration);
+                if (debugLogging) {
+                    VConsole.log(" * Dumping UIDL to the console");
+                    VConsole.dirUIDL(json, configuration);
 
-                updateDuration.logDuration(
-                        " * Dumping UIDL to the console completed", 10);
+                    updateDuration.logDuration(
+                            " * Dumping UIDL to the console completed", 10);
+                }
 
                 if (json.containsKey("locales")) {
                     VConsole.log(" * Handling locales");

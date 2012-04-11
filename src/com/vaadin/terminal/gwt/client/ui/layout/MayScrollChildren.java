@@ -5,6 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.layout;
 
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 
-public interface RequiresOverflowAutoFix extends ComponentContainerConnector {
+public interface MayScrollChildren extends ComponentContainerConnector {
 
 }

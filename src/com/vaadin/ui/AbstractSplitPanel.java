@@ -40,7 +40,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                     mouseDetails));
         }
 
-        public void setSplitterPosition(int position) {
+        public void setSplitterPosition(float position) {
             getState().getSplitterState().setPosition(position);
         }
     };
@@ -241,9 +241,10 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @param pos
      *            the new size of the first region in the unit that was last
-     *            used (default is percentage)
+     *            used (default is percentage). Fractions are only allowed when
+     *            unit is percentage.
      */
-    public void setSplitPosition(int pos) {
+    public void setSplitPosition(float pos) {
         setSplitPosition(pos, posUnit, false);
     }
 
@@ -252,12 +253,14 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @param pos
      *            the new size of the region in the unit that was last used
-     *            (default is percentage)
+     *            (default is percentage). Fractions are only allowed when unit
+     *            is percentage.
+     * 
      * @param reverse
      *            if set to true the split splitter position is measured by the
      *            second region else it is measured by the first region
      */
-    public void setSplitPosition(int pos, boolean reverse) {
+    public void setSplitPosition(float pos, boolean reverse) {
         setSplitPosition(pos, posUnit, reverse);
     }
 
@@ -265,11 +268,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Moves the position of the splitter with given position and unit.
      * 
      * @param pos
-     *            size of the first region
+     *            the new size of the first region. Fractions are only allowed
+     *            when unit is percentage.
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      */
-    public void setSplitPosition(int pos, Unit unit) {
+    public void setSplitPosition(float pos, Unit unit) {
         setSplitPosition(pos, unit, false);
     }
 
@@ -277,7 +281,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * Moves the position of the splitter with given position and unit.
      * 
      * @param pos
-     *            size of the first region
+     *            the new size of the first region. Fractions are only allowed
+     *            when unit is percentage.
      * @param unit
      *            the unit (from {@link Sizeable}) in which the size is given.
      * @param reverse
@@ -285,10 +290,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *            second region else it is measured by the first region
      * 
      */
-    public void setSplitPosition(int pos, Unit unit, boolean reverse) {
+    public void setSplitPosition(float pos, Unit unit, boolean reverse) {
         if (unit != Unit.PERCENTAGE && unit != Unit.PIXELS) {
             throw new IllegalArgumentException(
                     "Only percentage and pixel units are allowed");
+        }
+        if (unit != Unit.PERCENTAGE) {
+            pos = Math.round(pos);
         }
         SplitterState splitterState = getState().getSplitterState();
         splitterState.setPosition(pos);
@@ -305,7 +313,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @return position of the splitter
      */
-    public int getSplitPosition() {
+    public float getSplitPosition() {
         return getState().getSplitterState().getPosition();
     }
 

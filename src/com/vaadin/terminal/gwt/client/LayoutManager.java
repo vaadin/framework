@@ -22,10 +22,13 @@ import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
+
+    private static final boolean debugLogging = false;
+
     private ApplicationConnection connection;
     private final Set<Element> measuredNonPaintableElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
@@ -229,9 +232,11 @@ public class LayoutManager {
             }
 
             FastStringSet updatedSet = FastStringSet.create();
+            boolean changed = false;
 
             while (currentDependencyTree.hasHorizontalConnectorToLayout()
                     || currentDependencyTree.hasVerticaConnectorToLayout()) {
+                changed = true;
                 for (ManagedLayout layout : currentDependencyTree
                         .getHorizontalLayoutTargets()) {
                     if (layout instanceof DirectionalManagedLayout) {
@@ -248,7 +253,9 @@ public class LayoutManager {
                         rr.layout();
                         countLayout(layoutCounts, rr);
                     }
-                    updatedSet.add(layout.getConnectorId());
+                    if (debugLogging) {
+                        updatedSet.add(layout.getConnectorId());
+                    }
                 }
 
                 for (ManagedLayout layout : currentDependencyTree
@@ -266,36 +273,41 @@ public class LayoutManager {
                         rr.layout();
                         countLayout(layoutCounts, rr);
                     }
-                    updatedSet.add(layout.getConnectorId());
+                    if (debugLogging) {
+                        updatedSet.add(layout.getConnectorId());
+                    }
                 }
             }
 
-            JsArrayString changed = updatedSet.dump();
+            if (debugLogging) {
+                JsArrayString changedCids = updatedSet.dump();
 
-            StringBuilder b = new StringBuilder("  ");
-            b.append(changed.length());
-            b.append(" requestLayout invocations in ");
-            b.append(passDuration.elapsedMillis() - measureTime);
-            b.append(" ms");
-            if (changed.length() < 30) {
-                for (int i = 0; i < changed.length(); i++) {
-                    if (i != 0) {
-                        b.append(", ");
-                    } else {
-                        b.append(": ");
+                StringBuilder b = new StringBuilder("  ");
+                b.append(changedCids.length());
+                b.append(" requestLayout invocations in ");
+                b.append(passDuration.elapsedMillis() - measureTime);
+                b.append(" ms");
+                if (changedCids.length() < 30) {
+                    for (int i = 0; i < changedCids.length(); i++) {
+                        if (i != 0) {
+                            b.append(", ");
+                        } else {
+                            b.append(": ");
+                        }
+                        String connectorString = changedCids.get(i);
+                        if (changedCids.length() < 10) {
+                            ServerConnector connector = ConnectorMap.get(
+                                    connection).getConnector(connectorString);
+                            connectorString = Util
+                                    .getConnectorString(connector);
+                        }
+                        b.append(connectorString);
                     }
-                    String connectorString = changed.get(i);
-                    if (changed.length() < 10) {
-                        ServerConnector connector = ConnectorMap
-                                .get(connection).getConnector(connectorString);
-                        connectorString = Util.getConnectorString(connector);
-                    }
-                    b.append(connectorString);
                 }
+                VConsole.log(b.toString());
             }
-            VConsole.log(b.toString());
 
-            if (changed.length() == 0) {
+            if (!changed) {
                 VConsole.log("No more changes in pass " + passes);
                 break;
             }
@@ -413,7 +425,7 @@ public class LayoutManager {
     }
 
     private void doOverflowAutoFix(ComponentConnector connector) {
-        if (connector.getParent() instanceof RequiresOverflowAutoFix
+        if (connector.getParent() instanceof MayScrollChildren
                 && BrowserInfo.get().requiresOverflowAutoFix()
                 && !"absolute".equals(connector.getWidget().getElement()
                         .getStyle().getPosition())) {
