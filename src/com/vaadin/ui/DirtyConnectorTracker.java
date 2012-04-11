@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
-import com.vaadin.terminal.Paintable.RepaintRequestListener;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.ui.Component.RepaintRequestEvent;
+import com.vaadin.ui.Component.RepaintRequestListener;
 
 /**
  * A class that tracks dirty {@link ClientConnector}s. A {@link ClientConnector}
@@ -44,7 +44,7 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
     }
 
     public void repaintRequested(RepaintRequestEvent event) {
-        markDirty((Component) event.getPaintable());
+        markDirty((Component) event.getConnector());
     }
 
     public void componentAttached(Component component) {

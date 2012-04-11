@@ -26,6 +26,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.VDateField;
 
 /**
@@ -50,7 +51,7 @@ import com.vaadin.terminal.gwt.client.ui.VDateField;
  */
 @SuppressWarnings("serial")
 public class DateField extends AbstractField<Date> implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Vaadin6Component {
 
     /**
      * Resolutions for DateFields
@@ -285,9 +286,7 @@ public class DateField extends AbstractField<Date> implements
      * Paints this component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         // Adds the locale as attribute
         final Locale l = getLocale();
@@ -340,9 +339,7 @@ public class DateField extends AbstractField<Date> implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
 
         if (!isReadOnly()
                 && (variables.containsKey("year")

@@ -18,6 +18,9 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
@@ -35,7 +38,7 @@ import com.vaadin.ui.Component.Focusable;
 @SuppressWarnings("serial")
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
-        Action.ShortcutNotifier {
+        Action.ShortcutNotifier, Vaadin6Component {
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
         public void click(MouseEventDetails mouseEventDetails) {
@@ -87,16 +90,17 @@ public class Button extends AbstractComponent implements
      * @param source
      * @param variables
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
         if (variables.containsKey(FocusEvent.EVENT_ID)) {
             fireEvent(new FocusEvent(this));
         }
         if (variables.containsKey(BlurEvent.EVENT_ID)) {
             fireEvent(new BlurEvent(this));
         }
+    }
+
+    public void paintContent(PaintTarget target) throws PaintException {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
     /**
@@ -499,4 +503,5 @@ public class Button extends AbstractComponent implements
     public ButtonState getState() {
         return (ButtonState) super.getState();
     }
+
 }

@@ -20,6 +20,7 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.StreamVariable;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
@@ -27,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 @SuppressWarnings("serial")
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource {
+        DragSource, Vaadin6Component {
 
     public class WrapperTransferable extends TransferableImpl {
 
@@ -213,9 +214,11 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
-    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
+    }
+
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
         target.addAttribute(VDragAndDropWrapper.DRAG_START_MODE,
                 dragStartMode.ordinal());
         if (getDropHandler() != null) {

@@ -4,9 +4,12 @@
 
 package com.vaadin.ui;
 
+import java.util.Map;
+
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * Link is used to create external or internal URL links.
@@ -17,7 +20,7 @@ import com.vaadin.terminal.Resource;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Link extends AbstractComponent {
+public class Link extends AbstractComponent implements Vaadin6Component {
 
     /* Target window border type constant: No window border */
     public static final int TARGET_BORDER_NONE = Root.BORDER_NONE;
@@ -92,7 +95,6 @@ public class Link extends AbstractComponent {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (resource != null) {
@@ -229,5 +231,9 @@ public class Link extends AbstractComponent {
     public void setResource(Resource resource) {
         this.resource = resource;
         requestRepaint();
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 }

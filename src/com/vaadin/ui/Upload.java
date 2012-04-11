@@ -15,6 +15,7 @@ import java.util.Map;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
 
@@ -59,7 +60,8 @@ import com.vaadin.terminal.gwt.server.NoOutputStreamException;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Upload extends AbstractComponent implements Component.Focusable {
+public class Upload extends AbstractComponent implements Component.Focusable,
+        Vaadin6Component {
 
     /**
      * Should the field be focused on next repaint?
@@ -120,7 +122,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("pollForStart")) {
             int id = (Integer) variables.get("pollForStart");
@@ -140,7 +141,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (notStarted) {
             target.addAttribute("notStarted", true);

@@ -15,6 +15,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutServerRPC;
@@ -23,7 +24,8 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
+        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
+        Vaadin6Component {
 
     private AbstractOrderedLayoutServerRPC rpc = new AbstractOrderedLayoutServerRPC() {
 
@@ -175,13 +177,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
         // Add child component alignment info to layout tag
         target.addAttribute("alignments", componentToAlignment);
         target.addAttribute("expandRatios", componentToExpandRatio);
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
     /* Documented in superclass */

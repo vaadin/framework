@@ -12,7 +12,6 @@ import java.util.Locale;
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
@@ -53,8 +52,8 @@ import com.vaadin.terminal.gwt.server.RpcTarget;
  * @VERSION@
  * @since 3.0
  */
-public interface Component extends ClientConnector, Paintable, VariableOwner,
-        Sizeable, Serializable, RpcTarget {
+public interface Component extends ClientConnector, Sizeable, Serializable,
+        RpcTarget {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component
@@ -117,9 +116,7 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * </p>
      * 
      * <p>
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * This method will trigger a {@link RepaintRequestEvent}.
      * </p>
      * 
      * @param style
@@ -161,9 +158,7 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * </pre>
      * 
      * <p>
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * This method will trigger a {@link RepaintRequestEvent}.
      * </p>
      * 
      * @param style
@@ -185,9 +180,7 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * style names defined in Vaadin or GWT can not be removed.
      * </p>
      * 
-     * * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * * This method will trigger a {@link RepaintRequestEvent}.
      * 
      * @param style
      *            the style name or style names to be removed
@@ -236,10 +229,9 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * </pre>
      * 
      * <p>
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent} for the component and, if it is a
-     * {@link ComponentContainer}, for all its children recursively.
+     * This method will trigger a {@link RepaintRequestEvent} for the component
+     * and, if it is a {@link ComponentContainer}, for all its children
+     * recursively.
      * </p>
      * 
      * @param enabled
@@ -389,9 +381,7 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * </p>
      * 
      * <p>
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * This method will trigger a {@link RepaintRequestEvent}.
      * </p>
      * 
      * @param readOnly
@@ -458,10 +448,8 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * </p>
      * 
      * <p>
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}. A reimplementation should call the superclass
-     * implementation.
+     * This method will trigger a {@link RepaintRequestEvent}. A
+     * reimplementation should call the superclass implementation.
      * </p>
      * 
      * @param caption
@@ -531,9 +519,7 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * {@code v-caption} .
      * </p>
      * 
-     * This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * This method will trigger a {@link RepaintRequestEvent}.
      * 
      * @param icon
      *            the icon of the component. If null, no icon is shown and it
@@ -717,6 +703,92 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
      * @since 7.0
      */
     public void updateState();
+
+    /**
+     * Adds an unique id for component that get's transferred to terminal for
+     * testing purposes. Keeping identifiers unique is the responsibility of the
+     * programmer.
+     * 
+     * @param id
+     *            An alphanumeric id
+     */
+    public void setDebugId(String id);
+
+    /**
+     * Get's currently set debug identifier
+     * 
+     * @return current debug id, null if not set
+     */
+    public String getDebugId();
+
+    /**
+     * Requests that the component should be repainted as soon as possible.
+     */
+    public void requestRepaint();
+
+    /**
+     * Repaint request event is thrown when the connector needs to be repainted.
+     * This is typically done when the <code>paint</code> method would return
+     * dissimilar UIDL from the previous call of the method.
+     */
+    @SuppressWarnings("serial")
+    public static class RepaintRequestEvent extends EventObject {
+
+        /**
+         * Constructs a new event.
+         * 
+         * @param source
+         *            the paintable needing repaint.
+         */
+        public RepaintRequestEvent(ClientConnector source) {
+            super(source);
+        }
+
+        /**
+         * Gets the connector needing repainting.
+         * 
+         * @return Paintable for which the <code>paint</code> method will return
+         *         dissimilar UIDL from the previous call of the method.
+         */
+        public ClientConnector getConnector() {
+            return (ClientConnector) getSource();
+        }
+    }
+
+    /**
+     * Listens repaint requests. The <code>repaintRequested</code> method is
+     * called when the paintable needs to be repainted. This is typically done
+     * when the <code>paint</code> method would return dissimilar UIDL from the
+     * previous call of the method.
+     */
+    public interface RepaintRequestListener extends Serializable {
+
+        /**
+         * Receives repaint request events.
+         * 
+         * @param event
+         *            the repaint request event specifying the paintable source.
+         */
+        public void repaintRequested(RepaintRequestEvent event);
+    }
+
+    /**
+     * Adds repaint request listener. In order to assure that no repaint
+     * requests are missed, the new repaint listener should paint the paintable
+     * right after adding itself as listener.
+     * 
+     * @param listener
+     *            the listener to be added.
+     */
+    public void addListener(RepaintRequestListener listener);
+
+    /**
+     * Removes repaint request listener.
+     * 
+     * @param listener
+     *            the listener to be removed.
+     */
+    public void removeListener(RepaintRequestListener listener);
 
     /* Component event framework */
 
@@ -1106,4 +1178,5 @@ public interface Component extends ClientConnector, Paintable, VariableOwner,
         public void setTabIndex(int tabIndex);
 
     }
+
 }

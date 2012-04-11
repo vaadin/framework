@@ -9,8 +9,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.terminal.Paintable;
-import com.vaadin.terminal.Paintable.RepaintRequestEvent;
+import com.vaadin.ui.Component.RepaintRequestEvent;
+import com.vaadin.ui.Component.RepaintRequestListener;
 import com.vaadin.ui.TextField;
 
 public class TextFieldWithPropertyFormatter extends TestCase {
@@ -61,7 +61,7 @@ public class TextFieldWithPropertyFormatter extends TestCase {
         };
 
         field.addListener(listener);
-        field.addListener(new Paintable.RepaintRequestListener() {
+        field.addListener(new RepaintRequestListener() {
             public void repaintRequested(RepaintRequestEvent event) {
                 repainted++;
             }

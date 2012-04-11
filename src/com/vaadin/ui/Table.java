@@ -43,6 +43,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -3361,7 +3362,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     target.addText("");
                     paintCellTooltips(target, itemId, columnId);
                 } else {
-                    c.paint(target);
+                    LegacyPaint.paint(c, target);
                 }
             } else {
                 target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
@@ -5272,7 +5273,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void setVisible(boolean visible) {
-        if (!isVisibleInContext() && visible) {
+        if (visible) {
             // We need to ensure that the rows are sent to the client when the
             // Table is made visible if it has been rendered as invisible.
             setRowCacheInvalidated(true);

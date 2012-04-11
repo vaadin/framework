@@ -32,6 +32,7 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
 import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
@@ -60,7 +61,7 @@ import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 public abstract class AbstractSelect extends AbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
-        Container.ItemSetChangeListener {
+        Container.ItemSetChangeListener, Vaadin6Component {
 
     public enum ItemCaptionMode {
         /**
@@ -322,11 +323,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        // Paints field properties
-        super.paintContent(target);
 
         // Paints select attributes
         if (isMultiSelect()) {
@@ -428,9 +425,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
 
         // New option entered (and it is allowed)
         if (isNewItemsAllowed()) {
@@ -582,10 +577,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * to the terminal or null if no items is visible.
      */
     public Collection<?> getVisibleItemIds() {
-        if (isVisibleInContext()) {
-            return getItemIds();
-        }
-        return null;
+        return getItemIds();
     }
 
     /* Property methods */

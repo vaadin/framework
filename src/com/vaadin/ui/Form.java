@@ -30,6 +30,7 @@ import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.FormConnector.FormState;
 
 /**
@@ -67,7 +68,8 @@ import com.vaadin.terminal.gwt.client.ui.FormConnector.FormState;
  */
 @Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,
-        Buffered, Item, Validatable, Action.Notifier, HasComponents {
+        Buffered, Item, Validatable, Action.Notifier, HasComponents,
+        Vaadin6Component {
 
     private Object propertyValue;
 
@@ -192,19 +194,13 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /* Documented in interface */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
         if (ownActionManager != null) {
             ownActionManager.paintActions(null, target);
         }
     }
 
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
         // Actions
         if (ownActionManager != null) {
             ownActionManager.handleActions(variables, this);

@@ -13,9 +13,11 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.VCheckBox;
 
-public class CheckBox extends AbstractField<Boolean> {
+public class CheckBox extends AbstractField<Boolean> implements
+        Vaadin6Component {
     /**
      * Creates a new checkbox.
      */
@@ -64,18 +66,13 @@ public class CheckBox extends AbstractField<Boolean> {
         return Boolean.class;
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
         Boolean value = getValue();
         boolean booleanValue = (value != null) ? value : false;
         target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue);
     }
 
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
 
         if (!isReadOnly() && variables.containsKey(VCheckBox.VARIABLE_STATE)) {
             // Gets the new and old states

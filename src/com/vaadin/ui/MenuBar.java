@@ -13,6 +13,7 @@ import java.util.Stack;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.VMenuBar;
 
 /**
@@ -23,7 +24,7 @@ import com.vaadin.terminal.gwt.client.ui.VMenuBar;
  * </p>
  */
 @SuppressWarnings("serial")
-public class MenuBar extends AbstractComponent {
+public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -38,12 +39,7 @@ public class MenuBar extends AbstractComponent {
     private boolean htmlContentAllowed;
 
     /** Paint (serialise) the component for the client. */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        // Superclass writes any common attributes in the paint target.
-        super.paintContent(target);
-
         target.addAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER, openRootOnHover);
 
         if (isHtmlContentAllowed()) {
@@ -129,7 +125,6 @@ public class MenuBar extends AbstractComponent {
     }
 
     /** Deserialize changes received from client. */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         Stack<MenuItem> items = new Stack<MenuItem>();
         boolean found = false;
@@ -731,8 +726,7 @@ public class MenuBar extends AbstractComponent {
         /**
          * Sets the items's description. See {@link #getDescription()} for more
          * information on what the description is. This method will trigger a
-         * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-         * RepaintRequestEvent}.
+         * {@link RepaintRequestEvent}.
          * 
          * @param description
          *            the new description string for the component.

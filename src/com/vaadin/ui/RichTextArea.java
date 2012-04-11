@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -18,7 +19,8 @@ import com.vaadin.terminal.PaintTarget;
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
  */
-public class RichTextArea extends AbstractField<String> {
+public class RichTextArea extends AbstractField<String> implements
+        Vaadin6Component {
 
     /**
      * Value formatter used to format the string contents.
@@ -101,7 +103,6 @@ public class RichTextArea extends AbstractField<String> {
         setCaption(caption);
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (selectAll) {
             target.addAttribute("selectAll", true);
@@ -119,7 +120,6 @@ public class RichTextArea extends AbstractField<String> {
         }
         target.addVariable(this, "text", value);
 
-        super.paintContent(target);
     }
 
     @Override
@@ -185,11 +185,7 @@ public class RichTextArea extends AbstractField<String> {
         }
     }
 
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-
-        super.changeVariables(source, variables);
-
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {
 

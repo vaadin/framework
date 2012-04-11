@@ -494,7 +494,6 @@ public abstract class Root extends AbstractComponentContainer implements
         return application;
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // Open requested resource
         synchronized (openList) {
@@ -600,10 +599,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
         if (variables.containsKey(CLICK_EVENT_ID)) {
             fireClick((Map<String, Object>) variables.get(CLICK_EVENT_ID));
         }

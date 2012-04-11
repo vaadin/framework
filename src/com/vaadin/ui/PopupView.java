@@ -8,8 +8,10 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * 
@@ -21,7 +23,8 @@ import com.vaadin.terminal.PaintTarget;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
-public class PopupView extends AbstractComponentContainer {
+public class PopupView extends AbstractComponentContainer implements
+        Vaadin6Component {
 
     private Content content;
     private boolean hideOnMouseOut;
@@ -304,11 +307,7 @@ public class PopupView extends AbstractComponentContainer {
      * 
      * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget)
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        // Superclass writes any common attributes in the paint target.
-        super.paintContent(target);
-
         String html = content.getMinimizedValueAsHTML();
         if (html == null) {
             html = "";
@@ -319,7 +318,7 @@ public class PopupView extends AbstractComponentContainer {
         // Only paint component to client if we know that the popup is showing
         if (isPopupVisible()) {
             target.startTag("popupComponent");
-            visibleComponent.paint(target);
+            LegacyPaint.paint(visibleComponent, target);
             target.endTag("popupComponent");
         }
 
@@ -332,7 +331,6 @@ public class PopupView extends AbstractComponentContainer {
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("popupVisibility")) {
             setPopupVisible(((Boolean) variables.get("popupVisibility"))

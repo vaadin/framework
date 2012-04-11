@@ -40,7 +40,7 @@ public class TestTextFieldValueChange extends
     protected void setValue(AbstractField<String> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("text", "newValue");
-        field.changeVariables(field, variables);
+        ((TextField) field).changeVariables(field, variables);
     }
 
     /**

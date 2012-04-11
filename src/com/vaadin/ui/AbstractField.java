@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import com.vaadin.Application;
@@ -1299,11 +1298,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     private void readValueFromProperty(Property.ValueChangeEvent event) {
         setInternalValue(convertFromDataSource(event.getProperty().getValue()));
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
     }
 
     /**
