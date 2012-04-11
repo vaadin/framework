@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -67,6 +68,20 @@ public abstract class AbstractOrderedLayoutConnector extends
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
+    }
+
+    @Override
+    public void onUnregister() {
+        LayoutManager lm = getLayoutManager();
+
+        VMeasuringOrderedLayout layout = getWidget();
+        lm.unregisterDependency(this, layout.spacingMeasureElement);
+
+        // Unregister child caption listeners
+        for (ComponentConnector child : getChildren()) {
+            VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
+            slot.setCaption(null);
+        }
     }
 
     @Override
@@ -282,8 +297,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     @Override
-    public void onConnectorHierarchyChange(
-            com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent event) {
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;

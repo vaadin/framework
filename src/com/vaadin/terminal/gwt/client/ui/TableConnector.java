@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
@@ -279,7 +280,16 @@ public class TableConnector extends AbstractComponentContainerConnector
     }
 
     public void postLayout() {
-        getWidget().sizeInit();
+        VScrollTable table = getWidget();
+        if (table.sizeNeedsInit) {
+            table.sizeInit();
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                public void execute() {
+                    getLayoutManager().setNeedsUpdate(TableConnector.this);
+                    getLayoutManager().layoutNow();
+                }
+            });
+        }
     }
 
     @Override

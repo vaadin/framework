@@ -29,8 +29,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 
 /**
@@ -137,6 +135,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private boolean validationVisible = true;
 
     private boolean valueWasModifiedByDataSourceDuringCommit;
+
+    /**
+     * Whether this field currently listens to Property events.
+     */
+    private boolean isListening = false;
 
     /* Component basics */
 
@@ -673,18 +676,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Saves the old value
         final Object oldValue = getInternalValue();
 
-        // Stops listening the old data source changes
-        if (dataSource != null
-                && Property.ValueChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
-            ((Property.ValueChangeNotifier) dataSource).removeListener(this);
-        }
-        if (dataSource != null
-                && Property.ReadOnlyStatusChangeNotifier.class
-                        .isAssignableFrom(dataSource.getClass())) {
-            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
-                    .removeListener(this);
-        }
+        // Stop listening to the old data source
+        removePropertyListeners();
 
         // Sets the new data source
         dataSource = newDataSource;
@@ -719,14 +712,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setModified(true);
         }
 
-        // Listens the new data source if possible
-        if (dataSource instanceof Property.ValueChangeNotifier) {
-            ((Property.ValueChangeNotifier) dataSource).addListener(this);
-        }
-        if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
-            ((Property.ReadOnlyStatusChangeNotifier) dataSource)
-                    .addListener(this);
-        }
+        // Listen to new data source if possible
+        addPropertyListeners();
 
         // Copy the validators from the data source
         if (dataSource instanceof Validatable) {
@@ -933,6 +920,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void removeValidator(Validator validator) {
         if (validators != null) {
             validators.remove(validator);
+        }
+        requestRepaint();
+    }
+
+    /**
+     * Removes all validators from the field.
+     */
+    public void removeAllValidators() {
+        if (validators != null) {
+            validators.clear();
         }
         requestRepaint();
     }
@@ -1356,6 +1353,26 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
+     * Notifies the component that it is connected to an application.
+     * 
+     * @see com.vaadin.ui.Component#attach()
+     */
+    @Override
+    public void attach() {
+        super.attach();
+        // No-op if listeners already registered
+        addPropertyListeners();
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        // Stop listening to data source events on detach to avoid a potential
+        // memory leak. See #6155.
+        removePropertyListeners();
+    }
+
+    /**
      * Is this field required. Required fields must filled by the user.
      * 
      * If the field is required, it is visually indicated in the user interface.
@@ -1592,4 +1609,30 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         getState().setHideErrors(shouldHideErrors());
     }
 
+    private void addPropertyListeners() {
+        if (!isListening) {
+            if (dataSource instanceof Property.ValueChangeNotifier) {
+                ((Property.ValueChangeNotifier) dataSource).addListener(this);
+            }
+            if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
+                ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                        .addListener(this);
+            }
+            isListening = true;
+        }
+    }
+
+    private void removePropertyListeners() {
+        if (isListening) {
+            if (dataSource instanceof Property.ValueChangeNotifier) {
+                ((Property.ValueChangeNotifier) dataSource)
+                        .removeListener(this);
+            }
+            if (dataSource instanceof Property.ReadOnlyStatusChangeNotifier) {
+                ((Property.ReadOnlyStatusChangeNotifier) dataSource)
+                        .removeListener(this);
+            }
+            isListening = false;
+        }
+    }
 }

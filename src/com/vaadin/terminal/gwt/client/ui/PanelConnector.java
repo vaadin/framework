@@ -16,7 +16,6 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
@@ -85,6 +84,16 @@ public class PanelConnector extends AbstractComponentContainerConnector
         layoutManager.registerDependency(this, panel.captionNode);
         layoutManager.registerDependency(this, panel.bottomDecoration);
         layoutManager.registerDependency(this, panel.contentNode);
+    }
+
+    @Override
+    public void onUnregister() {
+        VPanel panel = getWidget();
+        LayoutManager layoutManager = getLayoutManager();
+
+        layoutManager.unregisterDependency(this, panel.captionNode);
+        layoutManager.unregisterDependency(this, panel.bottomDecoration);
+        layoutManager.unregisterDependency(this, panel.contentNode);
     }
 
     @Override

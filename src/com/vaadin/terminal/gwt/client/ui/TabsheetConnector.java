@@ -32,10 +32,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         // tabs; push or not
         if (!isUndefinedWidth()) {
-            // FIXME: This makes tab sheet tabs go to 1px width on every update
-            // and then back to original width
-            // update width later, in updateTabScroller();
-            DOM.setStyleAttribute(getWidget().tabs, "width", "1px");
             DOM.setStyleAttribute(getWidget().tabs, "overflow", "hidden");
         } else {
             getWidget().showAllTabs();

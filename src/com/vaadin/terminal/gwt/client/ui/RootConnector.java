@@ -33,8 +33,8 @@ import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)

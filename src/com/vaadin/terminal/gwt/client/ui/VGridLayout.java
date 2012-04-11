@@ -585,21 +585,24 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
+    Cell getCell(int row, int col) {
+        return cells[col][row];
+    }
+
     /**
-     * Returns the Cell with the given coordinates. Creates a new Cell if an
-     * existing was not found and also updates the Cell based on the given UIDL.
+     * Creates a new Cell with the given coordinates. If an existing cell was
+     * found, returns that one.
      * 
      * @param row
      * @param col
      * @return
      */
-    Cell getCell(int row, int col, UIDL c) {
-        Cell cell = cells[col][row];
+    Cell createCell(int row, int col) {
+        Cell cell = getCell(row, col);
         if (cell == null) {
             cell = new Cell(row, col);
             cells[col][row] = cell;
         }
-        cell.updateFromUidl(c);
         return cell;
     }
 
@@ -657,6 +660,22 @@ public class VGridLayout extends ComplexPanel {
         } else {
             spacingMeasureElement.removeClassName(styleName + "-spacing-on");
             spacingMeasureElement.addClassName(styleName + "-spacing-off");
+        }
+    }
+
+    public void setSize(int rows, int cols) {
+        if (cells == null) {
+            cells = new Cell[cols][rows];
+        } else if (cells.length != cols || cells[0].length != rows) {
+            Cell[][] newCells = new Cell[cols][rows];
+            for (int i = 0; i < cells.length; i++) {
+                for (int j = 0; j < cells[i].length; j++) {
+                    if (i < cols && j < rows) {
+                        newCells[i][j] = cells[i][j];
+                    }
+                }
+            }
+            cells = newCells;
         }
     }
 

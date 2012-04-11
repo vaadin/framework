@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -88,8 +89,14 @@ public class TreeConnector extends AbstractComponentConnector implements
         getWidget().isMultiselect = "multi".equals(selectMode);
 
         if (getWidget().isMultiselect) {
-            getWidget().multiSelectMode = uidl
-                    .getIntAttribute("multiselectmode");
+            if (BrowserInfo.get().isTouchDevice()) {
+                // Always use the simple mode for touch devices that do not have
+                // shift/ctrl keys (#8595)
+                getWidget().multiSelectMode = VTree.MULTISELECT_MODE_SIMPLE;
+            } else {
+                getWidget().multiSelectMode = uidl
+                        .getIntAttribute("multiselectmode");
+            }
         }
 
         getWidget().selectedIds = uidl.getStringArrayVariableAsSet("selected");
