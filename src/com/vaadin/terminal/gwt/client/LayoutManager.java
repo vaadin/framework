@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
@@ -425,7 +425,7 @@ public class LayoutManager {
     }
 
     private void doOverflowAutoFix(ComponentConnector connector) {
-        if (connector.getParent() instanceof RequiresOverflowAutoFix
+        if (connector.getParent() instanceof MayScrollChildren
                 && BrowserInfo.get().requiresOverflowAutoFix()
                 && !"absolute".equals(connector.getWidget().getElement()
                         .getStyle().getPosition())) {

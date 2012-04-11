@@ -24,12 +24,12 @@ import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 @Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
-        SimpleManagedLayout, PostLayoutListener, RequiresOverflowAutoFix {
+        SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 
     public interface WindowServerRPC extends ClickRPC, ServerRpc {
     }

@@ -18,13 +18,13 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.ui.layout.RequiresOverflowAutoFix;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.Panel;
 
 @Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener,
-        RequiresOverflowAutoFix {
+        MayScrollChildren {
 
     public interface PanelServerRPC extends ClickRPC, ServerRpc {
 
