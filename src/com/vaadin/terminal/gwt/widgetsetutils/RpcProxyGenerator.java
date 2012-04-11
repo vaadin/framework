@@ -18,9 +18,10 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.communication.InitializableServerRpc;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 
 /**
  * GWT generator that creates client side proxy classes for making RPC calls
@@ -52,7 +53,7 @@ public class RpcProxyGenerator extends Generator {
                 + requestedType.getName().replaceAll("[$.]", "_");
 
         JClassType initializableInterface = typeOracle
-                .findType(InitializableClientToServerRpc.class
+                .findType(InitializableServerRpc.class
                         .getCanonicalName());
 
         ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(
@@ -96,20 +97,14 @@ public class RpcProxyGenerator extends Generator {
                 .findType(ApplicationConnection.class.getCanonicalName());
 
         // fields
-        writer.println("private String connectorId;");
-        writer.println("private "
-                + applicationConnectionClass.getQualifiedSourceName()
-                + " client;");
+        writer.println("private " + ServerConnector.class.getName()
+                + " connector;");
 
         // init method from the RPC interface
-        writer.println("public void initRpc(String connectorId, "
-                + applicationConnectionClass.getQualifiedSourceName()
-                + " client) {");
+        writer.println("public void initRpc(" + ServerConnector.class.getName()
+                + " connector) {");
         writer.indent();
-
-        writer.println("this.connectorId = connectorId;");
-        writer.println("this.client = client;");
-
+        writer.println("this.connector = connector;");
         writer.outdent();
         writer.println("}");
     }
@@ -123,7 +118,7 @@ public class RpcProxyGenerator extends Generator {
             writer.println(" {");
             writer.indent();
 
-            writer.print("client.addMethodInvocationToQueue(new MethodInvocation(connectorId, \""
+            writer.print("connector.getConnection().addMethodInvocationToQueue(new MethodInvocation(connector.getConnectorId(), \""
                     + requestedType.getQualifiedBinaryName() + "\", \"");
             writer.print(m.getName());
             writer.print("\", new Object[] {");
