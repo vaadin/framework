@@ -163,6 +163,10 @@ public abstract class AbstractConnector implements ServerConnector,
                 .addHandler(StateChangeEvent.TYPE, handler);
     }
 
+    public void removeStateChangeHandler(StateChangeHandler handler) {
+        ensureHandlerManager().removeHandler(StateChangeEvent.TYPE, handler);
+    }
+
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         if (debugLogging) {
             VConsole.log("State change event for "

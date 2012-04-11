@@ -10,6 +10,9 @@ public class VerticalBoxLayoutConnector extends AbstractBoxLayoutConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // TODO fix when Vaadin style name handling is improved so that it won't
+        // override extra client side style names
+        getWidget().setVertical(true);
         super.updateFromUIDL(uidl, client);
         getWidget().setVertical(true);
     }

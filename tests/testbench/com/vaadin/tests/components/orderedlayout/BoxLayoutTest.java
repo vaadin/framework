@@ -9,6 +9,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractComponent;
@@ -41,6 +42,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
     protected NativeSelect componentCaption;
     protected NativeSelect componentIcon;
     protected TextField componentDescription;
+    protected CheckBox componentError;
 
     protected NativeSelect align;
     protected CheckBox expand;
@@ -219,7 +221,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         HorizontalLayout component = new HorizontalLayout();
         component.addStyleName("fieldset");
         component.setSpacing(true);
-        controls.addComponent(component);
+        root.addComponent(component);
         component.addComponent(new Label("Component"));
 
         sizes = new ArrayList<String>();
@@ -298,6 +300,19 @@ public class BoxLayoutTest extends AbstractTestRoot {
         });
         component.addComponent(componentDescription);
 
+        componentError = new CheckBox("Error");
+        componentError.setImmediate(true);
+        componentError.setEnabled(false);
+        componentError.addListener(new ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                if (target != null) {
+                    target.setComponentError(componentError.getValue() ? new UserError(
+                            "Error message") : null);
+                }
+            }
+        });
+        component.addComponent(componentError);
+
         return root;
     }
 
@@ -312,52 +327,55 @@ public class BoxLayoutTest extends AbstractTestRoot {
 
         l.addListener(new LayoutClickListener() {
             public void layoutClick(LayoutClickEvent event) {
-                if (event.getChildComponent() != null) {
-                    if (target != null || target == event.getChildComponent()) {
+                if (event.getChildComponent() == null
+                        || target == event.getChildComponent()) {
+                    if (target != null) {
                         target.removeStyleName("target");
                     }
-                    if (target != event.getChildComponent()) {
-                        target = (AbstractComponent) event.getChildComponent();
-                        target.addStyleName("target");
-                    } else {
-                        target = null;
-                    }
-                    componentWidth.setEnabled(target != null);
-                    componentHeight.setEnabled(target != null);
-                    componentCaption.setEnabled(target != null);
-                    componentIcon.setEnabled(target != null);
-                    componentDescription.setEnabled(target != null);
-                    align.setEnabled(target != null);
-                    expand.setEnabled(target != null);
+                    target = null;
+                } else if (target != event.getChildComponent()) {
                     if (target != null) {
-                        if (target.getWidth() > -1) {
-                            componentWidth.select(new Float(target.getWidth())
-                                    .intValue()
-                                    + target.getWidthUnits().getSymbol());
-                        } else {
-                            componentWidth.select(null);
-                        }
-                        if (target.getHeight() > -1) {
-                            componentHeight.select(new Float(target.getHeight())
-                                    .intValue()
-                                    + target.getHeightUnits().getSymbol());
-                        } else {
-                            componentHeight.select(null);
-                        }
-
-                        align.select(l.getComponentAlignment(target));
-                        expand.setValue(new Boolean(
-                                l.getExpandRatio(target) > 0));
-
-                        componentCaption.select(target.getCaption());
-                        if (target.getIcon() != null) {
-                            componentIcon.select(((ThemeResource) target
-                                    .getIcon()).getResourceId());
-                        } else {
-                            componentIcon.select(null);
-                        }
-                        componentDescription.setValue(target.getDescription());
+                        target.removeStyleName("target");
                     }
+                    target = (AbstractComponent) event.getChildComponent();
+                    target.addStyleName("target");
+                }
+                componentWidth.setEnabled(target != null);
+                componentHeight.setEnabled(target != null);
+                componentCaption.setEnabled(target != null);
+                componentIcon.setEnabled(target != null);
+                componentDescription.setEnabled(target != null);
+                componentError.setEnabled(target != null);
+                align.setEnabled(target != null);
+                expand.setEnabled(target != null);
+                if (target != null) {
+                    if (target.getWidth() > -1) {
+                        componentWidth.select(new Float(target.getWidth())
+                                .intValue()
+                                + target.getWidthUnits().getSymbol());
+                    } else {
+                        componentWidth.select(null);
+                    }
+                    if (target.getHeight() > -1) {
+                        componentHeight.select(new Float(target.getHeight())
+                                .intValue()
+                                + target.getHeightUnits().getSymbol());
+                    } else {
+                        componentHeight.select(null);
+                    }
+
+                    align.select(l.getComponentAlignment(target));
+                    expand.setValue(new Boolean(l.getExpandRatio(target) > 0));
+
+                    componentCaption.select(target.getCaption());
+                    if (target.getIcon() != null) {
+                        componentIcon.select(((ThemeResource) target.getIcon())
+                                .getResourceId());
+                    } else {
+                        componentIcon.select(null);
+                    }
+                    componentDescription.setValue(target.getDescription());
+                    componentError.setValue(target.getComponentError() != null);
                 }
             }
         });

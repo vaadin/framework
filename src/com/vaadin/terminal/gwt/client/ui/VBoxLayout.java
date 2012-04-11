@@ -11,12 +11,15 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 
 public class VBoxLayout extends FlowPanel {
 
@@ -24,7 +27,11 @@ public class VBoxLayout extends FlowPanel {
 
     protected boolean vertical = true;
 
+    protected boolean definedHeight = false;
+
     private Map<Widget, Slot> widgetToSlot = new HashMap<Widget, Slot>();
+
+    private LayoutManager layoutManager;
 
     public VBoxLayout() {
         setStylePrimaryName("v-boxlayout");
@@ -94,20 +101,22 @@ public class VBoxLayout extends FlowPanel {
         return slot;
     }
 
-    protected static class Slot extends SimplePanel {
+    public enum CaptionPosition {
+        TOP, RIGHT, BOTTOM, LEFT
+    }
 
-        public enum CaptionPosition {
-            TOP, RIGHT, BOTTOM, LEFT
-        }
+    protected class Slot extends SimplePanel {
 
         private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
         private DivElement spacer;
 
+        private Element captionWrap;
         private Element caption;
         private Element captionText;
-        private Element captionWrap;
         private Element icon;
+        private Element errorIcon;
+
         private CaptionPosition captionPosition = CaptionPosition.TOP;
 
         private AlignmentInfo alignment;
@@ -167,6 +176,7 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
+        // TODO use ElementResizeListener for this
         protected int getSpacingSize(boolean vertical) {
             if (spacer == null) {
                 return 0;
@@ -196,13 +206,13 @@ public class VBoxLayout extends FlowPanel {
         }
 
         public void setCaption(String captionText, String iconUrl,
-                List<String> styles) {
+                List<String> styles, String error) {
 
             // TODO place for optimization: check if any of these have changed
             // since last time, and only run those changes
 
             // Caption wrappers
-            if (captionText != null || iconUrl != null) {
+            if (captionText != null || iconUrl != null || error != null) {
                 if (caption == null) {
                     caption = DOM.createDiv();
                     captionWrap = DOM.createDiv();
@@ -245,6 +255,18 @@ public class VBoxLayout extends FlowPanel {
                 icon = null;
             }
 
+            // Error
+            if (error != null) {
+                if (errorIcon == null) {
+                    errorIcon = DOM.createSpan();
+                    errorIcon.setClassName("v-errorindicator");
+                }
+                caption.appendChild(errorIcon);
+            } else if (errorIcon != null) {
+                errorIcon.removeFromParent();
+                errorIcon = null;
+            }
+
             // Styles
             if (caption != null) {
                 caption.setClassName("v-caption");
@@ -256,10 +278,45 @@ public class VBoxLayout extends FlowPanel {
                 }
             }
 
-            // TODO add extra styles to captionWrap as well?
+            // TODO theme flexibility: add extra styles to captionWrap as well?
 
-            // updateSize();
+        }
 
+        public boolean hasCaption() {
+            return caption != null;
+        }
+
+        public Element getCaptionElement() {
+            return caption;
+        }
+
+        public void setRelativeWidth(boolean relativeWidth) {
+            updateRelativeSize(relativeWidth, "width");
+        }
+
+        public void setRelativeHeight(boolean relativeHeight) {
+            updateRelativeSize(relativeHeight, "height");
+        }
+
+        private void updateRelativeSize(boolean isRelativeSize, String direction) {
+            if (isRelativeSize && hasCaption()) {
+                captionWrap.getStyle().setProperty(
+                        direction,
+                        getWidget().getElement().getStyle()
+                                .getProperty(direction));
+                captionWrap.addClassName("v-has-" + direction);
+            } else if (hasCaption()) {
+                captionWrap.getStyle().clearHeight();
+                captionWrap.removeClassName("v-has-" + direction);
+                captionWrap.getStyle().clearPaddingTop();
+                captionWrap.getStyle().clearPaddingRight();
+                captionWrap.getStyle().clearPaddingBottom();
+                captionWrap.getStyle().clearPaddingLeft();
+                caption.getStyle().clearMarginTop();
+                caption.getStyle().clearMarginRight();
+                caption.getStyle().clearMarginBottom();
+                caption.getStyle().clearMarginLeft();
+            }
         }
 
         @Override
@@ -267,60 +324,11 @@ public class VBoxLayout extends FlowPanel {
             super.onBrowserEvent(event);
             if (DOM.eventGetType(event) == Event.ONLOAD
                     && icon == DOM.eventGetTarget(event)) {
-                updateSize();
-            }
-        }
-
-        public void updateSize() {
-            if (caption == null) {
-                return;
-            }
-
-            Style style = captionWrap.getStyle();
-
-            style.clearWidth();
-            style.clearHeight();
-            style.clearPaddingTop();
-            style.clearPaddingRight();
-            style.clearPaddingBottom();
-            style.clearPaddingLeft();
-
-            caption.getStyle().clearMarginTop();
-            caption.getStyle().clearMarginRight();
-            caption.getStyle().clearMarginBottom();
-            caption.getStyle().clearMarginLeft();
-
-            captionWrap.removeClassName("v-has-width");
-            captionWrap.removeClassName("v-has-height");
-
-            // Relative sized widgets need extra calculations
-            if (getWidget().getElement().getStyle().getWidth().endsWith("%")) {
-                if (captionPosition == CaptionPosition.LEFT) {
-                    int offset = caption.getOffsetWidth();
-                    style.setPaddingLeft(offset, Unit.PX);
-                    caption.getStyle().setMarginLeft(-offset, Unit.PX);
-                } else if (captionPosition == CaptionPosition.RIGHT) {
-                    int offset = caption.getOffsetWidth();
-                    style.setPaddingRight(offset, Unit.PX);
-                    caption.getStyle().setMarginRight(-offset, Unit.PX);
+                if (layoutManager != null) {
+                    layoutManager.layoutLater();
+                } else {
+                    updateSize(caption);
                 }
-                captionWrap.addClassName("v-has-width");
-                style.setProperty("width", getWidget().getElement().getStyle()
-                        .getWidth());
-            }
-            if (getWidget().getElement().getStyle().getHeight().endsWith("%")) {
-                if (captionPosition == CaptionPosition.TOP) {
-                    int offset = caption.getOffsetHeight();
-                    style.setPaddingTop(offset, Unit.PX);
-                    caption.getStyle().setMarginTop(-offset, Unit.PX);
-                } else if (captionPosition == CaptionPosition.BOTTOM) {
-                    int offset = caption.getOffsetHeight();
-                    style.setPaddingBottom(offset, Unit.PX);
-                    caption.getStyle().setMarginBottom(-offset, Unit.PX);
-                }
-                captionWrap.addClassName("v-has-height");
-                style.setProperty("height", getWidget().getElement().getStyle()
-                        .getHeight());
             }
         }
 
@@ -332,6 +340,72 @@ public class VBoxLayout extends FlowPanel {
             super.onDetach();
         }
 
+    }
+
+    void setLayoutManager(LayoutManager manager) {
+        layoutManager = manager;
+    }
+
+    private static final RegExp captionPositionRegexp = RegExp
+            .compile("v-caption-on-(\\S+)");
+
+    public void updateSize(Element caption) {
+
+        Element captionWrap = caption.getParentElement().cast();
+        Style captionWrapStyle = captionWrap.getStyle();
+
+        captionWrapStyle.clearPaddingTop();
+        captionWrapStyle.clearPaddingRight();
+        captionWrapStyle.clearPaddingBottom();
+        captionWrapStyle.clearPaddingLeft();
+
+        Style captionStyle = caption.getStyle();
+        captionStyle.clearMarginTop();
+        captionStyle.clearMarginRight();
+        captionStyle.clearMarginBottom();
+        captionStyle.clearMarginLeft();
+
+        // Get caption position from the classname
+        MatchResult matcher = captionPositionRegexp.exec(captionWrap
+                .getClassName());
+        String captionClass = matcher.getGroup(1);
+        CaptionPosition captionPosition = CaptionPosition.valueOf(
+                CaptionPosition.class, captionClass.toUpperCase());
+
+        if (captionPosition == CaptionPosition.LEFT
+                || captionPosition == CaptionPosition.RIGHT) {
+            int captionWidth;
+            if (layoutManager != null) {
+                captionWidth = layoutManager.getOuterWidth(caption)
+                        - layoutManager.getMarginWidth(caption);
+            } else {
+                captionWidth = caption.getOffsetWidth();
+            }
+            if (captionPosition == CaptionPosition.LEFT) {
+                captionWrapStyle.setPaddingLeft(captionWidth, Unit.PX);
+                captionStyle.setMarginLeft(-captionWidth, Unit.PX);
+            } else {
+                captionWrapStyle.setPaddingRight(captionWidth, Unit.PX);
+                captionStyle.setMarginRight(-captionWidth, Unit.PX);
+            }
+        }
+        if (captionPosition == CaptionPosition.TOP
+                || captionPosition == CaptionPosition.BOTTOM) {
+            int captionHeight;
+            if (layoutManager != null) {
+                captionHeight = layoutManager.getOuterHeight(caption)
+                        - layoutManager.getMarginHeight(caption);
+            } else {
+                captionHeight = caption.getOffsetHeight();
+            }
+            if (captionPosition == CaptionPosition.TOP) {
+                captionWrapStyle.setPaddingTop(captionHeight, Unit.PX);
+                captionStyle.setMarginTop(-captionHeight, Unit.PX);
+            } else {
+                captionWrapStyle.setPaddingBottom(captionHeight, Unit.PX);
+                captionStyle.setMarginBottom(-captionHeight, Unit.PX);
+            }
+        }
     }
 
     private void toggleStyleName(String name, boolean enabled) {
@@ -358,43 +432,30 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    private boolean recalculateExpandsScheduled = false;
-
     public void recalculateExpands() {
-        if (!recalculateExpandsScheduled) {
-            Scheduler.get().scheduleDeferred(calculateExpands);
-            recalculateExpandsScheduled = true;
+        double total = 0;
+        for (Slot slot : widgetToSlot.values()) {
+            if (slot.getExpandRatio() > -1) {
+                total += slot.getExpandRatio();
+            } else {
+                if (vertical) {
+                    slot.getElement().getStyle().clearHeight();
+                } else {
+                    slot.getElement().getStyle().clearWidth();
+                }
+            }
+        }
+        for (Slot slot : widgetToSlot.values()) {
+            if (slot.getExpandRatio() > -1) {
+                if (vertical) {
+                    slot.setHeight((100 * (slot.getExpandRatio() / total))
+                            + "%");
+                } else {
+                    slot.setWidth((100 * (slot.getExpandRatio() / total)) + "%");
+                }
+            }
         }
     }
-
-    private ScheduledCommand calculateExpands = new ScheduledCommand() {
-        public void execute() {
-            double total = 0;
-            for (Slot slot : widgetToSlot.values()) {
-                if (slot.getExpandRatio() > -1) {
-                    total += slot.getExpandRatio();
-                } else {
-                    if (vertical) {
-                        slot.getElement().getStyle().clearHeight();
-                    } else {
-                        slot.getElement().getStyle().clearWidth();
-                    }
-                }
-            }
-            for (Slot slot : widgetToSlot.values()) {
-                if (slot.getExpandRatio() > -1) {
-                    if (vertical) {
-                        slot.setHeight((100 * (slot.getExpandRatio() / total))
-                                + "%");
-                    } else {
-                        slot.setWidth((100 * (slot.getExpandRatio() / total))
-                                + "%");
-                    }
-                }
-            }
-            recalculateExpandsScheduled = false;
-        }
-    };
 
     private Element expandWrapper;
 
@@ -458,7 +519,7 @@ public class VBoxLayout extends FlowPanel {
                     expandWrapper.getFirstChildElement().getStyle()
                             .setMarginLeft(-totalSize, Unit.PX);
                 }
-                calculateExpands.execute();
+                recalculateExpands();
 
             } else if (expandWrapper != null) {
                 for (; expandWrapper.getChildCount() > 0;) {
@@ -478,45 +539,45 @@ public class VBoxLayout extends FlowPanel {
         }
     };
 
-    private boolean recalculateLayoutHeightScheduled = false;
-
     public void recalculateLayoutHeight() {
-        if (vertical || getStyleName().contains("v-has-height")) {
+        // Only needed if a horizontal layout is undefined high, and contains
+        // relative height children or vertical alignments
+        if (vertical || definedHeight) {
             return;
         }
-        if (!recalculateLayoutHeightScheduled) {
-            recalculateLayoutHeightScheduled = true;
-            Scheduler.get().scheduleDeferred(calculateLayoutHeight);
+
+        boolean hasRelativeHeightChildren = false;
+        boolean hasVAlign = false;
+
+        for (Widget slot : getChildren()) {
+            Widget widget = ((Slot) slot).getWidget();
+            String h = widget.getElement().getStyle().getHeight();
+            if (h != null && h.indexOf("%") > -1) {
+                hasRelativeHeightChildren = true;
+            }
+            AlignmentInfo a = ((Slot) slot).getAlignment();
+            if (a.isVerticalCenter() || a.isBottom()) {
+                hasVAlign = true;
+            }
         }
+
+        if (hasRelativeHeightChildren || hasVAlign) {
+            int newHeight;
+            if (layoutManager != null) {
+                newHeight = layoutManager.getOuterHeight(getElement())
+                        - layoutManager.getMarginHeight(getElement());
+            } else {
+                newHeight = getElement().getOffsetHeight();
+            }
+            VBoxLayout.this.getElement().getStyle()
+                    .setHeight(newHeight, Unit.PX);
+        }
+
     }
 
-    private ScheduledCommand calculateLayoutHeight = new ScheduledCommand() {
-        public void execute() {
-            // Clear previous height
-            getElement().getStyle().clearHeight();
-
-            boolean hasRelativeHeight = false;
-            boolean hasVAlign = false;
-
-            for (Widget slot : getChildren()) {
-                Widget widget = ((Slot) slot).getWidget();
-                String h = widget.getElement().getStyle().getHeight();
-                if (h != null && h.indexOf("%") > -1) {
-                    hasRelativeHeight = true;
-                }
-                AlignmentInfo a = ((Slot) slot).getAlignment();
-                if (a.isVerticalCenter() || a.isBottom()) {
-                    hasVAlign = true;
-                }
-            }
-
-            if (hasRelativeHeight || hasVAlign) {
-                int newHeight = getOffsetHeight();
-                VBoxLayout.this.getElement().getStyle()
-                        .setHeight(newHeight, Unit.PX);
-            }
-
-            recalculateLayoutHeightScheduled = false;
-        }
-    };
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+        definedHeight = (height != null && !"".equals(height));
+    }
 }

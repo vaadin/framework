@@ -91,6 +91,15 @@ public interface ServerConnector extends Connector {
     public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
 
     /**
+     * Removes the specified StateChangeHandler from this connector. The handler
+     * will no longer be notified of the state is updated by the server.
+     * 
+     * @param handler
+     *            The handler that should be removed.
+     */
+    public void removeStateChangeHandler(StateChangeHandler handler);
+
+    /**
      * Sends the given event to all registered handlers.
      * 
      * @param event

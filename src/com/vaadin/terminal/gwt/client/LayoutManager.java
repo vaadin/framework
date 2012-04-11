@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
+import com.vaadin.terminal.gwt.client.ui.PreLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
@@ -152,7 +153,7 @@ public class LayoutManager {
         }
     }
 
-    private void layoutLater() {
+    public void layoutLater() {
         if (!layoutPending) {
             layoutPending = true;
             layoutTimer.schedule(100);
@@ -176,10 +177,21 @@ public class LayoutManager {
     private void doLayout() {
         VConsole.log("Starting layout phase");
 
+        Duration totalDuration = new Duration();
+
+        int preLayoutStart = totalDuration.elapsedMillis();
+        for (ComponentConnector connector : connection.getConnectorMap()
+                .getComponentConnectors()) {
+            if (connector instanceof PreLayoutListener) {
+                ((PreLayoutListener) connector).preLayout();
+            }
+        }
+        VConsole.log("Invoke pre layout listeners in "
+                + (totalDuration.elapsedMillis() - preLayoutStart) + " ms");
+
         Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
 
         int passes = 0;
-        Duration totalDuration = new Duration();
 
         for (ManagedLayout layout : needsHorizontalLayout) {
             currentDependencyTree.setNeedsHorizontalLayout(layout, true);
@@ -577,6 +589,14 @@ public class LayoutManager {
         return getMeasuredSize(element, nullSize).getMarginLeft();
     }
 
+    public int getMarginWidth(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginWidth();
+    }
+
+    public int getMarginHeight(Element element) {
+        return getMeasuredSize(element, nullSize).getMarginHeight();
+    }
+
     public void reportOuterHeight(ComponentConnector component, int outerHeight) {
         MeasuredSize measuredSize = getMeasuredSize(component);
         if (isLayoutRunning()) {
@@ -677,4 +697,5 @@ public class LayoutManager {
     public void setEverythingNeedsMeasure() {
         everythingNeedsMeasure = true;
     }
+
 }
