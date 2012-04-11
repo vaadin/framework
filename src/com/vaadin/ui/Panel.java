@@ -112,45 +112,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Gets the current layout of the panel.
-     * 
-     * @return the Current layout of the panel.
-     * @deprecated A Panel can now contain a ComponentContainer which is not
-     *             necessarily a Layout. Use {@link #getContent()} instead.
-     */
-    @Deprecated
-    public Layout getLayout() {
-        if (content instanceof Layout) {
-            return (Layout) content;
-        } else if (content == null) {
-            return null;
-        }
-
-        throw new IllegalStateException(
-                "Panel does not contain a Layout. Use getContent() instead of getLayout().");
-    }
-
-    /**
-     * Sets the layout of the panel.
-     * 
-     * If given layout is null, a VerticalLayout with margins set is used as a
-     * default.
-     * 
-     * Components from old layout are not moved to new layout by default
-     * (changed in 5.2.2). Use function in Layout interface manually.
-     * 
-     * @param newLayout
-     *            the New layout of the panel.
-     * @deprecated A Panel can now contain a ComponentContainer which is not
-     *             necessarily a Layout. Use
-     *             {@link #setContent(ComponentContainer)} instead.
-     */
-    @Deprecated
-    public void setLayout(Layout newLayout) {
-        setContent(newLayout);
-    }
-
-    /**
      * Returns the content of the Panel.
      * 
      * @return
