@@ -12,7 +12,8 @@ import java.util.Set;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
@@ -361,8 +362,10 @@ public class LayoutManager {
         if (!pendingOverflowFixes.isEmpty()) {
             Duration duration = new Duration();
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
-                componentConnector.getWidget().getElement().getParentElement()
-                        .getStyle().setTop(1, Unit.PX);
+                Style style = componentConnector.getWidget().getElement()
+                        .getParentElement().getStyle();
+                assert (style.getOverflow() == null);
+                style.setOverflow(Overflow.HIDDEN);
             }
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 componentConnector.getWidget().getElement().getParentElement()
@@ -370,7 +373,7 @@ public class LayoutManager {
             }
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 componentConnector.getWidget().getElement().getParentElement()
-                        .getStyle().setTop(0, Unit.PX);
+                        .getStyle().clearOverflow();
                 layoutDependencyTree.setNeedsMeasure(componentConnector, true);
                 ComponentContainerConnector parent = componentConnector
                         .getParent();
@@ -437,8 +440,10 @@ public class LayoutManager {
     }
 
     private void doOverflowAutoFix(ComponentConnector connector) {
+        // IE9 doesn't need the original fix, but for some reason it needs one
         if (connector.getParent() instanceof MayScrollChildren
-                && BrowserInfo.get().requiresOverflowAutoFix()
+                && (BrowserInfo.get().requiresOverflowAutoFix() || BrowserInfo
+                        .get().isIE9())
                 && !"absolute".equals(connector.getWidget().getElement()
                         .getStyle().getPosition())) {
             pendingOverflowFixes.add(connector);
