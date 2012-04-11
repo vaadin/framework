@@ -235,7 +235,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     /*-{
         var me = this;
         el.oncut = function() {
-            me.@com.vaadin.terminal.gwt.client.ui.VTextField::onCut()();
+            me.@com.vaadin.terminal.gwt.client.ui.textfield.VTextField::onCut()();
         };
     }-*/;
 

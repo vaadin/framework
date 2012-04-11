@@ -40,7 +40,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         var me = this;
 
         el.attachEvent("ondragstart",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         });
     }-*/;
 
@@ -50,19 +50,19 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         var me = this;
 
         el.attachEvent("ondragenter",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         });
 
         el.attachEvent("ondragleave",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         });
 
         el.attachEvent("ondragover",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         });
 
         el.attachEvent("ondrop",  function(ev) {
-            return me.@com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
         });
     }-*/;
 

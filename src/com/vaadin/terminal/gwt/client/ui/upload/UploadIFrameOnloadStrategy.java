@@ -3,14 +3,13 @@
  */
 package com.vaadin.terminal.gwt.client.ui.upload;
 
-
 public class UploadIFrameOnloadStrategy {
 
     native void hookEvents(com.google.gwt.dom.client.Element iframe,
             VUpload upload)
     /*-{
         iframe.onload = function() {
-            upload.@com.vaadin.terminal.gwt.client.ui.VUpload::onSubmitComplete()();
+            upload.@com.vaadin.terminal.gwt.client.ui.upload.VUpload::onSubmitComplete()();
         };
     }-*/;
 

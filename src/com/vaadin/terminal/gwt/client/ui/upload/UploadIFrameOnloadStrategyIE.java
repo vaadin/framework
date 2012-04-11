@@ -15,7 +15,7 @@ public class UploadIFrameOnloadStrategyIE extends UploadIFrameOnloadStrategy {
     /*-{
       iframe.onreadystatechange = function() {
         if (iframe.readyState == 'complete') {
-          upload.@com.vaadin.terminal.gwt.client.ui.VUpload::onSubmitComplete()();
+          upload.@com.vaadin.terminal.gwt.client.ui.upload.VUpload::onSubmitComplete()();
         }
       };
     }-*/;

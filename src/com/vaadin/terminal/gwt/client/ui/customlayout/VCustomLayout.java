@@ -363,7 +363,7 @@ public class VCustomLayout extends ComplexPanel {
     /*-{
     	var self = this;
     	element.notifyChildrenOfSizeChange = function() {
-    		self.@com.vaadin.terminal.gwt.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
+    		self.@com.vaadin.terminal.gwt.client.ui.customlayout.VCustomLayout::notifyChildrenOfSizeChange()();
     	};
     }-*/;
 
