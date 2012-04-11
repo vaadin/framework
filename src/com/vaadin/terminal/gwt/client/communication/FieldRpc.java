@@ -1,5 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.communication;
-
 
 public class FieldRpc {
     public interface FocusServerRpc extends ServerRpc {
