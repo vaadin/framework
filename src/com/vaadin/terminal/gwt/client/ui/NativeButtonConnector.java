@@ -4,19 +4,29 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventHelper;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.ui.NativeButton;
 
 @Component(NativeButton.class)
 public class NativeButtonConnector extends AbstractComponentConnector implements
-        Paintable {
+        BlurHandler, FocusHandler {
+
+    private HandlerRegistration focusHandlerRegistration;
+    private HandlerRegistration blurHandlerRegistration;
+
+    private FocusAndBlurServerRpc focusBlurRpc = RpcProxy.create(
+            FocusAndBlurServerRpc.class, this);
 
     @Override
     public void init() {
@@ -24,6 +34,8 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
 
         getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
                 this);
+        getWidget().client = getConnection();
+        getWidget().paintableId = getConnectorId();
     }
 
     @Override
@@ -31,21 +43,15 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
         return false;
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         getWidget().disableOnClick = getState().isDisableOnClick();
-        getWidget().focusHandlerRegistration = EventHelper.updateFocusHandler(
-                this, client, getWidget().focusHandlerRegistration);
-        getWidget().blurHandlerRegistration = EventHelper.updateBlurHandler(
-                this, client, getWidget().blurHandlerRegistration);
-
-        // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
+        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
+                focusHandlerRegistration);
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
+                blurHandlerRegistration);
 
         // Set text
         getWidget().setText(getState().getCaption());
@@ -69,7 +75,7 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
 
         if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
-                getWidget().icon = new Icon(client);
+                getWidget().icon = new Icon(getConnection());
                 getWidget().getElement().insertBefore(
                         getWidget().icon.getElement(),
                         getWidget().captionElement);
@@ -98,6 +104,18 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     @Override
     public ButtonState getState() {
         return (ButtonState) super.getState();
+    }
+
+    public void onFocus(FocusEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurRpc.focus();
+    }
+
+    public void onBlur(BlurEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurRpc.blur();
     }
 
 }

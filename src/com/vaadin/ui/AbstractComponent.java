@@ -33,6 +33,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.ResourceReference;
@@ -1536,9 +1537,17 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param implementation
      *            RPC interface implementation. Also used to deduce the type.
      */
-    protected <T> void registerRpc(T implementation) {
-        Class<?>[] interfaces = implementation.getClass().getInterfaces();
-        if (interfaces.length != 1) {
+    protected <T extends ServerRpc> void registerRpc(T implementation) {
+        Class<?> cls = implementation.getClass();
+        Class<?>[] interfaces = cls.getInterfaces();
+        while (interfaces.length == 0) {
+            // Search upwards until an interface is found. It must be found as T
+            // extends ServerRpc
+            cls = cls.getSuperclass();
+            interfaces = cls.getInterfaces();
+        }
+        if (interfaces.length != 1
+                || !(ServerRpc.class.isAssignableFrom(interfaces[0]))) {
             throw new RuntimeException(
                     "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
         }

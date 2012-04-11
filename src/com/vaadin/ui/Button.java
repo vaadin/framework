@@ -6,21 +6,18 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.ButtonState;
@@ -38,7 +35,7 @@ import com.vaadin.ui.Component.Focusable;
 @SuppressWarnings("serial")
 public class Button extends AbstractComponent implements
         FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Focusable,
-        Action.ShortcutNotifier, Vaadin6Component {
+        Action.ShortcutNotifier {
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
         public void click(MouseEventDetails mouseEventDetails) {
@@ -52,11 +49,19 @@ public class Button extends AbstractComponent implements
         }
     };
 
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+        @Override
+        protected void fireEvent(Event event) {
+            Button.this.fireEvent(event);
+        }
+    };
+
     /**
      * Creates a new push button.
      */
     public Button() {
         registerRpc(rpc);
+        registerRpc(focusBlurRpc);
     }
 
     /**
@@ -81,26 +86,6 @@ public class Button extends AbstractComponent implements
     public Button(String caption, ClickListener listener) {
         this(caption);
         addListener(listener);
-    }
-
-    /**
-     * Invoked when the value of a variable has changed. Button listeners are
-     * notified if the button is clicked.
-     * 
-     * @param source
-     * @param variables
-     */
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        if (variables.containsKey(FocusEvent.EVENT_ID)) {
-            fireEvent(new FocusEvent(this));
-        }
-        if (variables.containsKey(BlurEvent.EVENT_ID)) {
-            fireEvent(new BlurEvent(this));
-        }
-    }
-
-    public void paintContent(PaintTarget target) throws PaintException {
-        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
     /**

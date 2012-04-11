@@ -5,21 +5,25 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.ui.Button;
 
 @Component(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector implements
-        Paintable {
+        BlurHandler, FocusHandler {
 
     /**
      * RPC interface for calls from client to server.
@@ -42,6 +46,13 @@ public class ButtonConnector extends AbstractComponentConnector implements
         public void disableOnClick();
     }
 
+    private ButtonServerRpc rpc = RpcProxy.create(ButtonServerRpc.class, this);
+    private FocusAndBlurServerRpc focusBlurProxy = RpcProxy.create(
+            FocusAndBlurServerRpc.class, this);
+
+    private HandlerRegistration focusHandlerRegistration = null;
+    private HandlerRegistration blurHandlerRegistration = null;
+
     @Override
     public boolean delegateCaptionHandling() {
         return false;
@@ -50,27 +61,18 @@ public class ButtonConnector extends AbstractComponentConnector implements
     @Override
     public void init() {
         super.init();
-        getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
-                this);
+        getWidget().buttonRpcProxy = rpc;
+        getWidget().client = getConnection();
+        getWidget().paintableId = getConnectorId();
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // Ensure correct implementation,
-        // but don't let container manage caption etc.
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().focusHandlerRegistration = EventHelper.updateFocusHandler(
-                this, client, getWidget().focusHandlerRegistration);
-        getWidget().blurHandlerRegistration = EventHelper.updateBlurHandler(
-                this, client, getWidget().blurHandlerRegistration);
-
-        // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
-
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
+                focusHandlerRegistration);
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
+                blurHandlerRegistration);
         // Set text
         getWidget().setText(getState().getCaption());
 
@@ -93,7 +95,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
 
         if (getState().getIcon() != null) {
             if (getWidget().icon == null) {
-                getWidget().icon = new Icon(client);
+                getWidget().icon = new Icon(getConnection());
                 getWidget().wrapper.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
@@ -123,4 +125,15 @@ public class ButtonConnector extends AbstractComponentConnector implements
         return (ButtonState) super.getState();
     }
 
+    public void onFocus(FocusEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurProxy.focus();
+    }
+
+    public void onBlur(BlurEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurProxy.blur();
+    }
 }

@@ -7,29 +7,22 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.ButtonConnector.ButtonServerRpc;
 
-public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
-        BlurHandler {
+public class VButton extends FocusWidget implements ClickHandler {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -84,9 +77,6 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
      */
     private boolean disallowNextClick = false;
     private boolean isHovering;
-
-    protected HandlerRegistration focusHandlerRegistration;
-    protected HandlerRegistration blurHandlerRegistration;
 
     protected int clickShortcut = 0;
     // TODO Move this to VButtonPaintable
@@ -446,11 +436,4 @@ public class VButton extends FocusWidget implements ClickHandler, FocusHandler,
     	return ret;
     }-*/;
 
-    public void onFocus(FocusEvent arg0) {
-        client.updateVariable(paintableId, EventId.FOCUS, "", true);
-    }
-
-    public void onBlur(BlurEvent arg0) {
-        client.updateVariable(paintableId, EventId.BLUR, "", true);
-    }
 }

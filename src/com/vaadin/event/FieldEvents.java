@@ -8,8 +8,10 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.terminal.gwt.client.EventId;
+import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.TextField;
@@ -247,4 +249,25 @@ public interface FieldEvents {
 
         public void removeListener(TextChangeListener listener);
     }
+
+    public static abstract class FocusAndBlurServerRpcImpl implements
+            FocusAndBlurServerRpc {
+
+        private Component component;
+
+        public FocusAndBlurServerRpcImpl(Component component) {
+            this.component = component;
+        }
+
+        protected abstract void fireEvent(Event event);
+
+        public void blur() {
+            fireEvent(new BlurEvent(component));
+        }
+
+        public void focus() {
+            fireEvent(new FocusEvent(component));
+        }
+    };
+
 }
