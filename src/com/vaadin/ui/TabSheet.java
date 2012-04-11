@@ -589,6 +589,10 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // connector
         if (selected instanceof ComponentContainer) {
             ((ComponentContainer) selected).requestRepaintAll();
+        } else if (selected instanceof Table) {
+            // Workaround until there's a generic way of telling a component
+            // that there is no client side state to rely on. See #8642
+            ((Table) selected).refreshRowCache();
         } else if (selected != null) {
             selected.requestRepaint();
         }
