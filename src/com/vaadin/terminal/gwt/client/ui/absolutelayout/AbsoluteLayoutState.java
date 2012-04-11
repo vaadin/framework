@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutState;
 
 public class AbsoluteLayoutState extends AbstractLayoutState {
     // Maps each component to a position

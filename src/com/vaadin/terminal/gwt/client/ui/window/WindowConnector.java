@@ -22,7 +22,6 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.Component;
@@ -30,82 +29,11 @@ import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelConnector.PanelState;
 
 @Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
         SimpleManagedLayout, PostLayoutListener {
-
-    public interface WindowServerRPC extends ClickRPC, ServerRpc {
-    }
-
-    public static class WindowState extends PanelState {
-        private boolean modal = false;
-        private boolean resizable = true;
-        private boolean resizeLazy = false;
-        private boolean draggable = true;
-        private boolean centered = false;;
-        private int positionX = -1;
-        private int positionY = -1;
-
-        public boolean isModal() {
-            return modal;
-        }
-
-        public void setModal(boolean modal) {
-            this.modal = modal;
-        }
-
-        public boolean isResizable() {
-            return resizable;
-        }
-
-        public void setResizable(boolean resizable) {
-            this.resizable = resizable;
-        }
-
-        public boolean isResizeLazy() {
-            return resizeLazy;
-        }
-
-        public void setResizeLazy(boolean resizeLazy) {
-            this.resizeLazy = resizeLazy;
-        }
-
-        public boolean isDraggable() {
-            return draggable;
-        }
-
-        public void setDraggable(boolean draggable) {
-            this.draggable = draggable;
-        }
-
-        public boolean isCentered() {
-            return centered;
-        }
-
-        public void setCentered(boolean centered) {
-            this.centered = centered;
-        }
-
-        public int getPositionX() {
-            return positionX;
-        }
-
-        public void setPositionX(int positionX) {
-            this.positionX = positionX;
-        }
-
-        public int getPositionY() {
-            return positionY;
-        }
-
-        public void setPositionY(int positionY) {
-            this.positionY = positionY;
-        }
-
-    }
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override

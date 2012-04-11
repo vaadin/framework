@@ -21,7 +21,6 @@ import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.button.ButtonConnector.ButtonServerRpc;
 
 public class VButton extends FocusWidget implements ClickHandler {
 

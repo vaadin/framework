@@ -10,7 +10,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
@@ -18,7 +17,6 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.Component;
@@ -30,40 +28,6 @@ import com.vaadin.ui.Panel;
 @Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener {
-
-    public interface PanelServerRPC extends ClickRPC, ServerRpc {
-
-    }
-
-    public static class PanelState extends ComponentState {
-        private int tabIndex;
-        private int scrollLeft, scrollTop;
-
-        public int getTabIndex() {
-            return tabIndex;
-        }
-
-        public void setTabIndex(int tabIndex) {
-            this.tabIndex = tabIndex;
-        }
-
-        public int getScrollLeft() {
-            return scrollLeft;
-        }
-
-        public void setScrollLeft(int scrollLeft) {
-            this.scrollLeft = scrollLeft;
-        }
-
-        public int getScrollTop() {
-            return scrollTop;
-        }
-
-        public void setScrollTop(int scrollTop) {
-            this.scrollTop = scrollTop;
-        }
-
-    }
 
     private Integer uidlScrollTop;
 

@@ -17,13 +17,12 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -32,37 +31,6 @@ import com.vaadin.ui.GridLayout;
 @Component(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements Paintable, DirectionalManagedLayout {
-
-    public static class GridLayoutState extends AbstractLayoutState {
-        private boolean spacing = false;
-        private int rows = 0;
-        private int columns = 0;
-
-        public boolean isSpacing() {
-            return spacing;
-        }
-
-        public void setSpacing(boolean spacing) {
-            this.spacing = spacing;
-        }
-
-        public int getRows() {
-            return rows;
-        }
-
-        public void setRows(int rows) {
-            this.rows = rows;
-        }
-
-        public int getColumns() {
-            return columns;
-        }
-
-        public void setColumns(int cols) {
-            columns = cols;
-        }
-
-    }
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -78,10 +46,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         };
 
     };
-
-    public interface GridLayoutServerRPC extends LayoutClickRPC, ServerRpc {
-
-    }
 
     private GridLayoutServerRPC rpc;
     private boolean needCaptionUpdate = false;

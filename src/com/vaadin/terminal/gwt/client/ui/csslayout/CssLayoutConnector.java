@@ -12,35 +12,21 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout.FlowPane;
 import com.vaadin.ui.CssLayout;
 
 @Component(CssLayout.class)
 public class CssLayoutConnector extends AbstractLayoutConnector {
-
-    public static class CssLayoutState extends AbstractLayoutState {
-        private Map<Connector, String> childCss = new HashMap<Connector, String>();
-
-        public Map<Connector, String> getChildCss() {
-            return childCss;
-        }
-
-        public void setChildCss(Map<Connector, String> childCss) {
-            this.childCss = childCss;
-        }
-
-    }
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -56,10 +42,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             return rpc;
         };
     };
-
-    public interface CssLayoutServerRPC extends LayoutClickRPC, ServerRpc {
-
-    }
 
     private CssLayoutServerRPC rpc;
 

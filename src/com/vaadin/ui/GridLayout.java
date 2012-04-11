@@ -21,8 +21,8 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutConnector.GridLayoutServerRPC;
-import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutConnector.GridLayoutState;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**

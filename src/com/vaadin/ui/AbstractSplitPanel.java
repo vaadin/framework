@@ -12,10 +12,10 @@ import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelConnector.AbstractSplitPanelRPC;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelConnector.AbstractSplitPanelState;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelConnector.SplitterState;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelRPC;
+import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState;
+import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.tools.ReflectTools;
 
 /**

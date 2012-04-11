@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.terminal.gwt.client.ui.customlayout.CustomLayoutConnector.CustomLayoutState;
+import com.vaadin.terminal.gwt.client.ui.customlayout.CustomLayoutState;
 
 /**
  * <p>

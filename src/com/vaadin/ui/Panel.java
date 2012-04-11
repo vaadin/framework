@@ -18,8 +18,8 @@ import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelConnector.PanelServerRPC;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelConnector.PanelState;
+import com.vaadin.terminal.gwt.client.ui.panel.PanelServerRPC;
+import com.vaadin.terminal.gwt.client.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
 
 /**

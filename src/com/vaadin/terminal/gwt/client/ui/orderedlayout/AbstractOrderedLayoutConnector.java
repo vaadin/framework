@@ -19,34 +19,16 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
-
-    public static class AbstractOrderedLayoutState extends AbstractLayoutState {
-        private boolean spacing = false;
-
-        public boolean isSpacing() {
-            return spacing;
-        }
-
-        public void setSpacing(boolean spacing) {
-            this.spacing = spacing;
-        }
-
-    }
-
-    public interface AbstractOrderedLayoutServerRPC extends LayoutClickRPC,
-            ServerRpc {
-
-    }
 
     AbstractOrderedLayoutServerRPC rpc;
 

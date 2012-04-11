@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.Caption;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.ErrorFlag;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.VFormLayoutTable;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutConnector.AbstractOrderedLayoutState;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Component(FormLayout.class)

@@ -13,10 +13,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.EventHelper;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.Component;
@@ -27,27 +25,6 @@ import com.vaadin.ui.Button;
 @Component(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector implements
         BlurHandler, FocusHandler {
-
-    /**
-     * RPC interface for calls from client to server.
-     * 
-     * @since 7.0
-     */
-    public interface ButtonServerRpc extends ServerRpc {
-        /**
-         * Button click event.
-         * 
-         * @param mouseEventDetails
-         *            serialized mouse event details
-         */
-        public void click(MouseEventDetails mouseEventDetails);
-
-        /**
-         * Indicate to the server that the client has disabled the button as a
-         * result of a click.
-         */
-        public void disableOnClick();
-    }
 
     private ButtonServerRpc rpc = RpcProxy.create(ButtonServerRpc.class, this);
     private FocusAndBlurServerRpc focusBlurProxy = RpcProxy.create(

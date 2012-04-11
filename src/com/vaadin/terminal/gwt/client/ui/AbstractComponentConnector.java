@@ -14,29 +14,16 @@ import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
-
-    public interface ClickRPC extends ServerRpc {
-        /**
-         * Called when a click event has occurred and there are server side
-         * listeners for the event.
-         * 
-         * @param mouseDetails
-         *            Details about the mouse when the event took place
-         */
-        public void click(MouseEventDetails mouseDetails);
-    }
 
     private ComponentContainerConnector parent;
 

@@ -4,7 +4,7 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector.AbstractLayoutState;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutState;
 import com.vaadin.ui.Layout.MarginHandler;
 
 /**

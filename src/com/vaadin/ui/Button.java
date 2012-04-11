@@ -19,8 +19,8 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.button.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.button.ButtonState;
-import com.vaadin.terminal.gwt.client.ui.button.ButtonConnector.ButtonServerRpc;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component.Focusable;
 

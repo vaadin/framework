@@ -24,7 +24,6 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.Component;
@@ -33,9 +32,6 @@ import com.vaadin.ui.Embedded;
 @Component(Embedded.class)
 public class EmbeddedConnector extends AbstractComponentConnector implements
         Paintable {
-
-    public interface EmbeddedServerRPC extends ClickRPC, ServerRpc {
-    }
 
     public static final String ALTERNATE_TEXT = "alt";
 

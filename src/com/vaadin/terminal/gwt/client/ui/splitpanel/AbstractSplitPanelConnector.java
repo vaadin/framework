@@ -14,121 +14,19 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
+import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
-
-    public interface AbstractSplitPanelRPC extends ServerRpc {
-
-        /**
-         * Called when the position has been updated by the user.
-         * 
-         * @param position
-         *            The new position in % if the current unit is %, in px
-         *            otherwise
-         */
-        public void setSplitterPosition(float position);
-
-        /**
-         * Called when a click event has occurred on the splitter.
-         * 
-         * @param mouseDetails
-         *            Details about the mouse when the event took place
-         */
-        public void splitterClick(MouseEventDetails mouseDetails);
-
-    }
-
-    public static class SplitterState {
-        private float position;
-        private String positionUnit;
-        private boolean positionReversed = false;
-        private boolean locked = false;
-
-        public float getPosition() {
-            return position;
-        }
-
-        public void setPosition(float position) {
-            this.position = position;
-        }
-
-        public String getPositionUnit() {
-            return positionUnit;
-        }
-
-        public void setPositionUnit(String positionUnit) {
-            this.positionUnit = positionUnit;
-        }
-
-        public boolean isPositionReversed() {
-            return positionReversed;
-        }
-
-        public void setPositionReversed(boolean positionReversed) {
-            this.positionReversed = positionReversed;
-        }
-
-        public boolean isLocked() {
-            return locked;
-        }
-
-        public void setLocked(boolean locked) {
-            this.locked = locked;
-        }
-
-    }
-
-    public static class AbstractSplitPanelState extends ComponentState {
-        private Connector firstChild = null;
-        private Connector secondChild = null;
-        private SplitterState splitterState = new SplitterState();
-
-        public boolean hasFirstChild() {
-            return firstChild != null;
-        }
-
-        public boolean hasSecondChild() {
-            return secondChild != null;
-        }
-
-        public Connector getFirstChild() {
-            return firstChild;
-        }
-
-        public void setFirstChild(Connector firstChild) {
-            this.firstChild = firstChild;
-        }
-
-        public Connector getSecondChild() {
-            return secondChild;
-        }
-
-        public void setSecondChild(Connector secondChild) {
-            this.secondChild = secondChild;
-        }
-
-        public SplitterState getSplitterState() {
-            return splitterState;
-        }
-
-        public void setSplitterState(SplitterState splitterState) {
-            this.splitterState = splitterState;
-        }
-
-    }
 
     private AbstractSplitPanelRPC rpc;
 
