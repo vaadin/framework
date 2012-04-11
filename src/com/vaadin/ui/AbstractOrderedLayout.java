@@ -18,9 +18,9 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRPC;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -345,22 +345,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public float getExpandRatio(Component component) {
         Float ratio = componentToExpandRatio.get(component);
         return (ratio == null) ? 0 : ratio.floatValue();
-    }
-
-    /**
-     * Sets the component alignment using a short hand string notation.
-     * 
-     * @deprecated Replaced by
-     *             {@link #setComponentAlignment(Component, Alignment)}
-     * 
-     * @param component
-     *            A child component in this layout
-     * @param alignment
-     *            A short hand notation described in {@link AlignmentUtils}
-     */
-    @Deprecated
-    public void setComponentAlignment(Component component, String alignment) {
-        AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
     public void addListener(LayoutClickListener listener) {

@@ -21,9 +21,9 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutServerRPC;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutState;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
@@ -1386,22 +1386,6 @@ public class GridLayout extends AbstractLayout implements
             }
         }
         return null;
-    }
-
-    /**
-     * Sets the component alignment using a shorthand string notation.
-     * 
-     * @deprecated Replaced by
-     *             {@link #setComponentAlignment(Component, Alignment)}
-     * 
-     * @param component
-     *            A child component in this layout
-     * @param alignment
-     *            A short hand notation described in {@link AlignmentUtils}
-     */
-    @Deprecated
-    public void setComponentAlignment(Component component, String alignment) {
-        AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
     public void addListener(LayoutClickListener listener) {
