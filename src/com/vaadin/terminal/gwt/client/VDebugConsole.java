@@ -56,7 +56,7 @@ import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 
 /**
  * A helper console for client side development. The debug console can also be
@@ -858,9 +858,8 @@ public class VDebugConsole extends VOverlay implements Console {
                 .getConnectors();
         log("Sub windows:");
         Set<ComponentConnector> subWindowHierarchyConnectors = new HashSet<ComponentConnector>();
-        for (VWindow w : root.getWidget().getSubWindowList()) {
-            SimpleTree windowHierachy = dumpConnectorHierarchy(
-                    connectorMap.getConnector(w), "",
+        for (WindowConnector wc : root.getSubWindows()) {
+            SimpleTree windowHierachy = dumpConnectorHierarchy(wc, "",
                     subWindowHierarchyConnectors);
             if (panel.isAttached()) {
                 windowHierachy.open(true);

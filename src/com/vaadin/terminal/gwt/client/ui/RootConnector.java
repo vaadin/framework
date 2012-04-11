@@ -3,8 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -22,6 +23,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -40,6 +43,19 @@ import com.vaadin.ui.Root;
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
         implements Paintable {
+
+    public static class RootState extends ComponentState {
+        private Connector content;
+
+        public Connector getContent() {
+            return content;
+        }
+
+        public void setContent(Connector content) {
+            this.content = content;
+        }
+
+    }
 
     public interface RootServerRPC extends ClickRPC, ServerRpc {
 
@@ -158,39 +174,8 @@ public class RootConnector extends AbstractComponentContainerConnector
             return;
         }
 
-        // Draw this application level window
-        UIDL childUidl = uidl.getChildUIDL(childIndex);
-        final ComponentConnector lo = client.getPaintable(childUidl);
-
-        boolean layoutChanged = getWidget().layout != lo;
-        if (getWidget().layout != null) {
-            if (layoutChanged) {
-                // remove old
-                if (childStateChangeHandlerRegistration != null) {
-                    childStateChangeHandlerRegistration.removeHandler();
-                    childStateChangeHandlerRegistration = null;
-                }
-                // add new
-                getWidget().setWidget(lo.getWidget());
-                getWidget().layout = lo;
-            }
-        } else {
-            getWidget().setWidget(lo.getWidget());
-            getWidget().layout = lo;
-            if (layoutChanged) {
-                childStateChangeHandlerRegistration = lo
-                        .addStateChangeHandler(childStateChangeHandler);
-                // Must handle new child here as state change events are already
-                // fired
-                onChildSizeChange();
-            }
-        }
-
-        // Save currently open subwindows to track which will need to be closed
-        final HashSet<VWindow> removedSubWindows = new HashSet<VWindow>(
-                getWidget().subWindows);
-
         // Handle other UIDL children
+        UIDL childUidl;
         while ((childUidl = uidl.getChildUIDL(++childIndex)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
@@ -208,26 +193,7 @@ public class RootConnector extends AbstractComponentContainerConnector
                     final UIDL notification = (UIDL) it.next();
                     VNotification.showNotification(client, notification);
                 }
-            } else {
-                // subwindows
-                final WindowConnector w = (WindowConnector) client
-                        .getPaintable(childUidl);
-                VWindow windowWidget = w.getWidget();
-                if (getWidget().subWindows.contains(windowWidget)) {
-                    removedSubWindows.remove(windowWidget);
-                } else {
-                    getWidget().subWindows.add(windowWidget);
-                }
-                w.updateFromUIDL(childUidl, client);
             }
-        }
-
-        // Close old windows which where not in UIDL anymore
-        for (final Iterator<VWindow> rem = removedSubWindows.iterator(); rem
-                .hasNext();) {
-            final VWindow w = rem.next();
-            getWidget().subWindows.remove(w);
-            w.hide();
         }
 
         if (uidl.hasAttribute("focused")) {
@@ -356,7 +322,7 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     protected void onChildSizeChange() {
-        ComponentConnector child = getWidget().layout;
+        ComponentConnector child = (ComponentConnector) getState().getContent();
         Style childStyle = child.getWidget().getElement().getStyle();
         /*
          * Must set absolute position if the child has relative height and
@@ -382,16 +348,69 @@ public class RootConnector extends AbstractComponentContainerConnector
      */
     @Deprecated
     public boolean hasSubWindow(WindowConnector wc) {
-        return getWidget().subWindows.contains(wc.getWidget());
+        return getChildren().contains(wc);
+    }
+
+    /**
+     * Return an iterator for current subwindows. This method is meant for
+     * testing purposes only.
+     * 
+     * @return
+     */
+    public List<WindowConnector> getSubWindows() {
+        ArrayList<WindowConnector> windows = new ArrayList<WindowConnector>();
+        for (ComponentConnector child : getChildren()) {
+            if (child instanceof WindowConnector) {
+                windows.add((WindowConnector) child);
+            }
+        }
+        return windows;
+    }
+
+    @Override
+    public RootState getState() {
+        return (RootState) super.getState();
     }
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
+
+        ComponentConnector oldChild = null;
+        ComponentConnector newChild = (ComponentConnector) getState()
+                .getContent();
+
+        for (ComponentConnector c : event.getOldChildren()) {
+            if (!(c instanceof WindowConnector)) {
+                oldChild = c;
+                break;
+            }
+        }
+
+        if (oldChild != newChild) {
+            if (childStateChangeHandlerRegistration != null) {
+                childStateChangeHandlerRegistration.removeHandler();
+                childStateChangeHandlerRegistration = null;
+            }
+            getWidget().setWidget(newChild.getWidget());
+            childStateChangeHandlerRegistration = newChild
+                    .addStateChangeHandler(childStateChangeHandler);
+            // Must handle new child here as state change events are already
+            // fired
+            onChildSizeChange();
+        }
+
         for (ComponentConnector c : getChildren()) {
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;
                 wc.setWindowOrderAndPosition();
+            }
+        }
+
+        // Close removed sub windows
+        for (ComponentConnector c : event.getOldChildren()) {
+            if (c.getParent() != this && c instanceof WindowConnector) {
+                ((WindowConnector) c).getWidget().hide();
             }
         }
     }

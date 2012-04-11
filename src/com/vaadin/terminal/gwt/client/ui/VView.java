@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -43,10 +42,6 @@ public class VView extends SimplePanel implements ResizeHandler,
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
     String theme;
-
-    ComponentConnector layout;
-
-    final LinkedHashSet<VWindow> subWindows = new LinkedHashSet<VWindow>();
 
     String id;
 
@@ -328,20 +323,6 @@ public class VView extends SimplePanel implements ResizeHandler,
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
      }-*/;
-
-    /**
-     * Return an iterator for current subwindows. This method is meant for
-     * testing purposes only.
-     * 
-     * @return
-     */
-    public ArrayList<VWindow> getSubWindowList() {
-        ArrayList<VWindow> windows = new ArrayList<VWindow>(subWindows.size());
-        for (VWindow widget : subWindows) {
-            windows.add(widget);
-        }
-        return windows;
-    }
 
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;

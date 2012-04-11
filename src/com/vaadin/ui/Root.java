@@ -27,10 +27,12 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.RootConnector.RootServerRPC;
+import com.vaadin.terminal.gwt.client.ui.RootConnector.RootState;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.tools.ReflectTools;
@@ -74,7 +76,7 @@ import com.vaadin.ui.Window.CloseListener;
  * @since 7.0
  */
 public abstract class Root extends AbstractComponentContainer implements
-        Action.Container, Action.Notifier {
+        Action.Container, Action.Notifier, Vaadin6Component {
 
     /**
      * Listener that gets notified when the size of the browser window
@@ -344,11 +346,6 @@ public abstract class Root extends AbstractComponentContainer implements
     public static final int BORDER_DEFAULT = 2;
 
     /**
-     * The container in which the component hierarchy of the root starts.
-     */
-    private ComponentContainer content;
-
-    /**
      * The application to which this root belongs
      */
     private Application application;
@@ -422,8 +419,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * {@link VerticalLayout} with margins enabled as its content.
      */
     public Root() {
-        registerRpc(rpc);
-        setSizeFull();
+        this((ComponentContainer) null);
     }
 
     /**
@@ -435,7 +431,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setContent(ComponentContainer)
      */
     public Root(ComponentContainer content) {
-        this();
+        registerRpc(rpc);
+        setSizeFull();
         setContent(content);
     }
 
@@ -450,7 +447,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setCaption(String)
      */
     public Root(String caption) {
-        this();
+        this((ComponentContainer) null);
         setCaption(caption);
     }
 
@@ -469,6 +466,11 @@ public abstract class Root extends AbstractComponentContainer implements
     public Root(String caption, ComponentContainer content) {
         this(content);
         setCaption(caption);
+    }
+
+    @Override
+    public RootState getState() {
+        return (RootState) super.getState();
     }
 
     /**
@@ -503,17 +505,6 @@ public abstract class Root extends AbstractComponentContainer implements
                 }
                 openList.clear();
             }
-        }
-
-        ComponentContainer content = getContent();
-        if (content != null) {
-            content.paint(target);
-        }
-
-        // Paint subwindows
-        for (final Iterator<Window> i = windows.iterator(); i.hasNext();) {
-            final Window w = i.next();
-            w.paint(target);
         }
 
         // Paint notifications
@@ -1035,10 +1026,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public ComponentContainer getContent() {
-        if (content == null) {
-            setContent(createDefaultLayout());
-        }
-        return content;
+        return (ComponentContainer) getState().getContent();
     }
 
     /**
@@ -1066,10 +1054,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public void setContent(ComponentContainer content) {
-        if (this.content != null) {
-            super.removeComponent(this.content);
+        if (content == null) {
+            content = createDefaultLayout();
         }
-        this.content = content;
+
+        if (getState().getContent() != null) {
+            super.removeComponent((Component) getState().getContent());
+        }
+        getState().setContent(content);
         if (content != null) {
             super.addComponent(content);
         }
