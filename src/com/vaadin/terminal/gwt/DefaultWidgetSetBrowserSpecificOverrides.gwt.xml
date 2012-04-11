@@ -14,7 +14,7 @@
 	<replace-with
 		class="com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategyIE">
 		<when-type-is
-			com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategytrategy" />
+			class="com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategy" />
 		<any>
 			<when-property-is name="user.agent" value="ie8" />
 		</any>
