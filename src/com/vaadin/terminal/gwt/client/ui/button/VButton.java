@@ -16,8 +16,6 @@ import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
@@ -31,8 +29,6 @@ public class VButton extends FocusWidget implements ClickHandler {
     protected static int MOVE_THRESHOLD = 3;
     protected int mousedownX = 0;
     protected int mousedownY = 0;
-
-    protected String paintableId;
 
     protected ApplicationConnection client;
 
@@ -54,8 +50,6 @@ public class VButton extends FocusWidget implements ClickHandler {
     private boolean enabled = true;
 
     private int tabIndex = 0;
-
-    protected boolean disableOnClick = false;
 
     /*
      * BELOW PRIVATE MEMBERS COPY-PASTED FROM GWT CustomButton
@@ -79,8 +73,6 @@ public class VButton extends FocusWidget implements ClickHandler {
     private boolean isHovering;
 
     protected int clickShortcut = 0;
-    // TODO Move this to VButtonPaintable
-    ButtonServerRpc buttonRpcProxy;
 
     public VButton() {
         super(DOM.createDiv());
@@ -289,21 +281,9 @@ public class VButton extends FocusWidget implements ClickHandler {
      * .dom.client.ClickEvent)
      */
     public void onClick(ClickEvent event) {
-        if (paintableId == null || client == null) {
-            return;
-        }
         if (BrowserInfo.get().isSafari()) {
             VButton.this.setFocus(true);
         }
-        if (disableOnClick) {
-            setEnabled(false);
-            buttonRpcProxy.disableOnClick();
-        }
-
-        // Add mouse details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent(), getElement());
-        buttonRpcProxy.click(details);
 
         clickPending = false;
     }

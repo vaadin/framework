@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -120,38 +121,17 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().setPopupPosition(positionx, positiony);
         }
 
-        boolean showingUrl = false;
         int childIndex = 0;
-        UIDL childUidl = uidl.getChildUIDL(childIndex++);
-
-        final ComponentConnector lo = client.getPaintable(childUidl);
-        if (getWidget().layout != null) {
-            if (getWidget().layout != lo) {
-                // remove old
-                getWidget().contentPanel.remove(getWidget().layout.getWidget());
-                // add new
-                if (!showingUrl) {
-                    getWidget().contentPanel.setWidget(lo.getWidget());
-                }
-                getWidget().layout = lo;
-            }
-        } else if (!showingUrl) {
-            getWidget().contentPanel.setWidget(lo.getWidget());
-            getWidget().layout = lo;
-        }
 
         // we may have actions
-        if (uidl.getChildCount() > 1) {
-            final int cnt = uidl.getChildCount();
-            for (int i = 1; i < cnt; i++) {
-                childUidl = uidl.getChildUIDL(i);
-                if (childUidl.getTag().equals("actions")) {
-                    if (getWidget().shortcutHandler == null) {
-                        getWidget().shortcutHandler = new ShortcutActionHandler(
-                                getConnectorId(), client);
-                    }
-                    getWidget().shortcutHandler.updateActionMap(childUidl);
+        for (int i = 0; i < uidl.getChildCount(); i++) {
+            UIDL childUidl = uidl.getChildUIDL(i);
+            if (childUidl.getTag().equals("actions")) {
+                if (getWidget().shortcutHandler == null) {
+                    getWidget().shortcutHandler = new ShortcutActionHandler(
+                            getConnectorId(), client);
                 }
+                getWidget().shortcutHandler.updateActionMap(childUidl);
             }
 
         }
@@ -179,7 +159,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
         if (uidl.hasAttribute("bringToFront")) {
             /*
-             * Focus as a side-efect. Will be overridden by
+             * Focus as a side-effect. Will be overridden by
              * ApplicationConnection if another component was focused by the
              * server side.
              */
@@ -207,6 +187,22 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected Widget createWidget() {
         return GWT.create(VWindow.class);
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
+
+        // We always have 1 child, unless the child is hidden
+        Widget newChildWidget = null;
+        ComponentConnector newChild = null;
+        if (getChildren().size() == 1) {
+            newChild = getChildren().get(0);
+            newChildWidget = newChild.getWidget();
+        }
+
+        getWidget().layout = newChild;
+        getWidget().setWidget(newChildWidget);
     }
 
     public void layout() {

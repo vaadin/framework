@@ -7,12 +7,16 @@ package com.vaadin.terminal.gwt.client.ui.button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.EventHelper;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
@@ -24,7 +28,7 @@ import com.vaadin.ui.Button;
 
 @Component(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector implements
-        BlurHandler, FocusHandler {
+        BlurHandler, FocusHandler, ClickHandler {
 
     private ButtonServerRpc rpc = RpcProxy.create(ButtonServerRpc.class, this);
     private FocusAndBlurServerRpc focusBlurProxy = RpcProxy.create(
@@ -41,9 +45,8 @@ public class ButtonConnector extends AbstractComponentConnector implements
     @Override
     public void init() {
         super.init();
-        getWidget().buttonRpcProxy = rpc;
+        getWidget().addClickHandler(this);
         getWidget().client = getConnection();
-        getWidget().paintableId = getConnectorId();
     }
 
     @Override
@@ -55,8 +58,6 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 blurHandlerRegistration);
         // Set text
         getWidget().setText(getState().getCaption());
-
-        getWidget().disableOnClick = getState().isDisableOnClick();
 
         // handle error
         if (null != getState().getErrorMessage()) {
@@ -115,5 +116,19 @@ public class ButtonConnector extends AbstractComponentConnector implements
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurProxy.blur();
+    }
+
+    public void onClick(ClickEvent event) {
+        if (getState().isDisableOnClick()) {
+            getWidget().setEnabled(false);
+            rpc.disableOnClick();
+        }
+
+        // Add mouse details
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent(), getWidget()
+                        .getElement());
+        rpc.click(details);
+
     }
 }
