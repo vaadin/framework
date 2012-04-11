@@ -23,7 +23,6 @@ import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
-import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
@@ -41,7 +40,7 @@ public class LayoutManager {
 
     private final Collection<ComponentConnector> needsMeasure = new HashSet<ComponentConnector>();
 
-    private final Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
+    private Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
 
     private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<Element, Collection<ElementResizeListener>>();
     private final Set<Element> listenersToFire = new HashSet<Element>();
@@ -207,6 +206,10 @@ public class LayoutManager {
             int measuredConnectorCount = measureConnectors(
                     currentDependencyTree, everythingNeedsMeasure);
             everythingNeedsMeasure = false;
+            if (measuredConnectorCount == 0) {
+                VConsole.log("No more changes in pass " + passes);
+                break;
+            }
 
             int measureTime = passDuration.elapsedMillis();
             VConsole.log("  Measured " + measuredConnectorCount
@@ -233,11 +236,9 @@ public class LayoutManager {
             }
 
             FastStringSet updatedSet = FastStringSet.create();
-            boolean changed = false;
 
             while (currentDependencyTree.hasHorizontalConnectorToLayout()
                     || currentDependencyTree.hasVerticaConnectorToLayout()) {
-                changed = true;
                 for (ManagedLayout layout : currentDependencyTree
                         .getHorizontalLayoutTargets()) {
                     if (layout instanceof DirectionalManagedLayout) {
@@ -308,11 +309,6 @@ public class LayoutManager {
                 VConsole.log(b.toString());
             }
 
-            if (!changed) {
-                VConsole.log("No more changes in pass " + passes);
-                break;
-            }
-
             VConsole.log("Pass " + passes + " completed in "
                     + passDuration.elapsedMillis() + " ms");
 
@@ -352,9 +348,30 @@ public class LayoutManager {
 
             HashMap<Element, String> originalOverflows = new HashMap<Element, String>();
 
+            HashSet<ComponentConnector> delayedOverflowFixes = new HashSet<ComponentConnector>();
+
             // First set overflow to hidden (and save previous value so it can
             // be restored later)
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
+                // Delay the overflow fix if the involved connectors might still
+                // change
+                if (!currentDependencyTree
+                        .noMoreChangesExpected(componentConnector)
+                        || !currentDependencyTree
+                                .noMoreChangesExpected(componentConnector
+                                        .getParent())) {
+                    delayedOverflowFixes.add(componentConnector);
+                    continue;
+                }
+
+                if (debugLogging) {
+                    VConsole.log("Doing overflow fix for "
+                            + Util.getConnectorString(componentConnector)
+                            + " in "
+                            + Util.getConnectorString(componentConnector
+                                    .getParent()));
+                }
+
                 Element parentElement = componentConnector.getWidget()
                         .getElement().getParentElement();
                 Style style = parentElement.getStyle();
@@ -370,6 +387,8 @@ public class LayoutManager {
                 style.setOverflow(Overflow.HIDDEN);
             }
 
+            pendingOverflowFixes.removeAll(delayedOverflowFixes);
+
             // Then ensure all scrolling elements are reflowed by measuring
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 componentConnector.getWidget().getElement().getParentElement()
@@ -384,20 +403,13 @@ public class LayoutManager {
                         originalOverflows.get(parentElement));
 
                 layoutDependencyTree.setNeedsMeasure(componentConnector, true);
-
-                ComponentContainerConnector parent = componentConnector
-                        .getParent();
-                if (parent instanceof ManagedLayout) {
-                    ManagedLayout managedParent = (ManagedLayout) parent;
-                    layoutDependencyTree.setNeedsHorizontalLayout(
-                            managedParent, true);
-                    layoutDependencyTree.setNeedsVerticalLayout(managedParent,
-                            true);
-                }
             }
-            VConsole.log("Did overflow fix for " + pendingOverflowFixes.size()
-                    + " elements  in " + duration.elapsedMillis() + " ms");
-            pendingOverflowFixes.clear();
+            if (!pendingOverflowFixes.isEmpty()) {
+                VConsole.log("Did overflow fix for "
+                        + pendingOverflowFixes.size() + " elements  in "
+                        + duration.elapsedMillis() + " ms");
+            }
+            pendingOverflowFixes = delayedOverflowFixes;
         }
 
         int measureCount = 0;
@@ -440,7 +452,7 @@ public class LayoutManager {
 
     private void onConnectorChange(ComponentConnector connector,
             boolean widthChanged, boolean heightChanged) {
-        doOverflowAutoFix(connector);
+        setNeedsOverflowFix(connector);
         if (heightChanged) {
             currentDependencyTree.markHeightAsChanged(connector);
         }
@@ -449,14 +461,15 @@ public class LayoutManager {
         }
     }
 
-    private void doOverflowAutoFix(ComponentConnector connector) {
-        // IE9 doesn't need the original fix, but for some reason it needs one
-        if (connector.getParent() instanceof MayScrollChildren
-                && (BrowserInfo.get().requiresOverflowAutoFix() || BrowserInfo
-                        .get().isIE9())
-                && !"absolute".equals(connector.getWidget().getElement()
-                        .getStyle().getPosition())) {
-            pendingOverflowFixes.add(connector);
+    private void setNeedsOverflowFix(ComponentConnector connector) {
+        // IE9 doesn't need the original fix, but for some reason it needs this
+        if (BrowserInfo.get().requiresOverflowAutoFix()
+                || BrowserInfo.get().isIE9()) {
+            ComponentConnector scrollingBoundary = currentDependencyTree
+                    .getScrollingBoundary(connector);
+            if (scrollingBoundary != null) {
+                pendingOverflowFixes.add(scrollingBoundary);
+            }
         }
     }
 
