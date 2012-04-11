@@ -1,10 +1,15 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal;
+
+import java.io.Serializable;
 
 import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
 
-public class LegacyPaint {
+public class LegacyPaint implements Serializable {
     /**
      * 
      * <p>

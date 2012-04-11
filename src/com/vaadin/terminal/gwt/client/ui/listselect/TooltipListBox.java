@@ -1,3 +1,6 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui.listselect;
 
 import com.google.gwt.user.client.Event;

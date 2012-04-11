@@ -1,3 +1,6 @@
+/* 
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui.panel;
 
 import com.vaadin.terminal.gwt.client.ComponentState;
