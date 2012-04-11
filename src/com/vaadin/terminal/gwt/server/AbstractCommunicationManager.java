@@ -1108,7 +1108,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         sortByHierarchy((List) legacyComponents);
         for (Vaadin6Component c : legacyComponents) {
-            logger.info("Painting legacy Component " + c.getClass().getName()
+            logger.fine("Painting Vaadin6Component " + c.getClass().getName()
                     + "@" + Integer.toHexString(c.hashCode()));
             paintTarget.startTag("change");
             final String pid = c.getConnectorId();
