@@ -30,6 +30,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.root.RootServerRPC;
@@ -471,6 +472,13 @@ public abstract class Root extends AbstractComponentContainer implements
     @Override
     public RootState getState() {
         return (RootState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        // This is a workaround for a problem with creating the correct state
+        // object during build
+        return new RootState();
     }
 
     /**
