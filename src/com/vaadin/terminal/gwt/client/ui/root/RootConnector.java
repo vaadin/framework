@@ -161,7 +161,7 @@ public class RootConnector extends AbstractComponentContainerConnector
 
         // Handle other UIDL children
         UIDL childUidl;
-        while ((childUidl = uidl.getChildUIDL(++childIndex)) != null) {
+        while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
                 if (getWidget().actionHandler == null) {
