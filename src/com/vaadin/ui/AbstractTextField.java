@@ -19,7 +19,7 @@ import com.vaadin.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {

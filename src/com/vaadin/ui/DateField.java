@@ -27,7 +27,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.VDateField;
+import com.vaadin.terminal.gwt.client.ui.datefield.VDateField;
 
 /**
  * <p>

@@ -16,8 +16,8 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector;
-import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector.EmbeddedServerRPC;
+import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
+import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector.EmbeddedServerRPC;
 
 /**
  * Component for embedding external objects.

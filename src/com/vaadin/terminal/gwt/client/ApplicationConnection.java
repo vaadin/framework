@@ -46,11 +46,11 @@ import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
-import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
+import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**

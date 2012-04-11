@@ -7,7 +7,7 @@ package com.vaadin.ui;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.VideoConnector;
+import com.vaadin.terminal.gwt.client.ui.video.VideoConnector;
 
 /**
  * The Video component translates into an HTML5 &lt;video&gt; element and as

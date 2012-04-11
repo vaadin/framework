@@ -6,27 +6,27 @@
 
 	<!-- Fall through to this rule for everything but IE -->
 	<replace-with
-		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy">
+		class="com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategy">
 		<when-type-is
-			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+			class="com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategy" />
 	</replace-with>
 
 	<replace-with
-		class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategyIE">
+		class="com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategyIE">
 		<when-type-is
-			class="com.vaadin.terminal.gwt.client.ui.UploadIFrameOnloadStrategy" />
+			com.vaadin.terminal.gwt.client.ui.upload.UploadIFrameOnloadStrategytrategy" />
 		<any>
 			<when-property-is name="user.agent" value="ie8" />
 		</any>
 	</replace-with>
 
 	<!-- Fall through to this rule for everything but IE -->
-	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper">
-		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper" />
 	</replace-with>
 
-	<replace-with class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapperIE">
-		<when-type-is class="com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper" />
+	<replace-with class="com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapperIE">
+		<when-type-is class="com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper" />
 		<any>
 			<when-property-is name="user.agent" value="ie8" />
 		</any>

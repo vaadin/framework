@@ -11,8 +11,8 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.CheckBoxConnector.CheckBoxServerRpc;
-import com.vaadin.terminal.gwt.client.ui.CheckBoxConnector.CheckBoxState;
+import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxState;
 
 public class CheckBox extends AbstractField<Boolean> {
 

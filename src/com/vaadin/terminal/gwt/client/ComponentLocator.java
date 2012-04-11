@@ -13,12 +13,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
-import com.vaadin.terminal.gwt.client.ui.VGridLayout;
-import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetPanel;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.VMeasuringOrderedLayout;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetPanel;
+import com.vaadin.terminal.gwt.client.ui.window.VWindow;
+import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
  * ComponentLocator provides methods for generating a String locator for a given

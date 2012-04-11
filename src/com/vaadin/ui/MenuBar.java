@@ -14,7 +14,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.VMenuBar;
+import com.vaadin.terminal.gwt.client.ui.menubar.VMenuBar;
 
 /**
  * <p>

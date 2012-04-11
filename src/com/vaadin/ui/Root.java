@@ -31,7 +31,7 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.root.RootServerRPC;
 import com.vaadin.terminal.gwt.client.ui.root.RootState;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;

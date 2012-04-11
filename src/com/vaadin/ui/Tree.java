@@ -44,11 +44,11 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.TreeConnector;
-import com.vaadin.terminal.gwt.client.ui.VTree;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.dd.VTargetInSubtree;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.tree.TreeConnector;
+import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.tools.ReflectTools;
 
 /**

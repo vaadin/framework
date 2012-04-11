@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 /**
  *

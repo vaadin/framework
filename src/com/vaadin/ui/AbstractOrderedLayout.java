@@ -18,8 +18,8 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutServerRPC;
-import com.vaadin.terminal.gwt.client.ui.AbstractOrderedLayoutConnector.AbstractOrderedLayoutState;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutConnector.AbstractOrderedLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutConnector.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 @SuppressWarnings("serial")

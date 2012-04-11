@@ -12,7 +12,7 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";

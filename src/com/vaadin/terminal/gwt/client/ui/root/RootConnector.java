@@ -39,8 +39,8 @@ import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
+import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)

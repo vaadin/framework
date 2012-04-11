@@ -31,7 +31,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.FormConnector.FormState;
+import com.vaadin.terminal.gwt.client.ui.form.FormState;
 
 /**
  * Form component provides easy way of creating and managing sets fields.

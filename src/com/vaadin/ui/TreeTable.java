@@ -23,7 +23,7 @@ import com.vaadin.data.util.HierarchicalContainerOrderedWrapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.TreeTableConnector;
+import com.vaadin.terminal.gwt.client.ui.treetable.TreeTableConnector;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;

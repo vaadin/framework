@@ -22,9 +22,9 @@ import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VDragAndDropWrapper;
 import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper;
 
 @SuppressWarnings("serial")
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
