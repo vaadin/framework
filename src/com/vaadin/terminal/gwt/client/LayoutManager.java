@@ -349,20 +349,42 @@ public class LayoutManager {
             boolean measureAll) {
         if (!pendingOverflowFixes.isEmpty()) {
             Duration duration = new Duration();
+
+            HashMap<Element, String> originalOverflows = new HashMap<Element, String>();
+
+            // First set overflow to hidden (and save previous value so it can
+            // be restored later)
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
-                Style style = componentConnector.getWidget().getElement()
-                        .getParentElement().getStyle();
-                assert (style.getOverflow() == null);
+                Element parentElement = componentConnector.getWidget()
+                        .getElement().getParentElement();
+                Style style = parentElement.getStyle();
+                String originalOverflow = style.getOverflow();
+
+                if (originalOverflow != null
+                        && !originalOverflows.containsKey(parentElement)) {
+                    // Store original value for restore, but only the first time
+                    // the value is changed
+                    originalOverflows.put(parentElement, originalOverflow);
+                }
+
                 style.setOverflow(Overflow.HIDDEN);
             }
+
+            // Then ensure all scrolling elements are reflowed by measuring
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 componentConnector.getWidget().getElement().getParentElement()
                         .getOffsetHeight();
             }
+
+            // Finally restore old overflow value and update bookkeeping
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
-                componentConnector.getWidget().getElement().getParentElement()
-                        .getStyle().clearOverflow();
+                Element parentElement = componentConnector.getWidget()
+                        .getElement().getParentElement();
+                parentElement.getStyle().setProperty("overflow",
+                        originalOverflows.get(parentElement));
+
                 layoutDependencyTree.setNeedsMeasure(componentConnector, true);
+
                 ComponentContainerConnector parent = componentConnector
                         .getParent();
                 if (parent instanceof ManagedLayout) {
