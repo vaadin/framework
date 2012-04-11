@@ -140,9 +140,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     private boolean valueWasModifiedByDataSourceDuringCommit;
 
     /**
-     * Whether this field currently listens to Property events.
+     * Whether this field is currently registered as listening to events from
+     * its data source.
+     * 
+     * @see #setPropertyDataSource(Property)
+     * @see #addPropertyListeners()
+     * @see #removePropertyListeners()
      */
-    private boolean isListening = false;
+    private boolean isListeningToPropertyEvents = false;
 
     /* Component basics */
 
@@ -579,6 +584,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * messages to fields and do not allow committing them as long as the value
      * is invalid. After the value is valid, the error message is not shown and
      * the commit can be done normally.
+     * </p>
+     * 
+     * <p>
+     * If the data source implements
+     * {@link com.vaadin.data.Property.ValueChangeNotifier} and/or
+     * {@link com.vaadin.data.Property.ReadOnlyStatusChangeNotifier}, the field
+     * registers itself as a listener and updates itself according to the events
+     * it receives. To avoid memory leaks caused by references to a field no
+     * longer in use, the listener registrations are removed on
+     * {@link AbstractField#detach() detach} and re-added on
+     * {@link AbstractField#attach() attach}.
      * </p>
      * 
      * <p>
@@ -1120,8 +1136,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (actionManager != null) {
             actionManager.setViewer(getWindow());
         }
-        // No-op if listeners already registered
-        addPropertyListeners();
+
+        if (!isListeningToPropertyEvents) {
+            addPropertyListeners();
+            if (!isModified() && isReadThrough()) {
+                // Update value from data source
+                discard();
+            }
+        }
     }
 
     @Override
@@ -1334,8 +1356,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
+    /**
+     * Registers this as an event listener for events sent by the data source
+     * (if any). Does nothing if
+     * <code>isListeningToPropertyEvents == true</code>.
+     */
     private void addPropertyListeners() {
-        if (!isListening) {
+        if (!isListeningToPropertyEvents) {
             if (dataSource instanceof Property.ValueChangeNotifier) {
                 ((Property.ValueChangeNotifier) dataSource).addListener(this);
             }
@@ -1343,12 +1370,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 ((Property.ReadOnlyStatusChangeNotifier) dataSource)
                         .addListener(this);
             }
-            isListening = true;
+            isListeningToPropertyEvents = true;
         }
     }
 
+    /**
+     * Stops listening to events sent by the data source (if any). Does nothing
+     * if <code>isListeningToPropertyEvents == false</code>.
+     */
     private void removePropertyListeners() {
-        if (isListening) {
+        if (isListeningToPropertyEvents) {
             if (dataSource instanceof Property.ValueChangeNotifier) {
                 ((Property.ValueChangeNotifier) dataSource)
                         .removeListener(this);
@@ -1357,7 +1388,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 ((Property.ReadOnlyStatusChangeNotifier) dataSource)
                         .removeListener(this);
             }
-            isListening = false;
+            isListeningToPropertyEvents = false;
         }
     }
 }
