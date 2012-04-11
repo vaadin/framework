@@ -961,7 +961,7 @@ public class ApplicationConnection {
             return;
         }
 
-        MultiStepDuration handleUIDLDuration = new MultiStepDuration();
+        final MultiStepDuration handleUIDLDuration = new MultiStepDuration();
 
         // Get security key
         if (json.containsKey(UIDL_SECURITY_TOKEN_ID)) {
@@ -1002,6 +1002,9 @@ public class ApplicationConnection {
 
         Command c = new Command() {
             public void execute() {
+                handleUIDLDuration.logDuration(" * Loading widgets completed",
+                        10);
+
                 MultiStepDuration updateDuration = new MultiStepDuration();
 
                 if (debugLogging) {

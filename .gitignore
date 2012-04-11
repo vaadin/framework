@@ -8,6 +8,7 @@
 /work
 /.gwt-cache
 /.externalToolBuilders
+/extras
 
 # /WebContent/VAADIN/themes/base/
 /WebContent/VAADIN/themes/base/styles.css
