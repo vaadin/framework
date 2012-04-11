@@ -1100,9 +1100,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             throws PaintException {
         List<Vaadin6Component> legacyComponents = new ArrayList<Vaadin6Component>();
         for (Connector connector : dirtyVisibleConnectors) {
+            // All Components that want to use paintContent must implement
+            // Vaadin6Component
             if (connector instanceof Vaadin6Component) {
-                // All legacy Components must be Paintables as Component extends
-                // Paintable in Vaadin 6
                 legacyComponents.add((Vaadin6Component) connector);
             }
         }

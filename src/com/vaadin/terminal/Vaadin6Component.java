@@ -4,6 +4,17 @@ import java.util.EventListener;
 
 import com.vaadin.ui.Component;
 
+/**
+ * Interface provided to ease porting of Vaadin 6 components to Vaadin 7. By
+ * implementing this interface your Component will be able to use
+ * {@link #paintContent(PaintTarget)} and
+ * {@link #changeVariables(Object, java.util.Map)} just like in Vaadin 6.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ * 
+ */
 public interface Vaadin6Component extends VariableOwner, Component,
         EventListener {
 
