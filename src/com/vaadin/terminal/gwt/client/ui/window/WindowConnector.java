@@ -140,7 +140,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().layout = lo;
         }
 
-        // we may have actions and notifications
+        // we may have actions
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
             for (int i = 1; i < cnt; i++) {
