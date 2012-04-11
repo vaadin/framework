@@ -243,8 +243,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
             getWidget().setHeight(Window.getClientHeight() + "px");
         }
 
-        client.getView().getWidget().scrollIntoView(uidl);
-
         if (uidl.hasAttribute("bringToFront")) {
             /*
              * Focus as a side-efect. Will be overridden by

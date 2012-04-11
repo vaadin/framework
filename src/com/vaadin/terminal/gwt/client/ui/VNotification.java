@@ -21,6 +21,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 
 public class VNotification extends VOverlay {
 
@@ -364,7 +365,7 @@ public class VNotification extends VOverlay {
     public static void showNotification(ApplicationConnection client,
             final UIDL notification) {
         boolean onlyPlainText = notification
-                .hasAttribute(VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+                .hasAttribute(VRoot.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
         if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_ICON)) {
             final String parsedUri = client.translateVaadinUri(notification

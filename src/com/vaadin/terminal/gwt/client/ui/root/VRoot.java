@@ -2,18 +2,16 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.terminal.gwt.client.ui;
+package com.vaadin.terminal.gwt.client.ui.root;
 
 import java.util.ArrayList;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -22,17 +20,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
+import com.vaadin.terminal.gwt.client.ui.VTextField;
 
 /**
  *
  */
-public class VView extends SimplePanel implements ResizeHandler,
+public class VRoot extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
 
     public static final String FRAGMENT_VARIABLE = "fragment";
@@ -117,7 +116,7 @@ public class VView extends SimplePanel implements ResizeHandler,
 
             });
 
-    public VView() {
+    public VRoot() {
         super();
         setStyleName(CLASSNAME);
 
@@ -208,24 +207,6 @@ public class VView extends SimplePanel implements ResizeHandler,
     public boolean isEmbedded() {
         return !getElement().getOwnerDocument().getBody().getClassName()
                 .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
-    }
-
-    /**
-     * Tries to scroll paintable referenced from given UIDL snippet to be
-     * visible.
-     * 
-     * @param uidl
-     */
-    void scrollIntoView(final UIDL uidl) {
-        if (uidl.hasAttribute("scrollTo")) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    final ComponentConnector paintable = (ComponentConnector) uidl
-                            .getPaintableAttribute("scrollTo", connection);
-                    paintable.getWidget().getElement().scrollIntoView();
-                }
-            });
-        }
     }
 
     @Override

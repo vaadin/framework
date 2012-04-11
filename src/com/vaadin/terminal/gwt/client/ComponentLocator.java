@@ -16,9 +16,9 @@ import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VGridLayout;
 import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
 import com.vaadin.terminal.gwt.client.ui.VTabsheetPanel;
-import com.vaadin.terminal.gwt.client.ui.VView;
 import com.vaadin.terminal.gwt.client.ui.VWindow;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 
 /**
  * ComponentLocator provides methods for generating a String locator for a given
@@ -370,12 +370,12 @@ public class ComponentLocator {
             return null;
         }
 
-        if (w instanceof VView) {
+        if (w instanceof VRoot) {
             return "";
         } else if (w instanceof VWindow) {
             Connector windowConnector = ConnectorMap.get(client)
                     .getConnector(w);
-            List<WindowConnector> subWindowList = client.getView()
+            List<WindowConnector> subWindowList = client.getRootConnector()
                     .getSubWindows();
             int indexOfSubWindow = subWindowList.indexOf(windowConnector);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
@@ -436,7 +436,7 @@ public class ComponentLocator {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = client.getView().getWidget();
+                w = client.getRootConnector().getWidget();
             } else if (w == null) {
                 String id = part;
                 // Must be old static pid (PID_S*)
@@ -445,7 +445,7 @@ public class ComponentLocator {
                 if (connector == null) {
                     // Lookup by debugId
                     // TODO Optimize this
-                    connector = findConnectorById(client.getView(),
+                    connector = findConnectorById(client.getRootConnector(),
                             id.substring(5));
                 }
 
@@ -541,7 +541,7 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    List<WindowConnector> windows = client.getView()
+                    List<WindowConnector> windows = client.getRootConnector()
                             .getSubWindows();
                     List<VWindow> windowWidgets = new ArrayList<VWindow>(
                             windows.size());

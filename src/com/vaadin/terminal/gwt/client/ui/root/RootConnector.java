@@ -1,7 +1,7 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.terminal.gwt.client.ui;
+package com.vaadin.terminal.gwt.client.ui.root;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,8 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
@@ -34,34 +32,22 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
+import com.vaadin.terminal.gwt.client.ui.VNotification;
+import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
         implements Paintable {
 
-    public static class RootState extends ComponentState {
-        private Connector content;
-
-        public Connector getContent() {
-            return content;
-        }
-
-        public void setContent(Connector content) {
-            this.content = content;
-        }
-
-    }
-
-    public interface RootServerRPC extends ClickRPC, ServerRpc {
-
-    }
-
-    private RootServerRPC rpc;
+    private RootServerRPC rpc = RpcProxy.create(RootServerRPC.class, this);
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -76,7 +62,6 @@ public class RootConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(RootServerRPC.class, this);
     }
 
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -87,7 +72,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         getWidget().connection = client;
 
         getWidget().immediate = getState().isImmediate();
-        getWidget().resizeLazy = uidl.hasAttribute(VView.RESIZE_LAZY);
+        getWidget().resizeLazy = uidl.hasAttribute(VRoot.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
         if (getWidget().theme != null && !newTheme.equals(getWidget().theme)) {
             // Complete page refresh is needed due css can affect layout
@@ -133,14 +118,14 @@ public class RootConnector extends AbstractComponentContainerConnector
                 // (and window stays open).
                 Scheduler.get().scheduleDeferred(new Command() {
                     public void execute() {
-                        VView.goTo(url);
+                        VRoot.goTo(url);
                     }
                 });
             } else if ("_self".equals(target)) {
                 // This window is closing (for sure). Only other opens are
                 // relevant in this change. See #3558, #2144
                 isClosed = true;
-                VView.goTo(url);
+                VRoot.goTo(url);
             } else {
                 String options;
                 if (open.hasAttribute("border")) {
@@ -186,7 +171,7 @@ public class RootConnector extends AbstractComponentContainerConnector
                 getWidget().actionHandler.updateActionMap(childUidl);
             } else if (tag == "execJS") {
                 String script = childUidl.getStringAttribute("script");
-                VView.eval(script);
+                VRoot.eval(script);
             } else if (tag == "notifications") {
                 for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {
@@ -247,11 +232,15 @@ public class RootConnector extends AbstractComponentContainerConnector
             Util.runWebkitOverflowAutoFix(getWidget().getElement());
         }
 
-        getWidget().scrollIntoView(uidl);
+        if (uidl.hasAttribute("scrollTo")) {
+            final ComponentConnector connector = (ComponentConnector) uidl
+                    .getPaintableAttribute("scrollTo", getConnection());
+            scrollIntoView(connector);
+        }
 
-        if (uidl.hasAttribute(VView.FRAGMENT_VARIABLE)) {
+        if (uidl.hasAttribute(VRoot.FRAGMENT_VARIABLE)) {
             getWidget().currentFragment = uidl
-                    .getStringAttribute(VView.FRAGMENT_VARIABLE);
+                    .getStringAttribute(VRoot.FRAGMENT_VARIABLE);
             if (!getWidget().currentFragment.equals(History.getToken())) {
                 History.newItem(getWidget().currentFragment, true);
             }
@@ -261,7 +250,7 @@ public class RootConnector extends AbstractComponentContainerConnector
             getWidget().currentFragment = History.getToken();
 
             // Include current fragment in the next request
-            client.updateVariable(getWidget().id, VView.FRAGMENT_VARIABLE,
+            client.updateVariable(getWidget().id, VRoot.FRAGMENT_VARIABLE,
                     getWidget().currentFragment, false);
         }
 
@@ -312,17 +301,21 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public VView getWidget() {
-        return (VView) super.getWidget();
+    public VRoot getWidget() {
+        return (VRoot) super.getWidget();
     }
 
     @Override
     protected Widget createWidget() {
-        return GWT.create(VView.class);
+        return GWT.create(VRoot.class);
+    }
+
+    protected ComponentConnector getContent() {
+        return (ComponentConnector) getState().getContent();
     }
 
     protected void onChildSizeChange() {
-        ComponentConnector child = (ComponentConnector) getState().getContent();
+        ComponentConnector child = getContent();
         Style childStyle = child.getWidget().getElement().getStyle();
         /*
          * Must set absolute position if the child has relative height and
@@ -377,8 +370,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         super.onConnectorHierarchyChange(event);
 
         ComponentConnector oldChild = null;
-        ComponentConnector newChild = (ComponentConnector) getState()
-                .getContent();
+        ComponentConnector newChild = getContent();
 
         for (ComponentConnector c : event.getOldChildren()) {
             if (!(c instanceof WindowConnector)) {
@@ -414,4 +406,24 @@ public class RootConnector extends AbstractComponentContainerConnector
             }
         }
     }
+
+    /**
+     * Tries to scroll the viewport so that the given connector is in view.
+     * 
+     * @param componentConnector
+     *            The connector which should be visible
+     * 
+     */
+    public void scrollIntoView(final ComponentConnector componentConnector) {
+        if (componentConnector == null) {
+            return;
+        }
+
+        Scheduler.get().scheduleDeferred(new Command() {
+            public void execute() {
+                componentConnector.getWidget().getElement().scrollIntoView();
+            }
+        });
+    }
+
 }

@@ -31,10 +31,10 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.RootConnector.RootServerRPC;
-import com.vaadin.terminal.gwt.client.ui.RootConnector.RootState;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
-import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.root.RootServerRPC;
+import com.vaadin.terminal.gwt.client.ui.root.RootState;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Window.CloseListener;
 
@@ -403,7 +403,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private int browserWindowHeight = -1;
 
     /** Identifies the click event */
-    private static final String CLICK_EVENT_ID = VView.CLICK_EVENT_ID;
+    private static final String CLICK_EVENT_ID = VRoot.CLICK_EVENT_ID;
 
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
@@ -530,7 +530,7 @@ public abstract class Root extends AbstractComponentContainer implements
                 }
                 if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
-                            VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
+                            VRoot.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
                 }
                 target.addAttribute(
                         VNotification.ATTRIBUTE_NOTIFICATION_POSITION,
@@ -578,11 +578,11 @@ public abstract class Root extends AbstractComponentContainer implements
         }
 
         if (fragment != null) {
-            target.addAttribute(VView.FRAGMENT_VARIABLE, fragment);
+            target.addAttribute(VRoot.FRAGMENT_VARIABLE, fragment);
         }
 
         if (isResizeLazy()) {
-            target.addAttribute(VView.RESIZE_LAZY, true);
+            target.addAttribute(VRoot.RESIZE_LAZY, true);
         }
     }
 
@@ -609,8 +609,8 @@ public abstract class Root extends AbstractComponentContainer implements
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(VView.FRAGMENT_VARIABLE)) {
-            String fragment = (String) variables.get(VView.FRAGMENT_VARIABLE);
+        if (variables.containsKey(VRoot.FRAGMENT_VARIABLE)) {
+            String fragment = (String) variables.get(VRoot.FRAGMENT_VARIABLE);
             setFragment(fragment, true);
         }
 

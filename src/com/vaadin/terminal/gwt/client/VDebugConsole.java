@@ -52,11 +52,11 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
+import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
 /**
  * A helper console for client side development. The debug console can also be
@@ -100,7 +100,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector connector = Util.getConnectorForElement(
-                            a, a.getView().getWidget(), eventTarget);
+                            a, a.getRootConnector().getWidget(), eventTarget);
                     if (connector == null) {
                         connector = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -129,7 +129,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector paintable = Util.getConnectorForElement(
-                            a, a.getView().getWidget(), eventTarget);
+                            a, a.getRootConnector().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -841,7 +841,7 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     protected void dumpConnectorInfo(ApplicationConnection a) {
-        RootConnector root = a.getView();
+        RootConnector root = a.getRootConnector();
         log("================");
         log("Connector hierarchy for Root: " + root.getState().getCaption()
                 + " (" + root.getConnectorId() + ")");

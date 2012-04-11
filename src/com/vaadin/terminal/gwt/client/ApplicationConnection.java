@@ -45,12 +45,12 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.VNotification.HideEvent;
 import com.vaadin.terminal.gwt.client.ui.WindowConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
+import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
@@ -140,7 +140,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final RootConnector view;
+    private final RootConnector rootConnector;
 
     protected boolean applicationRunning = false;
 
@@ -192,7 +192,7 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
-        view = GWT.create(RootConnector.class);
+        rootConnector = GWT.create(RootConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
@@ -224,7 +224,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        view.init(cnf.getRootPanelId(), this);
+        rootConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
     }
 
@@ -856,7 +856,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(view.getWidget().getElement(), loadElement);
+            DOM.appendChild(rootConnector.getWidget().getElement(), loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -1032,7 +1032,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        view.getWidget().clear();
+                        rootConnector.getWidget().clear();
                         getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1226,10 +1226,10 @@ public class ApplicationConnection {
                             if (!cc.getParent().getChildren().contains(cc)) {
                                 VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                             }
-                        } else if ((cc instanceof RootConnector && cc == getView())) {
+                        } else if ((cc instanceof RootConnector && cc == getRootConnector())) {
                             // RootConnector for this connection, leave as-is
                         } else if (cc instanceof WindowConnector
-                                && getView().hasSubWindow((WindowConnector) cc)) {
+                                && getRootConnector().hasSubWindow((WindowConnector) cc)) {
                             // Sub window attached to this RootConnector, leave
                             // as-is
                         } else {
@@ -1279,8 +1279,8 @@ public class ApplicationConnection {
                             // RootConnector has been created but not
                             // initialized as the connector id has not been
                             // known
-                            connectorMap.registerConnector(connectorId, view);
-                            view.doInit(connectorId, ApplicationConnection.this);
+                            connectorMap.registerConnector(connectorId, rootConnector);
+                            rootConnector.doInit(connectorId, ApplicationConnection.this);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -2207,8 +2207,8 @@ public class ApplicationConnection {
 
         @Override
         public void run() {
-            VConsole.log("Running re-layout of " + view.getClass().getName());
-            runDescendentsLayout(view.getWidget());
+            VConsole.log("Running re-layout of " + rootConnector.getClass().getName());
+            runDescendentsLayout(rootConnector.getWidget());
             isPending = false;
         }
     };
@@ -2243,8 +2243,8 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public RootConnector getView() {
-        return view;
+    public RootConnector getRootConnector() {
+        return rootConnector;
     }
 
     /**
