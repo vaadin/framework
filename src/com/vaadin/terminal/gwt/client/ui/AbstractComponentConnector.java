@@ -75,6 +75,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return state;
     }
 
+    @Deprecated
     public static boolean isRealUpdate(UIDL uidl) {
         return !uidl.hasAttribute("cached");
     }

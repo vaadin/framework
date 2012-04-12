@@ -45,6 +45,7 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
@@ -2337,7 +2338,29 @@ public class ApplicationConnection {
     @Deprecated
     public void handleTooltipEvent(Event event, Widget owner, Object key) {
         handleTooltipEvent(event, getConnectorMap().getConnector(owner), key);
+    }
 
+    /**
+     * Method provided for backwards compatibility. Duties previously done by
+     * this method is now handled by the state change event handler in
+     * AbstractComponentConnector. The only function this method has is to
+     * return true if the UIDL is a "cached" update.
+     * 
+     * @param component
+     * @param uidl
+     * @param manageCaption
+     * @return
+     */
+    @Deprecated
+    public boolean updateComponent(Widget component, UIDL uidl,
+            boolean manageCaption) {
+        ComponentConnector connector = getConnectorMap()
+                .getConnector(component);
+        if (!AbstractComponentConnector.isRealUpdate(uidl)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Deprecated
