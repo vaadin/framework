@@ -465,7 +465,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     int serverCacheFirst = -1;
     int serverCacheLast = -1;
 
-    private boolean sizeNeedsInit = true;
+    boolean sizeNeedsInit = true;
 
     /**
      * Used to recall the position of an open context menu if we need to close
@@ -1629,9 +1629,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * * Makes deferred request to get some cache rows
      */
     void sizeInit() {
-        if (!sizeNeedsInit) {
-            return;
-        }
         sizeNeedsInit = false;
 
         scrollBody.setContainerHeight();
@@ -1884,8 +1881,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
         });
-
-        client.doLayout(true);
     }
 
     /**

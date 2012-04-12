@@ -211,6 +211,8 @@ public class VGridLayout extends ComplexPanel {
                     + layoutManager.getPaddingBottom(element)
                     + layoutManager.getBorderHeight(element);
             element.getStyle().setHeight(outerHeight, Unit.PX);
+            getConnector().getLayoutManager().reportOuterHeight(getConnector(),
+                    outerHeight);
         }
     }
 
@@ -234,6 +236,8 @@ public class VGridLayout extends ComplexPanel {
                     + layoutManager.getPaddingRight(element)
                     + layoutManager.getBorderWidth(element);
             element.getStyle().setWidth(outerWidth, Unit.PX);
+            getConnector().getLayoutManager().reportOuterWidth(getConnector(),
+                    outerWidth);
         }
     }
 
@@ -559,6 +563,10 @@ public class VGridLayout extends ComplexPanel {
                 if (slot == null || slot.getChild() != childConnector) {
                     slot = new ComponentConnectorLayoutSlot(CLASSNAME,
                             childConnector, getConnector());
+                    if (childConnector.isRelativeWidth()) {
+                        slot.getWrapperElement().getStyle()
+                                .setWidth(100, Unit.PCT);
+                    }
                     Element slotWrapper = slot.getWrapperElement();
                     getElement().appendChild(slotWrapper);
 

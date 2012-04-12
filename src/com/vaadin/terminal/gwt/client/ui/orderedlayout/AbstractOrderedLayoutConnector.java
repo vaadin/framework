@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.orderedlayout;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -53,6 +54,20 @@ public abstract class AbstractOrderedLayoutConnector extends
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
+    }
+
+    @Override
+    public void onUnregister() {
+        LayoutManager lm = getLayoutManager();
+
+        VMeasuringOrderedLayout layout = getWidget();
+        lm.unregisterDependency(this, layout.spacingMeasureElement);
+
+        // Unregister child caption listeners
+        for (ComponentConnector child : getChildren()) {
+            VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
+            slot.setCaption(null);
+        }
     }
 
     @Override
@@ -177,11 +192,20 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         Style ownStyle = getWidget().getElement().getStyle();
         if (isUndefined) {
-            ownStyle.setPropertyPx(getSizeProperty(isVertical),
-                    getSizeForInnerSize(allocatedSize, isVertical));
+            int outerSize = getSizeForInnerSize(allocatedSize, isVertical);
+            ownStyle.setPropertyPx(getSizeProperty(isVertical), outerSize);
+            reportUndefinedSize(outerSize, isVertical);
         } else {
             ownStyle.setProperty(getSizeProperty(isVertical),
                     getDefinedSize(isVertical));
+        }
+    }
+
+    private void reportUndefinedSize(int outerSize, boolean isVertical) {
+        if (isVertical) {
+            getLayoutManager().reportOuterHeight(this, outerSize);
+        } else {
+            getLayoutManager().reportOuterWidth(this, outerSize);
         }
     }
 
@@ -215,8 +239,11 @@ public abstract class AbstractOrderedLayoutConnector extends
         Style ownStyle = getWidget().getElement().getStyle();
 
         if (isUndefined) {
+            int outerSize = getSizeForInnerSize(allocatedSize,
+                    !getWidget().isVertical);
             ownStyle.setPropertyPx(getSizeProperty(!getWidget().isVertical),
-                    getSizeForInnerSize(allocatedSize, !getWidget().isVertical));
+                    outerSize);
+            reportUndefinedSize(outerSize, !isVertical);
         } else {
             ownStyle.setProperty(getSizeProperty(!getWidget().isVertical),
                     getDefinedSize(!getWidget().isVertical));
@@ -275,6 +302,9 @@ public abstract class AbstractOrderedLayoutConnector extends
                         .getStylePrimaryName(), child, this);
             }
             layout.addOrMove(slot, currentIndex++);
+            if (child.isRelativeWidth()) {
+                slot.getWrapperElement().getStyle().setWidth(100, Unit.PCT);
+            }
         }
 
         for (ComponentConnector child : previousChildren) {

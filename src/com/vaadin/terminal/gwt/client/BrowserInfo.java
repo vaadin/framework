@@ -300,4 +300,16 @@ public class BrowserInfo {
         return touchDevice;
     }
 
+    /**
+     * Indicates whether the browser might require juggling to properly update
+     * sizes inside elements with overflow: auto.
+     * 
+     * @return <code>true</code> if the browser requires the workaround,
+     *         otherwise <code>false</code>
+     */
+    public boolean requiresOverflowAutoFix() {
+        return (getWebkitVersion() > 0 || getOperaVersion() >= 11)
+                && Util.getNativeScrollbarSize() > 0;
+    }
+
 }

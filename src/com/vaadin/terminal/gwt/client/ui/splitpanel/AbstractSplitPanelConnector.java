@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.DomEvent;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
@@ -140,6 +142,28 @@ public abstract class AbstractSplitPanelConnector extends
         VAbstractSplitPanel splitPanel = getWidget();
         splitPanel.setSplitPosition(splitPanel.position);
         splitPanel.updateSizes();
+        // Report relative sizes in other direction for quicker propagation
+        List<ComponentConnector> children = getChildren();
+        for (ComponentConnector child : children) {
+            reportOtherDimension(child);
+        }
+    }
+
+    private void reportOtherDimension(ComponentConnector child) {
+        LayoutManager layoutManager = getLayoutManager();
+        if (this instanceof HorizontalSplitPanelConnector) {
+            if (child.isRelativeHeight()) {
+                int height = layoutManager.getInnerHeight(getWidget()
+                        .getElement());
+                layoutManager.reportHeightAssignedToRelative(child, height);
+            }
+        } else {
+            if (child.isRelativeWidth()) {
+                int width = layoutManager.getInnerWidth(getWidget()
+                        .getElement());
+                layoutManager.reportWidthAssignedToRelative(child, width);
+            }
+        }
     }
 
     @Override

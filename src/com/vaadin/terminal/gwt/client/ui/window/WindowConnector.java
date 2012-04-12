@@ -21,7 +21,6 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
@@ -30,11 +29,12 @@ import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 @Component(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
-        SimpleManagedLayout, PostLayoutListener {
+        SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
@@ -60,6 +60,15 @@ public class WindowConnector extends AbstractComponentContainerConnector
                 getWidget().contentPanel.getElement());
         getLayoutManager().registerDependency(this, getWidget().header);
         getLayoutManager().registerDependency(this, getWidget().footer);
+    }
+
+    @Override
+    public void onUnregister() {
+        LayoutManager lm = getLayoutManager();
+        VWindow window = getWidget();
+        lm.unregisterDependency(this, window.contentPanel.getElement());
+        lm.unregisterDependency(this, window.header);
+        lm.unregisterDependency(this, window.footer);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -262,8 +271,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
         } else {
             childStyle.clearPosition();
         }
-
-        Util.runWebkitOverflowAutoFix(window.contentPanel.getElement());
     }
 
     public void postLayout() {

@@ -29,7 +29,6 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
@@ -39,13 +38,14 @@ import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 import com.vaadin.ui.Root;
 
 @Component(value = Root.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
-        implements Paintable {
+        implements Paintable, MayScrollChildren {
 
     private RootServerRPC rpc = RpcProxy.create(RootServerRPC.class, this);
 
@@ -224,12 +224,6 @@ public class RootConnector extends AbstractComponentContainerConnector
                     getWidget().scrollLeft);
         } else {
             getWidget().scrollable = false;
-        }
-
-        // Safari workaround must be run after scrollTop is updated as it sets
-        // scrollTop using a deferred command.
-        if (BrowserInfo.get().isSafari()) {
-            Util.runWebkitOverflowAutoFix(getWidget().getElement());
         }
 
         if (uidl.hasAttribute("scrollTo")) {

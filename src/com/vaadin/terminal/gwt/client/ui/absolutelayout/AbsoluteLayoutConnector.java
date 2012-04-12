@@ -176,6 +176,7 @@ public class AbsoluteLayoutConnector extends
                             - wrapper.getElement().getOffsetTop();
                 }
                 wrapperStyle.setHeight(h, Unit.PX);
+                getLayoutManager().reportHeightAssignedToRelative(paintable, h);
             } else {
                 wrapperStyle.clearHeight();
             }
@@ -207,6 +208,7 @@ public class AbsoluteLayoutConnector extends
                             - wrapper.getElement().getOffsetLeft();
                 }
                 wrapperStyle.setWidth(w, Unit.PX);
+                getLayoutManager().reportWidthAssignedToRelative(paintable, w);
             } else {
                 wrapperStyle.clearWidth();
             }

@@ -1130,7 +1130,9 @@ public class ApplicationConnection {
                         + (updateDuration.elapsedMillis() - startProcessing)
                         + " ms");
 
-                doLayout(false);
+                LayoutManager layoutManager = getLayoutManager();
+                layoutManager.setEverythingNeedsMeasure();
+                layoutManager.layoutNow();
 
                 updateDuration
                         .logDuration(" * Layout processing completed", 10);
@@ -1229,7 +1231,8 @@ public class ApplicationConnection {
                         } else if ((cc instanceof RootConnector && cc == getRootConnector())) {
                             // RootConnector for this connection, leave as-is
                         } else if (cc instanceof WindowConnector
-                                && getRootConnector().hasSubWindow((WindowConnector) cc)) {
+                                && getRootConnector().hasSubWindow(
+                                        (WindowConnector) cc)) {
                             // Sub window attached to this RootConnector, leave
                             // as-is
                         } else {
@@ -1279,8 +1282,10 @@ public class ApplicationConnection {
                             // RootConnector has been created but not
                             // initialized as the connector id has not been
                             // known
-                            connectorMap.registerConnector(connectorId, rootConnector);
-                            rootConnector.doInit(connectorId, ApplicationConnection.this);
+                            connectorMap.registerConnector(connectorId,
+                                    rootConnector);
+                            rootConnector.doInit(connectorId,
+                                    ApplicationConnection.this);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1945,7 +1950,7 @@ public class ApplicationConnection {
     public void forceLayout() {
         Duration duration = new Duration();
 
-        layoutManager.foceLayout();
+        layoutManager.forceLayout();
 
         VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }
@@ -2189,39 +2194,7 @@ public class ApplicationConnection {
 
     }
 
-    /*
-     * Helper to run layout functions triggered by child components with a
-     * decent interval.
-     */
-    private final Timer layoutTimer = new Timer() {
-
-        private boolean isPending = false;
-
-        @Override
-        public void schedule(int delayMillis) {
-            if (!isPending) {
-                super.schedule(delayMillis);
-                isPending = true;
-            }
-        }
-
-        @Override
-        public void run() {
-            VConsole.log("Running re-layout of " + rootConnector.getClass().getName());
-            runDescendentsLayout(rootConnector.getWidget());
-            isPending = false;
-        }
-    };
-
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
-
-    /**
-     * Components can call this function to run all layout functions. This is
-     * usually done, when component knows that its size has changed.
-     */
-    public void requestLayoutPhase() {
-        layoutTimer.schedule(500);
-    }
 
     protected String getUidlSecurityKey() {
         return uidlSecurityKey;
@@ -2382,36 +2355,6 @@ public class ApplicationConnection {
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getConnectorMap().getConnector(widget),
                 eventIdentifier);
-    }
-
-    private boolean layoutPending = false;
-    private ScheduledCommand layoutCommand = new ScheduledCommand() {
-        public void execute() {
-            /*
-             * Layout again if a new layout is requested while the current one
-             * is running.
-             */
-            while (layoutPending) {
-                layoutPending = false;
-                layoutManager.doLayout();
-            }
-        }
-    };
-
-    public void doLayout(boolean lazy) {
-        if (!lazy) {
-            layoutPending = true;
-            layoutCommand.execute();
-        } else if (!layoutPending) {
-            layoutPending = true;
-            /*
-             * Current layoutCommand will do layouts again if layoutScheduled is
-             * set to true -> no need to schedule another command
-             */
-            if (!layoutManager.isLayoutRunning()) {
-                Scheduler.get().scheduleDeferred(layoutCommand);
-            }
-        }
     }
 
     LayoutManager getLayoutManager() {

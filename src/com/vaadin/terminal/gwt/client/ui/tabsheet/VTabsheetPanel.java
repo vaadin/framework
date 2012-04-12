@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
 
 /**
@@ -194,16 +193,12 @@ public class VTabsheetPanel extends ComplexPanel {
         getElement().getStyle().setPropertyPx("height", height);
 
         // widget wrapper height
-        wrapperDiv.getStyle().setPropertyPx("height", height);
-        runWebkitOverflowAutoFix();
-    }
-
-    public void runWebkitOverflowAutoFix() {
-        if (visibleWidget != null) {
-            Util.runWebkitOverflowAutoFix(DOM.getParent(visibleWidget
-                    .getElement()));
+        if (dynamicHeight) {
+            wrapperDiv.getStyle().clearHeight();
+        } else {
+            // widget wrapper height
+            wrapperDiv.getStyle().setPropertyPx("height", height);
         }
-
     }
 
     public void replaceComponent(Widget oldComponent, Widget newComponent) {

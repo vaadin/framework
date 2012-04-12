@@ -254,9 +254,6 @@ public class VAccordion extends VTabsheetBase {
             super.setWidth(maxWidth + "px");
             openTab.setWidth(maxWidth);
         }
-
-        Util.runWebkitOverflowAutoFix(openTab.getContainerElement());
-
     }
 
     /**

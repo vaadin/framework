@@ -25,6 +25,9 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
@@ -299,6 +302,28 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(secondContainer, "left",
                     (pixelPosition + getSplitterSize()) + "px");
 
+            LayoutManager layoutManager = LayoutManager.get(client);
+            ConnectorMap connectorMap = ConnectorMap.get(client);
+            if (firstChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(firstChild);
+                if (connector.isRelativeWidth()) {
+                    layoutManager.reportWidthAssignedToRelative(connector,
+                            pixelPosition);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
+                }
+            }
+            if (secondChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(secondChild);
+                if (connector.isRelativeWidth()) {
+                    layoutManager.reportWidthAssignedToRelative(connector,
+                            secondContainerWidth);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
+                }
+            }
             break;
         case ORIENTATION_VERTICAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
@@ -326,6 +351,28 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
 
+            layoutManager = LayoutManager.get(client);
+            connectorMap = ConnectorMap.get(client);
+            if (firstChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(firstChild);
+                if (connector.isRelativeHeight()) {
+                    layoutManager.reportHeightAssignedToRelative(connector,
+                            pixelPosition);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
+                }
+            }
+            if (secondChild != null) {
+                ComponentConnector connector = connectorMap
+                        .getConnector(secondChild);
+                if (connector.isRelativeHeight()) {
+                    layoutManager.reportHeightAssignedToRelative(connector,
+                            secondContainerHeight);
+                } else {
+                    layoutManager.setNeedsMeasure(connector);
+                }
+            }
             break;
         }
 
@@ -463,7 +510,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newX + "px");
-        client.doLayout(false);
     }
 
     private void onVerticalMouseMove(int y) {
@@ -507,7 +553,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         setSplitPosition(newY + "px");
-        client.doLayout(false);
     }
 
     public void onMouseUp(Event event) {

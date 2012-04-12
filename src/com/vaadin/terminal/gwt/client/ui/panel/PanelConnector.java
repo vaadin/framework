@@ -15,7 +15,6 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
@@ -23,11 +22,13 @@ import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.Panel;
 
 @Component(Panel.class)
 public class PanelConnector extends AbstractComponentContainerConnector
-        implements Paintable, SimpleManagedLayout, PostLayoutListener {
+        implements Paintable, SimpleManagedLayout, PostLayoutListener,
+        MayScrollChildren {
 
     private Integer uidlScrollTop;
 
@@ -53,6 +54,16 @@ public class PanelConnector extends AbstractComponentContainerConnector
         layoutManager.registerDependency(this, panel.captionNode);
         layoutManager.registerDependency(this, panel.bottomDecoration);
         layoutManager.registerDependency(this, panel.contentNode);
+    }
+
+    @Override
+    public void onUnregister() {
+        VPanel panel = getWidget();
+        LayoutManager layoutManager = getLayoutManager();
+
+        layoutManager.unregisterDependency(this, panel.captionNode);
+        layoutManager.unregisterDependency(this, panel.bottomDecoration);
+        layoutManager.unregisterDependency(this, panel.contentNode);
     }
 
     @Override
@@ -189,8 +200,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
         // Read actual value back to ensure update logic is correct
         panel.scrollTop = panel.contentNode.getScrollTop();
         panel.scrollLeft = panel.contentNode.getScrollLeft();
-
-        Util.runWebkitOverflowAutoFix(panel.contentNode);
     }
 
     public void postLayout() {

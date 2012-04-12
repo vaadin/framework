@@ -79,23 +79,23 @@ public class Util {
      * @param widget
      * @param lazy
      *            run componentSizeUpdated lazyly
+     * 
+     * @deprecated since 7.0, use
+     *             {@link LayoutManager#setNeedsMeasure(ComponentConnector)}
+     *             instead
      */
+    @Deprecated
     public static void notifyParentOfSizeChange(Widget widget, boolean lazy) {
-        ApplicationConnection applicationConnection = findApplicationConnectionFor(widget);
-        if (applicationConnection != null) {
-            applicationConnection.doLayout(lazy);
+        ComponentConnector connector = findConnectorFor(widget);
+        if (connector != null) {
+            connector.getLayoutManager().setNeedsMeasure(connector);
+            if (!lazy) {
+                connector.getLayoutManager().layoutNow();
+            }
         }
     }
 
-    private static boolean findAppConnectionWarningDisplayed = false;
-
-    private static ApplicationConnection findApplicationConnectionFor(
-            Widget widget) {
-        if (!findAppConnectionWarningDisplayed) {
-            findAppConnectionWarningDisplayed = true;
-            VConsole.log("Warning: Using Util.findApplicationConnectionFor which should be eliminated once there is a better way to find the ApplicationConnection for a Paintable");
-        }
-
+    private static ComponentConnector findConnectorFor(Widget widget) {
         List<ApplicationConnection> runningApplications = ApplicationConfiguration
                 .getRunningApplications();
         for (ApplicationConnection applicationConnection : runningApplications) {
@@ -105,7 +105,7 @@ public class Util {
                 continue;
             }
             if (connector.getConnection() == applicationConnection) {
-                return applicationConnection;
+                return connector;
             }
         }
 
@@ -433,8 +433,7 @@ public class Util {
     public static void runWebkitOverflowAutoFix(final Element elem) {
         // Add max version if fix lands sometime to Webkit
         // Starting from Opera 11.00, also a problem in Opera
-        if ((BrowserInfo.get().getWebkitVersion() > 0 || BrowserInfo.get()
-                .getOperaVersion() >= 11) && getNativeScrollbarSize() > 0) {
+        if (BrowserInfo.get().requiresOverflowAutoFix()) {
             final String originalOverflow = elem.getStyle().getProperty(
                     "overflow");
             if ("hidden".equals(originalOverflow)) {

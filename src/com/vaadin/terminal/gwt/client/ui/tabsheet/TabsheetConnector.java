@@ -11,11 +11,12 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
+import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.TabSheet;
 
 @Component(TabSheet.class)
 public class TabsheetConnector extends TabsheetBaseConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, MayScrollChildren {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

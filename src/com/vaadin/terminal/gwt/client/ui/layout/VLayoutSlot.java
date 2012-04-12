@@ -94,14 +94,20 @@ public abstract class VLayoutSlot {
             style.clearProperty("width");
         }
 
+        double allocatedContentWidth = 0;
+        if (isRelativeWidth()) {
+            String percentWidth = getWidget().getElement().getStyle()
+                    .getWidth();
+            double percentage = parsePercent(percentWidth);
+            allocatedContentWidth = availableWidth * (percentage / 100);
+            reportActualRelativeWidth(Math.round((float) allocatedContentWidth));
+        }
+
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isLeft()) {
             double usedWidth;
             if (isRelativeWidth()) {
-                String percentWidth = getWidget().getElement().getStyle()
-                        .getWidth();
-                double percentage = parsePercent(percentWidth);
-                usedWidth = availableWidth * (percentage / 100);
+                usedWidth = allocatedContentWidth;
             } else {
                 usedWidth = getWidgetWidth();
             }
@@ -156,13 +162,20 @@ public abstract class VLayoutSlot {
             style.clearHeight();
         }
 
+        double allocatedContentHeight = 0;
+        if (isRelativeHeight()) {
+            String height = getWidget().getElement().getStyle().getHeight();
+            double percentage = parsePercent(height);
+            allocatedContentHeight = contentHeight * (percentage / 100);
+            reportActualRelativeHeight(Math
+                    .round((float) allocatedContentHeight));
+        }
+
         AlignmentInfo alignment = getAlignment();
         if (!alignment.isTop()) {
             double usedHeight;
             if (isRelativeHeight()) {
-                String height = getWidget().getElement().getStyle().getHeight();
-                double percentage = parsePercent(height);
-                usedHeight = captionHeight + contentHeight * (percentage / 100);
+                usedHeight = captionHeight + allocatedContentHeight;
             } else {
                 usedHeight = getUsedHeight();
             }
@@ -174,6 +187,14 @@ public abstract class VLayoutSlot {
         }
 
         style.setTop(currentLocation, Unit.PX);
+    }
+
+    protected void reportActualRelativeHeight(int allocatedHeight) {
+        // Default implementation does nothing
+    }
+
+    protected void reportActualRelativeWidth(int allocatedWidth) {
+        // Default implementation does nothing
     }
 
     public void positionInDirection(double currentLocation,

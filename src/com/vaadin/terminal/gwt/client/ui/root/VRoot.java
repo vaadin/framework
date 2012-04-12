@@ -20,8 +20,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -150,23 +151,27 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      */
     protected void windowSizeMaybeChanged(int newWidth, int newHeight) {
         boolean changed = false;
+        ComponentConnector connector = ConnectorMap.get(connection)
+                .getConnector(this);
         if (width != newWidth) {
             width = newWidth;
             changed = true;
+            connector.getLayoutManager().reportOuterWidth(connector, newWidth);
             VConsole.log("New window width: " + width);
         }
         if (height != newHeight) {
             height = newHeight;
             changed = true;
+            connector.getLayoutManager()
+                    .reportOuterHeight(connector, newHeight);
             VConsole.log("New window height: " + height);
         }
         if (changed) {
             VConsole.log("Running layout functions due to window resize");
-            Util.runWebkitOverflowAutoFix(getElement());
 
             sendClientResized();
 
-            connection.doLayout(false);
+            connector.getLayoutManager().layoutNow();
         }
     }
 
