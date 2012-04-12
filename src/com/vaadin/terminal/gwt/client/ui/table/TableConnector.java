@@ -289,6 +289,8 @@ public class TableConnector extends AbstractComponentContainerConnector
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 public void execute() {
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
+                    getLayoutManager().setNeedsMeasure(
+                            TableConnector.this.getParent());
                     getLayoutManager()
                             .setHeightNeedsUpdate(TableConnector.this);
                     getLayoutManager().layoutNow();
