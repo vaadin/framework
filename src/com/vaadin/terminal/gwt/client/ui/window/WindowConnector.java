@@ -46,6 +46,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
     private WindowServerRPC rpc;
 
+    boolean minWidthChecked = false;
+
     @Override
     public boolean delegateCaptionHandling() {
         return false;
@@ -220,11 +222,16 @@ public class WindowConnector extends AbstractComponentContainerConnector
         ComponentConnector layout = window.layout;
         Element contentElement = window.contentPanel.getElement();
 
-        boolean needsMinWidth = !isUndefinedWidth() || layout.isRelativeWidth();
-        int minWidth = window.getMinWidth();
-        if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
-            // Use minimum width if less than a certain size
-            window.setWidth(minWidth + "px");
+        if (!minWidthChecked) {
+            boolean needsMinWidth = !isUndefinedWidth()
+                    || layout.isRelativeWidth();
+            int minWidth = window.getMinWidth();
+            if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
+                minWidthChecked = true;
+                // Use minimum width if less than a certain size
+                window.setWidth(minWidth + "px");
+            }
+            minWidthChecked = true;
         }
 
         boolean needsMinHeight = !isUndefinedHeight()
@@ -274,6 +281,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
     }
 
     public void postLayout() {
+        minWidthChecked = false;
         VWindow window = getWidget();
         if (window.centered) {
             window.center();
