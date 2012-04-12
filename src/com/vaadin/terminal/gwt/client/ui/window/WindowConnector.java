@@ -202,7 +202,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().layout = newChild;
-        getWidget().setWidget(newChildWidget);
+        getWidget().contentPanel.setWidget(newChildWidget);
     }
 
     public void layout() {
