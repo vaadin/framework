@@ -69,7 +69,7 @@ public class LayoutManager {
 
     public void registerDependency(ManagedLayout owner, Element element) {
         MeasuredSize measuredSize = ensureMeasured(element);
-        setNeedsUpdate(owner);
+        setNeedsLayout(owner);
         measuredSize.addDependent(owner.getConnectorId());
     }
 
@@ -528,7 +528,7 @@ public class LayoutManager {
                 .getComponentConnectors();
         for (ComponentConnector connector : paintableWidgets) {
             if (connector instanceof ManagedLayout) {
-                setNeedsUpdate((ManagedLayout) connector);
+                setNeedsLayout((ManagedLayout) connector);
             }
         }
         setEverythingNeedsMeasure();
@@ -536,16 +536,16 @@ public class LayoutManager {
     }
 
     // TODO Rename to setNeedsLayout
-    public final void setNeedsUpdate(ManagedLayout layout) {
-        setWidthNeedsUpdate(layout);
-        setHeightNeedsUpdate(layout);
+    public final void setNeedsLayout(ManagedLayout layout) {
+        setNeedsHorizontalLayout(layout);
+        setNeedsVerticalLayout(layout);
     }
 
-    public final void setWidthNeedsUpdate(ManagedLayout layout) {
+    public final void setNeedsHorizontalLayout(ManagedLayout layout) {
         needsHorizontalLayout.add(layout);
     }
 
-    public final void setHeightNeedsUpdate(ManagedLayout layout) {
+    public final void setNeedsVerticalLayout(ManagedLayout layout) {
         needsVerticalLayout.add(layout);
     }
 

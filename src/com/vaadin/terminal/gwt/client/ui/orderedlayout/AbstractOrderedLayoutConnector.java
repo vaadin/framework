@@ -91,7 +91,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             caption.updateCaption();
         } else {
             layout.setCaption(component.getWidget(), null);
-            getLayoutManager().setNeedsUpdate(this);
+            getLayoutManager().setNeedsLayout(this);
         }
     }
 
@@ -137,7 +137,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         layout.updateSpacingStyleName(getState().isSpacing());
 
-        getLayoutManager().setNeedsUpdate(this);
+        getLayoutManager().setNeedsLayout(this);
     }
 
     private int getSizeForInnerSize(int size, boolean isVertical) {

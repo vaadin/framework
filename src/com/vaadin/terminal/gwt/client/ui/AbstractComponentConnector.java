@@ -151,14 +151,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
             ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setWidthNeedsUpdate((ManagedLayout) parent);
+                getLayoutManager().setNeedsHorizontalLayout((ManagedLayout) parent);
             }
         }
 
         if (newHeight.endsWith("%") != lastKnownHeight.endsWith("%")) {
             ComponentContainerConnector parent = getParent();
             if (parent instanceof ManagedLayout) {
-                getLayoutManager().setHeightNeedsUpdate((ManagedLayout) parent);
+                getLayoutManager().setNeedsVerticalLayout((ManagedLayout) parent);
             }
         }
 

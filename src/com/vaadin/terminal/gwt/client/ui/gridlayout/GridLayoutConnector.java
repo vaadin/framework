@@ -160,7 +160,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
                 updateCaption(child);
             }
         }
-        getLayoutManager().setNeedsUpdate(this);
+        getLayoutManager().setNeedsLayout(this);
     }
 
     @Override

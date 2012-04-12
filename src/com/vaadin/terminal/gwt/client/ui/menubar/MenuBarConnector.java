@@ -149,7 +149,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
             }
         }// while
 
-        getLayoutManager().setWidthNeedsUpdate(this);
+        getLayoutManager().setNeedsHorizontalLayout(this);
 
     }// updateFromUIDL
 
