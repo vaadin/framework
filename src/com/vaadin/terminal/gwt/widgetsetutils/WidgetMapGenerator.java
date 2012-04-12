@@ -26,16 +26,16 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically
- * based on {@link Connect} annotations available in workspace. By modifying
- * the generator it is possible to do some fine tuning for the generated
- * widgetset (aka client side engine). The components to be included in the
- * client side engine can modified be overriding {@link #getUsedConnectors()}.
+ * based on {@link Connect} annotations available in workspace. By modifying the
+ * generator it is possible to do some fine tuning for the generated widgetset
+ * (aka client side engine). The components to be included in the client side
+ * engine can modified be overriding {@link #getUsedConnectors()}.
  * <p>
  * The generator also decides how the client side component implementations are
  * loaded to the browser. The default generator is
@@ -43,11 +43,11 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * that loads all widget implementation on application initialization. This has
  * been the only option until Vaadin 6.4.
  * <p>
- * This generator uses the loadStyle hints from the {@link Connect}
- * annotations. Depending on the {@link LoadStyle} used, the widget may be
- * included in the initially loaded JavaScript, loaded when the application has
- * started and there is no communication to server or lazy loaded when the
- * implementation is absolutely needed.
+ * This generator uses the loadStyle hints from the {@link Connect} annotations.
+ * Depending on the {@link LoadStyle} used, the widget may be included in the
+ * initially loaded JavaScript, loaded when the application has started and
+ * there is no communication to server or lazy loaded when the implementation is
+ * absolutely needed.
  * <p>
  * The GWT module description file of the widgetset (
  * <code>...Widgetset.gwt.xml</code>) can be used to define the
@@ -155,14 +155,13 @@ public class WidgetMapGenerator extends Generator {
                 .iterator();
         while (iter.hasNext()) {
             Class<? extends ComponentConnector> connectorClass = iter.next();
-            Connect annotation = connectorClass
-                    .getAnnotation(Connect.class);
+            Connect annotation = connectorClass.getAnnotation(Connect.class);
             if (!ClientConnector.class.isAssignableFrom(annotation.value())) {
                 logger.log(
                         Type.WARN,
                         "Connector class "
                                 + annotation.value().getName()
-                                + " defined in @Component annotation is not a subclass of "
+                                + " defined in @Connect annotation is not a subclass of "
                                 + ClientConnector.class.getName()
                                 + ". The component connector "
                                 + connectorClass.getName()

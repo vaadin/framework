@@ -27,7 +27,7 @@ public class UnknownComponentConnector extends AbstractComponentConnector
                 .setCaption(
                         "Widgetset does not contain implementation for "
                                 + getWidget().serverClassName
-                                + ". Check its component connector's @Component mapping, widgetsets "
+                                + ". Check its component connector's @Connect mapping, widgetsets "
                                 + "GWT module description file and re-compile your"
                                 + " widgetset. In case you have downloaded a vaadin"
                                 + " add-on package, you might want to refer to "
