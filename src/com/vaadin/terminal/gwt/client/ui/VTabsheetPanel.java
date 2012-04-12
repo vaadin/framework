@@ -191,8 +191,12 @@ public class VTabsheetPanel extends ComplexPanel {
         // v-tabsheet-tabsheetpanel height
         getElement().getStyle().setPropertyPx("height", height);
 
-        // widget wrapper height
-        wrapperDiv.getStyle().setPropertyPx("height", height);
+        if (dynamicHeight) {
+            wrapperDiv.getStyle().clearHeight();
+        } else {
+            // widget wrapper height
+            wrapperDiv.getStyle().setPropertyPx("height", height);
+        }
     }
 
     public void replaceComponent(Widget oldComponent, Widget newComponent) {

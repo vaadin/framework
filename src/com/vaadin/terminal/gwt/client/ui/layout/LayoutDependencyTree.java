@@ -25,6 +25,9 @@ public class LayoutDependencyTree {
         private boolean needsLayout = false;
         private boolean needsMeasure = false;
 
+        private boolean scrollingParentCached = false;
+        private ComponentConnector scrollingBoundary = null;
+
         private Set<ComponentConnector> measureBlockers = new HashSet<ComponentConnector>();
         private Set<ComponentConnector> layoutBlockers = new HashSet<ComponentConnector>();
 
@@ -104,7 +107,8 @@ public class LayoutDependencyTree {
         public void setNeedsLayout(boolean needsLayout) {
             if (!(connector instanceof ManagedLayout)) {
                 throw new IllegalStateException(
-                        "Only managed layouts can need layout");
+                        "Only managed layouts can need layout, layout attempted for "
+                                + Util.getConnectorString(connector));
             }
             if (needsLayout && !this.needsLayout) {
                 // If enabling needsLayout
@@ -224,9 +228,10 @@ public class LayoutDependencyTree {
 
             // Should also go through the hierarchy to discover appeared or
             // disappeared scrollbars
-            LayoutDependency potentiallyChangedScrollbar = findPotentiallyChangedScrollbar();
-            if (potentiallyChangedScrollbar != null) {
-                potentiallyChangedScrollbar.setNeedsMeasure(true);
+            ComponentConnector scrollingBoundary = getScrollingBoundary(connector);
+            if (scrollingBoundary != null) {
+                getDependency(scrollingBoundary, getOppositeDirection())
+                        .setNeedsMeasure(true);
             }
 
         }
@@ -314,6 +319,11 @@ public class LayoutDependencyTree {
             s += "Measure blockers: " + blockersToString(measureBlockers);
 
             return s;
+        }
+
+        public boolean noMoreChangesExpected() {
+            return !needsLayout && !needsMeasure && layoutBlockers.isEmpty()
+                    && measureBlockers.isEmpty();
         }
 
     }
@@ -484,5 +494,28 @@ public class LayoutDependencyTree {
         VConsole.log("====");
         VConsole.log(getDependency(connector, HORIZONTAL).toString());
         VConsole.log(getDependency(connector, VERTICAL).toString());
+    }
+
+    public boolean noMoreChangesExpected(ComponentConnector connector) {
+        return getDependency(connector, HORIZONTAL).noMoreChangesExpected()
+                && getDependency(connector, VERTICAL).noMoreChangesExpected();
+    }
+
+    public ComponentConnector getScrollingBoundary(ComponentConnector connector) {
+        LayoutDependency dependency = getDependency(connector, HORIZONTAL);
+        if (!dependency.scrollingParentCached) {
+            ComponentContainerConnector parent = dependency.connector
+                    .getParent();
+            if (parent instanceof MayScrollChildren) {
+                dependency.scrollingBoundary = connector;
+            } else if (parent != null) {
+                dependency.scrollingBoundary = getScrollingBoundary(parent);
+            } else {
+                // No scrolling parent
+            }
+
+            dependency.scrollingParentCached = true;
+        }
+        return dependency.scrollingBoundary;
     }
 }
