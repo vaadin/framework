@@ -569,14 +569,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @param position
      *            the position of the tab
-     * @return
+     * @return The tab in the given position, or null if the position is out of
+     *         bounds.
      */
     public Tab getTab(int position) {
-        Component c = components.get(position);
-        if (c != null) {
-            return tabs.get(c);
+        if (position >= 0 && position < getComponentCount()) {
+            return getTab(components.get(position));
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**
