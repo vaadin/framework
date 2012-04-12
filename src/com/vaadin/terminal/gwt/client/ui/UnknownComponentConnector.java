@@ -6,41 +6,12 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.VUIDLBrowser;
 
-public class UnknownComponentConnector extends AbstractComponentConnector
-        implements Paintable {
+public class UnknownComponentConnector extends AbstractComponentConnector {
 
     @Override
     public boolean delegateCaptionHandling() {
         return false;
-    }
-
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-        getWidget()
-                .setCaption(
-                        "Widgetset does not contain implementation for "
-                                + getWidget().serverClassName
-                                + ". Check its component connector's @Connect mapping, widgetsets "
-                                + "GWT module description file and re-compile your"
-                                + " widgetset. In case you have downloaded a vaadin"
-                                + " add-on package, you might want to refer to "
-                                + "<a href='http://vaadin.com/using-addons'>add-on "
-                                + "instructions</a>. Unrendered UIDL:");
-        if (getWidget().uidlTree != null) {
-            getWidget().uidlTree.removeFromParent();
-        }
-
-        getWidget().uidlTree = new VUIDLBrowser(uidl, client.getConfiguration());
-        getWidget().uidlTree.open(true);
-        getWidget().uidlTree.setText("Unrendered UIDL");
-        getWidget().panel.add(getWidget().uidlTree);
     }
 
     @Override
@@ -54,6 +25,15 @@ public class UnknownComponentConnector extends AbstractComponentConnector
     }
 
     public void setServerSideClassName(String serverClassName) {
-        getWidget().setServerSideClassName(serverClassName);
+        getWidget()
+                .setCaption(
+                        "Widgetset does not contain implementation for "
+                                + serverClassName
+                                + ". Check its component connector's @Connect mapping, widgetsets "
+                                + "GWT module description file and re-compile your"
+                                + " widgetset. In case you have downloaded a vaadin"
+                                + " add-on package, you might want to refer to "
+                                + "<a href='http://vaadin.com/using-addons'>add-on "
+                                + "instructions</a>.");
     }
 }
