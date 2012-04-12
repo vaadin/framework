@@ -238,7 +238,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         StringBuffer styleBuf = new StringBuffer();
         styleBuf.append(primaryStyleName);
-        styleBuf.append(" v-paintable");
+        styleBuf.append(" v-connector");
 
         // Uses connector methods to enable connectors to take hierarchy or
         // multiple state variables into account

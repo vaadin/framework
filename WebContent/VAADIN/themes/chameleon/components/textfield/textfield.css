@@ -25,7 +25,7 @@ input.v-textfield[type="text"] {
 	height: 1.2em;
 	}
 
-input.v-paintable.v-textfield[type="text"],
+input.v-connector.v-textfield[type="text"],
 .v-filterselect {
 	height: 1.6em;
 	}

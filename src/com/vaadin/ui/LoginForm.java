@@ -158,11 +158,11 @@ public class LoginForm extends CustomComponent {
                     + "<div>"
                     + usernameCaption
                     + "</div><div >"
-                    + "<input class='v-textfield v-paintable' style='display:block;' type='text' name='username'></div>"
+                    + "<input class='v-textfield v-connector' style='display:block;' type='text' name='username'></div>"
                     + "<div>"
                     + passwordCaption
                     + "</div>"
-                    + "<div><input class='v-textfield v-paintable' style='display:block;' type='password' name='password'></div>"
+                    + "<div><input class='v-textfield v-connector' style='display:block;' type='password' name='password'></div>"
                     + "<div><div onclick=\"document.forms[0].submit();\" tabindex=\"0\" class=\"v-button\" role=\"button\" ><span class=\"v-button-wrap\"><span class=\"v-button-caption\">"
                     + loginButtonCaption
                     + "</span></span></div></div></form></div>" + "</body></html>")
