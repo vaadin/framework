@@ -15,9 +15,9 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutServerRPC;
-import com.vaadin.terminal.gwt.client.ui.AbsoluteLayoutConnector.AbsoluteLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutState;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute

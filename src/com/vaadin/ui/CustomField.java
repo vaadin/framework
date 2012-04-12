@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 
 /**
  * A {@link Field} whose UI content can be constructed by the user, enabling the
@@ -82,17 +80,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     public void detach() {
         super.detach();
         getContent().detach();
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        if (getContent() == null) {
-            throw new IllegalStateException(
-                    "Content component or layout of the field must be set before the "
-                            + getClass().getName() + " can be painted");
-        }
-
-        getContent().paint(target);
     }
 
     /**

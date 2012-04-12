@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -12,11 +13,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
-import com.vaadin.terminal.gwt.client.ui.VGridLayout;
-import com.vaadin.terminal.gwt.client.ui.VMeasuringOrderedLayout;
-import com.vaadin.terminal.gwt.client.ui.VTabsheetPanel;
-import com.vaadin.terminal.gwt.client.ui.VView;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.VMeasuringOrderedLayout;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetPanel;
+import com.vaadin.terminal.gwt.client.ui.window.VWindow;
+import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
  * ComponentLocator provides methods for generating a String locator for a given
@@ -368,18 +370,14 @@ public class ComponentLocator {
             return null;
         }
 
-        String pid = ConnectorMap.get(client).getConnectorId(w.getElement());
-        if (isStaticPid(pid)) {
-            return pid;
-        }
-
-        if (w instanceof VView) {
+        if (w instanceof VRoot) {
             return "";
         } else if (w instanceof VWindow) {
-            VWindow win = (VWindow) w;
-            ArrayList<VWindow> subWindowList = client.getView().getWidget()
-                    .getSubWindowList();
-            int indexOfSubWindow = subWindowList.indexOf(win);
+            Connector windowConnector = ConnectorMap.get(client)
+                    .getConnector(w);
+            List<WindowConnector> subWindowList = client.getRootConnector()
+                    .getSubWindows();
+            int indexOfSubWindow = subWindowList.indexOf(windowConnector);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
         } else if (w instanceof RootPanel) {
             return ROOT_ID;
@@ -438,7 +436,7 @@ public class ComponentLocator {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = client.getView().getWidget();
+                w = client.getRootConnector().getWidget();
             } else if (w == null) {
                 String id = part;
                 // Must be old static pid (PID_S*)
@@ -447,7 +445,7 @@ public class ComponentLocator {
                 if (connector == null) {
                     // Lookup by debugId
                     // TODO Optimize this
-                    connector = findConnectorById(client.getView(),
+                    connector = findConnectorById(client.getRootConnector(),
                             id.substring(5));
                 }
 
@@ -543,8 +541,14 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    iterator = client.getView().getWidget().getSubWindowList()
-                            .iterator();
+                    List<WindowConnector> windows = client.getRootConnector()
+                            .getSubWindows();
+                    List<VWindow> windowWidgets = new ArrayList<VWindow>(
+                            windows.size());
+                    for (WindowConnector wc : windows) {
+                        windowWidgets.add(wc.getWidget());
+                    }
+                    iterator = windowWidgets.iterator();
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {
@@ -601,21 +605,6 @@ public class ComponentLocator {
         }
 
         return null;
-    }
-
-    /**
-     * Checks if the given pid is a static pid.
-     * 
-     * @param pid
-     *            The pid to check
-     * @return true if the pid is a static pid, false otherwise
-     */
-    private boolean isStaticPid(String pid) {
-        if (pid == null) {
-            return false;
-        }
-
-        return pid.startsWith("PID_S");
     }
 
 }

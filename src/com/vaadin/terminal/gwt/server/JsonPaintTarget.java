@@ -20,7 +20,6 @@ import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.ThemeResource;
@@ -55,7 +54,7 @@ public class JsonPaintTarget implements PaintTarget {
     private final Stack<JsonTag> openJsonTags;
 
     // these match each other element-wise
-    private final Stack<Paintable> openPaintables;
+    private final Stack<ClientConnector> openPaintables;
     private final Stack<String> openPaintableTags;
 
     private final PrintWriter uidlBuffer;
@@ -73,8 +72,6 @@ public class JsonPaintTarget implements PaintTarget {
     private JsonTag tag;
 
     private boolean cacheEnabled = false;
-
-    private final Collection<Paintable> paintedComponents = new HashSet<Paintable>();
 
     private final Set<Class<? extends ClientConnector>> usedClientConnectors = new HashSet<Class<? extends ClientConnector>>();
 
@@ -103,7 +100,7 @@ public class JsonPaintTarget implements PaintTarget {
         mOpenTags = new Stack<String>();
         openJsonTags = new Stack<JsonTag>();
 
-        openPaintables = new Stack<Paintable>();
+        openPaintables = new Stack<ClientConnector>();
         openPaintableTags = new Stack<String>();
 
         cacheEnabled = cachingRequired;
@@ -402,9 +399,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    public void addAttribute(String name, Paintable value)
+    public void addAttribute(String name, ClientConnector value)
             throws PaintException {
-        final String id = getPaintIdentifier(value);
+        final String id = value.getConnectorId();
         addAttribute(name, id);
     }
 
@@ -420,9 +417,8 @@ public class JsonPaintTarget implements PaintTarget {
             Object key = it.next();
             Object mapValue = value.get(key);
             sb.append("\"");
-            if (key instanceof Paintable) {
-                Paintable paintable = (Paintable) key;
-                sb.append(getPaintIdentifier(paintable));
+            if (key instanceof ClientConnector) {
+                sb.append(((ClientConnector) key).getConnectorId());
             } else {
                 sb.append(escapeJSON(key.toString()));
             }
@@ -471,10 +467,9 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addVariable(new StringVariable(owner, name, escapeJSON(value)));
     }
 
-    public void addVariable(VariableOwner owner, String name, Paintable value)
-            throws PaintException {
-        tag.addVariable(new StringVariable(owner, name,
-                getPaintIdentifier(value)));
+    public void addVariable(VariableOwner owner, String name,
+            ClientConnector value) throws PaintException {
+        tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
     }
 
     public void addVariable(VariableOwner owner, String name, int value)
@@ -650,19 +645,18 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
-    public PaintStatus startPaintable(Paintable paintable, String tagName)
+    public PaintStatus startPaintable(ClientConnector connector, String tagName)
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
-        logger.fine("startPaintable for " + paintable.getClass().getName()
-                + "@" + Integer.toHexString(paintable.hashCode()));
+        logger.fine("startPaintable for " + connector.getClass().getName()
+                + "@" + Integer.toHexString(connector.hashCode()));
         startTag(tagName, true);
 
-        openPaintables.push(paintable);
+        openPaintables.push(connector);
         openPaintableTags.push(tagName);
 
-        final String id = getPaintIdentifier(paintable);
-        addAttribute("id", id);
+        addAttribute("id", connector.getConnectorId());
 
         // Only paint top level paintables. All sub paintables are marked as
         // queued and painted separately later.
@@ -670,38 +664,26 @@ public class JsonPaintTarget implements PaintTarget {
             return PaintStatus.CACHED;
         }
 
-        // not a nested paintable, paint the it now
-        paintedComponents.add(paintable);
-
-        if (paintable instanceof CustomLayout) {
+        if (connector instanceof CustomLayout) {
             customLayoutArgumentsOpen = true;
         }
         return PaintStatus.PAINTING;
     }
 
-    public void endPaintable(Paintable paintable) throws PaintException {
+    public void endPaintable(ClientConnector paintable) throws PaintException {
         logger.fine("endPaintable for " + paintable.getClass().getName() + "@"
                 + Integer.toHexString(paintable.hashCode()));
 
-        Paintable openPaintable = openPaintables.peek();
+        ClientConnector openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {
             throw new PaintException("Invalid UIDL: closing wrong paintable: '"
-                    + getPaintIdentifier(paintable) + "' expected: '"
-                    + getPaintIdentifier(openPaintable) + "'.");
+                    + paintable.getConnectorId() + "' expected: '"
+                    + openPaintable.getConnectorId() + "'.");
         }
         // remove paintable from the stack
         openPaintables.pop();
         String openTag = openPaintableTags.pop();
         endTag(openTag);
-    }
-
-    public String getPaintIdentifier(Paintable paintable) throws PaintException {
-        // TODO This should be unnecessary as Paintable must be a Connector
-        if (paintable instanceof Connector) {
-            return ((Connector) paintable).getConnectorId();
-        }
-        throw new RuntimeException("Paintable " + paintable
-                + " must implement Connector");
     }
 
     /*
@@ -979,25 +961,21 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     @SuppressWarnings("unchecked")
-    public String getTag(Paintable paintable) {
-        if (!(paintable instanceof ClientConnector)) {
-            throw new IllegalArgumentException(
-                    "Tags are only available for ClientConnectors");
-        }
-        Class<? extends Paintable> paintableClass = paintable.getClass();
-        while (paintableClass.isAnonymousClass()) {
-            paintableClass = (Class<? extends Paintable>) paintableClass
+    public String getTag(ClientConnector clientConnector) {
+        Class<? extends ClientConnector> clientConnectorClass = clientConnector
+                .getClass();
+        while (clientConnectorClass.isAnonymousClass()) {
+            clientConnectorClass = (Class<? extends ClientConnector>) clientConnectorClass
                     .getSuperclass();
         }
-        Class<?> clazz = paintableClass;
+        Class<?> clazz = clientConnectorClass;
         while (!usedClientConnectors.contains(clazz)
                 && clazz.getSuperclass() != null
                 && ClientConnector.class.isAssignableFrom(clazz)) {
             usedClientConnectors.add((Class<? extends ClientConnector>) clazz);
             clazz = clazz.getSuperclass();
         }
-        return manager
-                .getTagForType((Class<? extends ClientConnector>) paintableClass);
+        return manager.getTagForType(clientConnectorClass);
     }
 
     Collection<Class<? extends ClientConnector>> getUsedClientConnectors() {

@@ -15,11 +15,11 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.PanelConnector;
-import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelServerRPC;
-import com.vaadin.terminal.gwt.client.ui.PanelConnector.PanelState;
+import com.vaadin.terminal.gwt.client.ui.panel.PanelServerRPC;
+import com.vaadin.terminal.gwt.client.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
 
 /**
@@ -33,7 +33,8 @@ import com.vaadin.ui.Component.Focusable;
 @SuppressWarnings("serial")
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable {
+        ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable,
+        Vaadin6Component {
 
     /**
      * Content of the panel.
@@ -111,45 +112,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Gets the current layout of the panel.
-     * 
-     * @return the Current layout of the panel.
-     * @deprecated A Panel can now contain a ComponentContainer which is not
-     *             necessarily a Layout. Use {@link #getContent()} instead.
-     */
-    @Deprecated
-    public Layout getLayout() {
-        if (content instanceof Layout) {
-            return (Layout) content;
-        } else if (content == null) {
-            return null;
-        }
-
-        throw new IllegalStateException(
-                "Panel does not contain a Layout. Use getContent() instead of getLayout().");
-    }
-
-    /**
-     * Sets the layout of the panel.
-     * 
-     * If given layout is null, a VerticalLayout with margins set is used as a
-     * default.
-     * 
-     * Components from old layout are not moved to new layout by default
-     * (changed in 5.2.2). Use function in Layout interface manually.
-     * 
-     * @param newLayout
-     *            the New layout of the panel.
-     * @deprecated A Panel can now contain a ComponentContainer which is not
-     *             necessarily a Layout. Use
-     *             {@link #setContent(ComponentContainer)} instead.
-     */
-    @Deprecated
-    public void setLayout(Layout newLayout) {
-        setContent(newLayout);
-    }
-
-    /**
      * Returns the content of the Panel.
      * 
      * @return
@@ -221,14 +183,10 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget
-     * )
+     * com.vaadin.terminal.Vaadin6Component#paintContent(com.vaadin.terminal
+     * .PaintTarget)
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        // This is needed for now for paint to be ever run for the child
-        content.paint(target);
-
         if (actionManager != null) {
             actionManager.paintActions(null, target);
         }
@@ -289,10 +247,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
      */
     @SuppressWarnings("unchecked")
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");

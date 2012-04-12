@@ -25,7 +25,7 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.VWindow;
+import com.vaadin.terminal.gwt.client.ui.window.VWindow;
 
 public class VUIDLBrowser extends SimpleTree {
     private static final String HELP = "Shift click handle to open recursively. Click components to hightlight them on client side. Shift click components to highlight them also on the server side.";

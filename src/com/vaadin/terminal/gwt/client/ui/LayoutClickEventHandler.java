@@ -8,7 +8,6 @@ import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector.LayoutClickRPC;
 
 public abstract class LayoutClickEventHandler extends AbstractClickEventHandler {
 

@@ -18,10 +18,11 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VTextField;
+import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
-        BlurNotifier, FocusNotifier, TextChangeNotifier {
+        BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {
 
     /**
      * Value formatter used to format the string contents.
@@ -99,9 +100,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         super();
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         if (getMaxLength() >= 0) {
             target.addAttribute("maxLength", getMaxLength());
@@ -185,12 +184,10 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         }
     }
 
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         changingVariables = true;
 
         try {
-            super.changeVariables(source, variables);
 
             if (variables.containsKey(VTextField.VAR_CURSOR)) {
                 Integer object = (Integer) variables.get(VTextField.VAR_CURSOR);

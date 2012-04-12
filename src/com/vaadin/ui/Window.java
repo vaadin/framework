@@ -22,9 +22,10 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowServerRPC;
-import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
+import com.vaadin.terminal.gwt.client.ui.window.WindowServerRPC;
+import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
  * A component that represents an application (browser native) window or a sub
@@ -72,7 +73,8 @@ import com.vaadin.terminal.gwt.client.ui.WindowConnector.WindowState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Window extends Panel implements FocusNotifier, BlurNotifier {
+public class Window extends Panel implements FocusNotifier, BlurNotifier,
+        Vaadin6Component {
 
     private WindowServerRPC rpc = new WindowServerRPC() {
 

@@ -29,13 +29,11 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.PaintTarget.PaintStatus;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.ResourceReference;
@@ -172,8 +170,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets and replaces all previous style names of the component. This method
-     * will trigger a {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * will trigger a {@link RepaintRequestEvent}.
      * 
      * @param style
      *            the new style of the component.
@@ -273,8 +270,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets the component's caption <code>String</code>. Caption is the visible
      * name of the component. This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * {@link RepaintRequestEvent}.
      * 
      * @param caption
      *            the new caption <code>String</code> for the component.
@@ -343,8 +339,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets the component's icon. This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * {@link RepaintRequestEvent}.
      * 
      * @param icon
      *            the icon to be shown with the component's caption.
@@ -413,8 +408,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets the component's immediate mode to the specified status. This method
-     * will trigger a {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * will trigger a {@link RepaintRequestEvent}.
      * 
      * @param immediate
      *            the boolean value specifying if the component should be in the
@@ -518,8 +512,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets the component's description. See {@link #getDescription()} for more
      * information on what the description is. This method will trigger a
-     * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-     * RepaintRequestEvent}.
+     * {@link RepaintRequestEvent}.
      * 
      * The description is displayed as HTML/XHTML in tooltips or directly in
      * certain components so care should be taken to avoid creating the
@@ -708,84 +701,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /* Component painting */
-
-    @Deprecated
-    public void requestRepaintRequests() {
-        // This is no longer needed. Remove when Component no longer extends
-        // Paintable
-    }
-
-    /**
-     * 
-     * <p>
-     * Paints the Paintable into a UIDL stream. This method creates the UIDL
-     * sequence describing it and outputs it to the given UIDL stream.
-     * </p>
-     * 
-     * <p>
-     * It is called when the contents of the component should be painted in
-     * response to the component first being shown or having been altered so
-     * that its visual representation is changed.
-     * </p>
-     * 
-     * <p>
-     * <b>Do not override this to paint your component.</b> Override
-     * {@link #paintContent(PaintTarget)} instead.
-     * </p>
-     * 
-     * 
-     * @param target
-     *            the target UIDL stream where the component should paint itself
-     *            to.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    public void paint(PaintTarget target) throws PaintException {
-        // Only paint content of visible components.
-        if (!isVisibleInContext()) {
-            return;
-        }
-
-        final String tag = target.getTag(this);
-        final PaintStatus status = target.startPaintable(this, tag);
-        if (PaintStatus.CACHED == status) {
-            // nothing to do but flag as cached and close the paintable tag
-            target.addAttribute("cached", true);
-        } else {
-            // Paint the contents of the component
-            paintContent(target);
-
-        }
-        target.endPaintable(this);
-
-    }
-
-    /**
-     * Checks if the component is visible and its parent is visible,
-     * recursively.
-     * <p>
-     * This is only a helper until paint is moved away from this class.
-     * 
-     * @return
-     */
-    @Deprecated
-    protected boolean isVisibleInContext() {
-        HasComponents p = getParent();
-        while (p != null) {
-            if (!p.isVisible()) {
-                return false;
-            }
-            p = p.getParent();
-        }
-        if (getParent() != null && !getParent().isComponentVisible(this)) {
-            return false;
-        }
-
-        // All parents visible, return this state
-        return isVisible();
-    }
-
     /**
      * Build CSS compatible string representation of height.
      * 
@@ -810,22 +725,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         } else {
             return getWidth() + getWidthUnits().getSymbol();
         }
-    }
-
-    /**
-     * Paints any needed component-specific things to the given UIDL stream. The
-     * more general {@link #paint(PaintTarget)} method handles all general
-     * attributes common to all components, and it calls this method to paint
-     * any component-specific attributes to the UIDL stream.
-     * 
-     * @param target
-     *            the target UIDL stream where the component should paint itself
-     *            to
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    public void paintContent(PaintTarget target) throws PaintException {
-
     }
 
     /**
@@ -959,17 +858,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 repaintRequestListeners = null;
             }
         }
-    }
-
-    /* Component variable changes */
-
-    /*
-     * Invoked when the value of a variable has changed. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
-     */
-    public void changeVariables(Object source, Map<String, Object> variables) {
-
     }
 
     /* General event framework */
@@ -1649,9 +1537,17 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @param implementation
      *            RPC interface implementation. Also used to deduce the type.
      */
-    protected <T> void registerRpc(T implementation) {
-        Class<?>[] interfaces = implementation.getClass().getInterfaces();
-        if (interfaces.length != 1) {
+    protected <T extends ServerRpc> void registerRpc(T implementation) {
+        Class<?> cls = implementation.getClass();
+        Class<?>[] interfaces = cls.getInterfaces();
+        while (interfaces.length == 0) {
+            // Search upwards until an interface is found. It must be found as T
+            // extends ServerRpc
+            cls = cls.getSuperclass();
+            interfaces = cls.getInterfaces();
+        }
+        if (interfaces.length != 1
+                || !(ServerRpc.class.isAssignableFrom(interfaces[0]))) {
             throw new RuntimeException(
                     "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
         }

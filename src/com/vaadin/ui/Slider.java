@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * A component for selecting a numerical value within a range.
@@ -45,7 +46,7 @@ import com.vaadin.terminal.PaintTarget;
  * 
  * @author Vaadin Ltd.
  */
-public class Slider extends AbstractField<Double> {
+public class Slider extends AbstractField<Double> implements Vaadin6Component {
 
     public static final int ORIENTATION_HORIZONTAL = 0;
 
@@ -277,9 +278,7 @@ public class Slider extends AbstractField<Double> {
         super.setValue(newFieldValue);
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
 
         target.addAttribute("min", min);
         if (max > min) {
@@ -308,9 +307,7 @@ public class Slider extends AbstractField<Double> {
      * @param source
      * @param variables
      */
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
         if (variables.containsKey("value")) {
             final Object value = variables.get("value");
             final Double newValue = new Double(value.toString());

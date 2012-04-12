@@ -8,7 +8,7 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.vaadin.terminal.gwt.client.ui.VDateField;
+import com.vaadin.terminal.gwt.client.ui.datefield.VDateField;
 
 /**
  * This class provides date/time parsing services to all components on the

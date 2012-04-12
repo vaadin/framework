@@ -11,6 +11,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
 
 /**
@@ -47,7 +48,8 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     }
 
-    public <T extends Component & Container> ActionManager(T viewer) {
+    public <T extends Component & Container & VariableOwner> ActionManager(
+            T viewer) {
         this.viewer = viewer;
     }
 
@@ -57,7 +59,8 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
-    public <T extends Component & Container> void setViewer(T viewer) {
+    public <T extends Component & Container & VariableOwner> void setViewer(
+            T viewer) {
         if (viewer == this.viewer) {
             return;
         }
@@ -153,7 +156,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         if (!actions.isEmpty() || clientHasActions) {
             actionMapper = new KeyMapper<Action>();
 
-            paintTarget.addVariable(viewer, "action", "");
+            paintTarget.addVariable((VariableOwner) viewer, "action", "");
             paintTarget.startTag("actions");
 
             for (final Action a : actions) {

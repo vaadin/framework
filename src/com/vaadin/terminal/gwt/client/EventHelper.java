@@ -6,10 +6,12 @@ package com.vaadin.terminal.gwt.client;
 import static com.vaadin.terminal.gwt.client.EventId.BLUR;
 import static com.vaadin.terminal.gwt.client.EventId.FOCUS;
 
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasBlurHandlers;
-import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
@@ -40,38 +42,56 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class EventHelper {
 
-    public static HandlerRegistration updateFocusHandler(
-            ComponentConnector paintable, ApplicationConnection client,
-            HandlerRegistration handlerRegistration) {
-        if (client.hasEventListeners(paintable, FOCUS)) {
-            if (handlerRegistration == null) {
-                handlerRegistration = ((HasFocusHandlers) paintable)
-                        .addFocusHandler((FocusHandler) paintable);
-            }
-            return handlerRegistration;
-        } else if (handlerRegistration != null) {
-            handlerRegistration.removeHandler();
-            handlerRegistration = null;
-
-        }
-        return null;
+    /**
+     * Adds or removes a focus handler depending on if the connector has focus
+     * listeners on the server side or not.
+     * 
+     * @param connector
+     *            The connector to update. Must implement focusHandler.
+     * @param handlerRegistration
+     *            The old registration reference or null no handler has been
+     *            registered previously
+     * @return a new registration handler that can be used to unregister the
+     *         handler later
+     */
+    public static <T extends ComponentConnector & FocusHandler> HandlerRegistration updateFocusHandler(
+            T connector, HandlerRegistration handlerRegistration) {
+        return updateHandler(connector, FOCUS, handlerRegistration,
+                FocusEvent.getType());
     }
 
-    public static HandlerRegistration updateBlurHandler(
-            ComponentConnector paintable, ApplicationConnection client,
-            HandlerRegistration handlerRegistration) {
-        if (client.hasEventListeners(paintable, BLUR)) {
+    /**
+     * Adds or removes a blur handler depending on if the connector has blur
+     * listeners on the server side or not.
+     * 
+     * @param connector
+     *            The connector to update. Must implement BlurHandler.
+     * @param handlerRegistration
+     *            The old registration reference or null no handler has been
+     *            registered previously
+     * @return a new registration handler that can be used to unregister the
+     *         handler later
+     */
+    public static <T extends ComponentConnector & BlurHandler> HandlerRegistration updateBlurHandler(
+            T connector, HandlerRegistration handlerRegistration) {
+        return updateHandler(connector, BLUR, handlerRegistration,
+                BlurEvent.getType());
+    }
+
+    private static <H extends EventHandler> HandlerRegistration updateHandler(
+            ComponentConnector connector, String eventIdentifier,
+            HandlerRegistration handlerRegistration, Type<H> type) {
+        if (connector.hasEventListener(eventIdentifier)) {
             if (handlerRegistration == null) {
-                handlerRegistration = ((HasBlurHandlers) paintable)
-                        .addBlurHandler((BlurHandler) paintable);
+                handlerRegistration = connector.getWidget().addDomHandler(
+                        (H) connector, type);
             }
-            return handlerRegistration;
         } else if (handlerRegistration != null) {
             handlerRegistration.removeHandler();
             handlerRegistration = null;
-
         }
-        return null;
+        return handlerRegistration;
+
     }
 
 }

@@ -27,12 +27,15 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.RootConnector.RootServerRPC;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
-import com.vaadin.terminal.gwt.client.ui.VView;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
+import com.vaadin.terminal.gwt.client.ui.root.RootServerRPC;
+import com.vaadin.terminal.gwt.client.ui.root.RootState;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Window.CloseListener;
 
@@ -74,7 +77,7 @@ import com.vaadin.ui.Window.CloseListener;
  * @since 7.0
  */
 public abstract class Root extends AbstractComponentContainer implements
-        Action.Container, Action.Notifier {
+        Action.Container, Action.Notifier, Vaadin6Component {
 
     /**
      * Listener that gets notified when the size of the browser window
@@ -344,11 +347,6 @@ public abstract class Root extends AbstractComponentContainer implements
     public static final int BORDER_DEFAULT = 2;
 
     /**
-     * The container in which the component hierarchy of the root starts.
-     */
-    private ComponentContainer content;
-
-    /**
      * The application to which this root belongs
      */
     private Application application;
@@ -406,7 +404,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private int browserWindowHeight = -1;
 
     /** Identifies the click event */
-    private static final String CLICK_EVENT_ID = VView.CLICK_EVENT_ID;
+    private static final String CLICK_EVENT_ID = VRoot.CLICK_EVENT_ID;
 
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
@@ -422,8 +420,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * {@link VerticalLayout} with margins enabled as its content.
      */
     public Root() {
-        registerRpc(rpc);
-        setSizeFull();
+        this((ComponentContainer) null);
     }
 
     /**
@@ -435,7 +432,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setContent(ComponentContainer)
      */
     public Root(ComponentContainer content) {
-        this();
+        registerRpc(rpc);
+        setSizeFull();
         setContent(content);
     }
 
@@ -450,7 +448,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setCaption(String)
      */
     public Root(String caption) {
-        this();
+        this((ComponentContainer) null);
         setCaption(caption);
     }
 
@@ -469,6 +467,18 @@ public abstract class Root extends AbstractComponentContainer implements
     public Root(String caption, ComponentContainer content) {
         this(content);
         setCaption(caption);
+    }
+
+    @Override
+    public RootState getState() {
+        return (RootState) super.getState();
+    }
+
+    @Override
+    protected ComponentState createState() {
+        // This is a workaround for a problem with creating the correct state
+        // object during build
+        return new RootState();
     }
 
     /**
@@ -492,7 +502,6 @@ public abstract class Root extends AbstractComponentContainer implements
         return application;
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // Open requested resource
         synchronized (openList) {
@@ -503,17 +512,6 @@ public abstract class Root extends AbstractComponentContainer implements
                 }
                 openList.clear();
             }
-        }
-
-        ComponentContainer content = getContent();
-        if (content != null) {
-            content.paint(target);
-        }
-
-        // Paint subwindows
-        for (final Iterator<Window> i = windows.iterator(); i.hasNext();) {
-            final Window w = i.next();
-            w.paint(target);
         }
 
         // Paint notifications
@@ -540,7 +538,7 @@ public abstract class Root extends AbstractComponentContainer implements
                 }
                 if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
-                            VView.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
+                            VRoot.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
                 }
                 target.addAttribute(
                         VNotification.ATTRIBUTE_NOTIFICATION_POSITION,
@@ -588,11 +586,11 @@ public abstract class Root extends AbstractComponentContainer implements
         }
 
         if (fragment != null) {
-            target.addAttribute(VView.FRAGMENT_VARIABLE, fragment);
+            target.addAttribute(VRoot.FRAGMENT_VARIABLE, fragment);
         }
 
         if (isResizeLazy()) {
-            target.addAttribute(VView.RESIZE_LAZY, true);
+            target.addAttribute(VRoot.RESIZE_LAZY, true);
         }
     }
 
@@ -609,10 +607,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
         if (variables.containsKey(CLICK_EVENT_ID)) {
             fireClick((Map<String, Object>) variables.get(CLICK_EVENT_ID));
         }
@@ -622,8 +617,8 @@ public abstract class Root extends AbstractComponentContainer implements
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(VView.FRAGMENT_VARIABLE)) {
-            String fragment = (String) variables.get(VView.FRAGMENT_VARIABLE);
+        if (variables.containsKey(VRoot.FRAGMENT_VARIABLE)) {
+            String fragment = (String) variables.get(VRoot.FRAGMENT_VARIABLE);
             setFragment(fragment, true);
         }
 
@@ -1035,10 +1030,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public ComponentContainer getContent() {
-        if (content == null) {
-            setContent(createDefaultLayout());
-        }
-        return content;
+        return (ComponentContainer) getState().getContent();
     }
 
     /**
@@ -1066,10 +1058,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public void setContent(ComponentContainer content) {
-        if (this.content != null) {
-            super.removeComponent(this.content);
+        if (content == null) {
+            content = createDefaultLayout();
         }
-        this.content = content;
+
+        if (getState().getContent() != null) {
+            super.removeComponent((Component) getState().getContent());
+        }
+        getState().setContent(content);
         if (content != null) {
             super.addComponent(content);
         }

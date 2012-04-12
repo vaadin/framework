@@ -9,7 +9,7 @@ import java.util.Collection;
 import com.vaadin.data.Container;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VTwinColSelect;
+import com.vaadin.terminal.gwt.client.ui.twincolselect.VTwinColSelect;
 
 /**
  * Multiselect component with two lists: left side for available items and right

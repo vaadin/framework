@@ -26,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ui.Component;
 import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
-import com.vaadin.terminal.gwt.client.ui.RootConnector;
+import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 

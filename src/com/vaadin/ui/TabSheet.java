@@ -20,11 +20,13 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.KeyMapper;
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.TabsheetBaseConnector;
-import com.vaadin.terminal.gwt.client.ui.VTabsheet;
+import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.TabsheetBaseConnector;
+import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheet;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -59,7 +61,7 @@ import com.vaadin.ui.themes.Runo;
  * @since 3.0
  */
 public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusNotifier, BlurNotifier {
+        FocusNotifier, BlurNotifier, Vaadin6Component {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,
@@ -357,7 +359,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (areTabsHidden()) {
@@ -422,7 +423,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             target.addAttribute("key", keyMapper.key(component));
             if (component.equals(selected)) {
                 target.addAttribute("selected", true);
-                component.paint(target);
+                LegacyPaint.paint(component, target);
             }
             target.endTag("tab");
         }
@@ -678,7 +679,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     // inherits javadoc
-    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("selected")) {
             setSelectedTab(keyMapper.get((String) variables.get("selected")));
@@ -1057,9 +1057,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * </pre>
          * 
          * <p>
-         * This method will trigger a
-         * {@link com.vaadin.terminal.Paintable.RepaintRequestEvent
-         * RepaintRequestEvent} on the TabSheet to which the Tab belongs.
+         * This method will trigger a {@link RepaintRequestEvent} on the
+         * TabSheet to which the Tab belongs.
          * </p>
          * 
          * @param styleName

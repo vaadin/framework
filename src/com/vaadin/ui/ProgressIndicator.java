@@ -4,10 +4,13 @@
 
 package com.vaadin.ui;
 
+import java.util.Map;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * <code>ProgressIndicator</code> is component that shows user state of a
@@ -25,7 +28,7 @@ import com.vaadin.terminal.PaintTarget;
  */
 @SuppressWarnings("serial")
 public class ProgressIndicator extends AbstractField<Number> implements
-        Property.Viewer, Property.ValueChangeListener {
+        Property.Viewer, Property.ValueChangeListener, Vaadin6Component {
 
     /**
      * Content mode, where the label contains only plain text. The getValue()
@@ -108,7 +111,6 @@ public class ProgressIndicator extends AbstractField<Number> implements
      * @throws PaintException
      *             if the Paint Operation fails.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("indeterminate", indeterminate);
         target.addAttribute("pollinginterval", pollingInterval);
@@ -243,6 +245,11 @@ public class ProgressIndicator extends AbstractField<Number> implements
      */
     public int getPollingInterval() {
         return pollingInterval;
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
+
     }
 
 }

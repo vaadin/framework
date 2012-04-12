@@ -11,8 +11,8 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector.CssLayoutServerRPC;
-import com.vaadin.terminal.gwt.client.ui.CssLayoutConnector.CssLayoutState;
+import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**

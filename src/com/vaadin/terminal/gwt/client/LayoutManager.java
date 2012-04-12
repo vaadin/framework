@@ -20,10 +20,10 @@ import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.PreLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.VNotification;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.LayoutDependencyTree;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";

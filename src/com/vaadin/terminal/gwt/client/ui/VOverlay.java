@@ -27,7 +27,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * The z-index value from where all overlays live. This can be overridden in
      * any extending class.
      */
-    protected static int Z_INDEX = 20000;
+    public static int Z_INDEX = 20000;
 
     private static int leftFix = -1;
 
@@ -249,7 +249,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
      */
-    protected void updateShadowSizeAndPosition() {
+    public void updateShadowSizeAndPosition() {
         updateShadowSizeAndPosition(1.0);
     }
 

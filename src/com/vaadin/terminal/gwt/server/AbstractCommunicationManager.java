@@ -48,15 +48,16 @@ import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.CombinedRequest;
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Paintable;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.StreamVariable.StreamingEndEvent;
 import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorEvent;
 import com.vaadin.terminal.Terminal.ErrorListener;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
@@ -80,14 +81,6 @@ import com.vaadin.ui.Window;
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
  * {@link ApplicationConnection}.
- * 
- * A server side component sends its state to the client in a paint request (see
- * {@link Paintable} and {@link PaintTarget} on the server side). The client
- * widget receives these paint requests as calls to
- * {@link com.vaadin.terminal.gwt.client.ComponentConnector#updateFromUIDL()}.
- * The client component communicates back to the server by sending a list of
- * variable changes (see {@link ApplicationConnection#updateVariable()} and
- * {@link VariableOwner#changeVariables(Object, Map)}).
  * 
  * TODO Document better!
  */
@@ -836,8 +829,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // widget mapping
 
         JSONObject connectorTypes = new JSONObject();
-        for (Connector connector : dirtyVisibleConnectors) {
-            String connectorType = paintTarget.getTag((Paintable) connector);
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            String connectorType = paintTarget.getTag(connector);
             try {
                 connectorTypes.put(connector.getConnectorId(), connectorType);
             } catch (JSONException e) {
@@ -1105,22 +1098,22 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private void legacyPaint(PaintTarget paintTarget,
             ArrayList<ClientConnector> dirtyVisibleConnectors)
             throws PaintException {
-        List<Component> legacyComponents = new ArrayList<Component>();
+        List<Vaadin6Component> legacyComponents = new ArrayList<Vaadin6Component>();
         for (Connector connector : dirtyVisibleConnectors) {
-            if (connector instanceof Paintable) {
-                // All legacy Components must be Paintables as Component extends
-                // Paintable in Vaadin 6
-                legacyComponents.add((Component) connector);
+            // All Components that want to use paintContent must implement
+            // Vaadin6Component
+            if (connector instanceof Vaadin6Component) {
+                legacyComponents.add((Vaadin6Component) connector);
             }
         }
-        sortByHierarchy(legacyComponents);
-        for (Component c : legacyComponents) {
-            logger.info("Painting legacy Component " + c.getClass().getName()
+        sortByHierarchy((List) legacyComponents);
+        for (Vaadin6Component c : legacyComponents) {
+            logger.fine("Painting Vaadin6Component " + c.getClass().getName()
                     + "@" + Integer.toHexString(c.hashCode()));
             paintTarget.startTag("change");
             final String pid = c.getConnectorId();
             paintTarget.addAttribute("pid", pid);
-            c.paint(paintTarget);
+            LegacyPaint.paint(c, paintTarget);
             paintTarget.endTag("change");
         }
 

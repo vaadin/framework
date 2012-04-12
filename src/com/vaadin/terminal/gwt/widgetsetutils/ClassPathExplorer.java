@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
-import com.vaadin.terminal.Paintable;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * Utility class to collect widgetset related information from classpath.
@@ -99,22 +99,20 @@ public class ClassPathExplorer {
      * As a side effect, also accept criteria are searched under the same class
      * path entries and added into the acceptCriterion collection.
      * 
-     * @return a collection of {@link Paintable} classes
+     * @return a collection of {@link ClientConnector} classes
      */
-    public static Collection<Class<? extends Paintable>> getPaintablesHavingWidgetAnnotation() {
-        logger.info("Searching for paintables..");
+    public static void findAcceptCriteria() {
+        logger.info("Searching for accept criteria..");
         long start = System.currentTimeMillis();
-        Collection<Class<? extends Paintable>> paintables = new HashSet<Class<? extends Paintable>>();
         Set<String> keySet = classpathLocations.keySet();
         for (String url : keySet) {
-            logger.fine("Searching for paintables in "
+            logger.fine("Searching for accept criteria in "
                     + classpathLocations.get(url));
-            searchForPaintables(classpathLocations.get(url), url, paintables);
+            searchForPaintables(classpathLocations.get(url), url);
         }
         long end = System.currentTimeMillis();
 
         logger.info("Search took " + (end - start) + "ms");
-        return paintables;
 
     }
 
@@ -128,7 +126,7 @@ public class ClassPathExplorer {
         if (acceptCriterion.isEmpty()) {
             // accept criterion are searched as a side effect, normally after
             // paintable detection
-            getPaintablesHavingWidgetAnnotation();
+            findAcceptCriteria();
         }
         return acceptCriterion;
     }
@@ -456,11 +454,9 @@ public class ClassPathExplorer {
      * 
      * @param location
      * @param locationString
-     * @param paintables
      */
     private final static void searchForPaintables(URL location,
-            String locationString,
-            Collection<Class<? extends Paintable>> paintables) {
+            String locationString) {
 
         // Get a File object for the package
         File directory = new File(location.getFile());
@@ -477,7 +473,7 @@ public class ClassPathExplorer {
                     String packageName = locationString
                             .substring(locationString.lastIndexOf("/") + 1);
                     classname = packageName + "." + classname;
-                    tryToAdd(classname, paintables);
+                    tryToAdd(classname);
                 }
             }
         } else {
@@ -509,7 +505,7 @@ public class ClassPathExplorer {
                                 classname = classname.substring(1);
                             }
                             classname = classname.replace('/', '.');
-                            tryToAdd(classname, paintables);
+                            tryToAdd(classname);
                         }
                     }
                 }
@@ -542,16 +538,12 @@ public class ClassPathExplorer {
 
     /**
      * Checks a class for the {@link ClientCriterion} annotations, and adds it
-     * to the appropriate collection if it has either.
+     * to the appropriate collection.
      * 
      * @param fullclassName
-     * @param paintables
-     *            the collection to which to add server side classes with
-     *            {@link ClientCriterion} annotation
      */
     @SuppressWarnings("unchecked")
-    private static void tryToAdd(final String fullclassName,
-            Collection<Class<? extends Paintable>> paintables) {
+    private static void tryToAdd(final String fullclassName) {
         PrintStream out = System.out;
         PrintStream err = System.err;
         Throwable errorToShow = null;
@@ -663,10 +655,9 @@ public class ClassPathExplorer {
      * Test method for helper tool
      */
     public static void main(String[] args) {
-        Collection<Class<? extends Paintable>> paintables = ClassPathExplorer
-                .getPaintablesHavingWidgetAnnotation();
-        logger.info("Found annotated paintables:");
-        for (Class<? extends Paintable> cls : paintables) {
+        ClassPathExplorer.findAcceptCriteria();
+        logger.info("Found client criteria:");
+        for (Class<? extends AcceptCriterion> cls : acceptCriterion) {
             logger.info(cls.getCanonicalName());
         }
 

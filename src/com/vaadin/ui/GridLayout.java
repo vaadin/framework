@@ -15,13 +15,15 @@ import java.util.Map.Entry;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutServerRPC;
-import com.vaadin.terminal.gwt.client.ui.GridLayoutConnector.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutState;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
@@ -51,7 +53,8 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
  */
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
+        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
+        Vaadin6Component {
 
     private GridLayoutServerRPC rpc = new GridLayoutServerRPC() {
 
@@ -428,6 +431,10 @@ public class GridLayout extends AbstractLayout implements
         return components.size();
     }
 
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
+    }
+
     /**
      * Paints the contents of this component.
      * 
@@ -436,11 +443,7 @@ public class GridLayout extends AbstractLayout implements
      * @throws PaintException
      *             if the paint operation failed.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        super.paintContent(target);
-
         // TODO refactor attribute names in future release.
         target.addAttribute("structuralChange", structuralChange);
         structuralChange = false;
@@ -541,7 +544,7 @@ public class GridLayout extends AbstractLayout implements
                     if (rows > 1) {
                         target.addAttribute("h", rows);
                     }
-                    area.getComponent().paint(target);
+                    LegacyPaint.paint(area.getComponent(), target);
 
                     alignmentsArray[index++] = String
                             .valueOf(getComponentAlignment(area.getComponent())
@@ -1383,22 +1386,6 @@ public class GridLayout extends AbstractLayout implements
             }
         }
         return null;
-    }
-
-    /**
-     * Sets the component alignment using a shorthand string notation.
-     * 
-     * @deprecated Replaced by
-     *             {@link #setComponentAlignment(Component, Alignment)}
-     * 
-     * @param component
-     *            A child component in this layout
-     * @param alignment
-     *            A short hand notation described in {@link AlignmentUtils}
-     */
-    @Deprecated
-    public void setComponentAlignment(Component component, String alignment) {
-        AlignmentUtils.setComponentAlignment(this, component, alignment);
     }
 
     public void addListener(LayoutClickListener listener) {

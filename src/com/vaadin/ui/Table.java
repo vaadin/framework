@@ -34,7 +34,6 @@ import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.ItemClickEvent.ItemClickNotifier;
-import com.vaadin.event.ItemClickEvent.ItemClickSource;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
@@ -43,12 +42,13 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
+import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.VScrollTable;
 import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
+import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
 
 /**
  * <p>
@@ -75,8 +75,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
  */
 @SuppressWarnings({ "deprecation" })
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickSource,
-        ItemClickNotifier, DragSource, DropTarget, HasComponents {
+        Container.Ordered, Container.Sortable, ItemClickNotifier, DragSource,
+        DropTarget, HasComponents {
 
     private static final Logger logger = Logger
             .getLogger(Table.class.getName());
@@ -3361,7 +3361,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     target.addText("");
                     paintCellTooltips(target, itemId, columnId);
                 } else {
-                    c.paint(target);
+                    LegacyPaint.paint(c, target);
                 }
             } else {
                 target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
@@ -5272,7 +5272,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void setVisible(boolean visible) {
-        if (!isVisibleInContext() && visible) {
+        if (visible) {
             // We need to ensure that the rows are sent to the client when the
             // Table is made visible if it has been rendered as invisible.
             setRowCacheInvalidated(true);

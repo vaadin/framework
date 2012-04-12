@@ -5,11 +5,13 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * Label component for showing non-editable short texts.
@@ -39,7 +41,7 @@ import com.vaadin.terminal.PaintTarget;
 // TODO generics for interface Property
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
-        Property.ValueChangeNotifier, Comparable<Object> {
+        Property.ValueChangeNotifier, Comparable<Object>, Vaadin6Component {
 
     /**
      * Content modes defining how the client should interpret a Label's value.
@@ -255,7 +257,6 @@ public class Label extends AbstractComponent implements Property,
      * @throws PaintException
      *             if the Paint Operation fails.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         String uidlName = contentMode.getUidlName();
         if (uidlName != null) {
@@ -563,6 +564,10 @@ public class Label extends AbstractComponent implements Property,
         }
 
         return res.toString();
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
 }

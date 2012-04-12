@@ -13,10 +13,11 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector;
-import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector.EmbeddedServerRPC;
+import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
+import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedServerRPC;
 
 /**
  * Component for embedding external objects.
@@ -27,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ui.EmbeddedConnector.EmbeddedServerRPC;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Embedded extends AbstractComponent {
+public class Embedded extends AbstractComponent implements Vaadin6Component {
 
     /**
      * General object type.
@@ -119,7 +120,6 @@ public class Embedded extends AbstractComponent {
     /**
      * Invoked when the component state should be painted.
      */
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         switch (type) {
@@ -519,6 +519,10 @@ public class Embedded extends AbstractComponent {
     public void removeListener(ClickListener listener) {
         removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
                 ClickEvent.class, listener);
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
 }

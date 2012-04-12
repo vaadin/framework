@@ -4,22 +4,50 @@
 
 package com.vaadin.ui;
 
-import java.util.Map;
-
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.VCheckBox;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxState;
 
 public class CheckBox extends AbstractField<Boolean> {
+
+    private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
+
+        public void setChecked(boolean checked,
+                MouseEventDetails mouseEventDetails) {
+            if (isReadOnly()) {
+                return;
+            }
+
+            final Boolean oldValue = getValue();
+            final Boolean newValue = checked;
+
+            if (!newValue.equals(oldValue)) {
+                // The event is only sent if the switch state is changed
+                setValue(newValue);
+            }
+
+        }
+    };
+
+    FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+        @Override
+        protected void fireEvent(Event event) {
+            CheckBox.this.fireEvent(event);
+        }
+    };
+
     /**
      * Creates a new checkbox.
      */
     public CheckBox() {
+        registerRpc(rpc);
+        registerRpc(focusBlurRpc);
         setValue(Boolean.FALSE);
     }
 
@@ -65,36 +93,17 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        Boolean value = getValue();
-        boolean booleanValue = (value != null) ? value : false;
-        target.addVariable(this, VCheckBox.VARIABLE_STATE, booleanValue);
+    public CheckBoxState getState() {
+        return (CheckBoxState) super.getState();
     }
 
     @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        super.changeVariables(source, variables);
-
-        if (!isReadOnly() && variables.containsKey(VCheckBox.VARIABLE_STATE)) {
-            // Gets the new and old states
-            final Boolean newValue = (Boolean) variables
-                    .get(VCheckBox.VARIABLE_STATE);
-            final Boolean oldValue = getValue();
-
-            // The event is only sent if the switch state is changed
-            if (newValue != null && !newValue.equals(oldValue)) {
-                setValue(newValue);
-            }
+    protected void setInternalValue(Boolean newValue) {
+        super.setInternalValue(newValue);
+        if (newValue == null) {
+            newValue = false;
         }
-
-        if (variables.containsKey(FocusEvent.EVENT_ID)) {
-            fireEvent(new FocusEvent(this));
-        }
-        if (variables.containsKey(BlurEvent.EVENT_ID)) {
-            fireEvent(new BlurEvent(this));
-        }
+        getState().setChecked(newValue);
     }
 
     public void addListener(BlurListener listener) {
@@ -113,7 +122,6 @@ public class CheckBox extends AbstractField<Boolean> {
 
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
-
     }
 
     /**

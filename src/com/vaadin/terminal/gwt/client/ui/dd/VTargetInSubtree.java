@@ -8,8 +8,8 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.VTree;
-import com.vaadin.terminal.gwt.client.ui.VTree.TreeNode;
+import com.vaadin.terminal.gwt.client.ui.tree.VTree;
+import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
 
 final public class VTargetInSubtree extends VAcceptCriterion {
 

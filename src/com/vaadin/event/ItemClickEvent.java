@@ -6,7 +6,6 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.MouseEvents.ClickEvent;
@@ -81,19 +80,6 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
 
     public interface ItemClickListener extends Serializable {
         public void itemClick(ItemClickEvent event);
-    }
-
-    /**
-     * Components implementing
-     * 
-     * @link {@link Container} interface may support emitting
-     *       {@link ItemClickEvent}s.
-     * 
-     * @deprecated Use {@link ItemClickNotifier} instead. ItemClickSource was
-     *             deprecated in version 6.5.
-     */
-    @Deprecated
-    public interface ItemClickSource extends ItemClickNotifier {
     }
 
     /**

@@ -17,9 +17,9 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.communication.InitializableServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy.RpcProxyCreator;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc.InitializableClientToServerRpc;
 
 public class RpcProxyCreatorGenerator extends Generator {
 
@@ -62,8 +62,7 @@ public class RpcProxyCreatorGenerator extends Generator {
         composer.addImport(GWT.class.getCanonicalName());
         composer.addImport(ServerRpc.class.getCanonicalName());
         composer.addImport(ServerConnector.class.getCanonicalName());
-        composer.addImport(InitializableClientToServerRpc.class
-                .getCanonicalName());
+        composer.addImport(InitializableServerRpc.class.getCanonicalName());
         composer.addImport(IllegalArgumentException.class.getCanonicalName());
         composer.addImplementedInterface(RpcProxyCreator.class
                 .getCanonicalName());
@@ -82,19 +81,13 @@ public class RpcProxyCreatorGenerator extends Generator {
         sourceWriter
                 .println("throw new IllegalArgumentException(\"RpcInterface and/or connector cannot be null\");");
         sourceWriter.outdent();
-        sourceWriter
-                .println("} else if (connector.getConnectorId() == null) {");
-        sourceWriter.indent();
-        sourceWriter
-                .println("throw new IllegalArgumentException(\"Connector must be initialized before creating Rpc instances.\");");
-        sourceWriter.outdent();
 
         JClassType initializableInterface = typeOracle.findType(ServerRpc.class
                 .getCanonicalName());
 
         for (JClassType rpcType : initializableInterface.getSubtypes()) {
             String rpcClassName = rpcType.getQualifiedSourceName();
-            if (InitializableClientToServerRpc.class.getCanonicalName().equals(
+            if (InitializableServerRpc.class.getCanonicalName().equals(
                     rpcClassName)) {
                 // InitializableClientToServerRpc is a special marker interface
                 // that should not get a generated class
@@ -105,8 +98,8 @@ public class RpcProxyCreatorGenerator extends Generator {
             sourceWriter.indent();
             sourceWriter.println(rpcClassName + " rpc = GWT.create("
                     + rpcClassName + ".class);");
-            sourceWriter
-                    .println("((InitializableClientToServerRpc) rpc).initRpc(connector.getConnectorId(), connector.getConnection());");
+            sourceWriter.println("((" + InitializableServerRpc.class.getName()
+                    + ") rpc).initRpc(connector);");
             sourceWriter.println("return (T) rpc;");
             sourceWriter.outdent();
         }

@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector.MediaControl;
 
@@ -20,7 +22,8 @@ import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector.MediaControl;
  * 
  * @author Vaadin Ltd
  */
-public class AbstractMedia extends AbstractComponent {
+public class AbstractMedia extends AbstractComponent implements
+        Vaadin6Component {
 
     private List<Resource> sources = new ArrayList<Resource>();
 
@@ -189,9 +192,7 @@ public class AbstractMedia extends AbstractComponent {
         getRpcProxy(MediaControl.class).play();
     }
 
-    @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
         target.addAttribute(MediaBaseConnector.ATTR_CONTROLS, isShowControls());
         if (getAltText() != null) {
             target.addAttribute(MediaBaseConnector.ATTR_ALT_TEXT, getAltText());
@@ -207,5 +208,9 @@ public class AbstractMedia extends AbstractComponent {
             target.endTag(MediaBaseConnector.TAG_SOURCE);
         }
         target.addAttribute(MediaBaseConnector.ATTR_MUTED, isMuted());
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // TODO Remove once Vaadin6Component is no longer implemented
     }
 }
