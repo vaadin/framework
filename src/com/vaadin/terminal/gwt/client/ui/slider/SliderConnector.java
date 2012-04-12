@@ -11,10 +11,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.Slider;
 
-@Component(Slider.class)
+@Connect(Slider.class)
 public class SliderConnector extends AbstractFieldConnector implements
         Paintable {
 

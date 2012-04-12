@@ -9,10 +9,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.tests.dd.CustomDDImplementation.MyDropTarget;
 
-@Component(MyDropTarget.class)
+@Connect(MyDropTarget.class)
 public class MyDropTargetConnector extends AbstractComponentConnector implements
         Paintable {
 

@@ -12,11 +12,11 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.ui.PopupView;
 
-@Component(PopupView.class)
+@Connect(PopupView.class)
 public class PopupViewConnector extends AbstractComponentContainerConnector
         implements Paintable, PostLayoutListener {
 

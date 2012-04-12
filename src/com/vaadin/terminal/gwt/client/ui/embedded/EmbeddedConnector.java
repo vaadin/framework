@@ -26,10 +26,10 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.Embedded;
 
-@Component(Embedded.class)
+@Connect(Embedded.class)
 public class EmbeddedConnector extends AbstractComponentConnector implements
         Paintable {
 

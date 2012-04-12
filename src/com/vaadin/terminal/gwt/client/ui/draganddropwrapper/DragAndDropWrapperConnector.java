@@ -11,11 +11,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.ui.DragAndDropWrapper;
 
-@Component(DragAndDropWrapper.class)
+@Connect(DragAndDropWrapper.class)
 public class DragAndDropWrapperConnector extends CustomComponentConnector
         implements Paintable {
 

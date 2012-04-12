@@ -4,11 +4,11 @@
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
 import com.google.gwt.core.client.GWT;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.VerticalSplitPanel;
 
-@Component(value = VerticalSplitPanel.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = VerticalSplitPanel.class, loadStyle = LoadStyle.EAGER)
 public class VerticalSplitPanelConnector extends AbstractSplitPanelConnector {
 
     @Override

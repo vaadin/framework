@@ -20,12 +20,12 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.ContextMenuDetails;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;
 
-@Component(com.vaadin.ui.Table.class)
+@Connect(com.vaadin.ui.Table.class)
 public class TableConnector extends AbstractComponentContainerConnector
         implements Paintable, DirectionalManagedLayout, PostLayoutListener {
 

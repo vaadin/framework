@@ -7,14 +7,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.FocusableScrollPanel;
 import com.vaadin.terminal.gwt.client.ui.table.TableConnector;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.terminal.gwt.client.ui.treetable.VTreeTable.PendingNavigationEvent;
 import com.vaadin.ui.TreeTable;
 
-@Component(TreeTable.class)
+@Connect(TreeTable.class)
 public class TreeTableConnector extends TableConnector {
     public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
 

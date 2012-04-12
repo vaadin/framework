@@ -24,14 +24,14 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
-@Component(value = com.vaadin.ui.Window.class)
+@Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
         SimpleManagedLayout, PostLayoutListener, MayScrollChildren {

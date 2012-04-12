@@ -13,7 +13,7 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.Form;
 
-@Component(Form.class)
+@Connect(Form.class)
 public class FormConnector extends AbstractComponentContainerConnector
         implements Paintable, MayScrollChildren {
 

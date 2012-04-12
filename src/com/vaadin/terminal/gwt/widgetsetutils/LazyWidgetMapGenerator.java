@@ -4,7 +4,7 @@
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
 
 /**

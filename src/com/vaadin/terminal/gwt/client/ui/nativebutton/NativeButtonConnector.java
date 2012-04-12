@@ -16,13 +16,13 @@ import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerR
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.button.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ui.button.ButtonState;
 import com.vaadin.ui.NativeButton;
 
-@Component(NativeButton.class)
+@Connect(NativeButton.class)
 public class NativeButtonConnector extends AbstractComponentConnector implements
         BlurHandler, FocusHandler {
 

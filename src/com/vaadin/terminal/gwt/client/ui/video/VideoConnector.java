@@ -7,11 +7,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
 import com.vaadin.ui.Video;
 
-@Component(Video.class)
+@Connect(Video.class)
 public class VideoConnector extends MediaBaseConnector {
     public static final String ATTR_POSTER = "poster";
 

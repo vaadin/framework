@@ -11,11 +11,11 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.ui.CustomLayout;
 
-@Component(CustomLayout.class)
+@Connect(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractLayoutConnector implements
         SimpleManagedLayout {
 

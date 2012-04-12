@@ -9,11 +9,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.ui.TwinColSelect;
 
-@Component(TwinColSelect.class)
+@Connect(TwinColSelect.class)
 public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         DirectionalManagedLayout {
 

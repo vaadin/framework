@@ -19,13 +19,13 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.ui.AbsoluteLayout;
 
-@Component(AbsoluteLayout.class)
+@Connect(AbsoluteLayout.class)
 public class AbsoluteLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
 

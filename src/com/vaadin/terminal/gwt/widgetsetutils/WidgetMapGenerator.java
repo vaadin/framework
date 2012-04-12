@@ -24,15 +24,15 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically
- * based on {@link Component} annotations available in workspace. By modifying
+ * based on {@link Connect} annotations available in workspace. By modifying
  * the generator it is possible to do some fine tuning for the generated
  * widgetset (aka client side engine). The components to be included in the
  * client side engine can modified be overriding {@link #getUsedConnectors()}.
@@ -43,7 +43,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * that loads all widget implementation on application initialization. This has
  * been the only option until Vaadin 6.4.
  * <p>
- * This generator uses the loadStyle hints from the {@link Component}
+ * This generator uses the loadStyle hints from the {@link Connect}
  * annotations. Depending on the {@link LoadStyle} used, the widget may be
  * included in the initially loaded JavaScript, loaded when the application has
  * started and there is no communication to server or lazy loaded when the
@@ -155,8 +155,8 @@ public class WidgetMapGenerator extends Generator {
                 .iterator();
         while (iter.hasNext()) {
             Class<? extends ComponentConnector> connectorClass = iter.next();
-            Component annotation = connectorClass
-                    .getAnnotation(Component.class);
+            Connect annotation = connectorClass
+                    .getAnnotation(Connect.class);
             if (!ClientConnector.class.isAssignableFrom(annotation.value())) {
                 logger.log(
                         Type.WARN,
@@ -215,7 +215,7 @@ public class WidgetMapGenerator extends Generator {
                 .getName());
         Collection<Class<? extends ComponentConnector>> connectors = new HashSet<Class<? extends ComponentConnector>>();
         for (JClassType jClassType : connectorType.getSubtypes()) {
-            Component annotation = jClassType.getAnnotation(Component.class);
+            Connect annotation = jClassType.getAnnotation(Connect.class);
             if (annotation != null) {
                 try {
                     Class<? extends ComponentConnector> clazz = (Class<? extends ComponentConnector>) Class
@@ -232,7 +232,7 @@ public class WidgetMapGenerator extends Generator {
     /**
      * Returns true if the widget for given component will be lazy loaded by the
      * client. The default implementation reads the information from the
-     * {@link Component} annotation.
+     * {@link Connect} annotation.
      * <p>
      * The method can be overridden to optimize the widget loading mechanism. If
      * the Widgetset is wanted to be optimized for a network with a high latency
@@ -245,7 +245,7 @@ public class WidgetMapGenerator extends Generator {
      */
     protected LoadStyle getLoadStyle(
             Class<? extends ComponentConnector> connector) {
-        Component annotation = connector.getAnnotation(Component.class);
+        Connect annotation = connector.getAnnotation(Connect.class);
         return annotation.loadStyle();
     }
 
@@ -395,7 +395,7 @@ public class WidgetMapGenerator extends Generator {
 
     private static Class<? extends ClientConnector> getClientConnectorClass(
             Class<? extends ComponentConnector> connectorClass) {
-        Component annotation = connectorClass.getAnnotation(Component.class);
+        Connect annotation = connectorClass.getAnnotation(Connect.class);
         return (Class<? extends ClientConnector>) annotation.value();
     }
 }

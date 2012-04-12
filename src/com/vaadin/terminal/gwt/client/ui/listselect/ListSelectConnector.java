@@ -6,11 +6,11 @@ package com.vaadin.terminal.gwt.client.ui.listselect;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.ui.ListSelect;
 
-@Component(ListSelect.class)
+@Connect(ListSelect.class)
 public class ListSelectConnector extends OptionGroupBaseConnector {
 
     @Override

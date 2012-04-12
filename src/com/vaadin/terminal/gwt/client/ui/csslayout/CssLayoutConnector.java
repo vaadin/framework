@@ -18,14 +18,14 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout.FlowPane;
 import com.vaadin.ui.CssLayout;
 
-@Component(CssLayout.class)
+@Connect(CssLayout.class)
 public class CssLayoutConnector extends AbstractLayoutConnector {
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
