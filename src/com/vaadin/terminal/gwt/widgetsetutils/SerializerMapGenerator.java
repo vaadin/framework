@@ -18,6 +18,7 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONObject;
@@ -221,6 +222,13 @@ public class SerializerMapGenerator extends Generator {
         if (serializableTypes.contains(type)) {
             return;
         }
+        JParameterizedType parametrized = type.isParameterized();
+        if (parametrized != null) {
+            for (JClassType parameterType : parametrized.getTypeArgs()) {
+                addTypeIfNeeded(serializableTypes, parameterType);
+            }
+        }
+
         if (serializationHandledByFramework(type)) {
             return;
         }
