@@ -9,10 +9,10 @@ import java.util.Set;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.dom.client.TouchEvent;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.touch.client.TouchScroller;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -92,36 +92,6 @@ public class VPanel extends SimplePanel implements Container,
     };
     private TouchScrollDelegate touchScrollDelegate;
 
-    private TouchScroller touchScroller = new TouchScroller() {
-        @Override
-        protected void onTouchStart(TouchEvent<?> event) {
-            if (event.getEventTarget() == contentNode) {
-                super.onTouchStart(event);
-            }
-        }
-
-        @Override
-        protected void onTouchMove(TouchEvent<?> event) {
-            if (event.getSource() == contentNode) {
-                super.onTouchMove(event);
-            }
-        }
-
-        @Override
-        protected void onTouchEnd(TouchEvent<?> event) {
-            if (event.getSource() == contentNode) {
-                super.onTouchEnd(event);
-            }
-        }
-
-        @Override
-        protected void onTouchCancel(TouchEvent<?> event) {
-            if (event.getSource() == contentNode) {
-                super.onTouchCancel(event);
-            }
-        }
-    };
-
     public VPanel() {
         super();
         DivElement captionWrap = Document.get().createDivElement();
@@ -147,19 +117,14 @@ public class VPanel extends SimplePanel implements Container,
         getElement().appendChild(bottomDecoration);
         setStyleName(CLASSNAME);
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
-        DOM.sinkEvents(contentNode, Event.ONSCROLL);
+        DOM.sinkEvents(contentNode, Event.ONSCROLL | Event.TOUCHEVENTS);
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
-
-        // if (BrowserInfo.get().requiresTouchScrollDelegate()) {
-        //
-        // DOM.sinkEvents(contentNode, Event.TOUCHEVENTS);
-        // addHandler(new TouchStartHandler() {
-        // public void onTouchStart(TouchStartEvent event) {
-        // getTouchScrollDelegate().onTouchStart(event);
-        // }
-        // }, TouchStartEvent.getType());
-        // }
+        addHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                getTouchScrollDelegate().onTouchStart(event);
+            }
+        }, TouchStartEvent.getType());
     }
 
     /**

@@ -16,7 +16,7 @@ public class RemoveListenersOnDetach {
     AbstractField field = new AbstractField() {
         @Override
         public Class<?> getType() {
-            return int.class;
+            return null;
         }
 
         @Override
@@ -34,20 +34,17 @@ public class RemoveListenersOnDetach {
     };
 
     Property property = new AbstractProperty() {
-        private int value;
-
         public Object getValue() {
-            return value;
+            return null;
         }
 
         public void setValue(Object newValue) throws ReadOnlyException,
                 ConversionException {
-            value = (Integer) newValue;
             fireValueChange();
         }
 
         public Class<?> getType() {
-            return int.class;
+            return null;
         }
     };
 
@@ -55,28 +52,21 @@ public class RemoveListenersOnDetach {
     public void testAttachDetach() {
         field.setPropertyDataSource(property);
 
-        property.setValue(1);
+        property.setValue(null);
         property.setReadOnly(true);
-        assertEquals(1, field.getValue());
         assertEquals(1, numValueChanges);
         assertEquals(1, numReadOnlyChanges);
 
         field.attach();
-        property.setValue(2);
+        property.setValue(null);
         property.setReadOnly(false);
-        assertEquals(2, field.getValue());
         assertEquals(2, numValueChanges);
         assertEquals(2, numReadOnlyChanges);
 
         field.detach();
-        property.setValue(3);
+        property.setValue(null);
         property.setReadOnly(true);
-        assertEquals(3, field.getValue());
         assertEquals(2, numValueChanges);
         assertEquals(2, numReadOnlyChanges);
-
-        field.attach();
-        assertEquals(3, field.getValue());
-        assertEquals(3, numValueChanges);
     }
 }

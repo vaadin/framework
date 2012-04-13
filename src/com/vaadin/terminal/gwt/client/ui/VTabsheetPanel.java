@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
 
 /**
@@ -35,26 +34,23 @@ public class VTabsheetPanel extends ComplexPanel {
      */
     public VTabsheetPanel() {
         setElement(DOM.createDiv());
-
-        if (BrowserInfo.get().requiresTouchScrollDelegate()) {
-            sinkEvents(Event.TOUCHEVENTS);
-            addDomHandler(new TouchStartHandler() {
-                public void onTouchStart(TouchStartEvent event) {
-                    /*
-                     * All container elements needs to be scrollable by one
-                     * finger. Update the scrollable element list of touch
-                     * delegate on each touch start.
-                     */
-                    NodeList<Node> childNodes = getElement().getChildNodes();
-                    Element[] elements = new Element[childNodes.getLength()];
-                    for (int i = 0; i < elements.length; i++) {
-                        elements[i] = (Element) childNodes.getItem(i);
-                    }
-                    getTouchScrollDelegate().setElements(elements);
-                    getTouchScrollDelegate().onTouchStart(event);
+        sinkEvents(Event.TOUCHEVENTS);
+        addDomHandler(new TouchStartHandler() {
+            public void onTouchStart(TouchStartEvent event) {
+                /*
+                 * All container elements needs to be scrollable by one finger.
+                 * Update the scrollable element list of touch delegate on each
+                 * touch start.
+                 */
+                NodeList<Node> childNodes = getElement().getChildNodes();
+                Element[] elements = new Element[childNodes.getLength()];
+                for (int i = 0; i < elements.length; i++) {
+                    elements[i] = (Element) childNodes.getItem(i);
                 }
-            }, TouchStartEvent.getType());
-        }
+                getTouchScrollDelegate().setElements(elements);
+                getTouchScrollDelegate().onTouchStart(event);
+            }
+        }, TouchStartEvent.getType());
     }
 
     protected TouchScrollDelegate getTouchScrollDelegate() {

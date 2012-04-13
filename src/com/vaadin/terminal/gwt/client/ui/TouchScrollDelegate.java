@@ -119,7 +119,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
             Touch touch = event.getTouches().get(0);
             if (detectScrolledElement(touch)) {
-                VConsole.log("<hr>TouchDelegate takes over");
+                VConsole.log("TouchDelegate takes over");
                 event.stopPropagation();
                 handlerRegistration = Event.addNativePreviewHandler(this);
                 activeScrollDelegate = this;
@@ -166,7 +166,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }-*/;
 
     private void onTransitionEnd() {
-        VConsole.log("transitionEnd");
         if (finalScrollTop < 0) {
             animateToScrollPosition(0, finalScrollTop);
             finalScrollTop = 0;
@@ -311,13 +310,11 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private void onTouchEnd(NativeEvent event) {
         if (!moved) {
-            VConsole.log("TouchEnd - not moved");
             activeScrollDelegate = null;
             handlerRegistration.removeHandler();
             handlerRegistration = null;
             return;
         }
-        VConsole.log("TouchEnd - moved");
 
         int currentY = origScrollTop + deltaScrollPos;
 
@@ -415,7 +412,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      * @param translateY
      */
     private void translateTo(int duration, int translateY) {
-        // VConsole.log("translateTo " + duration + "ms " + translateY + "px");
         for (Element el : layers) {
             final Style style = el.getStyle();
             if (duration > 0) {
@@ -445,8 +441,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public void onPreviewNativeEvent(NativePreviewEvent event) {
-        VConsole.log("previewNativeEvent "
-                + Integer.toHexString(event.getTypeInt()));
         if (transitionOn) {
             /*
              * TODO allow starting new events. See issue in onTouchStart
