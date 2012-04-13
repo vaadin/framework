@@ -46,7 +46,7 @@ public class JsonCodec implements Serializable {
         registerType(Float.class, JsonEncoder.VTYPE_FLOAT);
         registerType(float.class, JsonEncoder.VTYPE_FLOAT);
         registerType(Double.class, JsonEncoder.VTYPE_DOUBLE);
-        registerType(double.class, JsonEncoder.VTYPE_FLOAT);
+        registerType(double.class, JsonEncoder.VTYPE_DOUBLE);
         registerType(Long.class, JsonEncoder.VTYPE_LONG);
         registerType(long.class, JsonEncoder.VTYPE_LONG);
         // transported as string representation
