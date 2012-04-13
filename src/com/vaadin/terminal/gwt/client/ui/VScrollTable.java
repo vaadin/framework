@@ -485,12 +485,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
         scrollBodyPanel.addKeyUpHandler(navKeyUpHandler);
 
-        scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
-        scrollBodyPanel.addDomHandler(new TouchStartHandler() {
-            public void onTouchStart(TouchStartEvent event) {
-                getTouchScrollDelegate().onTouchStart(event);
-            }
-        }, TouchStartEvent.getType());
+        if (BrowserInfo.get().requiresTouchScrollDelegate()) {
+            scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
+            scrollBodyPanel.addDomHandler(new TouchStartHandler() {
+                public void onTouchStart(TouchStartEvent event) {
+                    getTouchScrollDelegate().onTouchStart(event);
+                }
+            }, TouchStartEvent.getType());
+        }
 
         scrollBodyPanel.sinkEvents(Event.ONCONTEXTMENU);
         scrollBodyPanel.addDomHandler(new ContextMenuHandler() {

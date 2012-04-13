@@ -68,12 +68,12 @@ public class BrowserInfo {
         }
         
         if (browserDetails.isChrome()) {
-        	touchDevice = detectChromeTouchDevice();
+            touchDevice = detectChromeTouchDevice();
         } else {
-        	touchDevice = detectTouchDevice();
+            touchDevice = detectTouchDevice();
         }
     }
-
+    
     private native boolean detectTouchDevice()
     /*-{
         try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
@@ -407,6 +407,15 @@ public class BrowserInfo {
      */
     public boolean isTouchDevice() {
         return touchDevice;
+    }
+
+    /**
+     * @return true if browser needs TouchScrollDelegate javascript scrolling
+     *         handler
+     */
+    public boolean requiresTouchScrollDelegate() {
+        return !(isTouchDevice() && isWebkit() && getWebkitVersion() >= 534 && getBrowserString()
+                .contains("Android"));
     }
 
 }

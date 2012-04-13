@@ -181,17 +181,20 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 VConsole.log("TOUCH CANCEL");
             }
         }, TouchCancelEvent.getType());
-        addDomHandler(new TouchStartHandler() {
-            public void onTouchStart(TouchStartEvent event) {
-                Node target = event.getTouches().get(0).getTarget().cast();
-                if (splitter.isOrHasChild(target)) {
-                    onMouseDown(Event.as(event.getNativeEvent()));
-                } else {
-                    getTouchScrollDelegate().onTouchStart(event);
-                }
-            }
 
-        }, TouchStartEvent.getType());
+        if (BrowserInfo.get().requiresTouchScrollDelegate()) {
+            addDomHandler(new TouchStartHandler() {
+                public void onTouchStart(TouchStartEvent event) {
+                    Node target = event.getTouches().get(0).getTarget().cast();
+                    if (splitter.isOrHasChild(target)) {
+                        onMouseDown(Event.as(event.getNativeEvent()));
+                    } else {
+                        getTouchScrollDelegate().onTouchStart(event);
+                    }
+                }
+
+            }, TouchStartEvent.getType());
+        }
         addDomHandler(new TouchMoveHandler() {
             public void onTouchMove(TouchMoveEvent event) {
                 if (resizing) {

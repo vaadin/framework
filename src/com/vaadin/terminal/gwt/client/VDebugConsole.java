@@ -14,7 +14,6 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -291,10 +290,10 @@ public class VDebugConsole extends VOverlay implements Console {
             height = Integer.parseInt(split[3]);
             autoScrollValue = Boolean.valueOf(split[4]);
         } else {
-            width = 400;
-            height = 150;
-            top = Window.getClientHeight() - 160;
-            left = Window.getClientWidth() - 410;
+            width = 500;
+            height = 500;
+            top = Window.getClientHeight() - 510;
+            left = Window.getClientWidth() - 510;
         }
         setPixelSize(width, height);
         setPopupPosition(left, top);
@@ -637,7 +636,7 @@ public class VDebugConsole extends VOverlay implements Console {
 
             actions = new HorizontalPanel();
             Style style = actions.getElement().getStyle();
-            style.setPosition(Position.ABSOLUTE);
+            // style.setPosition(Position.ABSOLUTE);
             style.setBackgroundColor("#666");
             style.setLeft(135, Unit.PX);
             style.setHeight(25, Unit.PX);
@@ -670,7 +669,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 private void addHMParameter() {
                     UrlBuilder createUrlBuilder = Location.createUrlBuilder();
                     createUrlBuilder.setParameter("gwt.codesvr",
-                            "localhost:9997");
+                            Location.getHostName() + ":9997");
                     Location.assign(createUrlBuilder.buildString());
                 }
 
