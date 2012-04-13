@@ -535,7 +535,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             if (!getType().isAssignableFrom(newFieldValue.getClass())) {
                 throw new Converter.ConversionException("Value of type "
                         + newFieldValue.getClass() + " cannot be assigned to "
-                        + getClass().getName());
+                        + getType().getName());
             }
         }
         setValue((T) newFieldValue, false);
