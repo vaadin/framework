@@ -5229,21 +5229,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 public void run() {
                                     TouchScrollDelegate activeScrollDelegate = TouchScrollDelegate
                                             .getActiveScrollDelegate();
-                                    if (activeScrollDelegate != null
-                                            && !activeScrollDelegate.isMoved()) {
-                                        /*
-                                         * scrolling hasn't started. Cancel
-                                         * scrolling and let row handle this as
-                                         * drag start or context menu.
-                                         */
-                                        activeScrollDelegate.stopScrolling();
-                                    } else {
-                                        /*
-                                         * Scrolled or scrolling, clear touch
-                                         * start to indicate that row shouldn't
-                                         * handle touch move/end events.
-                                         */
-                                        touchStart = null;
+                                    if (activeScrollDelegate != null) {
+                                        if (!activeScrollDelegate.isMoved()) {
+                                            /*
+                                             * scrolling hasn't started. Cancel
+                                             * scrolling and let row handle this
+                                             * as drag start or context menu.
+                                             */
+                                            activeScrollDelegate
+                                                    .stopScrolling();
+                                        } else {
+                                            /*
+                                             * Scrolled or scrolling, clear
+                                             * touch start to indicate that row
+                                             * shouldn't handle touch move/end
+                                             * events.
+                                             */
+                                            touchStart = null;
+                                        }
                                     }
                                 }
                             }.schedule(TOUCHSCROLL_TIMEOUT);
