@@ -5229,23 +5229,32 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 public void run() {
                                     TouchScrollDelegate activeScrollDelegate = TouchScrollDelegate
                                             .getActiveScrollDelegate();
+                                    /*
+                                     * If there's a scroll delegate, check if
+                                     * we're actually scrolling and handle it.
+                                     * If no delegate, do nothing here and let
+                                     * the row handle potential drag'n'drop or
+                                     * context menu.
+                                     */
                                     if (activeScrollDelegate != null) {
-                                        if (!activeScrollDelegate.isMoved()) {
+                                        if (activeScrollDelegate.isMoved()) {
                                             /*
-                                             * scrolling hasn't started. Cancel
-                                             * scrolling and let row handle this
-                                             * as drag start or context menu.
+                                             * Prevent the row from handling
+                                             * touch move/end events (the
+                                             * delegate handles those) and from
+                                             * doing drag'n'drop or opening a
+                                             * context menu.
+                                             */
+                                            touchStart = null;
+                                        } else {
+                                            /*
+                                             * Scrolling hasn't started, so
+                                             * cancel delegate and let the row
+                                             * handle potential drag'n'drop or
+                                             * context menu.
                                              */
                                             activeScrollDelegate
                                                     .stopScrolling();
-                                        } else {
-                                            /*
-                                             * Scrolled or scrolling, clear
-                                             * touch start to indicate that row
-                                             * shouldn't handle touch move/end
-                                             * events.
-                                             */
-                                            touchStart = null;
                                         }
                                     }
                                 }
