@@ -1213,7 +1213,11 @@ public class ApplicationConnection {
                 VConsole.log(" * Sending state change events");
 
                 for (StateChangeEvent sce : pendingStateChangeEvents) {
-                    sce.getConnector().fireEvent(sce);
+                    try {
+                        sce.getConnector().fireEvent(sce);
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
                 }
 
             }
@@ -1336,7 +1340,11 @@ public class ApplicationConnection {
 
                 VConsole.log(" * Sending hierarchy change events");
                 for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
-                    event.getConnector().fireEvent(event);
+                    try {
+                        event.getConnector().fireEvent(event);
+                    } catch (final Throwable e) {
+                        VConsole.error(e);
+                    }
                 }
 
             }
