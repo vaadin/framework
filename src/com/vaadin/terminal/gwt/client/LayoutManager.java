@@ -131,7 +131,7 @@ public class LayoutManager {
             return;
         }
         measuredSize.removeDependent(owner.getConnectorId());
-        stopMeasuringIfUnecessary(element);
+        stopMeasuringIfUnnecessary(element);
     }
 
     public boolean isLayoutRunning() {
@@ -713,12 +713,12 @@ public class LayoutManager {
             listeners.remove(listener);
             if (listeners.isEmpty()) {
                 elementResizeListeners.remove(element);
-                stopMeasuringIfUnecessary(element);
+                stopMeasuringIfUnnecessary(element);
             }
         }
     }
 
-    private void stopMeasuringIfUnecessary(Element element) {
+    private void stopMeasuringIfUnnecessary(Element element) {
         if (!needsMeasure(element)) {
             measuredNonPaintableElements.remove(element);
             setMeasuredSize(element, null);

@@ -18,8 +18,8 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Label.ContentMode;
@@ -96,8 +96,24 @@ public class BoxLayoutTest extends AbstractTestRoot {
         Button addComponent = new Button("Add Component",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        l.addComponent(new ComboBox("ComboBox "
-                                + (l.getComponentCount() + 1)));
+                        GridLayout grid = new GridLayout(2, 2);
+                        Button grow = new Button("Grow Me",
+                                new Button.ClickListener() {
+                                    public void buttonClick(ClickEvent event) {
+                                        if (event.getButton().getWidth() == -1) {
+                                            event.getButton().setHeight("50px");
+                                            event.getButton().setWidth("200px");
+                                        } else {
+                                            event.getButton()
+                                                    .setSizeUndefined();
+                                        }
+                                    }
+                                });
+                        grid.addComponent(new Label("Grid cell 1"));
+                        grid.addComponent(new Label("Grid cell 2"));
+                        grid.addComponent(grow);
+                        grid.addComponent(new Label("Grid cell 4"));
+                        l.addComponent(grid);
                     }
                 });
         header.addComponent(addComponent);
@@ -170,7 +186,6 @@ public class BoxLayoutTest extends AbstractTestRoot {
         });
         spacing.setImmediate(true);
         layout.addComponent(spacing);
-        layout.setComponentAlignment(spacing, Alignment.MIDDLE_LEFT);
 
         // Cell controls
         HorizontalLayout cell = new HorizontalLayout();

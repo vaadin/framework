@@ -9,9 +9,15 @@ import com.vaadin.ui.HorizontalLayout;
 public class HorizontalBoxLayoutConnector extends AbstractBoxLayoutConnector {
 
     @Override
+    public void init() {
+        super.init();
+        getWidget().setVertical(false);
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // TODO fix when Vaadin style name handling is improved so that it won't
-        // override extra client side style names
+        // TODO remove when Vaadin style name handling is improved so that it
+        // won't override extra client side style names
         getWidget().setVertical(false);
         super.updateFromUIDL(uidl, client);
         getWidget().setVertical(false);

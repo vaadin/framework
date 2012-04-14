@@ -4,10 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -18,10 +14,13 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 
 public class VBoxLayout extends FlowPanel {
+
+    private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
     protected boolean spacing = false;
 
@@ -107,14 +106,12 @@ public class VBoxLayout extends FlowPanel {
 
     protected class Slot extends SimplePanel {
 
-        private static final String ALIGN_CLASS_PREFIX = "v-align-";
-
-        private DivElement spacer;
+        private Element spacer;
 
         private Element captionWrap;
         private Element caption;
         private Element captionText;
-        private Element icon;
+        private Icon icon;
         private Element errorIcon;
 
         private CaptionPosition captionPosition = CaptionPosition.TOP;
@@ -166,7 +163,7 @@ public class VBoxLayout extends FlowPanel {
 
         public void setSpacing(boolean spacing) {
             if (spacing && spacer == null) {
-                spacer = Document.get().createDivElement();
+                spacer = DOM.createDiv();
                 spacer.addClassName("v-spacing");
                 getElement().getParentElement().insertBefore(spacer,
                         getElement());
@@ -176,18 +173,26 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
-        // TODO use ElementResizeListener for this
+        public Element getSpacingElement() {
+            return spacer;
+        }
+
         protected int getSpacingSize(boolean vertical) {
+            // No spacer attached
             if (spacer == null) {
                 return 0;
             }
-            // TODO place for optimization (in expense of theme flexibility):
-            // only measure one of the elements and cache the value
-            if (vertical) {
-                return spacer.getOffsetHeight();
-            } else {
-                return spacer.getOffsetWidth();
-            }
+
+            // if (layoutManager != null) {
+            // return vertical ? layoutManager.getOuterHeight(spacer)
+            // : layoutManager.getOuterWidth(spacer);
+            // } else {
+            // TODO place for optimization (in expense of theme
+            // flexibility): only measure one of the elements and cache the
+            // value
+            return vertical ? spacer.getOffsetHeight() : spacer
+                    .getOffsetWidth();
+            // }
         }
 
         public void setCaptionPosition(CaptionPosition captionPosition) {
@@ -245,13 +250,15 @@ public class VBoxLayout extends FlowPanel {
             // Icon
             if (iconUrl != null) {
                 if (icon == null) {
-                    icon = DOM.createImg();
-                    icon.setClassName("v-icon");
-                    caption.insertFirst(icon);
+                    icon = new Icon();
+                    // icon = DOM.createImg();
+                    // icon.setClassName("v-icon");
+                    caption.insertFirst(icon.getElement());
                 }
-                icon.setAttribute("src", iconUrl);
+                // icon.setAttribute("src", iconUrl);
+                icon.setUri(iconUrl);
             } else if (icon != null) {
-                icon.removeFromParent();
+                icon.getElement().removeFromParent();
                 icon = null;
             }
 
@@ -323,11 +330,11 @@ public class VBoxLayout extends FlowPanel {
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (DOM.eventGetType(event) == Event.ONLOAD
-                    && icon == DOM.eventGetTarget(event)) {
+                    && icon.getElement() == DOM.eventGetTarget(event)) {
                 if (layoutManager != null) {
                     layoutManager.layoutLater();
                 } else {
-                    updateSize(caption);
+                    updateCaptionOffset(caption);
                 }
             }
         }
@@ -342,6 +349,32 @@ public class VBoxLayout extends FlowPanel {
 
     }
 
+    protected class Icon extends UIObject {
+        public static final String CLASSNAME = "v-icon";
+        private String myUrl;
+
+        public Icon() {
+            setElement(DOM.createImg());
+            DOM.setElementProperty(getElement(), "alt", "");
+            setStyleName(CLASSNAME);
+        }
+
+        public void setUri(String url) {
+            if (!url.equals(myUrl)) {
+                /*
+                 * Start sinking onload events, widgets responsibility to react.
+                 * We must do this BEFORE we set src as IE fires the event
+                 * immediately if the image is found in cache (#2592).
+                 */
+                sinkEvents(Event.ONLOAD);
+
+                DOM.setElementProperty(getElement(), "src", url);
+                myUrl = url;
+            }
+        }
+
+    }
+
     void setLayoutManager(LayoutManager manager) {
         layoutManager = manager;
     }
@@ -349,11 +382,11 @@ public class VBoxLayout extends FlowPanel {
     private static final RegExp captionPositionRegexp = RegExp
             .compile("v-caption-on-(\\S+)");
 
-    public void updateSize(Element caption) {
+    void updateCaptionOffset(Element caption) {
 
         Element captionWrap = caption.getParentElement().cast();
-        Style captionWrapStyle = captionWrap.getStyle();
 
+        Style captionWrapStyle = captionWrap.getStyle();
         captionWrapStyle.clearPaddingTop();
         captionWrapStyle.clearPaddingRight();
         captionWrapStyle.clearPaddingBottom();
@@ -432,7 +465,7 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    public void recalculateExpands() {
+    private void recalculateExpands() {
         double total = 0;
         for (Slot slot : widgetToSlot.values()) {
             if (slot.getExpandRatio() > -1) {
@@ -459,85 +492,79 @@ public class VBoxLayout extends FlowPanel {
 
     private Element expandWrapper;
 
-    private boolean recalculateUsedSpaceScheduled = false;
-
-    public void recalculateUsedSpace() {
-        if (!recalculateUsedSpaceScheduled) {
-            Scheduler.get().scheduleDeferred(updateExpandSlotSize);
-            recalculateUsedSpaceScheduled = true;
+    void clearExpand() {
+        if (expandWrapper != null) {
+            for (; expandWrapper.getChildCount() > 0;) {
+                Element el = expandWrapper.getChild(0).cast();
+                getElement().appendChild(el);
+                if (vertical) {
+                    el.getStyle().clearHeight();
+                    el.getStyle().clearMarginTop();
+                } else {
+                    el.getStyle().clearWidth();
+                    el.getStyle().clearMarginLeft();
+                }
+            }
+            expandWrapper.removeFromParent();
+            expandWrapper = null;
         }
     }
 
-    private ScheduledCommand updateExpandSlotSize = new ScheduledCommand() {
-        public void execute() {
-            boolean isExpanding = false;
-            for (Widget w : getChildren()) {
-                if (((Slot) w).getExpandRatio() > -1) {
-                    isExpanding = true;
-                } else {
-                    if (vertical) {
-                        w.getElement().getStyle().clearHeight();
-                    } else {
-                        w.getElement().getStyle().clearWidth();
-                    }
-                }
-                w.getElement().getStyle().clearMarginLeft();
-                w.getElement().getStyle().clearMarginTop();
-            }
-            if (isExpanding) {
-                if (expandWrapper == null) {
-                    expandWrapper = DOM.createDiv();
-                    expandWrapper.setClassName("v-expand");
-                    for (; getElement().getChildCount() > 0;) {
-                        Node el = getElement().getChild(0);
-                        expandWrapper.appendChild(el);
-                    }
-                    getElement().appendChild(expandWrapper);
-                }
-
-                int totalSize = 0;
-                for (Widget w : getChildren()) {
-                    Slot slot = (Slot) w;
-                    if (slot.getExpandRatio() == -1) {
-                        totalSize += vertical ? slot.getOffsetHeight() : slot
-                                .getOffsetWidth();
-                    }
-                    // TODO fails in Opera, always returns 0
-                    totalSize += slot.getSpacingSize(vertical);
-                }
-
-                // When we set the margin to the first child, we don't need
-                // overflow:hidden in the layout root element, since the wrapper
-                // would otherwise be placed outside of the layout root element
-                // and block events on elements below it.
+    public void updateExpand() {
+        boolean isExpanding = false;
+        for (Widget slot : getChildren()) {
+            if (((Slot) slot).getExpandRatio() > -1) {
+                isExpanding = true;
+            } else {
                 if (vertical) {
-                    expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
-                    expandWrapper.getFirstChildElement().getStyle()
-                            .setMarginTop(-totalSize, Unit.PX);
+                    slot.getElement().getStyle().clearHeight();
                 } else {
-                    expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
-                    expandWrapper.getFirstChildElement().getStyle()
-                            .setMarginLeft(-totalSize, Unit.PX);
+                    slot.getElement().getStyle().clearWidth();
                 }
-                recalculateExpands();
-
-            } else if (expandWrapper != null) {
-                for (; expandWrapper.getChildCount() > 0;) {
-                    Node el = expandWrapper.getChild(0);
-                    getElement().appendChild(el);
-                    if (vertical) {
-                        ((Element) el.cast()).getStyle().clearHeight();
-                    } else {
-                        ((Element) el.cast()).getStyle().clearWidth();
-                    }
+            }
+            slot.getElement().getStyle().clearMarginLeft();
+            slot.getElement().getStyle().clearMarginTop();
+        }
+        if (isExpanding) {
+            if (expandWrapper == null) {
+                expandWrapper = DOM.createDiv();
+                expandWrapper.setClassName("v-expand");
+                for (; getElement().getChildCount() > 0;) {
+                    Node el = getElement().getChild(0);
+                    expandWrapper.appendChild(el);
                 }
-                expandWrapper.removeFromParent();
-                expandWrapper = null;
+                getElement().appendChild(expandWrapper);
             }
 
-            recalculateUsedSpaceScheduled = false;
+            int totalSize = 0;
+            for (Widget w : getChildren()) {
+                Slot slot = (Slot) w;
+                if (slot.getExpandRatio() == -1) {
+                    // TODO use layoutManager?
+                    totalSize += vertical ? slot.getOffsetHeight() : slot
+                            .getOffsetWidth();
+                }
+                // TODO fails in Opera, always returns 0
+                totalSize += slot.getSpacingSize(vertical);
+            }
+
+            // When we set the margin to the first child, we don't need
+            // overflow:hidden in the layout root element, since the wrapper
+            // would otherwise be placed outside of the layout root element
+            // and block events on elements below it.
+            if (vertical) {
+                expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
+                expandWrapper.getFirstChildElement().getStyle()
+                        .setMarginTop(-totalSize, Unit.PX);
+            } else {
+                expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
+                expandWrapper.getFirstChildElement().getStyle()
+                        .setMarginLeft(-totalSize, Unit.PX);
+            }
+            recalculateExpands();
+
         }
-    };
+    }
 
     public void recalculateLayoutHeight() {
         // Only needed if a horizontal layout is undefined high, and contains
@@ -556,7 +583,7 @@ public class VBoxLayout extends FlowPanel {
                 hasRelativeHeightChildren = true;
             }
             AlignmentInfo a = ((Slot) slot).getAlignment();
-            if (a.isVerticalCenter() || a.isBottom()) {
+            if (a != null && (a.isVerticalCenter() || a.isBottom())) {
                 hasVAlign = true;
             }
         }
@@ -573,6 +600,10 @@ public class VBoxLayout extends FlowPanel {
                     .setHeight(newHeight, Unit.PX);
         }
 
+    }
+
+    void clearHeight() {
+        getElement().getStyle().clearHeight();
     }
 
     @Override
