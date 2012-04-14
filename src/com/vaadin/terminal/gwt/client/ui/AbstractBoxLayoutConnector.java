@@ -100,6 +100,9 @@ public abstract class AbstractBoxLayoutConnector extends
      */
     private HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
 
+    // For debugging
+    private int resizeCount = 0;
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -138,20 +141,24 @@ public abstract class AbstractBoxLayoutConnector extends
             } else {
                 expandRatio = -1;
                 hasExpandRatio.remove(child);
+                getLayoutManager().addElementResizeListener(
+                        child.getWidget().getElement(),
+                        childComponentResizeListener);
+                if (slot.hasCaption()) {
+                    getLayoutManager()
+                            .addElementResizeListener(slot.getCaptionElement(),
+                                    slotCaptionResizeListener);
+                }
             }
             slot.setExpandRatio(expandRatio);
 
         }
 
-        layout.setMargin(new VMarginInfo(getState().getMarginsBitmask()));
-        layout.setSpacing(getState().isSpacing());
-        // TODO add/remove spacing size listener
-
-        // if (needsFixedHeight()) {
-        // setLayoutHeightListener(true);
-        // } else {
-        // setLayoutHeightListener(false);
-        // }
+        if (needsExpand()) {
+            updateExpand();
+        } else {
+            getWidget().clearExpand();
+        }
 
     }
 
@@ -225,6 +232,12 @@ public abstract class AbstractBoxLayoutConnector extends
             }
         }
 
+        if (needsExpand()) {
+            getWidget().updateExpand();
+        } else {
+            getWidget().clearExpand();
+        }
+
     }
 
     @Override
@@ -239,6 +252,7 @@ public abstract class AbstractBoxLayoutConnector extends
         } else {
             setLayoutHeightListener(false);
         }
+
     }
 
     StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
@@ -262,7 +276,7 @@ public abstract class AbstractBoxLayoutConnector extends
                     && slot.hasCaption()) {
                 getLayoutManager().addElementResizeListener(
                         slot.getCaptionElement(), slotCaptionResizeListener);
-            } else {
+            } else if (!needsExpand()) {
                 getLayoutManager().removeElementResizeListener(
                         slot.getCaptionElement(), slotCaptionResizeListener);
             }
@@ -270,22 +284,26 @@ public abstract class AbstractBoxLayoutConnector extends
             if (child.isRelativeHeight()) {
                 hasRelativeHeight.add(child);
                 needsMeasure.remove(child.getWidget().getElement());
-                childElementHeight.remove(child.getWidget().getElement());
+                // childElementHeight.remove(child.getWidget().getElement());
             } else {
                 hasRelativeHeight.remove(child);
                 needsMeasure.add(child.getWidget().getElement());
             }
 
             if (needsFixedHeight()) {
-                setLayoutHeightListener(true);
                 getLayoutManager().addElementResizeListener(
                         child.getWidget().getElement(),
                         childComponentResizeListener);
-            } else {
-                setLayoutHeightListener(false);
+            } else if (!needsExpand()) {
                 getLayoutManager().removeElementResizeListener(
                         child.getWidget().getElement(),
                         childComponentResizeListener);
+            }
+
+            if (needsFixedHeight()) {
+                setLayoutHeightListener(true);
+            } else {
+                setLayoutHeightListener(false);
             }
 
         }
@@ -301,25 +319,14 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     private boolean needsExpand() {
-        for (ComponentConnector child : getChildren()) {
-            if (getWidget().getSlot(child.getWidget()).getExpandRatio() > -1) {
-                return true;
-            }
-        }
-        return false;
+        return hasExpandRatio.size() > 0;
     }
 
     public void preLayout() {
+        resizeCount = 0;
         if (needsFixedHeight()) {
             getWidget().clearHeight();
             getLayoutManager().setNeedsMeasure(this);
-        }
-
-        // TODO currently not using LayoutManager properly
-        if (needsExpand()) {
-            getWidget().updateExpand();
-        } else {
-            getWidget().clearExpand();
         }
     }
 
@@ -348,18 +355,28 @@ public abstract class AbstractBoxLayoutConnector extends
                 getWidget().getElement().getStyle().setHeight(height, Unit.PX);
             }
         }
+        // System.err.println("Element resize listeners fired for " +
+        // resizeCount
+        // + " times");
     }
 
     private ElementResizeListener layoutResizeListener = new ElementResizeListener() {
         public void onElementResize(ElementResizeEvent e) {
+            resizeCount++;
             updateLayoutHeight();
+            if (needsExpand()) {
+                updateExpand();
+            }
         }
     };
 
     private ElementResizeListener slotCaptionResizeListener = new ElementResizeListener() {
         public void onElementResize(ElementResizeEvent e) {
+            resizeCount++;
+
             Element captionElement = (Element) e.getElement().cast();
 
+            // TODO only apply to widgets with relative size
             getWidget().updateCaptionOffset(captionElement);
 
             // TODO take caption position into account
@@ -372,30 +389,36 @@ public abstract class AbstractBoxLayoutConnector extends
             }
 
             String widgetHeight = widgetElement.getStyle().getHeight();
-            if (widgetHeight == null || !widgetHeight.endsWith("%")) {
-                int h = getLayoutManager().getOuterHeight(captionElement)
-                        - getLayoutManager().getMarginHeight(captionElement);
-                System.out.println("Adding caption height: " + h);
-                childCaptionElementHeight.put(widgetElement, h);
-                updateLayoutHeight();
+            // if (widgetHeight == null || !widgetHeight.endsWith("%")) {
+            int h = getLayoutManager().getOuterHeight(captionElement)
+                    - getLayoutManager().getMarginHeight(captionElement);
+            // System.out.println("Adding caption height: " + h);
+            childCaptionElementHeight.put(widgetElement, h);
+            // }
+
+            updateLayoutHeight();
+
+            if (needsExpand()) {
+                updateExpand();
             }
         }
     };
 
     private ElementResizeListener childComponentResizeListener = new ElementResizeListener() {
         public void onElementResize(ElementResizeEvent e) {
+            resizeCount++;
             int h = getLayoutManager().getOuterHeight(e.getElement());
             childElementHeight.put((Element) e.getElement().cast(), h);
             updateLayoutHeight();
+
+            if (needsExpand()) {
+                updateExpand();
+            }
         }
     };
 
     private void updateLayoutHeight() {
         if (needsFixedHeight() && childElementHeight.size() > 0) {
-            System.out.println("All sizes: "
-                    + childElementHeight.values().toString()
-                    + " - Caption sizes: "
-                    + childCaptionElementHeight.values().toString());
             int h = getMaxHeight();
             System.out.println("Max height: " + h);
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
@@ -406,18 +429,38 @@ public abstract class AbstractBoxLayoutConnector extends
         }
     }
 
+    private void updateExpand() {
+        System.out.println("All sizes: "
+                + childElementHeight.values().toString() + " - Caption sizes: "
+                + childCaptionElementHeight.values().toString());
+        getWidget().updateExpand();
+    }
+
     private int getMaxHeight() {
-        int h = 0;
+        int highestNonRelative = -1;
+        int highestRelative = -1;
         for (Element el : childElementHeight.keySet()) {
-            int height = childElementHeight.get(el);
-            if (childCaptionElementHeight.containsKey(el)) {
-                height += childCaptionElementHeight.get(el);
-            }
-            if (height > h) {
-                h = height;
+            if (needsMeasure.contains(el)) {
+                int h = childElementHeight.get(el);
+                String sHeight = el.getStyle().getHeight();
+                if (childCaptionElementHeight.containsKey(el)
+                        && (sHeight == null || !sHeight.endsWith("%"))) {
+                    h += childCaptionElementHeight.get(el);
+                }
+                if (h > highestNonRelative) {
+                    highestNonRelative = h;
+                }
+            } else {
+                int h = childElementHeight.get(el);
+                if (childCaptionElementHeight.containsKey(el)) {
+                    h += childCaptionElementHeight.get(el);
+                }
+                if (h > highestRelative) {
+                    highestRelative = h;
+                }
             }
         }
-        return h;
+        return highestNonRelative > -1 ? highestNonRelative : highestRelative;
     }
 
     @Override
@@ -452,8 +495,10 @@ public abstract class AbstractBoxLayoutConnector extends
         } else {
             getLayoutManager().removeElementResizeListener(
                     getWidget().getElement(), layoutResizeListener);
-            childElementHeight.clear();
-            childCaptionElementHeight.clear();
+            if (!needsExpand()) {
+                childElementHeight.clear();
+                childCaptionElementHeight.clear();
+            }
         }
     }
 

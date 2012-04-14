@@ -540,9 +540,29 @@ public class VBoxLayout extends FlowPanel {
             for (Widget w : getChildren()) {
                 Slot slot = (Slot) w;
                 if (slot.getExpandRatio() == -1) {
-                    // TODO use layoutManager?
-                    totalSize += vertical ? slot.getOffsetHeight() : slot
-                            .getOffsetWidth();
+                    if (layoutManager != null) {
+                        // TODO check caption position
+                        if (vertical) {
+                            totalSize += layoutManager.getOuterHeight(slot
+                                    .getWidget().getElement())
+                                    - layoutManager.getMarginHeight(slot
+                                            .getWidget().getElement());
+                            if (slot.hasCaption()) {
+                                totalSize += layoutManager.getOuterHeight(slot
+                                        .getCaptionElement())
+                                        - layoutManager.getMarginHeight(slot
+                                                .getCaptionElement());
+                            }
+                        } else {
+                            totalSize += layoutManager.getOuterWidth(slot
+                                    .getWidget().getElement())
+                                    - layoutManager.getMarginWidth(slot
+                                            .getWidget().getElement());
+                        }
+                    } else {
+                        totalSize += vertical ? slot.getOffsetHeight() : slot
+                                .getOffsetWidth();
+                    }
                 }
                 // TODO fails in Opera, always returns 0
                 totalSize += slot.getSpacingSize(vertical);
