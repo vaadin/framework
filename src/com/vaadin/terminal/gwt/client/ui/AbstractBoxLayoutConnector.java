@@ -265,7 +265,7 @@ public abstract class AbstractBoxLayoutConnector extends
             Slot slot = getWidget().getSlot(child.getWidget());
             slot.setRelativeWidth(child.isRelativeWidth());
             slot.setRelativeHeight(child.isRelativeHeight());
-            if (slot.hasCaption()) {
+            if (slot.hasCaption() && child.isRelativeHeight()) {
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
             }
 
@@ -364,7 +364,7 @@ public abstract class AbstractBoxLayoutConnector extends
         public void onElementResize(ElementResizeEvent e) {
             resizeCount++;
             updateLayoutHeight();
-            if (needsExpand()) {
+            if (needsExpand() && (isUndefinedHeight() || isUndefinedWidth())) {
                 updateExpand();
             }
         }
@@ -376,25 +376,25 @@ public abstract class AbstractBoxLayoutConnector extends
 
             Element captionElement = (Element) e.getElement().cast();
 
-            // TODO only apply to widgets with relative size
-            getWidget().updateCaptionOffset(captionElement);
-
             // TODO take caption position into account
             Element widgetElement = captionElement.getParentElement()
                     .getLastChild().cast();
 
             if (captionElement == widgetElement) {
                 // Caption element already detached
+                getLayoutManager().removeElementResizeListener(captionElement,
+                        slotCaptionResizeListener);
                 return;
             }
 
             String widgetHeight = widgetElement.getStyle().getHeight();
-            // if (widgetHeight == null || !widgetHeight.endsWith("%")) {
+            if (widgetHeight.endsWith("%")) {
+                getWidget().updateCaptionOffset(captionElement);
+            }
+
             int h = getLayoutManager().getOuterHeight(captionElement)
                     - getLayoutManager().getMarginHeight(captionElement);
-            // System.out.println("Adding caption height: " + h);
             childCaptionElementHeight.put(widgetElement, h);
-            // }
 
             updateLayoutHeight();
 
@@ -420,7 +420,6 @@ public abstract class AbstractBoxLayoutConnector extends
     private void updateLayoutHeight() {
         if (needsFixedHeight() && childElementHeight.size() > 0) {
             int h = getMaxHeight();
-            System.out.println("Max height: " + h);
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
                             getWidget().getElement());
