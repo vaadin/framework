@@ -1597,7 +1597,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
-            addMethodInvocationToQueue(rpcInterfaceName, method.getName(), args);
+            addMethodInvocationToQueue(rpcInterfaceName, method, args);
             // TODO no need to do full repaint if only RPC calls
             requestRepaint();
             return null;
@@ -1618,10 +1618,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @since 7.0
      */
     protected void addMethodInvocationToQueue(String interfaceName,
-            String methodName, Object[] parameters) {
+            Method method, Object[] parameters) {
         // add to queue
         pendingInvocations.add(new ClientMethodInvocation(this, interfaceName,
-                methodName, parameters));
+                method, parameters));
     }
 
     /**

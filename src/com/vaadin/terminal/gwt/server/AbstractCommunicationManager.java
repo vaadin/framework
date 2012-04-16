@@ -897,9 +897,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 invocationJson.put(invocation.getInterfaceName());
                 invocationJson.put(invocation.getMethodName());
                 JSONArray paramJson = new JSONArray();
-                for (int i = 0; i < invocation.getParameters().length; ++i) {
+                for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
                     paramJson.put(JsonCodec.encode(
-                            invocation.getParameters()[i], application));
+                            invocation.getParameters()[i],
+                            invocation.getParameterTypes()[i], application));
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);

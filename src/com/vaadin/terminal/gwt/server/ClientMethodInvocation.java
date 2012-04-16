@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
 /**
  * Internal class for keeping track of pending server to client method
@@ -18,19 +19,25 @@ public class ClientMethodInvocation implements Serializable,
     private final String interfaceName;
     private final String methodName;
     private final Object[] parameters;
+    private Class<?>[] parameterTypes;
 
-    // used for sorting calls between different Paintables in the same Root
+    // used for sorting calls between different connectors in the same Root
     private final long sequenceNumber;
     // TODO may cause problems when clustering etc.
     private static long counter = 0;
 
     public ClientMethodInvocation(ClientConnector connector,
-            String interfaceName, String methodName, Object[] parameters) {
+            String interfaceName, Method method, Object[] parameters) {
         this.connector = connector;
         this.interfaceName = interfaceName;
-        this.methodName = methodName;
+        methodName = method.getName();
+        parameterTypes = method.getParameterTypes();
         this.parameters = (null != parameters) ? parameters : new Object[0];
         sequenceNumber = ++counter;
+    }
+
+    public Class<?>[] getParameterTypes() {
+        return parameterTypes;
     }
 
     public ClientConnector getConnector() {
