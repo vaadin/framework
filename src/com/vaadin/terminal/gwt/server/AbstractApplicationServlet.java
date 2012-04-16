@@ -171,6 +171,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         public boolean isStandalone(WrappedRequest request) {
             return true;
         }
+
+        public ClassLoader getClassLoader() {
+            try {
+                return AbstractApplicationServlet.this.getClassLoader();
+            } catch (ServletException e) {
+                throw new RuntimeException(e);
+            }
+        }
     };
 
     static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
@@ -1037,7 +1045,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             application.setLocale(locale);
             application.start(new ApplicationStartEvent(applicationUrl,
                     applicationProperties, webApplicationContext,
-                    isProductionMode(), getClassLoader()));
+                    isProductionMode()));
         }
     }
 

@@ -6,9 +6,12 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
+
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Root;
 
@@ -50,10 +53,26 @@ public class CustomRootClassLoader extends TestCase {
     public void testWithNullClassLoader() throws Exception {
         Application application = createStubApplication();
         application.start(new ApplicationStartEvent(null, new Properties(),
-                null, false, null));
+                null, false));
 
-        Root root = application.getRootForRequest(null);
+        Root root = application.getRootForRequest(createRequestMock(null));
         assertTrue(root instanceof MyRoot);
+    }
+
+    private static WrappedRequest createRequestMock(ClassLoader classloader) {
+        // Mock a DeploymentConfiguration to give the passed classloader
+        DeploymentConfiguration configurationMock = EasyMock
+                .createMock(DeploymentConfiguration.class);
+        EasyMock.expect(configurationMock.getClassLoader()).andReturn(
+                classloader);
+
+        // Mock a WrappedRequest to give the mocked deployment configuration
+        WrappedRequest requestMock = EasyMock.createMock(WrappedRequest.class);
+        EasyMock.expect(requestMock.getDeploymentConfiguration()).andReturn(
+                configurationMock);
+
+        EasyMock.replay(configurationMock, requestMock);
+        return requestMock;
     }
 
     /**
@@ -68,9 +87,10 @@ public class CustomRootClassLoader extends TestCase {
 
         Application application = createStubApplication();
         application.start(new ApplicationStartEvent(null, new Properties(),
-                null, false, loggingClassLoader));
+                null, false));
 
-        Root root = application.getRootForRequest(null);
+        Root root = application
+                .getRootForRequest(createRequestMock(loggingClassLoader));
         assertTrue(root instanceof MyRoot);
         assertEquals(1, loggingClassLoader.requestedClasses.size());
         assertEquals(MyRoot.class.getName(),

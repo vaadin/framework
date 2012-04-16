@@ -287,6 +287,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 return "/html";
             }
         }
+
+        public ClassLoader getClassLoader() {
+            // Custom class loaders not currently supported in portlets (see
+            // #8574)
+            return null;
+        }
     };
 
     @Override
@@ -857,7 +863,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    applicationProperties, context, isProductionMode(), null));
+                    applicationProperties, context, isProductionMode()));
         }
     }
 
