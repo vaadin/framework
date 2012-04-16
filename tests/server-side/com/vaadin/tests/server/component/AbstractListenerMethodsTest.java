@@ -48,11 +48,14 @@ public abstract class AbstractListenerMethodsTest extends TestCase {
                         System.out.println("package " + packageName + ";");
 
                         System.out.println("import "
-                                + AbstractListenerMethodsTest.class.getName() + ";");
+                                + AbstractListenerMethodsTest.class.getName()
+                                + ";");
                         System.out.println("import " + c.getName() + ";");
-                        System.out.println("public class " + c.getSimpleName()
+                        System.out.println("public class "
+                                + c.getSimpleName()
                                 + "Listeners extends "
-                                + AbstractListenerMethodsTest.class.getSimpleName() + " {");
+                                + AbstractListenerMethodsTest.class
+                                        .getSimpleName() + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]

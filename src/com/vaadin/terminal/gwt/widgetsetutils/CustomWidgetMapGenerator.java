@@ -25,7 +25,8 @@ public abstract class CustomWidgetMapGenerator extends WidgetMapGenerator {
     private Collection<Class<? extends ComponentConnector>> deferredPaintables = new HashSet<Class<? extends ComponentConnector>>();
 
     @Override
-    protected LoadStyle getLoadStyle(Class<? extends ComponentConnector> connector) {
+    protected LoadStyle getLoadStyle(
+            Class<? extends ComponentConnector> connector) {
         if (eagerPaintables == null) {
             init();
         }

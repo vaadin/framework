@@ -14,16 +14,17 @@ public class TabSheetIndexOperations extends TestBase {
     @Override
     protected void setup() {
         final TabSheet tabs = new TabSheet();
-        
+
         // Add some tabs
         tabs.addTab(new Label("Content 1"), "Tab 1", null);
         tabs.addTab(new Label("Content 2"), "Tab 2", null);
         tabs.addTab(new Label("Content 3"), "Tab 3", null);
-        
+
         addComponent(tabs);
-        
-        Button addTab = new Button("Add tab at index 2", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+
+        Button addTab = new Button("Add tab at index 2",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
                         tabs.addTab(new Label("Content " + tabCounter),
                                 "Added Tab " + tabCounter, null, 2);
                         tabCounter++;
@@ -37,8 +38,8 @@ public class TabSheetIndexOperations extends TestBase {
                         Tab tab = tabs.getTab(2);
                         tab.setCaption(new StringBuffer(tab.getCaption())
                                 .reverse().toString());
-            }
-        });
+                    }
+                });
         addComponent(setCaption);
 
         Button move = new Button("Move selected tab to index 2",
@@ -49,16 +50,17 @@ public class TabSheetIndexOperations extends TestBase {
                     }
                 });
         addComponent(move);
-        
-        Button getIndex = new Button("Get selected tab index", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
+
+        Button getIndex = new Button("Get selected tab index",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
                         getMainWindow().showNotification(
                                 "Index: "
                                         + tabs.getTabPosition(tabs.getTab(tabs
                                                 .getSelectedTab())));
-                
-            }
-        });
+
+                    }
+                });
         addComponent(getIndex);
     }
 

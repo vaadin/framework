@@ -33,13 +33,12 @@ public class SubWindowWithUndefinedHeight extends TestBase {
         table.setCaption("tab 2");
         table.setWidth("100%");
         table.setHeight("100%");
-        
+
         final TabSheet tabsheet = new TabSheet();
         tabsheet.addComponent(tabButton);
         tabsheet.addComponent(table);
         tabsheet.addListener(new TabSheet.SelectedTabChangeListener() {
-            public void selectedTabChange(
-                    TabSheet.SelectedTabChangeEvent event) {
+            public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
                 if (tabsheet.getSelectedTab() == tabButton) {
                     tabsheet.setSizeUndefined();
                     subwindow.getContent().setSizeUndefined();

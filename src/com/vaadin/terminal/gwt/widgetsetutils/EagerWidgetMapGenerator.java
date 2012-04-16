@@ -21,10 +21,10 @@ import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
  * 
  */
 public class EagerWidgetMapGenerator extends WidgetMapGenerator {
-	
-    
-	@Override
-    protected LoadStyle getLoadStyle(Class<? extends ComponentConnector> connector) {
-    	return LoadStyle.EAGER;
+
+    @Override
+    protected LoadStyle getLoadStyle(
+            Class<? extends ComponentConnector> connector) {
+        return LoadStyle.EAGER;
     }
 }

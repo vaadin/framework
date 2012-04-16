@@ -60,7 +60,8 @@ public class TablePageLengthUpdate extends TestBase {
     }
 
     public String getTableHeight() {
-        return "" + (int) table.getHeight() + table.getHeightUnits().getSymbol();
+        return "" + (int) table.getHeight()
+                + table.getHeightUnits().getSymbol();
     }
 
     public void setTableHeight(String height) {

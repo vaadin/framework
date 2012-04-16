@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui;
 
-
 /**
  * A horizontal split panel contains two components and lays them horizontally.
  * The first component is on the left side.

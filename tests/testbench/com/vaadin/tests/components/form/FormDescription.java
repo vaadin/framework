@@ -10,11 +10,11 @@ public class FormDescription extends TestBase {
 
     @Override
     protected void setup() {
-       final Form form = new Form();
-       form.setDescription("Some description");
+        final Form form = new Form();
+        form.setDescription("Some description");
         form.addField("AAAA", new TextField());
-       addComponent(form);
-       
+        addComponent(form);
+
         addComponent(new Button("Toggle description",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
@@ -25,7 +25,6 @@ public class FormDescription extends TestBase {
                         }
                     }
                 }));
-       
 
     }
 

@@ -25,25 +25,26 @@ public class ActiveDragSourceClassName extends TestBase {
 
     protected void setup() {
         TestUtils.injectCSS(getMainWindow(), GREENBOXES + HIDEDRAGSOURCE);
-        
+
         VerticalLayout l = new VerticalLayout();
         l.setWidth("400px");
         l.setHeight("100px");
         DragAndDropWrapper pane = new DragAndDropWrapper(cssLayout);
         pane.setSizeFull();
         l.addComponent(pane);
-        
+
         addComponent(l);
-        
+
         for (int i = 0; i < 4; i++) {
             cssLayout.addComponent(new WrappedLabel("Block"));
         }
-        
+
     }
-    
+
     static int count;
 
-    private CssLayout cssLayout = new CssLayout() {};
+    private CssLayout cssLayout = new CssLayout() {
+    };
 
     class WrappedLabel extends DragAndDropWrapper {
 

@@ -4,7 +4,6 @@
 
 package com.vaadin.ui;
 
-
 /**
  * FormLayout is used by {@link Form} to layout fields. It may also be used
  * separately without {@link Form}.

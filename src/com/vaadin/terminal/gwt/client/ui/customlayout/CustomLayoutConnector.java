@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.customlayout;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;

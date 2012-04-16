@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.combobox;
+
 import java.util.Arrays;
 
 import com.vaadin.data.Property.ValueChangeEvent;

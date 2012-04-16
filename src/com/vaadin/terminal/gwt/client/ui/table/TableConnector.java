@@ -291,8 +291,8 @@ public class TableConnector extends AbstractComponentContainerConnector
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     getLayoutManager().setNeedsMeasure(
                             TableConnector.this.getParent());
-                    getLayoutManager()
-                            .setNeedsVerticalLayout(TableConnector.this);
+                    getLayoutManager().setNeedsVerticalLayout(
+                            TableConnector.this);
                     getLayoutManager().layoutNow();
                 }
             });
