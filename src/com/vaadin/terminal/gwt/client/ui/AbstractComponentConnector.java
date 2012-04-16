@@ -108,8 +108,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         // Style names
-        String styleName = getStyleNames(getWidget().getStylePrimaryName(),
-                this);
+        String styleName = getStyleNames(getWidget().getStylePrimaryName());
         getWidget().setStyleName(styleName);
 
         // Update tooltip
@@ -223,32 +222,32 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     /**
      * Generates the style name for the widget based on the given primary style
-     * name (typically returned by Widget.getPrimaryStyleName()) and the UIDL
-     * and shared state of the component. An additional "modified" style name
-     * can be added if the field parameter is set to true.
+     * name and the shared state.
+     * <p>
+     * This method can be overridden to provide additional style names for the
+     * component
+     * </p>
      * 
      * @param primaryStyleName
-     * @param uidl
-     * @param state
-     *            component shared state
-     * @param field
-     * @return
+     *            The primary style name to use when generating the final style
+     *            names
+     * @return The style names, settable using
+     *         {@link Widget#setStyleName(String)}
      */
-    protected static String getStyleNames(String primaryStyleName,
-            ComponentConnector connector) {
-        ComponentState state = connector.getState();
+    protected String getStyleNames(String primaryStyleName) {
+        ComponentState state = getState();
 
-        StringBuffer styleBuf = new StringBuffer();
+        StringBuilder styleBuf = new StringBuilder();
         styleBuf.append(primaryStyleName);
         styleBuf.append(" v-connector");
 
         // Uses connector methods to enable connectors to take hierarchy or
         // multiple state variables into account
-        if (!connector.isEnabled()) {
+        if (!isEnabled()) {
             styleBuf.append(" ");
             styleBuf.append(ApplicationConnection.DISABLED_CLASSNAME);
         }
-        if (connector.isReadOnly()) {
+        if (isReadOnly()) {
             styleBuf.append(" ");
             styleBuf.append("v-readonly");
         }
@@ -263,23 +262,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 styleBuf.append(style);
                 styleBuf.append(" ");
                 styleBuf.append(style);
-            }
-        }
-
-        if (connector instanceof AbstractFieldConnector) {
-            // TODO Move to AbstractFieldConnector
-            AbstractFieldConnector afc = ((AbstractFieldConnector) connector);
-            if (afc.isModified()) {
-                // add modified classname to Fields
-                styleBuf.append(" ");
-                styleBuf.append(ApplicationConnection.MODIFIED_CLASSNAME);
-            }
-
-            if (afc.isRequired()) {
-                // add required classname to required fields
-                styleBuf.append(" ");
-                styleBuf.append(primaryStyleName);
-                styleBuf.append(ApplicationConnection.REQUIRED_CLASSNAME_EXT);
             }
         }
 

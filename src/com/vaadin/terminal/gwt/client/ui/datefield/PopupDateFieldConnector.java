@@ -37,8 +37,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
 
         super.updateFromUIDL(uidl, client);
 
-        String popupStyleNames = getStyleNames(
-                VPopupCalendar.POPUP_PRIMARY_STYLE_NAME, this);
+        String popupStyleNames = getStyleNames(VPopupCalendar.POPUP_PRIMARY_STYLE_NAME);
         popupStyleNames += " "
                 + VDateField.CLASSNAME
                 + "-"
