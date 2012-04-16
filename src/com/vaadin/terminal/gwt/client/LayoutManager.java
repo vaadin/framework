@@ -224,7 +224,11 @@ public class LayoutManager {
                     ElementResizeEvent event = new ElementResizeEvent(this,
                             element);
                     for (ElementResizeListener listener : array) {
-                        listener.onElementResize(event);
+                        try {
+                            listener.onElementResize(event);
+                        } catch (RuntimeException e) {
+                            VConsole.error(e);
+                        }
                     }
                 }
                 int measureListenerTime = passDuration.elapsedMillis();
@@ -245,14 +249,22 @@ public class LayoutManager {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
                         DirectionalManagedLayout cl = (DirectionalManagedLayout) layout;
-                        cl.layoutHorizontally();
+                        try {
+                            cl.layoutHorizontally();
+                        } catch (RuntimeException e) {
+                            VConsole.log(e);
+                        }
                         countLayout(layoutCounts, cl);
                     } else {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         SimpleManagedLayout rr = (SimpleManagedLayout) layout;
-                        rr.layout();
+                        try {
+                            rr.layout();
+                        } catch (RuntimeException e) {
+                            VConsole.log(e);
+                        }
                         countLayout(layoutCounts, rr);
                     }
                     if (debugLogging) {
@@ -265,14 +277,22 @@ public class LayoutManager {
                     if (layout instanceof DirectionalManagedLayout) {
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         DirectionalManagedLayout cl = (DirectionalManagedLayout) layout;
-                        cl.layoutVertically();
+                        try {
+                            cl.layoutVertically();
+                        } catch (RuntimeException e) {
+                            VConsole.log(e);
+                        }
                         countLayout(layoutCounts, cl);
                     } else {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         SimpleManagedLayout rr = (SimpleManagedLayout) layout;
-                        rr.layout();
+                        try {
+                            rr.layout();
+                        } catch (RuntimeException e) {
+                            VConsole.log(e);
+                        }
                         countLayout(layoutCounts, rr);
                     }
                     if (debugLogging) {
