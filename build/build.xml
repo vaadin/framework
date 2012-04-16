@@ -178,6 +178,7 @@
 
         <war warfile="${result-path}/${test-war-filename}"> 
             <fileset dir="${output-dir}/WebContent">
+            	<exclude name="VAADIN/gwt-unitCache" />
                 <!-- Already in JAR -->
             	<!-- Not excluded because used from WAR by portal integration tests
                 <exclude name="VAADIN/themes/base/**/*" />
