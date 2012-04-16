@@ -224,6 +224,8 @@ public class VBoxLayout extends FlowPanel {
             return captionPosition;
         }
 
+        // TODO refactor VCaption and use that instead: creates a tight coupling
+        // between this layout and Vaadin, but it's already coupled
         public void setCaption(String captionText, String iconUrl,
                 List<String> styles, String error, boolean required) {
 
@@ -292,7 +294,9 @@ public class VBoxLayout extends FlowPanel {
             if (required) {
                 if (requiredIcon == null) {
                     requiredIcon = DOM.createSpan();
-                    requiredIcon.setClassName("v-required-indicator");
+                    // TODO decide something better
+                    requiredIcon.setInnerHTML("*");
+                    requiredIcon.setClassName("v-required-field-indicator");
                 }
                 caption.appendChild(requiredIcon);
             } else if (requiredIcon != null) {

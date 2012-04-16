@@ -13,6 +13,7 @@ import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -43,6 +44,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
     protected NativeSelect componentIcon;
     protected TextField componentDescription;
     protected CheckBox componentError;
+    protected CheckBox componentRequired;
 
     protected NativeSelect align;
     protected CheckBox expand;
@@ -113,7 +115,8 @@ public class BoxLayoutTest extends AbstractTestRoot {
                         grid.addComponent(new Label("Grid cell 2"));
                         grid.addComponent(grow);
                         grid.addComponent(new Label("Grid cell 4"));
-                        l.addComponent(grid);
+                        // l.addComponent(grid);
+                        l.addComponent(new TextField("Some field"));
                     }
                 });
         header.addComponent(addComponent);
@@ -328,6 +331,19 @@ public class BoxLayoutTest extends AbstractTestRoot {
         });
         component.addComponent(componentError);
 
+        componentRequired = new CheckBox("Required");
+        componentRequired.setImmediate(true);
+        componentRequired.setEnabled(false);
+        componentRequired.addListener(new ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                if (target != null && target instanceof AbstractField) {
+                    ((AbstractField<?>) target).setRequired(componentRequired
+                            .getValue());
+                }
+            }
+        });
+        component.addComponent(componentRequired);
+
         return root;
     }
 
@@ -361,6 +377,8 @@ public class BoxLayoutTest extends AbstractTestRoot {
                 componentIcon.setEnabled(target != null);
                 componentDescription.setEnabled(target != null);
                 componentError.setEnabled(target != null);
+                componentRequired.setEnabled(target != null
+                        && target instanceof AbstractField);
                 align.setEnabled(target != null);
                 expand.setEnabled(target != null);
                 if (target != null) {
@@ -391,6 +409,10 @@ public class BoxLayoutTest extends AbstractTestRoot {
                     }
                     componentDescription.setValue(target.getDescription());
                     componentError.setValue(target.getComponentError() != null);
+                    if (target instanceof AbstractField) {
+                        componentRequired.setValue(((AbstractField<?>) target)
+                                .isRequired());
+                    }
                 }
             }
         });
