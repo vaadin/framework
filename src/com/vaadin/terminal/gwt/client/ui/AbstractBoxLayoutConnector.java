@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.ui.VBoxLayout.CaptionPosition;
 import com.vaadin.terminal.gwt.client.ui.VBoxLayout.Slot;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
@@ -101,7 +102,7 @@ public abstract class AbstractBoxLayoutConnector extends
     private HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
 
     // For debugging
-    private int resizeCount = 0;
+    private static int resizeCount = 0;
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
@@ -134,7 +135,14 @@ public abstract class AbstractBoxLayoutConnector extends
             slot.setAlignment(alignment);
 
             double expandRatio;
-            if (expandRatios.containsKey(pid)
+            // TODO discuss the layout specs, is this what we want: distribute
+            // extra space equally if no expand ratios are specified inside a
+            // layout with specified size
+            if (expandRatios.getKeySet().size() == 0
+                    && ((!getWidget().vertical && !isUndefinedHeight()) || !isUndefinedWidth())) {
+                expandRatio = 1;
+                hasExpandRatio.add(child);
+            } else if (expandRatios.containsKey(pid)
                     && expandRatios.getRawNumber(pid) > 0) {
                 expandRatio = expandRatios.getRawNumber(pid);
                 hasExpandRatio.add(child);
@@ -151,6 +159,11 @@ public abstract class AbstractBoxLayoutConnector extends
                 }
             }
             slot.setExpandRatio(expandRatio);
+
+            if (slot.getSpacingElement() != null) {
+                getLayoutManager().addElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
+            }
 
         }
 
@@ -170,18 +183,28 @@ public abstract class AbstractBoxLayoutConnector extends
                 .getIcon().getURL() : null;
         List<String> styles = child.getState().getStyles();
         String error = child.getState().getErrorMessage();
+        boolean required = false;
+        if (child instanceof AbstractFieldConnector) {
+            required = ((AbstractFieldConnector) child).isRequired();
+        }
         // TODO Description is handled from somewhere else?
 
-        slot.setCaption(caption, iconUrl, styles, error);
+        slot.setCaption(caption, iconUrl, styles, error, required);
 
         slot.setRelativeWidth(child.isRelativeWidth());
         slot.setRelativeHeight(child.isRelativeHeight());
 
-        // TODO Should also check captionposition: && captionPosition==TOP ||
-        // captionPosition==BOTTOM
         if (slot.hasCaption()) {
+            CaptionPosition pos = slot.getCaptionPosition();
             getLayoutManager().addElementResizeListener(
                     slot.getCaptionElement(), slotCaptionResizeListener);
+            if (child.isRelativeHeight()
+                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+                getWidget().updateCaptionOffset(slot.getCaptionElement());
+            } else if (child.isRelativeWidth()
+                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+                getWidget().updateCaptionOffset(slot.getCaptionElement());
+            }
         } else {
             getLayoutManager().removeElementResizeListener(
                     slot.getCaptionElement(), slotCaptionResizeListener);
@@ -228,6 +251,10 @@ public abstract class AbstractBoxLayoutConnector extends
                                     slot.getCaptionElement(),
                                     slotCaptionResizeListener);
                 }
+                if (slot.getSpacingElement() != null) {
+                    getLayoutManager().removeElementResizeListener(
+                            slot.getSpacingElement(), spacingResizeListener);
+                }
                 layout.removeSlot(child.getWidget());
             }
         }
@@ -265,9 +292,21 @@ public abstract class AbstractBoxLayoutConnector extends
             Slot slot = getWidget().getSlot(child.getWidget());
             slot.setRelativeWidth(child.isRelativeWidth());
             slot.setRelativeHeight(child.isRelativeHeight());
-            if (slot.hasCaption() && child.isRelativeHeight()) {
-                getWidget().updateCaptionOffset(slot.getCaptionElement());
+
+            // For relative sized widgets, we need to set the caption offset
+            if (slot.hasCaption()) {
+                CaptionPosition pos = slot.getCaptionPosition();
+                if (child.isRelativeHeight()
+                        && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+                    getWidget().updateCaptionOffset(slot.getCaptionElement());
+                } else if (child.isRelativeWidth()
+                        && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+                    getWidget().updateCaptionOffset(slot.getCaptionElement());
+                }
             }
+
+            // TODO 'needsExpand' might return false during the first render,
+            // since updateFromUidl is called last
 
             // If the slot has caption, we need to listen for it's size changes
             // in order to update the padding/margin offset for relative sized
@@ -277,14 +316,22 @@ public abstract class AbstractBoxLayoutConnector extends
                 getLayoutManager().addElementResizeListener(
                         slot.getCaptionElement(), slotCaptionResizeListener);
             } else if (!needsExpand()) {
-                getLayoutManager().removeElementResizeListener(
-                        slot.getCaptionElement(), slotCaptionResizeListener);
+                // getLayoutManager().removeElementResizeListener(
+                // slot.getCaptionElement(), slotCaptionResizeListener);
+            }
+
+            if (slot.getSpacingElement() != null && needsExpand()) {
+                // Spacing is on
+                getLayoutManager().addElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
+            } else if (slot.getSpacingElement() != null) {
+                getLayoutManager().addElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
             }
 
             if (child.isRelativeHeight()) {
                 hasRelativeHeight.add(child);
                 needsMeasure.remove(child.getWidget().getElement());
-                // childElementHeight.remove(child.getWidget().getElement());
             } else {
                 hasRelativeHeight.remove(child);
                 needsMeasure.add(child.getWidget().getElement());
@@ -376,9 +423,15 @@ public abstract class AbstractBoxLayoutConnector extends
 
             Element captionElement = (Element) e.getElement().cast();
 
-            // TODO take caption position into account
+            CaptionPosition pos = getWidget().getCaptionPositionFromElement(
+                    (Element) captionElement.getParentElement().cast());
+
             Element widgetElement = captionElement.getParentElement()
                     .getLastChild().cast();
+            if (pos == CaptionPosition.BOTTOM || pos == CaptionPosition.RIGHT) {
+                widgetElement = captionElement.getParentElement()
+                        .getFirstChildElement().cast();
+            }
 
             if (captionElement == widgetElement) {
                 // Caption element already detached
@@ -387,8 +440,14 @@ public abstract class AbstractBoxLayoutConnector extends
                 return;
             }
 
+            String widgetWidth = widgetElement.getStyle().getWidth();
             String widgetHeight = widgetElement.getStyle().getHeight();
-            if (widgetHeight.endsWith("%")) {
+
+            if (widgetHeight.endsWith("%")
+                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+                getWidget().updateCaptionOffset(captionElement);
+            } else if (widgetWidth.endsWith("%")
+                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
                 getWidget().updateCaptionOffset(captionElement);
             }
 
@@ -417,6 +476,15 @@ public abstract class AbstractBoxLayoutConnector extends
         }
     };
 
+    private ElementResizeListener spacingResizeListener = new ElementResizeListener() {
+        public void onElementResize(ElementResizeEvent e) {
+            resizeCount++;
+            if (needsExpand()) {
+                updateExpand();
+            }
+        }
+    };
+
     private void updateLayoutHeight() {
         if (needsFixedHeight() && childElementHeight.size() > 0) {
             int h = getMaxHeight();
@@ -429,9 +497,9 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     private void updateExpand() {
-        System.out.println("All sizes: "
-                + childElementHeight.values().toString() + " - Caption sizes: "
-                + childCaptionElementHeight.values().toString());
+        // System.out.println("All sizes: "
+        // + childElementHeight.values().toString() + " - Caption sizes: "
+        // + childCaptionElementHeight.values().toString());
         getWidget().updateExpand();
     }
 
@@ -439,11 +507,20 @@ public abstract class AbstractBoxLayoutConnector extends
         int highestNonRelative = -1;
         int highestRelative = -1;
         for (Element el : childElementHeight.keySet()) {
+            // TODO would be more efficient to measure the slot element if both
+            // caption and child widget elements need to be measured. Keeping
+            // track of what to measure is the most difficult part of this
+            // layout.
+            CaptionPosition pos = getWidget().getCaptionPositionFromElement(
+                    (Element) el.getParentElement().cast());
             if (needsMeasure.contains(el)) {
                 int h = childElementHeight.get(el);
                 String sHeight = el.getStyle().getHeight();
+                // Only add the caption size to the height of the slot if
+                // coption position is top or bottom
                 if (childCaptionElementHeight.containsKey(el)
-                        && (sHeight == null || !sHeight.endsWith("%"))) {
+                        && (sHeight == null || !sHeight.endsWith("%"))
+                        && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);
                 }
                 if (h > highestNonRelative) {
@@ -451,7 +528,8 @@ public abstract class AbstractBoxLayoutConnector extends
                 }
             } else {
                 int h = childElementHeight.get(el);
-                if (childCaptionElementHeight.containsKey(el)) {
+                if (childCaptionElementHeight.containsKey(el)
+                        && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);
                 }
                 if (h > highestRelative) {
@@ -476,6 +554,11 @@ public abstract class AbstractBoxLayoutConnector extends
             if (slot.hasCaption()) {
                 getLayoutManager().removeElementResizeListener(
                         slot.getCaptionElement(), slotCaptionResizeListener);
+            }
+
+            if (slot.getSpacingElement() != null) {
+                getLayoutManager().removeElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
             }
 
             getLayoutManager()

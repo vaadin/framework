@@ -1,3 +1,11 @@
+/*
+TODO
+- separate styles to proper places
+- decide a good class name structure for core layouts (e.g. 'v-layout', 'v-vertical', 'v-grid' etc.)
+- use !important in carefully selected places to prevent accidental layout breakage by custom theming (e.g. alignments should be forced)
+
+*/
+
 .v-boxlayout.v-margin-top 		{padding-top: 		18px;}
 .v-boxlayout.v-margin-right 	{padding-right: 	18px;}
 .v-boxlayout.v-margin-bottom 	{padding-bottom: 	18px;}
@@ -13,7 +21,7 @@
 }
 
 .v-boxlayout.v-horizontal {
-	white-space: nowrap;
+	white-space: nowrap !important;
 }
 
 .v-boxlayout > .v-expand {
@@ -104,6 +112,7 @@
 }
 
 .v-caption {
+	display: inline-block; /* Force default width to zero */
 	overflow: visible;
 	vertical-align: middle;
 }
@@ -113,9 +122,9 @@
 	white-space: nowrap;
 }
 
-.v-caption-on-left > .v-caption,
-.v-caption-on-right > .v-caption {
-	display: inline-block;
+.v-caption-on-top > .v-caption,
+.v-caption-on-bottom > .v-caption {
+	display: block;
 }
 
 .v-caption-on-left > .v-caption {
@@ -140,4 +149,8 @@
 
 .v-has-caption.v-has-height > .v-paintable {
 	height: 100% !important;
+}
+
+.v-errorindicator {
+	vertical-align: middle;
 }
