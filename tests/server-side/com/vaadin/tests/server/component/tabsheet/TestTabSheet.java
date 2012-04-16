@@ -119,6 +119,8 @@ public class TestTabSheet {
         assertEquals(tab1, tabSheet.getTab(0));
         assertEquals(tab2, tabSheet.getTab(1));
         assertEquals(tab3, tabSheet.getTab(2));
+
+        assertEquals(null, tabSheet.getTab(3));
     }
 
     @Test
