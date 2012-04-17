@@ -1168,7 +1168,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      *            The child to check
      * @return true if the child is visible to the client, false otherwise
      */
-    private boolean isVisible(Component child) {
+    static boolean isVisible(Component child) {
         HasComponents parent = child.getParent();
         if (parent == null || !child.isVisible()) {
             return child.isVisible();

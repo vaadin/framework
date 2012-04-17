@@ -25,6 +25,7 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.ui.Component;
 
 /**
  * Decoder for converting RPC parameters and other values from JSON in transfer
@@ -205,7 +206,7 @@ public class JsonCodec implements Serializable {
             Application application) throws JSONException {
 
         if (null == value) {
-            return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
+            return encodeNull();
         }
 
         if (valueType == null) {
@@ -252,6 +253,11 @@ public class JsonCodec implements Serializable {
             }
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
+            if (value instanceof Component
+                    && !(AbstractCommunicationManager
+                            .isVisible((Component) value))) {
+                return encodeNull();
+            }
             return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
                     connector.getConnectorId());
         } else if (transportType != null) {
@@ -262,6 +268,10 @@ public class JsonCodec implements Serializable {
             return combineTypeAndValue(valueType.getName(),
                     encodeObject(value, application));
         }
+    }
+
+    private static JSONArray encodeNull() {
+        return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
     }
 
     private static Object encodeObject(Object value, Application application)
