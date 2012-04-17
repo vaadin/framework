@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
+import com.vaadin.terminal.gwt.client.ui.VBoxLayout;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.VMeasuringOrderedLayout;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
@@ -482,6 +483,14 @@ public class ComponentLocator {
                     // TabSheetPanel now only contains 1 connector => the index
                     // is always 0 which indicates the widget in the active tab
                     widgetPosition = 0;
+                }
+                if ("VVerticalLayout".equals(widgetClassName)
+                        || "VHorizontalLayout".equals(widgetClassName)) {
+                    widgetClassName = "VBoxLayout";
+                }
+                if (w instanceof VBoxLayout
+                        && "ChildComponentContainer".equals(widgetClassName)) {
+                    widgetClassName = "VBoxLayout$Slot";
                 }
 
                 /*
