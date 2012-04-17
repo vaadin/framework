@@ -338,12 +338,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public void onUnregister() {
         super.onUnregister();
 
-        // Warn if widget is still attached to DOM. It should never be at this
-        // point.
+        // Show an error if widget is still attached to DOM. It should never be
+        // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
-            VConsole.log("Widget for unregistered connector "
+            getWidget().removeFromParent();
+            VConsole.error("Widget is still attached to the DOM after the connector ("
                     + Util.getConnectorString(this)
-                    + " is still attached to the DOM.");
+                    + ") has been unregistered. Widget was removed.");
         }
     }
 }
