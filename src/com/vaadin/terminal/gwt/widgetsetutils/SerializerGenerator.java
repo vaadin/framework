@@ -167,8 +167,8 @@ public class SerializerGenerator extends Generator {
             logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
                     + beanQualifiedSourceName + " (" + beanType.getName() + ")");
 
-            String jsonFieldName = "json" + fieldName;
-            // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
+            String jsonFieldName = "json_" + fieldName;
+            // JSONArray json_Height = (JSONArray) jsonValue.get("height");
             sourceWriter.println("JSONArray " + jsonFieldName
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
