@@ -76,10 +76,10 @@ public abstract class VLayoutSlot {
         } else {
             captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
             if (!captionAboveCompnent) {
-                paddingRight += captionWidth;
                 availableWidth -= captionWidth;
                 captionStyle.clearLeft();
-                captionStyle.setRight(0, Unit.PX);
+                captionStyle.setRight(paddingRight, Unit.PX);
+                paddingRight += captionWidth;
             } else {
                 captionStyle.setLeft(0, Unit.PX);
                 captionStyle.clearRight();
