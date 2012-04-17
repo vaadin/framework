@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -116,7 +117,7 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
     }
 
     public int layoutPrimaryDirection(int spacingSize, int allocatedSize,
-            int startPadding) {
+            int startPadding, int endPadding) {
         int actuallyAllocated = 0;
         double totalExpand = 0;
 
@@ -146,7 +147,9 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
 
         double currentLocation = startPadding;
 
-        for (Widget child : this) {
+        WidgetCollection children = getChildren();
+        for (int i = 0; i < children.size(); i++) {
+            Widget child = children.get(i);
             if (child instanceof VCaption) {
                 continue;
             }
@@ -187,7 +190,16 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
              */
             double roundedSpace = Math.round(endLocation) - roundedLocation;
 
-            slot.positionInDirection(roundedLocation, roundedSpace, isVertical);
+            // Reserve room for the padding if we're at the end
+            double slotEndPadding;
+            if (i == children.size() - 1) {
+                slotEndPadding = endPadding;
+            } else {
+                slotEndPadding = 0;
+            }
+
+            slot.positionInDirection(roundedLocation, roundedSpace,
+                    slotEndPadding, isVertical);
 
             currentLocation = endLocation + spacingSize;
         }
@@ -195,7 +207,8 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
         return allocatedSize;
     }
 
-    public int layoutSecondaryDirection(int allocatedSize, int startPadding) {
+    public int layoutSecondaryDirection(int allocatedSize, int startPadding,
+            int endPadding) {
         int maxSize = 0;
         for (Widget child : this) {
             if (child instanceof VCaption) {
@@ -219,7 +232,8 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
             }
 
             VLayoutSlot slot = getSlotForChild(child);
-            slot.positionInDirection(startPadding, allocatedSize, !isVertical);
+            slot.positionInDirection(startPadding, allocatedSize, endPadding,
+                    !isVertical);
         }
 
         return allocatedSize;
