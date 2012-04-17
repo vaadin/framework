@@ -626,10 +626,14 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     public void error(Throwable e) {
+        handleError(e, this);
+    }
+
+    static void handleError(Throwable e, Console target) {
         if (e instanceof UmbrellaException) {
             UmbrellaException ue = (UmbrellaException) e;
             for (Throwable t : ue.getCauses()) {
-                error(t);
+                target.error(t);
             }
             return;
         }
@@ -638,7 +642,7 @@ public class VDebugConsole extends VOverlay implements Console {
         if (message != null && message.length() != 0) {
             exceptionText += ": " + e.getMessage();
         }
-        error(exceptionText);
+        target.error(exceptionText);
         GWT.log(e.getMessage(), e);
         if (!GWT.isProdMode()) {
             e.printStackTrace();
