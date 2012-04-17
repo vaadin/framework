@@ -1261,11 +1261,14 @@ public class Table extends AbstractSelect implements Action.Container,
             maxIndex = 0;
         }
 
-        // Assume that we want to scroll to the very bottom (so that the bottom
-        // row is completely visible even if (table height) / (row height) is
-        // not an integer.)
+        /*
+         * FIXME #7607 Take somehow into account the case where we want to
+         * scroll to the bottom so that the last row is completely visible even
+         * if (table height) / (row height) is not an integer. Reverted the
+         * original fix because of #8662 regression.
+         */
         if (newIndex > maxIndex) {
-            newIndex = maxIndex + 1;
+            newIndex = maxIndex;
         }
 
         // Refresh first item id

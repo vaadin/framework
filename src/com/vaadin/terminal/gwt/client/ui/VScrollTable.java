@@ -2065,9 +2065,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         isNewBody = false;
 
         if (firstvisible > 0) {
-            scrollBodyPanel
-                    .setScrollPosition(measureRowHeightOffset(firstvisible));
-            firstRowInViewPort = firstvisible;
+            // FIXME #7607
+            // Originally deferred due to Firefox oddities which should not
+            // occur any more. Currently deferring breaks Webkit scrolling with
+            // relative-height tables, but not deferring instead breaks tables
+            // with explicit page length.
+            Scheduler.get().scheduleDeferred(new Command() {
+                public void execute() {
+                    scrollBodyPanel
+                            .setScrollPosition(measureRowHeightOffset(firstvisible));
+                    firstRowInViewPort = firstvisible;
+                }
+            });
         }
 
         if (enabled) {
