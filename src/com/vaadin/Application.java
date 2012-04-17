@@ -40,6 +40,7 @@ import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
@@ -343,8 +344,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         private final boolean productionMode;
 
-        private final ClassLoader classLoader;
-
         /**
          * @param applicationUrl
          *            the URL the application should respond to.
@@ -356,19 +355,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @param productionMode
          *            flag indicating whether the application is running in
          *            production mode.
-         * @param classLoader
-         *            class loader to use for loading Root classes,
-         *            <code>null</code> indicates that the default class loader
-         *            should be used.
          */
         public ApplicationStartEvent(URL applicationUrl,
                 Properties applicationProperties, ApplicationContext context,
-                boolean productionMode, ClassLoader classLoader) {
+                boolean productionMode) {
             this.applicationUrl = applicationUrl;
             this.applicationProperties = applicationProperties;
             this.context = context;
             this.productionMode = productionMode;
-            this.classLoader = classLoader;
         }
 
         /**
@@ -416,19 +410,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
          */
         public boolean isProductionMode() {
             return productionMode;
-        }
-
-        /**
-         * Gets the class loader to use for loading Root classes,
-         * <code>null</code> indicates that the default class loader should be
-         * used.
-         * 
-         * @return the class loader, or <code>null</code> if not defined.
-         * 
-         * @see Application#getClassLoader()
-         */
-        public ClassLoader getClassLoader() {
-            return classLoader;
         }
     }
 
@@ -520,11 +501,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      */
     private Set<Integer> initedRoots = new HashSet<Integer>();
-
-    /**
-     * The classloader that is used to load {@link Root} classes.
-     */
-    private ClassLoader classLoader;
 
     /**
      * Gets the user of the application.
@@ -640,7 +616,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         productionMode = event.isProductionMode();
         properties = event.getApplicationProperties();
         context = event.getContext();
-        classLoader = event.getClassLoader();
         init();
         applicationIsRunning = true;
     }
@@ -1867,9 +1842,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * The default implementation in {@link Application} creates a new instance
      * of the Root class returned by {@link #getRootClassName(WrappedRequest)},
      * which in turn uses the {@value #ROOT_PARAMETER} parameter from web.xml.
-     * If {@link #getClassLoader()} returns a {@link ClassLoader}, it is used
-     * for loading the Root class. Otherwise the {@link ClassLoader} used to
-     * load this class is used.
+     * If {@link DeploymentConfiguration#getClassLoader()} for the request
+     * returns a {@link ClassLoader}, it is used for loading the Root class.
+     * Otherwise the {@link ClassLoader} used to load this class is used.
      * </p>
      * 
      * @param request
@@ -1890,7 +1865,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
             throws RootRequiresMoreInformationException {
         String rootClassName = getRootClassName(request);
         try {
-            ClassLoader classLoader = getClassLoader();
+            ClassLoader classLoader = request.getDeploymentConfiguration()
+                    .getClassLoader();
             if (classLoader == null) {
                 classLoader = getClass().getClassLoader();
             }
@@ -1907,16 +1883,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
             throw new RuntimeException("Could not load root class "
                     + rootClassName, e);
         }
-    }
-
-    /**
-     * Get the class loader to use for loading Root classes. <code>null</code>
-     * indicates that the default class loader should be used.
-     * 
-     * @return the class loader to use, or <code>null</code>
-     */
-    protected ClassLoader getClassLoader() {
-        return classLoader;
     }
 
     /**

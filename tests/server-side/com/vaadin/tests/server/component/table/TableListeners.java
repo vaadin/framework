@@ -20,7 +20,8 @@ public class TableListeners extends AbstractListenerMethodsTest {
     }
 
     public void testItemClickListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(Table.class, ItemClickEvent.class, ItemClickListener.class);
+        testListenerAddGetRemove(Table.class, ItemClickEvent.class,
+                ItemClickListener.class);
     }
 
     public void testFooterClickListenerAddGetRemove() throws Exception {

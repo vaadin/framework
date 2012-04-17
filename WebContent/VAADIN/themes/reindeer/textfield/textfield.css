@@ -35,8 +35,8 @@
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
 }
-.v-app input.v-textfield.v-paintable,
-.v-window input.v-textfield.v-paintable {
+.v-app input.v-textfield.v-connector,
+.v-window input.v-textfield.v-connector {
 	height: 24px;
 }
 .v-app .v-textfield-focus,
@@ -66,8 +66,8 @@ textarea.v-textarea-prompt {
 .v-app textarea.v-textarea-small {
 	font-size: 11px;
 }
-.v-app .v-table  input.v-textfield.v-paintable,
-.v-window .v-table input.v-textfield.v-paintable {
+.v-app .v-table  input.v-textfield.v-connector,
+.v-window .v-table input.v-textfield.v-connector {
 	padding: 1px 2px;
 	height: auto;
 	line-height: normal;

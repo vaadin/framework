@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui;
 
-
 /**
  * A vertical split panel contains two components and lays them vertically. The
  * first component is above the second component.

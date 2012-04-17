@@ -66,7 +66,12 @@ public class TestForChildComponentRendering extends CustomComponent {
         });
         main.addComponent(b);
 
-        b = new Button("remove randomly one component", new Button.ClickListener() { public void buttonClick(ClickEvent event)  { removeRandomComponent();}});
+        b = new Button("remove randomly one component",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        removeRandomComponent();
+                    }
+                });
         main.addComponent(b);
 
     }

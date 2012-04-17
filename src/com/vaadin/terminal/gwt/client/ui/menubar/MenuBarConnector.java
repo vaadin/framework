@@ -14,13 +14,13 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.menubar.VMenuBar.CustomMenuItem;
 
-@Component(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
+@Connect(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBarConnector extends AbstractComponentConnector implements
         Paintable, SimpleManagedLayout {
     /**
@@ -149,7 +149,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
             }
         }// while
 
-        getLayoutManager().setWidthNeedsUpdate(this);
+        getLayoutManager().setNeedsHorizontalLayout(this);
 
     }// updateFromUIDL
 

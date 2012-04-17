@@ -28,8 +28,8 @@ public class FormWithPropertyFormatterConnected extends TestBase {
                         @Override
                         public Object parse(String formattedValue)
                                 throws Exception {
-                            String str = formattedValue
-                                    .replaceAll("[^0-9.]", "");
+                            String str = formattedValue.replaceAll("[^0-9.]",
+                                    "");
                             if (formattedValue.toLowerCase().contains("months")) {
                                 return Double.parseDouble(str) / 12;
                             }
@@ -40,7 +40,7 @@ public class FormWithPropertyFormatterConnected extends TestBase {
                         public String format(Object value) {
                             Double dValue = (Double) value;
                             if (dValue < 1) {
-                                return ((int)(dValue * 12)) + " months";
+                                return ((int) (dValue * 12)) + " months";
                             }
                             return dValue + " years";
                         }
@@ -51,7 +51,7 @@ public class FormWithPropertyFormatterConnected extends TestBase {
             }
         });
         form2.setItemDataSource(createItem());
-        
+
         addComponent(form2);
         addComponent(new Button("B"));
     }

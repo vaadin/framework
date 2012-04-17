@@ -53,8 +53,7 @@ public class RpcProxyGenerator extends Generator {
                 + requestedType.getName().replaceAll("[$.]", "_");
 
         JClassType initializableInterface = typeOracle
-                .findType(InitializableServerRpc.class
-                        .getCanonicalName());
+                .findType(InitializableServerRpc.class.getCanonicalName());
 
         ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(
                 requestedType.getPackage().getName(), generatedClassName);

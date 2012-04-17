@@ -10,11 +10,11 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.Upload;
 
-@Component(value = Upload.class, loadStyle = LoadStyle.LAZY)
+@Connect(value = Upload.class, loadStyle = LoadStyle.LAZY)
 public class UploadConnector extends AbstractComponentConnector implements
         Paintable {
 

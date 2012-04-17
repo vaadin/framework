@@ -130,8 +130,7 @@ public class SerializerGenerator extends Generator {
 
         for (JMethod setterMethod : getSetters(beanType)) {
             String setterName = setterMethod.getName();
-            String capitalizedFieldName = setterName.substring(3);
-            String fieldName = decapitalize(capitalizedFieldName);
+            String fieldName = setterName.substring(3); // setZindex() -> ZIndex
             String getterName = findGetter(beanType, setterMethod);
 
             if (getterName == null) {
@@ -162,15 +161,14 @@ public class SerializerGenerator extends Generator {
                 + beanQualifiedSourceName + ".class);");
         for (JMethod method : getSetters(beanType)) {
             String setterName = method.getName();
-            String capitalizedFieldName = setterName.substring(3);
-            String fieldName = decapitalize(capitalizedFieldName);
+            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
             JType setterParameterType = method.getParameterTypes()[0];
 
             logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
                     + beanQualifiedSourceName + " (" + beanType.getName() + ")");
 
-            String jsonFieldName = "json" + capitalizedFieldName;
-            // JSONArray jsonHeight = (JSONArray) jsonValue.get("height");
+            String jsonFieldName = "json_" + fieldName;
+            // JSONArray json_Height = (JSONArray) jsonValue.get("height");
             sourceWriter.println("JSONArray " + jsonFieldName
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
@@ -209,12 +207,12 @@ public class SerializerGenerator extends Generator {
 
     private String findGetter(JClassType beanType, JMethod setterMethod) {
         JType setterParameterType = setterMethod.getParameterTypes()[0];
-        String capitalizedFieldName = setterMethod.getName().substring(3);
+        String fieldName = setterMethod.getName().substring(3);
         if (setterParameterType.getQualifiedSourceName().equals(
                 boolean.class.getName())) {
-            return "is" + capitalizedFieldName;
+            return "is" + fieldName;
         } else {
-            return "get" + capitalizedFieldName;
+            return "get" + fieldName;
         }
     }
 

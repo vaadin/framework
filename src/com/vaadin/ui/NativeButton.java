@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui;
 
-
 @SuppressWarnings("serial")
 public class NativeButton extends Button {
 

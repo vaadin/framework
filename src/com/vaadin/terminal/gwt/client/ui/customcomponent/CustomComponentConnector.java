@@ -8,11 +8,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.CustomComponent;
 
-@Component(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponentConnector extends
         AbstractComponentContainerConnector {
 

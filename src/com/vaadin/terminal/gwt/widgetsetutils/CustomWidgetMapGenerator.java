@@ -7,13 +7,13 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
 /**
  * An abstract helper class that can be used to easily build a widgetset with
  * customized load styles for each components. In three abstract methods one can
- * override the default values given in {@link Component} annotations.
+ * override the default values given in {@link Connect} annotations.
  * 
  * @see WidgetMapGenerator
  * 
@@ -25,7 +25,8 @@ public abstract class CustomWidgetMapGenerator extends WidgetMapGenerator {
     private Collection<Class<? extends ComponentConnector>> deferredPaintables = new HashSet<Class<? extends ComponentConnector>>();
 
     @Override
-    protected LoadStyle getLoadStyle(Class<? extends ComponentConnector> connector) {
+    protected LoadStyle getLoadStyle(
+            Class<? extends ComponentConnector> connector) {
         if (eagerPaintables == null) {
             init();
         }

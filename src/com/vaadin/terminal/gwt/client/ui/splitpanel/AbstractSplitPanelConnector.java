@@ -134,7 +134,7 @@ public abstract class AbstractSplitPanelConnector extends
         // appearing/disappearing scrollbars into account.
         getConnection().runDescendentsLayout(getWidget());
 
-        getLayoutManager().setNeedsUpdate(this);
+        getLayoutManager().setNeedsLayout(this);
 
     }
 

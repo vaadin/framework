@@ -11,10 +11,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.ProgressIndicator;
 
-@Component(ProgressIndicator.class)
+@Connect(ProgressIndicator.class)
 public class ProgressIndicatorConnector extends AbstractFieldConnector
         implements Paintable {
 

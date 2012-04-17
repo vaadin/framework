@@ -8,16 +8,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.widgetsetutils.CustomWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.LazyWidgetMapGenerator;
 import com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator;
 
 /**
- * Annotation defining the default server side counterpart in GWT terminal for
- * {@link ComponentConnector}.
+ * Annotation defining the server side connector that this ClientSideConnector
+ * should connect to. The value must always by a class extending
+ * {@link ClientConnector}.
  * <p>
  * With this annotation client side Vaadin connector is marked to have a server
  * side counterpart. The value of the annotation is the class of server side
@@ -27,7 +28,7 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Component {
+public @interface Connect {
 
     /**
      * @return the server side counterpart for the annotated component connector
@@ -45,7 +46,7 @@ public @interface Component {
      * is not included in the initial JavaScript application loaded when the
      * application starts. Instead the implementation is loaded to the client
      * when it is first needed. Lazy loaded widget can be achieved by giving
-     * {@link LoadStyle#LAZY} value in {@link Component} annotation.
+     * {@link LoadStyle#LAZY} value in {@link Connect} annotation.
      * <p>
      * Lazy loaded widgets don't stress the size and startup time of the client
      * side as much as eagerly loaded widgets. On the other hand there is a

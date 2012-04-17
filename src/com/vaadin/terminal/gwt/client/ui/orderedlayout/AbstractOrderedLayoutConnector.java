@@ -91,7 +91,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             caption.updateCaption();
         } else {
             layout.setCaption(component.getWidget(), null);
-            getLayoutManager().setNeedsUpdate(this);
+            getLayoutManager().setNeedsLayout(this);
         }
     }
 
@@ -137,7 +137,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         layout.updateSpacingStyleName(getState().isSpacing());
 
-        getLayoutManager().setNeedsUpdate(this);
+        getLayoutManager().setNeedsLayout(this);
     }
 
     private int getSizeForInnerSize(int size, boolean isVertical) {
@@ -178,6 +178,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         boolean isUndefined = isUndefinedInDirection(isVertical);
 
         int startPadding = getStartPadding(isVertical);
+        int endPadding = getEndPadding(isVertical);
         int spacingSize = getSpacingInDirection(isVertical);
         int allocatedSize;
 
@@ -188,7 +189,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
 
         allocatedSize = layout.layoutPrimaryDirection(spacingSize,
-                allocatedSize, startPadding);
+                allocatedSize, startPadding, endPadding);
 
         Style ownStyle = getWidget().getElement().getStyle();
         if (isUndefined) {
@@ -225,6 +226,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         boolean isUndefined = isUndefinedInDirection(!isVertical);
 
         int startPadding = getStartPadding(!isVertical);
+        int endPadding = getEndPadding(!isVertical);
 
         int allocatedSize;
         if (isUndefined) {
@@ -234,7 +236,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
 
         allocatedSize = layout.layoutSecondaryDirection(allocatedSize,
-                startPadding);
+                startPadding, endPadding);
 
         Style ownStyle = getWidget().getElement().getStyle();
 
@@ -263,6 +265,15 @@ public abstract class AbstractOrderedLayoutConnector extends
             return getLayoutManager().getPaddingTop(getWidget().getElement());
         } else {
             return getLayoutManager().getPaddingLeft(getWidget().getElement());
+        }
+    }
+
+    private int getEndPadding(boolean isVertical) {
+        if (isVertical) {
+            return getLayoutManager()
+                    .getPaddingBottom(getWidget().getElement());
+        } else {
+            return getLayoutManager().getPaddingRight(getWidget().getElement());
         }
     }
 

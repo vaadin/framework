@@ -120,5 +120,5 @@ public class TestTabSheet {
         assertEquals(tab2, tabSheet.getTab(1));
         assertEquals(tab3, tabSheet.getTab(2));
     }
-    
+
 }

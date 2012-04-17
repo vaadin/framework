@@ -14,11 +14,11 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
 import com.vaadin.ui.Tree;
 
-@Component(Tree.class)
+@Connect(Tree.class)
 public class TreeConnector extends AbstractComponentConnector implements
         Paintable {
 

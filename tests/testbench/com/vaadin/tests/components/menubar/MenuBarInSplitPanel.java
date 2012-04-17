@@ -22,8 +22,8 @@ public class MenuBarInSplitPanel extends AbstractTestCase {
 
     @Override
     public void init() {
-        LegacyWindow mainWindow = new LegacyWindow(
-                "MenuBar in SplitPanel", new HorizontalSplitPanel());
+        LegacyWindow mainWindow = new LegacyWindow("MenuBar in SplitPanel",
+                new HorizontalSplitPanel());
         VerticalLayout left = new VerticalLayout();
         mainWindow.addComponent(left);
         left.setSizeFull();

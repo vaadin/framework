@@ -10,12 +10,12 @@ import com.vaadin.ui.TextField;
 public class TextChangeListenerChangingNonTextProperties extends TestBase {
 
     int index = 0;
-    String[] styles = {"red","green","blue","cyan", "magenta"};
-    
+    String[] styles = { "red", "green", "blue", "cyan", "magenta" };
+
     private String getNextStyle() {
-        return styles[++index%styles.length];
+        return styles[++index % styles.length];
     }
-    
+
     @Override
     protected void setup() {
         final TextField tf2 = new TextField("Updates width") {
@@ -35,7 +35,7 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
                 tf2.setStyleName(getNextStyle());
             }
 
-        }) ;
+        });
         tf2.setImmediate(true);
 
         addComponent(tf2);
@@ -50,6 +50,5 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
     protected Integer getTicketNumber() {
         return Integer.valueOf(6588);
     }
-    
 
 }

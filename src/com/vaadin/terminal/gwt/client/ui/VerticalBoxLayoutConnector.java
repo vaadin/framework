@@ -2,10 +2,10 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component.LoadStyle;
+import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.VerticalLayout;
 
-@Component(value = VerticalLayout.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = VerticalLayout.class, loadStyle = LoadStyle.EAGER)
 public class VerticalBoxLayoutConnector extends AbstractBoxLayoutConnector {
 
     @Override

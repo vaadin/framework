@@ -22,11 +22,11 @@ import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerR
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.ui.CheckBox;
 
-@Component(CheckBox.class)
+@Connect(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector implements
         FocusHandler, BlurHandler, ClickHandler {
 

@@ -74,4 +74,13 @@ public interface DeploymentConfiguration extends Serializable {
      */
     public String getApplicationOrSystemProperty(String propertyName,
             String defaultValue);
+
+    /**
+     * Get the class loader to use for loading classes loaded by name, e.g.
+     * custom Root classes. <code>null</code> indicates that the default class
+     * loader should be used.
+     * 
+     * @return the class loader to use, or <code>null</code>
+     */
+    public ClassLoader getClassLoader();
 }

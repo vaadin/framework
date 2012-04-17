@@ -3,7 +3,6 @@
  */
 package com.vaadin.ui;
 
-
 /**
  * Horizontal layout
  * 

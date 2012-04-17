@@ -12,13 +12,13 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.combobox.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.terminal.gwt.client.ui.menubar.MenuItem;
 import com.vaadin.ui.Select;
 
-@Component(Select.class)
+@Connect(Select.class)
 public class ComboBoxConnector extends AbstractFieldConnector implements
         Paintable, SimpleManagedLayout {
 

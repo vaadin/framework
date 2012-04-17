@@ -84,9 +84,9 @@ public class LayoutAttachListenerInfo extends TestBase {
                 }));
     }
 
-    private void testOrderedLayout(){
+    private void testOrderedLayout() {
         content.removeAllComponents();
-        
+
         final VerticalLayout v = new VerticalLayout();
         v.setWidth("300px");
         v.setHeight("300px");

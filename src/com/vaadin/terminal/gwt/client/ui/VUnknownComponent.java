@@ -13,7 +13,6 @@ public class VUnknownComponent extends Composite {
     com.google.gwt.user.client.ui.Label caption = new com.google.gwt.user.client.ui.Label();;
     SimpleTree uidlTree;
     protected VerticalPanel panel;
-    protected String serverClassName = "unkwnown";
 
     public VUnknownComponent() {
         panel = new VerticalPanel();
@@ -21,10 +20,6 @@ public class VUnknownComponent extends Composite {
         initWidget(panel);
         setStyleName("vaadin-unknown");
         caption.setStyleName("vaadin-unknown-caption");
-    }
-
-    public void setServerSideClassName(String serverClassName) {
-        this.serverClassName = serverClassName;
     }
 
     public void setCaption(String c) {

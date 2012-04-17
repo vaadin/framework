@@ -11,12 +11,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.ui.DateField;
 
-@Component(DateField.class)
+@Connect(DateField.class)
 public class PopupDateFieldConnector extends TextualDateConnector {
 
     /*
@@ -37,8 +37,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
 
         super.updateFromUIDL(uidl, client);
 
-        String popupStyleNames = getStyleNames(
-                VPopupCalendar.POPUP_PRIMARY_STYLE_NAME, this);
+        String popupStyleNames = getStyleNames(VPopupCalendar.POPUP_PRIMARY_STYLE_NAME);
         popupStyleNames += " "
                 + VDateField.CLASSNAME
                 + "-"

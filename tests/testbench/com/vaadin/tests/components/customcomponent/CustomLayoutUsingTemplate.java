@@ -23,7 +23,8 @@ public class CustomLayoutUsingTemplate extends TestBase implements
         thisPackage = thisPackage.replaceAll(
                 CustomLayoutUsingTemplate.class.getSimpleName() + "$", "");
         String template = thisPackage + "template.htm";
-        InputStream is = getClassLoader().getResourceAsStream(template);
+        InputStream is = getClass().getClassLoader().getResourceAsStream(
+                template);
         try {
             layout = new CustomLayout(is);
             layout.addComponent(new Button(

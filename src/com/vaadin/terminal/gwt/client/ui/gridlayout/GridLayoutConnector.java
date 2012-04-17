@@ -20,7 +20,7 @@ import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
-import com.vaadin.terminal.gwt.client.ui.Component;
+import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
@@ -28,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.ui.GridLayout;
 
-@Component(GridLayout.class)
+@Connect(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements Paintable, DirectionalManagedLayout {
 
@@ -160,7 +160,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
                 updateCaption(child);
             }
         }
-        getLayoutManager().setNeedsUpdate(this);
+        getLayoutManager().setNeedsLayout(this);
     }
 
     @Override

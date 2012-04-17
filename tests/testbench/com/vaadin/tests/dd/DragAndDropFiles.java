@@ -67,8 +67,7 @@ public class DragAndDropFiles extends TestBase {
                                 return true;
                             }
 
-                            public void onProgress(
-                                    StreamingProgressEvent event) {
+                            public void onProgress(StreamingProgressEvent event) {
                                 System.err.println("Progress"
                                         + event.getBytesReceived());
                             }

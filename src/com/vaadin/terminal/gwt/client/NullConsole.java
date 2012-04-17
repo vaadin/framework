@@ -41,7 +41,8 @@ public class NullConsole implements Console {
     }
 
     public void error(Throwable e) {
-        GWT.log(e.getMessage(), e);
+        // Borrow exception handling from VDebugConsole
+        VDebugConsole.handleError(e, this);
     }
 
     public void setQuietMode(boolean quietDebugMode) {

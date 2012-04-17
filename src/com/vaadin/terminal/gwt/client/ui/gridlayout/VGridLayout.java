@@ -193,6 +193,7 @@ public class VGridLayout extends ComplexPanel {
         LayoutManager layoutManager = LayoutManager.get(client);
         Element element = getElement();
         int paddingTop = layoutManager.getPaddingTop(element);
+        int paddingBottom = layoutManager.getPaddingBottom(element);
         int y = paddingTop;
 
         for (int i = 0; i < cells.length; i++) {
@@ -200,7 +201,15 @@ public class VGridLayout extends ComplexPanel {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    cell.layoutVertically(y);
+                    int effectivePadding;
+                    if (cell.rowspan + j >= cells[i].length) {
+                        // Make room for layout padding for cells reaching the
+                        // bottom of the layout
+                        effectivePadding = paddingBottom;
+                    } else {
+                        effectivePadding = 0;
+                    }
+                    cell.layoutVertically(y, effectivePadding);
                 }
                 y += rowHeights[j] + verticalSpacing;
             }
@@ -220,12 +229,21 @@ public class VGridLayout extends ComplexPanel {
         LayoutManager layoutManager = LayoutManager.get(client);
         Element element = getElement();
         int x = layoutManager.getPaddingLeft(element);
+        int paddingRight = layoutManager.getPaddingRight(element);
         int horizontalSpacing = getHorizontalSpacing();
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    cell.layoutHorizontally(x);
+                    int effectivePadding;
+                    // Make room for layout padding for cells reaching the
+                    // right edge of the layout
+                    if (i + cell.colspan >= cells.length) {
+                        effectivePadding = paddingRight;
+                    } else {
+                        effectivePadding = 0;
+                    }
+                    cell.layoutHorizontally(x, effectivePadding);
                 }
             }
             x += columnWidths[i] + horizontalSpacing;
@@ -489,15 +507,15 @@ public class VGridLayout extends ComplexPanel {
             return height;
         }
 
-        public void layoutHorizontally(int x) {
+        public void layoutHorizontally(int x, int paddingRight) {
             if (slot != null) {
-                slot.positionHorizontally(x, getAvailableWidth());
+                slot.positionHorizontally(x, getAvailableWidth(), paddingRight);
             }
         }
 
-        public void layoutVertically(int y) {
+        public void layoutVertically(int y, int paddingBottom) {
             if (slot != null) {
-                slot.positionVertically(y, getAvailableHeight());
+                slot.positionVertically(y, getAvailableHeight(), paddingBottom);
             }
         }
 

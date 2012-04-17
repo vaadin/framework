@@ -32,7 +32,6 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
         }
     };
 
-
     @Override
     protected Class<TwinColSelect> getTestClass() {
         return TwinColSelect.class;

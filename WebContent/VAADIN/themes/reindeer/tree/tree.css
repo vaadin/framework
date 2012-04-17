@@ -26,9 +26,7 @@
 	padding-left: 16px;
 }
 .v-tree-node-caption.v-tree-node-focused span{
-	padding-left: 1px;
-	padding-top: 0px;
-	padding-bottom: 0px;
+	padding: 0 1px; /* Make room for border */
 }
 .v-tree-node-focused span{
 	border: 1px dotted black;	

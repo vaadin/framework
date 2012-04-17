@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.orderedlayout;
 
-
 public class VVerticalLayout extends VMeasuringOrderedLayout {
 
     public static final String CLASSNAME = "v-verticallayout";

@@ -60,7 +60,7 @@ public abstract class VLayoutSlot {
     }
 
     public void positionHorizontally(double currentLocation,
-            double allocatedSpace) {
+            double allocatedSpace, double paddingRight) {
         Style style = wrapper.getStyle();
 
         double availableWidth = allocatedSpace;
@@ -73,19 +73,23 @@ public abstract class VLayoutSlot {
         boolean captionAboveCompnent;
         if (caption == null) {
             captionAboveCompnent = false;
-            style.clearPaddingRight();
         } else {
             captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
             if (!captionAboveCompnent) {
-                style.setPaddingRight(captionWidth, Unit.PX);
                 availableWidth -= captionWidth;
                 captionStyle.clearLeft();
-                captionStyle.setRight(0, Unit.PX);
+                captionStyle.setRight(paddingRight, Unit.PX);
+                paddingRight += captionWidth;
             } else {
-                style.clearPaddingRight();
                 captionStyle.setLeft(0, Unit.PX);
                 captionStyle.clearRight();
             }
+        }
+
+        if (paddingRight > 0) {
+            style.setPaddingRight(paddingRight, Unit.PX);
+        } else {
+            style.clearPaddingRight();
         }
 
         if (isRelativeWidth()) {
@@ -137,7 +141,8 @@ public abstract class VLayoutSlot {
         return Double.parseDouble(size.replaceAll("%", ""));
     }
 
-    public void positionVertically(double currentLocation, double allocatedSpace) {
+    public void positionVertically(double currentLocation,
+            double allocatedSpace, double paddingBottom) {
         Style style = wrapper.getStyle();
 
         double contentHeight = allocatedSpace;
@@ -154,6 +159,12 @@ public abstract class VLayoutSlot {
                 contentHeight = 0;
             }
             style.setPaddingTop(captionHeight, Unit.PX);
+        }
+
+        if (paddingBottom > 0) {
+            style.setPaddingBottom(paddingBottom, Unit.PX);
+        } else {
+            style.clearPaddingBottom();
         }
 
         if (isRelativeHeight()) {
@@ -198,11 +209,11 @@ public abstract class VLayoutSlot {
     }
 
     public void positionInDirection(double currentLocation,
-            double allocatedSpace, boolean isVertical) {
+            double allocatedSpace, double endingPadding, boolean isVertical) {
         if (isVertical) {
-            positionVertically(currentLocation, allocatedSpace);
+            positionVertically(currentLocation, allocatedSpace, endingPadding);
         } else {
-            positionHorizontally(currentLocation, allocatedSpace);
+            positionHorizontally(currentLocation, allocatedSpace, endingPadding);
         }
     }
 
