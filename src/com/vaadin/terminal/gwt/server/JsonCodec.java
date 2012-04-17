@@ -271,9 +271,9 @@ public class JsonCodec implements Serializable {
         try {
             for (PropertyDescriptor pd : Introspector.getBeanInfo(
                     value.getClass()).getPropertyDescriptors()) {
-                String fieldName = pd.getName();
                 Class<?> fieldType = pd.getPropertyType();
-                if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+                String fieldName = getTransportFieldName(pd);
+                if (fieldName == null) {
                     continue;
                 }
                 Method getterMethod = pd.getReadMethod();
@@ -288,6 +288,24 @@ public class JsonCodec implements Serializable {
         return jsonMap;
     }
 
+    /**
+     * Returns the name that should be used as field name in the JSON. We strip
+     * "set" from the setter, keeping the result - this is easy to do on both
+     * server and client, avoiding some issues with cASE. E.g setZIndex()
+     * becomes "ZIndex". Also ensures that both getter and setter are present,
+     * returning null otherwise.
+     * 
+     * @param pd
+     * @return the name to be used or null if both getter and setter are not
+     *         found.
+     */
+    private static String getTransportFieldName(PropertyDescriptor pd) {
+        if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+            return null;
+        }
+        return pd.getWriteMethod().getName().substring(3);
+    }
+
     private static Object decodeObject(String type,
             JSONObject serializedObject, Application application)
             throws JSONException {
@@ -299,11 +317,11 @@ public class JsonCodec implements Serializable {
             Object decodedObject = cls.newInstance();
             for (PropertyDescriptor pd : Introspector.getBeanInfo(cls)
                     .getPropertyDescriptors()) {
-                if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+
+                String fieldName = getTransportFieldName(pd);
+                if (fieldName == null) {
                     continue;
                 }
-
-                String fieldName = pd.getName();
                 JSONArray encodedObject = serializedObject
                         .getJSONArray(fieldName);
                 pd.getWriteMethod().invoke(decodedObject,
