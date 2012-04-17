@@ -17,7 +17,6 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.terminal.gwt.server.RpcTarget;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -52,8 +51,7 @@ import com.vaadin.terminal.gwt.server.RpcTarget;
  * @VERSION@
  * @since 3.0
  */
-public interface Component extends ClientConnector, Sizeable, Serializable,
-        RpcTarget {
+public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component

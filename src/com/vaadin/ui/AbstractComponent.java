@@ -1522,7 +1522,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *            registered
      */
     protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
-        rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(this,
+        rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
                 implementation, rpcInterfaceType));
     }
 

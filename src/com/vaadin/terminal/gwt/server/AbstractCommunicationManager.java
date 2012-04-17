@@ -1448,87 +1448,94 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
                 final String interfaceName = invocation.getInterfaceName();
 
-                if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
-                        .equals(interfaceName)) {
-                    // handle other RPC calls than variable changes
-                    applyInvocation(app, invocation);
-                    continue;
-                }
                 final ClientConnector connector = getConnector(app,
                         invocation.getConnectorId());
-                final VariableOwner owner = (VariableOwner) connector;
 
-                boolean connectorEnabled = (connector != null && connector
-                        .isConnectorEnabled());
+                if (connector == null) {
+                    logger.log(
+                            Level.WARNING,
+                            "RPC call to " + invocation.getInterfaceName()
+                                    + "." + invocation.getMethodName()
+                                    + " received for connector "
+                                    + invocation.getConnectorId()
+                                    + " but no such connector could be found");
+                    continue;
+                }
 
-                if (owner != null && connectorEnabled) {
-                    VariableChange change = new VariableChange(invocation);
+                if (!connector.isConnectorEnabled()) {
 
-                    // TODO could optimize with a single value map if only one
-                    // change for a paintable
+                    if (ApplicationConnection.UPDATE_VARIABLE_INTERFACE
+                            .equals(interfaceName)) {
+                        // TODO convert window close to a separate RPC call and
+                        // handle above - not a variable change
+                        VariableChange change = new VariableChange(invocation);
 
-                    Map<String, Object> m = new HashMap<String, Object>();
-                    m.put(change.getName(), change.getValue());
-                    while (nextInvocation != null
-                            && invocation.getConnectorId().equals(
-                                    nextInvocation.getConnectorId())
-                            && ApplicationConnection.UPDATE_VARIABLE_METHOD
-                                    .equals(nextInvocation.getMethodName())) {
-                        i++;
-                        invocation = nextInvocation;
-                        change = new VariableChange(invocation);
-                        m.put(change.getName(), change.getValue());
-                        if (i + 1 < invocations.size()) {
-                            nextInvocation = invocations.get(i + 1);
-                        } else {
-                            nextInvocation = null;
+                        // Handle special case where window-close is called
+                        // after the window has been removed from the
+                        // application or the application has closed
+                        if ("close".equals(change.getName())
+                                && Boolean.TRUE.equals(change.getValue())) {
+                            // Silently ignore this
+                            continue;
                         }
                     }
 
-                    try {
-                        changeVariables(source, owner, m);
-                    } catch (Exception e) {
-                        Component errorComponent = null;
-                        if (owner instanceof Component) {
-                            errorComponent = (Component) owner;
-                        } else if (owner instanceof DragAndDropService) {
-                            if (m.get("dhowner") instanceof Component) {
-                                errorComponent = (Component) m.get("dhowner");
-                            }
-                        }
-                        handleChangeVariablesError(app, errorComponent, e, m);
-                    }
-                } else {
-                    // TODO convert window close to a separate RPC call and
-                    // handle above - not a variable change
-
-                    VariableChange change = new VariableChange(invocation);
-
-                    // Handle special case where window-close is called
-                    // after the window has been removed from the
-                    // application or the application has closed
-                    if ("close".equals(change.getName())
-                            && Boolean.TRUE.equals(change.getValue())) {
-                        // Silently ignore this
-                        continue;
-                    }
-
-                    // Ignore variable change
-                    String msg = "Warning: Ignoring RPC call for ";
-                    if (owner != null) {
-                        msg += "disabled component " + owner.getClass();
-                        String caption = ((Component) owner).getCaption();
+                    // Connector is disabled, log a warning and move the next
+                    String msg = "Ignoring RPC call for disabled connector "
+                            + connector.getClass().getName();
+                    if (connector instanceof Component) {
+                        String caption = ((Component) connector).getCaption();
                         if (caption != null) {
                             msg += ", caption=" + caption;
                         }
-                    } else {
-                        msg += "non-existent component, VAR_PID="
-                                + invocation.getConnectorId();
-                        // TODO should this cause the message to be ignored?
-                        success = false;
                     }
                     logger.warning(msg);
                     continue;
+                }
+
+                if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
+                        .equals(interfaceName)) {
+                    // handle other RPC calls than variable changes
+                    ServerRpcManager.applyInvocation(connector, invocation);
+                    continue;
+                }
+
+                // All code below is for legacy variable changes
+                final VariableOwner owner = (VariableOwner) connector;
+
+                VariableChange change = new VariableChange(invocation);
+
+                Map<String, Object> m = new HashMap<String, Object>();
+                m.put(change.getName(), change.getValue());
+                while (nextInvocation != null
+                        && invocation.getConnectorId().equals(
+                                nextInvocation.getConnectorId())
+                        && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                                .equals(nextInvocation.getMethodName())) {
+                    i++;
+                    invocation = nextInvocation;
+                    change = new VariableChange(invocation);
+                    m.put(change.getName(), change.getValue());
+                    if (i + 1 < invocations.size()) {
+                        nextInvocation = invocations.get(i + 1);
+                    } else {
+                        nextInvocation = null;
+                    }
+                }
+
+                try {
+                    changeVariables(source, owner, m);
+                } catch (Exception e) {
+                    Component errorComponent = null;
+                    if (owner instanceof Component) {
+                        errorComponent = (Component) owner;
+                    } else if (owner instanceof DragAndDropService) {
+                        if (m.get("dhowner") instanceof Component) {
+                            errorComponent = (Component) m.get("dhowner");
+                        }
+                    }
+                    handleChangeVariablesError(app, errorComponent, e, m);
+
                 }
             }
 
@@ -1540,34 +1547,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         return success;
-    }
-
-    /**
-     * Execute an RPC call from the client by finding its target and letting the
-     * RPC mechanism call the correct method for it.
-     * 
-     * @param app
-     * 
-     * @param invocation
-     */
-    protected void applyInvocation(Application app, MethodInvocation invocation) {
-        Connector c = app.getConnector(invocation.getConnectorId());
-        if (c instanceof RpcTarget) {
-            ServerRpcManager.applyInvocation((RpcTarget) c, invocation);
-        } else if (c == null) {
-            logger.log(
-                    Level.WARNING,
-                    "RPC call " + invocation.getInterfaceName() + "."
-                            + invocation.getMethodName()
-                            + " received for connector id "
-                            + invocation.getConnectorId()
-                            + " but no such connector could be found");
-
-        } else {
-            logger.log(Level.WARNING, "RPC call received for connector "
-                    + c.getClass().getName() + " (" + c.getConnectorId()
-                    + ") but the connector is not a ServerRpcTarget");
-        }
     }
 
     /**

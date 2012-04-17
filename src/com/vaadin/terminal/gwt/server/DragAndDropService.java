@@ -233,4 +233,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public List<ClientMethodInvocation> retrievePendingRpcCalls() {
         return null;
     }
+
+    public RpcManager getRpcManager(Class<?> rpcInterface) {
+        // TODO Use rpc for drag'n'drop
+        return null;
+    }
 }

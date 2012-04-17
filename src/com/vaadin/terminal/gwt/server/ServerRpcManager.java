@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
  */
 public class ServerRpcManager<T> implements RpcManager {
 
-    private final RpcTarget target;
     private final T implementation;
     private final Class<T> rpcInterface;
 
@@ -59,9 +58,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param rpcInterface
      *            RPC interface type
      */
-    public ServerRpcManager(RpcTarget target, T implementation,
-            Class<T> rpcInterface) {
-        this.target = target;
+    public ServerRpcManager(T implementation, Class<T> rpcInterface) {
         this.implementation = implementation;
         this.rpcInterface = rpcInterface;
     }
@@ -97,15 +94,6 @@ public class ServerRpcManager<T> implements RpcManager {
                     + invocation.getInterfaceName() + " of the target "
                     + target + " could not be found.");
         }
-    }
-
-    /**
-     * Returns the RPC target of this RPC manager instance.
-     * 
-     * @return RpcTarget, typically a {@link Connector}
-     */
-    public RpcTarget getTarget() {
-        return target;
     }
 
     /**
