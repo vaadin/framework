@@ -261,7 +261,7 @@ public class VBoxLayout extends FlowPanel {
                     this.captionText.addClassName("v-captiontext");
                     caption.appendChild(this.captionText);
                 }
-                if (captionText.equals("")) {
+                if (captionText.trim().equals("")) {
                     this.captionText.setInnerHTML("&nbsp;");
                 } else {
                     this.captionText.setInnerText(captionText);
