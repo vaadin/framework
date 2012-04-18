@@ -120,12 +120,12 @@ TODO
 	margin-left: auto;
 }
 
-.v-has-caption {
-	display: inline-block;
+.v-has-caption,
+.v-has-caption > .v-caption {
+	display: inline-block; /* Force natural width to zero */
 }
 
 .v-caption {
-	display: inline-block; /* Force default width to zero */
 	overflow: visible;
 	vertical-align: middle;
 }
