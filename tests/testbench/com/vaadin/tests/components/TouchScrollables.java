@@ -39,14 +39,26 @@ public class TouchScrollables extends TestBase {
         CssLayout cssLayout = new CssLayout();
         final Table table = new Table();
 
-        Button button = new Button("Make pagelength 0");
+        Button button = new Button("Toggle lazyloading");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                table.setCacheRate(100);
-                table.setHeight("400px");
+                if (table.getCacheRate() == 100) {
+                    table.setCacheRate(2);
+                    table.setPageLength(15);
+                } else {
+                    table.setCacheRate(100);
+                    table.setHeight("400px");
+                }
             }
         });
+        cssLayout.addComponent(button);
 
+        button = new Button("Toggle selectable");
+        button.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                table.setSelectable(!table.isSelectable());
+            }
+        });
         cssLayout.addComponent(button);
 
         table.addContainerProperty("foo", String.class, "bar");
@@ -95,7 +107,7 @@ public class TouchScrollables extends TestBase {
         TestUtils
                 .injectCSS(
                         getLayout().getWindow(),
-                        ".v-table-row-drag-middle .v-table-cell-content {"
+                        "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
                                 + "        background-color: inherit ; border-bottom: 1px solid cyan;"
                                 + "}"
                                 + ".v-table-row-drag-middle .v-table-cell-wrapper {"
