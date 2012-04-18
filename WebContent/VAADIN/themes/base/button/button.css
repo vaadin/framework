@@ -57,7 +57,7 @@
 .v-button-link,
 .v-nativebutton-link {
 	border: none;
-	text-align: left;
+	text-align: left !important;
 	background: transparent;
 	padding: 0;
 	color: inherit;
