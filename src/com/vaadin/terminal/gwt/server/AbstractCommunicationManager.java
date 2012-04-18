@@ -1393,8 +1393,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final String burst) {
         boolean success = true;
         try {
-            List<MethodInvocation> invocations = parseInvocations(burst);
+            Set<Connector> enabledConnectors = new HashSet<Connector>();
 
+            List<MethodInvocation> invocations = parseInvocations(burst);
+            for (MethodInvocation invocation : invocations) {
+                final ClientConnector connector = getConnector(app,
+                        invocation.getConnectorId());
+
+                if (connector.isConnectorEnabled()) {
+                    enabledConnectors.add(connector);
+                }
+            }
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
 
@@ -1412,7 +1421,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     continue;
                 }
 
-                if (!connector.isConnectorEnabled()) {
+                if (!enabledConnectors.contains(connector)) {
 
                     if (invocation instanceof LegacyChangeVariablesInvocation) {
                         LegacyChangeVariablesInvocation legacyInvocation = (LegacyChangeVariablesInvocation) invocation;
