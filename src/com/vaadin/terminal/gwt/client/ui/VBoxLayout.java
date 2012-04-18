@@ -616,10 +616,19 @@ public class VBoxLayout extends FlowPanel {
                                                 .getCaptionElement());
                             }
                         } else {
-                            totalSize += layoutManager.getOuterWidth(slot
-                                    .getWidget().getElement())
+                            int max = -1;
+                            max = layoutManager.getOuterWidth(slot.getWidget()
+                                    .getElement())
                                     - layoutManager.getMarginWidth(slot
                                             .getWidget().getElement());
+                            if (slot.hasCaption()) {
+                                int max2 = layoutManager.getOuterWidth(slot
+                                        .getCaptionElement())
+                                        - layoutManager.getMarginWidth(slot
+                                                .getCaptionElement());
+                                max = Math.max(max, max2);
+                            }
+                            totalSize += max;
                         }
                     } else {
                         totalSize += vertical ? slot.getOffsetHeight() : slot
