@@ -538,7 +538,8 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @param c
      *            the component
-     * @return
+     * @return The tab instance associated with the given component, or null if
+     *         the tabsheet does not contain the component.
      */
     public Tab getTab(Component c) {
         return tabs.get(c);
@@ -550,14 +551,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @param position
      *            the position of the tab
-     * @return
+     * @return The tab in the given position, or null if the position is out of
+     *         bounds.
      */
     public Tab getTab(int position) {
-        Component c = components.get(position);
-        if (c != null) {
-            return tabs.get(c);
+        if (position >= 0 && position < getComponentCount()) {
+            return getTab(components.get(position));
+        } else {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -608,17 +610,19 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @param tab
      */
     public void setSelectedTab(Tab tab) {
-        setSelectedTab(tab.getComponent());
+        if (tab != null) {
+            setSelectedTab(tab.getComponent());
+        }
     }
 
     /**
-     * Sets the selected tab, identified by its position. Does nothing if
-     * <code>index &lt; 0 || index &gt; {@link #getComponentCount()}</code>.
+     * Sets the selected tab, identified by its position. Does nothing if the
+     * position is out of bounds.
      * 
-     * @param index
+     * @param position
      */
-    public void setSelectedTab(int index) {
-        setSelectedTab(getTab(index));
+    public void setSelectedTab(int position) {
+        setSelectedTab(getTab(position));
     }
 
     /**

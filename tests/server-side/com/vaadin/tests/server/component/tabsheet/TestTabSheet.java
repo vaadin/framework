@@ -119,6 +119,43 @@ public class TestTabSheet {
         assertEquals(tab1, tabSheet.getTab(0));
         assertEquals(tab2, tabSheet.getTab(1));
         assertEquals(tab3, tabSheet.getTab(2));
+
+        assertEquals(null, tabSheet.getTab(3));
     }
 
+    @Test
+    public void selectTab() {
+        TabSheet tabSheet = new TabSheet();
+        Tab tab1 = tabSheet.addTab(new Label("aaa"));
+        Tab tab2 = tabSheet.addTab(new Label("bbb"));
+        Tab tab3 = tabSheet.addTab(new Label("ccc"));
+        Label componentNotInSheet = new Label("ddd");
+        Tab tabNotInSheet = new TabSheet().addTab(new Label("eee"));
+
+        assertEquals(tab1.getComponent(), tabSheet.getSelectedTab());
+
+        // Select tab by component...
+        tabSheet.setSelectedTab(tab2.getComponent());
+        assertEquals(tab2.getComponent(), tabSheet.getSelectedTab());
+
+        // by tab instance
+        tabSheet.setSelectedTab(tab3);
+        assertEquals(tab3.getComponent(), tabSheet.getSelectedTab());
+
+        // by index
+        tabSheet.setSelectedTab(0);
+        assertEquals(tab1.getComponent(), tabSheet.getSelectedTab());
+
+        // Should be no-op...
+        tabSheet.setSelectedTab(componentNotInSheet);
+        assertEquals(tab1.getComponent(), tabSheet.getSelectedTab());
+
+        // this as well
+        tabSheet.setSelectedTab(tabNotInSheet);
+        assertEquals(tab1.getComponent(), tabSheet.getSelectedTab());
+
+        // and this
+        tabSheet.setSelectedTab(123);
+        assertEquals(tab1.getComponent(), tabSheet.getSelectedTab());
+    }
 }
