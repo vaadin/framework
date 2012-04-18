@@ -256,6 +256,7 @@ public abstract class AbstractBoxLayoutConnector extends
                     getLayoutManager().removeElementResizeListener(
                             slot.getSpacingElement(), spacingResizeListener);
                 }
+                child.removeStateChangeHandler(childStateChangeHandler);
                 layout.removeSlot(child.getWidget());
             }
         }
