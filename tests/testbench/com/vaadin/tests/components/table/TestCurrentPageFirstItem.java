@@ -24,7 +24,7 @@ public class TestCurrentPageFirstItem extends TestBase implements ClickListener 
 
         HorizontalLayout baseLayout = new HorizontalLayout();
         baseLayout.setHeight("115px");
-        addComponent(baseLayout);
+        getMainWindow().setContent(baseLayout);
 
         for (int i = 0; i < tables.length; ++i) {
             Table t = new Table();
