@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -807,8 +808,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (null != state) {
                 // encode and send shared state
                 try {
+                    // FIXME Use declared type
                     JSONArray stateJsonArray = JsonCodec.encode(state,
-                            application);
+                            state.getClass(), application);
                     sharedStates
                             .put(connector.getConnectorId(), stateJsonArray);
                 } catch (JSONException e) {
@@ -1369,43 +1371,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     /**
-     * Helper class for parsing variable change RPC calls.
-     * 
-     * Note that variable changes still only support the old data types and
-     * partly use Vaadin 6 way of encoding of values. Other RPC method calls
-     * support more data types.
-     * 
-     * @since 7.0
-     */
-    private class VariableChange {
-        private final String name;
-        private final Object value;
-
-        public VariableChange(MethodInvocation invocation) throws JSONException {
-            name = (String) invocation.getParameters()[0];
-            value = invocation.getParameters()[1];
-        }
-
-        /**
-         * Returns the variable name for the modification.
-         * 
-         * @return variable name
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Returns the (parsed and converted) value of the updated variable.
-         * 
-         * @return variable value
-         */
-        public Object getValue() {
-            return value;
-        }
-    }
-
-    /**
      * Processes a message burst received from the client.
      * 
      * A burst can contain any number of RPC calls, including legacy variable
@@ -1430,23 +1395,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         try {
             List<MethodInvocation> invocations = parseInvocations(burst);
 
-            // Perform the method invocations, grouping consecutive variable
-            // changes for the same Paintable.
-
-            // Combining of variable changes is currently needed to preserve the
-            // old semantics for any component that relies on them. If the
-            // support for legacy variable change events is removed, each call
-            // can be performed separately and thelogic here simplified.
-
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
-
-                MethodInvocation nextInvocation = null;
-                if (i + 1 < invocations.size()) {
-                    nextInvocation = invocations.get(i + 1);
-                }
-
-                final String interfaceName = invocation.getInterfaceName();
 
                 final ClientConnector connector = getConnector(app,
                         invocation.getConnectorId());
@@ -1464,23 +1414,24 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
                 if (!connector.isConnectorEnabled()) {
 
-                    if (ApplicationConnection.UPDATE_VARIABLE_INTERFACE
-                            .equals(interfaceName)) {
+                    if (invocation instanceof LegacyChangeVariablesInvocation) {
+                        LegacyChangeVariablesInvocation legacyInvocation = (LegacyChangeVariablesInvocation) invocation;
                         // TODO convert window close to a separate RPC call and
                         // handle above - not a variable change
-                        VariableChange change = new VariableChange(invocation);
 
                         // Handle special case where window-close is called
                         // after the window has been removed from the
                         // application or the application has closed
-                        if ("close".equals(change.getName())
-                                && Boolean.TRUE.equals(change.getValue())) {
+                        Map<String, Object> changes = legacyInvocation
+                                .getVariableChanges();
+                        if (changes.size() == 1 && changes.containsKey("close")
+                                && Boolean.TRUE.equals(changes.get("close"))) {
                             // Silently ignore this
                             continue;
                         }
                     }
 
-                    // Connector is disabled, log a warning and move the next
+                    // Connector is disabled, log a warning and move to the next
                     String msg = "Ignoring RPC call for disabled connector "
                             + connector.getClass().getName();
                     if (connector instanceof Component) {
@@ -1493,49 +1444,32 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     continue;
                 }
 
-                if (!ApplicationConnection.UPDATE_VARIABLE_INTERFACE
-                        .equals(interfaceName)) {
-                    // handle other RPC calls than variable changes
-                    ServerRpcManager.applyInvocation(connector, invocation);
-                    continue;
-                }
+                if (invocation instanceof ServerRPCMethodInvocation) {
+                    ServerRpcManager.applyInvocation(connector,
+                            (ServerRPCMethodInvocation) invocation);
+                } else {
 
-                // All code below is for legacy variable changes
-                final VariableOwner owner = (VariableOwner) connector;
-
-                VariableChange change = new VariableChange(invocation);
-
-                Map<String, Object> m = new HashMap<String, Object>();
-                m.put(change.getName(), change.getValue());
-                while (nextInvocation != null
-                        && invocation.getConnectorId().equals(
-                                nextInvocation.getConnectorId())
-                        && ApplicationConnection.UPDATE_VARIABLE_METHOD
-                                .equals(nextInvocation.getMethodName())) {
-                    i++;
-                    invocation = nextInvocation;
-                    change = new VariableChange(invocation);
-                    m.put(change.getName(), change.getValue());
-                    if (i + 1 < invocations.size()) {
-                        nextInvocation = invocations.get(i + 1);
-                    } else {
-                        nextInvocation = null;
-                    }
-                }
-
-                try {
-                    changeVariables(source, owner, m);
-                } catch (Exception e) {
-                    Component errorComponent = null;
-                    if (owner instanceof Component) {
-                        errorComponent = (Component) owner;
-                    } else if (owner instanceof DragAndDropService) {
-                        if (m.get("dhowner") instanceof Component) {
-                            errorComponent = (Component) m.get("dhowner");
+                    // All code below is for legacy variable changes
+                    LegacyChangeVariablesInvocation legacyInvocation = (LegacyChangeVariablesInvocation) invocation;
+                    Map<String, Object> changes = legacyInvocation
+                            .getVariableChanges();
+                    try {
+                        changeVariables(source, (VariableOwner) connector,
+                                changes);
+                    } catch (Exception e) {
+                        Component errorComponent = null;
+                        if (connector instanceof Component) {
+                            errorComponent = (Component) connector;
+                        } else if (connector instanceof DragAndDropService) {
+                            Object dropHandlerOwner = changes.get("dhowner");
+                            if (dropHandlerOwner instanceof Component) {
+                                errorComponent = (Component) dropHandlerOwner;
+                            }
                         }
-                    }
-                    handleChangeVariablesError(app, errorComponent, e, m);
+                        handleChangeVariablesError(app, errorComponent, e,
+                                changes);
 
+                    }
                 }
             }
 
@@ -1564,23 +1498,92 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
 
+        MethodInvocation previousInvocation = null;
         // parse JSON to MethodInvocations
         for (int i = 0; i < invocationsJson.length(); ++i) {
+
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
-            String connectorId = invocationJson.getString(0);
-            String interfaceName = invocationJson.getString(1);
-            String methodName = invocationJson.getString(2);
-            JSONArray parametersJson = invocationJson.getJSONArray(3);
-            Object[] parameters = new Object[parametersJson.length()];
-            for (int j = 0; j < parametersJson.length(); ++j) {
-                parameters[j] = JsonCodec.decode(
-                        parametersJson.getJSONArray(j), application);
+
+            MethodInvocation invocation = parseInvocation(invocationJson,
+                    previousInvocation);
+            if (invocation != null) {
+                // Can be null iff the invocation was a legacy invocation and it
+                // was merged with the previous one
+                invocations.add(invocation);
+                previousInvocation = invocation;
             }
-            MethodInvocation invocation = new MethodInvocation(connectorId,
-                    interfaceName, methodName, parameters);
-            invocations.add(invocation);
         }
         return invocations;
+    }
+
+    private MethodInvocation parseInvocation(JSONArray invocationJson,
+            MethodInvocation previousInvocation) throws JSONException {
+        String connectorId = invocationJson.getString(0);
+        String interfaceName = invocationJson.getString(1);
+        String methodName = invocationJson.getString(2);
+
+        JSONArray parametersJson = invocationJson.getJSONArray(3);
+
+        if (LegacyChangeVariablesInvocation.isLegacyVariableChange(
+                interfaceName, methodName)) {
+            if (!(previousInvocation instanceof LegacyChangeVariablesInvocation)) {
+                previousInvocation = null;
+            }
+
+            return parseLegacyChangeVariablesInvocation(connectorId,
+                    interfaceName, methodName,
+                    (LegacyChangeVariablesInvocation) previousInvocation,
+                    parametersJson);
+        } else {
+            return parseServerRpcInvocation(connectorId, interfaceName,
+                    methodName, parametersJson);
+        }
+
+    }
+
+    private LegacyChangeVariablesInvocation parseLegacyChangeVariablesInvocation(
+            String connectorId, String interfaceName, String methodName,
+            LegacyChangeVariablesInvocation previousInvocation,
+            JSONArray parametersJson) throws JSONException {
+        if (parametersJson.length() != 2) {
+            throw new JSONException(
+                    "Invalid parameters in legacy change variables call. Expected 2, was "
+                            + parametersJson.length());
+        }
+        String variableName = (String) JsonCodec
+                .decodeInternalType(String.class, true,
+                        parametersJson.getJSONArray(0), application);
+        Object value = JsonCodec.decodeInternalType(
+                parametersJson.getJSONArray(1), application);
+
+        if (previousInvocation != null
+                && previousInvocation.getConnectorId().equals(connectorId)) {
+            previousInvocation.setVariableChange(variableName, value);
+            return null;
+        } else {
+            return new LegacyChangeVariablesInvocation(connectorId,
+                    variableName, value);
+        }
+    }
+
+    private ServerRPCMethodInvocation parseServerRpcInvocation(
+            String connectorId, String interfaceName, String methodName,
+            JSONArray parametersJson) throws JSONException {
+        ServerRPCMethodInvocation invocation = new ServerRPCMethodInvocation(
+                connectorId, interfaceName, methodName, parametersJson.length());
+
+        Object[] parameters = new Object[parametersJson.length()];
+        Type[] declaredRpcMethodParameterTypes = invocation.getMethod()
+                .getGenericParameterTypes();
+
+        for (int j = 0; j < parametersJson.length(); ++j) {
+            JSONArray parameterJson = parametersJson.getJSONArray(j);
+            Type parameterType = declaredRpcMethodParameterTypes[j];
+            parameters[j] = JsonCodec.decodeInternalOrCustomType(parameterType,
+                    parameterJson, application);
+        }
+        invocation.setParameters(parameters);
+        return invocation;
     }
 
     protected void changeVariables(Object source, final VariableOwner owner,

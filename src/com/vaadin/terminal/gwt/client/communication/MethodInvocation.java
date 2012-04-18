@@ -17,14 +17,19 @@ public class MethodInvocation {
     private final String connectorId;
     private final String interfaceName;
     private final String methodName;
-    private final Object[] parameters;
+    private Object[] parameters;
 
     public MethodInvocation(String connectorId, String interfaceName,
-            String methodName, Object[] parameters) {
+            String methodName) {
         this.connectorId = connectorId;
         this.interfaceName = interfaceName;
         this.methodName = methodName;
-        this.parameters = parameters;
+    }
+
+    public MethodInvocation(String connectorId, String interfaceName,
+            String methodName, Object[] parameters) {
+        this(connectorId, interfaceName, methodName);
+        setParameters(parameters);
     }
 
     public String getConnectorId() {
@@ -43,9 +48,14 @@ public class MethodInvocation {
         return parameters;
     }
 
+    public void setParameters(Object[] parameters) {
+        this.parameters = parameters;
+    }
+
     @Override
     public String toString() {
         return connectorId + ":" + interfaceName + "." + methodName + "("
                 + Arrays.toString(parameters) + ")";
     }
+
 }
