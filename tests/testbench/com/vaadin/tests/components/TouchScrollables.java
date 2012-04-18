@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -108,12 +110,28 @@ public class TouchScrollables extends TestBase {
     private void addDDSortableTable() {
         final Table table;
         table = new Table();
-        table.setCaption("DD sortable table");
+        table.setCaption("DD sortable table with context menus");
         // table.setWidth("100%");
         table.setPageLength(10);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         table.setSelectable(true);
         table.setMultiSelect(true);
+
+        table.addActionHandler(new Handler() {
+
+            Action[] actions = new Action[] { new Action("FOO"),
+                    new Action("BAR"), new Action("CAR") };
+
+            public Action[] getActions(Object target, Object sender) {
+                return actions;
+            }
+
+            public void handleAction(Action action, Object sender, Object target) {
+                getLayout().getWindow().showNotification(action.getCaption());
+
+            }
+        });
+
         populateTable(table);
 
         /*
