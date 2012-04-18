@@ -391,6 +391,15 @@ public class VBoxLayout extends FlowPanel {
         }
 
         @Override
+        protected Element getContainerElement() {
+            if (captionWrap == null) {
+                return getElement();
+            } else {
+                return captionWrap;
+            }
+        }
+
+        @Override
         protected void onDetach() {
             if (spacer != null) {
                 spacer.removeFromParent();
