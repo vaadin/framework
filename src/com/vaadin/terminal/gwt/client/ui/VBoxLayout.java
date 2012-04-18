@@ -239,7 +239,7 @@ public class VBoxLayout extends FlowPanel {
                 if (caption == null) {
                     caption = DOM.createDiv();
                     captionWrap = DOM.createDiv();
-                    captionWrap.addClassName("v-paintable");
+                    captionWrap.addClassName("v-connector");
                     captionWrap.addClassName("v-has-caption");
                     getElement().appendChild(captionWrap);
                     captionWrap.appendChild(getWidget().getElement());

@@ -42,8 +42,9 @@ TODO
 /* Clear any floats inside the slot, to prevent unwanted collapsing */
 .v-slot:after {
 	content: "";
-	display: block;
+	display: inline-block;
 	clear: both;
+	width: 0;
 	height: 0;
 	overflow: hidden;
 }
@@ -51,6 +52,7 @@ TODO
 .v-vertical > .v-slot,
 .v-vertical > .v-expand > .v-slot {
 	display: block;
+	clear: both;
 }
 
 .v-horizontal > .v-slot,
@@ -61,6 +63,8 @@ TODO
 .v-vertical > .v-spacing,
 .v-vertical > .v-expand > .v-spacing {
 	width: 0;
+	display: block;
+	clear: both;
 }
 
 .v-horizontal > .v-spacing,
@@ -81,21 +85,21 @@ TODO
 
 .v-align-middle,
 .v-align-bottom {
-	white-space: nowrap;;
+	white-space: nowrap;
 }
 
-.v-align-middle > .v-paintable,
-.v-align-bottom > .v-paintable {
+.v-align-middle > .v-connector,
+.v-align-bottom > .v-connector {
 	display: inline-block;
 	/* TODO this is a bit tricky, since it will override component defaults in some cases */
 	white-space: normal;
 }
 
-.v-align-middle > .v-paintable {
+.v-align-middle > .v-connector {
 	vertical-align: middle;
 }
 
-.v-align-bottom > .v-paintable {
+.v-align-bottom > .v-connector {
 	vertical-align: bottom;
 }
 
@@ -103,7 +107,7 @@ TODO
 	text-align: center;
 }
 
-.v-align-center > .v-paintable {
+.v-align-center > .v-connector {
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -112,7 +116,7 @@ TODO
 	text-align: right;
 }
 
-.v-align-right > .v-paintable {
+.v-align-right > .v-connector {
 	margin-left: auto;
 }
 
@@ -144,19 +148,19 @@ TODO
 	padding-left: .5em;
 }
 
-.v-caption-on-left > .v-paintable,
-.v-caption-on-right > .v-paintable {
+.v-caption-on-left > .v-connector,
+.v-caption-on-right > .v-connector {
 	display: inline-block;
 	vertical-align: middle;
 	/* TODO this is a bit tricky, since it will override component defaults in some cases */
 	white-space: normal;
 }
 
-.v-has-caption.v-has-width > .v-paintable {
+.v-has-caption.v-has-width > .v-connector {
 	width: 100% !important;
 }
 
-.v-has-caption.v-has-height > .v-paintable {
+.v-has-caption.v-has-height > .v-connector {
 	height: 100% !important;
 }
 
