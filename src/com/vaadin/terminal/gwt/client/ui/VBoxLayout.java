@@ -608,15 +608,18 @@ public class VBoxLayout extends FlowPanel {
                     if (layoutManager != null) {
                         // TODO check caption position
                         if (vertical) {
-                            totalSize += layoutManager.getOuterHeight(slot
+                            int size = layoutManager.getOuterHeight(slot
                                     .getWidget().getElement())
                                     - layoutManager.getMarginHeight(slot
                                             .getWidget().getElement());
                             if (slot.hasCaption()) {
-                                totalSize += layoutManager.getOuterHeight(slot
+                                size += layoutManager.getOuterHeight(slot
                                         .getCaptionElement())
                                         - layoutManager.getMarginHeight(slot
                                                 .getCaptionElement());
+                            }
+                            if (size > 0) {
+                                totalSize += size;
                             }
                         } else {
                             int max = -1;
@@ -631,7 +634,9 @@ public class VBoxLayout extends FlowPanel {
                                                 .getCaptionElement());
                                 max = Math.max(max, max2);
                             }
-                            totalSize += max;
+                            if (max > 0) {
+                                totalSize += max;
+                            }
                         }
                     } else {
                         totalSize += vertical ? slot.getOffsetHeight() : slot
@@ -639,7 +644,10 @@ public class VBoxLayout extends FlowPanel {
                     }
                 }
                 // TODO fails in Opera, always returns 0
-                totalSize += slot.getSpacingSize(vertical);
+                int spacingSize = slot.getSpacingSize(vertical);
+                if (spacingSize > 0) {
+                    totalSize += spacingSize;
+                }
             }
 
             // When we set the margin to the first child, we don't need

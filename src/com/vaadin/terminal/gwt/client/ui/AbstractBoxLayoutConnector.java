@@ -142,7 +142,7 @@ public abstract class AbstractBoxLayoutConnector extends
             // extra space equally if no expand ratios are specified inside a
             // layout with specified size
             if (expandRatios.getKeySet().size() == 0
-                    && ((!getWidget().vertical && !isUndefinedHeight()) || !isUndefinedWidth())) {
+                    && ((getWidget().vertical && !isUndefinedHeight()) || !isUndefinedWidth())) {
                 expandRatio = 1;
                 hasExpandRatio.add(child);
             } else if (expandRatios.containsKey(pid)
