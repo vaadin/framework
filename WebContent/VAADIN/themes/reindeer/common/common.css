@@ -41,7 +41,7 @@
 }
 .v-errorindicator {
 	width: 13px;
-	height: 16px;
+	height: 14px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
 .v-tooltip {
