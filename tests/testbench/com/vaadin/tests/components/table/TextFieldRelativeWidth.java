@@ -43,7 +43,6 @@ public class TextFieldRelativeWidth extends TestBase {
             setPageLength(100);
             setHeight("100%");
             setSizeFull();
-            getLayout().setSizeFull();
             addContainerProperty("id", Integer.class, null);
             addContainerProperty("text", Component.class, null);
             addContainerProperty("button", Button.class, null);

@@ -412,7 +412,19 @@ public class ComponentSizeValidator implements Serializable {
                 return true;
             }
 
-            if (parent instanceof GridLayout) {
+            if (parent instanceof AbstractOrderedLayout) {
+                boolean horizontal = true;
+                if (parent instanceof VerticalLayout) {
+                    horizontal = false;
+                }
+                if (horizontal
+                        && hasNonRelativeHeightComponent((AbstractOrderedLayout) parent)) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
                 boolean rowHasHeight = false;
@@ -495,7 +507,20 @@ public class ComponentSizeValidator implements Serializable {
         if (parent.getWidth() < 0) {
             // Undefined width
 
-            if (parent instanceof GridLayout) {
+            if (parent instanceof AbstractOrderedLayout) {
+                AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
+                boolean horizontal = true;
+                if (ol instanceof VerticalLayout) {
+                    horizontal = false;
+                }
+
+                if (!horizontal && hasNonRelativeWidthComponent(ol)) {
+                    // valid situation, other components defined width
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
                 boolean columnHasWidth = false;
