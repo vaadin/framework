@@ -1553,6 +1553,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
         Connector c = app.getConnector(invocation.getConnectorId());
         if (c instanceof RpcTarget) {
             ServerRpcManager.applyInvocation((RpcTarget) c, invocation);
+        } else if (c == null) {
+            logger.log(
+                    Level.WARNING,
+                    "RPC call " + invocation.getInterfaceName() + "."
+                            + invocation.getMethodName()
+                            + " received for connector id "
+                            + invocation.getConnectorId()
+                            + " but no such connector could be found");
+
         } else {
             logger.log(Level.WARNING, "RPC call received for connector "
                     + c.getClass().getName() + " (" + c.getConnectorId()

@@ -185,11 +185,12 @@ public class PanelConnector extends AbstractComponentContainerConnector
         VPanel panel = getWidget();
 
         LayoutManager layoutManager = getLayoutManager();
-        int top = layoutManager.getInnerHeight(panel.captionNode);
+        int top = layoutManager.getOuterHeight(panel.captionNode);
         int bottom = layoutManager.getInnerHeight(panel.bottomDecoration);
 
         Style style = panel.getElement().getStyle();
-        panel.captionNode.getStyle().setMarginTop(-top, Unit.PX);
+        panel.captionNode.getParentElement().getStyle()
+                .setMarginTop(-top, Unit.PX);
         panel.bottomDecoration.getStyle().setMarginBottom(-bottom, Unit.PX);
         style.setPaddingTop(top, Unit.PX);
         style.setPaddingBottom(bottom, Unit.PX);
