@@ -191,15 +191,15 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
             double roundedSpace = Math.round(endLocation) - roundedLocation;
 
             // Reserve room for the padding if we're at the end
-            double slotEndPadding;
+            double slotEndMargin;
             if (i == children.size() - 1) {
-                slotEndPadding = endPadding;
+                slotEndMargin = endPadding;
             } else {
-                slotEndPadding = 0;
+                slotEndMargin = 0;
             }
 
             slot.positionInDirection(roundedLocation, roundedSpace,
-                    slotEndPadding, isVertical);
+                    slotEndMargin, isVertical);
 
             currentLocation = endLocation + spacingSize;
         }

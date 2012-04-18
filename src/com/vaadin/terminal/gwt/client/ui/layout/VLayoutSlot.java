@@ -60,7 +60,7 @@ public abstract class VLayoutSlot {
     }
 
     public void positionHorizontally(double currentLocation,
-            double allocatedSpace, double paddingRight) {
+            double allocatedSpace, double marginRight) {
         Style style = wrapper.getStyle();
 
         double availableWidth = allocatedSpace;
@@ -73,23 +73,25 @@ public abstract class VLayoutSlot {
         boolean captionAboveCompnent;
         if (caption == null) {
             captionAboveCompnent = false;
+            style.clearPaddingRight();
         } else {
             captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
             if (!captionAboveCompnent) {
                 availableWidth -= captionWidth;
                 captionStyle.clearLeft();
-                captionStyle.setRight(paddingRight, Unit.PX);
-                paddingRight += captionWidth;
+                captionStyle.setRight(0, Unit.PX);
+                style.setPaddingRight(captionWidth, Unit.PX);
             } else {
                 captionStyle.setLeft(0, Unit.PX);
                 captionStyle.clearRight();
+                style.clearPaddingRight();
             }
         }
 
-        if (paddingRight > 0) {
-            style.setPaddingRight(paddingRight, Unit.PX);
+        if (marginRight > 0) {
+            style.setMarginRight(marginRight, Unit.PX);
         } else {
-            style.clearPaddingRight();
+            style.clearMarginRight();
         }
 
         if (isRelativeWidth()) {
@@ -142,7 +144,7 @@ public abstract class VLayoutSlot {
     }
 
     public void positionVertically(double currentLocation,
-            double allocatedSpace, double paddingBottom) {
+            double allocatedSpace, double marginBottom) {
         Style style = wrapper.getStyle();
 
         double contentHeight = allocatedSpace;
@@ -161,10 +163,10 @@ public abstract class VLayoutSlot {
             style.setPaddingTop(captionHeight, Unit.PX);
         }
 
-        if (paddingBottom > 0) {
-            style.setPaddingBottom(paddingBottom, Unit.PX);
+        if (marginBottom > 0) {
+            style.setMarginBottom(marginBottom, Unit.PX);
         } else {
-            style.clearPaddingBottom();
+            style.clearMarginBottom();
         }
 
         if (isRelativeHeight()) {
@@ -209,11 +211,11 @@ public abstract class VLayoutSlot {
     }
 
     public void positionInDirection(double currentLocation,
-            double allocatedSpace, double endingPadding, boolean isVertical) {
+            double allocatedSpace, double endingMargin, boolean isVertical) {
         if (isVertical) {
-            positionVertically(currentLocation, allocatedSpace, endingPadding);
+            positionVertically(currentLocation, allocatedSpace, endingMargin);
         } else {
-            positionHorizontally(currentLocation, allocatedSpace, endingPadding);
+            positionHorizontally(currentLocation, allocatedSpace, endingMargin);
         }
     }
 
