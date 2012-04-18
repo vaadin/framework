@@ -230,8 +230,8 @@ public class VBoxLayout extends FlowPanel {
         // TODO refactor VCaption and use that instead: creates a tight coupling
         // between this layout and Vaadin, but it's already coupled
         public void setCaption(String captionText, String iconUrl,
-                List<String> styles, String error, boolean required,
-                boolean enabled) {
+                List<String> styles, String error, boolean showError,
+                boolean required, boolean enabled) {
 
             // TODO place for optimization: check if any of these have changed
             // since last time, and only run those changes
@@ -301,7 +301,7 @@ public class VBoxLayout extends FlowPanel {
             }
 
             // Error
-            if (error != null) {
+            if (error != null && showError) {
                 if (errorIcon == null) {
                     errorIcon = DOM.createSpan();
                     errorIcon.setClassName("v-errorindicator");

@@ -8,7 +8,8 @@
 .v-orderedlayout-margin-right,
 .v-horizontallayout-margin-right,
 .v-verticallayout-margin-right,
-.v-csslayout-margin-right {
+.v-csslayout-margin-right,
+.v-boxlayout.v-margin-right {
 	padding-right: 18px;
 }
 .v-orderedlayout-margin-bottom,
@@ -21,7 +22,8 @@
 .v-orderedlayout-margin-left,
 .v-horizontallayout-margin-left,
 .v-verticallayout-margin-left,
-.v-csslayout-margin-left {
+.v-csslayout-margin-left,
+.v-boxlayout.v-margin-left {
 	padding-left: 18px;
 }
 .v-orderedlayout-spacing-on,

@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
@@ -186,6 +187,12 @@ public abstract class AbstractBoxLayoutConnector extends
                 .getIcon().getURL() : null;
         List<String> styles = child.getState().getStyles();
         String error = child.getState().getErrorMessage();
+        boolean showError = error != null;
+        if (child.getState() instanceof AbstractFieldState) {
+            AbstractFieldState abstractFieldState = (AbstractFieldState) child
+                    .getState();
+            showError = showError && !abstractFieldState.isHideErrors();
+        }
         boolean required = false;
         if (child instanceof AbstractFieldConnector) {
             required = ((AbstractFieldConnector) child).isRequired();
@@ -193,7 +200,8 @@ public abstract class AbstractBoxLayoutConnector extends
         boolean enabled = child.getState().isEnabled();
         // TODO Description is handled from somewhere else?
 
-        slot.setCaption(caption, iconUrl, styles, error, required, enabled);
+        slot.setCaption(caption, iconUrl, styles, error, showError, required,
+                enabled);
 
         slot.setRelativeWidth(child.isRelativeWidth());
         slot.setRelativeHeight(child.isRelativeHeight());
