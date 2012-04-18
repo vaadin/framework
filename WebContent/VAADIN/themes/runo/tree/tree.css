@@ -34,7 +34,9 @@
 	outline:none;	
 }
 .v-tree-node-caption.v-tree-node-focused span{
-	padding: 0;
+	padding-left: 1px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 .v-tree-node-focused span{
 	border: 1px dotted black;	
