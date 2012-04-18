@@ -68,7 +68,7 @@ public class ServerRpcManager<T> implements RpcManager {
      *            method invocation to perform
      */
     public static void applyInvocation(RpcTarget target,
-            ServerRPCMethodInvocation invocation) {
+            ServerRpcMethodInvocation invocation) {
         RpcManager manager = target.getRpcManager(invocation
                 .getInterfaceClass());
         if (manager != null) {
@@ -109,7 +109,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
-    public void applyInvocation(ServerRPCMethodInvocation invocation) {
+    public void applyInvocation(ServerRpcMethodInvocation invocation) {
         Method method = invocation.getMethod();
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] args = new Object[parameterTypes.length];

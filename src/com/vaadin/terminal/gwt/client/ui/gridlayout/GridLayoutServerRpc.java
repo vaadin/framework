@@ -4,8 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui.gridlayout;
 
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 
-public interface GridLayoutServerRPC extends LayoutClickRPC, ServerRpc {
+public interface GridLayoutServerRpc extends LayoutClickRpc, ServerRpc {
 
 }

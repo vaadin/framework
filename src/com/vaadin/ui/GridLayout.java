@@ -22,7 +22,7 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.GridLayoutState;
 
 /**
@@ -56,7 +56,7 @@ public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
         Vaadin6Component {
 
-    private GridLayoutServerRPC rpc = new GridLayoutServerRPC() {
+    private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {

@@ -11,7 +11,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
@@ -58,7 +58,7 @@ import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
  */
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
-    private CssLayoutServerRPC rpc = new CssLayoutServerRPC() {
+    private CssLayoutServerRpc rpc = new CssLayoutServerRpc() {
 
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {

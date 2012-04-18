@@ -19,7 +19,7 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 
 @SuppressWarnings("serial")
@@ -27,7 +27,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
         Vaadin6Component {
 
-    private AbstractOrderedLayoutServerRPC rpc = new AbstractOrderedLayoutServerRPC() {
+    private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
 
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {

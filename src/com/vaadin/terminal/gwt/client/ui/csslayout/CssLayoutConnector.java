@@ -20,7 +20,7 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.csslayout.VCssLayout.FlowPane;
 import com.vaadin.ui.CssLayout;
@@ -38,19 +38,19 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         }
 
         @Override
-        protected LayoutClickRPC getLayoutClickRPC() {
+        protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
     };
 
-    private CssLayoutServerRPC rpc;
+    private CssLayoutServerRpc rpc;
 
     private Map<ComponentConnector, VCaption> childToCaption = new HashMap<ComponentConnector, VCaption>();
 
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(CssLayoutServerRPC.class, this);
+        rpc = RpcProxy.create(CssLayoutServerRpc.class, this);
     }
 
     @Override

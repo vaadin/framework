@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
-public class ServerRPCMethodInvocation extends MethodInvocation {
+public class ServerRpcMethodInvocation extends MethodInvocation {
 
     private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<String, Method>(
             128, 0.75f, 1);
@@ -19,7 +19,7 @@ public class ServerRPCMethodInvocation extends MethodInvocation {
 
     private Class<? extends ServerRpc> interfaceClass;
 
-    public ServerRPCMethodInvocation(String connectorId, String interfaceName,
+    public ServerRpcMethodInvocation(String connectorId, String interfaceName,
             String methodName, int parameterCount) {
         super(connectorId, interfaceName, methodName);
 

@@ -30,12 +30,12 @@ import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.Splitter
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
 
-    private AbstractSplitPanelRPC rpc;
+    private AbstractSplitPanelRpc rpc;
 
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(AbstractSplitPanelRPC.class, this);
+        rpc = RpcProxy.create(AbstractSplitPanelRpc.class, this);
         // TODO Remove
         getWidget().client = getConnection();
 

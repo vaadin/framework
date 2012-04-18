@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.splitpanel;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
-public interface AbstractSplitPanelRPC extends ServerRpc {
+public interface AbstractSplitPanelRpc extends ServerRpc {
 
     /**
      * Called when the position has been updated by the user.

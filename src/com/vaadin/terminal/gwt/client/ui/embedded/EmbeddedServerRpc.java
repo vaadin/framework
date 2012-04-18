@@ -4,7 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.embedded;
 
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.ui.ClickRPC;
+import com.vaadin.terminal.gwt.client.ui.ClickRpc;
 
-public interface EmbeddedServerRPC extends ClickRPC, ServerRpc {
+public interface EmbeddedServerRpc extends ClickRpc, ServerRpc {
 }

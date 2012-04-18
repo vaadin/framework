@@ -1453,9 +1453,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     continue;
                 }
 
-                if (invocation instanceof ServerRPCMethodInvocation) {
+                if (invocation instanceof ServerRpcMethodInvocation) {
                     ServerRpcManager.applyInvocation(connector,
-                            (ServerRPCMethodInvocation) invocation);
+                            (ServerRpcMethodInvocation) invocation);
                 } else {
 
                     // All code below is for legacy variable changes
@@ -1575,10 +1575,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private ServerRPCMethodInvocation parseServerRpcInvocation(
+    private ServerRpcMethodInvocation parseServerRpcInvocation(
             String connectorId, String interfaceName, String methodName,
             JSONArray parametersJson) throws JSONException {
-        ServerRPCMethodInvocation invocation = new ServerRPCMethodInvocation(
+        ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
                 connectorId, interfaceName, methodName, parametersJson.length());
 
         Object[] parameters = new Object[parametersJson.length()];

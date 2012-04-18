@@ -4,8 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui.root;
 
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.ui.ClickRPC;
+import com.vaadin.terminal.gwt.client.ui.ClickRpc;
 
-public interface RootServerRPC extends ClickRPC, ServerRpc {
+public interface RootServerRpc extends ClickRpc, ServerRpc {
 
 }

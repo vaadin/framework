@@ -16,7 +16,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutState;
 
 /**
@@ -28,7 +28,7 @@ import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutState;
 public class AbsoluteLayout extends AbstractLayout implements
         LayoutClickNotifier {
 
-    private AbsoluteLayoutServerRPC rpc = new AbsoluteLayoutServerRPC() {
+    private AbsoluteLayoutServerRpc rpc = new AbsoluteLayoutServerRpc() {
 
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {

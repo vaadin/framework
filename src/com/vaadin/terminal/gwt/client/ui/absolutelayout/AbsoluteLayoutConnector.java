@@ -21,7 +21,7 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.ui.AbsoluteLayout;
 
@@ -38,20 +38,20 @@ public class AbsoluteLayoutConnector extends
         }
 
         @Override
-        protected LayoutClickRPC getLayoutClickRPC() {
+        protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
 
     };
 
-    private AbsoluteLayoutServerRPC rpc;
+    private AbsoluteLayoutServerRpc rpc;
 
     private Map<String, AbsoluteWrapper> connectorIdToComponentWrapper = new HashMap<String, AbsoluteWrapper>();
 
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(AbsoluteLayoutServerRPC.class, this);
+        rpc = RpcProxy.create(AbsoluteLayoutServerRpc.class, this);
     }
 
     /**

@@ -7,7 +7,7 @@ import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
-public interface LayoutClickRPC extends ServerRpc {
+public interface LayoutClickRpc extends ServerRpc {
     /**
      * Called when a layout click event has occurred and there are server side
      * listeners for the event.

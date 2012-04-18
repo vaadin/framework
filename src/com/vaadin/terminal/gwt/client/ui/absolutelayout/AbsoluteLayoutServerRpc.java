@@ -4,8 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui.absolutelayout;
 
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 
-public interface AbsoluteLayoutServerRPC extends LayoutClickRPC, ServerRpc {
+public interface AbsoluteLayoutServerRpc extends LayoutClickRpc, ServerRpc {
 
 }
