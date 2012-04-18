@@ -1,5 +1,5 @@
 .v-menubar {
-	float: left; /* Force minimum width */
+	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
 }
