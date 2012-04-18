@@ -18,7 +18,7 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
     @Override
     protected void setup() {
         setTheme("tests-tickets");
-        layout = new CustomLayout("Ticket1775.html");
+        layout = new CustomLayout("Ticket1775");
         addComponent(layout);
         layout.addComponent(new TextField("Username"), "loginUser");
         layout.addComponent(new TextField("Password"), "loginPassword");
