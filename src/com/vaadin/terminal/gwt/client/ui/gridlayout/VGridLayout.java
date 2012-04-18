@@ -201,15 +201,15 @@ public class VGridLayout extends ComplexPanel {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    int effectivePadding;
+                    int reservedMargin;
                     if (cell.rowspan + j >= cells[i].length) {
                         // Make room for layout padding for cells reaching the
                         // bottom of the layout
-                        effectivePadding = paddingBottom;
+                        reservedMargin = paddingBottom;
                     } else {
-                        effectivePadding = 0;
+                        reservedMargin = 0;
                     }
-                    cell.layoutVertically(y, effectivePadding);
+                    cell.layoutVertically(y, reservedMargin);
                 }
                 y += rowHeights[j] + verticalSpacing;
             }
@@ -235,15 +235,15 @@ public class VGridLayout extends ComplexPanel {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
                 if (cell != null) {
-                    int effectivePadding;
+                    int reservedMargin;
                     // Make room for layout padding for cells reaching the
                     // right edge of the layout
                     if (i + cell.colspan >= cells.length) {
-                        effectivePadding = paddingRight;
+                        reservedMargin = paddingRight;
                     } else {
-                        effectivePadding = 0;
+                        reservedMargin = 0;
                     }
-                    cell.layoutHorizontally(x, effectivePadding);
+                    cell.layoutHorizontally(x, reservedMargin);
                 }
             }
             x += columnWidths[i] + horizontalSpacing;
@@ -507,15 +507,15 @@ public class VGridLayout extends ComplexPanel {
             return height;
         }
 
-        public void layoutHorizontally(int x, int paddingRight) {
+        public void layoutHorizontally(int x, int marginRight) {
             if (slot != null) {
-                slot.positionHorizontally(x, getAvailableWidth(), paddingRight);
+                slot.positionHorizontally(x, getAvailableWidth(), marginRight);
             }
         }
 
-        public void layoutVertically(int y, int paddingBottom) {
+        public void layoutVertically(int y, int marginBottom) {
             if (slot != null) {
-                slot.positionVertically(y, getAvailableHeight(), paddingBottom);
+                slot.positionVertically(y, getAvailableHeight(), marginBottom);
             }
         }
 
