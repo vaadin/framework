@@ -187,9 +187,10 @@ public abstract class AbstractBoxLayoutConnector extends
         if (child instanceof AbstractFieldConnector) {
             required = ((AbstractFieldConnector) child).isRequired();
         }
+        boolean enabled = child.getState().isEnabled();
         // TODO Description is handled from somewhere else?
 
-        slot.setCaption(caption, iconUrl, styles, error, required);
+        slot.setCaption(caption, iconUrl, styles, error, required, enabled);
 
         slot.setRelativeWidth(child.isRelativeWidth());
         slot.setRelativeHeight(child.isRelativeHeight());
@@ -316,6 +317,8 @@ public abstract class AbstractBoxLayoutConnector extends
                 getLayoutManager().addElementResizeListener(
                         slot.getCaptionElement(), slotCaptionResizeListener);
             } else if (!needsExpand()) {
+                // TODO recheck if removing the listener here breaks anything.
+                // Should be cleaned up.
                 // getLayoutManager().removeElementResizeListener(
                 // slot.getCaptionElement(), slotCaptionResizeListener);
             }
@@ -366,7 +369,9 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     private boolean needsExpand() {
-        return hasExpandRatio.size() > 0;
+        boolean canApplyExpand = (getWidget().vertical && !isUndefinedHeight())
+                || !isUndefinedWidth();
+        return hasExpandRatio.size() > 0 && canApplyExpand;
     }
 
     public void preLayout() {

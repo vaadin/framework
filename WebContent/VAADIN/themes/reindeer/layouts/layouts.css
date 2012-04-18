@@ -1,21 +1,25 @@
 .v-orderedlayout-margin-top,
 .v-horizontallayout-margin-top,
-.v-verticallayout-margin-top {
+.v-verticallayout-margin-top,
+.v-boxlayout.v-margin-top {
 	padding-top: 18px;
 }
 .v-orderedlayout-margin-right,
 .v-horizontallayout-margin-right,
-.v-verticallayout-margin-right {
+.v-verticallayout-margin-right,
+.v-boxlayout.v-margin-right {
 	padding-right: 18px;
 }
 .v-orderedlayout-margin-bottom,
 .v-horizontallayout-margin-bottom,
-.v-verticallayout-margin-bottom {
+.v-verticallayout-margin-bottom,
+.v-boxlayout.v-margin-bottom {
 	padding-bottom: 18px;
 }
 .v-orderedlayout-margin-left,
 .v-horizontallayout-margin-left,
-.v-verticallayout-margin-left {
+.v-verticallayout-margin-left,
+.v-boxlayout.v-margin-left {
 	padding-left: 18px;
 }
 .v-orderedlayout-spacing-on,
@@ -23,6 +27,10 @@
 .v-verticallayout-spacing-on {
 	padding-top: 7px;
 	padding-left: 6px;
+}
+.v-spacing {
+	height: 7px;
+	width: 6px;
 }
 /* Different for historical reasons: previously was inherited directly from Base theme */
 /* TODO unify these values in version 7 */

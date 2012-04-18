@@ -29,6 +29,7 @@ public class TextFieldInLayoutInTable extends Application.LegacyApplication {
 
         table.setSizeFull();
         mainWindow.addComponent(table);
+        mainWindow.getContent().setSizeFull();
     }
 
 }

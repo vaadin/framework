@@ -6,14 +6,14 @@ TODO
 
 */
 
-.v-boxlayout.v-margin-top 		{padding-top: 		18px;}
-.v-boxlayout.v-margin-right 	{padding-right: 	18px;}
-.v-boxlayout.v-margin-bottom 	{padding-bottom: 	18px;}
-.v-boxlayout.v-margin-left 		{padding-left: 		18px;}
+.v-boxlayout.v-margin-top 		{padding-top: 		12px;}
+.v-boxlayout.v-margin-right 	{padding-right: 	12px;}
+.v-boxlayout.v-margin-bottom 	{padding-bottom: 	12px;}
+.v-boxlayout.v-margin-left 		{padding-left: 		12px;}
 
 .v-spacing {
-	width: 7px;
-	height: 7px;
+	width: 6px;
+	height: 6px;
 }
 
 .v-boxlayout {
@@ -37,6 +37,15 @@ TODO
 	display: inline-block;
 	white-space: normal;
 	vertical-align: top;
+}
+
+/* Clear any floats inside the slot, to prevent unwanted collapsing */
+.v-slot:after {
+	content: "";
+	display: block;
+	clear: both;
+	height: 0;
+	overflow: hidden;
 }
 
 .v-vertical > .v-slot,

@@ -4,7 +4,7 @@
 .v-button {
 	display: inline-block;
 	zoom: 1;
-	text-align: center;
+	text-align: center !important;
 	text-decoration: none;
 	border: 2px outset #ddd;
 	background: #eee;
@@ -84,7 +84,7 @@
  * NativeButton styles (html button element)
  * -------------------------------------- */
 .v-nativebutton {
-	text-align: center;
+	text-align: center !important;
 	cursor: pointer;
 	white-space: nowrap;
 	margin: 0;

@@ -227,7 +227,8 @@ public class VBoxLayout extends FlowPanel {
         // TODO refactor VCaption and use that instead: creates a tight coupling
         // between this layout and Vaadin, but it's already coupled
         public void setCaption(String captionText, String iconUrl,
-                List<String> styles, String error, boolean required) {
+                List<String> styles, String error, boolean required,
+                boolean enabled) {
 
             // TODO place for optimization: check if any of these have changed
             // since last time, and only run those changes
@@ -278,18 +279,6 @@ public class VBoxLayout extends FlowPanel {
                 icon = null;
             }
 
-            // Error
-            if (error != null) {
-                if (errorIcon == null) {
-                    errorIcon = DOM.createSpan();
-                    errorIcon.setClassName("v-errorindicator");
-                }
-                caption.appendChild(errorIcon);
-            } else if (errorIcon != null) {
-                errorIcon.removeFromParent();
-                errorIcon = null;
-            }
-
             // Required
             if (required) {
                 if (requiredIcon == null) {
@@ -304,8 +293,20 @@ public class VBoxLayout extends FlowPanel {
                 requiredIcon = null;
             }
 
-            // Styles
+            // Error
+            if (error != null) {
+                if (errorIcon == null) {
+                    errorIcon = DOM.createSpan();
+                    errorIcon.setClassName("v-errorindicator");
+                }
+                caption.appendChild(errorIcon);
+            } else if (errorIcon != null) {
+                errorIcon.removeFromParent();
+                errorIcon = null;
+            }
+
             if (caption != null) {
+                // Styles
                 caption.setClassName("v-caption");
 
                 if (styles != null) {
@@ -313,9 +314,14 @@ public class VBoxLayout extends FlowPanel {
                         caption.addClassName("v-caption-" + style);
                     }
                 }
-            }
 
-            if (caption != null) {
+                if (enabled) {
+                    caption.removeClassName("v-disabled");
+                } else {
+                    caption.addClassName("v-disabled");
+                }
+
+                // Caption position
                 if (captionText != null || iconUrl != null) {
                     setCaptionPosition(CaptionPosition.TOP);
                 } else {
@@ -578,67 +584,63 @@ public class VBoxLayout extends FlowPanel {
         }
 
         if (isExpanding) {
-            if (isExpanding) {
-                if (expandWrapper == null) {
-                    expandWrapper = DOM.createDiv();
-                    expandWrapper.setClassName("v-expand");
-                    for (; getElement().getChildCount() > 0;) {
-                        Node el = getElement().getChild(0);
-                        expandWrapper.appendChild(el);
-                    }
-                    getElement().appendChild(expandWrapper);
+            if (expandWrapper == null) {
+                expandWrapper = DOM.createDiv();
+                expandWrapper.setClassName("v-expand");
+                for (; getElement().getChildCount() > 0;) {
+                    Node el = getElement().getChild(0);
+                    expandWrapper.appendChild(el);
                 }
+                getElement().appendChild(expandWrapper);
+            }
 
-                int totalSize = 0;
-                for (Widget w : getChildren()) {
-                    Slot slot = (Slot) w;
-                    if (slot.getExpandRatio() == -1) {
-                        if (layoutManager != null) {
-                            // TODO check caption position
-                            if (vertical) {
+            int totalSize = 0;
+            for (Widget w : getChildren()) {
+                Slot slot = (Slot) w;
+                if (slot.getExpandRatio() == -1) {
+                    if (layoutManager != null) {
+                        // TODO check caption position
+                        if (vertical) {
+                            totalSize += layoutManager.getOuterHeight(slot
+                                    .getWidget().getElement())
+                                    - layoutManager.getMarginHeight(slot
+                                            .getWidget().getElement());
+                            if (slot.hasCaption()) {
                                 totalSize += layoutManager.getOuterHeight(slot
-                                        .getWidget().getElement())
+                                        .getCaptionElement())
                                         - layoutManager.getMarginHeight(slot
-                                                .getWidget().getElement());
-                                if (slot.hasCaption()) {
-                                    totalSize += layoutManager
-                                            .getOuterHeight(slot
-                                                    .getCaptionElement())
-                                            - layoutManager
-                                                    .getMarginHeight(slot
-                                                            .getCaptionElement());
-                                }
-                            } else {
-                                totalSize += layoutManager.getOuterWidth(slot
-                                        .getWidget().getElement())
-                                        - layoutManager.getMarginWidth(slot
-                                                .getWidget().getElement());
+                                                .getCaptionElement());
                             }
                         } else {
-                            totalSize += vertical ? slot.getOffsetHeight()
-                                    : slot.getOffsetWidth();
+                            totalSize += layoutManager.getOuterWidth(slot
+                                    .getWidget().getElement())
+                                    - layoutManager.getMarginWidth(slot
+                                            .getWidget().getElement());
                         }
+                    } else {
+                        totalSize += vertical ? slot.getOffsetHeight() : slot
+                                .getOffsetWidth();
                     }
-                    // TODO fails in Opera, always returns 0
-                    totalSize += slot.getSpacingSize(vertical);
                 }
-
-                // When we set the margin to the first child, we don't need
-                // overflow:hidden in the layout root element, since the wrapper
-                // would otherwise be placed outside of the layout root element
-                // and block events on elements below it.
-                if (vertical) {
-                    expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
-                    expandWrapper.getFirstChildElement().getStyle()
-                            .setMarginTop(-totalSize, Unit.PX);
-                } else {
-                    expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
-                    expandWrapper.getFirstChildElement().getStyle()
-                            .setMarginLeft(-totalSize, Unit.PX);
-                }
-                recalculateExpands();
-
+                // TODO fails in Opera, always returns 0
+                totalSize += slot.getSpacingSize(vertical);
             }
+
+            // When we set the margin to the first child, we don't need
+            // overflow:hidden in the layout root element, since the wrapper
+            // would otherwise be placed outside of the layout root element
+            // and block events on elements below it.
+            if (vertical) {
+                expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
+                expandWrapper.getFirstChildElement().getStyle()
+                        .setMarginTop(-totalSize, Unit.PX);
+            } else {
+                expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
+                expandWrapper.getFirstChildElement().getStyle()
+                        .setMarginLeft(-totalSize, Unit.PX);
+            }
+
+            recalculateExpands();
         }
     }
 

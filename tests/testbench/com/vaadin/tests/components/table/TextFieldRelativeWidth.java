@@ -27,8 +27,7 @@ public class TextFieldRelativeWidth extends TestBase {
 
     public class EditTable extends Table implements Button.ClickListener {
 
-        private Button addButton = new Button("Add new row",
-                (Button.ClickListener) this);
+        private Button addButton = new Button("Add new row", this);
 
         private String inputPrompt;
 
@@ -44,6 +43,7 @@ public class TextFieldRelativeWidth extends TestBase {
             setPageLength(100);
             setHeight("100%");
             setSizeFull();
+            getLayout().setSizeFull();
             addContainerProperty("id", Integer.class, null);
             addContainerProperty("text", Component.class, null);
             addContainerProperty("button", Button.class, null);
