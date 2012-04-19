@@ -6501,6 +6501,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            The row to ensure is visible
      */
     private void ensureRowIsVisible(VScrollTableRow row) {
+        if (BrowserInfo.get().isTouchDevice()) {
+            // Skip due to android devices that have broken scrolltop will may
+            // get odd scrolling here.
+            return;
+        }
         Util.scrollIntoViewVertically(row.getElement());
     }
 
