@@ -368,6 +368,15 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     public static void requestRepaintAll(HasComponents container) {
         container.requestRepaint();
+        if (container instanceof Panel) {
+            Panel p = (Panel) container;
+            // #2924 Panel is invalid, really invalid.
+            // Panel.getComponentIterator returns the children of content, not
+            // of Panel...
+            if (p.getContent() != null) {
+                p.getContent().requestRepaint();
+            }
+        }
         for (Iterator<Component> childIterator = container
                 .getComponentIterator(); childIterator.hasNext();) {
             Component c = childIterator.next();
