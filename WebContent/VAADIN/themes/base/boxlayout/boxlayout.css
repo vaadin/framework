@@ -91,8 +91,6 @@ TODO
 .v-align-middle > .v-connector,
 .v-align-bottom > .v-connector {
 	display: inline-block;
-	/* TODO this is a bit tricky, since it will override component defaults in some cases */
-	white-space: normal;
 }
 
 .v-align-middle > .v-connector {
@@ -152,8 +150,6 @@ TODO
 .v-caption-on-right > .v-connector {
 	display: inline-block;
 	vertical-align: middle;
-	/* TODO this is a bit tricky, since it will override component defaults in some cases */
-	white-space: normal;
 }
 
 .v-has-caption.v-has-width > .v-connector {

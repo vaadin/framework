@@ -225,6 +225,8 @@ public abstract class AbstractBoxLayoutConnector extends
         if (!slot.hasCaption()) {
             childCaptionElementHeight.remove(child.getWidget().getElement());
         }
+
+        updateLayoutHeight();
     }
 
     @Override
@@ -401,14 +403,17 @@ public abstract class AbstractBoxLayoutConnector extends
                 childElementHeight.put(el, getLayoutManager()
                         .getOuterHeight(el));
 
-                // Element captionElement = el.getParentElement()
-                // .getFirstChildElement().cast();
-                // if (captionElement.getClassName().contains("v-caption")) {
-                // childCaptionElementHeight.put(el, getLayoutManager()
-                // .getOuterHeight(captionElement));
-                // }
+                Element captionElement = el.getParentElement()
+                        .getFirstChildElement().cast();
+                if (captionElement.getClassName().contains("v-caption")) {
+                    childCaptionElementHeight.put(el, getLayoutManager()
+                            .getOuterHeight(captionElement));
+                }
             }
 
+            // If no height has been set, use the natural height for the
+            // component (this is mostly just a precaution so that something
+            // renders correctly)
             String h = getWidget().getElement().getStyle().getHeight();
             if (h == null || h.equals("")) {
                 int height = getLayoutManager().getOuterHeight(

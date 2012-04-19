@@ -1,6 +1,6 @@
 .v-datefield {
 	white-space: nowrap;
-	float: left; /* Force minimum width */
+	display: inline-block; /* Force minimum width */
 }
 .v-datefield-textfield {
 	vertical-align: top;

@@ -1,3 +1,15 @@
+/* THIS IS HERE ONLY BECAUSE WE WANT TO DEFINE IT FIRST, TO MAKE IT EASY TO OVERRIDE */
+.v-connector {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	text-align: left;
+	display: inline-block;
+	white-space: normal;
+}
+
+/* Actual AbsoluteLayout styles begin here */
+
 .v-absolutelayout-wrapper {
 	position: absolute;
 	overflow: hidden;
