@@ -215,17 +215,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (getParent() != null && !getParent().isEnabled()) {
-            // some ancestor still disabled, don't update children
-            return;
-        } else {
-            requestRepaintAll();
-        }
-    }
-
-    @Override
     public void setVisible(boolean visible) {
         if (getState().isVisible() == visible) {
             return;

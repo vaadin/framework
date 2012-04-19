@@ -5,8 +5,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -93,6 +93,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         }
 
+        setWidgetEnabled(isEnabled());
         /*
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
@@ -100,11 +101,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (state instanceof TabIndexState && getWidget() instanceof Focusable) {
             ((Focusable) getWidget()).setTabIndex(((TabIndexState) state)
                     .getTabIndex());
-        }
-
-        if (getWidget() instanceof FocusWidget) {
-            FocusWidget fw = (FocusWidget) getWidget();
-            fw.setEnabled(isEnabled());
         }
 
         // Style names
@@ -139,6 +135,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          */
 
         updateComponentSize();
+    }
+
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        if (getWidget() instanceof HasEnabled) {
+            HasEnabled hasEnabled = (HasEnabled) getWidget();
+            if (hasEnabled.isEnabled() != widgetEnabled) {
+                hasEnabled.setEnabled(widgetEnabled);
+            }
+        }
     }
 
     private void updateComponentSize() {

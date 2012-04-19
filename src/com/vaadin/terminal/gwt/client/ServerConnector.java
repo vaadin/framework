@@ -46,11 +46,9 @@ public interface ServerConnector extends Connector {
     public ApplicationConnection getConnection();
 
     /**
-     * Tests whether the connector is enabled or not. Disabled connectors will
-     * ignore all attempts at communications. Received messages will be
-     * discarded. This method must check that the connector is enabled in
-     * context, that is if it's parent is disabled, this method must return
-     * false.
+     * Tests whether the connector is enabled or not. This method checks that
+     * the connector is enabled in context, i.e. if the parent connector is
+     * disabled, this method must return false.
      * 
      * @return true if the connector is enabled, false otherwise
      */
