@@ -364,6 +364,13 @@
             </fileset>
         </copy>
 
+    	<!-- Add test files to be included in test war -->
+        <copy todir="${output-dir}/WebContent">
+            <fileset dir="WebContent">
+                <include name="statictestfiles/**" />
+            </fileset>
+        </copy>
+
         <!-- Add servlet and portlet configuration files from WebContent -->
         <copy todir="${output-dir}/WebContent/WEB-INF">
             <fileset dir="WebContent/WEB-INF">
