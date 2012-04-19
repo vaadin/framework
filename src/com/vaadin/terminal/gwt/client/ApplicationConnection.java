@@ -643,10 +643,23 @@ public class ApplicationConnection {
 
     int cssWaits = 0;
 
+    /**
+     * Holds the time spent rendering the last request
+     */
     protected int lastProcessingTime;
 
+    /**
+     * Holds the total time spent rendering requests during the lifetime of the
+     * session.
+     */
     protected int totalProcessingTime;
 
+    /**
+     * Holds the timing information from the server-side. How much time was
+     * spent servicing the last request and how much time has been spent
+     * servicing the session so far. These values are always one request behind,
+     * since they cannot be measured before the request is finished.
+     */
     private ValueMap testBenchServerStatus;
 
     static final int MAX_CSS_WAITS = 100;
