@@ -610,6 +610,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     if (application.isRunning()) {
                         switch (requestType) {
                         case RENDER:
+                        case ACTION:
+                            // Both action requests and render requests are ok
+                            // without a Root as they render the initial HTML
+                            // and then do a second request
                             try {
                                 root = application
                                         .getRootForRequest(wrappedRequest);

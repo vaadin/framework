@@ -2118,7 +2118,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 String initialUIDL = getInitialUIDL(combinedRequest, root);
                 params.put("uidl", initialUIDL);
             }
-            response.getWriter().write(params.toString());
+
+            // NOTE! GateIn requires, for some weird reason, getOutputStream
+            // to be used instead of getWriter() (it seems to interpret
+            // application/json as a binary content type)
+            final OutputStream out = response.getOutputStream();
+            final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                    new OutputStreamWriter(out, "UTF-8")));
+
+            outWriter.write(params.toString());
+            // NOTE GateIn requires the buffers to be flushed to work
+            outWriter.flush();
+            out.flush();
         } catch (RootRequiresMoreInformationException e) {
             // Requiring more information at this point is not allowed
             // TODO handle in a better way
