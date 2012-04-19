@@ -71,7 +71,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                 return null;
             }
             i++;
-            AbstractSplitPanelState state = getState();
             if (i == 1) {
                 return (getFirstComponent() == null ? getSecondComponent()
                         : getFirstComponent());
