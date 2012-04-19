@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Arrays;
  * 
  * @since 7.0
  */
-public class MethodInvocation {
+public class MethodInvocation implements Serializable {
 
     private final String connectorId;
     private final String interfaceName;
