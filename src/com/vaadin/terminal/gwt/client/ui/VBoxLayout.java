@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 
 public class VBoxLayout extends FlowPanel {
@@ -88,17 +89,17 @@ public class VBoxLayout extends FlowPanel {
     }
 
     public Slot removeSlot(Widget widget) {
-        Slot slot = getSlot(widget);
+        Slot slot = widgetToSlot.get(widget);
         remove(slot);
         widgetToSlot.remove(widget);
         return slot;
     }
 
-    public Slot getSlot(Widget widget) {
-        Slot slot = widgetToSlot.get(widget);
+    public Slot getSlot(ComponentConnector connector) {
+        Slot slot = widgetToSlot.get(connector.getWidget());
         if (slot == null) {
-            slot = new Slot(widget);
-            widgetToSlot.put(widget, slot);
+            slot = new Slot(connector);
+            widgetToSlot.put(connector.getWidget(), slot);
         }
         return slot;
     }
@@ -108,6 +109,8 @@ public class VBoxLayout extends FlowPanel {
     }
 
     protected class Slot extends SimplePanel {
+
+        private ComponentConnector connector;
 
         private Element spacer;
 
@@ -125,8 +128,9 @@ public class VBoxLayout extends FlowPanel {
         private AlignmentInfo alignment;
         private double expandRatio = -1;
 
-        public Slot(Widget widget) {
-            setWidget(widget);
+        public Slot(ComponentConnector connector) {
+            this.connector = connector;
+            setWidget(connector.getWidget());
             setStylePrimaryName("v-slot");
         }
 
@@ -565,8 +569,14 @@ public class VBoxLayout extends FlowPanel {
                 if (vertical) {
                     slot.setHeight((100 * (slot.getExpandRatio() / total))
                             + "%");
+                    if (slot.connector.isRelativeHeight()) {
+                        layoutManager.setNeedsMeasure(slot.connector);
+                    }
                 } else {
                     slot.setWidth((100 * (slot.getExpandRatio() / total)) + "%");
+                    if (slot.connector.isRelativeWidth()) {
+                        layoutManager.setNeedsMeasure(slot.connector);
+                    }
                 }
             }
         }

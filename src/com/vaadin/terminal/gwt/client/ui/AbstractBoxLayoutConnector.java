@@ -121,7 +121,7 @@ public abstract class AbstractBoxLayoutConnector extends
         ValueMap alignments = uidl.getMapAttribute("alignments");
 
         for (ComponentConnector child : getChildren()) {
-            Slot slot = layout.getSlot(child.getWidget());
+            Slot slot = layout.getSlot(child);
             String pid = child.getConnectorId();
 
             AlignmentInfo alignment;
@@ -180,7 +180,7 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     public void updateCaption(ComponentConnector child) {
-        Slot slot = getWidget().getSlot(child.getWidget());
+        Slot slot = getWidget().getSlot(child);
 
         String caption = child.getState().getCaption();
         String iconUrl = child.getState().getIcon() != null ? child.getState()
@@ -237,7 +237,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
         for (ComponentConnector child : getChildren()) {
             Widget childWidget = child.getWidget();
-            Slot slot = layout.getSlot(childWidget);
+            Slot slot = layout.getSlot(child);
             if (slot.getParent() != layout) {
                 child.addStateChangeHandler(childStateChangeHandler);
             }
@@ -246,7 +246,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
         for (ComponentConnector child : previousChildren) {
             if (child.getParent() != this) {
-                Slot slot = layout.getSlot(child.getWidget());
+                Slot slot = layout.getSlot(child);
                 hasVerticalAlignment.remove(child);
                 hasRelativeHeight.remove(child);
                 hasExpandRatio.remove(child);
@@ -302,7 +302,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
             // We need to update the slot size if the component size is changed
             // to relative
-            Slot slot = getWidget().getSlot(child.getWidget());
+            Slot slot = getWidget().getSlot(child);
             slot.setRelativeWidth(child.isRelativeWidth());
             slot.setRelativeHeight(child.isRelativeHeight());
 
