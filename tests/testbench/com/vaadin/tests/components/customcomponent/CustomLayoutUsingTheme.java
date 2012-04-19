@@ -23,20 +23,21 @@ public class CustomLayoutUsingTheme extends TestBase implements ClickListener {
         layout.addComponent(new TextField("Username"), "loginUser");
         layout.addComponent(new TextField("Password"), "loginPassword");
         layout.addComponent(new Button("Login"), "loginButton");
+        layout.setWidth(null);
 
         VerticalLayout menu = new VerticalLayout();
-        menu.addComponent(new Button("Set main to label", new ClickListener() {
+        menu.addComponent(new Button("Set body to label", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                layout.addComponent(new Label(LoremIpsum.get(200)), "main");
+                layout.addComponent(new Label(LoremIpsum.get(200)), "body");
             }
         }));
-        menu.addComponent(new Button("Set main to huge NativeButton",
+        menu.addComponent(new Button("Set body to huge NativeButton",
                 new ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
                         layout.addComponent(new NativeButton(
-                                "This is it, the main!"), "main");
+                                "This is it, the body!"), "body");
                     }
                 }));
         layout.addComponent(menu, "menu");
