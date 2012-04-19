@@ -407,6 +407,15 @@ public class VBoxLayout extends FlowPanel {
             super.onDetach();
         }
 
+        @Override
+        protected void onAttach() {
+            super.onAttach();
+            if (spacer != null) {
+                getElement().getParentElement().insertBefore(spacer,
+                        getElement());
+            }
+        }
+
     }
 
     protected class Icon extends UIObject {
