@@ -72,6 +72,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private Element scrolledElement;
     private int origScrollTop;
     private HandlerRegistration handlerRegistration;
+    private double lastAnimatedTranslateY;
     private int lastClientY;
     private int deltaScrollPos;
     private boolean transitionOn = false;
@@ -125,25 +126,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     public void onTouchStart(TouchStartEvent event) {
         if (activeScrollDelegate == null && event.getTouches().length() == 1) {
-
-            Touch touch = event.getTouches().get(0);
-            if (detectScrolledElement(touch)) {
-                VConsole.log("TouchDelegate takes over");
-                event.stopPropagation();
-                handlerRegistration = Event.addNativePreviewHandler(this);
-                activeScrollDelegate = this;
-                origY = touch.getClientY();
-                yPositions[0] = origY;
-                eventTimeStamps[0] = getTimeStamp();
-                nextEvent = 1;
-
-                origScrollTop = getScrollTop();
-                VConsole.log("ST" + origScrollTop);
-
-                moved = false;
-                // event.preventDefault();
-                // event.stopPropagation();
-            }
+            NativeEvent nativeEvent = event.getNativeEvent();
+            doTouchStart(nativeEvent);
         } else {
             /*
              * Touch scroll is currenly on (possibly bouncing). Ignore.
@@ -151,29 +135,38 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
     }
 
+    private void doTouchStart(NativeEvent nativeEvent) {
+        if (transitionOn) {
+            momentum.cancel();
+        }
+        Touch touch = nativeEvent.getTouches().get(0);
+        if (detectScrolledElement(touch)) {
+            VConsole.log("TouchDelegate takes over");
+            nativeEvent.stopPropagation();
+            handlerRegistration = Event.addNativePreviewHandler(this);
+            activeScrollDelegate = this;
+            origY = touch.getClientY();
+            yPositions[0] = origY;
+            eventTimeStamps[0] = getTimeStamp();
+            nextEvent = 1;
+
+            origScrollTop = getScrollTop();
+            VConsole.log("ST" + origScrollTop);
+
+            moved = false;
+            // event.preventDefault();
+            // event.stopPropagation();
+        }
+    }
+
     private int getScrollTop() {
         if (androidWithBrokenScrollTop) {
             if (scrolledElement.getPropertyJSO("_vScrollTop") != null) {
                 return scrolledElement.getPropertyInt("_vScrollTop");
-            } else {
-                return 0;
             }
-        } else {
-            if (transitionOn) {
-                // TODO calculate current position of ongoing
-                // transition,
-                // fix to that and start scroll from there. Another
-                // option
-                // is to investigate if we can get even close the same
-                // framerate with scheduler based impl instead of using
-                // transitions (GWT examples has impl of this, with jsni
-                // though). This is very smooth on native ipad, now we
-                // ignore touch starts during animation.
-                return scrolledElement.getScrollTop();
-            } else {
-                return scrolledElement.getScrollTop();
-            }
+            return 0;
         }
+        return scrolledElement.getScrollTop();
     }
 
     private void onTransitionEnd() {
@@ -186,7 +179,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         } else {
             moveTransformationToScrolloffset();
         }
-        transitionOn = false;
     }
 
     private void animateToScrollPosition(int to, int from) {
@@ -437,9 +429,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     /**
      * Note positive scrolltop moves layer up, positive translate moves layer
      * down.
-     * 
-     * @param duration
-     * @param translateY
      */
     private void translateTo(double translateY) {
         for (Element el : layers) {
@@ -454,7 +443,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      * down.
      * 
      * @param duration
-     * @param translateY
      */
     private void translateTo(int duration, final int fromY, final int finalY) {
         if (duration > 0) {
@@ -464,8 +452,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
                 @Override
                 protected void onUpdate(double progress) {
-                    double translateY = (fromY + (finalY - fromY) * progress);
-                    translateTo(translateY);
+                    lastAnimatedTranslateY = (fromY + (finalY - fromY)
+                            * progress);
+                    translateTo(lastAnimatedTranslateY);
                 }
 
                 @Override
@@ -476,7 +465,16 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 @Override
                 protected void onComplete() {
                     super.onComplete();
+                    transitionOn = false;
                     onTransitionEnd();
+                }
+
+                @Override
+                protected void onCancel() {
+                    int delta = (int) (finalY - lastAnimatedTranslateY);
+                    finalScrollTop -= delta;
+                    moveTransformationToScrolloffset();
+                    transitionOn = false;
                 }
             };
             momentum.run(duration);
@@ -494,14 +492,18 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public void onPreviewNativeEvent(NativePreviewEvent event) {
+        int typeInt = event.getTypeInt();
         if (transitionOn) {
             /*
              * TODO allow starting new events. See issue in onTouchStart
              */
             event.cancel();
+
+            if (typeInt == Event.ONTOUCHSTART) {
+                doTouchStart(event.getNativeEvent());
+            }
             return;
         }
-        int typeInt = event.getTypeInt();
         switch (typeInt) {
         case Event.ONTOUCHMOVE:
             if (!event.isCanceled()) {
