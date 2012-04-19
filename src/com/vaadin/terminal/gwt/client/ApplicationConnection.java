@@ -2367,6 +2367,10 @@ public class ApplicationConnection {
             return true;
         }
 
+        if (!manageCaption) {
+            VConsole.error(Util.getConnectorString(connector)
+                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
+        }
         return false;
     }
 
