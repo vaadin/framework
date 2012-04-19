@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal.gwt.server;
 
 import javax.portlet.PortletRequest;
