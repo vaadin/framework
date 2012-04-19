@@ -224,11 +224,21 @@ public class ApplicationConnection {
     		return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()()
     				|| ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
     	}
+    	
     	var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
     	if (vi) {
     		client.getVersionInfo = function() {
     			return vi;
     		}
+    	}
+    	
+    	client.getProfilingData = function() {
+    	    var pd = [
+        	    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::lastProcessingTime,
+                    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::totalProcessingTime
+    	        ];
+    	    pd = pd.concat(ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::testBenchServerStatus);
+    	    return pd;
     	}
 
     	client.getElementByPath = function(id) {
@@ -632,6 +642,13 @@ public class ApplicationConnection {
     }
 
     int cssWaits = 0;
+
+    protected int lastProcessingTime;
+
+    protected int totalProcessingTime;
+
+    private ValueMap testBenchServerStatus;
+
     static final int MAX_CSS_WAITS = 100;
 
     protected void handleWhenCSSLoaded(final String jsonText,
@@ -952,6 +969,13 @@ public class ApplicationConnection {
                     json.getValueMap("typeMappings"), widgetSet);
         }
 
+        /*
+         * Hook for TestBench to get details about server status
+         */
+        if (json.containsKey("tbss")) {
+            testBenchServerStatus = json.getValueMap("tbss");
+        }
+
         Command c = new Command() {
             public void execute() {
                 VConsole.dirUIDL(json, configuration);
@@ -1129,10 +1153,12 @@ public class ApplicationConnection {
 
                 // TODO build profiling for widget impl loading time
 
-                final long prosessingTime = (new Date().getTime())
-                        - start.getTime();
+                lastProcessingTime = (int) ((new Date().getTime()) - start
+                        .getTime());
+                totalProcessingTime += lastProcessingTime;
+
                 VConsole.log(" Processing time was "
-                        + String.valueOf(prosessingTime) + "ms for "
+                        + String.valueOf(lastProcessingTime) + "ms for "
                         + jsonText.length() + " characters of JSON");
                 VConsole.log("Referenced paintables: "
                         + idToPaintableDetail.size());

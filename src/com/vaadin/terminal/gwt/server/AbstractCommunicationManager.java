@@ -912,7 +912,7 @@ public abstract class AbstractCommunicationManager implements
                 repaintAll = true;
             }
 
-            writeUidlResponce(callback, repaintAll, outWriter, window,
+            writeUidlResponse(request, callback, repaintAll, outWriter, window,
                     analyzeLayouts);
 
         }
@@ -922,9 +922,9 @@ public abstract class AbstractCommunicationManager implements
 
     }
 
-    public void writeUidlResponce(Callback callback, boolean repaintAll,
-            final PrintWriter outWriter, Window window, boolean analyzeLayouts)
-            throws PaintException {
+    public void writeUidlResponse(Request request, Callback callback,
+            boolean repaintAll, final PrintWriter outWriter, Window window,
+            boolean analyzeLayouts) throws PaintException {
         outWriter.print("\"changes\":[");
 
         ArrayList<Paintable> paintables = null;
@@ -1205,6 +1205,20 @@ public abstract class AbstractCommunicationManager implements
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+
+        writePerformanceDataForTestBench(request, outWriter);
+    }
+
+    /**
+     * Adds the performance timing data used by TestBench 3 to the UIDL
+     * response.
+     */
+    private void writePerformanceDataForTestBench(final Request request,
+            final PrintWriter outWriter) {
+        Long totalTime = (Long) request.getAttribute("TOTAL");
+        Long lastRequestTime = (Long) request.getAttribute("LASTREQUEST");
+        outWriter.write(String.format(", \"tbss\":[%d, %d]", totalTime,
+                lastRequestTime));
     }
 
     private int getTimeoutInterval() {

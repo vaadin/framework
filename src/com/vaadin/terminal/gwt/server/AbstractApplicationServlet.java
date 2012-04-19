@@ -401,6 +401,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        RequestTimer.RequestWrapper wrappedRequest = new RequestTimer.RequestWrapper(
+                request);
+        RequestTimer requestTimer = RequestTimer.get(wrappedRequest);
+        requestTimer.start(wrappedRequest);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -549,6 +553,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                             request, response);
                 }
 
+                requestTimer.stop();
+                RequestTimer.set(wrappedRequest, requestTimer);
             }
 
         }

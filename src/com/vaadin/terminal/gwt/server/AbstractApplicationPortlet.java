@@ -326,6 +326,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
+        RequestTimer.RequestWrapper wrappedRequest = new RequestTimer.RequestWrapper(
+                request);
+        RequestTimer requestTimer = RequestTimer.get(wrappedRequest);
+        requestTimer.start(wrappedRequest);
+
         RequestType requestType = getRequestType(request);
 
         if (requestType == RequestType.UNKNOWN) {
@@ -490,6 +495,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                                 request, response);
 
                     }
+
+                    requestTimer.stop();
+                    RequestTimer.set(wrappedRequest, requestTimer);
                 }
             }
         }
