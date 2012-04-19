@@ -534,6 +534,31 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         return parent;
     }
 
+    /**
+     * Returns the closest ancestor with the given type.
+     * <p>
+     * To find the Window that contains the component, use {@code Window w =
+     * getParent(Window.class);}
+     * </p>
+     * 
+     * @param <T>
+     *            The type of the ancestor
+     * @param parentType
+     *            The ancestor class we are looking for
+     * @return The first ancestor that can be assigned to the given class. Null
+     *         if no ancestor with the correct type could be found.
+     */
+    public <T extends HasComponents> T findAncestor(Class<T> parentType) {
+        HasComponents p = getParent();
+        while (p != null) {
+            if (parentType.isAssignableFrom(p.getClass())) {
+                return parentType.cast(p);
+            }
+            p = p.getParent();
+        }
+        return null;
+    }
+
     /*
      * Sets the parent component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
@@ -1461,7 +1486,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private void setActionManagerViewer() {
         if (actionManager != null && getRoot() != null) {
             // Attached and has action manager
-            Window w = findParentOfType(Window.class, this);
+            Window w = findAncestor(Window.class);
             if (w != null) {
                 actionManager.setViewer(w);
             } else {
@@ -1469,32 +1494,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             }
         }
 
-    }
-
-    /**
-     * Helper method for finding the first parent component of a given type.
-     * Useful e.g. for finding the Window the component is inside.
-     * 
-     * @param <T>
-     * @param parentType
-     *            The type to look for
-     * @param c
-     *            The target component
-     * @return A parent component of type {@literal parentType} or null if no
-     *         parent component in the hierarchy can be assigned to the given
-     *         type.
-     */
-    private static <T extends Component> T findParentOfType(
-            Class<T> parentType, Component c) {
-        Component p = c.getParent();
-        if (p == null) {
-            return null;
-        }
-
-        if (parentType.isAssignableFrom(p.getClass())) {
-            return (T) p;
-        }
-        return findParentOfType(parentType, p);
     }
 
     public void addShortcutListener(ShortcutListener shortcut) {

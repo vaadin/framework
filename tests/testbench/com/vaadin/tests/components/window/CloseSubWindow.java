@@ -37,7 +37,7 @@ public class CloseSubWindow extends TestBase {
         Button closeButton = new Button("Close");
         closeButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
-                window.close();
+                event.getButton().findAncestor(Window.class).close();
             }
         });
         window.addComponent(closeButton);
