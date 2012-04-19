@@ -1257,7 +1257,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
              */
             iLayout();
             client.runDescendentsLayout(this);
-
+            /*
+             * Firefox and IE9 need a nudge to prevent unwanted scrollbars with
+             * Chameleon theme (#8625)
+             */
+            if (BrowserInfo.get().isFirefox() || BrowserInfo.get().isIE9()) {
+                Util.setStyleTemporarily((Element) tp.getElement()
+                        .getFirstChildElement(), "overflow", "");
+            }
             return false;
         } else {
             /*
