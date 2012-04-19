@@ -384,7 +384,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
     private boolean needsExpand() {
         boolean canApplyExpand = (getWidget().vertical && !isUndefinedHeight())
-                || !isUndefinedWidth();
+                || (!getWidget().vertical && !isUndefinedWidth());
         return hasExpandRatio.size() > 0 && canApplyExpand;
     }
 
