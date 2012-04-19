@@ -93,7 +93,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         }
 
-        setWidgetEnabled(isEnabled());
         /*
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
@@ -102,6 +101,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ((Focusable) getWidget()).setTabIndex(((TabIndexState) state)
                     .getTabIndex());
         }
+
+        setWidgetEnabled(isEnabled());
 
         // Style names
         String styleName = getStyleNames(getWidget().getStylePrimaryName());
@@ -139,10 +140,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     public void setWidgetEnabled(boolean widgetEnabled) {
         if (getWidget() instanceof HasEnabled) {
-            HasEnabled hasEnabled = (HasEnabled) getWidget();
-            if (hasEnabled.isEnabled() != widgetEnabled) {
-                hasEnabled.setEnabled(widgetEnabled);
-            }
+            ((HasEnabled) getWidget()).setEnabled(widgetEnabled);
         }
     }
 
