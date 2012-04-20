@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
+import java.io.Serializable;
+
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Connector;
 
@@ -44,7 +46,7 @@ public class AbstractSplitPanelState extends ComponentState {
         this.splitterState = splitterState;
     }
 
-    public static class SplitterState {
+    public static class SplitterState implements Serializable {
         private float position;
         private String positionUnit;
         private boolean positionReversed = false;

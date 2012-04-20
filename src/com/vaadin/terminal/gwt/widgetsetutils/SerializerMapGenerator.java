@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +53,8 @@ public class SerializerMapGenerator extends Generator {
             TypeOracle typeOracle = context.getTypeOracle();
             Set<JClassType> typesNeedingSerializers = findTypesNeedingSerializers(
                     typeOracle, logger);
+            warnIfNotJavaSerializable(typesNeedingSerializers, typeOracle,
+                    logger);
             Set<JClassType> typesWithExistingSerializers = findTypesWithExistingSerializers(
                     typeOracle, logger);
             Set<JClassType> serializerMappings = new HashSet<JClassType>();
@@ -75,6 +78,34 @@ public class SerializerMapGenerator extends Generator {
         }
         // return the fully qualifed name of the class generated
         return packageName + "." + className;
+    }
+
+    /**
+     * Emits a warning for all classes that are used in communication but do not
+     * implement java.io.Serializable. Implementing java.io.Serializable is not
+     * needed for communication but for the server side Application to be
+     * serializable i.e. work in GAE for instance.
+     * 
+     * @param typesNeedingSerializers
+     * @param typeOracle
+     * @param logger
+     */
+    private void warnIfNotJavaSerializable(
+            Set<JClassType> typesNeedingSerializers, TypeOracle typeOracle,
+            TreeLogger logger) {
+        JClassType javaSerializable = typeOracle.findType(Serializable.class
+                .getName());
+        for (JClassType type : typesNeedingSerializers) {
+            boolean serializable = type.isAssignableTo(javaSerializable);
+            if (!serializable) {
+                logger.log(
+                        Type.ERROR,
+                        type
+                                + " is used in RPC or shared state but does not implement "
+                                + Serializable.class.getName()
+                                + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type.");
+            }
+        }
     }
 
     private Set<JClassType> findTypesWithExistingSerializers(
@@ -233,8 +264,9 @@ public class SerializerMapGenerator extends Generator {
             return;
         }
 
-        if (serializableTypes.contains(type))
+        if (serializableTypes.contains(type)) {
             return;
+        }
 
         JClassType typeClass = type.isClass();
         if (typeClass != null) {
