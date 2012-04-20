@@ -18,7 +18,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -513,7 +512,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (touchScrollDelegate == null) {
             touchScrollDelegate = new TouchScrollDelegate(
                     scrollBodyPanel.getElement());
-            touchScrollDelegate.setScrollHandler(this);
         }
         return touchScrollDelegate;
 
@@ -4064,14 +4062,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             DOM.appendChild(container, preSpacer);
             DOM.appendChild(container, table);
             DOM.appendChild(container, postSpacer);
-            if (BrowserInfo.get().isTouchDevice()) {
-                NodeList<Node> childNodes = container.getChildNodes();
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                    Element item = (Element) childNodes.getItem(i);
-                    item.getStyle().setProperty("webkitTransform",
-                            "translate3d(0,0,0)");
-                }
-            }
 
         }
 
@@ -4617,7 +4607,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public class VScrollTableRow extends Panel implements ActionOwner,
                 Container {
 
-            private static final int TOUCHSCROLL_TIMEOUT = 100;
+            private static final int TOUCHSCROLL_TIMEOUT = 70;
             private static final int DRAGMODE_MULTIROW = 2;
             protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
@@ -5291,11 +5281,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     }
                                 };
                             }
-                            if (contextTouchTimeout != null) {
-                                contextTouchTimeout.cancel();
-                                contextTouchTimeout
-                                        .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
-                            }
+                            contextTouchTimeout.cancel();
+                            contextTouchTimeout
+                                    .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
                         }
                         break;
                     case Event.ONMOUSEDOWN:
@@ -5452,7 +5440,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     int top = Util.getTouchOrMouseClientY(event);
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
-                    contextMenu = new ContextMenuDetails(getKey(), left, top);
+                    contextMenu = new ContextMenuDetails(this.getKey(), left,
+                            top);
                     client.getContextMenu().showAt(this, left, top);
                 }
             }
@@ -6501,11 +6490,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            The row to ensure is visible
      */
     private void ensureRowIsVisible(VScrollTableRow row) {
-        if (BrowserInfo.get().isTouchDevice()) {
-            // Skip due to android devices that have broken scrolltop will may
-            // get odd scrolling here.
-            return;
-        }
         Util.scrollIntoViewVertically(row.getElement());
     }
 

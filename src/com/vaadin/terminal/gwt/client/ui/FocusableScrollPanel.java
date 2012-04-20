@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
@@ -24,7 +22,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.VConsole;
 
 /**
  * A scrollhandlers similar to {@link ScrollPanel}.
@@ -139,11 +136,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
      * @return the vertical scroll position, in pixels
      */
     public int getScrollPosition() {
-        if (getElement().getPropertyJSO("_vScrollTop") != null) {
-            return getElement().getPropertyInt("_vScrollTop");
-        } else {
-            return getElement().getScrollTop();
-        }
+        return getElement().getScrollTop();
     }
 
     /**
@@ -163,23 +156,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
      *            the new vertical scroll position, in pixels
      */
     public void setScrollPosition(int position) {
-        if (isAndroidWithBrokenScrollTop()) {
-            ArrayList<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
-                    .getElements(getElement());
-            for (com.google.gwt.dom.client.Element el : elements) {
-                final Style style = el.getStyle();
-                style.setProperty("webkitTransform", "translate3d(0px,"
-                        + -position + "px,0px)");
-            }
-            getElement().setPropertyInt("_vScrollTop", position);
-        } else {
-            getElement().setScrollTop(position);
-        }
-    }
-
-    private boolean isAndroidWithBrokenScrollTop() {
-        return BrowserInfo.getBrowserString().contains("Android 3")
-                || BrowserInfo.getBrowserString().contains("Android 4");
+        getElement().setScrollTop(position);
     }
 
     public void onScroll(ScrollEvent event) {
