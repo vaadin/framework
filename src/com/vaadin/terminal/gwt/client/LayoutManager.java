@@ -63,10 +63,30 @@ public class LayoutManager {
         this.connection = connection;
     }
 
+    /**
+     * Gets the layout manager associated with the given
+     * {@link ApplicationConnection}.
+     * 
+     * @param connection
+     *            the application connection to get a layout manager for
+     * @return the layout manager associated with the provided application
+     *         connection
+     */
     public static LayoutManager get(ApplicationConnection connection) {
         return connection.getLayoutManager();
     }
 
+    /**
+     * Registers that a ManagedLayout is depending on the size of an Element.
+     * This causes this layout manager to measure the element in the beginning
+     * of every layout phase and call the appropriate layout method of the
+     * managed layout if the size of the element has changed.
+     * 
+     * @param owner
+     *            the ManagedLayout that depends on an element
+     * @param element
+     *            the Element that should be measured
+     */
     public void registerDependency(ManagedLayout owner, Element element) {
         MeasuredSize measuredSize = ensureMeasured(element);
         setNeedsLayout(owner);
@@ -98,6 +118,16 @@ public class LayoutManager {
         }
     }
 
+    /**
+     * Assigns a measured size to an element. Method defined as protected to
+     * allow separate implementation for IE8 in which delete not always works.
+     * 
+     * @param element
+     *            the dom element to attach the measured size to
+     * @param measuredSize
+     *            the measured size to attach to the element. If
+     *            <code>null</code>, any previous measured size is removed.
+     */
     protected native void setMeasuredSize(Element element,
             MeasuredSize measuredSize)
     /*-{
@@ -124,6 +154,17 @@ public class LayoutManager {
         return measuredSize;
     }
 
+    /**
+     * Registers that a ManagedLayout is no longer depending on the size of an
+     * Element.
+     * 
+     * @see #registerDependency(ManagedLayout, Element)
+     * 
+     * @param owner
+     *            the ManagedLayout no longer depends on an element
+     * @param element
+     *            the Element that that no longer needs to be measured
+     */
     public void unregisterDependency(ManagedLayout owner, Element element) {
         MeasuredSize measuredSize = getMeasuredSize(element, null);
         if (measuredSize == null) {
@@ -555,88 +596,425 @@ public class LayoutManager {
         layoutNow();
     }
 
-    // TODO Rename to setNeedsLayout
+    /**
+     * Marks that a ManagedLayout should be layouted in the next layout phase
+     * even if none of the elements managed by the layout have been resized.
+     * 
+     * @param layout
+     *            the managed layout that should be layouted
+     */
     public final void setNeedsLayout(ManagedLayout layout) {
         setNeedsHorizontalLayout(layout);
         setNeedsVerticalLayout(layout);
     }
 
+    /**
+     * Marks that a ManagedLayout should be layouted horizontally in the next
+     * layout phase even if none of the elements managed by the layout have been
+     * resized horizontally.
+     * 
+     * For SimpleManagedLayout which is always layouted in both directions, this
+     * has the same effect as {@link #setNeedsLayout(ManagedLayout)}.
+     * 
+     * @param layout
+     *            the managed layout that should be layouted
+     */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
         needsHorizontalLayout.add(layout);
     }
 
+    /**
+     * Marks that a ManagedLayout should be layouted vertically in the next
+     * layout phase even if none of the elements managed by the layout have been
+     * resized vertically.
+     * 
+     * For SimpleManagedLayout which is always layouted in both directions, this
+     * has the same effect as {@link #setNeedsLayout(ManagedLayout)}.
+     * 
+     * @param layout
+     *            the managed layout that should be layouted
+     */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
         needsVerticalLayout.add(layout);
     }
 
-    public boolean isMeasured(Element element) {
-        return getMeasuredSize(element, nullSize) != nullSize;
-    }
-
+    /**
+     * Gets the outer height (including margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured outer height (including margins, paddings and
+     *         borders) of the element in pixels.
+     */
     public final int getOuterHeight(Element element) {
         return getMeasuredSize(element, nullSize).getOuterHeight();
     }
 
+    /**
+     * Gets the outer width (including margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured outer width (including margins, paddings and
+     *         borders) of the element in pixels.
+     */
     public final int getOuterWidth(Element element) {
         return getMeasuredSize(element, nullSize).getOuterWidth();
     }
 
+    /**
+     * Gets the inner height (excluding margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured inner height (excluding margins, paddings and
+     *         borders) of the element in pixels.
+     */
     public final int getInnerHeight(Element element) {
         return getMeasuredSize(element, nullSize).getInnerHeight();
     }
 
+    /**
+     * Gets the inner width (excluding margins, paddings and borders) of the
+     * given element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * -1 is returned if the element has not been measured. If 0 is returned, it
+     * might indicate that the element is not attached to the DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured inner width (excluding margins, paddings and
+     *         borders) of the element in pixels.
+     */
     public final int getInnerWidth(Element element) {
         return getMeasuredSize(element, nullSize).getInnerWidth();
     }
 
+    /**
+     * Gets the border height (top border + bottom border) of the given element,
+     * provided that it has been measured. These elements are guaranteed to be
+     * measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured border height (top border + bottom border) of the
+     *         element in pixels.
+     */
     public final int getBorderHeight(Element element) {
         return getMeasuredSize(element, nullSize).getBorderHeight();
     }
 
+    /**
+     * Gets the padding height (top padding + bottom padding) of the given
+     * element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured padding height (top padding + bottom padding) of the
+     *         element in pixels.
+     */
     public int getPaddingHeight(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingHeight();
     }
 
+    /**
+     * Gets the border width (left border + right border) of the given element,
+     * provided that it has been measured. These elements are guaranteed to be
+     * measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured border width (left border + right border) of the
+     *         element in pixels.
+     */
     public int getBorderWidth(Element element) {
         return getMeasuredSize(element, nullSize).getBorderWidth();
     }
 
+    /**
+     * Gets the padding width (left padding + right padding) of the given
+     * element, provided that it has been measured. These elements are
+     * guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured padding width (left padding + right padding) of the
+     *         element in pixels.
+     */
     public int getPaddingWidth(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingWidth();
     }
 
+    /**
+     * Gets the top padding of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured top padding of the element in pixels.
+     */
     public int getPaddingTop(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingTop();
     }
 
+    /**
+     * Gets the left padding of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured left padding of the element in pixels.
+     */
     public int getPaddingLeft(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingLeft();
     }
 
+    /**
+     * Gets the bottom padding of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured bottom padding of the element in pixels.
+     */
     public int getPaddingBottom(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingBottom();
     }
 
+    /**
+     * Gets the right padding of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured right padding of the element in pixels.
+     */
     public int getPaddingRight(Element element) {
         return getMeasuredSize(element, nullSize).getPaddingRight();
     }
 
+    /**
+     * Gets the top margin of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured top margin of the element in pixels.
+     */
     public int getMarginTop(Element element) {
         return getMeasuredSize(element, nullSize).getMarginTop();
     }
 
+    /**
+     * Gets the right margin of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured right margin of the element in pixels.
+     */
     public int getMarginRight(Element element) {
         return getMeasuredSize(element, nullSize).getMarginRight();
     }
 
+    /**
+     * Gets the bottom margin of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured bottom margin of the element in pixels.
+     */
     public int getMarginBottom(Element element) {
         return getMeasuredSize(element, nullSize).getMarginBottom();
     }
 
+    /**
+     * Gets the left margin of the given element, provided that it has been
+     * measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured size for
+     * @return the measured left margin of the element in pixels.
+     */
     public int getMarginLeft(Element element) {
         return getMeasuredSize(element, nullSize).getMarginLeft();
     }
 
+    /**
+     * Registers the outer height (including margins, borders and paddings) of a
+     * component. This can be used as an optimization by ManagedLayouts; by
+     * informing the LayoutManager about what size a component will have, the
+     * layout propagation can continue directly without first measuring the
+     * potentially resized elements.
+     * 
+     * @param component
+     *            the component for which the size is reported
+     * @param outerHeight
+     *            the new outer height (including margins, borders and paddings)
+     *            of the component in pixels
+     */
     public void reportOuterHeight(ComponentConnector component, int outerHeight) {
         MeasuredSize measuredSize = getMeasuredSize(component);
         if (isLayoutRunning()) {
@@ -653,6 +1031,19 @@ public class LayoutManager {
         }
     }
 
+    /**
+     * Registers the height reserved for a relatively sized component. This can
+     * be used as an optimization by ManagedLayouts; by informing the
+     * LayoutManager about what size a component will have, the layout
+     * propagation can continue directly without first measuring the potentially
+     * resized elements.
+     * 
+     * @param component
+     *            the relatively sized component for which the size is reported
+     * @param assignedHeight
+     *            the inner height of the relatively sized component's parent
+     *            element in pixels
+     */
     public void reportHeightAssignedToRelative(ComponentConnector component,
             int assignedHeight) {
         assert component.isRelativeHeight();
@@ -663,6 +1054,19 @@ public class LayoutManager {
         reportOuterHeight(component, effectiveHeight);
     }
 
+    /**
+     * Registers the width reserved for a relatively sized component. This can
+     * be used as an optimization by ManagedLayouts; by informing the
+     * LayoutManager about what size a component will have, the layout
+     * propagation can continue directly without first measuring the potentially
+     * resized elements.
+     * 
+     * @param component
+     *            the relatively sized component for which the size is reported
+     * @param assignedWidth
+     *            the inner width of the relatively sized component's parent
+     *            element in pixels
+     */
     public void reportWidthAssignedToRelative(ComponentConnector component,
             int assignedWidth) {
         assert component.isRelativeWidth();
@@ -677,6 +1081,19 @@ public class LayoutManager {
         return Float.parseFloat(size.substring(0, size.length() - 1));
     }
 
+    /**
+     * Registers the outer width (including margins, borders and paddings) of a
+     * component. This can be used as an optimization by ManagedLayouts; by
+     * informing the LayoutManager about what size a component will have, the
+     * layout propagation can continue directly without first measuring the
+     * potentially resized elements.
+     * 
+     * @param component
+     *            the component for which the size is reported
+     * @param outerWidth
+     *            the new outer width (including margins, borders and paddings)
+     *            of the component in pixels
+     */
     public void reportOuterWidth(ComponentConnector component, int outerWidth) {
         MeasuredSize measuredSize = getMeasuredSize(component);
         if (isLayoutRunning()) {
@@ -693,6 +1110,18 @@ public class LayoutManager {
         }
     }
 
+    /**
+     * Adds a listener that will be notified whenever the size of a specific
+     * element changes. Adding a listener to an element also ensures that all
+     * sizes for that element will be available starting from the next layout
+     * phase.
+     * 
+     * @param element
+     *            the element that should be checked for size changes
+     * @param listener
+     *            an ElementResizeListener that will be informed whenever the
+     *            size of the target element has changed
+     */
     public void addElementResizeListener(Element element,
             ElementResizeListener listener) {
         Collection<ElementResizeListener> listeners = elementResizeListeners
@@ -705,6 +1134,18 @@ public class LayoutManager {
         listeners.add(listener);
     }
 
+    /**
+     * Removes an element resize listener from the provided element. This might
+     * cause this LayoutManager to stop tracking the size of the element if no
+     * other sources are interested in the size.
+     * 
+     * @param element
+     *            the element to which the element resize listener was
+     *            previously added
+     * @param listener
+     *            the ElementResizeListener that should no longer get informed
+     *            about size changes to the target element.
+     */
     public void removeElementResizeListener(Element element,
             ElementResizeListener listener) {
         Collection<ElementResizeListener> listeners = elementResizeListeners
@@ -725,6 +1166,16 @@ public class LayoutManager {
         }
     }
 
+    /**
+     * Informs this LayoutManager that the size of a component might have
+     * changed. If there is no upcoming layout phase, a new layout phase is
+     * scheduled. This method should be used whenever a size might have changed
+     * from outside of Vaadin's normal update phase, e.g. when an icon has been
+     * loaded or when the user resizes some part of the UI using the mouse.
+     * 
+     * @param component
+     *            the component whose size might have changed.
+     */
     public void setNeedsMeasure(ComponentConnector component) {
         if (isLayoutRunning()) {
             currentDependencyTree.setNeedsMeasure(component, true);
