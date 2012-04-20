@@ -524,21 +524,26 @@ public class ApplicationConnection {
                         return;
 
                     case 503:
-                        // We'll assume msec instead of the usual seconds
-                        int delay = Integer.parseInt(response
-                                .getHeader("Retry-After"));
-                        VConsole.log("503, retrying in " + delay + "msec");
-                        (new Timer() {
-                            @Override
-                            public void run() {
-                                // TODO why? Here used to be "activeRequests--;"
-                                // but can't see why exactly
-                                hasActiveRequest = false;
-                                doUidlRequest(uri, payload, synchronous);
-                            }
-                        }).schedule(delay);
-                        return;
-
+                        /*
+                         * We'll assume msec instead of the usual seconds. If
+                         * there's no Retry-After header, handle the error like
+                         * a 500, as per RFC 2616 section 10.5.4.
+                         */
+                        String delay = response.getHeader("Retry-After");
+                        if (delay != null) {
+                            VConsole.log("503, retrying in " + delay + "msec");
+                            (new Timer() {
+                                @Override
+                                public void run() {
+                                    // TODO why? Here used to be
+                                    // "activeRequests--;"
+                                    // but can't see why exactly
+                                    hasActiveRequest = false;
+                                    doUidlRequest(uri, payload, synchronous);
+                                }
+                            }).schedule(Integer.parseInt(delay));
+                            return;
+                        }
                     }
 
                     if ((statusCode / 100) == 4) {
@@ -547,6 +552,13 @@ public class ApplicationConnection {
                         showCommunicationError(
                                 "UIDL could not be read from server. Check servlets mappings. Error code: "
                                         + statusCode, statusCode);
+                        endRequest();
+                        return;
+                    } else if ((statusCode / 100) == 5) {
+                        // Something's wrong on the server, there's nothing the
+                        // client can do except maybe try again.
+                        showCommunicationError("Server error. Error code: "
+                                + statusCode, statusCode);
                         endRequest();
                         return;
                     }
