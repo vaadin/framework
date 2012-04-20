@@ -2,8 +2,9 @@
 	background: #fff;
 }
 .v-window-contents {
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .v-window.v-has-width > div.popupContent,
@@ -24,8 +25,9 @@
 	padding: 0.3em 1em;
 	height: 1.6em;
 	position: relative;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .v-window-outerheader,

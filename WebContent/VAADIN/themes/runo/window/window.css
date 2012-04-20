@@ -27,8 +27,9 @@
 	border: 2px solid #babfc0;
 	border-top: none;
 	border-bottom: none;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 .v-window div.v-window-footer {
 	height: 8px;

@@ -3,8 +3,9 @@
 	overflow: hidden;
 }
 .v-absolutelayout-margin, .v-absolutelayout-canvas {
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 .v-absolutelayout.v-has-height > div, .v-absolutelayout.v-has-height > div > div {
 	height: 100%;

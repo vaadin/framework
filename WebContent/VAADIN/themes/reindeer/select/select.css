@@ -18,8 +18,9 @@
 .v-window input.v-filterselect-input,
 .v-popupview-popup input.v-filterselect-input {
 	padding: 4px 0 4px 2px;
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 .v-filterselect-prompt .v-filterselect-input {
 	font-style: normal;

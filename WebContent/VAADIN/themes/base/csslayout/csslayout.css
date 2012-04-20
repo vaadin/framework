@@ -2,8 +2,9 @@
 	overflow: hidden;
 }
 .v-csslayout-margin, .v-csslayout-container {
-	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 .v-has-width > .v-csslayout-margin,
 .v-has-width > .v-csslayout-margin > .v-csslayout-container {
