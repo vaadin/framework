@@ -30,6 +30,8 @@ public class LayoutManager {
 
     private static final boolean debugLogging = false;
 
+    private static int totalLayoutTime = 0;
+
     private ApplicationConnection connection;
     private final Set<Element> measuredNonConnectorElements = new HashSet<Element>();
     private final MeasuredSize nullSize = new MeasuredSize();
@@ -365,6 +367,12 @@ public class LayoutManager {
 
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
+
+        totalLayoutTime += totalDuration.elapsedMillis();
+        VConsole.log("");
+        VConsole.log("### Total combined layout phase: " + totalLayoutTime
+                + "ms");
+        VConsole.log("");
     }
 
     private void logConnectorStatus(int connectorId) {

@@ -115,8 +115,8 @@ public class BoxLayoutTest extends AbstractTestRoot {
                         grid.addComponent(new Label("Grid cell 2"));
                         grid.addComponent(grow);
                         grid.addComponent(new Label("Grid cell 4"));
-                        // l.addComponent(grid);
-                        l.addComponent(new TextField("Some field"));
+                        l.addComponent(grid);
+                        // l.addComponent(new TextField("Some field"));
                     }
                 });
         header.addComponent(addComponent);

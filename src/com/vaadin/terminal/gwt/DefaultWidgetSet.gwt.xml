@@ -24,7 +24,7 @@
 	<replace-with class="com.vaadin.terminal.gwt.client.ui.HorizontalBoxLayoutConnector">
 		<when-type-is class="com.vaadin.terminal.gwt.client.ui.orderedlayout.HorizontalLayoutConnector" />
 	</replace-with>
-
+	
 	<!-- Use own Scheduler implementation to be able to track if commands are 
 		running -->
 	<replace-with class="com.vaadin.terminal.gwt.client.VSchedulerImpl">

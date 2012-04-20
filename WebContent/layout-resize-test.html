@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>LayoutResizeTest opener</title>
+</head>
+<body>
+
+<button onclick="testV7()">Open LayoutResizeTest (Vaadin 7)</button><br>
+<button onclick="testV6()">Open LayoutResizeTest (Vaadin 6)</button><br>
+<button onclick="resize1()">Resize to 650x450</button><br>
+<button onclick="resize2()">Resize to 950x750</button>
+
+
+<script>
+var win1, win2;
+
+function testV7() {
+	win1 = window.open('/vaadin/run/com.vaadin.tests.components.orderedlayout.LayoutResizeTest?restartApplication&debug','layoutResizeTestV7','width=800,height=600');
+}
+
+function testV6() {
+	win2 = window.open('/LayoutBenchmark/?restartApplication&debug','layoutResizeTestV6','width=800,height=600');
+}
+
+function resize1() {
+	if(win1)
+		win1.resizeTo(650,450);
+	if(win2)
+		win2.resizeTo(650,450);
+}
+
+function resize2() {
+	if(win1)
+		win1.resizeTo(950,750);
+	if(win2)
+		win2.resizeTo(950,750);
+}
+</script>
+</body>
+</html>

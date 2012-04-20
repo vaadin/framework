@@ -30,8 +30,8 @@ import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServ
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 
 public abstract class AbstractBoxLayoutConnector extends
-        AbstractLayoutConnector implements Paintable, PreLayoutListener,
-        PostLayoutListener {
+        AbstractLayoutConnector implements Paintable, /* PreLayoutListener, */
+PostLayoutListener {
 
     AbstractOrderedLayoutServerRPC rpc;
 
@@ -218,15 +218,24 @@ public abstract class AbstractBoxLayoutConnector extends
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
             }
         } else {
-            getLayoutManager().removeElementResizeListener(
-                    slot.getCaptionElement(), slotCaptionResizeListener);
+            // getLayoutManager().removeElementResizeListener(
+            // slot.getCaptionElement(), slotCaptionResizeListener);
         }
 
         if (!slot.hasCaption()) {
             childCaptionElementHeight.remove(child.getWidget().getElement());
         }
 
+        if (needsFixedHeight()) {
+            getWidget().clearHeight();
+            getLayoutManager().setNeedsMeasure(this);
+        }
+
         updateLayoutHeight();
+
+        if (needsExpand()) {
+            updateExpand();
+        }
     }
 
     @Override
@@ -290,7 +299,9 @@ public abstract class AbstractBoxLayoutConnector extends
         getWidget().setSpacing(getState().isSpacing());
 
         if (needsFixedHeight()) {
+            getWidget().clearHeight();
             setLayoutHeightListener(true);
+            getLayoutManager().setNeedsMeasure(this);
         } else {
             setLayoutHeightListener(false);
         }
@@ -365,7 +376,10 @@ public abstract class AbstractBoxLayoutConnector extends
             }
 
             if (needsFixedHeight()) {
+                getWidget().clearHeight();
                 setLayoutHeightListener(true);
+                getLayoutManager().setNeedsMeasure(
+                        AbstractBoxLayoutConnector.this);
             } else {
                 setLayoutHeightListener(false);
             }
@@ -388,13 +402,9 @@ public abstract class AbstractBoxLayoutConnector extends
         return hasExpandRatio.size() > 0 && canApplyExpand;
     }
 
-    public void preLayout() {
-        resizeCount = 0;
-        if (needsFixedHeight()) {
-            getWidget().clearHeight();
-            getLayoutManager().setNeedsMeasure(this);
-        }
-    }
+    // public void preLayout() {
+    // resizeCount = 0;
+    // }
 
     public void postLayout() {
         if (needsFixedHeight()) {
@@ -410,19 +420,25 @@ public abstract class AbstractBoxLayoutConnector extends
                             .getOuterHeight(captionElement));
                 }
             }
+            // System.out.println("  ###  SlotCaption sizes: "
+            // + childCaptionElementHeight.values().toString());
 
             // If no height has been set, use the natural height for the
             // component (this is mostly just a precaution so that something
             // renders correctly)
-            String h = getWidget().getElement().getStyle().getHeight();
-            if (h == null || h.equals("")) {
-                int height = getLayoutManager().getOuterHeight(
-                        getWidget().getElement())
-                        - getLayoutManager().getMarginHeight(
-                                getWidget().getElement());
-                // int height = getMaxHeight();
-                getWidget().getElement().getStyle().setHeight(height, Unit.PX);
-            }
+            // String h = getWidget().getElement().getStyle().getHeight();
+            // if (h == null || h.equals("")) {
+            // int height = getLayoutManager().getOuterHeight(
+            // getWidget().getElement())
+            // - getLayoutManager().getMarginHeight(
+            // getWidget().getElement());
+            int height = getMaxHeight()
+                    + getLayoutManager().getBorderHeight(
+                            getWidget().getElement())
+                    + getLayoutManager().getPaddingHeight(
+                            getWidget().getElement());
+            getWidget().getElement().getStyle().setHeight(height, Unit.PX);
+            // }
         }
         // System.err.println("Element resize listeners fired for " +
         // resizeCount
@@ -459,6 +475,7 @@ public abstract class AbstractBoxLayoutConnector extends
                 // Caption element already detached
                 getLayoutManager().removeElementResizeListener(captionElement,
                         slotCaptionResizeListener);
+                childCaptionElementHeight.remove(widgetElement);
                 return;
             }
 
@@ -476,6 +493,13 @@ public abstract class AbstractBoxLayoutConnector extends
             int h = getLayoutManager().getOuterHeight(captionElement)
                     - getLayoutManager().getMarginHeight(captionElement);
             childCaptionElementHeight.put(widgetElement, h);
+            // System.out.println("Caption size: " + h);
+
+            if (needsFixedHeight()) {
+                getWidget().clearHeight();
+                getLayoutManager().setNeedsMeasure(
+                        AbstractBoxLayoutConnector.this);
+            }
 
             updateLayoutHeight();
 
