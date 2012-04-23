@@ -535,10 +535,6 @@ public class ApplicationConnection {
                             (new Timer() {
                                 @Override
                                 public void run() {
-                                    // TODO why? Here used to be
-                                    // "activeRequests--;"
-                                    // but can't see why exactly
-                                    hasActiveRequest = false;
                                     doUidlRequest(uri, payload, synchronous);
                                 }
                             }).schedule(Integer.parseInt(delay));
