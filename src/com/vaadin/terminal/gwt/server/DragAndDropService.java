@@ -238,4 +238,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         // TODO Use rpc for drag'n'drop
         return null;
     }
+
+    public Class<? extends SharedState> getStateType() {
+        return SharedState.class;
+    }
 }

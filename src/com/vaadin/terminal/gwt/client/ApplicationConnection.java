@@ -43,6 +43,7 @@ import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
+import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
@@ -101,6 +102,9 @@ public class ApplicationConnection {
     public static final String UIDL_SECURITY_HEADER = UIDL_SECURITY_TOKEN_ID;
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
+
+    private static SerializerMap serializerMap = GWT
+            .create(SerializerMap.class);
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -1414,8 +1418,8 @@ public class ApplicationConnection {
                                     states.getJavaScriptObject(connectorId));
 
                             Object state = JsonDecoder.decodeValue(
-                                    stateDataAndType, connectorMap,
-                                    ApplicationConnection.this);
+                                    stateDataAndType, connector.getState(),
+                                    connectorMap, ApplicationConnection.this);
 
                             connector.setState((SharedState) state);
                             StateChangeEvent event = GWT
@@ -1569,7 +1573,8 @@ public class ApplicationConnection {
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(
-                    (JSONArray) parametersJson.get(j), getConnectorMap(), this);
+                    (JSONArray) parametersJson.get(j), null, getConnectorMap(),
+                    this);
         }
         return new MethodInvocation(connectorId, interfaceName, methodName,
                 parameters);
@@ -2438,5 +2443,9 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
+    }
+
+    public SerializerMap getSerializerMap() {
+        return serializerMap;
     }
 }

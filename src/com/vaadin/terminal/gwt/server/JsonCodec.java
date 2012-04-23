@@ -419,11 +419,11 @@ public class JsonCodec implements Serializable {
     @Deprecated
     private static JSONArray encode(Object value, Application application)
             throws JSONException {
-        return encode(value, null, application);
+        return encode(value, null, null, application);
     }
 
-    public static JSONArray encode(Object value, Class<?> valueType,
-            Application application) throws JSONException {
+    public static JSONArray encode(Object value, Object referenceValue,
+            Type valueType, Application application) throws JSONException {
 
         if (null == value) {
             return encodeNull();
@@ -453,7 +453,8 @@ public class JsonCodec implements Serializable {
                         "Unable to serialize unsupported type: " + valueType);
             }
             Collection<?> collection = (Collection<?>) value;
-            JSONArray jsonArray = encodeCollection(collection, application);
+            JSONArray jsonArray = encodeCollection(valueType, collection,
+                    application);
 
             return combineTypeAndValue(internalTransportType, jsonArray);
         } else if (value instanceof Object[]) {
@@ -486,8 +487,9 @@ public class JsonCodec implements Serializable {
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return combineTypeAndValue(getCustomTransportType(valueType),
-                    encodeObject(value, application));
+            return combineTypeAndValue(
+                    getCustomTransportType((Class<?>) valueType),
+                    encodeObject(value, referenceValue, application));
         }
     }
 
@@ -495,22 +497,40 @@ public class JsonCodec implements Serializable {
         return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
     }
 
-    private static Object encodeObject(Object value, Application application)
-            throws JSONException {
+    private static Object encodeObject(Object value, Object referenceValue,
+            Application application) throws JSONException {
         JSONObject jsonMap = new JSONObject();
 
         try {
             for (PropertyDescriptor pd : Introspector.getBeanInfo(
                     value.getClass()).getPropertyDescriptors()) {
-                Class<?> fieldType = pd.getPropertyType();
                 String fieldName = getTransportFieldName(pd);
                 if (fieldName == null) {
                     continue;
                 }
                 Method getterMethod = pd.getReadMethod();
+                // We can't use PropertyDescriptor.getPropertyType() as it does
+                // not support generics
+                Type fieldType = getterMethod.getGenericReturnType();
                 Object fieldValue = getterMethod.invoke(value, (Object[]) null);
-                jsonMap.put(fieldName,
-                        encode(fieldValue, fieldType, application));
+                boolean equals = false;
+                Object referenceFieldValue = null;
+                if (referenceValue != null) {
+                    referenceFieldValue = getterMethod.invoke(referenceValue,
+                            (Object[]) null);
+                    equals = equals(fieldValue, referenceFieldValue);
+                }
+                if (!equals) {
+                    jsonMap.put(
+                            fieldName,
+                            encode(fieldValue, referenceFieldValue, fieldType,
+                                    application));
+                    // } else {
+                    // System.out.println("Skipping field " + fieldName
+                    // + " of type " + fieldType.getName()
+                    // + " for object " + value.getClass().getName()
+                    // + " as " + fieldValue + "==" + referenceFieldValue);
+                }
             }
         } catch (Exception e) {
             // TODO: Should exceptions be handled in a different way?
@@ -519,22 +539,54 @@ public class JsonCodec implements Serializable {
         return jsonMap;
     }
 
+    /**
+     * Compares the value with the reference. If they match, returns true.
+     * 
+     * @param fieldValue
+     * @param referenceValue
+     * @return
+     */
+    private static boolean equals(Object fieldValue, Object referenceValue) {
+        if (fieldValue == null) {
+            return referenceValue == null;
+        }
+
+        if (fieldValue.equals(referenceValue)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private static JSONArray encodeArrayContents(Object[] array,
             Application application) throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : array) {
-            jsonArray.put(encode(o, null, application));
+            jsonArray.put(encode(o, null, null, application));
         }
         return jsonArray;
     }
 
-    private static JSONArray encodeCollection(Collection collection,
-            Application application) throws JSONException {
+    private static JSONArray encodeCollection(Type targetType,
+            Collection collection, Application application)
+            throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : collection) {
-            jsonArray.put(encode(o, application));
+            jsonArray.put(encodeChild(targetType, 0, o, application));
         }
         return jsonArray;
+    }
+
+    private static JSONArray encodeChild(Type targetType, int typeIndex,
+            Object o, Application application) throws JSONException {
+        if (targetType instanceof ParameterizedType) {
+            Type childType = ((ParameterizedType) targetType)
+                    .getActualTypeArguments()[typeIndex];
+            // Encode using the given type
+            return encode(o, null, childType, application);
+        } else {
+            return encode(o, application);
+        }
     }
 
     private static JSONObject encodeMapContents(Map<Object, Object> map,
@@ -551,7 +603,8 @@ public class JsonCodec implements Serializable {
                         "Only maps with String/Connector keys are currently supported (#8602)");
             }
 
-            jsonMap.put((String) mapKey, encode(mapValue, null, application));
+            jsonMap.put((String) mapKey,
+                    encode(mapValue, null, null, application));
         }
         return jsonMap;
     }

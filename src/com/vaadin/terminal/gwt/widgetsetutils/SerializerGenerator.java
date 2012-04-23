@@ -106,7 +106,8 @@ public class SerializerGenerator extends Generator {
         composer.addImport(JsonDecoder.class.getName());
         // composer.addImport(VaadinSerializer.class.getName());
 
-        composer.addImplementedInterface(JSONSerializer.class.getName());
+        composer.addImplementedInterface(JSONSerializer.class.getName() + "<"
+                + beanQualifiedSourceName + ">");
 
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
@@ -117,7 +118,7 @@ public class SerializerGenerator extends Generator {
         // public JSONValue serialize(Object value, ConnectorMap idMapper,
         // ApplicationConnection connection) {
         sourceWriter.println("public " + JSONObject.class.getName()
-                + " serialize(" + Object.class.getName() + " value, "
+                + " serialize(" + beanQualifiedSourceName + " value, "
                 + ConnectorMap.class.getName() + " idMapper, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
@@ -152,13 +153,20 @@ public class SerializerGenerator extends Generator {
         // Deserializer
         sourceWriter.println("public " + beanQualifiedSourceName
                 + " deserialize(" + JSONObject.class.getName() + " jsonValue, "
+                + beanQualifiedSourceName + " target, "
                 + ConnectorMap.class.getName() + " idMapper, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
 
-        // VButtonState state = GWT.create(VButtonState.class);
-        sourceWriter.println(beanQualifiedSourceName + " state = GWT.create("
-                + beanQualifiedSourceName + ".class);");
+        // if (target == null) {
+        sourceWriter.println("if (target == null) {");
+        sourceWriter.indent();
+        // target = GWT.create(VButtonState.class);
+        sourceWriter.println("target = GWT.create(" + beanQualifiedSourceName
+                + ".class);");
+        sourceWriter.outdent();
+        sourceWriter.println("}");
+
         for (JMethod method : getSetters(beanType)) {
             String setterName = method.getName();
             String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
@@ -167,30 +175,59 @@ public class SerializerGenerator extends Generator {
             logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
                     + beanQualifiedSourceName + " (" + beanType.getName() + ")");
 
+            // if (jsonValue.containsKey("height")) {
+            sourceWriter.println("if (jsonValue.containsKey(\"" + fieldName
+                    + "\")) {");
+            sourceWriter.indent();
             String jsonFieldName = "json_" + fieldName;
             // JSONArray json_Height = (JSONArray) jsonValue.get("height");
             sourceWriter.println("JSONArray " + jsonFieldName
                     + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
 
-            // state.setHeight((String)
-            // JsonDecoder.decodeValue(jsonFieldValue,idMapper, connection));
-
             String fieldType;
+            String getterName = "get" + fieldName;
             JPrimitiveType primitiveType = setterParameterType.isPrimitive();
             if (primitiveType != null) {
                 // This is a primitive type -> must used the boxed type
                 fieldType = primitiveType.getQualifiedBoxedSourceName();
+                if (primitiveType == JPrimitiveType.BOOLEAN) {
+                    getterName = "is" + fieldName;
+                }
             } else {
                 fieldType = setterParameterType.getQualifiedSourceName();
             }
 
-            sourceWriter.println("state." + setterName + "((" + fieldType
+            // String referenceValue;
+            sourceWriter.println(fieldType + " referenceValue;");
+            // if (target == null) {
+            sourceWriter.println("if (target == null) {");
+            sourceWriter.indent();
+            // referenceValue = null;
+            sourceWriter.println("referenceValue = null;");
+            // } else {
+            sourceWriter.println("} else {");
+            // referenceValue = target.getHeight();
+            sourceWriter.println("referenceValue = target." + getterName
+                    + "();");
+            // }
+            sourceWriter.outdent();
+            sourceWriter.println("}");
+
+            // target.setHeight((String)
+            // JsonDecoder.decodeValue(jsonFieldValue,referenceValue, idMapper,
+            // connection));
+            sourceWriter.println("target." + setterName + "((" + fieldType
                     + ") " + JsonDecoder.class.getName() + ".decodeValue("
-                    + jsonFieldName + ", idMapper, connection));");
+                    + jsonFieldName
+                    + ", referenceValue, idMapper, connection));");
+
+            // } ... end of if contains
+            sourceWriter.println("}");
+            sourceWriter.outdent();
         }
 
-        // return state;
-        sourceWriter.println("return state;");
+        // return target;
+        sourceWriter.println("return target;");
         sourceWriter.println("}");
         sourceWriter.outdent();
 

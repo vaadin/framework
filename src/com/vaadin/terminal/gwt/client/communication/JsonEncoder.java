@@ -117,7 +117,7 @@ public class JsonEncoder {
                 // Try to find a generated serializer object, class name is the
                 // type
                 transportType = value.getClass().getName();
-                JSONSerializer serializer = JsonDecoder.serializerMap
+                JSONSerializer serializer = connection.getSerializerMap()
                         .getSerializer(transportType);
 
                 // TODO handle case with no serializer found

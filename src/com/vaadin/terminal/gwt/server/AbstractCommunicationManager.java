@@ -803,14 +803,28 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // client after component creation but before legacy UIDL
         // processing.
         JSONObject sharedStates = new JSONObject();
-        for (Connector connector : dirtyVisibleConnectors) {
+        for (ClientConnector connector : dirtyVisibleConnectors) {
             SharedState state = connector.getState();
             if (null != state) {
                 // encode and send shared state
                 try {
-                    // FIXME Use declared type
+                    Class<? extends SharedState> stateType = connector
+                            .getStateType();
+                    SharedState referenceState = null;
+                    if (repaintAll) {
+                        // Use an empty state object as reference for full
+                        // repaints
+                        try {
+                            referenceState = stateType.newInstance();
+                        } catch (Exception e) {
+                            logger.log(Level.WARNING,
+                                    "Error creating reference object for state of type "
+                                            + stateType.getName());
+                        }
+                    }
                     JSONArray stateJsonArray = JsonCodec.encode(state,
-                            state.getClass(), application);
+                            referenceState, stateType, application);
+
                     sharedStates
                             .put(connector.getConnectorId(), stateJsonArray);
                 } catch (JSONException e) {
@@ -900,9 +914,21 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 invocationJson.put(invocation.getMethodName());
                 JSONArray paramJson = new JSONArray();
                 for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
+                    Class<?> parameterType = invocation.getParameterTypes()[i];
+                    Object referenceParameter = null;
+                    // TODO Use default values for RPC parameter types
+                    // if (!JsonCodec.isInternalType(parameterType)) {
+                    // try {
+                    // referenceParameter = parameterType.newInstance();
+                    // } catch (Exception e) {
+                    // logger.log(Level.WARNING,
+                    // "Error creating reference object for parameter of type "
+                    // + parameterType.getName());
+                    // }
+                    // }
                     paramJson.put(JsonCodec.encode(
-                            invocation.getParameters()[i],
-                            invocation.getParameterTypes()[i], application));
+                            invocation.getParameters()[i], referenceParameter,
+                            parameterType, application));
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);
