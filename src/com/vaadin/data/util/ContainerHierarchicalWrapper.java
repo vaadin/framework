@@ -294,7 +294,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             return ((Container.Hierarchical) container).hasChildren(itemId);
         }
 
-        return children.get(itemId) != null;
+        LinkedList<Object> list = children.get(itemId);
+        return (list != null && !list.isEmpty());
     }
 
     /*
