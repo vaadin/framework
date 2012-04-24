@@ -895,7 +895,7 @@
         <property file="${gpg.passphrase.file}" />
 
         <echo>Publishing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to Maven repository</echo>
-        <artifact:mvn>
+        <artifact:mvn failonerror="true">
             <arg value="gpg:sign-and-deploy-file"/>
             <!-- .. is a workaround as maven runs in the build directory -->
             <sysproperty key="file" value="../${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" />
