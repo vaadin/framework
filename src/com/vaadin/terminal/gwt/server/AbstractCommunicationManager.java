@@ -1400,7 +1400,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 final ClientConnector connector = getConnector(app,
                         invocation.getConnectorId());
 
-                if (connector.isConnectorEnabled()) {
+                if (connector != null && connector.isConnectorEnabled()) {
                     enabledConnectors.add(connector);
                 }
             }
