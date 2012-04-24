@@ -220,10 +220,10 @@ public class ApplicationConnection {
     /*-{
     	var ap = this;
     	var client = {};
-    	client.isActive = function() {
+    	client.isActive = $entry(function() {
     		return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()()
     				|| ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
-    	}
+    	});
     	
     	var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
     	if (vi) {
@@ -232,21 +232,21 @@ public class ApplicationConnection {
     		}
     	}
     	
-    	client.getProfilingData = function() {
+    	client.getProfilingData = $entry(function() {
     	    var pd = [
         	    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::lastProcessingTime,
                     ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::totalProcessingTime
     	        ];
     	    pd = pd.concat(ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::testBenchServerStatus);
     	    return pd;
-    	}
+    	});
 
-    	client.getElementByPath = function(id) {
+    	client.getElementByPath = $entry(function(id) {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
-    	}
-    	client.getPathForElement = function(element) {
+    	});
+    	client.getPathForElement = $entry(function(element) {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-    	}
+    	});
 
     	if (!$wnd.vaadin.clients) {
     		$wnd.vaadin.clients = {};
@@ -292,22 +292,22 @@ public class ApplicationConnection {
     	if ($wnd.vaadin.forceSync) {
     		oldSync = $wnd.vaadin.forceSync;
     	}
-    	$wnd.vaadin.forceSync = function() {
+    	$wnd.vaadin.forceSync = $entry(function() {
     		if (oldSync) {
     			oldSync();
     		}
     		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
-    	}
+    	});
     	var oldForceLayout;
     	if ($wnd.vaadin.forceLayout) {
     		oldForceLayout = $wnd.vaadin.forceLayout;
     	}
-    	$wnd.vaadin.forceLayout = function() {
+    	$wnd.vaadin.forceLayout = $entry(function() {
     		if (oldForceLayout) {
     			oldForceLayout();
     		}
     		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::forceLayout()();
-    	}
+    	});
     }-*/;
 
     /**

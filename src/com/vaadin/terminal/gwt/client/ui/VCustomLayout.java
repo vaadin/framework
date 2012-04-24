@@ -479,9 +479,9 @@ public class VCustomLayout extends ComplexPanel implements Paintable,
     private native void publishResizedFunction(Element element)
     /*-{
     	var self = this;
-    	element.notifyChildrenOfSizeChange = function() {
+    	element.notifyChildrenOfSizeChange = $entry(function() {
     		self.@com.vaadin.terminal.gwt.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
-    	};
+    	});
     }-*/;
 
     /**

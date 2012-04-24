@@ -52,9 +52,9 @@ public class VVideo extends VMediaBase {
     private native void updateDimensionsWhenMetadataLoaded(Element el)
     /*-{
               var self = this;
-              el.addEventListener('loadedmetadata', function(e) {
-                  $entry(self.@com.vaadin.terminal.gwt.client.ui.VVideo::updateElementDynamicSize(II)(el.videoWidth, el.videoHeight));
-              }, false);
+              el.addEventListener('loadedmetadata', $entry(function(e) {
+                  self.@com.vaadin.terminal.gwt.client.ui.VVideo::updateElementDynamicSize(II)(el.videoWidth, el.videoHeight);
+              }), false);
 
     }-*/;
 

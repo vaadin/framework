@@ -282,9 +282,9 @@ public class Util {
      */
     public native static void addPngFix(Element el)
     /*-{
-        el.attachEvent("onload", function() {
+        el.attachEvent("onload", $entry(function() {
             @com.vaadin.terminal.gwt.client.Util::doIE6PngFix(Lcom/google/gwt/user/client/Element;)(el);
-        },false);
+        }),false);
     }-*/;
 
     private native static void doPngFix(Element el, String blankImageUrl)

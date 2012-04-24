@@ -357,9 +357,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     protected native void attachCutEventListener(Element el)
     /*-{
         var me = this;
-        el.oncut = function() {
+        el.oncut = $entry(function() {
             me.@com.vaadin.terminal.gwt.client.ui.VTextField::onCut()();
-        };
+        });
     }-*/;
 
     protected native void detachCutEventListener(Element el)

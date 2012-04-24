@@ -139,9 +139,9 @@ public class HistoryImplIEVaadin extends HistoryImpl {
     /*-{
        var historyImplRef = this;
 
-       $wnd.__gwt_onHistoryLoad = function(token) {
+       $wnd.__gwt_onHistoryLoad = $entry(function(token) {
          historyImplRef.@com.google.gwt.user.client.impl.HistoryImpl::newItemOnEvent(Ljava/lang/String;)(token);
-       };
+       });
      }-*/;
 
     protected native void navigateFrame(String token)
