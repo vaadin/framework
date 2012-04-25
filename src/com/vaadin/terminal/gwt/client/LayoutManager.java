@@ -18,7 +18,6 @@ import com.google.gwt.user.client.Timer;
 import com.vaadin.terminal.gwt.client.MeasuredSize.MeasureResult;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
-import com.vaadin.terminal.gwt.client.ui.PreLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
@@ -29,8 +28,6 @@ public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
 
     private static final boolean debugLogging = false;
-
-    private static int totalLayoutTime = 0;
 
     private ApplicationConnection connection;
     private final Set<Element> measuredNonConnectorElements = new HashSet<Element>();
@@ -181,16 +178,6 @@ public class LayoutManager {
 
         Duration totalDuration = new Duration();
 
-        int preLayoutStart = totalDuration.elapsedMillis();
-        for (ComponentConnector connector : connection.getConnectorMap()
-                .getComponentConnectors()) {
-            if (connector instanceof PreLayoutListener) {
-                ((PreLayoutListener) connector).preLayout();
-            }
-        }
-        VConsole.log("Invoke pre layout listeners in "
-                + (totalDuration.elapsedMillis() - preLayoutStart) + " ms");
-
         Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
 
         int passes = 0;
@@ -205,6 +192,9 @@ public class LayoutManager {
         needsVerticalLayout.clear();
 
         for (ComponentConnector connector : needsMeasure) {
+            // Ensure the MeasuredSize is attached to the DOM element before
+            // doing measurements to avoid reflows in "some" browsers
+            getMeasuredSize(connector);
             currentDependencyTree.setNeedsMeasure(connector, true);
         }
         needsMeasure.clear();
@@ -228,6 +218,9 @@ public class LayoutManager {
             int measureTime = passDuration.elapsedMillis();
             VConsole.log("  Measured " + measuredConnectorCount
                     + " elements in " + measureTime + " ms");
+
+            VConsole.log("  Total of " + measureCount
+                    + " measurement operations");
 
             if (!listenersToFire.isEmpty()) {
                 for (Element element : listenersToFire) {
@@ -365,14 +358,9 @@ public class LayoutManager {
         VConsole.log("Invoke post layout listeners in "
                 + (totalDuration.elapsedMillis() - postLayoutStart) + " ms");
 
-        VConsole.log("Total layout phase time: "
-                + totalDuration.elapsedMillis() + "ms");
+        VConsole.log("<b>Total layout phase time: "
+                + totalDuration.elapsedMillis() + "ms</b>");
 
-        totalLayoutTime += totalDuration.elapsedMillis();
-        VConsole.log("");
-        VConsole.log("### Total combined layout phase: " + totalLayoutTime
-                + "ms");
-        VConsole.log("");
     }
 
     private void logConnectorStatus(int connectorId) {
@@ -457,7 +445,7 @@ public class LayoutManager {
             ComponentConnector[] connectors = ConnectorMap.get(connection)
                     .getComponentConnectors();
             for (ComponentConnector connector : connectors) {
-                measueConnector(connector);
+                measureConnector(connector);
             }
             for (ComponentConnector connector : connectors) {
                 layoutDependencyTree.setNeedsMeasure(connector, false);
@@ -469,7 +457,7 @@ public class LayoutManager {
             Collection<ComponentConnector> measureTargets = layoutDependencyTree
                     .getMeasureTargets();
             for (ComponentConnector connector : measureTargets) {
-                measueConnector(connector);
+                measureConnector(connector);
                 measureCount++;
             }
             for (ComponentConnector connector : measureTargets) {
@@ -479,9 +467,16 @@ public class LayoutManager {
         return measureCount;
     }
 
-    private void measueConnector(ComponentConnector connector) {
-        Element element = connector.getWidget().getElement();
+    private void measureConnector(ComponentConnector connector) {
         MeasuredSize measuredSize = getMeasuredSize(connector);
+        if (!isManagedLayout(connector)
+                && !isManagedLayout(connector.getParent())
+                && elementResizeListeners.get(connector.getWidget()
+                        .getElement()) == null && !measuredSize.hasDependents()) {
+            return;
+        }
+
+        Element element = connector.getWidget().getElement();
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
@@ -521,8 +516,11 @@ public class LayoutManager {
                 + " non connector elements");
     }
 
+    int measureCount = 0;
+
     private MeasureResult measuredAndUpdate(Element element,
             MeasuredSize measuredSize) {
+        measureCount++;
         MeasureResult measureResult = measuredSize.measure(element);
         if (measureResult.isChanged()) {
             notifyListenersAndDepdendents(element,

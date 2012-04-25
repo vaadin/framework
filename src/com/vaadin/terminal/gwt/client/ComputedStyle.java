@@ -83,19 +83,19 @@ public class ComputedStyle {
 
             // If we're not dealing with a regular pixel number
             // but a number that has a weird ending, we need to convert it to pixels
-            if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
-                // Remember the original values
-                var left = style.left, rsLeft = elem.runtimeStyle.left;
-
-                // Put in the new values to get a computed value out
-                elem.runtimeStyle.left = cs.left;
-                style.left = ret || 0;
-                ret = style.pixelLeft + "px";
-
-                // Revert the changed values
-                style.left = left;
-                elem.runtimeStyle.left = rsLeft;
-            }
+                if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
+                    // Remember the original values
+                    var left = style.left, rsLeft = elem.runtimeStyle.left;
+    
+                    // Put in the new values to get a computed value out
+                    elem.runtimeStyle.left = cs.left;
+                    style.left = ret || 0;
+                    ret = style.pixelLeft + "px";
+    
+                    // Revert the changed values
+                    style.left = left;
+                    elem.runtimeStyle.left = rsLeft;
+                }
             
         }
         

@@ -143,7 +143,7 @@ PostLayoutListener {
             // extra space equally if no expand ratios are specified inside a
             // layout with specified size
             if (expandRatios.getKeySet().size() == 0
-                    && ((getWidget().vertical && !isUndefinedHeight()) || !isUndefinedWidth())) {
+                    && ((getWidget().vertical && !isUndefinedHeight()) || (!getWidget().vertical && !isUndefinedWidth()))) {
                 expandRatio = 1;
                 hasExpandRatio.add(child);
             } else if (expandRatios.containsKey(pid)
@@ -153,6 +153,35 @@ PostLayoutListener {
             } else {
                 expandRatio = -1;
                 hasExpandRatio.remove(child);
+                if (expandRatios.getKeySet().size() > 0
+                        || hasExpandRatio.size() > 0) {
+                    // Only add resize listeners if there are expand ratios in
+                    // use
+                    getLayoutManager().addElementResizeListener(
+                            child.getWidget().getElement(),
+                            childComponentResizeListener);
+                    if (slot.hasCaption()) {
+                        getLayoutManager().addElementResizeListener(
+                                slot.getCaptionElement(),
+                                slotCaptionResizeListener);
+                    }
+                }
+            }
+            slot.setExpandRatio(expandRatio);
+
+            if (slot.getSpacingElement() != null && needsExpand()) {
+                getLayoutManager().addElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
+            } else if (slot.getSpacingElement() != null) {
+                getLayoutManager().removeElementResizeListener(
+                        slot.getSpacingElement(), spacingResizeListener);
+            }
+
+        }
+
+        if (needsFixedHeight()) {
+            for (ComponentConnector child : getChildren()) {
+                Slot slot = layout.getSlot(child);
                 getLayoutManager().addElementResizeListener(
                         child.getWidget().getElement(),
                         childComponentResizeListener);
@@ -162,13 +191,6 @@ PostLayoutListener {
                                     slotCaptionResizeListener);
                 }
             }
-            slot.setExpandRatio(expandRatio);
-
-            if (slot.getSpacingElement() != null) {
-                getLayoutManager().addElementResizeListener(
-                        slot.getSpacingElement(), spacingResizeListener);
-            }
-
         }
 
         if (needsExpand()) {
@@ -353,7 +375,7 @@ PostLayoutListener {
                 getLayoutManager().addElementResizeListener(
                         slot.getSpacingElement(), spacingResizeListener);
             } else if (slot.getSpacingElement() != null) {
-                getLayoutManager().addElementResizeListener(
+                getLayoutManager().removeElementResizeListener(
                         slot.getSpacingElement(), spacingResizeListener);
             }
 
@@ -420,8 +442,10 @@ PostLayoutListener {
                             .getOuterHeight(captionElement));
                 }
             }
-            // System.out.println("  ###  SlotCaption sizes: "
-            // + childCaptionElementHeight.values().toString());
+            System.out.println("  ###  Child sizes: "
+                    + childElementHeight.values().toString());
+            System.out.println("  ###  Caption sizes: "
+                    + childCaptionElementHeight.values().toString());
 
             // If no height has been set, use the natural height for the
             // component (this is mostly just a precaution so that something
