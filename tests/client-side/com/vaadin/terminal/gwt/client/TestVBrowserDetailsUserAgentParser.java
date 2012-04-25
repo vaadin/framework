@@ -2,8 +2,6 @@ package com.vaadin.terminal.gwt.client;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.gwt.client.VBrowserDetails;
-
 public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     private static final String FIREFOX30_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
@@ -37,6 +35,9 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String SAFARI3_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 5.1; cs-CZ) AppleWebKit/525.28.3 (KHTML, like Gecko) Version/3.2.3 Safari/525.29";
     private static final String SAFARI4_MAC = "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_8; en-us) AppleWebKit/531.22.7 (KHTML, like Gecko) Version/4.0.5 Safari/531.22.7";
 
+    private static final String IPHONE_IOS_5_1 = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B179 Safari/7534.48.3";
+    private static final String IPAD_IOS_4_3_1 = "Mozilla/5.0 (iPad; U; CPU OS 4_3_1 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8G4 Safari/6533.18.5";
+
     public void testSafari3() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI3_WINDOWS);
         assertWebKit(bd);
@@ -55,6 +56,28 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 531f);
         assertMacOSX(bd);
+    }
+
+    public void testIPhoneIOS5() {
+        VBrowserDetails bd = new VBrowserDetails(IPHONE_IOS_5_1);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 5);
+        assertBrowserMinorVersion(bd, 1);
+        assertEngineVersion(bd, 534f);
+        assertMacOSX(bd);
+        assertIOS(bd);
+    }
+
+    public void testIPadIOS4() {
+        VBrowserDetails bd = new VBrowserDetails(IPAD_IOS_4_3_1);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 5);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 533f);
+        assertMacOSX(bd);
+        assertIOS(bd);
     }
 
     public void testChrome3() {
@@ -352,18 +375,30 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertFalse(browserDetails.isLinux());
         assertFalse(browserDetails.isWindows());
         assertTrue(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isAndroid());
+    }
+
+    private void assertIOS(VBrowserDetails browserDetails) {
+        assertFalse(browserDetails.isLinux());
+        assertFalse(browserDetails.isWindows());
+        assertTrue(browserDetails.isMacOSX());
+        assertTrue(browserDetails.isIOS());
+        assertFalse(browserDetails.isAndroid());
     }
 
     private void assertWindows(VBrowserDetails browserDetails) {
         assertFalse(browserDetails.isLinux());
         assertTrue(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isIOS());
+        assertFalse(browserDetails.isAndroid());
     }
 
     private void assertLinux(VBrowserDetails browserDetails) {
         assertTrue(browserDetails.isLinux());
         assertFalse(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isIOS());
     }
 
 }

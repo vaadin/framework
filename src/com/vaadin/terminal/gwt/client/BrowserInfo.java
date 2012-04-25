@@ -31,6 +31,9 @@ public class BrowserInfo {
     private static final String OS_LINUX = "lin";
     private static final String OS_MACOSX = "mac";
 
+    private static final String MOS_ANDROID = "android";
+    private static final String MOS_IOS = "ios";
+
     private static BrowserInfo instance;
 
     private static String cssClass = null;
@@ -66,11 +69,11 @@ public class BrowserInfo {
                 browserDetails.setIEMode(documentMode);
             }
         }
-        
+
         if (browserDetails.isChrome()) {
-        	touchDevice = detectChromeTouchDevice();
+            touchDevice = detectChromeTouchDevice();
         } else {
-        	touchDevice = detectTouchDevice();
+            touchDevice = detectTouchDevice();
         }
     }
 
@@ -78,7 +81,7 @@ public class BrowserInfo {
     /*-{
         try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
     }-*/;
-    
+
     private native boolean detectChromeTouchDevice()
     /*-{
         return ("ontouchstart" in window);
@@ -169,6 +172,11 @@ public class BrowserInfo {
             if (osClass != null) {
                 cssClass = cssClass + " " + prefix + osClass;
             }
+
+            String mosClass = getMobileOperatingSystemClass();
+            if (mosClass != null) {
+                cssClass = cssClass + " " + prefix + mosClass;
+            }
         }
 
         return cssClass;
@@ -183,6 +191,16 @@ public class BrowserInfo {
             return OS_MACOSX;
         }
         // Unknown OS
+        return null;
+    }
+
+    private String getMobileOperatingSystemClass() {
+        if (isAndroid()) {
+            return MOS_ANDROID;
+        } else if (browserDetails.isIOS()) {
+            return MOS_IOS;
+        }
+        // Unknown MOS
         return null;
     }
 
@@ -407,6 +425,46 @@ public class BrowserInfo {
      */
     public boolean isTouchDevice() {
         return touchDevice;
+    }
+
+    /**
+     * Checks if the browser is run on iOS
+     * 
+     * @return true if the browser is run on iOS, false otherwise
+     */
+    public boolean isIOS() {
+        return browserDetails.isIOS();
+    }
+
+    /**
+     * Checks if the browser is run on Android
+     * 
+     * @return true if the browser is run on Android, false otherwise
+     */
+    public boolean isAndroid() {
+        return browserDetails.isAndroid();
+    }
+
+    /**
+     * Checks if the browser is capable of handling scrolling natively or if a
+     * touch scroll helper is needed for scrolling.
+     * 
+     * @return true if browser needs a touch scroll helper, false if the browser
+     *         can handle scrolling natively
+     */
+    public boolean requiresTouchScrollDelegate() {
+        if (!isTouchDevice()) {
+            return false;
+        }
+
+        if (isAndroid() && isWebkit() && getWebkitVersion() < 534) {
+            return true;
+        }
+        // if (isIOS() && isWebkit() && getWebkitVersion() < ???) {
+        // return true;
+        // }
+
+        return false;
     }
 
 }

@@ -28,9 +28,16 @@ public class VBrowserDetails implements Serializable {
     private boolean isOpera = false;
     private boolean isIE = false;
 
-    private boolean isWindows = false;
-    private boolean isMacOSX = false;
-    private boolean isLinux = false;
+    private OperatingSystem os = OperatingSystem.UNKNOWN;
+    private MobileSystem ms = MobileSystem.UNKNOWN;
+
+    public enum OperatingSystem {
+        UNKNOWN, WINDOWS, MACOSX, LINUX;
+    }
+
+    public enum MobileSystem {
+        UNKNOWN, IOS, ANDROID;
+    }
 
     private float browserEngineVersion = -1;
     private int browserMajorVersion = -1;
@@ -115,13 +122,21 @@ public class VBrowserDetails implements Serializable {
 
         // Operating system
         if (userAgent.contains("windows ")) {
-            isWindows = true;
+            os = OperatingSystem.WINDOWS;
         } else if (userAgent.contains("linux")) {
-            isLinux = true;
+            os = OperatingSystem.LINUX;
+            if (userAgent.contains("android")) {
+                ms = MobileSystem.ANDROID;
+
+            }
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {
-            isMacOSX = true;
+            os = OperatingSystem.MACOSX;
+            if (userAgent.contains("ipad") || userAgent.contains("ipod")
+                    || userAgent.contains("iphone")) {
+                ms = MobileSystem.IOS;
+            }
         }
     }
 
@@ -281,7 +296,7 @@ public class VBrowserDetails implements Serializable {
      * @return true if run on Windows, false otherwise
      */
     public boolean isWindows() {
-        return isWindows;
+        return os == OperatingSystem.WINDOWS;
     }
 
     /**
@@ -290,7 +305,7 @@ public class VBrowserDetails implements Serializable {
      * @return true if run on Mac OSX, false otherwise
      */
     public boolean isMacOSX() {
-        return isMacOSX;
+        return os == OperatingSystem.MACOSX;
     }
 
     /**
@@ -299,7 +314,25 @@ public class VBrowserDetails implements Serializable {
      * @return true if run on Linux, false otherwise
      */
     public boolean isLinux() {
-        return isLinux;
+        return os == OperatingSystem.LINUX;
+    }
+
+    /**
+     * Tests if the browser is run on Android.
+     * 
+     * @return true if run on Android, false otherwise
+     */
+    public boolean isAndroid() {
+        return ms == MobileSystem.ANDROID;
+    }
+
+    /**
+     * Tests if the browser is run in iOS.
+     * 
+     * @return true if run in iOS, false otherwise
+     */
+    public boolean isIOS() {
+        return ms == MobileSystem.IOS;
     }
 
 }
