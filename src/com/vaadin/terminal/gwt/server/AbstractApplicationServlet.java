@@ -403,6 +403,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
 
+        RequestTimer requestTimer = RequestTimer.get(request);
+        requestTimer.start(request);
+
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
             return;
@@ -539,6 +542,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     Application.setCurrentApplication(null);
                 }
 
+                requestTimer.stop();
+                RequestTimer.set(request, requestTimer);
             }
 
         }

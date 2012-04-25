@@ -691,7 +691,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             outWriter.print(getSecurityKeyUIDL(request));
         }
 
-        writeUidlResponse(repaintAll, outWriter, root, analyzeLayouts);
+        writeUidlResponse(request, repaintAll, outWriter, root, analyzeLayouts);
 
         closeJsonMessage(outWriter);
 
@@ -735,7 +735,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public void writeUidlResponse(boolean repaintAll,
+    public void writeUidlResponse(WrappedRequest request, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
             throws PaintException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
@@ -1096,6 +1096,20 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
         }
+
+        writePerformanceDataForTestBench(request, outWriter);
+    }
+
+    /**
+     * Adds the performance timing data used by TestBench 3 to the UIDL
+     * response.
+     */
+    private void writePerformanceDataForTestBench(final WrappedRequest request,
+            final PrintWriter outWriter) {
+        Long totalTime = (Long) request.getAttribute("TOTAL");
+        Long lastRequestTime = (Long) request.getAttribute("LASTREQUEST");
+        outWriter.write(String.format(", \"tbss\":[%d, %d]", totalTime,
+                lastRequestTime));
     }
 
     private void legacyPaint(PaintTarget paintTarget,
@@ -2161,7 +2175,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (isXSRFEnabled(root.getApplication())) {
             pWriter.print(getSecurityKeyUIDL(request));
         }
-        writeUidlResponse(true, pWriter, root, false);
+        writeUidlResponse(request, true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
         logger.log(Level.FINE, "Initial UIDL:" + initialUIDL);

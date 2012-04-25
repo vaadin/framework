@@ -508,9 +508,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     protected native void hookHtml5DragStart(Element el)
     /*-{
         var me = this;
-        el.addEventListener("dragstart",  function(ev) {
+        el.addEventListener("dragstart",  $entry(function(ev) {
             return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-        }, false);
+        }), false);
     }-*/;
 
     /**
@@ -522,21 +522,21 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /*-{
             var me = this;
 
-            el.addEventListener("dragenter",  function(ev) {
+            el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-            }, false);
+            }), false);
 
-            el.addEventListener("dragleave",  function(ev) {
+            el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-            }, false);
+            }), false);
 
-            el.addEventListener("dragover",  function(ev) {
+            el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-            }, false);
+            }), false);
 
-            el.addEventListener("drop",  function(ev) {
+            el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/terminal/gwt/client/ui/dd/VHtml5DragEvent;)(ev);
-            }, false);
+            }), false);
     }-*/;
 
     public boolean updateDropDetails(VDragEvent drag) {

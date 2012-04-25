@@ -530,6 +530,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
 
+        RequestTimer requestTimer = RequestTimer.get(wrappedRequest);
+        requestTimer.start(wrappedRequest);
+
         RequestType requestType = getRequestType(request);
 
         if (requestType == RequestType.UNKNOWN) {
@@ -719,6 +722,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                         Root.setCurrentRoot(null);
                         Application.setCurrentApplication(null);
                     }
+
+                    requestTimer.stop();
+                    RequestTimer.set(wrappedRequest, requestTimer);
                 }
             }
         }
