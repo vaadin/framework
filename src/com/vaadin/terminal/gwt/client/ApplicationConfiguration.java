@@ -270,6 +270,7 @@ public class ApplicationConfiguration implements EntryPoint {
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {
              if(!$wnd.vaadin.vaadinConfigurations[j].initialized) {
+                 // $entry not needed as function is not exported
                  list.@java.util.Collection::add(Ljava/lang/Object;)(j);
              }
          }

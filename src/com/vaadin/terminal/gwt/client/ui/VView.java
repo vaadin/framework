@@ -657,6 +657,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {
+            // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
      }-*/;

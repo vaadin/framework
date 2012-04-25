@@ -123,6 +123,7 @@ public class HistoryImplIEVaadin extends HistoryImpl {
        // Assume an empty token.
        var token = '';
        // Get the initial token from the url's hash component.
+       // $entry not needed as function is not exported
        var hash = @com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::getLocationHash()();
        if (hash.length > 0) {
          try {
@@ -146,6 +147,7 @@ public class HistoryImplIEVaadin extends HistoryImpl {
 
     protected native void navigateFrame(String token)
     /*-{
+       // $entry not needed as function is not exported
        var escaped = @com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::escapeHtml(Ljava/lang/String;)(token);
        var doc = this.@com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::historyFrame.contentWindow.document;
        doc.open();
@@ -155,6 +157,7 @@ public class HistoryImplIEVaadin extends HistoryImpl {
 
     protected native void updateHash(String token)
     /*-{
+       // $entry not needed as function is not exported
        $wnd.location.hash = this.@com.google.gwt.user.client.impl.HistoryImpl::encodeFragment(Ljava/lang/String;)(token);
      }-*/;
 
@@ -169,6 +172,7 @@ public class HistoryImplIEVaadin extends HistoryImpl {
        var historyImplRef = this;
        var urlChecker = function() {
          $wnd.setTimeout(urlChecker, 250);
+         // $entry not needed as function is not exported
          var hash = @com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::getLocationHash()();
          if (hash.length > 0) {
            var token = '';
