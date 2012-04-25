@@ -111,6 +111,13 @@ public class VDateFieldCalendar extends VDateField {
      */
     @SuppressWarnings("deprecation")
     private void updateValueFromPanel() {
+
+        // If field is invisible at the beginning, client can still be null when
+        // this function is called.
+        if (getClient() == null) {
+            return;
+        }
+
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
