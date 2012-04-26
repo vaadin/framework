@@ -38,6 +38,9 @@ public class VBrowserDetails implements Serializable {
     private int browserMajorVersion = -1;
     private int browserMinorVersion = -1;
 
+    private int osMajorVersion = -1;
+    private int osMinorVersion = -1;
+
     /**
      * Create an instance based on the given user agent.
      * 
@@ -121,6 +124,7 @@ public class VBrowserDetails implements Serializable {
         } else if (userAgent.contains("linux")) {
             if (userAgent.contains("android")) {
                 os = OperatingSystem.ANDROID;
+                parseAndroidVersion(userAgent);
             } else {
                 os = OperatingSystem.LINUX;
 
@@ -131,10 +135,65 @@ public class VBrowserDetails implements Serializable {
             if (userAgent.contains("ipad") || userAgent.contains("ipod")
                     || userAgent.contains("iphone")) {
                 os = OperatingSystem.IOS;
+                parseIOSVersion(userAgent);
             } else {
                 os = OperatingSystem.MACOSX;
             }
         }
+    }
+
+    private void parseAndroidVersion(String userAgent) {
+        // Android 5.1;
+        if (!userAgent.contains("android")) {
+            return;
+        }
+
+        String osVersionString = safeSubstring(userAgent,
+                userAgent.indexOf("android ") + "android ".length(),
+                userAgent.length());
+        osVersionString = safeSubstring(osVersionString, 0,
+                osVersionString.indexOf(";"));
+        String[] parts = osVersionString.split("\\.");
+        parseOsVersion(parts);
+    }
+
+    private void parseIOSVersion(String userAgent) {
+        // OS 5_1 like Mac OS X
+        if (!userAgent.contains("os ") || !userAgent.contains(" like mac")) {
+            return;
+        }
+
+        String osVersionString = safeSubstring(userAgent,
+                userAgent.indexOf("os ") + 3, userAgent.indexOf(" like mac"));
+        String[] parts = osVersionString.split("_");
+        parseOsVersion(parts);
+    }
+
+    private void parseOsVersion(String[] parts) {
+        osMajorVersion = -1;
+        osMinorVersion = -1;
+
+        if (parts.length >= 1) {
+            try {
+                osMajorVersion = Integer.parseInt(parts[0]);
+            } catch (Exception e) {
+            }
+        }
+        if (parts.length >= 2) {
+            try {
+                osMinorVersion = Integer.parseInt(parts[1]);
+            } catch (Exception e) {
+            }
+            // Some Androids report version numbers as "2.1-update1"
+            if (osMinorVersion == -1 && parts[1].contains("-")) {
+                try {
+                    osMinorVersion = Integer.parseInt(parts[1].substring(0,
+                            parts[1].indexOf('-')));
+                } catch (Exception ee) {
+                }
+            }
+        }
+
     }
 
     private void parseVersionString(String versionString) {
@@ -330,6 +389,26 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isIOS() {
         return os == OperatingSystem.IOS;
+    }
+
+    /**
+     * Returns the major version of the operating system. Currently only
+     * supported for mobile devices (iOS/Android)
+     * 
+     * @return The major version or -1 if unknown
+     */
+    public int getOperatingSystemMajorVersion() {
+        return osMajorVersion;
+    }
+
+    /**
+     * Returns the minor version of the operating system. Currently only
+     * supported for mobile devices (iOS/Android)
+     * 
+     * @return The minor version or -1 if unknown
+     */
+    public int getOperatingSystemMinorVersion() {
+        return osMinorVersion;
     }
 
 }

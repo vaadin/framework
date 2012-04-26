@@ -456,4 +456,19 @@ public class BrowserInfo {
         return false;
     }
 
+    /**
+     * Tests if this is an Android devices with a broken scrollTop
+     * implementation
+     * 
+     * @return true if scrollTop cannot be trusted on this device, false
+     *         otherwise
+     */
+    public boolean isAndroidWithBrokenScrollTop() {
+        return isAndroid()
+                && (getOperatingSystemMajorVersion() == 3 || getOperatingSystemMajorVersion() == 4);
+    }
+
+    private int getOperatingSystemMajorVersion() {
+        return browserDetails.getOperatingSystemMajorVersion();
+    }
 }
