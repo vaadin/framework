@@ -30,9 +30,8 @@ public class BrowserInfo {
     private static final String OS_WINDOWS = "win";
     private static final String OS_LINUX = "lin";
     private static final String OS_MACOSX = "mac";
-
-    private static final String MOS_ANDROID = "android";
-    private static final String MOS_IOS = "ios";
+    private static final String OS_ANDROID = "android";
+    private static final String OS_IOS = "ios";
 
     private static BrowserInfo instance;
 
@@ -173,17 +172,17 @@ public class BrowserInfo {
                 cssClass = cssClass + " " + prefix + osClass;
             }
 
-            String mosClass = getMobileOperatingSystemClass();
-            if (mosClass != null) {
-                cssClass = cssClass + " " + prefix + mosClass;
-            }
         }
 
         return cssClass;
     }
 
     private String getOperatingSystemClass() {
-        if (browserDetails.isWindows()) {
+        if (browserDetails.isAndroid()) {
+            return OS_ANDROID;
+        } else if (browserDetails.isIOS()) {
+            return OS_IOS;
+        } else if (browserDetails.isWindows()) {
             return OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
             return OS_LINUX;
@@ -191,16 +190,6 @@ public class BrowserInfo {
             return OS_MACOSX;
         }
         // Unknown OS
-        return null;
-    }
-
-    private String getMobileOperatingSystemClass() {
-        if (isAndroid()) {
-            return MOS_ANDROID;
-        } else if (browserDetails.isIOS()) {
-            return MOS_IOS;
-        }
-        // Unknown MOS
         return null;
     }
 

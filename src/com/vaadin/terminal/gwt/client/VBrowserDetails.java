@@ -29,14 +29,9 @@ public class VBrowserDetails implements Serializable {
     private boolean isIE = false;
 
     private OperatingSystem os = OperatingSystem.UNKNOWN;
-    private MobileSystem ms = MobileSystem.UNKNOWN;
 
     public enum OperatingSystem {
-        UNKNOWN, WINDOWS, MACOSX, LINUX;
-    }
-
-    public enum MobileSystem {
-        UNKNOWN, IOS, ANDROID;
+        UNKNOWN, WINDOWS, MACOSX, LINUX, IOS, ANDROID;
     }
 
     private float browserEngineVersion = -1;
@@ -124,18 +119,20 @@ public class VBrowserDetails implements Serializable {
         if (userAgent.contains("windows ")) {
             os = OperatingSystem.WINDOWS;
         } else if (userAgent.contains("linux")) {
-            os = OperatingSystem.LINUX;
             if (userAgent.contains("android")) {
-                ms = MobileSystem.ANDROID;
+                os = OperatingSystem.ANDROID;
+            } else {
+                os = OperatingSystem.LINUX;
 
             }
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {
-            os = OperatingSystem.MACOSX;
             if (userAgent.contains("ipad") || userAgent.contains("ipod")
                     || userAgent.contains("iphone")) {
-                ms = MobileSystem.IOS;
+                os = OperatingSystem.IOS;
+            } else {
+                os = OperatingSystem.MACOSX;
             }
         }
     }
@@ -323,7 +320,7 @@ public class VBrowserDetails implements Serializable {
      * @return true if run on Android, false otherwise
      */
     public boolean isAndroid() {
-        return ms == MobileSystem.ANDROID;
+        return os == OperatingSystem.ANDROID;
     }
 
     /**
@@ -332,7 +329,7 @@ public class VBrowserDetails implements Serializable {
      * @return true if run in iOS, false otherwise
      */
     public boolean isIOS() {
-        return ms == MobileSystem.IOS;
+        return os == OperatingSystem.IOS;
     }
 
 }
