@@ -46,6 +46,11 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     boolean disableOnClick = false;
 
     /**
+     * If caption is rendered as HTML
+     */
+    private boolean htmlContentAllowed = false;
+
+    /**
      * Creates a new push button. The value of the push button is false and it
      * is immediate by default.
      * 
@@ -155,6 +160,10 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         }
         if (clickShortcut != null) {
             target.addAttribute("keycode", clickShortcut.getKeyCode());
+        }
+
+        if (isHtmlContentAllowed()) {
+            target.addAttribute("html-caption", true);
         }
     }
 
@@ -692,6 +701,35 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
     public void setDisableOnClick(boolean disableOnClick) {
         this.disableOnClick = disableOnClick;
         requestRepaint();
+    }
+
+    /**
+     * Set whether the caption text is rendered as HTML or not. You might need
+     * to retheme button to allow higher content than the original text style.
+     * 
+     * If set to true, the captions are passed to the browser as html and the
+     * developer is responsible for ensuring no harmful html is used. If set to
+     * false, the content is passed to the browser as plain text.
+     * 
+     * @param htmlContentAllowed
+     *            <code>true</code> if caption is rendered as HTML,
+     *            <code>false</code> otherwise
+     */
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        if (this.htmlContentAllowed != htmlContentAllowed) {
+            this.htmlContentAllowed = htmlContentAllowed;
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Return HTML rendering setting
+     * 
+     * @return <code>true</code> if the caption text is to be rendered as HTML,
+     *         <code>false</code> otherwise
+     */
+    public boolean isHtmlContentAllowed() {
+        return htmlContentAllowed;
     }
 
 }

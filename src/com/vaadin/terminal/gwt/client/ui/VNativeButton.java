@@ -56,6 +56,11 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
 
     private boolean disableOnClick = false;
 
+    /**
+     * If caption should be rendered in HTML
+     */
+    protected boolean htmlCaption = false;
+
     public VNativeButton() {
         setStyleName(CLASSNAME);
 
@@ -87,6 +92,10 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
         // Save details
         this.client = client;
         id = uidl.getId();
+
+        // Update HTML value before setting text
+        htmlCaption = uidl.hasAttribute("html-caption")
+                && uidl.getBooleanAttribute("html-caption");
 
         // Set text
         setText(uidl.getStringAttribute("caption"));
@@ -141,7 +150,11 @@ public class VNativeButton extends Button implements Paintable, ClickHandler,
 
     @Override
     public void setText(String text) {
-        captionElement.setInnerText(text);
+        if (htmlCaption) {
+            captionElement.setInnerHTML(text);
+        } else {
+            captionElement.setInnerText(text);
+        }
     }
 
     @Override

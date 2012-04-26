@@ -93,6 +93,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
 
     private int clickShortcut = 0;
 
+    /**
+     * If caption should be rendered in HTML
+     */
+    protected boolean htmlCaption = false;
+
     public VButton() {
         super(DOM.createDiv());
         setTabIndex(0);
@@ -129,6 +134,10 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
         // Save details
         this.client = client;
         id = uidl.getId();
+
+        // Update HTML value before setting text
+        htmlCaption = uidl.hasAttribute("html-caption")
+                && uidl.getBooleanAttribute("html-caption");
 
         // Set text
         setText(uidl.getStringAttribute("caption"));
@@ -172,7 +181,11 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
     }
 
     public void setText(String text) {
-        captionElement.setInnerText(text);
+        if (htmlCaption) {
+            captionElement.setInnerHTML(text);
+        } else {
+            captionElement.setInnerText(text);
+        }
     }
 
     @SuppressWarnings("deprecation")
