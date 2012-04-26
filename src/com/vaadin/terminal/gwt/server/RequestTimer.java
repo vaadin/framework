@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.server;
 
+import java.io.Serializable;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +19,7 @@ import javax.servlet.http.HttpSession;
  * 
  * @author Jonatan Kronqvist / Vaadin Ltd
  */
-public class RequestTimer {
+public class RequestTimer implements Serializable {
     public static final String SESSION_ATTR_ID = "REQUESTTIMER";
 
     private long requestStartTime = 0;
@@ -29,7 +31,7 @@ public class RequestTimer {
      * attributes on HttpServletRequests and PortletRequests. Using this class
      * we don't need to duplicate code everywhere.
      */
-    static class RequestWrapper {
+    static class RequestWrapper implements Serializable {
         private final HttpServletRequest servletRequest;
         private final PortletRequest portletRequest;
 
