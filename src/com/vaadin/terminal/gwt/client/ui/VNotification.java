@@ -155,7 +155,9 @@ public class VNotification extends VOverlay {
          * Android 4 fails to render notifications correctly without a little
          * nudge (#8551)
          */
-        Util.setStyleTemporarily(getElement(), "display", "none");
+        if (BrowserInfo.get().isAndroid()) {
+            Util.setStyleTemporarily(getElement(), "display", "none");
+        }
     }
 
     @Override
