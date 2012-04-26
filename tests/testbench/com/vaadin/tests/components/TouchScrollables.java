@@ -15,27 +15,103 @@ import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 public class TouchScrollables extends TestBase {
     java.util.Random r = new java.util.Random(1);
 
-    private HorizontalLayout testSelector;
+    private TabSheet testSelector = new TabSheet();
 
     @Override
     public void setup() {
-        testSelector = new HorizontalLayout();
         getLayout().addComponent(testSelector);
+        testSelector.setHeight("500px");
 
+        addTest(getPanelTest());
+        addTest(getSimpleTableTest());
+        addTest(getDDSortableTableTest());
+        addTest(getTabSheetTest());
+        addTest(getSplitPanelTest());
+        addTest(getAccordionTest());
+        addTest(getSubWindowTest());
+
+        TestUtils
+                .injectCSS(
+                        getLayout().getWindow(),
+                        "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
+                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
+                                + "}"
+                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
+                                + "        margin-bottom: -1px;" + "}" + ""
+
+                );
+    }
+
+    private Component getPanelTest() {
+        Layout cssLayout = new CssLayout();
+        cssLayout.setCaption("Panel");
+
+        final Panel p = new Panel();
+        p.setScrollable(true);
+        p.setHeight("400px");
+        Label l50 = null;
+        for (int i = 0; i < 100; i++) {
+            Label c = new Label("Label" + i);
+            p.addComponent(c);
+            if (i == 50) {
+                l50 = c;
+            }
+        }
+
+        final Label l = l50;
+        Button button = new Button("Scroll to label 50",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        getLayout().getWindow().scrollIntoView(l);
+                    }
+                });
+        cssLayout.addComponent(button);
+        button = new Button("Scroll to 100px", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                p.setScrollTop(100);
+            }
+        });
+        cssLayout.addComponent(button);
+        cssLayout.addComponent(p);
+        return cssLayout;
+    }
+
+    private Component getTabSheetTest() {
+        TabSheet ts = new TabSheet();
+        ts.setCaption("Tabsheet");
+        ts.setHeight("100%");
+        ts.addTab(getBigComponent(), "Tab 1");
+        ts.addTab(getBigComponent(), "Tab 2");
+        return ts;
+    }
+
+    private Component getSplitPanelTest() {
+        HorizontalSplitPanel sp = new HorizontalSplitPanel();
+        sp.setCaption("Splitpanel");
+        sp.addComponent(getBigComponent());
+        sp.addComponent(getBigComponent());
+        return sp;
+    }
+
+    private Component getSimpleTableTest() {
         CssLayout cssLayout = new CssLayout();
         final Table table = new Table();
 
@@ -68,58 +144,33 @@ public class TouchScrollables extends TestBase {
         }
         cssLayout.addComponent(table);
         cssLayout.setCaption("Table");
-
-        addTest(cssLayout);
-
-        cssLayout = new CssLayout();
-        cssLayout.setCaption("Panel");
-
-        final Panel p = new Panel();
-        p.setScrollable(true);
-        p.setHeight("400px");
-        p.setCaption("Panel");
-        Label l50 = null;
-        for (int i = 0; i < 100; i++) {
-            Label c = new Label("Label" + i);
-            p.addComponent(c);
-            if (i == 50) {
-                l50 = c;
-            }
-        }
-
-        final Label l = l50;
-        button = new Button("Scroll to label 50", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                getLayout().getWindow().scrollIntoView(l);
-            }
-        });
-        cssLayout.addComponent(button);
-        button = new Button("Scroll to 100px", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                p.setScrollTop(100);
-            }
-        });
-        cssLayout.addComponent(button);
-        cssLayout.addComponent(p);
-
-        addTest(cssLayout);
-
-        TestUtils
-                .injectCSS(
-                        getLayout().getWindow(),
-                        "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
-                                + "        background-color: inherit ; border-bottom: 1px solid cyan;"
-                                + "}"
-                                + ".v-table-row-drag-middle .v-table-cell-wrapper {"
-                                + "        margin-bottom: -1px;" + "}" + ""
-
-                );
-
-        addDDSortableTable();
-
+        return cssLayout;
     }
 
-    private void addDDSortableTable() {
+    private Component getAccordionTest() {
+        Accordion a = new Accordion();
+        a.setCaption("Accordion");
+        a.setHeight("100%");
+        a.addTab(getBigComponent(), "Tab 1");
+        a.addTab(getBigComponent(), "Tab 2");
+        a.addTab(getBigComponent(), "Tab 3");
+        return a;
+    }
+
+    private Component getSubWindowTest() {
+        Button b = new Button("Open subwindow", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Window w = new Window("Subwindow");
+                w.center();
+                w.setHeight("200px");
+                w.addComponent(getBigComponent());
+                getMainWindow().addWindow(w);
+            }
+        });
+        return b;
+    }
+
+    private Component getDDSortableTableTest() {
         final Table table;
         table = new Table();
         table.setCaption("DD sortable table with context menus");
@@ -220,7 +271,7 @@ public class TouchScrollables extends TestBase {
 
             }
         });
-        addTest(table);
+        return table;
     }
 
     private void populateTable(Table table) {
@@ -239,21 +290,17 @@ public class TouchScrollables extends TestBase {
 
     }
 
-    private Component testComponent;
+    private void addTest(final Component t) {
+        testSelector.addComponent(t);
+    }
 
-    private void addTest(final AbstractComponent t) {
-        Button button = new Button(t.getCaption());
-        testSelector.addComponent(button);
-        button.addListener(new Button.ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                if (testComponent != null) {
-                    getLayout().removeComponent(testComponent);
-                }
-                testComponent = t;
-                getLayout().addComponent(t);
-            }
-        });
+    private Component getBigComponent() {
+        Layout l = new VerticalLayout();
+        for (int i = 0; i < 100; i++) {
+            Label c = new Label("Label" + i);
+            l.addComponent(c);
+        }
+        return l;
     }
 
     @Override
