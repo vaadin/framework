@@ -1206,17 +1206,17 @@ public abstract class AbstractCommunicationManager implements
             dragAndDropService.printJSONResponse(outWriter);
         }
 
-        writePerformanceDataForTestBench(outWriter);
+        writePerformanceData(outWriter);
     }
 
     /**
-     * Adds the performance timing data used by TestBench 3 to the UIDL
+     * Adds the performance timing data (used by TestBench 3) to the UIDL
      * response.
      */
-    private void writePerformanceDataForTestBench(final PrintWriter outWriter) {
+    private void writePerformanceData(final PrintWriter outWriter) {
         AbstractWebApplicationContext ctx = (AbstractWebApplicationContext) application
                 .getContext();
-        outWriter.write(String.format(", \"tbss\":[%d, %d]",
+        outWriter.write(String.format(", \"timings\":[%d, %d]",
                 ctx.getTotalSessionTime(), ctx.getLastRequestTime()));
     }
 

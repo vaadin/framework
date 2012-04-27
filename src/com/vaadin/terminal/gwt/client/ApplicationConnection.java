@@ -237,7 +237,7 @@ public class ApplicationConnection {
         	    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::lastProcessingTime,
                     ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::totalProcessingTime
     	        ];
-    	    pd = pd.concat(ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::testBenchServerStatus);
+    	    pd = pd.concat(ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::serverTimingInfo);
     	    return pd;
     	});
 
@@ -668,7 +668,7 @@ public class ApplicationConnection {
      * servicing the session so far. These values are always one request behind,
      * since they cannot be measured before the request is finished.
      */
-    private ValueMap testBenchServerStatus;
+    private ValueMap serverTimingInfo;
 
     static final int MAX_CSS_WAITS = 100;
 
@@ -991,10 +991,10 @@ public class ApplicationConnection {
         }
 
         /*
-         * Hook for TestBench to get details about server status
+         * Hook for e.g. TestBench to get details about server peformance
          */
-        if (json.containsKey("tbss")) {
-            testBenchServerStatus = json.getValueMap("tbss");
+        if (json.containsKey("timings")) {
+            serverTimingInfo = json.getValueMap("timings");
         }
 
         Command c = new Command() {

@@ -488,15 +488,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                                 .endTransaction(application, request);
                     }
                 } finally {
-                    if (requestStarted) {
-                        ((PortletRequestListener) application).onRequestEnd(
-                                request, response);
+                    try {
+                        if (requestStarted) {
+                            ((PortletRequestListener) application)
+                                    .onRequestEnd(request, response);
 
+                        }
+                    } finally {
+                        requestTimer
+                                .stop((AbstractWebApplicationContext) application
+                                        .getContext());
                     }
-
-                    requestTimer
-                            .stop((AbstractWebApplicationContext) application
-                                    .getContext());
                 }
             }
         }

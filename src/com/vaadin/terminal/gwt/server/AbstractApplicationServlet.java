@@ -546,13 +546,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 }
 
             } finally {
-                if (requestStarted) {
-                    ((HttpServletRequestListener) application).onRequestEnd(
-                            request, response);
+                try {
+                    if (requestStarted) {
+                        ((HttpServletRequestListener) application)
+                                .onRequestEnd(request, response);
+                    }
+                } finally {
+                    requestTimer
+                            .stop((AbstractWebApplicationContext) application
+                                    .getContext());
                 }
-
-                requestTimer.stop((AbstractWebApplicationContext) application
-                        .getContext());
             }
 
         }
