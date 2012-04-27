@@ -747,33 +747,41 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
         for (Paintable paintable : changedChildren) {
 
             Cell cell = paintableToCell.get(paintable);
-            if (!cell.hasRelativeHeight() || !cell.hasRelativeWidth()) {
-                // cell sizes will only stay still if only relatively
-                // sized components
-                // check if changed child affects min col widths
-                assert cell.cc != null;
-                cell.cc.setWidth("");
-                cell.cc.setHeight("");
+            if (cell.hasRelativeHeight() && cell.hasRelativeWidth()) {
+                // This should not happen - the size of a relative-sized child
+                // cannot change except as a response to a parent change
+                VConsole.error("The size of a relative-sized child ("
+                        + client.getPid(paintable) + ") changed unexpectedly!");
+                continue;
+            }
+            // check if changed child affects min col widths
+            assert cell.cc != null;
+            cell.cc.setWidth("");
+            cell.cc.setHeight("");
 
-                cell.cc.updateWidgetSize();
+            cell.cc.updateWidgetSize();
 
-                /*
-                 * If this is the result of an caption icon onload event the
-                 * caption size may have changed
-                 */
-                cell.cc.updateCaptionSize();
+            /*
+             * If this is the result of an caption icon onload event the caption
+             * size may have changed
+             */
+            cell.cc.updateCaptionSize();
 
+            /*
+             * Must only respond to child width/height changes if the child has
+             * a non-relative width/height respectively. See #8619 for an
+             * example where we should ignore an unexpected (and erroneous)
+             * width change of a relative-width child.
+             */
+
+            if (!cell.hasRelativeWidth()) {
                 int width = cell.getWidth();
                 int allocated = columnWidths[cell.col];
                 for (int i = 1; i < cell.colspan; i++) {
                     allocated += spacingPixelsHorizontal
                             + columnWidths[cell.col + i];
                 }
-                if (cell.hasRelativeWidth() && allocated != width) {
-                    // This may happen e.g. when browser zoomout causes pixel
-                    // rounding issues, see #8619
-                    VConsole.error("A relative-width child should never cause cell width to change!");
-                } else if (allocated < width) {
+                if (allocated < width) {
                     needsLayout = true;
                     if (cell.colspan == 1) {
                         // do simple column width expansion
@@ -787,19 +795,16 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                     // shrink
                     dirtyColumns.add(cell.col);
                 }
+            }
 
+            if (!cell.hasRelativeHeight()) {
                 int height = cell.getHeight();
-
-                allocated = rowHeights[cell.row];
+                int allocated = rowHeights[cell.row];
                 for (int i = 1; i < cell.rowspan; i++) {
                     allocated += spacingPixelsVertical
                             + rowHeights[cell.row + i];
                 }
-                if (cell.hasRelativeHeight() && allocated != height) {
-                    // This may happen e.g. when browser zoomout causes pixel
-                    // rounding issues, see #8619
-                    VConsole.error("A relative-height child should never cause cell height to change!");
-                } else if (allocated < height) {
+                if (allocated < height) {
                     needsLayout = true;
                     if (cell.rowspan == 1) {
                         // do simple row expansion
