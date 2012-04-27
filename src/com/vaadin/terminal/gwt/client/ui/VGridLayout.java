@@ -29,6 +29,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.layout.CellBasedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.ChildComponentContainer;
 
@@ -768,7 +769,11 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                     allocated += spacingPixelsHorizontal
                             + columnWidths[cell.col + i];
                 }
-                if (allocated < width) {
+                if (cell.hasRelativeWidth() && allocated != width) {
+                    // This may happen e.g. when browser zoomout causes pixel
+                    // rounding issues, see #8619
+                    VConsole.error("A relative-width child should never cause cell width to change!");
+                } else if (allocated < width) {
                     needsLayout = true;
                     if (cell.colspan == 1) {
                         // do simple column width expansion
@@ -777,7 +782,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                         // mark that col span expansion is needed
                         reDistributeColSpanWidths = true;
                     }
-                } else if (allocated != width) {
+                } else if (allocated > width) {
                     // size is smaller thant allocated, column might
                     // shrink
                     dirtyColumns.add(cell.col);
@@ -790,7 +795,11 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                     allocated += spacingPixelsVertical
                             + rowHeights[cell.row + i];
                 }
-                if (allocated < height) {
+                if (cell.hasRelativeHeight() && allocated != height) {
+                    // This may happen e.g. when browser zoomout causes pixel
+                    // rounding issues, see #8619
+                    VConsole.error("A relative-height child should never cause cell height to change!");
+                } else if (allocated < height) {
                     needsLayout = true;
                     if (cell.rowspan == 1) {
                         // do simple row expansion
@@ -799,7 +808,7 @@ public class VGridLayout extends SimplePanel implements Paintable, Container {
                         // mark that row span expansion is needed
                         reDistributeRowSpanHeights = true;
                     }
-                } else if (allocated != height) {
+                } else if (allocated > height) {
                     // size is smaller than allocated, row might shrink
                     dirtyRows.add(cell.row);
                 }
