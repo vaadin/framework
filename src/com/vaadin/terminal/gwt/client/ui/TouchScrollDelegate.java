@@ -15,10 +15,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.VConsole;
 
@@ -85,6 +87,49 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
             .isAndroidWithBrokenScrollTop();
+
+    public static class TouchScrollHandler implements TouchStartHandler {
+
+        private final TouchScrollDelegate delegate;
+        private final boolean requiresDelegate = BrowserInfo.get()
+                .requiresTouchScrollDelegate();
+
+        public TouchScrollHandler(Widget widget, Element... scrollables) {
+            if (requiresDelegate) {
+                delegate = new TouchScrollDelegate();
+                widget.addDomHandler(this, TouchStartEvent.getType());
+            } else {
+                delegate = null;
+                widget.addDomHandler(new TouchStartHandler() {
+
+                    public void onTouchStart(TouchStartEvent event) {
+                        // TODO Auto-generated method stub
+
+                    }
+                }, TouchStartEvent.getType());
+            }
+            setElements(scrollables);
+        }
+
+        public void onTouchStart(TouchStartEvent event) {
+            VConsole.log("TouchScrollHandler onTouchStart");
+            assert delegate != null;
+            delegate.onTouchStart(event);
+        }
+
+        public void setElements(Element... scrollables) {
+            if (requiresDelegate) {
+                delegate.setElements(scrollables);
+            } else if (BrowserInfo.get().isTouchDevice()) {
+                for (Element e : scrollables) {
+                    e.getStyle().setProperty("overflow", "auto");
+                    e.getStyle().setProperty("-webkit-overflow-scrolling",
+                            "touch");
+                    e.getStyle().setProperty("-webkit-user-select", "none");
+                }
+            }
+        }
+    }
 
     public TouchScrollDelegate(Element... elements) {
         scrollableElements = elements;
@@ -535,7 +580,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
     }
 
-    public void setElements(com.google.gwt.user.client.Element[] elements) {
+    public void setElements(Element[] elements) {
         scrollableElements = elements;
     }
 
