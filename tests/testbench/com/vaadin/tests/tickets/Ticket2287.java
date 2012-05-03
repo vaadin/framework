@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import java.net.URL;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 
 public class Ticket2287 extends Ticket2292 {

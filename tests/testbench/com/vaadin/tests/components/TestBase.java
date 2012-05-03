@@ -1,8 +1,8 @@
 package com.vaadin.tests.components;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 

@@ -5,9 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 
 public class LabelTest extends AbstractComponentTest<Label> implements
         ValueChangeListener {

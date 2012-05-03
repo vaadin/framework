@@ -5,13 +5,11 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.terminal.gwt.client.ui.label.LabelState;
 
 /**
  * Label component for showing non-editable short texts.
@@ -41,120 +39,7 @@ import com.vaadin.terminal.Vaadin6Component;
 // TODO generics for interface Property
 public class Label extends AbstractComponent implements Property,
         Property.Viewer, Property.ValueChangeListener,
-        Property.ValueChangeNotifier, Comparable<Object>, Vaadin6Component {
-
-    /**
-     * Content modes defining how the client should interpret a Label's value.
-     * 
-     * @sine 7.0
-     */
-    public enum ContentMode {
-        /**
-         * Content mode, where the label contains only plain text. The
-         * getValue() result is coded to XML when painting.
-         */
-        TEXT(null) {
-            @Override
-            public void paintText(String text, PaintTarget target)
-                    throws PaintException {
-                target.addText(text);
-            }
-        },
-
-        /**
-         * Content mode, where the label contains preformatted text.
-         */
-        PREFORMATTED("pre") {
-            @Override
-            public void paintText(String text, PaintTarget target)
-                    throws PaintException {
-                target.startTag("pre");
-                target.addText(text);
-                target.endTag("pre");
-            }
-        },
-
-        /**
-         * Content mode, where the label contains XHTML. Contents is then
-         * enclosed in DIV elements having namespace of
-         * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".
-         */
-        XHTML("xhtml") {
-            @Override
-            public void paintText(String text, PaintTarget target)
-                    throws PaintException {
-                target.startTag("data");
-                target.addXMLSection("div", text,
-                        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
-                target.endTag("data");
-            }
-        },
-
-        /**
-         * Content mode, where the label contains well-formed or well-balanced
-         * XML. Each of the root elements must have their default namespace
-         * specified.
-         */
-        XML("xml") {
-            @Override
-            public void paintText(String text, PaintTarget target)
-                    throws PaintException {
-                target.addXMLSection("data", text, null);
-            }
-        },
-
-        /**
-         * Content mode, where the label contains RAW output. Output is not
-         * required to comply to with XML. In Web Adapter output is inserted
-         * inside the resulting HTML document as-is. This is useful for some
-         * specific purposes where possibly broken HTML content needs to be
-         * shown, but in most cases XHTML mode should be preferred.
-         */
-        RAW("raw") {
-            @Override
-            public void paintText(String text, PaintTarget target)
-                    throws PaintException {
-                target.startTag("data");
-                target.addAttribute("escape", false);
-                target.addText(text);
-                target.endTag("data");
-            }
-        };
-
-        private final String uidlName;
-
-        /**
-         * The default content mode is text
-         */
-        public static ContentMode DEFAULT = TEXT;
-
-        private ContentMode(String uidlName) {
-            this.uidlName = uidlName;
-        }
-
-        /**
-         * Gets the name representing this content mode in UIDL messages
-         * 
-         * @return the UIDL name of this content mode
-         */
-        public String getUidlName() {
-            return uidlName;
-        }
-
-        /**
-         * Adds the text value to a {@link PaintTarget} according to this
-         * content mode
-         * 
-         * @param text
-         *            the text to add
-         * @param target
-         *            the paint target to add the value to
-         * @throws PaintException
-         *             if the paint operation failed
-         */
-        public abstract void paintText(String text, PaintTarget target)
-                throws PaintException;
-    }
+        Property.ValueChangeNotifier, Comparable<Object> {
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
@@ -187,16 +72,14 @@ public class Label extends AbstractComponent implements Property,
     public static final ContentMode CONTENT_RAW = ContentMode.RAW;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#DEFAULT} instead
+     * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
      */
     @Deprecated
-    public static final ContentMode CONTENT_DEFAULT = ContentMode.DEFAULT;
+    public static final ContentMode CONTENT_DEFAULT = ContentMode.TEXT;
 
     private static final String DATASOURCE_MUST_BE_SET = "Datasource must be set";
 
     private Property dataSource;
-
-    private ContentMode contentMode = ContentMode.DEFAULT;
 
     /**
      * Creates an empty Label.
@@ -211,7 +94,7 @@ public class Label extends AbstractComponent implements Property,
      * @param content
      */
     public Label(String content) {
-        this(content, ContentMode.DEFAULT);
+        this(content, ContentMode.TEXT);
     }
 
     /**
@@ -221,7 +104,7 @@ public class Label extends AbstractComponent implements Property,
      * @param contentSource
      */
     public Label(Property contentSource) {
-        this(contentSource, ContentMode.DEFAULT);
+        this(contentSource, ContentMode.TEXT);
     }
 
     /**
@@ -243,27 +126,21 @@ public class Label extends AbstractComponent implements Property,
      */
     public Label(Property contentSource, ContentMode contentMode) {
         setPropertyDataSource(contentSource);
-        if (contentMode != ContentMode.DEFAULT) {
-            setContentMode(contentMode);
-        }
+        setContentMode(contentMode);
         setWidth(100, UNITS_PERCENTAGE);
     }
 
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the Paint Operation fails.
-     */
-    public void paintContent(PaintTarget target) throws PaintException {
-        String uidlName = contentMode.getUidlName();
-        if (uidlName != null) {
-            target.addAttribute("mode", uidlName);
-        }
-        contentMode.paintText(getStringValue(), target);
+    @Override
+    public void updateState() {
+        super.updateState();
+        // We don't know when the text is updated so update it here before
+        // sending the state to the client
+        getState().setText(getStringValue());
+    }
 
+    @Override
+    public LabelState getState() {
+        return (LabelState) super.getState();
     }
 
     /**
@@ -381,7 +258,7 @@ public class Label extends AbstractComponent implements Property,
      * @see ContentMode
      */
     public ContentMode getContentMode() {
-        return contentMode;
+        return getState().getContentMode();
     }
 
     /**
@@ -396,10 +273,9 @@ public class Label extends AbstractComponent implements Property,
         if (contentMode == null) {
             throw new IllegalArgumentException("Content mode can not be null");
         }
-        if (contentMode != this.contentMode) {
-            this.contentMode = contentMode;
-            requestRepaint();
-        }
+
+        getState().setContentMode(contentMode);
+        requestRepaint();
     }
 
     /* Value change events */
@@ -516,7 +392,8 @@ public class Label extends AbstractComponent implements Property,
         String thisValue;
         String otherValue;
 
-        if (contentMode == ContentMode.XML || contentMode == ContentMode.XHTML) {
+        if (getContentMode() == ContentMode.XML
+                || getContentMode() == ContentMode.XHTML) {
             thisValue = stripTags(getStringValue());
         } else {
             thisValue = getStringValue();
@@ -564,10 +441,6 @@ public class Label extends AbstractComponent implements Property,
         }
 
         return res.toString();
-    }
-
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
 }

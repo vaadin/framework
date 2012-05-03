@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 

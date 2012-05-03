@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.label;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 
 public class LabelModes extends ComponentTestCase<Label> {
 

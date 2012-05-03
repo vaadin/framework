@@ -8,10 +8,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Window;
 
