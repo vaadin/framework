@@ -4,10 +4,9 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.video.VideoConnector;
+import com.vaadin.terminal.gwt.client.ui.video.VideoState;
+import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * The Video component translates into an HTML5 &lt;video&gt; element and as
@@ -32,7 +31,10 @@ import com.vaadin.terminal.gwt.client.ui.video.VideoConnector;
  */
 public class Video extends AbstractMedia {
 
-    private Resource poster;
+    @Override
+    public VideoState getState() {
+        return (VideoState) super.getState();
+    }
 
     public Video() {
         this("", null);
@@ -65,21 +67,15 @@ public class Video extends AbstractMedia {
      * @param poster
      */
     public void setPoster(Resource poster) {
-        this.poster = poster;
+        getState().setPoster(new ResourceReference(poster));
+        requestRepaint();
     }
 
     /**
      * @return The poster image.
      */
     public Resource getPoster() {
-        return poster;
+        return ((ResourceReference) getState().getPoster()).getResource();
     }
 
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-        if (getPoster() != null) {
-            target.addAttribute(VideoConnector.ATTR_POSTER, getPoster());
-        }
-    }
 }

@@ -3,24 +3,12 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.URLReference;
 
-public abstract class MediaBaseConnector extends AbstractComponentConnector
-        implements Paintable {
-
-    public static final String TAG_SOURCE = "src";
-
-    public static final String ATTR_MUTED = "muted";
-    public static final String ATTR_CONTROLS = "ctrl";
-    public static final String ATTR_AUTOPLAY = "auto";
-    public static final String ATTR_RESOURCE = "res";
-    public static final String ATTR_RESOURCE_TYPE = "type";
-    public static final String ATTR_HTML = "html";
-    public static final String ATTR_ALT_TEXT = "alt";
+public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
     /**
      * Server to client RPC interface for controlling playback of the media.
@@ -54,40 +42,24 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector
         });
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
+    @Override
+    public AbstractMediaState getState() {
+        return (AbstractMediaState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        getWidget().setControls(getState().isShowControls());
+        getWidget().setAutoplay(getState().isAutoplay());
+        getWidget().setMuted(getState().isMuted());
+        for (int i = 0; i < getState().getSources().size(); i++) {
+            URLReference source = getState().getSources().get(i);
+            String sourceType = getState().getSourceTypes().get(i);
+            getWidget().addSource(source.getURL(), sourceType);
         }
-
-        getWidget().setControls(shouldShowControls(uidl));
-        getWidget().setAutoplay(shouldAutoplay(uidl));
-        getWidget().setMuted(isMediaMuted(uidl));
-
-        // Add all sources
-        for (int ix = 0; ix < uidl.getChildCount(); ix++) {
-            UIDL child = uidl.getChildUIDL(ix);
-            if (TAG_SOURCE.equals(child.getTag())) {
-                getWidget()
-                        .addSource(getSourceUrl(child), getSourceType(child));
-            }
-        }
-        setAltText(uidl);
-    }
-
-    protected boolean shouldShowControls(UIDL uidl) {
-        return uidl.getBooleanAttribute(ATTR_CONTROLS);
-    }
-
-    private boolean shouldAutoplay(UIDL uidl) {
-        return uidl.getBooleanAttribute(ATTR_AUTOPLAY);
-    }
-
-    private boolean isMediaMuted(UIDL uidl) {
-        return uidl.getBooleanAttribute(ATTR_MUTED);
-    }
-
-    private boolean allowHtmlContent(UIDL uidl) {
-        return uidl.getBooleanAttribute(ATTR_HTML);
+        setAltText(getState().getAltText());
     }
 
     @Override
@@ -95,36 +67,20 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector
         return (VMediaBase) super.getWidget();
     }
 
-    /**
-     * @param uidl
-     * @return the URL of a resource to be used as a source for the media
-     */
-    private String getSourceUrl(UIDL uidl) {
-        String url = getConnection().translateVaadinUri(
-                uidl.getStringAttribute(MediaBaseConnector.ATTR_RESOURCE));
-        if (url == null) {
-            return "";
+    private void setAltText(String altText) {
+
+        if (altText == null || "".equals(altText)) {
+            altText = getDefaultAltHtml();
+        } else if (!getState().isHtmlContentAllowed()) {
+            altText = Util.escapeHTML(altText);
         }
-        return url;
+        getWidget().setAltText(altText);
     }
 
     /**
-     * @param uidl
-     * @return the mime type of the media
+     * @return the default HTML to show users with browsers that do not support
+     *         HTML5 media markup.
      */
-    private String getSourceType(UIDL uidl) {
-        return uidl.getStringAttribute(MediaBaseConnector.ATTR_RESOURCE_TYPE);
-    }
-
-    private void setAltText(UIDL uidl) {
-        String alt = uidl.getStringAttribute(MediaBaseConnector.ATTR_ALT_TEXT);
-
-        if (alt == null || "".equals(alt)) {
-            alt = getWidget().getDefaultAltHtml();
-        } else if (!allowHtmlContent(uidl)) {
-            alt = Util.escapeHTML(alt);
-        }
-        getWidget().setAltText(alt);
-    }
+    protected abstract String getDefaultAltHtml();
 
 }

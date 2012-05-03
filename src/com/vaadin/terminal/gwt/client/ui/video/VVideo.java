@@ -52,11 +52,6 @@ public class VVideo extends VMediaBase {
         Util.notifyParentOfSizeChange(this, true);
     }
 
-    @Override
-    protected String getDefaultAltHtml() {
-        return "Your browser does not support the <code>video</code> element.";
-    }
-
     public void setPoster(String poster) {
         video.setPoster(poster);
     }

@@ -5,37 +5,25 @@
 package com.vaadin.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
+import com.vaadin.terminal.gwt.client.communication.URLReference;
+import com.vaadin.terminal.gwt.client.ui.AbstractMediaState;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector.MediaControl;
+import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * Abstract base class for the HTML5 media components.
  * 
  * @author Vaadin Ltd
  */
-public class AbstractMedia extends AbstractComponent implements
-        Vaadin6Component {
+public class AbstractMedia extends AbstractComponent {
 
-    private List<Resource> sources = new ArrayList<Resource>();
-
-    private boolean showControls;
-
-    private String altText;
-
-    private boolean htmlContentAllowed;
-
-    private boolean autoplay;
-
-    private boolean muted;
+    @Override
+    public AbstractMediaState getState() {
+        return (AbstractMediaState) super.getState();
+    }
 
     /**
      * Sets a single media file as the source of the media component.
@@ -43,8 +31,14 @@ public class AbstractMedia extends AbstractComponent implements
      * @param source
      */
     public void setSource(Resource source) {
-        sources.clear();
+        clearSources();
+
         addSource(source);
+    }
+
+    private void clearSources() {
+        getState().getSources().clear();
+        getState().getSourceTypes().clear();
     }
 
     /**
@@ -58,7 +52,8 @@ public class AbstractMedia extends AbstractComponent implements
      */
     public void addSource(Resource source) {
         if (source != null) {
-            sources.add(source);
+            getState().getSources().add(new ResourceReference(source));
+            getState().getSourceTypes().add(source.getMIMEType());
             requestRepaint();
         }
     }
@@ -72,15 +67,21 @@ public class AbstractMedia extends AbstractComponent implements
      * @param sources
      */
     public void setSources(Resource... sources) {
-        this.sources.addAll(Arrays.asList(sources));
-        requestRepaint();
+        clearSources();
+        for (Resource source : sources) {
+            addSource(source);
+        }
     }
 
     /**
      * @return The sources pointed to in this media.
      */
     public List<Resource> getSources() {
-        return Collections.unmodifiableList(sources);
+        ArrayList<Resource> sources = new ArrayList<Resource>();
+        for (URLReference ref : getState().getSources()) {
+            sources.add(((ResourceReference) ref).getResource());
+        }
+        return sources;
     }
 
     /**
@@ -89,7 +90,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @param showControls
      */
     public void setShowControls(boolean showControls) {
-        this.showControls = showControls;
+        getState().setShowControls(showControls);
         requestRepaint();
     }
 
@@ -97,7 +98,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @return true if the browser is to show native media controls.
      */
     public boolean isShowControls() {
-        return showControls;
+        return getState().isShowControls();
     }
 
     /**
@@ -109,10 +110,10 @@ public class AbstractMedia extends AbstractComponent implements
      * "https://developer.mozilla.org/En/Using_audio_and_video_in_Firefox#Using_Flash"
      * >Mozilla Developer Network</a> for details.
      * 
-     * @param text
+     * @param altText
      */
-    public void setAltText(String text) {
-        altText = text;
+    public void setAltText(String altText) {
+        getState().setAltText(altText);
         requestRepaint();
     }
 
@@ -121,7 +122,7 @@ public class AbstractMedia extends AbstractComponent implements
      *         HTML5.
      */
     public String getAltText() {
-        return altText;
+        return getState().getAltText();
     }
 
     /**
@@ -131,7 +132,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @param htmlContentAllowed
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        this.htmlContentAllowed = htmlContentAllowed;
+        getState().setHtmlContentAllowed(htmlContentAllowed);
         requestRepaint();
     }
 
@@ -140,7 +141,7 @@ public class AbstractMedia extends AbstractComponent implements
      *         be rendered as HTML.
      */
     public boolean isHtmlContentAllowed() {
-        return htmlContentAllowed;
+        return getState().isHtmlContentAllowed();
     }
 
     /**
@@ -150,7 +151,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @param autoplay
      */
     public void setAutoplay(boolean autoplay) {
-        this.autoplay = autoplay;
+        getState().setAutoplay(autoplay);
         requestRepaint();
     }
 
@@ -158,7 +159,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @return true if the media is set to automatically start playback.
      */
     public boolean isAutoplay() {
-        return autoplay;
+        return getState().isAutoplay();
     }
 
     /**
@@ -167,7 +168,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @param muted
      */
     public void setMuted(boolean muted) {
-        this.muted = muted;
+        getState().setMuted(muted);
         requestRepaint();
     }
 
@@ -175,7 +176,7 @@ public class AbstractMedia extends AbstractComponent implements
      * @return true if the audio is muted.
      */
     public boolean isMuted() {
-        return muted;
+        return getState().isMuted();
     }
 
     /**
@@ -192,25 +193,4 @@ public class AbstractMedia extends AbstractComponent implements
         getRpcProxy(MediaControl.class).play();
     }
 
-    public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute(MediaBaseConnector.ATTR_CONTROLS, isShowControls());
-        if (getAltText() != null) {
-            target.addAttribute(MediaBaseConnector.ATTR_ALT_TEXT, getAltText());
-        }
-        target.addAttribute(MediaBaseConnector.ATTR_HTML,
-                isHtmlContentAllowed());
-        target.addAttribute(MediaBaseConnector.ATTR_AUTOPLAY, isAutoplay());
-        for (Resource r : getSources()) {
-            target.startTag(MediaBaseConnector.TAG_SOURCE);
-            target.addAttribute(MediaBaseConnector.ATTR_RESOURCE, r);
-            target.addAttribute(MediaBaseConnector.ATTR_RESOURCE_TYPE,
-                    r.getMIMEType());
-            target.endTag(MediaBaseConnector.TAG_SOURCE);
-        }
-        target.addAttribute(MediaBaseConnector.ATTR_MUTED, isMuted());
-    }
-
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
-    }
 }
