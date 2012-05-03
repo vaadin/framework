@@ -4,7 +4,6 @@
 
 package com.vaadin.ui;
 
-import java.text.Format;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -19,16 +18,11 @@ import com.vaadin.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.terminal.gwt.client.ui.textfield.AbstractTextFieldState;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {
-
-    /**
-     * Value formatter used to format the string contents.
-     */
-    @Deprecated
-    private Format format;
 
     /**
      * Null representation.
@@ -39,21 +33,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * representation .
      */
     private boolean nullSettingAllowed = false;
-    /**
-     * Maximum character count in text field.
-     */
-    private int maxLength = -1;
-
-    /**
-     * Number of visible columns in the TextField.
-     */
-    private int columns = 0;
-
-    /**
-     * The prompt to display in an empty field. Null when disabled.
-     */
-    private String inputPrompt = null;
-
     /**
      * The text content when the last messages to the server was sent. Cleared
      * when value is changed.
@@ -100,32 +79,23 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         super();
     }
 
-    public void paintContent(PaintTarget target) throws PaintException {
+    @Override
+    public AbstractTextFieldState getState() {
+        return (AbstractTextFieldState) super.getState();
+    }
 
-        if (getMaxLength() >= 0) {
-            target.addAttribute("maxLength", getMaxLength());
-        }
+    @Override
+    public void updateState() {
+        super.updateState();
 
-        // Adds the number of column and rows
-        final int columns = getColumns();
-        if (columns != 0) {
-            target.addAttribute("cols", String.valueOf(columns));
-        }
-
-        if (getInputPrompt() != null) {
-            target.addAttribute("prompt", getInputPrompt());
-        }
-
-        // Adds the content as variable
-        String value = getFormattedValue();
+        String value = getValue();
         if (value == null) {
             value = getNullRepresentation();
         }
-        if (value == null) {
-            throw new IllegalStateException(
-                    "Null values are not allowed if the null-representation is null");
-        }
-        target.addVariable(this, "text", value);
+        getState().setText(value);
+    }
+
+    public void paintContent(PaintTarget target) throws PaintException {
 
         if (selectionPosition != -1) {
             target.addAttribute("selpos", selectionPosition);
@@ -151,37 +121,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
             }
         }
 
-    }
-
-    /**
-     * Gets the formatted string value. Sets the field value by using the
-     * assigned Format.
-     * 
-     * @return the Formatted value.
-     * @see #setFormat(Format)
-     * @see Format
-     * @deprecated
-     */
-    @Deprecated
-    protected String getFormattedValue() {
-        Object v = getValue();
-        if (v == null) {
-            return null;
-        }
-        return v.toString();
-    }
-
-    @Override
-    public String getValue() {
-        String v = super.getValue();
-        if (format == null || v == null) {
-            return v;
-        }
-        try {
-            return format.format(v);
-        } catch (final IllegalArgumentException e) {
-            return v;
-        }
     }
 
     public void changeVariables(Object source, Map<String, Object> variables) {
@@ -215,7 +154,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 if (getMaxLength() != -1 && newValue.length() > getMaxLength()) {
                     newValue = newValue.substring(0, getMaxLength());
                 }
-                final String oldValue = getFormattedValue();
+                final String oldValue = getValue();
                 if (newValue != null
                         && (oldValue == null || isNullSettingAllowed())
                         && newValue.equals(getNullRepresentation())) {
@@ -228,7 +167,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
                     // If the modified status changes, or if we have a
                     // formatter, repaint is needed after all.
-                    if (format != null || wasModified != isModified()) {
+                    if (wasModified != isModified()) {
                         requestRepaint();
                     }
                 }
@@ -345,31 +284,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         requestRepaint();
     }
 
-    /**
-     * Gets the value formatter of TextField.
-     * 
-     * @return the Format used to format the value.
-     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
-     */
-    @Deprecated
-    public Format getFormat() {
-        return format;
-    }
-
-    /**
-     * Gets the value formatter of TextField.
-     * 
-     * @param format
-     *            the Format used to format the value. Null disables the
-     *            formatting.
-     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
-     */
-    @Deprecated
-    public void setFormat(Format format) {
-        this.format = format;
-        requestRepaint();
-    }
-
     @Override
     protected boolean isEmpty() {
         return super.isEmpty() || getValue().length() == 0;
@@ -382,7 +296,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the maxLength
      */
     public int getMaxLength() {
-        return maxLength;
+        return getState().getMaxLength();
     }
 
     /**
@@ -393,7 +307,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      *            the maxLength to set
      */
     public void setMaxLength(int maxLength) {
-        this.maxLength = maxLength;
+        getState().setMaxLength(maxLength);
         requestRepaint();
     }
 
@@ -405,7 +319,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the number of columns in the editor.
      */
     public int getColumns() {
-        return columns;
+        return getState().getColumns();
     }
 
     /**
@@ -420,7 +334,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         if (columns < 0) {
             columns = 0;
         }
-        this.columns = columns;
+        getState().setColumns(columns);
         requestRepaint();
     }
 
@@ -431,7 +345,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the current input prompt, or null if not enabled
      */
     public String getInputPrompt() {
-        return inputPrompt;
+        return getState().getInputPrompt();
     }
 
     /**
@@ -441,7 +355,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @param inputPrompt
      */
     public void setInputPrompt(String inputPrompt) {
-        this.inputPrompt = inputPrompt;
+        getState().setInputPrompt(inputPrompt);
         requestRepaint();
     }
 

@@ -5,10 +5,8 @@
 package com.vaadin.terminal.gwt.client.ui.textarea;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.textfield.TextFieldConnector;
 import com.vaadin.ui.TextArea;
@@ -17,17 +15,16 @@ import com.vaadin.ui.TextArea;
 public class TextAreaConnector extends TextFieldConnector {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // Call parent renderer explicitly
-        super.updateFromUIDL(uidl, client);
+    public TextAreaState getState() {
+        return (TextAreaState) super.getState();
+    }
 
-        if (uidl.hasAttribute("rows")) {
-            getWidget().setRows(uidl.getIntAttribute("rows"));
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
-        if (getWidget().getMaxLength() >= 0) {
-            getWidget().sinkEvents(Event.ONKEYUP);
-        }
+        getWidget().setRows(getState().getRows());
+        getWidget().setWordwrap(getState().isWordwrap());
     }
 
     @Override
