@@ -143,8 +143,12 @@ public class JsonCodec implements Serializable {
         }
 
         // Try to decode object using fields
-        return decodeObject(targetType, (JSONObject) valueAndType.get(1),
-                application);
+        Object value = valueAndType.get(1);
+        if (value == JSONObject.NULL) {
+            return null;
+        } else {
+            return decodeObject(targetType, (JSONObject) value, application);
+        }
     }
 
     /**
