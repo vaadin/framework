@@ -698,6 +698,15 @@ public class JsonPaintTarget implements PaintTarget {
 
     public String getPaintIdentifier(Paintable paintable) throws PaintException {
         if (!manager.hasPaintableId(paintable)) {
+            if (paintable instanceof Component
+                    && ((Component) paintable).getApplication() == null) {
+                logger.log(
+                        Level.WARNING,
+                        "Painting reference to orphan "
+                                + paintable.getClass().getName()
+                                + ", the component will not be accessible on the client side.");
+                return "Orphan";
+            }
             if (identifiersCreatedDueRefPaint == null) {
                 identifiersCreatedDueRefPaint = new HashSet<Paintable>();
             }

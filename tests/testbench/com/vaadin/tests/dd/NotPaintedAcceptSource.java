@@ -61,6 +61,7 @@ public class NotPaintedAcceptSource extends TestBase {
                 } else {
                     horizontalLayout.replaceComponent(source2, source1);
                 }
+                target.requestRepaint();
             }
         }));
 
