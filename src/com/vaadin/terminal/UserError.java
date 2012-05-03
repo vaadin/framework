@@ -77,7 +77,7 @@ public class UserError implements ErrorMessage {
     public UserError(String message, int contentMode, int errorLevel) {
 
         // Check the parameters
-        if (contentMode < 0 || contentMode > 2) {
+        if (contentMode < 0 || contentMode > 3) {
             throw new java.lang.IllegalArgumentException(
                     "Unsupported content mode: " + contentMode);
         }
