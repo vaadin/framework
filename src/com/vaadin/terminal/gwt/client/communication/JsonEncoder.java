@@ -80,6 +80,9 @@ public class JsonEncoder {
                     JSONBoolean.getInstance((Boolean) value));
         } else if (value instanceof Object[]) {
             return encodeObjectArray((Object[]) value, connectorMap, connection);
+        } else if (value instanceof Enum) {
+            Enum e = (Enum) value;
+            return encodeEnum(e, connectorMap, connection);
         } else if (value instanceof Map) {
             Map<Object, Object> map = (Map<Object, Object>) value;
             JSONObject jsonMap = new JSONObject();
@@ -125,6 +128,12 @@ public class JsonEncoder {
                         serializer.serialize(value, connectorMap, connection));
             }
         }
+    }
+
+    private static JSONValue encodeEnum(Enum e, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
+        return combineTypeAndValue(e.getClass().getName(),
+                new JSONString(e.toString()));
     }
 
     private static JSONValue encodeObjectArray(Object[] array,
@@ -193,8 +202,6 @@ public class JsonEncoder {
             return VTYPE_LIST;
         } else if (value instanceof Set) {
             return VTYPE_SET;
-        } else if (value instanceof Enum) {
-            return VTYPE_STRING; // transported as string representation
         } else if (value instanceof String[]) {
             return VTYPE_STRINGARRAY;
         } else if (value instanceof Object[]) {

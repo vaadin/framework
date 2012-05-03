@@ -15,6 +15,7 @@ import java.util.Set;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
@@ -52,7 +53,7 @@ public class JsonDecoder {
         return decodeValue(type, jsonArray.get(1), target, idMapper, connection);
     }
 
-    private static Object decodeValue(String variableType, Object value,
+    private static Object decodeValue(String variableType, JSONValue value,
             Object target, ConnectorMap idMapper,
             ApplicationConnection connection) {
         Object val = null;
@@ -91,15 +92,15 @@ public class JsonDecoder {
         } else if (JsonEncoder.VTYPE_CONNECTOR.equals(variableType)) {
             val = idMapper.getConnector(((JSONString) value).stringValue());
         } else {
-            return decodeObject(variableType, (JSONObject) value, target,
-                    idMapper, connection);
+            return decodeObject(variableType, value, target, idMapper,
+                    connection);
         }
 
         return val;
     }
 
     private static Object decodeObject(String variableType,
-            JSONObject encodedValue, Object target, ConnectorMap idMapper,
+            JSONValue encodedValue, Object target, ConnectorMap idMapper,
             ApplicationConnection connection) {
         // object, class name as type
         JSONSerializer<Object> serializer = connection.getSerializerMap()

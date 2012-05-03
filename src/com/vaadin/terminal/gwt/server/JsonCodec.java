@@ -321,6 +321,11 @@ public class JsonCodec implements Serializable {
         }
     }
 
+    private static Object decodeEnum(Class<? extends Enum> cls, JSONObject value) {
+        String enumIdentifier = String.valueOf(value);
+        return Enum.valueOf(cls, enumIdentifier);
+    }
+
     private static String[] decodeStringArray(JSONArray jsonArray)
             throws JSONException {
         int length = jsonArray.length();
@@ -384,6 +389,11 @@ public class JsonCodec implements Serializable {
             throws JSONException {
 
         Class<?> targetClass = getClassForType(targetType);
+        if (Enum.class.isAssignableFrom(targetClass)) {
+            return decodeEnum(targetClass.asSubclass(Enum.class),
+                    serializedObject);
+        }
+
         try {
             Object decodedObject = targetClass.newInstance();
             for (PropertyDescriptor pd : Introspector.getBeanInfo(targetClass)
@@ -484,6 +494,8 @@ public class JsonCodec implements Serializable {
         } else if (internalTransportType != null) {
             return combineTypeAndValue(internalTransportType,
                     String.valueOf(value));
+        } else if (value instanceof Enum) {
+            return encodeEnum((Enum) value, application);
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
@@ -556,6 +568,12 @@ public class JsonCodec implements Serializable {
         }
 
         return false;
+    }
+
+    private static JSONArray encodeEnum(Enum e, Application application)
+            throws JSONException {
+        String enumIdentifier = e.name();
+        return combineTypeAndValue(e.getClass().getName(), enumIdentifier);
     }
 
     private static JSONArray encodeArrayContents(Object[] array,
