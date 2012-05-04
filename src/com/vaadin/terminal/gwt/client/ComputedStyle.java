@@ -179,6 +179,7 @@ public class ComputedStyle {
         if (isNaN(number))
             return null;
         else
+            // $entry not needed as function is not exported
             return @java.lang.Integer::valueOf(I)(number);
     }-*/;
 

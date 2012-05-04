@@ -62,6 +62,7 @@ final class ComponentDetailMap extends JavaScriptObject {
     private final native void fillWithValues(Collection<ComponentDetail> list)
     /*-{
         for(var key in this) {
+            // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(this[key]);
         }
     }-*/;

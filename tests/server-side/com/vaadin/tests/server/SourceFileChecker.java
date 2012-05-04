@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -79,6 +81,17 @@ public class SourceFileChecker extends TestCase {
                     "The following files contain CRLF instead of LF:\n{0}",
                     ".java");
         }
+    }
+
+    public void testGwtFilesUsingEntry() {
+        Set<String> ignore = new HashSet<String>(alwaysIgnore);
+        ignore.add(externalJavaFiles);
+        validateFiles(
+                SRC_DIR,
+                new GwtEntryChecker(),
+                ignore,
+                "The following files might export javscript callbacks without $entry:\n{0}",
+                ".java");
     }
 
     public interface FileValidator {
@@ -170,5 +183,34 @@ public class SourceFileChecker extends TestCase {
                 throw new IllegalArgumentException();
             }
         }
+    }
+
+    class GwtEntryChecker extends FileContentsValidator {
+        // Matches e.g.
+        // @com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::escapeHtml(
+        private final Matcher matcher = Pattern.compile("@[\\w.]+::\\w+\\(")
+                .matcher("");
+
+        @Override
+        protected void validateContents(File f, String contents)
+                throws Exception {
+            matcher.reset(contents);
+            while (matcher.find()) {
+                int start = matcher.start();
+
+                // Search backwards to find index of native block start
+                int nativeBlockStart = contents.lastIndexOf("/*-{", start);
+
+                // Get contents between block start and our match
+                String beforeMatchInBlock = contents.substring(
+                        nativeBlockStart, start);
+
+                // Fail if there's no $entry
+                if (!beforeMatchInBlock.contains("$entry")) {
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
     }
 }

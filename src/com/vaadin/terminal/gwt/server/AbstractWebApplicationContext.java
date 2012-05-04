@@ -44,6 +44,10 @@ public abstract class AbstractWebApplicationContext implements
 
     protected HashMap<Application, AbstractCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, AbstractCommunicationManager>();
 
+    private long totalSessionTime = 0;
+
+    private long lastRequestTime = -1;
+
     public void addTransactionListener(TransactionListener listener) {
         if (listener != null) {
             listeners.add(listener);
@@ -220,6 +224,32 @@ public abstract class AbstractWebApplicationContext implements
             return null;
         }
         return relativeUri.substring(index + 1, next);
+    }
+
+    /**
+     * @return The total time spent servicing requests in this session.
+     */
+    public long getTotalSessionTime() {
+        return totalSessionTime;
+    }
+
+    /**
+     * Sets the time spent servicing the last request in the session and updates
+     * the total time spent servicing requests in this session.
+     * 
+     * @param time
+     *            the time spent in the last request.
+     */
+    public void setLastRequestTime(long time) {
+        lastRequestTime = time;
+        totalSessionTime += time;
+    }
+
+    /**
+     * @return the time spent servicing the last request in this session.
+     */
+    public long getLastRequestTime() {
+        return lastRequestTime;
     }
 
 }

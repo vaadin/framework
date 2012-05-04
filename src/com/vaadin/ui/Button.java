@@ -489,4 +489,33 @@ public class Button extends AbstractComponent implements
         return (ButtonState) super.getState();
     }
 
+    /**
+     * Set whether the caption text is rendered as HTML or not. You might need
+     * to retheme button to allow higher content than the original text style.
+     * 
+     * If set to true, the captions are passed to the browser as html and the
+     * developer is responsible for ensuring no harmful html is used. If set to
+     * false, the content is passed to the browser as plain text.
+     * 
+     * @param htmlContentAllowed
+     *            <code>true</code> if caption is rendered as HTML,
+     *            <code>false</code> otherwise
+     */
+    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
+        if (getState().isHtmlContentAllowed() != htmlContentAllowed) {
+            getState().setHtmlContentAllowed(htmlContentAllowed);
+            requestRepaint();
+        }
+    }
+
+    /**
+     * Return HTML rendering setting
+     * 
+     * @return <code>true</code> if the caption text is to be rendered as HTML,
+     *         <code>false</code> otherwise
+     */
+    public boolean isHtmlContentAllowed() {
+        return getState().isHtmlContentAllowed();
+    }
+
 }

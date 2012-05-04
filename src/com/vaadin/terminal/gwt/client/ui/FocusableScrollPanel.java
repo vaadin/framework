@@ -153,7 +153,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
      *            the new vertical scroll position, in pixels
      */
     public void setScrollPosition(int position) {
-        if (isAndroidWithBrokenScrollTop()) {
+        if (BrowserInfo.get().isAndroidWithBrokenScrollTop()) {
             ArrayList<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
@@ -165,11 +165,6 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         } else {
             getElement().setScrollTop(position);
         }
-    }
-
-    private boolean isAndroidWithBrokenScrollTop() {
-        return BrowserInfo.getBrowserString().contains("Android 3")
-                || BrowserInfo.getBrowserString().contains("Android 4");
     }
 
     public void onScroll(ScrollEvent event) {

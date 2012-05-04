@@ -978,6 +978,19 @@ public class Util {
          */
         final Element target = getElementFromPoint(touch.getClientX(),
                 touch.getClientY());
+
+        /*
+         * Fixes infocusable form fields in Safari of iOS 5.x and some Android
+         * browsers.
+         */
+        Widget targetWidget = findWidget(target, null);
+        if (targetWidget instanceof com.google.gwt.user.client.ui.Focusable) {
+            final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) targetWidget;
+            toBeFocusedWidget.setFocus(true);
+        } else if (targetWidget instanceof Focusable) {
+            ((Focusable) targetWidget).focus();
+        }
+
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
             public void execute() {
                 try {

@@ -1097,19 +1097,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
             dragAndDropService.printJSONResponse(outWriter);
         }
 
-        writePerformanceDataForTestBench(request, outWriter);
+        writePerformanceData(outWriter);
     }
 
     /**
-     * Adds the performance timing data used by TestBench 3 to the UIDL
+     * Adds the performance timing data (used by TestBench 3) to the UIDL
      * response.
      */
-    private void writePerformanceDataForTestBench(final WrappedRequest request,
-            final PrintWriter outWriter) {
-        Long totalTime = (Long) request.getAttribute("TOTAL");
-        Long lastRequestTime = (Long) request.getAttribute("LASTREQUEST");
-        outWriter.write(String.format(", \"tbss\":[%d, %d]", totalTime,
-                lastRequestTime));
+    private void writePerformanceData(final PrintWriter outWriter) {
+        AbstractWebApplicationContext ctx = (AbstractWebApplicationContext) application
+                .getContext();
+        outWriter.write(String.format(", \"timings\":[%d, %d]",
+                ctx.getTotalSessionTime(), ctx.getLastRequestTime()));
     }
 
     private void legacyPaint(PaintTarget paintTarget,

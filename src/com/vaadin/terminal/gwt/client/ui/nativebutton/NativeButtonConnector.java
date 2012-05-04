@@ -58,7 +58,11 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
                 blurHandlerRegistration);
 
         // Set text
-        getWidget().setText(getState().getCaption());
+        if (getState().isHtmlContentAllowed()) {
+            getWidget().setHTML(getState().getCaption());
+        } else {
+            getWidget().setText(getState().getCaption());
+        }
 
         // handle error
         if (null != getState().getErrorMessage()) {

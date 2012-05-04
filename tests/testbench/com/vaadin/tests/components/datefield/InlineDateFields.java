@@ -25,6 +25,10 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
     @Override
     protected void initializeComponents() {
 
+        InlineDateField hidden = new InlineDateField();
+        hidden.setVisible(false); // Used to break rest of layout #8693
+        addComponent(hidden);
+
         Locale locale = LOCALES[0];
 
         InlineDateField pd = createInlineDateField("Undefined width", "-1",

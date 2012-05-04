@@ -98,6 +98,10 @@ public class VButton extends FocusWidget implements ClickHandler {
         captionElement.setInnerText(text);
     }
 
+    public void setHtml(String html) {
+        captionElement.setInnerHTML(html);
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     /*

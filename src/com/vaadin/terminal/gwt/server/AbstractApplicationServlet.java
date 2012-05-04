@@ -400,11 +400,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void service(WrappedHttpServletRequest request,
             WrappedHttpServletResponse response) throws ServletException,
             IOException {
+        RequestTimer requestTimer = new RequestTimer();
+        requestTimer.start();
+
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
-
-        RequestTimer requestTimer = RequestTimer.get(request);
-        requestTimer.start(request);
 
         RequestType requestType = getRequestType(request);
         if (!ensureCookiesEnabled(requestType, request, response)) {
@@ -540,10 +540,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 } finally {
                     Root.setCurrentRoot(null);
                     Application.setCurrentApplication(null);
-                }
 
-                requestTimer.stop();
-                RequestTimer.set(request, requestTimer);
+                    requestTimer
+                            .stop((AbstractWebApplicationContext) application
+                                    .getContext());
+                }
             }
 
         }

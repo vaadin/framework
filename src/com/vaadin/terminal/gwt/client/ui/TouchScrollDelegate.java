@@ -83,9 +83,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private static TouchScrollDelegate activeScrollDelegate;
 
-    private static final boolean androidWithBrokenScrollTop = BrowserInfo
-            .getBrowserString().contains("Android 3")
-            || BrowserInfo.getBrowserString().contains("Android 4");
+    private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
+            .isAndroidWithBrokenScrollTop();
 
     public TouchScrollDelegate(Element... elements) {
         scrollableElements = elements;
