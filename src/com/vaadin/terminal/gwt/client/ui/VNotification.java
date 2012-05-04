@@ -41,6 +41,8 @@ public class VNotification extends VOverlay {
     public static final String STYLE_SYSTEM = "system";
     private static final int FADE_ANIMATION_INTERVAL = 50; // == 20 fps
 
+    private static final ArrayList<VNotification> notifications = new ArrayList<VNotification>();
+
     private int startOpacity = 90;
     private int fadeMsec = 400;
     private int delayMsec = 1000;
@@ -150,6 +152,7 @@ public class VNotification extends VOverlay {
             addStyleDependentName(style);
         }
         super.show();
+        notifications.add(this);
         setPosition(position);
         /**
          * Android 4 fails to render notifications correctly without a little
@@ -171,6 +174,7 @@ public class VNotification extends VOverlay {
             temporaryStyle = null;
         }
         super.hide();
+        notifications.remove(this);
         fireEvent(new HideEvent(this));
     }
 
@@ -420,5 +424,20 @@ public class VNotification extends VOverlay {
 
     public interface EventListener extends java.util.EventListener {
         public void notificationHidden(HideEvent event);
+    }
+
+    /**
+     * Moves currently visible notifications to the top of the event preview
+     * stack. Can be called when opening other overlays such as subwindows to
+     * ensure the notifications receive the events they need and don't linger
+     * indefinitely. See #7136.
+     * 
+     * TODO Should this be a generic Overlay feature instead?
+     */
+    public static void bringNotificationsToFront() {
+        for (VNotification notification : notifications) {
+            DOM.removeEventPreview(notification);
+            DOM.addEventPreview(notification);
+        }
     }
 }
