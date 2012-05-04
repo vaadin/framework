@@ -230,3 +230,8 @@ div.v-app-loading {
     filter: alpha(opacity=50);
     cursor: default;
 }
+
+.v-scrollable {
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+}
