@@ -100,35 +100,28 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 widget.addDomHandler(this, TouchStartEvent.getType());
             } else {
                 delegate = null;
-                widget.addDomHandler(new TouchStartHandler() {
-
-                    public void onTouchStart(TouchStartEvent event) {
-                        // TODO Auto-generated method stub
-
-                    }
-                }, TouchStartEvent.getType());
             }
             setElements(scrollables);
         }
 
         public void onTouchStart(TouchStartEvent event) {
-            VConsole.log("TouchScrollHandler onTouchStart");
             assert delegate != null;
             delegate.onTouchStart(event);
         }
 
         public void setElements(Element... scrollables) {
+            for (Element scrollable : scrollables) {
+                scrollable.addClassName("v-scrollable");
+            }
             if (requiresDelegate) {
                 delegate.setElements(scrollables);
-            } else if (BrowserInfo.get().isTouchDevice()) {
-                for (Element e : scrollables) {
-                    e.getStyle().setProperty("overflow", "auto");
-                    e.getStyle().setProperty("-webkit-overflow-scrolling",
-                            "touch");
-                    e.getStyle().setProperty("-webkit-user-select", "none");
-                }
             }
         }
+    }
+
+    public static TouchScrollHandler enableTouchScrolling(Widget widget,
+            Element... scrollables) {
+        return new TouchScrollHandler(widget, scrollables);
     }
 
     public TouchScrollDelegate(Element... elements) {
