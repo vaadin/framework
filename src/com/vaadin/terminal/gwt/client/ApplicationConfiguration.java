@@ -212,6 +212,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private Class<? extends ComponentConnector>[] classes = new Class[1024];
 
     private boolean browserDetailsSent = false;
+    private boolean widgetsetVersionSent = false;
 
     static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
@@ -643,6 +644,25 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public void setBrowserDetailsSent() {
         browserDetailsSent = true;
+    }
+
+    /**
+     * Checks whether the widget set version has been sent to the server. It is
+     * sent in the first UIDL request.
+     * 
+     * @return <code>true</code> if browser information has already been sent
+     * 
+     * @see ApplicationConnection#getNativeBrowserDetailsParameters(String)
+     */
+    public boolean isWidgetsetVersionSent() {
+        return widgetsetVersionSent;
+    }
+
+    /**
+     * Registers that the widget set version has been sent to the server.
+     */
+    public void setWidgetsetVersionSent() {
+        widgetsetVersionSent = true;
     }
 
 }

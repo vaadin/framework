@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.Version;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
@@ -370,7 +371,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         JSONObject versionInfo = new JSONObject();
-        versionInfo.put("vaadinVersion", AbstractApplicationServlet.VERSION);
+        versionInfo.put("vaadinVersion", Version.getFullVersion());
         versionInfo.put("applicationVersion", application.getVersion());
         appConfig.put("versionInfo", versionInfo);
 
@@ -478,8 +479,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         Root root = context.getRoot();
-        String title = ((root == null || root.getCaption() == null) ? "Vaadin "
-                + AbstractApplicationServlet.VERSION_MAJOR : root.getCaption());
+        String title = ((root == null || root.getCaption() == null) ? "" : root
+                .getCaption());
 
         page.write("<title>"
                 + AbstractApplicationServlet.safeEscapeForHtml(title)

@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.Version;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -499,6 +500,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
 
+        checkWidgetsetVersion(request);
         requestThemeName = request.getParameter("theme");
         maxInactiveInterval = request.getSessionMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
@@ -583,6 +585,27 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         outWriter.close();
         requestThemeName = null;
+    }
+
+    /**
+     * Checks that the version reported by the client (widgetset) matches that
+     * of the server.
+     * 
+     * @param request
+     */
+    private void checkWidgetsetVersion(WrappedRequest request) {
+        String widgetsetVersion = request.getParameter("wsver");
+        if (widgetsetVersion == null) {
+            // Only check when the widgetset version is reported. It is reported
+            // in the first UIDL request (not the initial request as it is a
+            // plain GET /)
+            return;
+        }
+
+        if (!Version.getFullVersion().equals(widgetsetVersion)) {
+            logger.warning(String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                    Version.getFullVersion(), widgetsetVersion));
+        }
     }
 
     /**

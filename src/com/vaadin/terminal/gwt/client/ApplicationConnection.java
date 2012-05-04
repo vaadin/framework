@@ -416,13 +416,10 @@ public class ApplicationConnection {
         // initial uidl request
         String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
                 .getRootPanelId());
-        String widgetsetVersion = ApplicationConfiguration.VERSION;
-
         // TODO figure out how client and view size could be used better on
         // server. screen size can be accessed via Browser object, but other
         // values currently only via transaction listener.
-        String parameters = "repaintAll=1&" + nativeBootstrapParameters
-                + "&wsver=" + widgetsetVersion;
+        String parameters = "repaintAll=1&" + nativeBootstrapParameters;
         return parameters;
     }
 
@@ -1723,7 +1720,15 @@ public class ApplicationConnection {
         } else {
             extraParams = "";
         }
+        if (!getConfiguration().isWidgetsetVersionSent()) {
+            if (!extraParams.isEmpty()) {
+                extraParams += "&";
+            }
+            String widgetsetVersion = ApplicationConfiguration.VERSION;
+            extraParams += "wsver=" + widgetsetVersion;
 
+            getConfiguration().setWidgetsetVersionSent();
+        }
         makeUidlRequest(req.toString(), extraParams, forceSync);
     }
 
