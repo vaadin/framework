@@ -13,11 +13,11 @@ public class UploadIFrameOnloadStrategyIE extends UploadIFrameOnloadStrategy {
     @Override
     native void hookEvents(Element iframe, VUpload upload)
     /*-{
-      iframe.onreadystatechange = function() {
+      iframe.onreadystatechange = $entry(function() {
         if (iframe.readyState == 'complete') {
           upload.@com.vaadin.terminal.gwt.client.ui.upload.VUpload::onSubmitComplete()();
         }
-      };
+      });
     }-*/;
 
     @Override

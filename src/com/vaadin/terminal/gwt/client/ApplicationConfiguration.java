@@ -69,6 +69,7 @@ public class ApplicationConfiguration implements EntryPoint {
             if (value === null || value === undefined) {
                 return null;
             } else {
+                 // $entry not needed as function is not exported
                 return @java.lang.Boolean::valueOf(Z)(value);
             } 
         }-*/;
@@ -89,6 +90,7 @@ public class ApplicationConfiguration implements EntryPoint {
             if (value === null || value === undefined) {
                 return null;
             } else {
+                 // $entry not needed as function is not exported
                 return @java.lang.Integer::valueOf(I)(value);
             } 
         }-*/;
@@ -589,7 +591,7 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public native static void registerCallback(String widgetsetName)
     /*-{
-        var callbackHandler = @com.vaadin.terminal.gwt.client.ApplicationConfiguration::startApplication(Ljava/lang/String;);
+        var callbackHandler = $entry(@com.vaadin.terminal.gwt.client.ApplicationConfiguration::startApplication(Ljava/lang/String;));
         $wnd.vaadin.registerWidgetset(widgetsetName, callbackHandler);
     }-*/;
 
