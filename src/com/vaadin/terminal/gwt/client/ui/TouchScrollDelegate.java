@@ -4,6 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -70,7 +72,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private static final double DECELERATION = 0.002;
     private static final int MAX_DURATION = 1500;
     private int origY;
-    private Element[] scrollableElements;
+    private HashSet<Element> scrollableElements;
     private Element scrolledElement;
     private int origScrollTop;
     private HandlerRegistration handlerRegistration;
@@ -101,7 +103,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             } else {
                 delegate = null;
             }
-            setElements(scrollables);
+            for (Element scrollable : scrollables) {
+                addElement(scrollable);
+            }
         }
 
         public void onTouchStart(TouchStartEvent event) {
@@ -109,12 +113,17 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             delegate.onTouchStart(event);
         }
 
-        public void setElements(Element... scrollables) {
-            for (Element scrollable : scrollables) {
-                scrollable.addClassName("v-scrollable");
-            }
+        public void addElement(Element scrollable) {
+            scrollable.addClassName("v-scrollable");
             if (requiresDelegate) {
-                delegate.setElements(scrollables);
+                delegate.scrollableElements.add(scrollable);
+            }
+        }
+
+        public void removeElement(Element scrollable) {
+            scrollable.removeClassName("v-scrollable");
+            if (requiresDelegate) {
+                delegate.scrollableElements.remove(scrollable);
             }
         }
     }
@@ -125,7 +134,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public TouchScrollDelegate(Element... elements) {
-        scrollableElements = elements;
+        scrollableElements = new HashSet<Element>(Arrays.asList(elements));
     }
 
     public void setScrollHandler(ScrollHandler scrollHandler) {
@@ -571,10 +580,6 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             event.cancel();
             break;
         }
-    }
-
-    public void setElements(Element[] elements) {
-        scrollableElements = elements;
     }
 
     /**
