@@ -445,15 +445,13 @@ public class BrowserInfo {
         if (!isTouchDevice()) {
             return false;
         }
-
-        if (isAndroid() && isWebkit() && getWebkitVersion() < 534) {
-            return true;
+        if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
+            return false;
         }
-        // if (isIOS() && isWebkit() && getWebkitVersion() < ???) {
-        // return true;
-        // }
-
-        return false;
+        if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
+            return false;
+        }
+        return true;
     }
 
     /**
