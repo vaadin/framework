@@ -4,7 +4,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -13,12 +13,12 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class TableClickValueChangeInteraction extends TestBase {
+public class TableClickValueChangeInteraction extends AbstractTestCase {
 
     final Window mainWindow = new Window();
 
     @Override
-    public void setup() {
+    public void init() {
         setMainWindow(mainWindow);
 
         GridLayout layout = new GridLayout(4, 4);

@@ -2,14 +2,14 @@ package com.vaadin.tests.components.window;
 
 import java.util.Map;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-public class ReplacingComponentsInHandleParameters extends TestBase {
+public class ReplacingComponentsInHandleParameters extends AbstractTestCase {
 
     @Override
     protected String getDescription() {
@@ -22,7 +22,7 @@ public class ReplacingComponentsInHandleParameters extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    public void init() {
         final ClickListener clickListener = new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 event.getButton().setCaption("Clicked!");

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
-public class ScrollCausesRequestLoop extends TestBase {
+public class ScrollCausesRequestLoop extends AbstractTestCase {
 
     @Override
-    protected void setup() {
+    public void init() {
         setMainWindow(new Window("", new TestView()));
     }
 

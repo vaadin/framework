@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -18,7 +18,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class GridLayoutCaptions extends TestBase {
+public class GridLayoutCaptions extends AbstractTestCase {
 
     class CustomForm extends Form {
         private com.vaadin.ui.GridLayout layout;
@@ -173,7 +173,7 @@ public class GridLayoutCaptions extends TestBase {
     }
 
     @Override
-    protected void setup() {
+    public void init() {
         Window mainWindow = new Window("Formlayoutcaptionboom Application");
         Label label = new Label("Hello Vaadin user");
         mainWindow.addComponent(label);

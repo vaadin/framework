@@ -1,16 +1,16 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
-public class PaintableIdsShouldBeUnique extends TestBase {
+public class PaintableIdsShouldBeUnique extends AbstractTestCase {
 
     @Override
-    protected void setup() {
+    public void init() {
         setMainWindow(new MyWindow());
     }
 

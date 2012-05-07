@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -10,8 +10,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class GridLayoutExpandRatioModification extends TestBase implements
-        ClickListener {
+public class GridLayoutExpandRatioModification extends AbstractTestCase
+        implements ClickListener {
 
     private boolean isVisible = false;
     private GridLayout mainLayout;
@@ -20,7 +20,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
     private Button button;
 
     @Override
-    public void setup() {
+    public void init() {
         Window main = new Window("The Main Window");
         mainLayout = new GridLayout(3, 3);
         main.setContent(mainLayout);

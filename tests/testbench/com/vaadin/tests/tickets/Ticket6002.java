@@ -3,16 +3,16 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket6002 extends TestBase {
+public class Ticket6002 extends AbstractTestCase {
 
     @Override
-    public void setup() {
+    public void init() {
         Window main = new Window("The Main Window");
         setMainWindow(main);
 

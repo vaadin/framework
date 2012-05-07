@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -9,10 +9,10 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class ScrollDetachSynchronization extends TestBase {
+public class ScrollDetachSynchronization extends AbstractTestCase {
 
     @Override
-    public void setup() {
+    public void init() {
         Window mainWindow = new Window("Synctest Application");
         mainWindow.setContent(buildLayout());
         setMainWindow(mainWindow);

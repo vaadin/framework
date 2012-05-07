@@ -3,16 +3,16 @@ package com.vaadin.tests.containers;
 import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
 
-public class TableWithFileSystemContainer extends TestBase {
+public class TableWithFileSystemContainer extends AbstractTestCase {
 
     private String testPath = "C:/temp/img";
 
     @Override
-    public void setup() {
+    public void init() {
         setMainWindow(new Window(""));
         Table table = new Table("Documents", new FilesystemContainer(new File(
                 testPath)));
