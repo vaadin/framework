@@ -552,9 +552,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                                 .onRequestEnd(request, response);
                     }
                 } finally {
-                    requestTimer
-                            .stop((AbstractWebApplicationContext) application
-                                    .getContext());
+                    HttpSession session = request.getSession(false);
+                    if (session != null) {
+                        requestTimer.stop(getApplicationContext(session));
+                    }
                 }
             }
 

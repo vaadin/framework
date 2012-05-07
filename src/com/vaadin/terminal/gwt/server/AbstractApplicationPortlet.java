@@ -495,9 +495,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
-                        requestTimer
-                                .stop((AbstractWebApplicationContext) application
-                                        .getContext());
+                        PortletSession session = request
+                                .getPortletSession(false);
+                        if (session != null) {
+                            requestTimer.stop(getApplicationContext(session));
+                        }
                     }
                 }
             }
