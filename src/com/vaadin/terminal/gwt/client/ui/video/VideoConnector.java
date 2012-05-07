@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.video;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.URLReference;
 import com.vaadin.terminal.gwt.client.ui.Connect;
@@ -33,11 +31,6 @@ public class VideoConnector extends MediaBaseConnector {
     @Override
     public VVideo getWidget() {
         return (VVideo) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VVideo.class);
     }
 
     @Override

@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -90,11 +88,6 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
 
         // Update possible changes
         getWidget().calendarPanel.renderCalendar();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VDateFieldCalendar.class);
     }
 
     @Override

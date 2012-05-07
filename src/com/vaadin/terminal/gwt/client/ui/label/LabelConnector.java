@@ -3,10 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui.label;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
@@ -17,6 +15,7 @@ import com.vaadin.ui.Label;
 @Connect(value = Label.class, loadStyle = LoadStyle.EAGER)
 public class LabelConnector extends AbstractComponentConnector {
 
+    @Override
     public LabelState getState() {
         return (LabelState) super.getState();
     }
@@ -59,11 +58,6 @@ public class LabelConnector extends AbstractComponentConnector {
         if (sinkOnloads) {
             Util.sinkOnloadForImages(getWidget().getElement());
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VLabel.class);
     }
 
     @Override

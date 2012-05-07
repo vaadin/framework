@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.combobox;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -225,11 +223,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         getWidget().initDone = true;
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VFilterSelect.class);
     }
 
     @Override

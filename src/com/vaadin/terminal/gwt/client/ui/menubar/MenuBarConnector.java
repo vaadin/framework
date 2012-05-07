@@ -8,7 +8,6 @@ import java.util.Stack;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -152,11 +151,6 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         getLayoutManager().setNeedsHorizontalLayout(this);
 
     }// updateFromUIDL
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VMenuBar.class);
-    }
 
     @Override
     public VMenuBar getWidget() {

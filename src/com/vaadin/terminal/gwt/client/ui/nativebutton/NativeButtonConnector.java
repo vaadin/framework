@@ -3,14 +3,12 @@
  */
 package com.vaadin.terminal.gwt.client.ui.nativebutton;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
@@ -97,11 +95,6 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
             }
         }
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VNativeButton.class);
     }
 
     @Override

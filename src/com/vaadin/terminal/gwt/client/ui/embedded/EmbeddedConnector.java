@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.embedded;
 
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -16,7 +15,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -179,11 +177,6 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
         if (clearBrowserElement) {
             getWidget().browserElement = null;
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VEmbedded.class);
     }
 
     @Override

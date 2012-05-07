@@ -1414,11 +1414,10 @@ public class ApplicationConnection {
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(connectorId));
 
-                            Object state = JsonDecoder.decodeValue(
-                                    stateDataAndType, connector.getState(),
-                                    connectorMap, ApplicationConnection.this);
+                            JsonDecoder.decodeValue(stateDataAndType,
+                                    connector.getState(), connectorMap,
+                                    ApplicationConnection.this);
 
-                            connector.setState((SharedState) state);
                             StateChangeEvent event = GWT
                                     .create(StateChangeEvent.class);
                             event.setConnector(connector);

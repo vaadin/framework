@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui.button;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,7 +12,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
@@ -93,11 +91,6 @@ public class ButtonConnector extends AbstractComponentConnector implements
         }
 
         getWidget().clickShortcut = getState().getClickShortcutKeyCode();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VButton.class);
     }
 
     @Override

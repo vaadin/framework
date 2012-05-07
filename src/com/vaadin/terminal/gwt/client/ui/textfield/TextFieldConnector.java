@@ -4,11 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui.textfield;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -90,11 +88,6 @@ public class TextFieldConnector extends AbstractFieldConnector implements
                 }
             });
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTextField.class);
     }
 
     @Override

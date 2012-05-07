@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.optiongroup;
 
 import java.util.ArrayList;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,11 +58,6 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
                 }
             }
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VOptionGroup.class);
     }
 
     @Override

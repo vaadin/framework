@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.formlayout;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
@@ -95,11 +94,6 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
     @Override
     public VFormLayout getWidget() {
         return (VFormLayout) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VFormLayout.class);
     }
 
 }

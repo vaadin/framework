@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.absolutelayout;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
@@ -91,11 +90,6 @@ public class AbsoluteLayoutConnector extends
             }
         }
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VAbsoluteLayout.class);
     }
 
     @Override

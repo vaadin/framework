@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.checkbox;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -13,7 +12,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
@@ -114,11 +112,6 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
     @Override
     public VCheckBox getWidget() {
         return (VCheckBox) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VCheckBox.class);
     }
 
     public void onFocus(FocusEvent event) {

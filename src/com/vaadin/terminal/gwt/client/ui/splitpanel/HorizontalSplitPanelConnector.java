@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
-import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -12,8 +11,8 @@ import com.vaadin.ui.HorizontalSplitPanel;
 public class HorizontalSplitPanelConnector extends AbstractSplitPanelConnector {
 
     @Override
-    protected VAbstractSplitPanel createWidget() {
-        return GWT.create(VSplitPanelHorizontal.class);
+    public VSplitPanelHorizontal getWidget() {
+        return (VSplitPanelHorizontal) super.getWidget();
     }
 
 }

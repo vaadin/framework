@@ -4,9 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.link;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -85,11 +83,6 @@ public class LinkConnector extends AbstractComponentConnector implements
             getWidget().icon.setUri(getState().getIcon().getURL());
         }
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VLink.class);
     }
 
     @Override

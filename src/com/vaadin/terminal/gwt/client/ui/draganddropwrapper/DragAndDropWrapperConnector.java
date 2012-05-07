@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.draganddropwrapper;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -60,11 +58,6 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
             getWidget().html5DataFlavors = uidl
                     .getMapAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS);
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VDragAndDropWrapper.class);
     }
 
     @Override

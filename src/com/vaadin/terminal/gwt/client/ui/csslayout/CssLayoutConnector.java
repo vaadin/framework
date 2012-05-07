@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.csslayout;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
@@ -136,11 +135,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     @Override
     public VCssLayout getWidget() {
         return (VCssLayout) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VCssLayout.class);
     }
 
     public void updateCaption(ComponentConnector child) {

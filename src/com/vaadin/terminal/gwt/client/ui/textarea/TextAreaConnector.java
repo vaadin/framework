@@ -4,8 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui.textarea;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.textfield.TextFieldConnector;
@@ -25,11 +23,6 @@ public class TextAreaConnector extends TextFieldConnector {
 
         getWidget().setRows(getState().getRows());
         getWidget().setWordwrap(getState().isWordwrap());
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTextArea.class);
     }
 
     @Override

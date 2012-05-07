@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.window;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
@@ -193,11 +192,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     public VWindow getWidget() {
         return (VWindow) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VWindow.class);
     }
 
     @Override

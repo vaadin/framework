@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.accordion;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -57,11 +55,6 @@ public class AccordionConnector extends TabsheetBaseConnector implements
     @Override
     public VAccordion getWidget() {
         return (VAccordion) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VAccordion.class);
     }
 
     public void updateCaption(ComponentConnector component) {

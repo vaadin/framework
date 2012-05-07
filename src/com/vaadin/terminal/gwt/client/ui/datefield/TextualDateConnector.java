@@ -4,8 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui.datefield;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 
@@ -42,11 +40,6 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
             getWidget().text.removeStyleDependentName("readonly");
         }
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTextualDate.class);
     }
 
     @Override

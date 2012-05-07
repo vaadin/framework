@@ -172,9 +172,6 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     @Override
-    protected abstract VAbstractSplitPanel createWidget();
-
-    @Override
     public AbstractSplitPanelState getState() {
         return (AbstractSplitPanelState) super.getState();
     }

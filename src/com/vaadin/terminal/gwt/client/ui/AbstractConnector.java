@@ -17,6 +17,7 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
@@ -37,6 +38,8 @@ public abstract class AbstractConnector implements ServerConnector,
     private HandlerManager handlerManager;
     private Map<String, Collection<ClientRpc>> rpcImplementations;
     private final boolean debugLogging = false;
+
+    private SharedState state;
 
     /*
      * (non-Javadoc)
@@ -183,4 +186,32 @@ public abstract class AbstractConnector implements ServerConnector,
         }
 
     }
+
+    /**
+     * Returns the shared state object for this connector.
+     * 
+     * Override this method to define the shared state type for your connector.
+     * 
+     * @return the current shared state (never null)
+     */
+    public SharedState getState() {
+        if (state == null) {
+            state = createState();
+        }
+
+        return state;
+    }
+
+    /**
+     * Creates a state object with default values for this connector. The
+     * created state object must be compatible with the return type of
+     * {@link #getState()}. The default implementation creates a state object
+     * using GWT.create() using the defined return type of {@link #getState()}.
+     * 
+     * @return A new state object
+     */
+    protected SharedState createState() {
+        return ConnectorStateFactory.createState(getClass());
+    }
+
 }

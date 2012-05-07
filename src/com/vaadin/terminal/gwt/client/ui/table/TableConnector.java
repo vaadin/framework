@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.table;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Position;
@@ -258,11 +257,6 @@ public class TableConnector extends AbstractComponentContainerConnector
         getWidget().rendering = false;
         getWidget().headerChangedDuringUpdate = false;
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VScrollTable.class);
     }
 
     @Override

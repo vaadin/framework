@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.panel;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
@@ -170,11 +169,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
     @Override
     public VPanel getWidget() {
         return (VPanel) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VPanel.class);
     }
 
     public void layout() {
