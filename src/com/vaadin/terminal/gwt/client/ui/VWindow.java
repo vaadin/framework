@@ -205,6 +205,9 @@ public class VWindow extends VOverlay implements Container,
         contentPanel.addKeyDownHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
+
+        TouchScrollDelegate.enableTouchScrolling(this, getContainerElement()
+                .getFirstChildElement());
     }
 
     public void bringToFront() {
