@@ -350,6 +350,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
             return width;
         }
+        public Element getCloseButton() {
+            return closeButton;
+        }
+
     }
 
     static class TabBar extends ComplexPanel implements ClickHandler,
@@ -412,7 +416,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public void onClick(ClickEvent event) {
-            Widget caption = (Widget) event.getSource();
+            TabCaption caption = (TabCaption) event.getSource();
+            Element targetElement = event.getNativeEvent().getEventTarget()
+                    .cast();
+            // the tab should not be focused if the close button was clicked
+            if (targetElement == caption.getCloseButton()) {
+                return;
+            }
+
             int index = getWidgetIndex(caption.getParent());
             // IE needs explicit focus()
             if (BrowserInfo.get().isIE()) {
