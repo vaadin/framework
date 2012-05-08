@@ -1,5 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal.gwt.client.ui.label;
-
 
 /**
  * Content modes defining how the client should interpret a Label's value.

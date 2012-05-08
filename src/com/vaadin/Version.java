@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin;
 
 import java.io.Serializable;
