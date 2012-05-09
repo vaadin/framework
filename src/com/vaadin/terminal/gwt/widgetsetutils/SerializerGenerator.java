@@ -288,11 +288,11 @@ public class SerializerGenerator extends Generator {
                         + ". Serialization will likely fail");
             }
             // json.put("button",
-            // JsonEncoder.encode(castedValue.getButton(), idMapper,
+            // JsonEncoder.encode(castedValue.getButton(), false, idMapper,
             // connection));
-            sourceWriter.println("json.put(\"" + fieldName + "\", "
+            sourceWriter.println("json.put(\"" + fieldName + "\",  "
                     + JsonEncoder.class.getName() + ".encode(castedValue."
-                    + getterName + "(), idMapper, connection));");
+                    + getterName + "(), false, idMapper, connection));");
         }
         // return json;
         sourceWriter.println("return json;");

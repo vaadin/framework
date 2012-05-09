@@ -29,7 +29,7 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
             ApplicationConnection connection) {
         JSONObject json = new JSONObject();
         json.put("URL",
-                JsonEncoder.encode(value.getURL(), idMapper, connection));
+                JsonEncoder.encode(value.getURL(), true, idMapper, connection));
         return json;
     }
 

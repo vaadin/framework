@@ -44,7 +44,6 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -1688,11 +1687,12 @@ public class ApplicationConnection {
                 invocationJson.set(2,
                         new JSONString(invocation.getMethodName()));
                 JSONArray paramJson = new JSONArray();
+                boolean restrictToInternalTypes = isLegacyVariableChange(invocation);
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
-                            invocation.getParameters()[i], getConnectorMap(),
-                            this));
+                            invocation.getParameters()[i],
+                            restrictToInternalTypes, getConnectorMap(), this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);
@@ -1729,6 +1729,13 @@ public class ApplicationConnection {
             getConfiguration().setWidgetsetVersionSent();
         }
         makeUidlRequest(req.toString(), extraParams, forceSync);
+    }
+
+    private boolean isLegacyVariableChange(MethodInvocation invocation) {
+        return ApplicationConnection.UPDATE_VARIABLE_METHOD.equals(invocation
+                .getInterfaceName())
+                && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                        .equals(invocation.getMethodName());
     }
 
     /**
