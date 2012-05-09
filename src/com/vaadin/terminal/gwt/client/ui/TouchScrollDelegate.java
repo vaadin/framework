@@ -98,11 +98,20 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
         public TouchScrollHandler(Widget widget, Element... scrollables) {
             if (requiresDelegate) {
+                VConsole.log("REQUIRES DELEGATE");
                 delegate = new TouchScrollDelegate();
                 widget.addDomHandler(this, TouchStartEvent.getType());
             } else {
+                VConsole.log("DOES NOT REQUIRE DELEGATE");
                 delegate = null;
             }
+            VConsole.log(BrowserInfo.getBrowserString());
+            BrowserInfo bi = BrowserInfo.get();
+            VConsole.log("Is Android: " + bi.isAndroid());
+            VConsole.log("Is Android with broken scrolltop: "
+                    + bi.isAndroidWithBrokenScrollTop());
+            VConsole.log("Is IOS: " + bi.isIOS());
+            VConsole.log("Is Webkit: " + bi.isWebkit());
             for (Element scrollable : scrollables) {
                 addElement(scrollable);
             }
@@ -113,17 +122,37 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             delegate.onTouchStart(event);
         }
 
+        public void debug(Element e) {
+            VConsole.log("Classes: " + e.getClassName() + " overflow: "
+                    + e.getStyle().getProperty("overflow") + " w-o-s: "
+                    + e.getStyle().getProperty("-webkit-overflow-scrolling"));
+        }
+
         public void addElement(Element scrollable) {
             scrollable.addClassName("v-scrollable");
+            scrollable.getStyle().setProperty("-webkit-overflow-scrolling",
+                    "touch");
+            scrollable.getStyle().setProperty("overflow-y", "auto");
+            scrollable.getStyle().setProperty("overflow-x", "hidden");
             if (requiresDelegate) {
                 delegate.scrollableElements.add(scrollable);
             }
+            VConsole.log("Added scrollable: " + scrollable.getClassName());
         }
 
         public void removeElement(Element scrollable) {
             scrollable.removeClassName("v-scrollable");
             if (requiresDelegate) {
                 delegate.scrollableElements.remove(scrollable);
+            }
+        }
+
+        public void setElements(Element... scrollables) {
+            if (requiresDelegate) {
+                delegate.scrollableElements.clear();
+            }
+            for (Element e : scrollables) {
+                addElement(e);
             }
         }
     }
