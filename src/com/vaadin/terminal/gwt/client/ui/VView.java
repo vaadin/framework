@@ -61,10 +61,18 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private ShortcutActionHandler actionHandler;
 
-    /** stored size for IE resize optimization */
+    /*
+     * Last known window size used to detect whether VView should be layouted
+     * again. Detection must be based on window size, because the VView size
+     * might be fixed and thus not automatically adapt to changed window sizes.
+     */
     private int windowWidth;
     private int windowHeight;
 
+    /*
+     * Last know view size used to detect whether new dimensions should be sent
+     * to the server.
+     */
     private int viewWidth;
     private int viewHeight;
 
@@ -146,6 +154,13 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             VConsole.log("New window height: " + windowHeight);
         }
         if (changed) {
+            /*
+             * If the window size has changed, layout the VView again and send
+             * new size to the server if the size changed. (Just checking VView
+             * size would cause us to ignore cases when a relatively sized VView
+             * should shrink as the content's size is fixed and would thus not
+             * automatically shrink.)
+             */
             VConsole.log("Running layout functions due to window resize");
             connection.runDescendentsLayout(VView.this);
             Util.runWebkitOverflowAutoFix(getElement());
@@ -493,8 +508,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Send new dimensions to the server.
      */
     private void sendClientResized() {
-        int newViewHeight = getElement().getClientHeight();
-        int newViewWidth = getElement().getClientWidth();
+        Element parentElement = getElement().getParentElement();
+        int newViewHeight = parentElement.getClientHeight();
+        int newViewWidth = parentElement.getClientWidth();
 
         // Send the view dimensions if they have changed
         if (newViewHeight != viewHeight || newViewWidth != viewWidth) {
