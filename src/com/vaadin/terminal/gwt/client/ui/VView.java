@@ -61,11 +61,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
 
     private ShortcutActionHandler actionHandler;
 
-    /** stored width for IE resize optimization */
-    private int width;
+    /** stored size for IE resize optimization */
+    private int windowWidth;
+    private int windowHeight;
 
-    /** stored height for IE resize optimization */
-    private int height;
+    private int viewWidth;
+    private int viewHeight;
 
     private ApplicationConnection connection;
 
@@ -134,15 +135,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     protected void windowSizeMaybeChanged(int newWidth, int newHeight) {
         boolean changed = false;
-        if (width != newWidth) {
-            width = newWidth;
+        if (windowWidth != newWidth) {
+            windowWidth = newWidth;
             changed = true;
-            VConsole.log("New window width: " + width);
+            VConsole.log("New window width: " + windowWidth);
         }
-        if (height != newHeight) {
-            height = newHeight;
+        if (windowHeight != newHeight) {
+            windowHeight = newHeight;
             changed = true;
-            VConsole.log("New window height: " + height);
+            VConsole.log("New window height: " + windowHeight);
         }
         if (changed) {
             VConsole.log("Running layout functions due to window resize");
@@ -492,8 +493,16 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Send new dimensions to the server.
      */
     private void sendClientResized() {
-        connection.updateVariable(id, "height", height, false);
-        connection.updateVariable(id, "width", width, immediate);
+        int newViewHeight = getElement().getClientHeight();
+        int newViewWidth = getElement().getClientWidth();
+
+        // Send the view dimensions if they have changed
+        if (newViewHeight != viewHeight || newViewWidth != viewWidth) {
+            viewHeight = newViewHeight;
+            viewWidth = newViewWidth;
+            connection.updateVariable(id, "height", newViewHeight, false);
+            connection.updateVariable(id, "width", newViewWidth, immediate);
+        }
     }
 
     public native static void goTo(String url)
