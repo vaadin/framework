@@ -3425,6 +3425,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          *            The text in the footer
          */
         public void setText(String footerText) {
+            if (footerText == null || footerText.equals("")) {
+                footerText = "&nbsp;";
+            }
+
             DOM.setInnerHTML(captionContainer, footerText);
         }
 
