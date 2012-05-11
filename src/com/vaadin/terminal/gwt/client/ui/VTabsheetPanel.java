@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.Util;
@@ -25,15 +24,13 @@ public class VTabsheetPanel extends ComplexPanel {
 
     private Widget visibleWidget;
 
-    private TouchScrollHandler touchScrollHandler;
+    private final TouchScrollHandler touchScrollHandler;
 
     /**
      * Creates an empty tabsheet panel.
      */
     public VTabsheetPanel() {
         setElement(DOM.createDiv());
-        sinkEvents(Event.TOUCHEVENTS);
-
         touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
 
@@ -54,6 +51,7 @@ public class VTabsheetPanel extends ComplexPanel {
         Element el = DOM.createDiv();
         DOM.setStyleAttribute(el, "position", "absolute");
         hide(el);
+        touchScrollHandler.addElement(el);
         return el;
     }
 
@@ -97,6 +95,7 @@ public class VTabsheetPanel extends ComplexPanel {
             if (parent != null) {
                 DOM.removeChild(getElement(), parent);
             }
+            touchScrollHandler.removeElement(parent);
         }
         return removed;
     }
@@ -117,8 +116,6 @@ public class VTabsheetPanel extends ComplexPanel {
             }
             visibleWidget = newVisible;
             unHide(DOM.getParent(visibleWidget.getElement()));
-            touchScrollHandler.setElements(visibleWidget.getElement()
-                    .getParentElement());
         }
     }
 
