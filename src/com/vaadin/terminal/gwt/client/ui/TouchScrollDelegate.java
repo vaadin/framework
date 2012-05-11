@@ -125,15 +125,15 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         public void debug(Element e) {
             VConsole.log("Classes: " + e.getClassName() + " overflow: "
                     + e.getStyle().getProperty("overflow") + " w-o-s: "
-                    + e.getStyle().getProperty("-webkit-overflow-scrolling"));
+                    + e.getStyle().getProperty("WebkitOverflowScrolling"));
         }
 
         public void addElement(Element scrollable) {
             scrollable.addClassName("v-scrollable");
-            scrollable.getStyle().setProperty("-webkit-overflow-scrolling",
+            scrollable.getStyle().setProperty("WebkitOverflowScrolling",
                     "touch");
-            scrollable.getStyle().setProperty("overflow-y", "auto");
-            scrollable.getStyle().setProperty("overflow-x", "hidden");
+            scrollable.getStyle().setProperty("overflowY", "auto");
+            scrollable.getStyle().setProperty("overflowX", "auto");
             if (requiresDelegate) {
                 delegate.scrollableElements.add(scrollable);
             }
