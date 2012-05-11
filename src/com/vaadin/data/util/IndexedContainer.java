@@ -865,7 +865,6 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Property#setValue(java.lang.Object)
          */
         public void setValue(Object newValue) throws Property.ReadOnlyException {
-
             // Gets the Property set
             final Map<Object, Object> propertySet = items.get(itemId);
 
@@ -875,8 +874,10 @@ public class IndexedContainer extends
             } else if (getType().isAssignableFrom(newValue.getClass())) {
                 propertySet.put(propertyId, newValue);
             } else {
-                throw new IllegalArgumentException("Value is of invalid type, "
-                        + getType().getName() + " expected");
+                throw new IllegalArgumentException(
+                        "Value is of invalid type, got "
+                                + newValue.getClass().getName() + " but "
+                                + getType().getName() + " was expected");
             }
 
             // update the container filtering if this property is being filtered
