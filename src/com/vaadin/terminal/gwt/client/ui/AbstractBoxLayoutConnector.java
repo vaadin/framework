@@ -26,14 +26,14 @@ import com.vaadin.terminal.gwt.client.ui.VBoxLayout.CaptionPosition;
 import com.vaadin.terminal.gwt.client.ui.VBoxLayout.Slot;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRPC;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 
 public abstract class AbstractBoxLayoutConnector extends
         AbstractLayoutConnector implements Paintable, /* PreLayoutListener, */
 PostLayoutListener {
 
-    AbstractOrderedLayoutServerRPC rpc;
+    AbstractOrderedLayoutServerRpc rpc;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -45,7 +45,7 @@ PostLayoutListener {
         }
 
         @Override
-        protected LayoutClickRPC getLayoutClickRPC() {
+        protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
 
@@ -53,7 +53,7 @@ PostLayoutListener {
 
     @Override
     public void init() {
-        rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
+        rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
         getWidget().setLayoutManager(getLayoutManager());
     }
 

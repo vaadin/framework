@@ -368,7 +368,11 @@ public class VBoxLayout extends FlowPanel {
                                 .getProperty(direction));
                 captionWrap.addClassName("v-has-" + direction);
             } else if (hasCaption()) {
-                captionWrap.getStyle().clearHeight();
+                if (direction.equals("height")) {
+                    captionWrap.getStyle().clearHeight();
+                } else {
+                    captionWrap.getStyle().clearWidth();
+                }
                 captionWrap.removeClassName("v-has-" + direction);
                 captionWrap.getStyle().clearPaddingTop();
                 captionWrap.getStyle().clearPaddingRight();

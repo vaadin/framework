@@ -220,6 +220,7 @@ public class LayoutManager {
         Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
 
         int passes = 0;
+        Duration totalDuration = new Duration();
 
         for (ManagedLayout layout : needsHorizontalLayout) {
             currentDependencyTree.setNeedsHorizontalLayout(layout, true);
