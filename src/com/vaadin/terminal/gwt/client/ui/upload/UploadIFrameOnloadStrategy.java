@@ -8,9 +8,9 @@ public class UploadIFrameOnloadStrategy {
     native void hookEvents(com.google.gwt.dom.client.Element iframe,
             VUpload upload)
     /*-{
-        iframe.onload = function() {
+        iframe.onload = $entry(function() {
             upload.@com.vaadin.terminal.gwt.client.ui.upload.VUpload::onSubmitComplete()();
-        };
+        });
     }-*/;
 
     /**

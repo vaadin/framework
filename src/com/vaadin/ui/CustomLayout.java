@@ -9,8 +9,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+import com.vaadin.terminal.PaintException;
+import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.ui.customlayout.CustomLayoutState;
+import com.vaadin.terminal.gwt.server.JsonPaintTarget;
 
 /**
  * <p>
@@ -42,7 +48,7 @@ import com.vaadin.terminal.gwt.client.ui.customlayout.CustomLayoutState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CustomLayout extends AbstractLayout {
+public class CustomLayout extends AbstractLayout implements Vaadin6Component {
 
     private static final int BUFFER_SIZE = 10000;
 
@@ -297,6 +303,22 @@ public class CustomLayout extends AbstractLayout {
             boolean bottomEnabled, boolean leftEnabled) {
         throw new UnsupportedOperationException(
                 "CustomLayout does not support margins.");
+    }
+
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        // Nothing to see here
+    }
+
+    public void paintContent(PaintTarget target) throws PaintException {
+        // Workaround to make the CommunicationManager read the template file
+        // and send it to the client
+        String templateName = getState().getTemplateName();
+        if (templateName != null && templateName.length() != 0) {
+            Set<Object> usedResources = ((JsonPaintTarget) target)
+                    .getUsedResources();
+            String resourceName = "layouts/" + templateName + ".html";
+            usedResources.add(resourceName);
+        }
     }
 
 }

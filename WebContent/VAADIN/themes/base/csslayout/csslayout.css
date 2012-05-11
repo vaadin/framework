@@ -6,8 +6,8 @@ div.v-csslayout {
 	display: block;
 }
 .v-csslayout-margin, .v-csslayout-container {
-	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 .v-has-width > .v-csslayout-margin,

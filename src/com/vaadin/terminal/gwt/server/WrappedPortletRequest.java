@@ -13,6 +13,7 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
+import com.vaadin.Application;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
@@ -118,8 +119,21 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     public BrowserDetails getBrowserDetails() {
-        // No browserDetails available for normal requests
-        return null;
+        return new BrowserDetails() {
+            public String getUriFragment() {
+                return null;
+            }
+
+            public String getWindowName() {
+                return null;
+            }
+
+            public WebBrowser getWebBrowser() {
+                PortletApplicationContext2 context = (PortletApplicationContext2) Application
+                        .getCurrentApplication().getContext();
+                return context.getBrowser();
+            }
+        };
     }
 
     public Locale getLocale() {

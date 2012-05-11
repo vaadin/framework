@@ -10,6 +10,8 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.ui.Component;
 
 /**
  * Decoder for converting RPC parameters and other values from JSON in transfer
@@ -35,6 +38,12 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 public class JsonCodec implements Serializable {
 
     private static Map<Class<?>, String> typeToTransportType = new HashMap<Class<?>, String>();
+
+    /**
+     * Note! This does not contain primitives.
+     * <p>
+     */
+    private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
 
     static {
         registerType(String.class, JsonEncoder.VTYPE_STRING);
@@ -49,8 +58,6 @@ public class JsonCodec implements Serializable {
         registerType(double.class, JsonEncoder.VTYPE_DOUBLE);
         registerType(Long.class, JsonEncoder.VTYPE_LONG);
         registerType(long.class, JsonEncoder.VTYPE_LONG);
-        // transported as string representation
-        registerType(Enum.class, JsonEncoder.VTYPE_STRING);
         registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
         registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
         registerType(Map.class, JsonEncoder.VTYPE_MAP);
@@ -60,94 +67,258 @@ public class JsonCodec implements Serializable {
 
     private static void registerType(Class<?> type, String transportType) {
         typeToTransportType.put(type, transportType);
+        if (!type.isPrimitive()) {
+            transportTypeToType.put(transportType, type);
+        }
+    }
+
+    public static boolean isInternalTransportType(String transportType) {
+        return transportTypeToType.containsKey(transportType);
+    }
+
+    public static boolean isInternalType(Type type) {
+        if (type instanceof Class && ((Class<?>) type).isPrimitive()) {
+            // All primitive types are handled internally
+            return true;
+        }
+        return typeToTransportType.containsKey(getClassForType(type));
+    }
+
+    private static Class<?> getClassForType(Type type) {
+        if (type instanceof ParameterizedType) {
+            return (Class<?>) (((ParameterizedType) type).getRawType());
+        } else {
+            return (Class<?>) type;
+        }
+    }
+
+    public static String getTransportType(JSONArray encodedValue)
+            throws JSONException {
+        return encodedValue.getString(0);
+    }
+
+    private static Class<?> getType(String transportType) {
+        return transportTypeToType.get(transportType);
     }
 
     /**
-     * Convert a JSON array with two elements (type and value) into a
-     * server-side type, recursively if necessary.
+     * Decodes the given value and type, restricted to using only internal
+     * types.
      * 
-     * @param value
-     *            JSON array with two elements
+     * @param valueAndType
      * @param application
-     *            mapper between connector ID and {@link Connector} objects
-     * @return converted value (does not contain JSON types)
      * @throws JSONException
-     *             if the conversion fails
      */
-    public static Object decode(JSONArray value, Application application)
-            throws JSONException {
-        return decodeVariableValue(value.getString(0), value.get(1),
+    @Deprecated
+    public static Object decodeInternalType(JSONArray valueAndType,
+            Application application) throws JSONException {
+        String transportType = getTransportType(valueAndType);
+        return decodeInternalType(getType(transportType), true, valueAndType,
                 application);
     }
 
-    private static Object decodeVariableValue(String variableType,
-            Object value, Application application) throws JSONException {
-        Object val = null;
-        // TODO type checks etc.
-        if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = decodeArray((JSONArray) value, application);
-        } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
-            val = decodeList((JSONArray) value, application);
-        } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
-            val = decodeSet((JSONArray) value, application);
-        } else if (JsonEncoder.VTYPE_MAP_CONNECTOR.equals(variableType)) {
-            val = decodeConnectorMap((JSONObject) value, application);
-        } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = decodeMap((JSONObject) value, application);
-        } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
-            val = decodeStringArray((JSONArray) value);
-        } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
-            val = value;
-        } else if (JsonEncoder.VTYPE_INTEGER.equals(variableType)) {
-            // TODO handle properly
-            val = Integer.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_LONG.equals(variableType)) {
-            // TODO handle properly
-            val = Long.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_FLOAT.equals(variableType)) {
-            // TODO handle properly
-            val = Float.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_DOUBLE.equals(variableType)) {
-            // TODO handle properly
-            val = Double.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_BOOLEAN.equals(variableType)) {
-            // TODO handle properly
-            val = Boolean.valueOf(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_CONNECTOR.equals(variableType)) {
-            val = application.getConnector(String.valueOf(value));
-        } else if (JsonEncoder.VTYPE_NULL.equals(variableType)) {
-            val = null;
+    public static Object decodeInternalOrCustomType(Type targetType,
+            JSONArray valueAndType, Application application)
+            throws JSONException {
+        if (isInternalType(targetType)) {
+            return decodeInternalType(targetType, false, valueAndType,
+                    application);
         } else {
-            // Try to decode object using fields
-            return decodeObject(variableType, (JSONObject) value, application);
-
+            return decodeCustomType(targetType, valueAndType, application);
         }
-
-        return val;
     }
 
-    private static Object decodeMap(JSONObject jsonMap, Application application)
+    public static Object decodeCustomType(Type targetType,
+            JSONArray valueAndType, Application application)
             throws JSONException {
+        if (isInternalType(targetType)) {
+            throw new JSONException("decodeCustomType cannot be used for "
+                    + targetType + ", which is an internal type");
+        }
+        String transportType = getCustomTransportType(getClassForType(targetType));
+        String encodedTransportType = valueAndType.getString(0);
+        if (!transportTypesCompatible(encodedTransportType, transportType)) {
+            throw new JSONException("Expected a value of type " + transportType
+                    + ", received " + encodedTransportType);
+        }
+
+        // Try to decode object using fields
+        return decodeObject(targetType, (JSONObject) valueAndType.get(1),
+                application);
+    }
+
+    /**
+     * Decodes a value that is of an internal type.
+     * <p>
+     * Ensures the encoded value is of the same type as target type.
+     * </p>
+     * <p>
+     * Allows restricting collections so that they must be declared using
+     * generics. If this is used then all objects in the collection are encoded
+     * using the declared type. Otherwise only internal types are allowed in
+     * collections.
+     * </p>
+     * 
+     * @param targetType
+     *            The type that should be returned by this method
+     * @param valueAndType
+     *            The encoded value and type array
+     * @param application
+     *            A reference to the application
+     * @param enforceGenericsInCollections
+     *            true if generics should be enforce, false to only allow
+     *            internal types in collections
+     * @return
+     * @throws JSONException
+     */
+    public static Object decodeInternalType(Type targetType,
+            boolean restrictToInternalTypes, JSONArray valueAndType,
+            Application application) throws JSONException {
+        String encodedTransportType = valueAndType.getString(0);
+        if (!isInternalType(targetType)) {
+            throw new JSONException("Type " + targetType
+                    + " is not a supported internal type.");
+        }
+        String transportType = getInternalTransportType(targetType);
+        if (!transportTypesCompatible(encodedTransportType, transportType)) {
+            throw new JSONException("Expected a value of type " + targetType
+                    + ", received " + getType(encodedTransportType));
+        }
+
+        Object encodedJsonValue = valueAndType.get(1);
+
+        if (JsonEncoder.VTYPE_NULL.equals(encodedTransportType)) {
+            return null;
+        }
+        // Collections
+        if (JsonEncoder.VTYPE_LIST.equals(transportType)) {
+            return decodeList(targetType, restrictToInternalTypes,
+                    (JSONArray) encodedJsonValue, application);
+        } else if (JsonEncoder.VTYPE_SET.equals(transportType)) {
+            return decodeSet(targetType, restrictToInternalTypes,
+                    (JSONArray) encodedJsonValue, application);
+        } else if (JsonEncoder.VTYPE_MAP_CONNECTOR.equals(transportType)) {
+            return decodeConnectorToObjectMap(targetType,
+                    restrictToInternalTypes, (JSONObject) encodedJsonValue,
+                    application);
+        } else if (JsonEncoder.VTYPE_MAP.equals(transportType)) {
+            return decodeStringToObjectMap(targetType, restrictToInternalTypes,
+                    (JSONObject) encodedJsonValue, application);
+        }
+
+        // Arrays
+        if (JsonEncoder.VTYPE_ARRAY.equals(transportType)) {
+
+            return decodeObjectArray(targetType, (JSONArray) encodedJsonValue,
+                    application);
+
+        } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(transportType)) {
+            return decodeStringArray((JSONArray) encodedJsonValue);
+        }
+
+        // Special Vaadin types
+
+        String stringValue = String.valueOf(encodedJsonValue);
+
+        if (JsonEncoder.VTYPE_CONNECTOR.equals(transportType)) {
+            return application.getConnector(stringValue);
+        }
+
+        // Standard Java types
+
+        if (JsonEncoder.VTYPE_STRING.equals(transportType)) {
+            return stringValue;
+        } else if (JsonEncoder.VTYPE_INTEGER.equals(transportType)) {
+            return Integer.valueOf(stringValue);
+        } else if (JsonEncoder.VTYPE_LONG.equals(transportType)) {
+            return Long.valueOf(stringValue);
+        } else if (JsonEncoder.VTYPE_FLOAT.equals(transportType)) {
+            return Float.valueOf(stringValue);
+        } else if (JsonEncoder.VTYPE_DOUBLE.equals(transportType)) {
+            return Double.valueOf(stringValue);
+        } else if (JsonEncoder.VTYPE_BOOLEAN.equals(transportType)) {
+            return Boolean.valueOf(stringValue);
+        }
+
+        throw new JSONException("Unknown type " + transportType);
+    }
+
+    private static boolean transportTypesCompatible(
+            String encodedTransportType, String transportType) {
+        if (encodedTransportType == null) {
+            return false;
+        }
+        if (encodedTransportType.equals(transportType)) {
+            return true;
+        }
+        if (encodedTransportType.equals(JsonEncoder.VTYPE_NULL)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Deprecated
+    private static Map<String, Object> decodeStringToObjectMap(Type targetType,
+            boolean restrictToInternalTypes, JSONObject jsonMap,
+            Application application) throws JSONException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String key = it.next();
-            map.put(key, decode(jsonMap.getJSONArray(key), application));
+            JSONArray encodedValueAndType = jsonMap.getJSONArray(key);
+            Object decodedChild = decodeChild(targetType,
+                    restrictToInternalTypes, 1, encodedValueAndType,
+                    application);
+            map.put(key, decodedChild);
         }
         return map;
     }
 
-    private static Object decodeConnectorMap(JSONObject jsonMap,
-            Application application) throws JSONException {
+    @Deprecated
+    private static Map<Connector, Object> decodeConnectorToObjectMap(
+            Type targetType, boolean restrictToInternalTypes,
+            JSONObject jsonMap, Application application) throws JSONException {
         HashMap<Connector, Object> map = new HashMap<Connector, Object>();
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String connectorId = it.next();
             Connector connector = application.getConnector(connectorId);
-            map.put(connector,
-                    decode(jsonMap.getJSONArray(connectorId), application));
+            JSONArray encodedValueAndType = jsonMap.getJSONArray(connectorId);
+            Object decodedChild = decodeChild(targetType,
+                    restrictToInternalTypes, 1, encodedValueAndType,
+                    application);
+            map.put(connector, decodedChild);
         }
         return map;
+    }
+
+    /**
+     * @param targetType
+     * @param restrictToInternalTypes
+     * @param typeIndex
+     *            The index of a generic type to use to define the child type
+     *            that should be decoded
+     * @param encodedValueAndType
+     * @param application
+     * @return
+     * @throws JSONException
+     */
+    private static Object decodeChild(Type targetType,
+            boolean restrictToInternalTypes, int typeIndex,
+            JSONArray encodedValueAndType, Application application)
+            throws JSONException {
+        if (!restrictToInternalTypes && targetType instanceof ParameterizedType) {
+            Type childType = ((ParameterizedType) targetType)
+                    .getActualTypeArguments()[typeIndex];
+            // Only decode the given type
+            return decodeInternalOrCustomType(childType, encodedValueAndType,
+                    application);
+        } else {
+            // Only internal types when not enforcing a given type to avoid
+            // security issues
+            return decodeInternalType(encodedValueAndType, application);
+        }
     }
 
     private static String[] decodeStringArray(JSONArray jsonArray)
@@ -160,43 +331,93 @@ public class JsonCodec implements Serializable {
         return tokens.toArray(new String[tokens.size()]);
     }
 
-    private static Object decodeArray(JSONArray jsonArray,
-            Application application) throws JSONException {
-        List list = decodeList(jsonArray, application);
+    private static Object[] decodeObjectArray(Type targetType,
+            JSONArray jsonArray, Application application) throws JSONException {
+        List list = decodeList(List.class, true, jsonArray, application);
         return list.toArray(new Object[list.size()]);
     }
 
-    private static List<Object> decodeList(JSONArray jsonArray,
+    private static List<Object> decodeList(Type targetType,
+            boolean restrictToInternalTypes, JSONArray jsonArray,
             Application application) throws JSONException {
         List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
-            JSONArray entryArray = jsonArray.getJSONArray(i);
-            list.add(decode(entryArray, application));
+            JSONArray encodedValueAndType = jsonArray.getJSONArray(i);
+            Object decodedChild = decodeChild(targetType,
+                    restrictToInternalTypes, 0, encodedValueAndType,
+                    application);
+            list.add(decodedChild);
         }
         return list;
     }
 
-    private static Set<Object> decodeSet(JSONArray jsonArray,
+    private static Set<Object> decodeSet(Type targetType,
+            boolean restrictToInternalTypes, JSONArray jsonArray,
             Application application) throws JSONException {
         HashSet<Object> set = new HashSet<Object>();
-        set.addAll(decodeList(jsonArray, application));
+        set.addAll(decodeList(List.class, restrictToInternalTypes, jsonArray,
+                application));
         return set;
     }
 
     /**
-     * Encode a value to a JSON representation for transport from the server to
-     * the client.
+     * Returns the name that should be used as field name in the JSON. We strip
+     * "set" from the setter, keeping the result - this is easy to do on both
+     * server and client, avoiding some issues with cASE. E.g setZIndex()
+     * becomes "ZIndex". Also ensures that both getter and setter are present,
+     * returning null otherwise.
      * 
-     * @param value
-     *            value to convert
-     * @param application
-     *            mapper between connector ID and {@link Connector} objects
-     * @return JSON representation of the value
-     * @throws JSONException
-     *             if encoding a value fails (e.g. NaN or infinite number)
+     * @param pd
+     * @return the name to be used or null if both getter and setter are not
+     *         found.
      */
-    public static JSONArray encode(Object value, Application application)
+    private static String getTransportFieldName(PropertyDescriptor pd) {
+        if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+            return null;
+        }
+        return pd.getWriteMethod().getName().substring(3);
+    }
+
+    private static Object decodeObject(Type targetType,
+            JSONObject serializedObject, Application application)
+            throws JSONException {
+
+        Class<?> targetClass = getClassForType(targetType);
+        try {
+            Object decodedObject = targetClass.newInstance();
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(targetClass)
+                    .getPropertyDescriptors()) {
+
+                String fieldName = getTransportFieldName(pd);
+                if (fieldName == null) {
+                    continue;
+                }
+                JSONArray encodedFieldValue = serializedObject
+                        .getJSONArray(fieldName);
+                Type fieldType = pd.getReadMethod().getGenericReturnType();
+                Object decodedFieldValue = decodeInternalOrCustomType(
+                        fieldType, encodedFieldValue, application);
+
+                pd.getWriteMethod().invoke(decodedObject, decodedFieldValue);
+            }
+
+            return decodedObject;
+        } catch (IllegalArgumentException e) {
+            throw new JSONException(e);
+        } catch (IllegalAccessException e) {
+            throw new JSONException(e);
+        } catch (InvocationTargetException e) {
+            throw new JSONException(e);
+        } catch (InstantiationException e) {
+            throw new JSONException(e);
+        } catch (IntrospectionException e) {
+            throw new JSONException(e);
+        }
+    }
+
+    @Deprecated
+    private static JSONArray encode(Object value, Application application)
             throws JSONException {
         return encode(value, null, application);
     }
@@ -205,14 +426,14 @@ public class JsonCodec implements Serializable {
             Application application) throws JSONException {
 
         if (null == value) {
-            return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
+            return encodeNull();
         }
 
         if (valueType == null) {
             valueType = value.getClass();
         }
 
-        String transportType = getTransportType(valueType);
+        String internalTransportType = getInternalTransportType(valueType);
         if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
@@ -225,16 +446,16 @@ public class JsonCodec implements Serializable {
         } else if (value instanceof Boolean) {
             return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
         } else if (value instanceof Number) {
-            return combineTypeAndValue(transportType, value);
+            return combineTypeAndValue(internalTransportType, value);
         } else if (value instanceof Collection) {
-            if (transportType == null) {
+            if (internalTransportType == null) {
                 throw new RuntimeException(
                         "Unable to serialize unsupported type: " + valueType);
             }
             Collection<?> collection = (Collection<?>) value;
             JSONArray jsonArray = encodeCollection(collection, application);
 
-            return combineTypeAndValue(transportType, jsonArray);
+            return combineTypeAndValue(internalTransportType, jsonArray);
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
             JSONArray jsonArray = encodeArrayContents(array, application);
@@ -252,16 +473,26 @@ public class JsonCodec implements Serializable {
             }
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
+            if (value instanceof Component
+                    && !(AbstractCommunicationManager
+                            .isVisible((Component) value))) {
+                return encodeNull();
+            }
             return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
                     connector.getConnectorId());
-        } else if (transportType != null) {
-            return combineTypeAndValue(transportType, String.valueOf(value));
+        } else if (internalTransportType != null) {
+            return combineTypeAndValue(internalTransportType,
+                    String.valueOf(value));
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return combineTypeAndValue(valueType.getName(),
+            return combineTypeAndValue(getCustomTransportType(valueType),
                     encodeObject(value, application));
         }
+    }
+
+    private static JSONArray encodeNull() {
+        return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
     }
 
     private static Object encodeObject(Object value, Application application)
@@ -288,68 +519,11 @@ public class JsonCodec implements Serializable {
         return jsonMap;
     }
 
-    /**
-     * Returns the name that should be used as field name in the JSON. We strip
-     * "set" from the setter, keeping the result - this is easy to do on both
-     * server and client, avoiding some issues with cASE. E.g setZIndex()
-     * becomes "ZIndex". Also ensures that both getter and setter are present,
-     * returning null otherwise.
-     * 
-     * @param pd
-     * @return the name to be used or null if both getter and setter are not
-     *         found.
-     */
-    private static String getTransportFieldName(PropertyDescriptor pd) {
-        if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
-            return null;
-        }
-        return pd.getWriteMethod().getName().substring(3);
-    }
-
-    private static Object decodeObject(String type,
-            JSONObject serializedObject, Application application)
-            throws JSONException {
-
-        Class<?> cls;
-        try {
-            cls = Class.forName(type);
-
-            Object decodedObject = cls.newInstance();
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(cls)
-                    .getPropertyDescriptors()) {
-
-                String fieldName = getTransportFieldName(pd);
-                if (fieldName == null) {
-                    continue;
-                }
-                JSONArray encodedObject = serializedObject
-                        .getJSONArray(fieldName);
-                pd.getWriteMethod().invoke(decodedObject,
-                        decode(encodedObject, application));
-            }
-
-            return decodedObject;
-        } catch (ClassNotFoundException e) {
-            throw new JSONException(e);
-        } catch (IllegalArgumentException e) {
-            throw new JSONException(e);
-        } catch (IllegalAccessException e) {
-            throw new JSONException(e);
-        } catch (InvocationTargetException e) {
-            throw new JSONException(e);
-        } catch (InstantiationException e) {
-            throw new JSONException(e);
-        } catch (IntrospectionException e) {
-            throw new JSONException(e);
-        }
-    }
-
     private static JSONArray encodeArrayContents(Object[] array,
             Application application) throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : array) {
-            // TODO handle object graph loops?
-            jsonArray.put(encode(o, application));
+            jsonArray.put(encode(o, null, application));
         }
         return jsonArray;
     }
@@ -358,7 +532,6 @@ public class JsonCodec implements Serializable {
             Application application) throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (Object o : collection) {
-            // TODO handle object graph loops?
             jsonArray.put(encode(o, application));
         }
         return jsonArray;
@@ -378,7 +551,7 @@ public class JsonCodec implements Serializable {
                         "Only maps with String/Connector keys are currently supported (#8602)");
             }
 
-            jsonMap.put((String) mapKey, encode(mapValue, application));
+            jsonMap.put((String) mapKey, encode(mapValue, null, application));
         }
         return jsonMap;
     }
@@ -395,21 +568,6 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Gets the transport type for the value. Returns null if no transport type
-     * can be found.
-     * 
-     * @param value
-     * @return
-     * @throws JSONException
-     */
-    private static String getTransportType(Object value) {
-        if (null == value) {
-            return JsonEncoder.VTYPE_NULL;
-        }
-        return getTransportType(value.getClass());
-    }
-
-    /**
      * Gets the transport type for the given class. Returns null if no transport
      * type can be found.
      * 
@@ -418,9 +576,12 @@ public class JsonCodec implements Serializable {
      * @return
      * @throws JSONException
      */
-    private static String getTransportType(Class<?> valueType) {
-        return typeToTransportType.get(valueType);
+    private static String getInternalTransportType(Type valueType) {
+        return typeToTransportType.get(getClassForType(valueType));
+    }
 
+    private static String getCustomTransportType(Class<?> targetType) {
+        return targetType.getName();
     }
 
 }

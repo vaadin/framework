@@ -8,12 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
 /**
  * Server side RPC manager that handles RPC calls coming from the client.
@@ -26,12 +24,8 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
  */
 public class ServerRpcManager<T> implements RpcManager {
 
-    private final RpcTarget target;
     private final T implementation;
     private final Class<T> rpcInterface;
-
-    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<String, Method>(
-            128, 0.75f, 1);
 
     private static final Map<Class<?>, Class<?>> boxedTypes = new HashMap<Class<?>, Class<?>>();
     static {
@@ -59,9 +53,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param rpcInterface
      *            RPC interface type
      */
-    public ServerRpcManager(RpcTarget target, T implementation,
-            Class<T> rpcInterface) {
-        this.target = target;
+    public ServerRpcManager(T implementation, Class<T> rpcInterface) {
         this.implementation = implementation;
         this.rpcInterface = rpcInterface;
     }
@@ -76,36 +68,20 @@ public class ServerRpcManager<T> implements RpcManager {
      *            method invocation to perform
      */
     public static void applyInvocation(RpcTarget target,
-            MethodInvocation invocation) {
-        try {
-            Class<?> rpcInterfaceClass = Class.forName(invocation
-                    .getInterfaceName());
-            RpcManager manager = target.getRpcManager(rpcInterfaceClass);
-            if (manager != null) {
-                manager.applyInvocation(invocation);
-            } else {
-                getLogger()
-                        .log(Level.WARNING,
-                                "RPC call received for RpcTarget "
-                                        + target.getClass().getName()
-                                        + " ("
-                                        + invocation.getConnectorId()
-                                        + ") but the target has not registered any RPC interfaces");
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Class for RPC interface "
-                    + invocation.getInterfaceName() + " of the target "
-                    + target + " could not be found.");
+            ServerRpcMethodInvocation invocation) {
+        RpcManager manager = target.getRpcManager(invocation
+                .getInterfaceClass());
+        if (manager != null) {
+            manager.applyInvocation(invocation);
+        } else {
+            getLogger()
+                    .log(Level.WARNING,
+                            "RPC call received for RpcTarget "
+                                    + target.getClass().getName()
+                                    + " ("
+                                    + invocation.getConnectorId()
+                                    + ") but the target has not registered any RPC interfaces");
         }
-    }
-
-    /**
-     * Returns the RPC target of this RPC manager instance.
-     * 
-     * @return RpcTarget, typically a {@link Connector}
-     */
-    public RpcTarget getTarget() {
-        return target;
     }
 
     /**
@@ -133,21 +109,11 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
-    public void applyInvocation(MethodInvocation invocation) {
-        String methodName = invocation.getMethodName();
-        // here, we already know that the interface is an rpcInterface
-        Object[] arguments = invocation.getParameters();
-
-        Method method = findInvocationMethod(rpcInterface, methodName,
-                arguments.length);
-        if (method == null) {
-            throw new RuntimeException(implementation + " does not contain "
-                    + rpcInterface.getName() + "." + methodName + " with "
-                    + arguments.length + " parameters");
-        }
-
+    public void applyInvocation(ServerRpcMethodInvocation invocation) {
+        Method method = invocation.getMethod();
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] args = new Object[parameterTypes.length];
+        Object[] arguments = invocation.getParameters();
         for (int i = 0; i < args.length; i++) {
             // no conversion needed for basic cases
             // Class<?> type = parameterTypes[i];
@@ -159,41 +125,10 @@ public class ServerRpcManager<T> implements RpcManager {
         try {
             method.invoke(implementation, args);
         } catch (Exception e) {
-            throw new RuntimeException(methodName, e);
+            throw new RuntimeException("Unable to invoke method "
+                    + invocation.getMethodName() + " in "
+                    + invocation.getInterfaceName(), e);
         }
-    }
-
-    private Method findInvocationMethod(Class<?> targetType, String methodName,
-            int parameterCount) {
-        // TODO currently only using method name and number of parameters as the
-        // signature
-        String signature = targetType.getName() + "." + methodName + "("
-                + parameterCount;
-        Method invocationMethod = invocationMethodCache.get(signature);
-
-        if (invocationMethod == null) {
-            invocationMethod = doFindInvocationMethod(targetType, methodName,
-                    parameterCount);
-
-            if (invocationMethod != null) {
-                invocationMethodCache.put(signature, invocationMethod);
-            }
-        }
-
-        return invocationMethod;
-    }
-
-    private Method doFindInvocationMethod(Class<?> targetType,
-            String methodName, int parameterCount) {
-        Method[] methods = targetType.getMethods();
-        for (Method method : methods) {
-            Class<?>[] parameterTypes = method.getParameterTypes();
-            if (method.getName().equals(methodName)
-                    && parameterTypes.length == parameterCount) {
-                return method;
-            }
-        }
-        return null;
     }
 
     private static Logger getLogger() {

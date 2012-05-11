@@ -215,17 +215,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (getParent() != null && !getParent().isEnabled()) {
-            // some ancestor still disabled, don't update children
-            return;
-        } else {
-            requestRepaintAll();
-        }
-    }
-
-    @Override
     public void setVisible(boolean visible) {
         if (getState().isVisible() == visible) {
             return;
@@ -379,6 +368,15 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      */
     public static void requestRepaintAll(HasComponents container) {
         container.requestRepaint();
+        if (container instanceof Panel) {
+            Panel p = (Panel) container;
+            // #2924 Panel is invalid, really invalid.
+            // Panel.getComponentIterator returns the children of content, not
+            // of Panel...
+            if (p.getContent() != null) {
+                p.getContent().requestRepaint();
+            }
+        }
         for (Iterator<Component> childIterator = container
                 .getComponentIterator(); childIterator.hasNext();) {
             Component c = childIterator.next();

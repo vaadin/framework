@@ -57,7 +57,11 @@ public class ButtonConnector extends AbstractComponentConnector implements
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
         // Set text
-        getWidget().setText(getState().getCaption());
+        if (getState().isHtmlContentAllowed()) {
+            getWidget().setHtml(getState().getCaption());
+        } else {
+            getWidget().setText(getState().getCaption());
+        }
 
         // handle error
         if (null != getState().getErrorMessage()) {

@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
-public interface ClickRPC extends ServerRpc {
+public interface ClickRpc extends ServerRpc {
     /**
      * Called when a click event has occurred and there are server side
      * listeners for the event.

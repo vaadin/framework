@@ -509,6 +509,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
+        RequestTimer requestTimer = new RequestTimer();
+        requestTimer.start();
+
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
 
@@ -610,6 +613,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     if (application.isRunning()) {
                         switch (requestType) {
                         case RENDER:
+                        case ACTION:
+                            // Both action requests and render requests are ok
+                            // without a Root as they render the initial HTML
+                            // and then do a second request
                             try {
                                 root = application
                                         .getRootForRequest(wrappedRequest);
@@ -714,6 +721,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     } finally {
                         Root.setCurrentRoot(null);
                         Application.setCurrentApplication(null);
+
+                        requestTimer
+                                .stop((AbstractWebApplicationContext) application
+                                        .getContext());
                     }
                 }
             }

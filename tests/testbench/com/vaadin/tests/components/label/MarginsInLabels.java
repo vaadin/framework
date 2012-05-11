@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.gridlayout;
+package com.vaadin.tests.components.label;
 
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;

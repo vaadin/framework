@@ -65,6 +65,11 @@ public class VNativeButton extends Button implements ClickHandler {
     }
 
     @Override
+    public void setHTML(String html) {
+        captionElement.setInnerHTML(html);
+    }
+
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 

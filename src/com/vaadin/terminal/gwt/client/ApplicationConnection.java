@@ -256,10 +256,10 @@ public class ApplicationConnection {
     /*-{
     	var ap = this;
     	var client = {};
-    	client.isActive = function() {
+    	client.isActive = $entry(function() {
     		return ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::hasActiveRequest()()
     				|| ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::isExecutingDeferredCommands()();
-    	}
+    	});
     	var vi = ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
     	if (vi) {
     		client.getVersionInfo = function() {
@@ -267,12 +267,21 @@ public class ApplicationConnection {
     		}
     	}
 
-    	client.getElementByPath = function(id) {
+    	client.getProfilingData = $entry(function() {
+    	    var pd = [
+        	    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::lastProcessingTime,
+                    ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::totalProcessingTime
+    	        ];
+    	    pd = pd.concat(ap.@com.vaadin.terminal.gwt.client.ApplicationConnection::serverTimingInfo);
+    	    return pd;
+    	});
+
+    	client.getElementByPath = $entry(function(id) {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
-    	}
-    	client.getPathForElement = function(element) {
+    	});
+    	client.getPathForElement = $entry(function(element) {
     		return componentLocator.@com.vaadin.terminal.gwt.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-    	}
+    	});
 
     	$wnd.vaadin.clients[TTAppId] = client;
     }-*/;
@@ -314,22 +323,22 @@ public class ApplicationConnection {
     	if ($wnd.vaadin.forceSync) {
     		oldSync = $wnd.vaadin.forceSync;
     	}
-    	$wnd.vaadin.forceSync = function() {
+    	$wnd.vaadin.forceSync = $entry(function() {
     		if (oldSync) {
     			oldSync();
     		}
     		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
-    	}
+    	});
     	var oldForceLayout;
     	if ($wnd.vaadin.forceLayout) {
     		oldForceLayout = $wnd.vaadin.forceLayout;
     	}
-    	$wnd.vaadin.forceLayout = function() {
+    	$wnd.vaadin.forceLayout = $entry(function() {
     		if (oldForceLayout) {
     			oldForceLayout();
     		}
     		app.@com.vaadin.terminal.gwt.client.ApplicationConnection::forceLayout()();
-    	}
+    	});
     }-*/;
 
     /**
@@ -536,21 +545,22 @@ public class ApplicationConnection {
                         return;
 
                     case 503:
-                        // We'll assume msec instead of the usual seconds
-                        int delay = Integer.parseInt(response
-                                .getHeader("Retry-After"));
-                        VConsole.log("503, retrying in " + delay + "msec");
-                        (new Timer() {
-                            @Override
-                            public void run() {
-                                // TODO why? Here used to be "activeRequests--;"
-                                // but can't see why exactly
-                                hasActiveRequest = false;
-                                doUidlRequest(uri, payload, synchronous);
-                            }
-                        }).schedule(delay);
-                        return;
-
+                        /*
+                         * We'll assume msec instead of the usual seconds. If
+                         * there's no Retry-After header, handle the error like
+                         * a 500, as per RFC 2616 section 10.5.4.
+                         */
+                        String delay = response.getHeader("Retry-After");
+                        if (delay != null) {
+                            VConsole.log("503, retrying in " + delay + "msec");
+                            (new Timer() {
+                                @Override
+                                public void run() {
+                                    doUidlRequest(uri, payload, synchronous);
+                                }
+                            }).schedule(Integer.parseInt(delay));
+                            return;
+                        }
                     }
 
                     if ((statusCode / 100) == 4) {
@@ -559,6 +569,13 @@ public class ApplicationConnection {
                         showCommunicationError(
                                 "UIDL could not be read from server. Check servlets mappings. Error code: "
                                         + statusCode, statusCode);
+                        endRequest();
+                        return;
+                    } else if ((statusCode / 100) == 5) {
+                        // Something's wrong on the server, there's nothing the
+                        // client can do except maybe try again.
+                        showCommunicationError("Server error. Error code: "
+                                + statusCode, statusCode);
                         endRequest();
                         return;
                     }
@@ -663,6 +680,26 @@ public class ApplicationConnection {
     }
 
     int cssWaits = 0;
+
+    /**
+     * Holds the time spent rendering the last request
+     */
+    protected int lastProcessingTime;
+
+    /**
+     * Holds the total time spent rendering requests during the lifetime of the
+     * session.
+     */
+    protected int totalProcessingTime;
+
+    /**
+     * Holds the timing information from the server-side. How much time was
+     * spent servicing the last request and how much time has been spent
+     * servicing the session so far. These values are always one request behind,
+     * since they cannot be measured before the request is finished.
+     */
+    private ValueMap serverTimingInfo;
+
     static final int MAX_CSS_WAITS = 100;
 
     protected void handleWhenCSSLoaded(final String jsonText,
@@ -999,6 +1036,12 @@ public class ApplicationConnection {
 
         handleUIDLDuration.logDuration(
                 " * Handling type mappings from server completed", 10);
+        /*
+         * Hook for e.g. TestBench to get details about server peformance
+         */
+        if (json.containsKey("timings")) {
+            serverTimingInfo = json.getValueMap("timings");
+        }
 
         Command c = new Command() {
             public void execute() {
@@ -1183,10 +1226,12 @@ public class ApplicationConnection {
 
                 // TODO build profiling for widget impl loading time
 
-                final long prosessingTime = (new Date().getTime())
-                        - start.getTime();
+                lastProcessingTime = (int) ((new Date().getTime()) - start
+                        .getTime());
+                totalProcessingTime += lastProcessingTime;
+
                 VConsole.log(" Processing time was "
-                        + String.valueOf(prosessingTime) + "ms for "
+                        + String.valueOf(lastProcessingTime) + "ms for "
                         + jsonText.length() + " characters of JSON");
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
@@ -2367,6 +2412,10 @@ public class ApplicationConnection {
             return true;
         }
 
+        if (!manageCaption) {
+            VConsole.error(Util.getConnectorString(connector)
+                    + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
+        }
         return false;
     }
 

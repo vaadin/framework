@@ -18,7 +18,7 @@ import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelServerRPC;
+import com.vaadin.terminal.gwt.client.ui.panel.PanelServerRpc;
 import com.vaadin.terminal.gwt.client.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
 
@@ -47,7 +47,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     protected ActionManager actionManager;
 
-    private PanelServerRPC rpc = new PanelServerRPC() {
+    private PanelServerRpc rpc = new PanelServerRpc() {
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Panel.this, mouseDetails));
         }

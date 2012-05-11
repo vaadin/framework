@@ -17,7 +17,7 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
-import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedServerRPC;
+import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedServerRpc;
 
 /**
  * Component for embedding external objects.
@@ -80,7 +80,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
 
     private String altText;
 
-    private EmbeddedServerRPC rpc = new EmbeddedServerRPC() {
+    private EmbeddedServerRpc rpc = new EmbeddedServerRpc() {
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Embedded.this, mouseDetails));
         }

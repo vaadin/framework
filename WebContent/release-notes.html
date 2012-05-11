@@ -71,16 +71,34 @@
       <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
       <p>
-        @version-minor@ is the first development release of the upcoming Version 7 of the
-        Vaadin Framework. It introduces the first set of new features in Vaadin 7, for the
-        purpose of receiving feedback regarding the changes.
+        @version-minor@ is the second development release of the upcoming Version 7 of the
+        Vaadin Framework. It introduces the second set of new features in Vaadin 7, for the
+        purpose of receiving feedback about the changes.
       </p>
 
-      <p>The major changes in this first phase are:
+      <p>The major changes in this second alpha phase are:
 
       <ul>
-        <li>Redesign of the window and application APIs</li>
-        <li>Redesign of forms and data binding</li>
+        <li>Complete overhaul of the client-server communication architecture
+          <ul>
+            <li>All add-on components that have widgets need to be ported to Vaadin 7</li>
+            <li>Integration of a GWT widget is done in a <i>connector</i> class</li>
+            <li>Component-to-widget mapping now defined on the client-side, in the connector</li>
+            <li>No more <b style="text-decoration: line-through">Paintable</b> or <b style="text-decoration: line-through">VariableOwner</b>
+            <li>Server-side component and client-side widget can have a <emphasis>shared state</emphasis> object which is automatically synchronized</li>
+            <li>Both client-side and server-side can make RPC calls to the other side
+              <ul>
+                <li>Communicated in the next request/response</li>
+                <li>No return values
+                <li>Typically for communicating events</li>
+              </ul>
+            </li>
+            <li>UIDL is deprecated</li>
+            <li>Compatibility layer for Vaadin 6 included for easy migration</li>
+          </ul>
+        </li>
+        <li>Get computed style of a component from the browser</li>
+        <li>Support for border, padding, and margin in core layout components</li>
       </ul>
 
       <p>
@@ -93,7 +111,7 @@
 
       <p>
         For a complete list of changes in this release, please see the <a
-        href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+7.0.0.alpha1">list
+        href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+7.0.0.alpha2">list
         of closed tickets</a>.
       </p>
 
@@ -103,6 +121,17 @@
         All Vaadin 6 applications need some changes when migrating to Vaadin 7. The most
         obvious changes are in the application/window API and require extending either
         <b>Root</b> or <b>Root.LegacyApplication</b> instead of <b>Application</b>.
+      </p>
+
+      <p>
+        Vaadin 6 add-ons (ones that contain widgets) do not work in Vaadin 7 - please
+        check the add-ons in <a href="http://vaadin.com/directory/">Vaadin Directory</a>
+        for Vaadin 7 support.
+      </p>
+
+      <p>
+        Any custom client-side widgets need to be changed to use the new client-server
+        communication API or the Vaadin 6 compatibility API.
       </p>
 
       <p>
@@ -288,8 +317,7 @@
       </p>
 
       <ul>
-        <li>Windows (see the <a href="#knownissues">Zip installation
-            notice above</a>)</li>
+        <li>Windows</li>
         <li>Linux</li>
         <li>Mac OS X</li>
       </ul>
@@ -330,11 +358,11 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 10</li>
+        <li>Mozilla Firefox 11</li>
         <li>Internet Explorer 8-9</li>
         <li>Safari 5</li>
         <li>Opera 11</li>
-        <li>Google Chrome 16</li>
+        <li>Google Chrome 18</li>
       </ul>
 
       <h2 id="vaadinontheweb">Vaadin on the Web</h2>

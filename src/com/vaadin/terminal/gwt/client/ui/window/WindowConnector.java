@@ -44,7 +44,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private WindowServerRPC rpc;
+    private WindowServerRpc rpc;
 
     boolean minWidthChecked = false;
 
@@ -56,7 +56,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(WindowServerRPC.class, this);
+        rpc = RpcProxy.create(WindowServerRpc.class, this);
 
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());

@@ -5,8 +5,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -102,10 +102,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     .getTabIndex());
         }
 
-        if (getWidget() instanceof FocusWidget) {
-            FocusWidget fw = (FocusWidget) getWidget();
-            fw.setEnabled(isEnabled());
-        }
+        setWidgetEnabled(isEnabled());
 
         // Style names
         String styleName = getStyleNames(getWidget().getStylePrimaryName());
@@ -139,6 +136,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          */
 
         updateComponentSize();
+    }
+
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        if (getWidget() instanceof HasEnabled) {
+            ((HasEnabled) getWidget()).setEnabled(widgetEnabled);
+        }
     }
 
     private void updateComponentSize() {
@@ -338,12 +341,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public void onUnregister() {
         super.onUnregister();
 
-        // Warn if widget is still attached to DOM. It should never be at this
-        // point.
+        // Show an error if widget is still attached to DOM. It should never be
+        // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
-            VConsole.log("Widget for unregistered connector "
+            getWidget().removeFromParent();
+            VConsole.error("Widget is still attached to the DOM after the connector ("
                     + Util.getConnectorString(this)
-                    + " is still attached to the DOM.");
+                    + ") has been unregistered. Widget was removed.");
         }
     }
 }

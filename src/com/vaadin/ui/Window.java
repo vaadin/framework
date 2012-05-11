@@ -24,7 +24,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.window.WindowServerRPC;
+import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
 import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
@@ -76,7 +76,7 @@ import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 public class Window extends Panel implements FocusNotifier, BlurNotifier,
         Vaadin6Component {
 
-    private WindowServerRPC rpc = new WindowServerRPC() {
+    private WindowServerRpc rpc = new WindowServerRpc() {
 
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));

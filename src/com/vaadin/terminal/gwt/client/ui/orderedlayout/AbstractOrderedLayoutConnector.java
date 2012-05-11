@@ -23,7 +23,7 @@ import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -31,7 +31,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 public abstract class AbstractOrderedLayoutConnector extends
         AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
 
-    AbstractOrderedLayoutServerRPC rpc;
+    AbstractOrderedLayoutServerRpc rpc;
 
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
@@ -43,7 +43,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
 
         @Override
-        protected LayoutClickRPC getLayoutClickRPC() {
+        protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
 
@@ -51,7 +51,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     @Override
     public void init() {
-        rpc = RpcProxy.create(AbstractOrderedLayoutServerRPC.class, this);
+        rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

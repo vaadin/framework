@@ -16,7 +16,7 @@ import com.vaadin.terminal.gwt.client.Connector;
  * @since 7.0.0
  * 
  */
-public interface ClientConnector extends Connector {
+public interface ClientConnector extends Connector, RpcTarget {
     /**
      * Returns the list of pending server to client RPC calls and clears the
      * list.

@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style type="text/css">
+.wrapper {
+	height: 150px;
+	width: 150px;
+	border: 1px solid black;
+	overflow: auto;
+	position: relative;
+}
+
+.content {
+	height: 100%;
+	width: 250px;
+	background: grey;
+}
+
+</style>
+<script type="text/javascript">
+function disableScrolling() {
+	var result = document.getElementsByClassName("content");
+	for(var i = 0; i < result.length; i++) {
+		var e = result[i];
+		e.style.width = "100%";
+	}
+}
+
+function triggerReflow() {
+	var style = "top";
+	var styleValue = "1px";
+	var result = document.getElementsByClassName("wrapper");
+	for(var i = 0; i < result.length; i++) {
+		var e = result[i];
+		var originalValue = e.style[style];
+		e.style[style] = styleValue;
+		e.offsetWidth;
+		e.style[style] = originalValue;
+	}
+}
+</script>
+</head>
+<body scroll="auto">
+<p>This test is used to verify how browsers take horizontal scrollbars into account when calculating 100% height and what happens when scrolling is no longer needed. This test tells which browsers need which workarounds for related features.</p>
+
+<p>Basic situation.
+<div class="wrapper"><div class="content"></div></div>
+</p>
+
+<p>
+Situation with position: absolute on the inner element.
+<div class="wrapper"><div class="content" style="position: absolute"></div></div>
+</p>
+
+<button id="disableScrolling" onclick="disableScrolling()">Disable scrolling</button>
+<button id="triggerReflow" onclick="triggerReflow()">Trigger reflow</button>
+</body>
+</html>

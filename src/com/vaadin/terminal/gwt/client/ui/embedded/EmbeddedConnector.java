@@ -35,12 +35,12 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
 
     public static final String ALTERNATE_TEXT = "alt";
 
-    EmbeddedServerRPC rpc;
+    EmbeddedServerRpc rpc;
 
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(EmbeddedServerRPC.class, this);
+        rpc = RpcProxy.create(EmbeddedServerRpc.class, this);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

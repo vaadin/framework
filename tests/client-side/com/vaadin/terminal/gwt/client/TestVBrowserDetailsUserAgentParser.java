@@ -2,8 +2,6 @@ package com.vaadin.terminal.gwt.client;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.gwt.client.VBrowserDetails;
-
 public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     private static final String FIREFOX30_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
@@ -37,6 +35,15 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String SAFARI3_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 5.1; cs-CZ) AppleWebKit/525.28.3 (KHTML, like Gecko) Version/3.2.3 Safari/525.29";
     private static final String SAFARI4_MAC = "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_5_8; en-us) AppleWebKit/531.22.7 (KHTML, like Gecko) Version/4.0.5 Safari/531.22.7";
 
+    private static final String IPHONE_IOS_5_1 = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B179 Safari/7534.48.3";
+    private static final String IPHONE_IOS_4_0 = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7";
+    private static final String IPAD_IOS_4_3_1 = "Mozilla/5.0 (iPad; U; CPU OS 4_3_1 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8G4 Safari/6533.18.5";
+
+    private static final String ANDROID_HTC_2_1 = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; ADR6300 Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
+    private static final String ANDROID_GOOGLE_NEXUS_2_2 = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+    private static final String ANDROID_MOTOROLA_3_0 = "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13";
+    private static final String ANDROID_GALAXY_NEXUS_4_0_4_CHROME = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19";
+
     public void testSafari3() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI3_WINDOWS);
         assertWebKit(bd);
@@ -55,6 +62,86 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 531f);
         assertMacOSX(bd);
+    }
+
+    public void testIPhoneIOS5() {
+        VBrowserDetails bd = new VBrowserDetails(IPHONE_IOS_5_1);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 5);
+        assertBrowserMinorVersion(bd, 1);
+        assertEngineVersion(bd, 534f);
+        assertIOS(bd, 5, 1);
+    }
+
+    public void testIPhoneIOS4() {
+        VBrowserDetails bd = new VBrowserDetails(IPHONE_IOS_4_0);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 532f);
+        assertIOS(bd, 4, 0);
+    }
+
+    public void testIPadIOS4() {
+        VBrowserDetails bd = new VBrowserDetails(IPAD_IOS_4_3_1);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 5);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 533f);
+        assertIOS(bd, 4, 3);
+    }
+
+    public void testAndroid21() {
+        VBrowserDetails bd = new VBrowserDetails(ANDROID_HTC_2_1);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 530f);
+        assertAndroid(bd, 2, 1);
+
+    }
+
+    public void testAndroid22() {
+        VBrowserDetails bd = new VBrowserDetails(ANDROID_GOOGLE_NEXUS_2_2);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 533f);
+        assertAndroid(bd, 2, 2);
+    }
+
+    public void testAndroid30() {
+        VBrowserDetails bd = new VBrowserDetails(ANDROID_MOTOROLA_3_0);
+        assertWebKit(bd);
+        assertSafari(bd);
+        assertBrowserMajorVersion(bd, 4);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 534f);
+        assertAndroid(bd, 3, 0);
+    }
+
+    public void testAndroid40Chrome() {
+        VBrowserDetails bd = new VBrowserDetails(
+                ANDROID_GALAXY_NEXUS_4_0_4_CHROME);
+        assertWebKit(bd);
+        assertChrome(bd);
+        assertBrowserMajorVersion(bd, 18);
+        assertBrowserMinorVersion(bd, 0);
+        assertEngineVersion(bd, 535f);
+        assertAndroid(bd, 4, 0);
+    }
+
+    private void assertOSMajorVersion(VBrowserDetails bd, int i) {
+        assertEquals(i, bd.getOperatingSystemMajorVersion());
+    }
+
+    private void assertOSMinorVersion(VBrowserDetails bd, int i) {
+        assertEquals(i, bd.getOperatingSystemMinorVersion());
     }
 
     public void testChrome3() {
@@ -352,18 +439,47 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertFalse(browserDetails.isLinux());
         assertFalse(browserDetails.isWindows());
         assertTrue(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isAndroid());
+    }
+
+    private void assertAndroid(VBrowserDetails browserDetails,
+            int majorVersion, int minorVersion) {
+        assertFalse(browserDetails.isLinux());
+        assertFalse(browserDetails.isWindows());
+        assertFalse(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isIOS());
+        assertTrue(browserDetails.isAndroid());
+
+        assertOSMajorVersion(browserDetails, majorVersion);
+        assertOSMinorVersion(browserDetails, minorVersion);
+    }
+
+    private void assertIOS(VBrowserDetails browserDetails, int majorVersion,
+            int minorVersion) {
+        assertFalse(browserDetails.isLinux());
+        assertFalse(browserDetails.isWindows());
+        assertFalse(browserDetails.isMacOSX());
+        assertTrue(browserDetails.isIOS());
+        assertFalse(browserDetails.isAndroid());
+
+        assertOSMajorVersion(browserDetails, majorVersion);
+        assertOSMinorVersion(browserDetails, minorVersion);
     }
 
     private void assertWindows(VBrowserDetails browserDetails) {
         assertFalse(browserDetails.isLinux());
         assertTrue(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isIOS());
+        assertFalse(browserDetails.isAndroid());
     }
 
     private void assertLinux(VBrowserDetails browserDetails) {
         assertTrue(browserDetails.isLinux());
         assertFalse(browserDetails.isWindows());
         assertFalse(browserDetails.isMacOSX());
+        assertFalse(browserDetails.isIOS());
+        assertFalse(browserDetails.isAndroid());
     }
 
 }

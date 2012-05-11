@@ -23,6 +23,14 @@ public abstract class AbstractComponentContainerConnector extends
     private final boolean debugLogging = false;
 
     /**
+     * Temporary storage for last enabled state to be able to see if it has
+     * changed. Can be removed once we are able to listen specifically for
+     * enabled changes in the state. Widget.isEnabled() cannot be used as all
+     * Widgets do not implement HasEnabled
+     */
+    private boolean lastWidgetEnabledState = true;
+
+    /**
      * Default constructor
      */
     public AbstractComponentContainerConnector() {
@@ -85,4 +93,18 @@ public abstract class AbstractComponentContainerConnector extends
                 ConnectorHierarchyChangeEvent.TYPE, handler);
     }
 
+    @Override
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        if (lastWidgetEnabledState == widgetEnabled) {
+            return;
+        }
+        lastWidgetEnabledState = widgetEnabled;
+
+        super.setWidgetEnabled(widgetEnabled);
+        for (ComponentConnector c : getChildren()) {
+            // Update children as they might be affected by the enabled state of
+            // their parent
+            c.setWidgetEnabled(c.isEnabled());
+        }
+    }
 }

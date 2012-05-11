@@ -35,5 +35,5 @@ public abstract class LayoutClickEventHandler extends AbstractClickEventHandler 
         getLayoutClickRPC().layoutClick(mouseDetails, getChildComponent(event));
     }
 
-    protected abstract LayoutClickRPC getLayoutClickRPC();
+    protected abstract LayoutClickRpc getLayoutClickRPC();
 }

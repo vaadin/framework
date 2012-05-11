@@ -43,11 +43,11 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     private Integer uidlScrollLeft;
 
-    private PanelServerRPC rpc;
+    private PanelServerRpc rpc;
 
     @Override
     public void init() {
-        rpc = RpcProxy.create(PanelServerRPC.class, this);
+        rpc = RpcProxy.create(PanelServerRpc.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
 

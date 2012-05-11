@@ -234,9 +234,9 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     protected native void attachCutEventListener(Element el)
     /*-{
         var me = this;
-        el.oncut = function() {
+        el.oncut = $entry(function() {
             me.@com.vaadin.terminal.gwt.client.ui.textfield.VTextField::onCut()();
-        };
+        });
     }-*/;
 
     protected native void detachCutEventListener(Element el)

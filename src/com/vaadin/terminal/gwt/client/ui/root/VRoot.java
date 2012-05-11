@@ -306,6 +306,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {
+            // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
      }-*/;

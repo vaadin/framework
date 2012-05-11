@@ -33,6 +33,7 @@ public class CSSRule {
     for(var i = 0; i < sheets.length; i++) {
     var sheet = sheets[i];
     if(sheet.href && sheet.href.indexOf("VAADIN/themes")>-1) {
+    // $entry not needed as function is not exported
     this.@com.vaadin.terminal.gwt.client.CSSRule::rules = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet, selector, deep);
     return;
     }
@@ -58,6 +59,7 @@ public class CSSRule {
     // IE handles imported sheet differently
     if(deep && sheet.imports && sheet.imports.length > 0) {
     for(var i=0; i < sheet.imports.length; i++) {
+    // $entry not needed as function is not exported
     var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet.imports[i], selector, deep);
     allMatches.concat(imports);
     }
@@ -83,6 +85,7 @@ public class CSSRule {
     }
     } else if(deep && r.type == 3) {
     // Search @import stylesheet
+    // $entry not needed as function is not exported
     var imports = @com.vaadin.terminal.gwt.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(r.styleSheet, selector, deep);
     allMatches = allMatches.concat(imports);
     }
@@ -102,6 +105,7 @@ public class CSSRule {
     /*-{
     var j = this.@com.vaadin.terminal.gwt.client.CSSRule::rules.length;
     for(var i=0; i<j; i++) {
+    // $entry not needed as function is not exported
     var value = this.@com.vaadin.terminal.gwt.client.CSSRule::rules[i].style[propertyName];
     if(value)
     return value;

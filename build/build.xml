@@ -364,6 +364,13 @@
             </fileset>
         </copy>
 
+    	<!-- Add test files to be included in test war -->
+        <copy todir="${output-dir}/WebContent">
+            <fileset dir="WebContent">
+                <include name="statictestfiles/**" />
+            </fileset>
+        </copy>
+
         <!-- Add servlet and portlet configuration files from WebContent -->
         <copy todir="${output-dir}/WebContent/WEB-INF">
             <fileset dir="WebContent/WEB-INF">
@@ -838,7 +845,7 @@
         <property file="${gpg.passphrase.file}" />
 
         <echo>Publishing ${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name} to Maven repository</echo>
-        <artifact:mvn>
+        <artifact:mvn failonerror="true">
             <arg value="gpg:sign-and-deploy-file"/>
             <!-- .. is a workaround as maven runs in the build directory -->
             <sysproperty key="file" value="../${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" />

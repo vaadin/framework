@@ -33,7 +33,7 @@ import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
-import com.vaadin.terminal.gwt.client.ui.root.RootServerRPC;
+import com.vaadin.terminal.gwt.client.ui.root.RootServerRpc;
 import com.vaadin.terminal.gwt.client.ui.root.RootState;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.tools.ReflectTools;
@@ -409,7 +409,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
 
-    private RootServerRPC rpc = new RootServerRPC() {
+    private RootServerRpc rpc = new RootServerRpc() {
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Root.this, mouseDetails));
         }

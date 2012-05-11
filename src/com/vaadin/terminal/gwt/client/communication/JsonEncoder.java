@@ -163,6 +163,15 @@ public class JsonEncoder {
         return outerArray;
     }
 
+    /**
+     * Returns the transport type for the given value. Only returns a transport
+     * type for internally handled values.
+     * 
+     * @param value
+     *            The value that should be transported
+     * @return One of the JsonEncode.VTYPE_ constants or null if the value
+     *         cannot be transported using an internally handled type.
+     */
     private static String getTransportType(Object value) {
         if (value == null) {
             return VTYPE_NULL;

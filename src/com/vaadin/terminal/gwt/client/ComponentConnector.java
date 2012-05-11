@@ -119,4 +119,12 @@ public interface ComponentConnector extends ServerConnector {
      */
     public boolean delegateCaptionHandling();
 
+    /**
+     * Sets the enabled state of the widget associated to this connector.
+     * 
+     * @param widgetEnabled
+     *            true if the widget should be enabled, false otherwise
+     */
+    public void setWidgetEnabled(boolean widgetEnabled);
+
 }

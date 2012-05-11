@@ -47,7 +47,7 @@ import com.vaadin.ui.Root;
 public class RootConnector extends AbstractComponentContainerConnector
         implements Paintable, MayScrollChildren {
 
-    private RootServerRPC rpc = RpcProxy.create(RootServerRPC.class, this);
+    private RootServerRpc rpc = RpcProxy.create(RootServerRpc.class, this);
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 

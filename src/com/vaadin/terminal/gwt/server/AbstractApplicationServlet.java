@@ -400,6 +400,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void service(WrappedHttpServletRequest request,
             WrappedHttpServletResponse response) throws ServletException,
             IOException {
+        RequestTimer requestTimer = new RequestTimer();
+        requestTimer.start();
+
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
 
@@ -537,8 +540,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 } finally {
                     Root.setCurrentRoot(null);
                     Application.setCurrentApplication(null);
-                }
 
+                    requestTimer
+                            .stop((AbstractWebApplicationContext) application
+                                    .getContext());
+                }
             }
 
         }

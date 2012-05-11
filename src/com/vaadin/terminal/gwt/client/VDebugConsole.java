@@ -180,6 +180,9 @@ public class VDebugConsole extends VOverlay implements Console {
     private static final String help = "Drag title=move, shift-drag=resize, doubleclick title=min/max."
             + "Use debug=quiet to log only to browser console.";
 
+    private static final int DEFAULT_WIDTH = 650;
+    private static final int DEFAULT_HEIGHT = 400;
+
     public VDebugConsole() {
         super(false, false);
         getElement().getStyle().setOverflow(Overflow.HIDDEN);
@@ -301,10 +304,20 @@ public class VDebugConsole extends VOverlay implements Console {
             height = Integer.parseInt(split[3]);
             autoScrollValue = Boolean.valueOf(split[4]);
         } else {
-            width = 400;
-            height = 150;
-            top = Window.getClientHeight() - 160;
-            left = Window.getClientWidth() - 410;
+            int windowHeight = Window.getClientHeight();
+            int windowWidth = Window.getClientWidth();
+            width = DEFAULT_WIDTH;
+            height = DEFAULT_HEIGHT;
+
+            if (height > windowHeight / 2) {
+                height = windowHeight / 2;
+            }
+            if (width > windowWidth / 2) {
+                width = windowWidth / 2;
+            }
+
+            top = windowHeight - (height + 10);
+            left = windowWidth - (width + 10);
         }
         setPixelSize(width, height);
         setPopupPosition(left, top);

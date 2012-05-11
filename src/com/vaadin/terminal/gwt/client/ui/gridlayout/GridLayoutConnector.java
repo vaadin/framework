@@ -22,7 +22,7 @@ import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRPC;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
@@ -41,18 +41,18 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         }
 
         @Override
-        protected LayoutClickRPC getLayoutClickRPC() {
+        protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
 
     };
 
-    private GridLayoutServerRPC rpc;
+    private GridLayoutServerRpc rpc;
     private boolean needCaptionUpdate = false;
 
     @Override
     public void init() {
-        rpc = RpcProxy.create(GridLayoutServerRPC.class, this);
+        rpc = RpcProxy.create(GridLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

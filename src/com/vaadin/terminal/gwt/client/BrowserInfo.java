@@ -28,6 +28,8 @@ public class BrowserInfo {
     private static final String OS_WINDOWS = "win";
     private static final String OS_LINUX = "lin";
     private static final String OS_MACOSX = "mac";
+    private static final String OS_ANDROID = "android";
+    private static final String OS_IOS = "ios";
 
     private static BrowserInfo instance;
 
@@ -167,13 +169,18 @@ public class BrowserInfo {
             if (osClass != null) {
                 cssClass = cssClass + " " + prefix + osClass;
             }
+
         }
 
         return cssClass;
     }
 
     private String getOperatingSystemClass() {
-        if (browserDetails.isWindows()) {
+        if (browserDetails.isAndroid()) {
+            return OS_ANDROID;
+        } else if (browserDetails.isIOS()) {
+            return OS_IOS;
+        } else if (browserDetails.isWindows()) {
             return OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
             return OS_LINUX;
@@ -312,4 +319,59 @@ public class BrowserInfo {
                 && Util.getNativeScrollbarSize() > 0;
     }
 
+    /**
+     * Checks if the browser is run on iOS
+     * 
+     * @return true if the browser is run on iOS, false otherwise
+     */
+    public boolean isIOS() {
+        return browserDetails.isIOS();
+    }
+
+    /**
+     * Checks if the browser is run on Android
+     * 
+     * @return true if the browser is run on Android, false otherwise
+     */
+    public boolean isAndroid() {
+        return browserDetails.isAndroid();
+    }
+
+    /**
+     * Checks if the browser is capable of handling scrolling natively or if a
+     * touch scroll helper is needed for scrolling.
+     * 
+     * @return true if browser needs a touch scroll helper, false if the browser
+     *         can handle scrolling natively
+     */
+    public boolean requiresTouchScrollDelegate() {
+        if (!isTouchDevice()) {
+            return false;
+        }
+
+        if (isAndroid() && isWebkit() && getWebkitVersion() < 534) {
+            return true;
+        }
+        // if (isIOS() && isWebkit() && getWebkitVersion() < ???) {
+        // return true;
+        // }
+
+        return false;
+    }
+
+    /**
+     * Tests if this is an Android devices with a broken scrollTop
+     * implementation
+     * 
+     * @return true if scrollTop cannot be trusted on this device, false
+     *         otherwise
+     */
+    public boolean isAndroidWithBrokenScrollTop() {
+        return isAndroid()
+                && (getOperatingSystemMajorVersion() == 3 || getOperatingSystemMajorVersion() == 4);
+    }
+
+    private int getOperatingSystemMajorVersion() {
+        return browserDetails.getOperatingSystemMajorVersion();
+    }
 }
