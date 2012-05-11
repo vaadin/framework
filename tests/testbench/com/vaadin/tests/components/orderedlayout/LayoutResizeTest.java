@@ -22,15 +22,14 @@ public class LayoutResizeTest extends TestBase {
 
         HorizontalSplitPanel split1 = new HorizontalSplitPanel();
         split1.setSizeFull();
-        // addComponent(split1);
+        addComponent(split1);
 
         VerticalLayout left = new VerticalLayout();
         left.setSizeFull();
-        // split1.setFirstComponent(left);
+        split1.setFirstComponent(left);
 
         left.setSpacing(true);
-        // left.setMargin(true);
-        addComponent(left);
+        left.setMargin(true);
 
         left.addComponent(new Label("<h2>Layout resize test</h2>",
                 Label.ContentMode.XHTML));
