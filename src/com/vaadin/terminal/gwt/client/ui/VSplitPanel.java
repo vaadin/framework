@@ -122,7 +122,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private boolean positionReversed = false;
 
-    private String[] componentStyleNames;
+    private String[] componentStyleNames = new String[0];
 
     private Element draggingCurtain;
 
@@ -150,8 +150,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     protected int origScrollTop;
 
-    private TouchScrollDelegate touchScrollDelegate;
-
     public VSplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -175,6 +173,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setOrientation(orientation);
         sinkEvents(Event.MOUSEEVENTS);
 
+        TouchScrollDelegate.enableTouchScrolling(this, firstContainer,
+                secondContainer);
+
         addDomHandler(new TouchCancelHandler() {
             public void onTouchCancel(TouchCancelEvent event) {
                 // TODO When does this actually happen??
@@ -186,11 +187,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
                 Node target = event.getTouches().get(0).getTarget().cast();
                 if (splitter.isOrHasChild(target)) {
                     onMouseDown(Event.as(event.getNativeEvent()));
-                } else {
-                    getTouchScrollDelegate().onTouchStart(event);
                 }
             }
-
         }, TouchStartEvent.getType());
         addDomHandler(new TouchMoveHandler() {
             public void onTouchMove(TouchMoveEvent event) {
@@ -209,14 +207,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     }
 
-    private TouchScrollDelegate getTouchScrollDelegate() {
-        if (touchScrollDelegate == null) {
-            touchScrollDelegate = new TouchScrollDelegate(firstContainer,
-                    secondContainer);
-        }
-        return touchScrollDelegate;
-    }
-
     protected void constructDom() {
         DOM.appendChild(splitter, DOM.createDiv()); // for styling
         DOM.appendChild(getElement(), wrapper);
@@ -231,9 +221,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
-        DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-        DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-
+        setStylenames();
     }
 
     private void setOrientation(int orientation) {
@@ -249,11 +237,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
             DOM.setStyleAttribute(firstContainer, "width", "100%");
             DOM.setStyleAttribute(secondContainer, "width", "100%");
         }
-
-        DOM.setElementProperty(firstContainer, "className", CLASSNAME
-                + "-first-container");
-        DOM.setElementProperty(secondContainer, "className", CLASSNAME
-                + "-second-container");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -320,7 +303,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         client.runDescendentsLayout(this);
 
         rendering = false;
-
     }
 
     @Override
@@ -475,7 +457,6 @@ public class VSplitPanel extends ComplexPanel implements Container,
         // fixes scrollbars issues on webkit based browsers
         Util.runWebkitOverflowAutoFix(secondContainer);
         Util.runWebkitOverflowAutoFix(firstContainer);
-
     }
 
     private void setFirstWidget(Widget w) {
@@ -815,31 +796,24 @@ public class VSplitPanel extends ComplexPanel implements Container,
     }
 
     private void setStylenames() {
-        final String splitterSuffix = (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
-                : "-vsplitter");
-        final String firstContainerSuffix = "-first-container";
-        final String secondContainerSuffix = "-second-container";
-        String lockedSuffix = "";
+        final String splitterClass = CLASSNAME
+                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                        : "-vsplitter");
+        final String firstContainerClass = CLASSNAME + "-first-container";
+        final String secondContainerClass = CLASSNAME + "-second-container";
+        final String lockedSuffix = locked ? "-locked" : "";
 
-        String splitterStyle = CLASSNAME + splitterSuffix;
-        String firstStyle = CLASSNAME + firstContainerSuffix;
-        String secondStyle = CLASSNAME + secondContainerSuffix;
+        splitter.addClassName(splitterClass);
+        firstContainer.addClassName(firstContainerClass);
+        secondContainer.addClassName(secondContainerClass);
 
-        if (locked) {
-            splitterStyle = CLASSNAME + splitterSuffix + "-locked";
-            lockedSuffix = "-locked";
+        for (String styleName : componentStyleNames) {
+            splitter.addClassName(splitterClass + "-" + styleName
+                    + lockedSuffix);
+            firstContainer.addClassName(firstContainerClass + "-" + styleName);
+            secondContainer
+                    .addClassName(secondContainerClass + "-" + styleName);
         }
-        for (int i = 0; i < componentStyleNames.length; i++) {
-            splitterStyle += " " + CLASSNAME + splitterSuffix + "-"
-                    + componentStyleNames[i] + lockedSuffix;
-            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-"
-                    + componentStyleNames[i];
-            secondStyle += " " + CLASSNAME + secondContainerSuffix + "-"
-                    + componentStyleNames[i];
-        }
-        DOM.setElementProperty(splitter, "className", splitterStyle);
-        DOM.setElementProperty(firstContainer, "className", firstStyle);
-        DOM.setElementProperty(secondContainer, "className", secondStyle);
     }
 
     public void setEnabled(boolean enabled) {
