@@ -24,6 +24,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VAccordion extends VTabsheetBase implements
         ContainerResizedListener {
@@ -48,12 +49,16 @@ public class VAccordion extends VTabsheetBase implements
 
     private RenderInformation renderInformation = new RenderInformation();
 
+    private final TouchScrollHandler touchScrollHandler;
+
     public VAccordion() {
         super(CLASSNAME);
         // IE6 needs this to calculate offsetHeight correctly
         if (BrowserInfo.get().isIE6()) {
             DOM.setStyleAttribute(getElement(), "zoom", "1");
         }
+
+        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
 
     @Override
@@ -198,7 +203,6 @@ public class VAccordion extends VTabsheetBase implements
                 }
             }
         }
-
         if (!alreadyOpen) {
             item.open();
             activeTabIndex = itemIndex;
@@ -442,11 +446,15 @@ public class VAccordion extends VTabsheetBase implements
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
-            setStyleName(CLASSNAME + "-item");
-            DOM.setElementProperty(content, "className", CLASSNAME
-                    + "-item-content");
-            DOM.setElementProperty(captionNode, "className", CLASSNAME
-                    + "-item-caption");
+
+            getElement().addClassName(CLASSNAME + "-item");
+            captionNode.addClassName(CLASSNAME + "-item-caption");
+            content.addClassName(CLASSNAME + "-item-content");
+
+            touchScrollHandler.addElement(getContainerElement());
+
+            sinkEvents(Event.TOUCHEVENTS | Event.MOUSEEVENTS);
+
             close();
         }
 
@@ -640,6 +648,8 @@ public class VAccordion extends VTabsheetBase implements
     protected void removeTab(int index) {
         StackItem item = getStackItem(index);
         remove(item);
+
+        touchScrollHandler.addElement(item.getContainerElement());
     }
 
     @Override
