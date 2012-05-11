@@ -138,7 +138,21 @@ public class LayoutManager {
         }
     }-*/;
 
-    private static native final MeasuredSize getMeasuredSize(Element element,
+    /**
+     * Get the measured size of the given element. If no size is set, use the
+     * default size instead.
+     * 
+     * Method defined as protected to allow separate implementation for IE8
+     * (performance reason: storing any data in the DOM causes a reflow).
+     * 
+     * @param element
+     *            the dom element whose measured size to get
+     * @param defaultSize
+     *            a fallback size if the element doesn't have a measured size
+     *            stored
+     * @return
+     */
+    protected native MeasuredSize getMeasuredSize(Element element,
             MeasuredSize defaultSize)
     /*-{
         return element.vMeasuredSize || defaultSize;
