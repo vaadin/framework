@@ -169,7 +169,8 @@ PostLayoutListener {
             }
             slot.setExpandRatio(expandRatio);
 
-            if (slot.getSpacingElement() != null && needsExpand()) {
+            // TODO only needed if expand ratios are used
+            if (slot.getSpacingElement() != null) {
                 getLayoutManager().addElementResizeListener(
                         slot.getSpacingElement(), spacingResizeListener);
             } else if (slot.getSpacingElement() != null) {
