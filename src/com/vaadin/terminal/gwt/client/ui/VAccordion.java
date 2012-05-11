@@ -648,8 +648,7 @@ public class VAccordion extends VTabsheetBase implements
     protected void removeTab(int index) {
         StackItem item = getStackItem(index);
         remove(item);
-
-        touchScrollHandler.addElement(item.getContainerElement());
+        touchScrollHandler.removeElement(item.getContainerElement());
     }
 
     @Override
