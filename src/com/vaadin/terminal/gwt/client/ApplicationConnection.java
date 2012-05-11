@@ -102,8 +102,7 @@ public class ApplicationConnection {
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
 
-    private static SerializerMap serializerMap = GWT
-            .create(SerializerMap.class);
+    private static SerializerMap serializerMap;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -200,6 +199,7 @@ public class ApplicationConnection {
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
+        serializerMap = GWT.create(SerializerMap.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
