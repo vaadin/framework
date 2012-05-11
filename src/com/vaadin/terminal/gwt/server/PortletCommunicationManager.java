@@ -38,7 +38,7 @@ import com.vaadin.ui.Root;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    private transient ResourceResponse currentUidlResponse;
+    private transient MimeResponse currentMimeResponse;
 
     public PortletCommunicationManager(Application application) {
         super(application);
@@ -83,13 +83,25 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
+    protected boolean handleApplicationRequest(WrappedRequest request,
+            WrappedResponse response) throws IOException {
+        currentMimeResponse = (RenderResponse) ((WrappedPortletResponse) response)
+                .getPortletResponse();
+        try {
+            return super.handleApplicationRequest(request, response);
+        } finally {
+            currentMimeResponse = null;
+        }
+    }
+
+    @Override
     public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
-        currentUidlResponse = (ResourceResponse) ((WrappedPortletResponse) response)
+        currentMimeResponse = (ResourceResponse) ((WrappedPortletResponse) response)
                 .getPortletResponse();
         super.handleUidlRequest(request, response, callback, root);
-        currentUidlResponse = null;
+        currentMimeResponse = null;
     }
 
     private Map<Connector, Map<String, StreamVariable>> ownerToNameToStreamVariable;
@@ -107,13 +119,21 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             ownerToNameToStreamVariable.put(owner, nameToReceiver);
         }
         nameToReceiver.put(name, value);
-        ResourceURL resurl = currentUidlResponse.createResourceURL();
+        ResourceURL resurl = createResourceURL();
         resurl.setResourceID("UPLOAD");
         resurl.setParameter("name", name);
         resurl.setParameter("rec-owner", owner.getConnectorId());
         resurl.setProperty("name", name);
         resurl.setProperty("rec-owner", owner.getConnectorId());
         return resurl.toString();
+    }
+
+    private ResourceURL createResourceURL() {
+        if (currentMimeResponse == null) {
+            throw new RuntimeException(
+                    "No reponse object available. Cannot create a resource URL");
+        }
+        return currentMimeResponse.createResourceURL();
     }
 
     @Override
