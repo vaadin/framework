@@ -34,8 +34,8 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
 
     public FocusableScrollPanel() {
         // Prevent IE standard mode bug when a AbsolutePanel is contained.
+        TouchScrollDelegate.enableTouchScrolling(this, getElement());
         Style style = getElement().getStyle();
-        style.setOverflow(Overflow.AUTO);
         style.setProperty("zoom", "1");
         style.setPosition(Position.RELATIVE);
     }
@@ -162,7 +162,8 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
      *            the new vertical scroll position, in pixels
      */
     public void setScrollPosition(int position) {
-        if (BrowserInfo.get().isAndroidWithBrokenScrollTop()) {
+        if (BrowserInfo.get().isAndroidWithBrokenScrollTop()
+                && BrowserInfo.get().requiresTouchScrollDelegate()) {
             ArrayList<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
