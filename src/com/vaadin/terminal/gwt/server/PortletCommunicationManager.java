@@ -15,7 +15,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 
 import com.vaadin.Application;
@@ -85,8 +84,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     @Override
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
-        currentMimeResponse = (RenderResponse) ((WrappedPortletResponse) response)
-                .getPortletResponse();
+        setCurrentMimeReponse(response);
         try {
             return super.handleApplicationRequest(request, response);
         } finally {
@@ -94,14 +92,32 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         }
     }
 
+    private void setCurrentMimeReponse(WrappedResponse response) {
+        PortletResponse portletResponse = ((WrappedPortletResponse) response)
+                .getPortletResponse();
+        if (portletResponse instanceof MimeResponse) {
+            currentMimeResponse = (MimeResponse) portletResponse;
+        }
+
+    }
+
     @Override
     public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
-        currentMimeResponse = (ResourceResponse) ((WrappedPortletResponse) response)
-                .getPortletResponse();
+        setCurrentMimeReponse(response);
         super.handleUidlRequest(request, response, callback, root);
         currentMimeResponse = null;
+    }
+
+    @Override
+    public void handleBrowserDetailsRequest(WrappedRequest request,
+            WrappedResponse response, Application application)
+            throws IOException {
+        setCurrentMimeReponse(response);
+        super.handleBrowserDetailsRequest(request, response, application);
+        currentMimeResponse = null;
+
     }
 
     private Map<Connector, Map<String, StreamVariable>> ownerToNameToStreamVariable;
