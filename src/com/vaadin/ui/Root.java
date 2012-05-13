@@ -643,6 +643,10 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
+        if (getContent() == null) {
+            return Collections.EMPTY_LIST.iterator();
+        }
+
         return Collections.singleton((Component) getContent()).iterator();
     }
 
