@@ -9,17 +9,14 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.Paintable;
-import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
 import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
@@ -29,7 +26,7 @@ import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
 public abstract class AbstractOrderedLayoutConnector extends
-        AbstractLayoutConnector implements Paintable, DirectionalManagedLayout {
+        AbstractLayoutConnector implements DirectionalManagedLayout {
 
     AbstractOrderedLayoutServerRpc rpc;
 
@@ -100,35 +97,23 @@ public abstract class AbstractOrderedLayoutConnector extends
         return (VMeasuringOrderedLayout) super.getWidget();
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
         clickEventHandler.handleEventHandlerRegistration();
 
         VMeasuringOrderedLayout layout = getWidget();
 
-        ValueMap expandRatios = uidl.getMapAttribute("expandRatios");
-        ValueMap alignments = uidl.getMapAttribute("alignments");
-
         for (ComponentConnector child : getChildren()) {
             VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
-            String pid = child.getConnectorId();
 
-            AlignmentInfo alignment;
-            if (alignments.containsKey(pid)) {
-                alignment = new AlignmentInfo(alignments.getInt(pid));
-            } else {
-                alignment = AlignmentInfo.TOP_LEFT;
-            }
+            AlignmentInfo alignment = new AlignmentInfo(getState()
+                    .getChildData().get(child).getAlignmentBitmask());
             slot.setAlignment(alignment);
 
-            double expandRatio;
-            if (expandRatios.containsKey(pid)) {
-                expandRatio = expandRatios.getRawNumber(pid);
-            } else {
-                expandRatio = 0;
-            }
+            double expandRatio = getState().getChildData().get(child)
+                    .getExpandRatio();
             slot.setExpandRatio(expandRatio);
         }
 
