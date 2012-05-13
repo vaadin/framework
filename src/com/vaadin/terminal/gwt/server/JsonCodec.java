@@ -61,6 +61,7 @@ public class JsonCodec implements Serializable {
         registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
         registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
         registerType(Map.class, JsonEncoder.VTYPE_MAP);
+        registerType(HashMap.class, JsonEncoder.VTYPE_MAP);
         registerType(List.class, JsonEncoder.VTYPE_LIST);
         registerType(Set.class, JsonEncoder.VTYPE_SET);
     }
@@ -201,12 +202,8 @@ public class JsonCodec implements Serializable {
         } else if (JsonEncoder.VTYPE_SET.equals(transportType)) {
             return decodeSet(targetType, restrictToInternalTypes,
                     (JSONArray) encodedJsonValue, application);
-        } else if (JsonEncoder.VTYPE_MAP_CONNECTOR.equals(transportType)) {
-            return decodeConnectorToObjectMap(targetType,
-                    restrictToInternalTypes, (JSONObject) encodedJsonValue,
-                    application);
         } else if (JsonEncoder.VTYPE_MAP.equals(transportType)) {
-            return decodeStringToObjectMap(targetType, restrictToInternalTypes,
+            return decodeMap(targetType, restrictToInternalTypes,
                     (JSONObject) encodedJsonValue, application);
         }
 
@@ -262,37 +259,22 @@ public class JsonCodec implements Serializable {
         return false;
     }
 
-    @Deprecated
-    private static Map<String, Object> decodeStringToObjectMap(Type targetType,
+    private static Map<Object, Object> decodeMap(Type targetType,
             boolean restrictToInternalTypes, JSONObject jsonMap,
             Application application) throws JSONException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<Object, Object> map = new HashMap<Object, Object>();
+
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String key = it.next();
-            JSONArray encodedValueAndType = jsonMap.getJSONArray(key);
-            Object decodedChild = decodeChild(targetType,
-                    restrictToInternalTypes, 1, encodedValueAndType,
-                    application);
-            map.put(key, decodedChild);
-        }
-        return map;
-    }
+            JSONArray encodedKey = new JSONArray(key);
+            JSONArray encodedValue = jsonMap.getJSONArray(key);
 
-    @Deprecated
-    private static Map<Connector, Object> decodeConnectorToObjectMap(
-            Type targetType, boolean restrictToInternalTypes,
-            JSONObject jsonMap, Application application) throws JSONException {
-        HashMap<Connector, Object> map = new HashMap<Connector, Object>();
-        Iterator<String> it = jsonMap.keys();
-        while (it.hasNext()) {
-            String connectorId = it.next();
-            Connector connector = application.getConnector(connectorId);
-            JSONArray encodedValueAndType = jsonMap.getJSONArray(connectorId);
-            Object decodedChild = decodeChild(targetType,
-                    restrictToInternalTypes, 1, encodedValueAndType,
-                    application);
-            map.put(connector, decodedChild);
+            Object decodedKey = decodeParametrizedType(targetType,
+                    restrictToInternalTypes, 0, encodedKey, application);
+            Object decodedValue = decodeParametrizedType(targetType,
+                    restrictToInternalTypes, 1, encodedValue, application);
+            map.put(decodedKey, decodedValue);
         }
         return map;
     }
@@ -308,7 +290,7 @@ public class JsonCodec implements Serializable {
      * @return
      * @throws JSONException
      */
-    private static Object decodeChild(Type targetType,
+    private static Object decodeParametrizedType(Type targetType,
             boolean restrictToInternalTypes, int typeIndex,
             JSONArray encodedValueAndType, Application application)
             throws JSONException {
@@ -353,7 +335,7 @@ public class JsonCodec implements Serializable {
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
             JSONArray encodedValueAndType = jsonArray.getJSONArray(i);
-            Object decodedChild = decodeChild(targetType,
+            Object decodedChild = decodeParametrizedType(targetType,
                     restrictToInternalTypes, 0, encodedValueAndType,
                     application);
             list.add(decodedChild);
@@ -381,7 +363,7 @@ public class JsonCodec implements Serializable {
      * @return the name to be used or null if both getter and setter are not
      *         found.
      */
-    private static String getTransportFieldName(PropertyDescriptor pd) {
+    static String getTransportFieldName(PropertyDescriptor pd) {
         if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
             return null;
         }
@@ -476,16 +458,9 @@ public class JsonCodec implements Serializable {
             JSONArray jsonArray = encodeArrayContents(array, application);
             return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
         } else if (value instanceof Map) {
-            Map<Object, Object> map = (Map<Object, Object>) value;
-            JSONObject jsonMap = encodeMapContents(map, application);
-            // Hack to support Connector as map key. Should be fixed by #
-            if (!map.isEmpty()
-                    && map.keySet().iterator().next() instanceof Connector) {
-                return combineTypeAndValue(JsonEncoder.VTYPE_MAP_CONNECTOR,
-                        jsonMap);
-            } else {
-                return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
-            }
+            JSONObject jsonMap = encodeMap(valueType, (Map<?, ?>) value,
+                    application);
+            return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             if (value instanceof Component
@@ -611,22 +586,24 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static JSONObject encodeMapContents(Map<Object, Object> map,
+    private static JSONObject encodeMap(Type mapType, Map<?, ?> map,
             Application application) throws JSONException {
+        Type keyType, valueType;
+
+        if (mapType instanceof ParameterizedType) {
+            keyType = ((ParameterizedType) mapType).getActualTypeArguments()[0];
+            valueType = ((ParameterizedType) mapType).getActualTypeArguments()[1];
+        } else {
+            throw new JSONException("Map is missing generics");
+        }
+
         JSONObject jsonMap = new JSONObject();
         for (Object mapKey : map.keySet()) {
             Object mapValue = map.get(mapKey);
-
-            if (mapKey instanceof ClientConnector) {
-                mapKey = ((ClientConnector) mapKey).getConnectorId();
-            }
-            if (!(mapKey instanceof String)) {
-                throw new JSONException(
-                        "Only maps with String/Connector keys are currently supported (#8602)");
-            }
-
-            jsonMap.put((String) mapKey,
-                    encode(mapValue, null, null, application));
+            JSONArray encodedKey = encode(mapKey, null, keyType, application);
+            JSONArray encodedValue = encode(mapValue, null, valueType,
+                    application);
+            jsonMap.put(encodedKey.toString(), encodedValue);
         }
         return jsonMap;
     }
