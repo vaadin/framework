@@ -210,8 +210,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private boolean enableDebug = false;
 
-    private final static boolean requiresTouchScrollDelegate = BrowserInfo
-            .get().requiresTouchScrollDelegate();
+    private static final boolean hasNativeTouchScrolling = BrowserInfo.get()
+            .isTouchDevice()
+            && !BrowserInfo.get().requiresTouchScrollDelegate();
 
     /**
      * Represents a select range of rows
@@ -5224,7 +5225,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             @Override
             public void onBrowserEvent(final Event event) {
 
-                if (!requiresTouchScrollDelegate) {
+                if (hasNativeTouchScrolling) {
                     onTouchBrowserEvent(event);
                     return;
                 }
