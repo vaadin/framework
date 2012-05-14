@@ -855,7 +855,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                             "Failed to serialize shared state for connector "
                                     + connector.getClass().getName() + " ("
                                     + connector.getConnectorId() + "): "
-                                    + e.getMessage());
+                                    + e.getMessage(), e);
                 }
             }
         }
@@ -876,7 +876,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 throw new PaintException(
                         "Failed to send connector type for connector "
                                 + connector.getConnectorId() + ": "
-                                + e.getMessage());
+                                + e.getMessage(), e);
             }
         }
         outWriter.print("\"types\":");
@@ -910,7 +910,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     throw new PaintException(
                             "Failed to send hierarchy information about "
                                     + parentConnectorId + " to the client: "
-                                    + e.getMessage());
+                                    + e.getMessage(), e);
                 }
             }
         }
@@ -961,7 +961,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                 + invocation.getConnector().getConnectorId()
                                 + " method " + invocation.getInterfaceName()
                                 + "." + invocation.getMethodName() + ": "
-                                + e.getMessage());
+                                + e.getMessage(), e);
             }
 
         }
