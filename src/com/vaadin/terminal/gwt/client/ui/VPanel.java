@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -159,44 +160,33 @@ public class VPanel extends SimplePanel implements Container,
         if (!uidl.hasAttribute("cached")) {
 
             // Handle caption displaying and style names, prior generics.
-            // Affects size
-            // calculations
+            // Affects size calculations
+
+            final boolean hasCaption = uidl.hasAttribute("caption")
+                    && !uidl.getStringAttribute("caption").equals("");
+
+            setCaption(hasCaption ? uidl.getStringAttribute("caption") : "");
 
             // Restore default stylenames
-            contentNode.setClassName(CLASSNAME + "-content");
-            bottomDecoration.setClassName(CLASSNAME + "-deco");
-            captionNode.setClassName(CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (uidl.hasAttribute("caption")
-                    && !uidl.getStringAttribute("caption").equals("")) {
-                setCaption(uidl.getStringAttribute("caption"));
-                hasCaption = true;
-            } else {
-                setCaption("");
-                captionNode.setClassName(CLASSNAME + "-nocaption");
-            }
+            final String captionBaseClass = CLASSNAME
+                    + (hasCaption ? "-caption" : "-nocaption");
+            final String contentBaseClass = CLASSNAME + "-content";
+            final String decoBaseClass = CLASSNAME + "-deco";
+
+            captionNode.addClassName(captionBaseClass);
+            contentNode.addClassName(contentBaseClass);
+            bottomDecoration.addClassName(decoBaseClass);
 
             // Add proper stylenames for all elements. This way we can prevent
             // unwanted CSS selector inheritance.
             if (uidl.hasAttribute("style")) {
                 final String[] styles = uidl.getStringAttribute("style").split(
                         " ");
-                final String captionBaseClass = CLASSNAME
-                        + (hasCaption ? "-caption" : "-nocaption");
-                final String contentBaseClass = CLASSNAME + "-content";
-                final String decoBaseClass = CLASSNAME + "-deco";
-                String captionClass = captionBaseClass;
-                String contentClass = contentBaseClass;
-                String decoClass = decoBaseClass;
-                for (int i = 0; i < styles.length; i++) {
-                    captionClass += " " + captionBaseClass + "-" + styles[i];
-                    contentClass += " " + contentBaseClass + "-" + styles[i];
-                    decoClass += " " + decoBaseClass + "-" + styles[i];
+                for (String style : styles) {
+                    captionNode.addClassName(captionBaseClass + "-" + style);
+                    contentNode.addClassName(contentBaseClass + "-" + style);
+                    bottomDecoration.addClassName(decoBaseClass + "-" + style);
                 }
-                captionNode.setClassName(captionClass);
-                contentNode.setClassName(contentClass);
-                bottomDecoration.setClassName(decoClass);
-
             }
         }
         // Ensure correct implementation
@@ -509,12 +499,13 @@ public class VPanel extends SimplePanel implements Container,
     }
 
     private void detectContainerBorders() {
-        DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+        Style contentStyle = contentNode.getStyle();
+        String overflow = contentStyle.getProperty("overflow");
 
+        contentStyle.setProperty("overflow", "hidden");
         borderPaddingHorizontal = Util.measureHorizontalBorder(contentNode);
         borderPaddingVertical = Util.measureVerticalBorder(contentNode);
-
-        DOM.setStyleAttribute(contentNode, "overflow", "auto");
+        contentStyle.setProperty("overflow", overflow);
 
         captionPaddingHorizontal = Util.measureHorizontalPaddingAndBorder(
                 captionNode, 26);
