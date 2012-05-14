@@ -448,9 +448,10 @@ public class BrowserInfo {
         if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
             return false;
         }
-        if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
-            return false;
-        }
+        // Cannot enable native touch scrolling on iOS 5 until #8792 is resolved
+        // if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
+        // return false;
+        // }
         return true;
     }
 
