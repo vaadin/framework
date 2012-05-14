@@ -318,8 +318,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             layout = lo;
         }
 
+        boolean childLayoutCached = childUidl.getBooleanAttribute("cached");
+
+        if (!childLayoutCached) {
+            // Liferay #5521: update portlet-body element size
+            updateLiferayPortletBodySize(childUidl);
+        }
+
         layout.updateFromUIDL(childUidl, client);
-        if (!childUidl.getBooleanAttribute("cached")) {
+        if (!childLayoutCached) {
             updateParentFrameSize();
         }
 
@@ -418,6 +425,35 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         scrollIntoView(uidl);
 
         rendering = false;
+    }
+
+    private void updateLiferayPortletBodySize(UIDL childUidl) {
+        // Liferay #5521: update portlet-body element size
+        Element parentOfVApp = getElement().getParentElement()
+                .getParentElement();
+        if (parentOfVApp != null
+                && parentOfVApp.getClassName().contains("portlet-body")) {
+            // portlet-body needs to get size 100% if e.g. in a freeform
+            // layout or otherwise in a situation where the application
+            // layout size is specified as a percentage
+            for (String direction : new String[] { "height", "width" }) {
+                if (childUidl.hasAttribute(direction)
+                        && childUidl.getStringAttribute(direction)
+                                .contains("%")) {
+                    // if layout has a percentual size, set portlet body size
+                    // as percentual
+                    if ("".equals(parentOfVApp.getStyle()
+                            .getProperty(direction))) {
+                        parentOfVApp.getStyle().setProperty(direction, "100%");
+                    }
+                } else if (parentOfVApp.getStyle().getHeight().contains("%")) {
+                    // if layout size is undefined or fixed and we have set a
+                    // percentual size for portlet-body, remove size setting on
+                    // portlet body
+                    parentOfVApp.getStyle().setProperty(direction, "");
+                }
+            }
+        }
     }
 
     /**
