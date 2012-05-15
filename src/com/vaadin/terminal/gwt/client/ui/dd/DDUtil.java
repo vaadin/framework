@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class DDUtil {
@@ -43,8 +44,11 @@ public class DDUtil {
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int offsetHeight, int clientY, double topBottomRatio) {
 
-        int absoluteTop = element.getAbsoluteTop();
-        int fromTop = clientY - absoluteTop;
+        // Event coordinates are relative to the viewport, element absolute
+        // position is relative to the document. Make element position relative
+        // to viewport by adjusting for viewport scrolling. See #6021
+        int elementTop = element.getAbsoluteTop() - Window.getScrollTop();
+        int fromTop = clientY - elementTop;
 
         float percentageFromTop = (fromTop / (float) offsetHeight);
         if (percentageFromTop < topBottomRatio) {
@@ -74,11 +78,14 @@ public class DDUtil {
     public static HorizontalDropLocation getHorizontalDropLocation(
             Element element, int clientX, double leftRightRatio) {
 
-        int absoluteLeft = element.getAbsoluteLeft();
+        // Event coordinates are relative to the viewport, element absolute
+        // position is relative to the document. Make element position relative
+        // to viewport by adjusting for viewport scrolling. See #6021
+        int elementLeft = element.getAbsoluteLeft() - Window.getScrollLeft();
         int offsetWidth = element.getOffsetWidth();
-        int fromTop = clientX - absoluteLeft;
+        int fromLeft = clientX - elementLeft;
 
-        float percentageFromTop = (fromTop / (float) offsetWidth);
+        float percentageFromTop = (fromLeft / (float) offsetWidth);
         if (percentageFromTop < leftRightRatio) {
             return HorizontalDropLocation.LEFT;
         } else if (percentageFromTop > 1 - leftRightRatio) {
