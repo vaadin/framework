@@ -446,7 +446,8 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                             .getProperty(direction))) {
                         parentOfVApp.getStyle().setProperty(direction, "100%");
                     }
-                } else if (parentOfVApp.getStyle().getHeight().contains("%")) {
+                } else if (parentOfVApp.getStyle().getProperty(direction)
+                        .contains("%")) {
                     // if layout size is undefined or fixed and we have set a
                     // percentual size for portlet-body, remove size setting on
                     // portlet body
