@@ -36,6 +36,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VSplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
@@ -146,6 +147,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
     /* The current position of the split handle in either percentages or pixels */
     private String position;
 
+    private final TouchScrollHandler touchScrollHandler;
+
     protected Element scrolledContainer;
 
     protected int origScrollTop;
@@ -173,8 +176,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setOrientation(orientation);
         sinkEvents(Event.MOUSEEVENTS);
 
-        TouchScrollDelegate.enableTouchScrolling(this, firstContainer,
-                secondContainer);
+        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this,
+                firstContainer, secondContainer);
 
         addDomHandler(new TouchCancelHandler() {
             public void onTouchCancel(TouchCancelEvent event) {
@@ -264,6 +267,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         setPositionReversed(uidl.getBooleanAttribute("reversed"));
 
         setStylenames();
+
+        // Ensure panels are still scrollable
+        touchScrollHandler.setElements(firstContainer, secondContainer);
 
         position = uidl.getStringAttribute("position");
         setSplitPosition(position);
@@ -803,9 +809,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
         final String secondContainerClass = CLASSNAME + "-second-container";
         final String lockedSuffix = locked ? "-locked" : "";
 
-        splitter.addClassName(splitterClass);
-        firstContainer.addClassName(firstContainerClass);
-        secondContainer.addClassName(secondContainerClass);
+        splitter.setClassName(splitterClass + lockedSuffix);
+        firstContainer.setClassName(firstContainerClass);
+        secondContainer.setClassName(secondContainerClass);
 
         for (String styleName : componentStyleNames) {
             splitter.addClassName(splitterClass + "-" + styleName

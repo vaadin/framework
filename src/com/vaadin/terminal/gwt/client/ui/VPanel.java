@@ -27,6 +27,7 @@ import com.vaadin.terminal.gwt.client.RenderSpace;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VPanel extends SimplePanel implements Container,
         ShortcutActionHandlerOwner, Focusable {
@@ -80,6 +81,8 @@ public class VPanel extends SimplePanel implements Container,
 
     private String previousStyleName;
 
+    private final TouchScrollHandler touchScrollHandler;
+
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             CLICK_EVENT_IDENTIFIER) {
 
@@ -119,7 +122,8 @@ public class VPanel extends SimplePanel implements Container,
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
 
-        TouchScrollDelegate.enableTouchScrolling(this, contentNode);
+        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this,
+                contentNode);
     }
 
     /**
@@ -173,9 +177,9 @@ public class VPanel extends SimplePanel implements Container,
             final String contentBaseClass = CLASSNAME + "-content";
             final String decoBaseClass = CLASSNAME + "-deco";
 
-            captionNode.addClassName(captionBaseClass);
-            contentNode.addClassName(contentBaseClass);
-            bottomDecoration.addClassName(decoBaseClass);
+            captionNode.setClassName(captionBaseClass);
+            contentNode.setClassName(contentBaseClass);
+            bottomDecoration.setClassName(decoBaseClass);
 
             // Add proper stylenames for all elements. This way we can prevent
             // unwanted CSS selector inheritance.
@@ -188,6 +192,9 @@ public class VPanel extends SimplePanel implements Container,
                     bottomDecoration.addClassName(decoBaseClass + "-" + style);
                 }
             }
+
+            // Ensure panel is still scrollable
+            touchScrollHandler.addElement(contentNode);
         }
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
