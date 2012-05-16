@@ -85,10 +85,10 @@ public class DDUtil {
         int offsetWidth = element.getOffsetWidth();
         int fromLeft = clientX - elementLeft;
 
-        float percentageFromTop = (fromLeft / (float) offsetWidth);
-        if (percentageFromTop < leftRightRatio) {
+        float percentageFromLeft = (fromLeft / (float) offsetWidth);
+        if (percentageFromLeft < leftRightRatio) {
             return HorizontalDropLocation.LEFT;
-        } else if (percentageFromTop > 1 - leftRightRatio) {
+        } else if (percentageFromLeft > 1 - leftRightRatio) {
             return HorizontalDropLocation.RIGHT;
         } else {
             return HorizontalDropLocation.CENTER;
