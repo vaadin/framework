@@ -725,25 +725,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         Tab newTab = tabs.get(newComponent);
         Tab oldTab = tabs.get(oldComponent);
 
-        // Gets the captions
-        String oldCaption = null;
-        Resource oldIcon = null;
-        String newCaption = null;
-        Resource newIcon = null;
-
-        if (oldTab != null) {
-            oldCaption = oldTab.getCaption();
-            oldIcon = oldTab.getIcon();
-        }
-
-        if (newTab != null) {
-            newCaption = newTab.getCaption();
-            newIcon = newTab.getIcon();
-        } else {
-            newCaption = newComponent.getCaption();
-            newIcon = newComponent.getIcon();
-        }
-
         // Gets the locations
         int oldLocation = -1;
         int newLocation = -1;
@@ -765,35 +746,21 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             addComponent(newComponent);
         } else if (newLocation == -1) {
             removeComponent(oldComponent);
-            keyMapper.remove(oldComponent);
-            newTab = addTab(newComponent);
-            components.remove(newComponent);
-            components.add(oldLocation, newComponent);
-            newTab.setCaption(oldCaption);
-            newTab.setIcon(oldIcon);
+            newTab = addTab(newComponent, oldLocation);
+            // Copy all relevant metadata to the new tab (#8793)
+            // TODO Should reuse the old tab instance instead?
+            copyTabMetadata(oldTab, newTab);
         } else {
-            if (oldLocation > newLocation) {
-                components.remove(oldComponent);
-                components.add(newLocation, oldComponent);
-                components.remove(newComponent);
-                components.add(oldLocation, newComponent);
-            } else {
-                components.remove(newComponent);
-                components.add(oldLocation, newComponent);
-                components.remove(oldComponent);
-                components.add(newLocation, oldComponent);
-            }
+            components.set(oldLocation, newComponent);
+            components.set(newLocation, oldComponent);
 
-            if (newTab != null) {
-                // This should always be true
-                newTab.setCaption(oldCaption);
-                newTab.setIcon(oldIcon);
-            }
-            if (oldTab != null) {
-                // This should always be true
-                oldTab.setCaption(newCaption);
-                oldTab.setIcon(newIcon);
-            }
+            // Tab associations are not changed, but metadata is swapped between
+            // the instances
+            // TODO Should reassociate the instances instead?
+            Tab tmp = new TabSheetTabImpl(null, null);
+            copyTabMetadata(newTab, tmp);
+            copyTabMetadata(oldTab, newTab);
+            copyTabMetadata(tmp, oldTab);
 
             requestRepaint();
         }
@@ -1302,5 +1269,24 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
+    }
+
+    /**
+     * Copies properties from one Tab to another.
+     * 
+     * @param from
+     *            The tab whose data to copy.
+     * @param to
+     *            The tab to which copy the data.
+     */
+    private static void copyTabMetadata(Tab from, Tab to) {
+        to.setCaption(from.getCaption());
+        to.setIcon(from.getIcon());
+        to.setDescription(from.getDescription());
+        to.setVisible(from.isVisible());
+        to.setEnabled(from.isEnabled());
+        to.setClosable(from.isClosable());
+        to.setStyleName(from.getStyleName());
+        to.setComponentError(from.getComponentError());
     }
 }
