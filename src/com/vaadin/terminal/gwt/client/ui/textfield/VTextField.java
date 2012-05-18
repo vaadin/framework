@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui.textfield;
 
-import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -60,21 +59,19 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      */
     private boolean valueBeforeEditIsSynced = true;
 
-    protected boolean immediate = false;
+    private boolean immediate = false;
     private int maxLength = -1;
 
     private static final String CLASSNAME_PROMPT = "prompt";
-    protected static final String ATTR_INPUTPROMPT = "prompt";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
     public static final String VAR_CURSOR = "c";
     public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
     protected static final String TEXTCHANGE_MODE_EAGER = "EAGER";
     private static final String TEXTCHANGE_MODE_TIMEOUT = "TIMEOUT";
 
-    protected String inputPrompt = null;
+    private String inputPrompt = null;
     private boolean prompting = false;
     private int lastCursorPos = -1;
-    private boolean wordwrap = true;
 
     public VTextField() {
         this(DOM.createInputText());
@@ -264,20 +261,18 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     protected void setMaxLength(int newMaxLength) {
         if (newMaxLength >= 0) {
             maxLength = newMaxLength;
-            if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlength property for textarea
-            } else {
-                getElement().setPropertyInt("maxLength", maxLength);
-            }
-        } else if (maxLength != -1) {
-            if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlength property for textarea
-            } else {
-                getElement().removeAttribute("maxLength");
-            }
+        } else {
             maxLength = -1;
         }
+        setMaxLengthToElement(newMaxLength);
+    }
 
+    protected void setMaxLengthToElement(int newMaxLength) {
+        if (newMaxLength >= 0) {
+            getElement().setPropertyInt("maxLength", newMaxLength);
+        } else {
+            getElement().removeAttribute("maxLength");
+        }
     }
 
     public int getMaxLength() {
@@ -390,48 +385,11 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     }
 
     public void setColumns(int columns) {
-        setColumns(getElement(), columns);
-    }
-
-    private native void setColumns(Element e, int c)
-    /*-{
-    try {
-    	switch(e.tagName.toLowerCase()) {
-    		case "input":
-    			//e.size = c;
-    			e.style.width = c+"em";
-    			break;
-    		case "textarea":
-    			//e.cols = c;
-    			e.style.width = c+"em";
-    			break;
-    		default:;
-    	}
-    } catch (e) {}
-    }-*/;
-
-    // Here for backward compatibility; to be moved to TextArea
-    public void setWordwrap(boolean enabled) {
-        if (enabled == wordwrap) {
-            return; // No change
+        if (columns <= 0) {
+            return;
         }
 
-        if (enabled) {
-            getElement().removeAttribute("wrap");
-            getElement().getStyle().clearOverflow();
-        } else {
-            getElement().setAttribute("wrap", "off");
-            getElement().getStyle().setOverflow(Overflow.AUTO);
-        }
-        if (BrowserInfo.get().isSafari4()) {
-            // Force redraw as Safari 4 does not properly update the screen
-            Util.forceWebkitRedraw(getElement());
-        } else if (BrowserInfo.get().isOpera()) {
-            // Opera fails to dynamically update the wrap attribute so we detach
-            // and reattach the whole TextArea.
-            Util.detachAttach(getElement());
-        }
-        wordwrap = enabled;
+        setWidth(columns + "em");
     }
 
     public void onKeyDown(KeyDownEvent event) {
@@ -439,4 +397,13 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             valueChange(false);
         }
     }
+
+    public void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    public void setInputPrompt(String inputPrompt) {
+        this.inputPrompt = inputPrompt;
+    }
+
 }

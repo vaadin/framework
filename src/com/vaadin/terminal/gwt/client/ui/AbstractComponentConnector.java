@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
@@ -28,9 +27,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private ComponentContainerConnector parent;
 
     private Widget widget;
-
-    // shared state from the server to the client
-    private ComponentState state;
 
     private String lastKnownWidth = "";
     private String lastKnownHeight = "";
@@ -47,7 +43,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * 
      * @return
      */
-    protected abstract Widget createWidget();
+    protected Widget createWidget() {
+        return ConnectorWidgetFactory.createWidget(getClass());
+    }
 
     /**
      * Returns the widget associated with this paintable. The widget returned by
@@ -63,21 +61,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return widget;
     }
 
-    /**
-     * Returns the shared state object for this connector.
-     * 
-     * If overriding this method to return a more specific type, also
-     * {@link #createState()} must be overridden.
-     * 
-     * @return current shared state (not null)
-     */
-    public ComponentState getState() {
-        return state;
-    }
-
     @Deprecated
     public static boolean isRealUpdate(UIDL uidl) {
         return !uidl.hasAttribute("cached");
+    }
+
+    @Override
+    public ComponentState getState() {
+        return (ComponentState) super.getState();
     }
 
     @Override
@@ -97,8 +88,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state.
          */
-        if (state instanceof TabIndexState && getWidget() instanceof Focusable) {
-            ((Focusable) getWidget()).setTabIndex(((TabIndexState) state)
+        if (getState() instanceof TabIndexState
+                && getWidget() instanceof Focusable) {
+            ((Focusable) getWidget()).setTabIndex(((TabIndexState) getState())
                     .getTabIndex());
         }
 
@@ -286,17 +278,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Deprecated
     public boolean isReadOnly() {
         return getState().isReadOnly();
-    }
-
-    /**
-     * Sets the shared state for the paintable widget.
-     * 
-     * @param new shared state (must be compatible with the return value of
-     *        {@link #getState()} - {@link ComponentState} if
-     *        {@link #getState()} is not overridden
-     */
-    public final void setState(SharedState state) {
-        this.state = (ComponentState) state;
     }
 
     public LayoutManager getLayoutManager() {

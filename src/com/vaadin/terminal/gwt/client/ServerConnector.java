@@ -8,7 +8,6 @@ import java.util.Collection;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 /**
@@ -21,21 +20,6 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * @since 7.0.0
  */
 public interface ServerConnector extends Connector {
-
-    /**
-     * Sets a new state for the connector.
-     * 
-     * @param state
-     *            The new state
-     * @deprecated This should be removed. Framework should update what is
-     *             returned by getState() instead of setting a new state object.
-     *             Note that this must be done either so that setState accepts a
-     *             state object once (first time received from the server) or
-     *             getState() in AbstractConnector uses a generated class to
-     *             create the state object (like RpcProy.craete())
-     */
-    @Deprecated
-    public void setState(SharedState state);
 
     /**
      * Gets ApplicationConnection instance that created this connector.

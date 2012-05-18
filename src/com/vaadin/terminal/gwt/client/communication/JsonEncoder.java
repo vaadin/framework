@@ -42,10 +42,6 @@ public class JsonEncoder {
     public static final String VTYPE_ARRAY = "a";
     public static final String VTYPE_STRINGARRAY = "S";
     public static final String VTYPE_MAP = "m";
-    // Hack to support Map<Connector,?>. Should be replaced by generic support
-    // for any object as key (#8602)
-    @Deprecated
-    public static final String VTYPE_MAP_CONNECTOR = "M";
     public static final String VTYPE_LIST = "L";
     public static final String VTYPE_SET = "q";
     public static final String VTYPE_NULL = "n";
@@ -61,7 +57,8 @@ public class JsonEncoder {
      * @param connection
      * @return JSON representation of the value
      */
-    public static JSONValue encode(Object value, ConnectorMap connectorMap,
+    public static JSONValue encode(Object value,
+            boolean restrictToInternalTypes, ConnectorMap connectorMap,
             ApplicationConnection connection) {
         if (null == value) {
             return combineTypeAndValue(VTYPE_NULL, JSONNull.getInstance());
@@ -79,35 +76,28 @@ public class JsonEncoder {
             return combineTypeAndValue(VTYPE_BOOLEAN,
                     JSONBoolean.getInstance((Boolean) value));
         } else if (value instanceof Object[]) {
-            return encodeObjectArray((Object[]) value, connectorMap, connection);
-        } else if (value instanceof Map) {
-            Map<Object, Object> map = (Map<Object, Object>) value;
-            JSONObject jsonMap = new JSONObject();
-            String type = VTYPE_MAP;
-            for (Object mapKey : map.keySet()) {
-                Object mapValue = map.get(mapKey);
-                if (mapKey instanceof Connector) {
-                    mapKey = ((Connector) mapKey).getConnectorId();
-                    type = VTYPE_MAP_CONNECTOR;
-                }
-
-                if (!(mapKey instanceof String)) {
-                    throw new RuntimeException(
-                            "Only Map<String,?> and Map<Connector,?> is currently supported."
-                                    + " Failed map used "
-                                    + mapKey.getClass().getName() + " as keys");
-                }
-                jsonMap.put((String) mapKey,
-                        encode(mapValue, connectorMap, connection));
+            return encodeObjectArray((Object[]) value, restrictToInternalTypes,
+                    connectorMap, connection);
+        } else if (value instanceof Enum) {
+            if (restrictToInternalTypes) {
+                // Enums are encoded as strings in Vaadin 6 so we still do that
+                // for backwards copmatibility.
+                return encode(value.toString(), restrictToInternalTypes,
+                        connectorMap, connection);
+            } else {
+                Enum e = (Enum) value;
+                return encodeEnum(e, connectorMap, connection);
             }
-            return combineTypeAndValue(type, jsonMap);
+        } else if (value instanceof Map) {
+            return encodeMap((Map) value, restrictToInternalTypes,
+                    connectorMap, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return combineTypeAndValue(VTYPE_CONNECTOR, new JSONString(
                     connector.getConnectorId()));
         } else if (value instanceof Collection) {
-            return encodeCollection((Collection) value, connectorMap,
-                    connection);
+            return encodeCollection((Collection) value,
+                    restrictToInternalTypes, connectorMap, connection);
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
@@ -117,7 +107,7 @@ public class JsonEncoder {
                 // Try to find a generated serializer object, class name is the
                 // type
                 transportType = value.getClass().getName();
-                JSONSerializer serializer = JsonDecoder.serializerMap
+                JSONSerializer serializer = connection.getSerializerMap()
                         .getSerializer(transportType);
 
                 // TODO handle case with no serializer found
@@ -127,22 +117,49 @@ public class JsonEncoder {
         }
     }
 
+    private static JSONValue encodeMap(Map<Object, Object> map,
+            boolean restrictToInternalTypes, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
+        JSONObject jsonMap = new JSONObject();
+        for (Object mapKey : map.keySet()) {
+            Object mapValue = map.get(mapKey);
+            JSONValue encodedKey = encode(mapKey, restrictToInternalTypes,
+                    connectorMap, connection);
+            JSONValue encodedValue = encode(mapValue, restrictToInternalTypes,
+                    connectorMap, connection);
+            jsonMap.put(encodedKey.toString(), encodedValue);
+        }
+        return combineTypeAndValue(VTYPE_MAP, jsonMap);
+    }
+
+    private static JSONValue encodeEnum(Enum e, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
+        return combineTypeAndValue(e.getClass().getName(),
+                new JSONString(e.toString()));
+    }
+
     private static JSONValue encodeObjectArray(Object[] array,
-            ConnectorMap connectorMap, ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array.length; ++i) {
             // TODO handle object graph loops?
-            jsonArray.set(i, encode(array[i], connectorMap, connection));
+            jsonArray.set(
+                    i,
+                    encode(array[i], restrictToInternalTypes, connectorMap,
+                            connection));
         }
         return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
     }
 
     private static JSONValue encodeCollection(Collection collection,
-            ConnectorMap connectorMap, ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         int idx = 0;
         for (Object o : collection) {
-            JSONValue encodedObject = encode(o, connectorMap, connection);
+            JSONValue encodedObject = encode(o, restrictToInternalTypes,
+                    connectorMap, connection);
             jsonArray.set(idx++, encodedObject);
         }
         if (collection instanceof Set) {
@@ -193,8 +210,6 @@ public class JsonEncoder {
             return VTYPE_LIST;
         } else if (value instanceof Set) {
             return VTYPE_SET;
-        } else if (value instanceof Enum) {
-            return VTYPE_STRING; // transported as string representation
         } else if (value instanceof String[]) {
             return VTYPE_STRINGARRAY;
         } else if (value instanceof Object[]) {

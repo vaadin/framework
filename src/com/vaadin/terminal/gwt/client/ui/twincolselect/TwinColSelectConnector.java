@@ -4,8 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui.twincolselect;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -39,11 +37,6 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
     public void onUnregister() {
         getLayoutManager().unregisterDependency(this,
                 getWidget().captionWrapper.getElement());
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTwinColSelect.class);
     }
 
     @Override

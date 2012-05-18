@@ -1,5 +1,6 @@
 package com.vaadin.tests.layouts;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -9,7 +10,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;

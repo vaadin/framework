@@ -1,5 +1,7 @@
 package com.vaadin.tests.integration;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -18,16 +20,18 @@ import javax.portlet.WindowState;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.Receiver;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
@@ -66,6 +70,14 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
         main.addComponent(portletEdit);
         portletMax.setEnabled(false);
         main.addComponent(portletMax);
+
+        Upload upload = new Upload("Upload a file", new Receiver() {
+
+            public OutputStream receiveUpload(String filename, String mimeType) {
+                return new ByteArrayOutputStream();
+            }
+        });
+        main.addComponent(upload);
 
         if (getContext() instanceof PortletApplicationContext2) {
             PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();

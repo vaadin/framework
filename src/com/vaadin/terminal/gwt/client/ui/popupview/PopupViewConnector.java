@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.popupview;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -104,11 +102,6 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
     @Override
     public VPopupView getWidget() {
         return (VPopupView) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VPopupView.class);
     }
 
     public void postLayout() {

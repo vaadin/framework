@@ -18,13 +18,13 @@ import java.lang.management.MemoryMXBean;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.StreamResource;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;

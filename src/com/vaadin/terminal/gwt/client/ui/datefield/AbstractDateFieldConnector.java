@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -95,11 +93,6 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         } else {
             getWidget().setCurrentDate(null);
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VDateField.class);
     }
 
     @Override

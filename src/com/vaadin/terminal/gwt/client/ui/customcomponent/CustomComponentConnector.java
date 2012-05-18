@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.customcomponent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
@@ -15,11 +13,6 @@ import com.vaadin.ui.CustomComponent;
 @Connect(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponentConnector extends
         AbstractComponentContainerConnector {
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VCustomComponent.class);
-    }
 
     @Override
     public VCustomComponent getWidget() {

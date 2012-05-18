@@ -3,33 +3,28 @@
  */
 package com.vaadin.terminal.gwt.client.ui.video;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.URLReference;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
 import com.vaadin.ui.Video;
 
 @Connect(Video.class)
 public class VideoConnector extends MediaBaseConnector {
-    public static final String ATTR_POSTER = "poster";
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-        super.updateFromUIDL(uidl, client);
-        setPosterFromUIDL(uidl);
+    public VideoState getState() {
+        return (VideoState) super.getState();
     }
 
-    private void setPosterFromUIDL(UIDL uidl) {
-        if (uidl.hasAttribute(ATTR_POSTER)) {
-            getWidget().setPoster(
-                    getConnection().translateVaadinUri(
-                            uidl.getStringAttribute(ATTR_POSTER)));
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        URLReference poster = getState().getPoster();
+        if (poster != null) {
+            getWidget().setPoster(poster.getURL());
+        } else {
+            getWidget().setPoster(null);
         }
     }
 
@@ -39,8 +34,8 @@ public class VideoConnector extends MediaBaseConnector {
     }
 
     @Override
-    protected Widget createWidget() {
-        return GWT.create(VVideo.class);
+    protected String getDefaultAltHtml() {
+        return "Your browser does not support the <code>video</code> element.";
     }
 
 }

@@ -5,9 +5,9 @@ import com.vaadin.annotations.EagerInit;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Root;
 

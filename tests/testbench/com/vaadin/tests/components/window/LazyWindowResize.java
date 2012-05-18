@@ -2,12 +2,12 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 import com.vaadin.ui.Root.BrowserWindowResizeListener;
 import com.vaadin.ui.Root.LegacyWindow;

@@ -12,8 +12,8 @@ import com.vaadin.ui.VerticalSplitPanel;
 public class VerticalSplitPanelConnector extends AbstractSplitPanelConnector {
 
     @Override
-    protected VAbstractSplitPanel createWidget() {
-        return GWT.create(VSplitPanelVertical.class);
+    public VSplitPanelVertical getWidget() {
+        return (VSplitPanelVertical) super.getWidget();
     }
 
 }

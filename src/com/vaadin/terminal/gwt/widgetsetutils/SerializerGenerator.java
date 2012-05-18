@@ -16,12 +16,16 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JEnumConstant;
+import com.google.gwt.core.ext.typeinfo.JEnumType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -89,6 +93,8 @@ public class SerializerGenerator extends Generator {
         if (printWriter == null) {
             return;
         }
+        boolean isEnum = (beanType.isEnum() != null);
+
         Date date = new Date();
         TypeOracle typeOracle = context.getTypeOracle();
         String beanQualifiedSourceName = beanType.getQualifiedSourceName();
@@ -106,7 +112,8 @@ public class SerializerGenerator extends Generator {
         composer.addImport(JsonDecoder.class.getName());
         // composer.addImport(VaadinSerializer.class.getName());
 
-        composer.addImplementedInterface(JSONSerializer.class.getName());
+        composer.addImplementedInterface(JSONSerializer.class.getName() + "<"
+                + beanQualifiedSourceName + ">");
 
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
@@ -116,81 +123,36 @@ public class SerializerGenerator extends Generator {
 
         // public JSONValue serialize(Object value, ConnectorMap idMapper,
         // ApplicationConnection connection) {
-        sourceWriter.println("public " + JSONObject.class.getName()
-                + " serialize(" + Object.class.getName() + " value, "
+        sourceWriter.println("public " + JSONValue.class.getName()
+                + " serialize(" + beanQualifiedSourceName + " value, "
                 + ConnectorMap.class.getName() + " idMapper, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
         // MouseEventDetails castedValue = (MouseEventDetails) value;
         sourceWriter.println(beanQualifiedSourceName + " castedValue = ("
                 + beanQualifiedSourceName + ") value;");
-        // JSONObject json = new JSONObject();
-        sourceWriter.println(JSONObject.class.getName() + " json = new "
-                + JSONObject.class.getName() + "();");
 
-        for (JMethod setterMethod : getSetters(beanType)) {
-            String setterName = setterMethod.getName();
-            String fieldName = setterName.substring(3); // setZindex() -> ZIndex
-            String getterName = findGetter(beanType, setterMethod);
-
-            if (getterName == null) {
-                logger.log(TreeLogger.ERROR, "No getter found for " + fieldName
-                        + ". Serialization will likely fail");
-            }
-            // json.put("button",
-            // JsonEncoder.encode(castedValue.getButton(), idMapper,
-            // connection));
-            sourceWriter.println("json.put(\"" + fieldName + "\", "
-                    + JsonEncoder.class.getName() + ".encode(castedValue."
-                    + getterName + "(), idMapper, connection));");
+        if (isEnum) {
+            writeEnumSerializer(logger, sourceWriter, beanType);
+        } else {
+            writeBeanSerializer(logger, sourceWriter, beanType);
         }
-        // return json;
-        sourceWriter.println("return json;");
         // }
         sourceWriter.println("}");
 
         // Deserializer
         sourceWriter.println("public " + beanQualifiedSourceName
-                + " deserialize(" + JSONObject.class.getName() + " jsonValue, "
+                + " deserialize(" + JSONValue.class.getName() + " jsonValue, "
+                + beanQualifiedSourceName + " target, "
                 + ConnectorMap.class.getName() + " idMapper, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
 
-        // VButtonState state = GWT.create(VButtonState.class);
-        sourceWriter.println(beanQualifiedSourceName + " state = GWT.create("
-                + beanQualifiedSourceName + ".class);");
-        for (JMethod method : getSetters(beanType)) {
-            String setterName = method.getName();
-            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
-            JType setterParameterType = method.getParameterTypes()[0];
-
-            logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
-                    + beanQualifiedSourceName + " (" + beanType.getName() + ")");
-
-            String jsonFieldName = "json_" + fieldName;
-            // JSONArray json_Height = (JSONArray) jsonValue.get("height");
-            sourceWriter.println("JSONArray " + jsonFieldName
-                    + " = (JSONArray) jsonValue.get(\"" + fieldName + "\");");
-
-            // state.setHeight((String)
-            // JsonDecoder.decodeValue(jsonFieldValue,idMapper, connection));
-
-            String fieldType;
-            JPrimitiveType primitiveType = setterParameterType.isPrimitive();
-            if (primitiveType != null) {
-                // This is a primitive type -> must used the boxed type
-                fieldType = primitiveType.getQualifiedBoxedSourceName();
-            } else {
-                fieldType = setterParameterType.getQualifiedSourceName();
-            }
-
-            sourceWriter.println("state." + setterName + "((" + fieldType
-                    + ") " + JsonDecoder.class.getName() + ".decodeValue("
-                    + jsonFieldName + ", idMapper, connection));");
+        if (isEnum) {
+            writeEnumDeserializer(logger, sourceWriter, beanType.isEnum());
+        } else {
+            writeBeanDeserializer(logger, sourceWriter, beanType);
         }
-
-        // return state;
-        sourceWriter.println("return state;");
         sourceWriter.println("}");
         sourceWriter.outdent();
 
@@ -202,6 +164,138 @@ public class SerializerGenerator extends Generator {
         context.commit(logger, printWriter);
         logger.log(TreeLogger.INFO, "Generated Serializer class "
                 + getFullyQualifiedSerializerClassName(beanType));
+    }
+
+    private void writeEnumDeserializer(TreeLogger logger,
+            SourceWriter sourceWriter, JEnumType enumType) {
+        sourceWriter.println("String enumIdentifier = (("
+                + JSONString.class.getName() + ")jsonValue).stringValue();");
+        for (JEnumConstant e : enumType.getEnumConstants()) {
+            sourceWriter.println("if (\"" + e.getName()
+                    + "\".equals(enumIdentifier)) {");
+            sourceWriter.indent();
+            sourceWriter.println("return " + enumType.getQualifiedSourceName()
+                    + "." + e.getName() + ";");
+            sourceWriter.outdent();
+            sourceWriter.println("}");
+        }
+        sourceWriter.println("return null;");
+    }
+
+    private void writeBeanDeserializer(TreeLogger logger,
+            SourceWriter sourceWriter, JClassType beanType) {
+        String beanQualifiedSourceName = beanType.getQualifiedSourceName();
+
+        // if (target == null) {
+        sourceWriter.println("if (target == null) {");
+        sourceWriter.indent();
+
+        // target = GWT.create(VButtonState.class);
+        sourceWriter.println("target = GWT.create(" + beanQualifiedSourceName
+                + ".class);");
+        sourceWriter.outdent();
+        sourceWriter.println("}");
+
+        // JSONOBject json = (JSONObject)jsonValue;
+        sourceWriter.println(JSONObject.class.getName() + " json = ("
+                + JSONObject.class.getName() + ")jsonValue;");
+
+        for (JMethod method : getSetters(beanType)) {
+            String setterName = method.getName();
+            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
+            JType setterParameterType = method.getParameterTypes()[0];
+
+            logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
+                    + beanQualifiedSourceName + " (" + beanType.getName() + ")");
+
+            // if (json.containsKey("height")) {
+            sourceWriter.println("if (json.containsKey(\"" + fieldName
+                    + "\")) {");
+            sourceWriter.indent();
+            String jsonFieldName = "json_" + fieldName;
+            // JSONArray json_Height = (JSONArray) json.get("height");
+            sourceWriter.println("JSONArray " + jsonFieldName
+                    + " = (JSONArray) json.get(\"" + fieldName + "\");");
+
+            String fieldType;
+            String getterName = "get" + fieldName;
+            JPrimitiveType primitiveType = setterParameterType.isPrimitive();
+            if (primitiveType != null) {
+                // This is a primitive type -> must used the boxed type
+                fieldType = primitiveType.getQualifiedBoxedSourceName();
+                if (primitiveType == JPrimitiveType.BOOLEAN) {
+                    getterName = "is" + fieldName;
+                }
+            } else {
+                fieldType = setterParameterType.getQualifiedSourceName();
+            }
+
+            // String referenceValue;
+            sourceWriter.println(fieldType + " referenceValue;");
+            // if (target == null) {
+            sourceWriter.println("if (target == null) {");
+            sourceWriter.indent();
+            // referenceValue = null;
+            sourceWriter.println("referenceValue = null;");
+            // } else {
+            sourceWriter.println("} else {");
+            // referenceValue = target.getHeight();
+            sourceWriter.println("referenceValue = target." + getterName
+                    + "();");
+            // }
+            sourceWriter.outdent();
+            sourceWriter.println("}");
+
+            // target.setHeight((String)
+            // JsonDecoder.decodeValue(jsonFieldValue,referenceValue, idMapper,
+            // connection));
+            sourceWriter.println("target." + setterName + "((" + fieldType
+                    + ") " + JsonDecoder.class.getName() + ".decodeValue("
+                    + jsonFieldName
+                    + ", referenceValue, idMapper, connection));");
+
+            // } ... end of if contains
+            sourceWriter.println("}");
+            sourceWriter.outdent();
+        }
+
+        // return target;
+        sourceWriter.println("return target;");
+
+    }
+
+    private void writeEnumSerializer(TreeLogger logger,
+            SourceWriter sourceWriter, JClassType beanType) {
+        // return new JSONString(castedValue.name());
+        sourceWriter.println("return new " + JSONString.class.getName()
+                + "(castedValue.name());");
+    }
+
+    private void writeBeanSerializer(TreeLogger logger,
+            SourceWriter sourceWriter, JClassType beanType) {
+
+        // JSONObject json = new JSONObject();
+        sourceWriter.println(JSONObject.class.getName() + " json = new "
+                + JSONObject.class.getName() + "();");
+
+        for (JMethod setterMethod : getSetters(beanType)) {
+            String setterName = setterMethod.getName();
+            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
+            String getterName = findGetter(beanType, setterMethod);
+
+            if (getterName == null) {
+                logger.log(TreeLogger.ERROR, "No getter found for " + fieldName
+                        + ". Serialization will likely fail");
+            }
+            // json.put("button",
+            // JsonEncoder.encode(castedValue.getButton(), false, idMapper,
+            // connection));
+            sourceWriter.println("json.put(\"" + fieldName + "\",  "
+                    + JsonEncoder.class.getName() + ".encode(castedValue."
+                    + getterName + "(), false, idMapper, connection));");
+        }
+        // return json;
+        sourceWriter.println("return json;");
 
     }
 
@@ -244,10 +338,6 @@ public class SerializerGenerator extends Generator {
         }
 
         return setterMethods;
-    }
-
-    private String decapitalize(String name) {
-        return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
     private static String getSerializerSimpleClassName(JClassType beanType) {

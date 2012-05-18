@@ -387,7 +387,7 @@ public class JsonPaintTarget implements PaintTarget {
                     "Parameters must be non-null strings");
         }
 
-        tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
+        tag.addAttribute("\"" + name + "\":\"" + escapeJSON(value) + "\"");
 
         if (customLayoutArgumentsOpen && "template".equals(name)) {
             getUsedResources().add("layouts/" + value + ".html");
@@ -411,7 +411,7 @@ public class JsonPaintTarget implements PaintTarget {
         StringBuilder sb = new StringBuilder();
         sb.append("\"");
         sb.append(name);
-        sb.append("\": ");
+        sb.append("\":");
         sb.append("{");
         for (Iterator<?> it = value.keySet().iterator(); it.hasNext();) {
             Object key = it.next();

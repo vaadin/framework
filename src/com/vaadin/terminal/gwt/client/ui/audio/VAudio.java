@@ -19,9 +19,4 @@ public class VAudio extends VMediaBase {
         setStyleName(CLASSNAME);
     }
 
-    @Override
-    protected String getDefaultAltHtml() {
-        return "Your browser does not support the <code>audio</code> element.";
-    }
-
 }

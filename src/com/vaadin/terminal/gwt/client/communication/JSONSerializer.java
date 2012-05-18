@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.server.JsonCodec;
@@ -33,12 +34,14 @@ public interface JSONSerializer<T> {
      * 
      * @param jsonValue
      *            JSON map from property name to property value
+     * @param target
+     *            The object to write the deserialized values to
      * @param idMapper
      *            mapper from paintable id to paintable, used to decode
      *            references to paintables
      * @return A deserialized object
      */
-    T deserialize(JSONObject jsonValue, ConnectorMap idMapper,
+    T deserialize(JSONValue jsonValue, T target, ConnectorMap idMapper,
             ApplicationConnection connection);
 
     /**
@@ -54,7 +57,7 @@ public interface JSONSerializer<T> {
      *            references to paintables
      * @return A JSON serialized version of the object
      */
-    JSONObject serialize(T value, ConnectorMap idMapper,
+    JSONValue serialize(T value, ConnectorMap idMapper,
             ApplicationConnection connection);
 
 }

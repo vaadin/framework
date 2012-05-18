@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.Version;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -499,6 +500,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response, Callback callback, Root root)
             throws IOException, InvalidUIDLSecurityKeyException {
 
+        checkWidgetsetVersion(request);
         requestThemeName = request.getParameter("theme");
         maxInactiveInterval = request.getSessionMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
@@ -583,6 +585,27 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         outWriter.close();
         requestThemeName = null;
+    }
+
+    /**
+     * Checks that the version reported by the client (widgetset) matches that
+     * of the server.
+     * 
+     * @param request
+     */
+    private void checkWidgetsetVersion(WrappedRequest request) {
+        String widgetsetVersion = request.getParameter("wsver");
+        if (widgetsetVersion == null) {
+            // Only check when the widgetset version is reported. It is reported
+            // in the first UIDL request (not the initial request as it is a
+            // plain GET /)
+            return;
+        }
+
+        if (!Version.getFullVersion().equals(widgetsetVersion)) {
+            logger.warning(String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                    Version.getFullVersion(), widgetsetVersion));
+        }
     }
 
     /**
@@ -803,14 +826,28 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // client after component creation but before legacy UIDL
         // processing.
         JSONObject sharedStates = new JSONObject();
-        for (Connector connector : dirtyVisibleConnectors) {
+        for (ClientConnector connector : dirtyVisibleConnectors) {
             SharedState state = connector.getState();
             if (null != state) {
                 // encode and send shared state
                 try {
-                    // FIXME Use declared type
+                    Class<? extends SharedState> stateType = connector
+                            .getStateType();
+                    SharedState referenceState = null;
+                    if (repaintAll) {
+                        // Use an empty state object as reference for full
+                        // repaints
+                        try {
+                            referenceState = stateType.newInstance();
+                        } catch (Exception e) {
+                            logger.log(Level.WARNING,
+                                    "Error creating reference object for state of type "
+                                            + stateType.getName());
+                        }
+                    }
                     JSONArray stateJsonArray = JsonCodec.encode(state,
-                            state.getClass(), application);
+                            referenceState, stateType, application);
+
                     sharedStates
                             .put(connector.getConnectorId(), stateJsonArray);
                 } catch (JSONException e) {
@@ -818,7 +855,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                             "Failed to serialize shared state for connector "
                                     + connector.getClass().getName() + " ("
                                     + connector.getConnectorId() + "): "
-                                    + e.getMessage());
+                                    + e.getMessage(), e);
                 }
             }
         }
@@ -839,7 +876,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 throw new PaintException(
                         "Failed to send connector type for connector "
                                 + connector.getConnectorId() + ": "
-                                + e.getMessage());
+                                + e.getMessage(), e);
             }
         }
         outWriter.print("\"types\":");
@@ -873,7 +910,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     throw new PaintException(
                             "Failed to send hierarchy information about "
                                     + parentConnectorId + " to the client: "
-                                    + e.getMessage());
+                                    + e.getMessage(), e);
                 }
             }
         }
@@ -900,9 +937,21 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 invocationJson.put(invocation.getMethodName());
                 JSONArray paramJson = new JSONArray();
                 for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
+                    Class<?> parameterType = invocation.getParameterTypes()[i];
+                    Object referenceParameter = null;
+                    // TODO Use default values for RPC parameter types
+                    // if (!JsonCodec.isInternalType(parameterType)) {
+                    // try {
+                    // referenceParameter = parameterType.newInstance();
+                    // } catch (Exception e) {
+                    // logger.log(Level.WARNING,
+                    // "Error creating reference object for parameter of type "
+                    // + parameterType.getName());
+                    // }
+                    // }
                     paramJson.put(JsonCodec.encode(
-                            invocation.getParameters()[i],
-                            invocation.getParameterTypes()[i], application));
+                            invocation.getParameters()[i], referenceParameter,
+                            parameterType, application));
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);
@@ -912,7 +961,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                 + invocation.getConnector().getConnectorId()
                                 + " method " + invocation.getInterfaceName()
                                 + "." + invocation.getMethodName() + ": "
-                                + e.getMessage());
+                                + e.getMessage(), e);
             }
 
         }

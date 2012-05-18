@@ -7,9 +7,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
 import com.vaadin.ui.Audio;
@@ -18,15 +17,13 @@ import com.vaadin.ui.Audio;
 public class AudioConnector extends MediaBaseConnector {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
         Style style = getWidget().getElement().getStyle();
 
         // Make sure that the controls are not clipped if visible.
-        if (shouldShowControls(uidl)
+        if (getState().isShowControls()
                 && (style.getHeight() == null || "".equals(style.getHeight()))) {
             if (BrowserInfo.get().isChrome()) {
                 style.setHeight(32, Unit.PX);
@@ -41,4 +38,8 @@ public class AudioConnector extends MediaBaseConnector {
         return GWT.create(VAudio.class);
     }
 
+    @Override
+    protected String getDefaultAltHtml() {
+        return "Your browser does not support the <code>audio</code> element.";
+    }
 }

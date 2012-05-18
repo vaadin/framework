@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.customlayout;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -101,11 +100,6 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     @Override
     public VCustomLayout getWidget() {
         return (VCustomLayout) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VCustomLayout.class);
     }
 
     public void updateCaption(ComponentConnector paintable) {

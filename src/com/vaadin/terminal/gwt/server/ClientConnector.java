@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 import java.util.List;
 
 import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -35,4 +36,12 @@ public interface ClientConnector extends Connector, RpcTarget {
      * @return true if the connector can receive messages, false otherwise
      */
     public boolean isConnectorEnabled();
+
+    /**
+     * Returns the type of the shared state for this connector
+     * 
+     * @return The type of the state. Must never return null.
+     */
+    public Class<? extends SharedState> getStateType();
+
 }

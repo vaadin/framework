@@ -3,11 +3,11 @@ package com.vaadin.tests.components;
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 

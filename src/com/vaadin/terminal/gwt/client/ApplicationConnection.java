@@ -43,7 +43,7 @@ import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -101,6 +101,8 @@ public class ApplicationConnection {
     public static final String UIDL_SECURITY_HEADER = UIDL_SECURITY_TOKEN_ID;
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
+
+    private static SerializerMap serializerMap;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -197,6 +199,7 @@ public class ApplicationConnection {
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
+        serializerMap = GWT.create(SerializerMap.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -412,13 +415,10 @@ public class ApplicationConnection {
         // initial uidl request
         String nativeBootstrapParameters = getNativeBrowserDetailsParameters(getConfiguration()
                 .getRootPanelId());
-        String widgetsetVersion = ApplicationConfiguration.VERSION;
-
         // TODO figure out how client and view size could be used better on
         // server. screen size can be accessed via Browser object, but other
         // values currently only via transaction listener.
-        String parameters = "repaintAll=1&" + nativeBootstrapParameters
-                + "&wsver=" + widgetsetVersion;
+        String parameters = "repaintAll=1&" + nativeBootstrapParameters;
         return parameters;
     }
 
@@ -1413,11 +1413,10 @@ public class ApplicationConnection {
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(connectorId));
 
-                            Object state = JsonDecoder.decodeValue(
-                                    stateDataAndType, connectorMap,
+                            JsonDecoder.decodeValue(stateDataAndType,
+                                    connector.getState(), connectorMap,
                                     ApplicationConnection.this);
 
-                            connector.setState((SharedState) state);
                             StateChangeEvent event = GWT
                                     .create(StateChangeEvent.class);
                             event.setConnector(connector);
@@ -1569,7 +1568,8 @@ public class ApplicationConnection {
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(
-                    (JSONArray) parametersJson.get(j), getConnectorMap(), this);
+                    (JSONArray) parametersJson.get(j), null, getConnectorMap(),
+                    this);
         }
         return new MethodInvocation(connectorId, interfaceName, methodName,
                 parameters);
@@ -1687,11 +1687,12 @@ public class ApplicationConnection {
                 invocationJson.set(2,
                         new JSONString(invocation.getMethodName()));
                 JSONArray paramJson = new JSONArray();
+                boolean restrictToInternalTypes = isLegacyVariableChange(invocation);
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
-                            invocation.getParameters()[i], getConnectorMap(),
-                            this));
+                            invocation.getParameters()[i],
+                            restrictToInternalTypes, getConnectorMap(), this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);
@@ -1718,8 +1719,23 @@ public class ApplicationConnection {
         } else {
             extraParams = "";
         }
+        if (!getConfiguration().isWidgetsetVersionSent()) {
+            if (!extraParams.isEmpty()) {
+                extraParams += "&";
+            }
+            String widgetsetVersion = ApplicationConfiguration.VERSION;
+            extraParams += "wsver=" + widgetsetVersion;
 
+            getConfiguration().setWidgetsetVersionSent();
+        }
         makeUidlRequest(req.toString(), extraParams, forceSync);
+    }
+
+    private boolean isLegacyVariableChange(MethodInvocation invocation) {
+        return ApplicationConnection.UPDATE_VARIABLE_METHOD.equals(invocation
+                .getInterfaceName())
+                && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                        .equals(invocation.getMethodName());
     }
 
     /**
@@ -2438,5 +2454,9 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
+    }
+
+    public SerializerMap getSerializerMap() {
+        return serializerMap;
     }
 }

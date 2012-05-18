@@ -3,8 +3,8 @@ package com.vaadin.tests.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class Log extends VerticalLayout {

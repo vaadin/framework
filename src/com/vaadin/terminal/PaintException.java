@@ -30,6 +30,19 @@ public class PaintException extends IOException implements Serializable {
     }
 
     /**
+     * Constructs an instance of <code>PaintExeception</code> with the specified
+     * detail message and cause.
+     * 
+     * @param msg
+     *            the detail message.
+     * @param cause
+     *            the cause
+     */
+    public PaintException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
+    /**
      * Constructs an instance of <code>PaintExeception</code> from IOException.
      * 
      * @param exception

@@ -3,6 +3,7 @@ package com.vaadin.tests.components.caption;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
@@ -10,7 +11,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 
 public class IconsInCaption extends TestBase {

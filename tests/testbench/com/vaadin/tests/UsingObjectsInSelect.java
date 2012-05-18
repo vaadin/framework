@@ -9,8 +9,8 @@ import java.util.Random;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Select;

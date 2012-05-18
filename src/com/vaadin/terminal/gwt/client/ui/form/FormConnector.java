@@ -3,7 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.form;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
@@ -189,11 +188,6 @@ public class FormConnector extends AbstractComponentContainerConnector
     @Override
     public VForm getWidget() {
         return (VForm) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VForm.class);
     }
 
     @Override

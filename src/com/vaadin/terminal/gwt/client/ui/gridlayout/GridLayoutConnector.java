@@ -5,7 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.gridlayout;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -222,11 +221,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     @Override
     public VGridLayout getWidget() {
         return (VGridLayout) super.getWidget();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VGridLayout.class);
     }
 
     public void layoutVertically() {

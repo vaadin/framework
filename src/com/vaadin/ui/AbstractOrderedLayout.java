@@ -4,28 +4,23 @@
 
 package com.vaadin.ui;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
-        Vaadin6Component {
+        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
 
     private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
 
@@ -48,10 +43,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /**
      * Mapping from components to alignments (horizontal + vertical).
      */
-    private final Map<Component, Alignment> componentToAlignment = new HashMap<Component, Alignment>();
-
-    private final Map<Component, Float> componentToExpandRatio = new HashMap<Component, Float>();
-
     public AbstractOrderedLayout() {
         registerRpc(rpc);
     }
@@ -75,11 +66,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         components.add(c);
         try {
             super.addComponent(c);
-            requestRepaint();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
         }
+        componentAdded(c);
     }
 
     /**
@@ -98,11 +89,12 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         components.addFirst(c);
         try {
             super.addComponent(c);
-            requestRepaint();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
         }
+        componentAdded(c);
+
     }
 
     /**
@@ -127,11 +119,23 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         components.add(index, c);
         try {
             super.addComponent(c);
-            requestRepaint();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
         }
+
+        componentAdded(c);
+    }
+
+    private void componentRemoved(Component c) {
+        getState().getChildData().remove(c);
+        requestRepaint();
+    }
+
+    private void componentAdded(Component c) {
+        getState().getChildData().put(c, new ChildComponentData());
+        requestRepaint();
+
     }
 
     /**
@@ -143,10 +147,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Override
     public void removeComponent(Component c) {
         components.remove(c);
-        componentToAlignment.remove(c);
-        componentToExpandRatio.remove(c);
         super.removeComponent(c);
-        requestRepaint();
+        componentRemoved(c);
     }
 
     /**
@@ -167,24 +169,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     public int getComponentCount() {
         return components.size();
-    }
-
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
-    public void paintContent(PaintTarget target) throws PaintException {
-        // Add child component alignment info to layout tag
-        target.addAttribute("alignments", componentToAlignment);
-        target.addAttribute("expandRatios", componentToExpandRatio);
-    }
-
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
     }
 
     /* Documented in superclass */
@@ -213,17 +197,16 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
             removeComponent(oldComponent);
             addComponent(newComponent, oldLocation);
         } else {
+            // Both old and new are in the layout
             if (oldLocation > newLocation) {
                 components.remove(oldComponent);
                 components.add(newLocation, oldComponent);
                 components.remove(newComponent);
-                componentToAlignment.remove(newComponent);
                 components.add(oldLocation, newComponent);
             } else {
                 components.remove(newComponent);
                 components.add(oldLocation, newComponent);
                 components.remove(oldComponent);
-                componentToAlignment.remove(oldComponent);
                 components.add(newLocation, oldComponent);
             }
 
@@ -239,21 +222,17 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
-        if (components.contains(childComponent)) {
-            // Alignments are bit masks
-            componentToAlignment.put(childComponent, new Alignment(
-                    horizontalAlignment + verticalAlignment));
-            requestRepaint();
-        } else {
-            throw new IllegalArgumentException(
-                    "Component must be added to layout before using setComponentAlignment()");
-        }
+        Alignment a = new Alignment(horizontalAlignment + verticalAlignment);
+        setComponentAlignment(childComponent, a);
     }
 
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
-        if (components.contains(childComponent)) {
-            componentToAlignment.put(childComponent, alignment);
+        ChildComponentData childData = getState().getChildData().get(
+                childComponent);
+        if (childData != null) {
+            // Alignments are bit masks
+            childData.setAlignmentBitmask(alignment.getBitMask());
             requestRepaint();
         } else {
             throw new IllegalArgumentException(
@@ -269,12 +248,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * .vaadin.ui.Component)
      */
     public Alignment getComponentAlignment(Component childComponent) {
-        Alignment alignment = componentToAlignment.get(childComponent);
-        if (alignment == null) {
-            return ALIGNMENT_DEFAULT;
-        } else {
-            return alignment;
+        ChildComponentData childData = getState().getChildData().get(
+                childComponent);
+        if (childData == null) {
+            throw new IllegalArgumentException(
+                    "The given component is not a child of this layout");
         }
+
+        return new Alignment(childData.getAlignmentBitmask());
     }
 
     /*
@@ -326,13 +307,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param ratio
      */
     public void setExpandRatio(Component component, float ratio) {
-        if (components.contains(component)) {
-            componentToExpandRatio.put(component, ratio);
-            requestRepaint();
-        } else {
+        ChildComponentData childData = getState().getChildData().get(component);
+        if (childData == null) {
             throw new IllegalArgumentException(
-                    "Component must be added to layout before using setExpandRatio()");
+                    "The given component is not a child of this layout");
         }
+
+        childData.setExpandRatio(ratio);
+        requestRepaint();
     };
 
     /**
@@ -340,11 +322,16 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @param component
      *            which expand ratios is requested
-     * @return expand ratio of given component, 0.0f by default
+     * @return expand ratio of given component, 0.0f by default.
      */
     public float getExpandRatio(Component component) {
-        Float ratio = componentToExpandRatio.get(component);
-        return (ratio == null) ? 0 : ratio.floatValue();
+        ChildComponentData childData = getState().getChildData().get(component);
+        if (childData == null) {
+            throw new IllegalArgumentException(
+                    "The given component is not a child of this layout");
+        }
+
+        return childData.getExpandRatio();
     }
 
     public void addListener(LayoutClickListener listener) {

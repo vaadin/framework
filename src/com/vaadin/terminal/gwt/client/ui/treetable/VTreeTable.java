@@ -24,7 +24,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComputedStyle;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -81,7 +80,7 @@ public class VTreeTable extends VScrollTable {
             return;
         }
 
-        if (animationsEnabled && browserSupportsAnimation()) {
+        if (animationsEnabled) {
             if (partialRowAdditions.hasAttribute("hide")) {
                 scrollBody.unlinkRowsAnimatedAndUpdateCacheWhenFinished(
                         partialRowAdditions.getIntAttribute("firstprowix"),
@@ -95,11 +94,6 @@ public class VTreeTable extends VScrollTable {
         } else {
             super.addAndRemoveRows(partialRowAdditions);
         }
-    }
-
-    private boolean browserSupportsAnimation() {
-        BrowserInfo bi = BrowserInfo.get();
-        return !(bi.isSafari4());
     }
 
     class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {

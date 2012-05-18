@@ -5,25 +5,12 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.terminal.gwt.client.ui.textarea.TextAreaState;
 
 /**
  * A text field that supports multi line editing.
  */
 public class TextArea extends AbstractTextField {
-
-    private static final int DEFAULT_ROWS = 5;
-
-    /**
-     * Number of visible rows in the text area.
-     */
-    private int rows = DEFAULT_ROWS;
-
-    /**
-     * Tells if word-wrapping should be used in the text area.
-     */
-    private boolean wordwrap = true;
 
     /**
      * Constructs an empty TextArea.
@@ -81,6 +68,11 @@ public class TextArea extends AbstractTextField {
 
     }
 
+    @Override
+    public TextAreaState getState() {
+        return (TextAreaState) super.getState();
+    }
+
     /**
      * Sets the number of rows in the text area.
      * 
@@ -91,10 +83,8 @@ public class TextArea extends AbstractTextField {
         if (rows < 0) {
             rows = 0;
         }
-        if (this.rows != rows) {
-            this.rows = rows;
-            requestRepaint();
-        }
+        getState().setRows(rows);
+        requestRepaint();
     }
 
     /**
@@ -103,7 +93,7 @@ public class TextArea extends AbstractTextField {
      * @return number of explicitly set rows.
      */
     public int getRows() {
-        return rows;
+        return getState().getRows();
     }
 
     /**
@@ -114,10 +104,8 @@ public class TextArea extends AbstractTextField {
      *            word-wrap mode.
      */
     public void setWordwrap(boolean wordwrap) {
-        if (this.wordwrap != wordwrap) {
-            this.wordwrap = wordwrap;
-            requestRepaint();
-        }
+        getState().setWordwrap(wordwrap);
+        requestRepaint();
     }
 
     /**
@@ -127,19 +115,7 @@ public class TextArea extends AbstractTextField {
      *         <code>false</code> if not.
      */
     public boolean isWordwrap() {
-        return wordwrap;
+        return getState().isWordwrap();
     }
 
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        super.paintContent(target);
-
-        target.addAttribute("rows", getRows());
-
-        if (!isWordwrap()) {
-            // Wordwrap is only painted if turned off to minimize communications
-            target.addAttribute("wordwrap", false);
-        }
-
-    }
 }

@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui.treetable;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.Connect;
@@ -88,11 +86,6 @@ public class TreeTableConnector extends TableConnector {
             getWidget()
                     .handleNavigation(event.keycode, event.ctrl, event.shift);
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTreeTable.class);
     }
 
     @Override

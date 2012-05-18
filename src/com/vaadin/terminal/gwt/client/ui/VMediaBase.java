@@ -23,12 +23,6 @@ public abstract class VMediaBase extends Widget {
         media = element;
     }
 
-    /**
-     * @return the default HTML to show users with browsers that do not support
-     *         HTML5 media markup.
-     */
-    protected abstract String getDefaultAltHtml();
-
     public void play() {
         media.play();
     }

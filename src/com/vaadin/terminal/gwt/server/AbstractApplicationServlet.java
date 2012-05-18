@@ -90,51 +90,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private static final Logger logger = Logger
             .getLogger(AbstractApplicationServlet.class.getName());
 
-    /**
-     * The version number of this release. For example "6.2.0". Always in the
-     * format "major.minor.revision[.build]". The build part is optional. All of
-     * major, minor, revision must be integers.
-     */
-    public static final String VERSION;
-    /**
-     * Major version number. For example 6 in 6.2.0.
-     */
-    public static final int VERSION_MAJOR;
-
-    /**
-     * Minor version number. For example 2 in 6.2.0.
-     */
-    public static final int VERSION_MINOR;
-
-    /**
-     * Version revision number. For example 0 in 6.2.0.
-     */
-    public static final int VERSION_REVISION;
-
-    /**
-     * Build identifier. For example "nightly-20091123-c9963" in
-     * 6.2.0.nightly-20091123-c9963.
-     */
-    public static final String VERSION_BUILD;
-
-    /* Initialize version numbers from string replaced by build-script. */
-    static {
-        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
-        } else {
-            VERSION = "@VERSION@";
-        }
-        final String[] digits = VERSION.split("\\.", 4);
-        VERSION_MAJOR = Integer.parseInt(digits[0]);
-        VERSION_MINOR = Integer.parseInt(digits[1]);
-        VERSION_REVISION = Integer.parseInt(digits[2]);
-        if (digits.length == 4) {
-            VERSION_BUILD = digits[3];
-        } else {
-            VERSION_BUILD = "";
-        }
-    }
-
     private Properties applicationProperties;
 
     private boolean productionMode = false;
@@ -232,19 +187,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * protection disabled
              */
             logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
-        }
-    }
-
-    /**
-     * Checks that the version reported by the client (widgetset) matches that
-     * of the server.
-     * 
-     * @param request
-     */
-    private void checkWidgetsetVersion(HttpServletRequest request) {
-        if (!VERSION.equals(request.getParameter("wsver"))) {
-            logger.warning(String.format(WIDGETSET_MISMATCH_INFO, VERSION,
-                    request.getParameter("wsver")));
         }
     }
 
@@ -414,11 +356,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (requestType == RequestType.STATIC_FILE) {
             serveStaticResources(request, response);
             return;
-        }
-
-        if (isRepaintAll(request)) {
-            // warn if versions do not match
-            checkWidgetsetVersion(request);
         }
 
         Application application = null;

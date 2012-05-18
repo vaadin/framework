@@ -63,11 +63,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
     }
 
     @Override
-    protected Widget createWidget() {
-        return GWT.create(VTabsheet.class);
-    }
-
-    @Override
     public VTabsheet getWidget() {
         return (VTabsheet) super.getWidget();
     }

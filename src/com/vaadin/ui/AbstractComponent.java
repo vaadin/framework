@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -821,19 +820,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     protected ComponentState createState() {
         try {
+            return getStateType().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Error creating state of type " + getStateType().getName()
+                            + " for " + getClass().getName(), e);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see com.vaadin.terminal.gwt.server.ClientConnector#getStateType()
+     */
+    public Class<? extends ComponentState> getStateType() {
+        try {
             Method m = getClass().getMethod("getState", (Class[]) null);
             Class<? extends ComponentState> type = (Class<? extends ComponentState>) m
                     .getReturnType();
-            return type.newInstance();
+            return type;
         } catch (Exception e) {
-            getLogger().log(
-                    Level.INFO,
-                    "Error determining state object class for "
-                            + getClass().getName());
+            throw new RuntimeException("Error finding state type for "
+                    + getClass().getName(), e);
         }
-
-        // Fall back to ComponentState if detection fails for some reason.
-        return new ComponentState();
     }
 
     /* Documentation copied from interface */

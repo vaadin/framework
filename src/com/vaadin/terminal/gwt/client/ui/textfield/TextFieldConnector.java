@@ -4,11 +4,9 @@
 
 package com.vaadin.terminal.gwt.client.ui.textfield;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -22,6 +20,11 @@ import com.vaadin.ui.TextField;
 public class TextFieldConnector extends AbstractFieldConnector implements
         Paintable, BeforeShortcutActionListener {
 
+    @Override
+    public AbstractTextFieldState getState() {
+        return (AbstractTextFieldState) super.getState();
+    }
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
@@ -33,14 +36,9 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
         getWidget().setReadOnly(isReadOnly());
 
-        getWidget().inputPrompt = uidl
-                .getStringAttribute(VTextField.ATTR_INPUTPROMPT);
-
-        getWidget().setMaxLength(
-                uidl.hasAttribute("maxLength") ? uidl
-                        .getIntAttribute("maxLength") : -1);
-
-        getWidget().immediate = getState().isImmediate();
+        getWidget().setInputPrompt(getState().getInputPrompt());
+        getWidget().setMaxLength(getState().getMaxLength());
+        getWidget().setImmediate(getState().isImmediate());
 
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
@@ -61,13 +59,9 @@ public class TextFieldConnector extends AbstractFieldConnector implements
             getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
             getWidget().attachCutEventListener(getWidget().getElement());
         }
+        getWidget().setColumns(getState().getColumns());
 
-        if (uidl.hasAttribute("cols")) {
-            getWidget().setColumns(
-                    new Integer(uidl.getStringAttribute("cols")).intValue());
-        }
-
-        final String text = uidl.getStringVariable("text");
+        final String text = getState().getText();
 
         /*
          * We skip the text content update if field has been repainted, but text
@@ -94,21 +88,6 @@ public class TextFieldConnector extends AbstractFieldConnector implements
                 }
             });
         }
-
-        // Here for backward compatibility; to be moved to TextArea.
-        // Optimization: server does not send attribute for the default 'true'
-        // state.
-        if (uidl.hasAttribute("wordwrap")
-                && uidl.getBooleanAttribute("wordwrap") == false) {
-            getWidget().setWordwrap(false);
-        } else {
-            getWidget().setWordwrap(true);
-        }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTextField.class);
     }
 
     @Override

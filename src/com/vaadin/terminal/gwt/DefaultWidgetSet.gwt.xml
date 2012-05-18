@@ -45,7 +45,7 @@
 	</replace-with>
 
 	<generate-with
- 		class="com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator"> 
+		class="com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator">
 		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" />
 	</generate-with>
 
@@ -74,6 +74,18 @@
 		class="com.vaadin.terminal.gwt.widgetsetutils.RpcManagerGenerator">
 		<when-type-assignable
 			class="com.vaadin.terminal.gwt.client.communication.RpcManager" />
+	</generate-with>
+
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorWidgetFactoryGenerator">
+		<when-type-assignable
+			class="com.vaadin.terminal.gwt.client.ui.ConnectorWidgetFactory" />
+	</generate-with>
+
+	<generate-with
+		class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorStateFactoryGenerator">
+		<when-type-assignable
+			class="com.vaadin.terminal.gwt.client.ui.ConnectorStateFactory" />
 	</generate-with>
 
 	<entry-point class="com.vaadin.terminal.gwt.client.ApplicationConfiguration" />

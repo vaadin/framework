@@ -5,8 +5,6 @@ package com.vaadin.terminal.gwt.client.ui.tree;
 
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -127,11 +125,6 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         getWidget().rendering = false;
 
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VTree.class);
     }
 
     @Override

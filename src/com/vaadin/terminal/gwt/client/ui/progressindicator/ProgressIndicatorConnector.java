@@ -4,9 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.progressindicator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -52,11 +50,6 @@ public class ProgressIndicatorConnector extends AbstractFieldConnector
             getWidget().interval = uidl.getIntAttribute("pollinginterval");
             getWidget().poller.scheduleRepeating(getWidget().interval);
         }
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VProgressIndicator.class);
     }
 
     @Override

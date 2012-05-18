@@ -301,9 +301,6 @@ public class SerializerMapGenerator extends Generator {
         if (setterType.isArray() != null) {
             return true;
         }
-        if (setterType.isEnum() != null) {
-            return true;
-        }
         if (setterType.isPrimitive() != null) {
             return true;
         }

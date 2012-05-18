@@ -4,6 +4,7 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
@@ -11,7 +12,6 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.Root.LegacyWindow;

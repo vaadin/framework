@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Table;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Window;
 
 public class SubWindowWithUndefinedHeight extends TestBase {
 
