@@ -329,6 +329,7 @@ PostLayoutListener {
             setLayoutHeightListener(false);
         }
 
+        // TODO recognize special cases here, using child states
     }
 
     StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
