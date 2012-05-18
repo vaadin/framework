@@ -1458,6 +1458,13 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         } else {
             // initial load
+
+            // #8805 send one extra row in the beginning in case a partial
+            // row is shown on the UI
+            if (firstIndex > 0) {
+                firstIndex = firstIndex - 1;
+                rows = rows + 1;
+            }
             firstToBeRenderedInClient = firstIndex;
         }
         if (totalRows > 0) {
