@@ -283,12 +283,11 @@ public abstract class AbstractBoxLayoutConnector extends
     };
 
     private boolean needsFixedHeight() {
-        if (!getWidget().vertical && isUndefinedHeight()
-                && (hasRelativeHeight.size() > 0 /*
-                                                  * ||
-                                                  * hasVerticalAlignment.size()
-                                                  * > 0
-                                                  */)) {
+        if (!getWidget().vertical
+                && isUndefinedHeight()
+                && (hasRelativeHeight.size() > 0 || (hasVerticalAlignment
+                        .size() > 0 && hasVerticalAlignment.size() < getChildren()
+                        .size()))) {
             return true;
         }
         return false;

@@ -57,13 +57,13 @@ public class BoxLayoutTest extends AbstractTestRoot {
         view.setMargin(true);
         view.setSpacing(true);
 
-        view.addComponent(createControls(false));
-        view.addComponent(createTestLayout(false));
-        view.setExpandRatio(view.getComponent(1), 1);
+        // view.addComponent(createControls(false));
+        // view.addComponent(createTestLayout(false));
+        // view.setExpandRatio(view.getComponent(1), 1);
 
-        // for (int i = 0; i < 20; i++) {
-        // view.addComponent(createHorizontalTest());
-        // }
+        for (int i = 0; i < 200; i++) {
+            view.addComponent(createHorizontalTest());
+        }
 
         setContent(view);
         getApplication().setRootPreserved(true);
