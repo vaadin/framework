@@ -82,6 +82,16 @@ public class ComponentState extends SharedState {
     }
 
     /**
+     * Returns true if the component height is relative to the parent, i.e.
+     * percentage, false if it is fixed/auto.
+     * 
+     * @return true if component height is relative (percentage)
+     */
+    public boolean isRelativeHeight() {
+        return getHeight().endsWith("%");
+    }
+
+    /**
      * Returns the component width as set by the server.
      * 
      * Can be relative (containing the percent sign) or absolute, or empty
@@ -117,6 +127,16 @@ public class ComponentState extends SharedState {
      */
     public boolean isUndefinedWidth() {
         return "".equals(getWidth());
+    }
+
+    /**
+     * Returns true if the component width is relative to the parent, i.e.
+     * percentage, false if it is fixed/auto.
+     * 
+     * @return true if component width is relative (percentage)
+     */
+    public boolean isRelativeWidth() {
+        return getWidth().endsWith("%");
     }
 
     /**

@@ -187,6 +187,10 @@ public class VBoxLayout extends FlowPanel {
             return spacer;
         }
 
+        public boolean hasSpacing() {
+            return getSpacingElement() != null;
+        }
+
         protected int getSpacingSize(boolean vertical) {
             if (spacer == null) {
                 return 0;
@@ -246,7 +250,7 @@ public class VBoxLayout extends FlowPanel {
                 if (caption == null) {
                     caption = DOM.createDiv();
                     captionWrap = DOM.createDiv();
-                    captionWrap.addClassName("v-connector");
+                    captionWrap.addClassName("v");
                     captionWrap.addClassName("v-has-caption");
                     getElement().appendChild(captionWrap);
                     captionWrap.appendChild(getWidget().getElement());

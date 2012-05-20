@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.Focusable;
@@ -30,6 +32,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private String lastKnownWidth = "";
     private String lastKnownHeight = "";
+
+    List<String> styleNames;
 
     /**
      * Default constructor
@@ -97,8 +101,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         setWidgetEnabled(isEnabled());
 
         // Style names
-        String styleName = getStyleNames(getWidget().getStylePrimaryName());
-        getWidget().setStyleName(styleName);
+        // String styleName = getStyleNames(getWidget().getStylePrimaryName());
+        // getWidget().setStyleName(styleName);
+        updateStyleNames();
 
         // Update tooltip
         TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
@@ -268,6 +273,54 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         return styleBuf.toString();
+    }
+
+    protected void updateStyleNames() {
+        Widget widget = getWidget();
+
+        widget.addStyleName("v");
+
+        // Disabled
+        if (!isEnabled()) {
+            widget.addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
+        } else {
+            widget.removeStyleName(ApplicationConnection.DISABLED_CLASSNAME);
+        }
+
+        // Read-only
+        if (isReadOnly()) {
+            widget.addStyleName("v-readonly");
+        } else {
+            widget.removeStyleName("v-readonly");
+        }
+
+        // Error
+        if (null != getState().getErrorMessage()) {
+            widget.addStyleDependentName("error");
+        } else {
+            widget.removeStyleDependentName("error");
+        }
+
+        // Additional style names
+        List<String> newStyleNames = getState().getStyles();
+        if (newStyleNames == null) {
+            newStyleNames = new LinkedList<String>();
+        }
+        if (styleNames != null) {
+            // Remove previous styles which are no longer in the current list
+            for (String style : styleNames) {
+                if (!newStyleNames.contains(style)) {
+                    widget.removeStyleName(style);
+                    widget.removeStyleDependentName(style);
+                }
+            }
+        }
+        // Add any new styles
+        for (String style : newStyleNames) {
+            widget.addStyleName(style);
+            widget.addStyleDependentName(style);
+        }
+        styleNames = newStyleNames;
     }
 
     /*

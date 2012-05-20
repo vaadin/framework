@@ -11,6 +11,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -23,7 +24,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Label.ContentMode;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -61,8 +61,34 @@ public class BoxLayoutTest extends AbstractTestRoot {
         view.addComponent(createTestLayout(false));
         view.setExpandRatio(view.getComponent(1), 1);
 
+        // for (int i = 0; i < 20; i++) {
+        // view.addComponent(createHorizontalTest());
+        // }
+
         setContent(view);
         getApplication().setRootPreserved(true);
+    }
+
+    private Component createHorizontalTest() {
+        HorizontalLayout l = new HorizontalLayout();
+        l.setWidth("100%");
+
+        Label exp;
+
+        // l.addComponent(new Embedded(null, new ThemeResource(
+        // "../runo/icons/32/document.png")));
+        l.addComponent(exp = new Label(
+                "Mauris iaculis porttitor posuere. Praesent id metus massa, ut blandit odio. Proin quis tortor orci. Etiam at risus et justo dignissim congue. Donec."));
+        // exp.setWidth("300px");
+        l.addComponent(new Button("Edit"));
+        l.addComponent(new Button("Delete"));
+        l.setExpandRatio(exp, 1);
+
+        for (int i = 0; i < l.getComponentCount(); i++) {
+            l.setComponentAlignment(l.getComponent(i), Alignment.MIDDLE_LEFT);
+        }
+
+        return l;
     }
 
     protected AbstractOrderedLayout createControls(boolean horizontal) {
@@ -343,6 +369,11 @@ public class BoxLayoutTest extends AbstractTestRoot {
             }
         });
         component.addComponent(componentRequired);
+
+        for (int i = 0; i < component.getComponentCount(); i++) {
+            component.setComponentAlignment(component.getComponent(i),
+                    Alignment.MIDDLE_LEFT);
+        }
 
         return root;
     }

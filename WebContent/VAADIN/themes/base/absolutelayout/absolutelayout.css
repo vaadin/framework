@@ -1,5 +1,6 @@
 /* THIS IS HERE ONLY BECAUSE WE WANT TO DEFINE IT FIRST, TO MAKE IT EASY TO OVERRIDE */
-.v-connector {
+/* TODO fix by using a better build script that allows us to define the order of the imports */
+.v {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;

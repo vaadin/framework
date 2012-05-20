@@ -20,8 +20,8 @@ TODO
 	display: inline-block;
 }
 
-.v-boxlayout.v-horizontal {
-	white-space: nowrap !important;
+div.v-boxlayout.v-horizontal.v {
+	white-space: nowrap;
 }
 
 .v-boxlayout > .v-expand {
@@ -40,7 +40,7 @@ TODO
 }
 
 /* Clear any floats inside the slot, to prevent unwanted collapsing */
-.v-slot:after {
+.v-vertical > .v-slot:after {
 	content: "";
 	display: inline-block;
 	clear: both;
@@ -88,16 +88,18 @@ TODO
 	white-space: nowrap;
 }
 
-.v-align-middle > .v-connector,
-.v-align-bottom > .v-connector {
+.v-align-middle > .v,
+.v-align-bottom > .v {
 	display: inline-block;
 }
 
-.v-align-middle > .v-connector {
+.v-align-middle,
+.v-align-middle > .v {
 	vertical-align: middle;
 }
 
-.v-align-bottom > .v-connector {
+.v-align-bottom,
+.v-align-bottom > .v {
 	vertical-align: bottom;
 }
 
@@ -105,7 +107,7 @@ TODO
 	text-align: center;
 }
 
-.v-align-center > .v-connector {
+.v-align-center > .v {
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -114,7 +116,7 @@ TODO
 	text-align: right;
 }
 
-.v-align-right > .v-connector {
+.v-align-right > .v {
 	margin-left: auto;
 }
 
@@ -146,17 +148,17 @@ TODO
 	padding-left: .5em;
 }
 
-.v-caption-on-left > .v-connector,
-.v-caption-on-right > .v-connector {
+.v-caption-on-left > .v,
+.v-caption-on-right > .v {
 	display: inline-block;
 	vertical-align: middle;
 }
 
-.v-has-caption.v-has-width > .v-connector {
+.v-has-caption.v-has-width > .v {
 	width: 100% !important;
 }
 
-.v-has-caption.v-has-height > .v-connector {
+.v-has-caption.v-has-height > .v {
 	height: 100% !important;
 }
 

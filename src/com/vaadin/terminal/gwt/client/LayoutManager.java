@@ -277,6 +277,9 @@ public class LayoutManager {
                 for (Element element : listenersToFire) {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
+                    if (listeners == null) {
+                        continue;
+                    }
                     ElementResizeListener[] array = listeners
                             .toArray(new ElementResizeListener[listeners.size()]);
                     ElementResizeEvent event = new ElementResizeEvent(this,
