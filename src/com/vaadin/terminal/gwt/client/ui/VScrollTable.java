@@ -4617,7 +4617,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             private String[] actionKeys = null;
             private final TableRowElement rowElement;
-            private boolean mDown;
             private int index;
             private Event touchStart;
             private static final String ROW_CLASSNAME_EVEN = CLASSNAME + "-row";
@@ -4628,6 +4627,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             private Timer dragTouchTimeout;
             private int touchStartY;
             private int touchStartX;
+            private boolean isDragging = false;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
@@ -5038,40 +5038,24 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             }
 
-            private boolean wasSignificantMove = false;
-            private boolean isDragging = false;
-
             /**
-             * Special handler for touch devices
+             * Special handler for touch devices that support native scrolling
              * 
-             * @param event
+             * @return Whether the event was handled by this method.
              */
-            public void onTouchBrowserEvent(final Event event) {
-                VConsole.log("-- START ONTOUCHBROWSEREVENT");
-                if (enabled) {
+            private boolean handleTouchEvent(final Event event) {
+
+                boolean touchEventHandled = false;
+
+                if (enabled && hasNativeTouchScrolling) {
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
                     final int type = event.getTypeInt();
 
                     switch (type) {
-                    case Event.ONCONTEXTMENU:
-                        showContextMenu(event);
-                        if (enabled
-                                && (actionKeys != null || client
-                                        .hasEventListeners(VScrollTable.this,
-                                                ITEM_CLICK_EVENT_ID))) {
-                            /*
-                             * Prevent browser context menu only if there are
-                             * action handlers or item click listeners
-                             * registered
-                             */
-                            event.stopPropagation();
-                            event.preventDefault();
-                        }
-                        break;
                     case Event.ONTOUCHSTART:
+                        touchEventHandled = true;
                         touchStart = event;
                         isDragging = false;
-                        wasSignificantMove = false;
                         Touch touch = event.getChangedTouches().get(0);
                         // save position to fields, touches in events are same
                         // instance during the operation.
@@ -5084,14 +5068,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     @Override
                                     public void run() {
                                         if (touchStart != null) {
-                                            VConsole.log("DRAGGING");
+                                            // Start a drag if a finger is held
+                                            // in place long enough, then moved
                                             isDragging = true;
                                         }
                                     }
                                 };
-                                VConsole.log("START DRAG TIMEOUT");
-                                dragTouchTimeout.schedule(TOUCHSCROLL_TIMEOUT);
                             }
+                            dragTouchTimeout.schedule(TOUCHSCROLL_TIMEOUT);
                         }
 
                         if (actionKeys != null) {
@@ -5100,54 +5084,51 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                     @Override
                                     public void run() {
                                         if (touchStart != null) {
-                                            VConsole.log("SHOW CONTEXT");
+                                            // Open the context menu if finger
+                                            // is held in place long enough.
                                             showContextMenu(touchStart);
                                             event.preventDefault();
-                                            touchStart = null;
-
                                         }
                                     }
                                 };
-                                VConsole.log("START CONTEXT TIMEOUT");
-
-                                contextTouchTimeout.cancel();
-                                contextTouchTimeout
-                                        .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
                             }
+                            contextTouchTimeout
+                                    .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
                         }
                         break;
                     case Event.ONTOUCHMOVE:
+                        touchEventHandled = true;
                         if (isSignificantMove(event)) {
-                            wasSignificantMove = true;
                             if (contextTouchTimeout != null) {
+                                // Moved finger before the context menu timer
+                                // expired, so let the browser handle this as a
+                                // scroll.
                                 contextTouchTimeout.cancel();
+                                contextTouchTimeout = null;
                             }
                             if (!isDragging && dragTouchTimeout != null) {
-                                VConsole.log("CANCEL DRAG TIMEOUT");
+                                // Moved finger before the drag timer expired,
+                                // so let the browser handle this as a scroll.
                                 dragTouchTimeout.cancel();
                                 dragTouchTimeout = null;
                             }
-                            if (isDragging) {
-                                if (dragmode != 0 && touchStart != null) {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    VConsole.log("START DRAG");
-                                    startRowDrag(touchStart, type, targetTdOrTr);
-                                }
-                                isDragging = false;
+
+                            if (dragmode != 0 && touchStart != null
+                                    && isDragging) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                startRowDrag(touchStart, type, targetTdOrTr);
                             }
                             touchStart = null;
                         }
                         break;
                     case Event.ONTOUCHEND:
                     case Event.ONTOUCHCANCEL:
-                        VConsole.log("ONTOUCHEND");
+                        touchEventHandled = true;
                         if (contextTouchTimeout != null) {
-                            VConsole.log("CANCEL CONTEXT TIMEOUT");
                             contextTouchTimeout.cancel();
                         }
                         if (dragTouchTimeout != null) {
-                            VConsole.log("CANCEL DRAG TIMEOUT");
                             dragTouchTimeout.cancel();
                         }
                         if (touchStart != null) {
@@ -5156,67 +5137,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             touchStart = null;
                         }
                         isDragging = false;
-                        VConsole.log("END ONTOUCHEND");
                         break;
-                    case Event.ONMOUSEDOWN:
-                        VConsole.log("ONMOUSEDOWN");
-                        if (targetTdOrTr != null) {
-                            setRowFocus(this);
-                            ensureFocus();
-                            if (dragmode != 0
-                                    && (event.getButton() == NativeEvent.BUTTON_LEFT)) {
-                                startRowDrag(event, event.getTypeInt(),
-                                        targetTdOrTr);
-                            } else {
-                                event.stopPropagation();
-                            }
-
-                            event.preventDefault();
-                        }
-                        break;
-                    case Event.ONMOUSEOUT:
-                        VConsole.log("ONMOUSEOUT");
-                        break;
-                    case Event.ONMOUSEUP:
-                        VConsole.log("ONMOUSEUP");
-                        if (targetTdOrTr != null) {
-                            if (isSelectable()) {
-                                boolean currentlyJustThisRowSelected = selectedRowKeys
-                                        .size() == 1
-                                        && selectedRowKeys.contains(getKey());
-
-                                if (!currentlyJustThisRowSelected) {
-                                    if (isSingleSelectMode()
-                                            || isMultiSelectModeDefault()) {
-                                        deselectAll();
-                                    }
-                                    toggleSelection();
-                                } else if ((isSingleSelectMode() || isMultiSelectModeSimple())
-                                        && nullSelectionAllowed) {
-                                    toggleSelection();
-                                }
-
-                                selectionRangeStart = this;
-                                setRowFocus(this);
-
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-                        }
-
-                        break;
-                    case Event.ONDBLCLICK:
-                        if (targetTdOrTr != null) {
-                            handleClickEvent(event, targetTdOrTr, true);
-                        }
-                        break;
-                    default:
                     }
                 }
-                VConsole.log("-- SUPER ONBROWSEREVENT");
-
-                super.onBrowserEvent(event);
-                VConsole.log("-- END ONTOUCHBROWSEREVENT");
+                return touchEventHandled;
             }
 
             /*
@@ -5225,12 +5149,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             @Override
             public void onBrowserEvent(final Event event) {
 
-                if (hasNativeTouchScrolling) {
-                    onTouchBrowserEvent(event);
-                    return;
-                }
+                final boolean touchEventHandled = handleTouchEvent(event);
 
-                if (enabled) {
+                if (enabled && !touchEventHandled) {
                     final int type = event.getTypeInt();
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
                     if (type == Event.ONCONTEXTMENU) {
@@ -5263,7 +5184,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         break;
                     case Event.ONMOUSEUP:
                         if (targetCellOrRowFound) {
-                            mDown = false;
                             /*
                              * Queue here, send at the same time as the
                              * corresponding value change event - see #7127
@@ -5507,7 +5427,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         break;
                     case Event.ONMOUSEOUT:
                         if (targetCellOrRowFound) {
-                            mDown = false;
                         }
                         break;
                     default:
@@ -5538,7 +5457,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             protected void startRowDrag(Event event, final int type,
                     Element targetTdOrTr) {
-                mDown = true;
                 VTransferable transferable = new VTransferable();
                 transferable.setDragSource(VScrollTable.this);
                 transferable.setData("itemId", "" + rowKey);
