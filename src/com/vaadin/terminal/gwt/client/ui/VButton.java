@@ -77,7 +77,9 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
     private boolean isCapturing;
 
     /**
-     * If <code>true</code>, this widget has focus with the space bar down.
+     * If <code>true</code>, this widget has focus with the space bar down. This
+     * means that we will get events when the button is released, but we should
+     * trigger the button only if the button is still focused at that point.
      */
     private boolean isFocusing;
 
@@ -90,8 +92,6 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
 
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
-
-    private int clickShortcut = 0;
 
     /**
      * If caption should be rendered in HTML
@@ -173,10 +173,6 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
                 wrapper.removeChild(icon.getElement());
                 icon = null;
             }
-        }
-
-        if (uidl.hasAttribute("keycode")) {
-            clickShortcut = uidl.getIntAttribute("keycode");
         }
     }
 
@@ -316,37 +312,28 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
         if ((event.getTypeInt() & Event.KEYEVENTS) != 0) {
             switch (type) {
             case Event.ONKEYDOWN:
+                // Stop propagation when the user starts pressing a button that
+                // we are handling to prevent actions from getting triggered
                 if (event.getKeyCode() == 32 /* space */) {
                     isFocusing = true;
                     event.preventDefault();
+                    event.stopPropagation();
+                } else if (event.getKeyCode() == KeyCodes.KEY_ENTER) {
+                    event.stopPropagation();
                 }
                 break;
             case Event.ONKEYUP:
                 if (isFocusing && event.getKeyCode() == 32 /* space */) {
                     isFocusing = false;
-
-                    /*
-                     * If click shortcut is space then the shortcut handler will
-                     * take care of the click.
-                     */
-                    if (clickShortcut != 32 /* space */) {
-                        onClick();
-                    }
-
+                    onClick();
+                    event.stopPropagation();
                     event.preventDefault();
                 }
                 break;
             case Event.ONKEYPRESS:
                 if (event.getKeyCode() == KeyCodes.KEY_ENTER) {
-
-                    /*
-                     * If click shortcut is enter then the shortcut handler will
-                     * take care of the click.
-                     */
-                    if (clickShortcut != KeyCodes.KEY_ENTER) {
-                        onClick();
-                    }
-
+                    onClick();
+                    event.stopPropagation();
                     event.preventDefault();
                 }
                 break;

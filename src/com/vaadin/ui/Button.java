@@ -158,9 +158,6 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
         if (isDisableOnClick()) {
             target.addAttribute(VButton.ATTR_DISABLE_ON_CLICK, true);
         }
-        if (clickShortcut != null) {
-            target.addAttribute("keycode", clickShortcut.getKeyCode());
-        }
 
         if (isHtmlContentAllowed()) {
             target.addAttribute("html-caption", true);
