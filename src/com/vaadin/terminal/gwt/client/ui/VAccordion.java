@@ -453,8 +453,6 @@ public class VAccordion extends VTabsheetBase implements
 
             touchScrollHandler.addElement(getContainerElement());
 
-            sinkEvents(Event.MOUSEEVENTS);
-
             close();
         }
 
