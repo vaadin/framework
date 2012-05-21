@@ -53,7 +53,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
     protected void setup(WrappedRequest request) {
 
         view = new VerticalLayout();
-        view.setSizeFull();
+        // view.setSizeFull();
         view.setMargin(true);
         view.setSpacing(true);
 
@@ -72,6 +72,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
     private Component createHorizontalTest() {
         HorizontalLayout l = new HorizontalLayout();
         l.setWidth("100%");
+        l.setSpacing(true);
 
         Label exp;
 

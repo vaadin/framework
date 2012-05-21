@@ -216,6 +216,17 @@ public abstract class AbstractBoxLayoutConnector extends
         hasRelativeHeight.clear();
         needsMeasure.clear();
 
+        boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
+                : !isUndefinedWidth();
+        for (ComponentConnector child : getChildren()) {
+            double expandRatio = getState().getChildData().get(child)
+                    .getExpandRatio();
+            if (expandRatio > 0) {
+                equalExpandRatio = false;
+                break;
+            }
+        }
+
         for (ComponentConnector child : getChildren()) {
             Slot slot = getWidget().getSlot(child);
 
@@ -225,7 +236,9 @@ public abstract class AbstractBoxLayoutConnector extends
 
             double expandRatio = getState().getChildData().get(child)
                     .getExpandRatio();
-            if (expandRatio == 0) {
+            if (equalExpandRatio) {
+                expandRatio = 1;
+            } else if (expandRatio == 0) {
                 expandRatio = -1;
             }
             slot.setExpandRatio(expandRatio);
