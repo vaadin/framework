@@ -18,8 +18,8 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
-import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
@@ -28,17 +28,16 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
  */
-public class JSR286PortletApplication extends Application.LegacyApplication {
+public class JSR286PortletRoot extends Root {
 
-    LegacyWindow main = new LegacyWindow();
     TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
@@ -46,16 +45,19 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
     Link someAction = null;
 
     @Override
-    public void init() {
-        setMainWindow(main);
-
+    protected void init(WrappedRequest request) {
+        VerticalLayout main = new VerticalLayout();
+        tf.setDebugId("tf");
+        userInfo.setDebugId("userInfo");
+        portletEdit.setDebugId("portletEdit");
+        portletMax.setDebugId("portletMax");
         Embedded appResourceTest = new Embedded(
                 "Test of ApplicationResources with full path",
-                new FlagSeResource(this));
+                new FlagSeResource(getApplication()));
         main.addComponent(appResourceTest);
         Embedded specialNameResourceTest = new Embedded(
                 "Test ApplicationResources with special names",
-                new SpecialNameResource(this));
+                new SpecialNameResource(getApplication()));
         main.addComponent(specialNameResourceTest);
 
         userInfo.setCaption("User info");
@@ -79,11 +81,12 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
         });
         main.addComponent(upload);
 
-        if (getContext() instanceof PortletApplicationContext2) {
-            PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();
-            ctx.addPortletListener(this, new DemoPortletListener());
+        if (getApplication().getContext() instanceof PortletApplicationContext2) {
+            PortletApplicationContext2 ctx = (PortletApplicationContext2) getApplication()
+                    .getContext();
+            ctx.addPortletListener(getApplication(), new DemoPortletListener());
         } else {
-            getMainWindow().showNotification("Not inited via Portal!",
+            showNotification("Not inited via Portal!",
                     Notification.TYPE_ERROR_MESSAGE);
         }
 
@@ -93,7 +96,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response, Root window) {
-            main.addComponent(new Label("Action received"));
+            getContent().addComponent(new Label("Action received"));
         }
 
         public void handleRenderRequest(RenderRequest request,
@@ -106,7 +109,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
             tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
 
             // Show notification about current mode and state
-            getMainWindow().showNotification(
+            showNotification(
                     "Portlet status",
                     "Mode: " + request.getPortletMode() + " State: "
                             + request.getWindowState(),
@@ -160,7 +163,9 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
                 try {
                     someAction = new Link("An action", new ExternalResource(
                             url.toString()));
-                    main.addComponent(someAction);
+                    someAction.setDebugId("someAction");
+
+                    addComponent(someAction);
                 } catch (Exception e) {
                     // Oops
                     System.err.println("Could not create someAction: " + e);
