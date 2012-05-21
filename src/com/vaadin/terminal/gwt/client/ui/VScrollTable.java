@@ -5426,8 +5426,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         }
                         break;
                     case Event.ONMOUSEOUT:
-                        if (targetCellOrRowFound) {
-                        }
                         break;
                     default:
                         break;
