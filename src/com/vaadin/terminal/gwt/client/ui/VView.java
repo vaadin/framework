@@ -47,6 +47,10 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHan
 public class VView extends SimplePanel implements Container, ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
 
+    public static final String BROWSER_HEIGHT_VAR = "browserHeight";
+
+    public static final String BROWSER_WIDTH_VAR = "browserWidth";
+
     private static final String CLASSNAME = "v-view";
 
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
@@ -68,13 +72,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private int windowWidth;
     private int windowHeight;
-
-    /*
-     * Last know view size used to detect whether new dimensions should be sent
-     * to the server.
-     */
-    private int viewWidth;
-    private int viewHeight;
 
     private ApplicationConnection connection;
 
@@ -547,16 +544,18 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private void sendClientResized() {
         Element parentElement = getElement().getParentElement();
-        int newViewHeight = parentElement.getClientHeight();
-        int newViewWidth = parentElement.getClientWidth();
+        int viewHeight = parentElement.getClientHeight();
+        int viewWidth = parentElement.getClientWidth();
 
-        // Send the view dimensions if they have changed
-        if (newViewHeight != viewHeight || newViewWidth != viewWidth) {
-            viewHeight = newViewHeight;
-            viewWidth = newViewWidth;
-            connection.updateVariable(id, "height", newViewHeight, false);
-            connection.updateVariable(id, "width", newViewWidth, immediate);
-        }
+        connection.updateVariable(id, "height", viewHeight, false);
+        connection.updateVariable(id, "width", viewWidth, false);
+
+        int windowWidth = Window.getClientWidth();
+        int windowHeight = Window.getClientHeight();
+
+        connection.updateVariable(id, BROWSER_WIDTH_VAR, windowWidth, false);
+        connection.updateVariable(id, BROWSER_HEIGHT_VAR, windowHeight,
+                immediate);
     }
 
     public native static void goTo(String url)

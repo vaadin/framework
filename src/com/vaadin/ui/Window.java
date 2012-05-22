@@ -223,6 +223,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      */
     private Component scrollIntoView;
 
+    private int browserWindowWidth = -1;
+
+    private int browserWindowHeight = -1;
+
     /**
      * Creates a new unnamed window with a default layout.
      */
@@ -1079,6 +1083,20 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         if (variables.containsKey("width")
                 && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
                         .get("width") != getWidth())) {
+            sizeHasChanged = true;
+        }
+        Integer browserHeightVar = (Integer) variables
+                .get(VView.BROWSER_HEIGHT_VAR);
+        if (browserHeightVar != null
+                && browserHeightVar.intValue() != browserWindowHeight) {
+            browserWindowHeight = browserHeightVar.intValue();
+            sizeHasChanged = true;
+        }
+        Integer browserWidthVar = (Integer) variables
+                .get(VView.BROWSER_WIDTH_VAR);
+        if (browserWidthVar != null
+                && browserWidthVar.intValue() != browserWindowWidth) {
+            browserWindowWidth = browserWidthVar.intValue();
             sizeHasChanged = true;
         }
 
@@ -2380,4 +2398,35 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         }
     }
 
+    /**
+     * Gets the height of the viewport area of the browser window where this
+     * window is displayed.
+     * 
+     * @return the browser viewport height in pixels
+     */
+    public int getBrowserWindowHeight() {
+        // Size only reported by VView -> data only available from application
+        // level window
+        if (getParent() != null) {
+            return (getParent()).getBrowserWindowHeight();
+        }
+
+        return browserWindowHeight;
+    }
+
+    /**
+     * Gets the width of the viewport area of the browser window where this
+     * window is displayed.
+     * 
+     * @return the browser viewport width in pixels
+     */
+    public int getBrowserWindowWidth() {
+        // Size only reported by VView -> data only available from application
+        // level window
+        if (getParent() != null) {
+            return (getParent()).getBrowserWindowWidth();
+        }
+
+        return browserWindowWidth;
+    }
 }

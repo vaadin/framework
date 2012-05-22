@@ -36,8 +36,10 @@ public class EmbedSizeTest extends TestBase {
         mainWindow.addListener(new Window.ResizeListener() {
             public void windowResized(ResizeEvent e) {
                 Window window = e.getWindow();
-                log.log("Resize event: " + window.getWidth() + " x "
-                        + window.getHeight());
+                log.log("App: " + window.getWidth() + " x "
+                        + window.getHeight() + ", Browser window: "
+                        + window.getBrowserWindowWidth() + " x "
+                        + window.getBrowserWindowHeight());
             }
         });
     }
