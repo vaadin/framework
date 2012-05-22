@@ -67,7 +67,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private static final Logger logger = Logger
             .getLogger(AbstractApplicationPortlet.class.getName());
 
-    private static class WrappedHttpAndPortletRequest extends
+    public static class WrappedHttpAndPortletRequest extends
             WrappedPortletRequest {
 
         public WrappedHttpAndPortletRequest(PortletRequest request,
@@ -112,7 +112,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    private static class WrappedGateinRequest extends
+    public static class WrappedGateinRequest extends
             WrappedHttpAndPortletRequest {
         public WrappedGateinRequest(PortletRequest request,
                 DeploymentConfiguration deploymentConfiguration) {
@@ -134,7 +134,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    private static class WrappedLiferayRequest extends
+    public static class WrappedLiferayRequest extends
             WrappedHttpAndPortletRequest {
 
         public WrappedLiferayRequest(PortletRequest request,
@@ -169,7 +169,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     }
 
-    private static class AbstractApplicationPortletWrapper implements Callback {
+    public static class AbstractApplicationPortletWrapper implements Callback {
 
         private final AbstractApplicationPortlet portlet;
 
@@ -500,20 +500,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
 
-        WrappedPortletRequest wrappedRequest;
-
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        if (portalInfo.contains("liferay")) {
-            wrappedRequest = new WrappedLiferayRequest(request,
-                    getDeploymentConfiguration());
-        } else if (portalInfo.contains("gatein")) {
-            wrappedRequest = new WrappedGateinRequest(request,
-                    getDeploymentConfiguration());
-        } else {
-            wrappedRequest = new WrappedPortletRequest(request,
-                    getDeploymentConfiguration());
-        }
+        WrappedPortletRequest wrappedRequest = createWrappedRequest(request);
 
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
@@ -710,6 +697,30 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 }
             }
         }
+    }
+
+    /**
+     * Wraps the request in a (possibly portal specific) wrapped portlet
+     * request.
+     * 
+     * @param request
+     *            The original PortletRequest
+     * @return A wrapped version of the PorletRequest
+     */
+    protected WrappedPortletRequest createWrappedRequest(PortletRequest request) {
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        if (portalInfo.contains("liferay")) {
+            return new WrappedLiferayRequest(request,
+                    getDeploymentConfiguration());
+        } else if (portalInfo.contains("gatein")) {
+            return new WrappedGateinRequest(request,
+                    getDeploymentConfiguration());
+        } else {
+            return new WrappedPortletRequest(request,
+                    getDeploymentConfiguration());
+        }
+
     }
 
     private DeploymentConfiguration getDeploymentConfiguration() {
