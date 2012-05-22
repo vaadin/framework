@@ -2112,6 +2112,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 return true;
             }
         } else {
+            if (scrollBody == null) {
+                return false;
+            }
             int fakeheight = (int) Math.round(scrollBody.getRowHeight()
                     * totalRows);
             int availableHeight = scrollBodyPanel.getElement().getPropertyInt(
@@ -6213,9 +6216,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     @Override
     public void setHeight(String height) {
+        boolean hadScrollbars = willHaveScrollbars();
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
+
+        if (hadScrollbars != willHaveScrollbars()) {
+            triggerLazyColumnAdjustment(true);
+        }
 
         if (initializedAndAttached) {
             updatePageLength();
