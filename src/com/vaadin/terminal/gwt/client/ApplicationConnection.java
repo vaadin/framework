@@ -331,6 +331,25 @@ public class ApplicationConnection {
     }-*/;
 
     /**
+     * If on Liferay and logged in, ask the client side session management
+     * JavaScript to extend the session duration.
+     * 
+     * Otherwise, Liferay client side JavaScript will explicitly expire the
+     * session even though the server side considers the session to be active.
+     * See ticket #8305 for more information.
+     */
+    protected native void extendLiferaySession()
+    /*-{
+    if ($wnd.Liferay && $wnd.Liferay.Session) {
+        $wnd.Liferay.Session.extend();
+        // if the extend banner is visible, hide it
+        if ($wnd.Liferay.Session.banner) {
+            $wnd.Liferay.Session.banner.remove();
+        }
+    }
+    }-*/;
+
+    /**
      * Get the active Console for writing debug messages. May return an actual
      * logging console, or the NullConsole if debugging is not turned on.
      * 
@@ -819,6 +838,14 @@ public class ApplicationConnection {
             public void execute() {
                 if (!hasActiveRequest()) {
                     hideLoadingIndicator();
+
+                    // If on Liferay and session expiration management is in
+                    // use, extend session duration on each request.
+                    // Doing it here rather than before the request to improve
+                    // responsiveness.
+                    // Postponed until the end of the next request if other
+                    // requests still pending.
+                    extendLiferaySession();
                 }
             }
         });
