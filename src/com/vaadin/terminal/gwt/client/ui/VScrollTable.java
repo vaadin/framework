@@ -5088,6 +5088,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                             // is held in place long enough.
                                             showContextMenu(touchStart);
                                             event.preventDefault();
+                                            touchStart = null;
                                         }
                                     }
                                 };
@@ -5134,6 +5135,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         if (touchStart != null) {
                             event.preventDefault();
                             event.stopPropagation();
+                            if (!BrowserInfo.get().isAndroid()) {
+                                Util.simulateClickFromTouchEvent(touchStart,
+                                        this);
+                            }
                             touchStart = null;
                         }
                         isDragging = false;
