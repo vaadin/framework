@@ -214,6 +214,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             .isTouchDevice()
             && !BrowserInfo.get().requiresTouchScrollDelegate();
 
+    private Set<String> noncollapsibleColumns;
+
     /**
      * Represents a select range of rows
      */
@@ -1086,6 +1088,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
         updateFooter(uidl.getStringArrayAttribute("vcolorder"));
+        if (uidl.hasVariable("noncollapsiblecolumns")) {
+            noncollapsibleColumns = uidl
+                    .getStringArrayVariableAsSet("noncollapsiblecolumns");
+        }
     }
 
     private void updateCollapsedColumns(UIDL uidl) {
@@ -3244,6 +3250,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             String colKey;
             private boolean collapsed;
+            private boolean noncollapsible = false;
             private VScrollTableRow currentlyFocusedRow;
 
             public VisibleColumnAction(String colKey) {
@@ -3255,6 +3262,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             @Override
             public void execute() {
+                if (noncollapsible) {
+                    return;
+                }
                 client.getContextMenu().hide();
                 // toggle selected column
                 if (collapsedColumns.contains(colKey)) {
@@ -3278,17 +3288,27 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 collapsed = b;
             }
 
+            public void setNoncollapsible(boolean b) {
+                noncollapsible = b;
+            }
+
             /**
              * Override default method to distinguish on/off columns
              */
             @Override
             public String getHTML() {
                 final StringBuffer buf = new StringBuffer();
+                buf.append("<span class=\"");
                 if (collapsed) {
-                    buf.append("<span class=\"v-off\">");
+                    buf.append("v-off");
                 } else {
-                    buf.append("<span class=\"v-on\">");
+                    buf.append("v-on");
                 }
+                if (noncollapsible) {
+                    buf.append(" v-disabled");
+                }
+                buf.append("\">");
+
                 buf.append(super.getHTML());
                 buf.append("</span>");
 
@@ -3329,6 +3349,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 a.setCaption(c.getCaption());
                 if (!c.isEnabled()) {
                     a.setCollapsed(true);
+                }
+                if (noncollapsibleColumns.contains(cid)) {
+                    a.setNoncollapsible(true);
                 }
                 actions[i] = a;
             }

@@ -230,6 +230,11 @@ public class Table extends AbstractSelect implements Action.Container,
     private LinkedList<Object> visibleColumns = new LinkedList<Object>();
 
     /**
+     * Holds noncollapsible columns.
+     */
+    private HashSet<Object> noncollapsibleColumns = new HashSet<Object>();
+
+    /**
      * Holds propertyIds of currently collapsed columns.
      */
     private final HashSet<Object> collapsedColumns = new HashSet<Object>();
@@ -1139,6 +1144,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!isColumnCollapsingAllowed()) {
             throw new IllegalStateException("Column collapsing not allowed!");
         }
+        if (collapsed && noncollapsibleColumns.contains(propertyId)) {
+            throw new IllegalStateException("The column is noncollapsible!");
+        }
 
         if (collapsed) {
             collapsedColumns.add(propertyId);
@@ -1175,6 +1183,34 @@ public class Table extends AbstractSelect implements Action.Container,
         // Assures the visual refresh. No need to reset the page buffer before
         // as the content has not changed, only the alignments.
         refreshRenderedCells();
+    }
+
+    /**
+     * Sets whether a column can be collapsed or not.
+     * 
+     * @param propertyId
+     *            the propertyID identifying the column.
+     * @param collapsible
+     *            the desired collapsibleness
+     */
+    public void setColumnNoncollapsible(Object propertyId,
+            boolean noncollapsible) {
+        if (noncollapsible) {
+            noncollapsibleColumns.add(propertyId);
+            collapsedColumns.remove(propertyId);
+        } else {
+            noncollapsibleColumns.remove(propertyId);
+        }
+        refreshRowCache();
+    }
+
+    /**
+     * Checks if the column can be collapsed.
+     * 
+     * @return true if the column can be collapsed; false otherwise.
+     */
+    public boolean isColumnNoncollapsible(Object propertyId) {
+        return noncollapsibleColumns.contains(propertyId);
     }
 
     /**
@@ -2996,7 +3032,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
             target.addVariable(this, "collapsedcolumns", collapsedKeys);
+
+            final String[] noncollapsibleKeys = new String[noncollapsibleColumns
+                    .size()];
+            nextColumn = 0;
+            for (Object colId : noncollapsibleColumns) {
+                noncollapsibleKeys[nextColumn++] = columnIdMap.key(colId);
+            }
+            target.addVariable(this, "noncollapsiblecolumns",
+                    noncollapsibleKeys);
         }
+
     }
 
     private void paintActions(PaintTarget target, final Set<Action> actionSet)
