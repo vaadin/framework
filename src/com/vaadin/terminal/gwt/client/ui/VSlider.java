@@ -200,7 +200,11 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
     private void buildBase() {
         final String styleAttribute = vertical ? "height" : "width";
+        final String oppositeStyleAttribute = vertical ? "width" : "height";
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+
+        // clear unnecessary opposite style attribute
+        DOM.setStyleAttribute(base, oppositeStyleAttribute, "");
 
         final Element p = DOM.getParent(getElement());
         if (DOM.getElementPropertyInt(p, domProperty) > 50) {
@@ -235,9 +239,14 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
     private void buildHandle() {
         final String styleAttribute = vertical ? "height" : "width";
         final String handleAttribute = vertical ? "marginTop" : "marginLeft";
+        final String oppositeHandleAttribute = vertical ? "marginLeft"
+                : "marginTop";
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
+
+        // clear unnecessary opposite handle attribute
+        DOM.setStyleAttribute(handle, oppositeHandleAttribute, "");
 
         if (scrollbarStyle) {
             // Only stretch the handle if scrollbar style is set.
@@ -356,7 +365,7 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             feedbackPopup.show();
         }
-        if(Util.isTouchEvent(event)) {
+        if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }
