@@ -148,6 +148,8 @@
 				<path refid="classpath" />
 				<pathelement path="${class-dir}" />
 			</classpath>
+			
+			<formatter usefile="false" type="plain"/>
 
 			<jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
 			<jvmarg value="-Dcom.vaadin.testbench.deployment.url=${com.vaadin.testbench.deployment.url}" />
