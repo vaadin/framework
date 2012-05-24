@@ -1237,6 +1237,12 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             updateRootWidth();
         }
 
+        // Popup opener width may have changed due to a style change (#8801)
+        if (!readonly && popupWidth != Util.getRequiredWidth(popupOpener)) {
+            popupWidth = Util.getRequiredWidth(popupOpener);
+            updateRootWidth();
+        }
+
         // Focus dependent style names are lost during the update, so we add
         // them here back again
         if (focused) {
