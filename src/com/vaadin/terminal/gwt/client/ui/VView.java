@@ -136,7 +136,14 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
         TouchScrollDelegate.enableTouchScrolling(this, getElement());
+    }
 
+    /**
+     * Start to periodically monitor for parent element resizes if embedded
+     * application (e.g. portlet).
+     */
+    protected void onLoad() {
+        super.onLoad();
         if (isMonitoringParentSize()) {
             resizeTimer = new Timer() {
                 @Override
@@ -149,6 +156,18 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             };
             resizeTimer.schedule(MONITOR_PARENT_TIMER_INTERVAL);
         }
+    }
+
+    /**
+     * Stop monitoring for parent element resizes.
+     */
+    @Override
+    protected void onUnload() {
+        if (resizeTimer != null) {
+            resizeTimer.cancel();
+            resizeTimer = null;
+        }
+        super.onUnload();
     }
 
     /**
