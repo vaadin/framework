@@ -350,6 +350,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
             return width;
         }
+
         public Element getCloseButton() {
             return closeButton;
         }
@@ -1274,7 +1275,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
              */
             if (BrowserInfo.get().isFirefox() || BrowserInfo.get().isIE9()) {
                 Util.setStyleTemporarily((Element) tp.getElement()
-                        .getFirstChildElement(), "overflow", "");
+                        .getFirstChildElement(), "overflow", "hidden");
             }
             return false;
         } else {
