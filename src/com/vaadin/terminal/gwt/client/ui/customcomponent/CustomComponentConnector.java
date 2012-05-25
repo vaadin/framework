@@ -28,8 +28,8 @@ public class CustomComponentConnector extends
         super.onConnectorHierarchyChange(event);
 
         ComponentConnector newChild = null;
-        if (getChildren().size() == 1) {
-            newChild = getChildren().get(0);
+        if (getChildComponents().size() == 1) {
+            newChild = getChildComponents().get(0);
         }
 
         VCustomComponent customComponent = getWidget();

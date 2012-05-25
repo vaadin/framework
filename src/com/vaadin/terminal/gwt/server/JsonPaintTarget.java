@@ -26,6 +26,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
 
 /**
@@ -399,7 +400,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    public void addAttribute(String name, ClientConnector value)
+    public void addAttribute(String name, Component value)
             throws PaintException {
         final String id = value.getConnectorId();
         addAttribute(name, id);
@@ -468,7 +469,7 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public void addVariable(VariableOwner owner, String name,
-            ClientConnector value) throws PaintException {
+            Component value) throws PaintException {
         tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
     }
 
@@ -645,7 +646,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
-    public PaintStatus startPaintable(ClientConnector connector, String tagName)
+    public PaintStatus startPaintable(Component connector, String tagName)
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
@@ -670,7 +671,7 @@ public class JsonPaintTarget implements PaintTarget {
         return PaintStatus.PAINTING;
     }
 
-    public void endPaintable(ClientConnector paintable) throws PaintException {
+    public void endPaintable(Component paintable) throws PaintException {
         logger.fine("endPaintable for " + paintable.getClass().getName() + "@"
                 + Integer.toHexString(paintable.hashCode()));
 

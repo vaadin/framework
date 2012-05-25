@@ -24,7 +24,6 @@ public class ComponentState extends SharedState {
     private String width = "";
     private boolean readOnly = false;
     private boolean immediate = false;
-    private boolean enabled = true;
     private String description = "";
     // Note: for the caption, there is a difference between null and an empty
     // string!
@@ -172,29 +171,6 @@ public class ComponentState extends SharedState {
      */
     public boolean hasStyles() {
         return styles != null && !styles.isEmpty();
-    }
-
-    /**
-     * Returns true if the component is enabled.
-     * 
-     * @see com.vaadin.ui.Component#isEnabled()
-     * 
-     * @return true if the component is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Enables or disables the component.
-     * 
-     * @see com.vaadin.ui.Component#setEnabled(boolean)
-     * 
-     * @param enabled
-     *            new mode for the component
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     /**

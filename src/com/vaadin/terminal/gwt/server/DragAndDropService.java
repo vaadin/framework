@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
@@ -241,5 +243,45 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     public Class<? extends SharedState> getStateType() {
         return SharedState.class;
+    }
+
+    public void requestRepaint() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public ClientConnector getParent() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void requestRepaintAll() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setParent(ClientConnector parent) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void attach() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void detach() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public Iterator<Extension> getExtensionIterator() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void removeExtension(Extension feature) {
+        // TODO Auto-generated method stub
+
     }
 }

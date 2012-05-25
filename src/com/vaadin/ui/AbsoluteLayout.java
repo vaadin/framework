@@ -161,7 +161,8 @@ public class AbsoluteLayout extends AbstractLayout implements
         // connectorId unless the component is attached to the application so
         // the String->String map cannot be populated in internal* either.
         Map<String, String> connectorToPosition = new HashMap<String, String>();
-        for (Component c : this) {
+        for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
+            Component c = ci.next();
             connectorToPosition.put(c.getConnectorId(), getPosition(c)
                     .getCSSString());
         }

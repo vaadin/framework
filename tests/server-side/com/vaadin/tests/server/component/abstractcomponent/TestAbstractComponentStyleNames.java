@@ -58,5 +58,4 @@ public class TestAbstractComponentStyleNames extends TestCase {
         return new AbstractComponent() {
         };
     }
-
 }

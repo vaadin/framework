@@ -3,7 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -18,17 +18,9 @@ public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector,
         ConnectorHierarchyChangeHandler {
 
-    List<ComponentConnector> children;
+    List<ComponentConnector> childComponents;
 
     private final boolean debugLogging = false;
-
-    /**
-     * Temporary storage for last enabled state to be able to see if it has
-     * changed. Can be removed once we are able to listen specifically for
-     * enabled changes in the state. Widget.isEnabled() cannot be used as all
-     * Widgets do not implement HasEnabled
-     */
-    private boolean lastWidgetEnabledState = true;
 
     /**
      * Default constructor
@@ -43,12 +35,12 @@ public abstract class AbstractComponentContainerConnector extends
      * @see
      * com.vaadin.terminal.gwt.client.ComponentContainerConnector#getChildren()
      */
-    public List<ComponentConnector> getChildren() {
-        if (children == null) {
-            return new LinkedList<ComponentConnector>();
+    public List<ComponentConnector> getChildComponents() {
+        if (childComponents == null) {
+            return Collections.emptyList();
         }
 
-        return children;
+        return childComponents;
     }
 
     /*
@@ -58,8 +50,8 @@ public abstract class AbstractComponentContainerConnector extends
      * com.vaadin.terminal.gwt.client.ComponentContainerConnector#setChildren
      * (java.util.Collection)
      */
-    public void setChildren(List<ComponentConnector> children) {
-        this.children = children;
+    public void setChildComponents(List<ComponentConnector> childComponents) {
+        this.childComponents = childComponents;
     }
 
     /*
@@ -80,7 +72,7 @@ public abstract class AbstractComponentContainerConnector extends
             VConsole.log(oldChildren);
 
             String newChildren = "* New children: ";
-            for (ComponentConnector child : getChildren()) {
+            for (ComponentConnector child : getChildComponents()) {
                 newChildren += Util.getConnectorString(child) + " ";
             }
             VConsole.log(newChildren);
@@ -91,20 +83,5 @@ public abstract class AbstractComponentContainerConnector extends
             ConnectorHierarchyChangeHandler handler) {
         return ensureHandlerManager().addHandler(
                 ConnectorHierarchyChangeEvent.TYPE, handler);
-    }
-
-    @Override
-    public void setWidgetEnabled(boolean widgetEnabled) {
-        if (lastWidgetEnabledState == widgetEnabled) {
-            return;
-        }
-        lastWidgetEnabledState = widgetEnabled;
-
-        super.setWidgetEnabled(widgetEnabled);
-        for (ComponentConnector c : getChildren()) {
-            // Update children as they might be affected by the enabled state of
-            // their parent
-            c.setWidgetEnabled(c.isEnabled());
-        }
     }
 }

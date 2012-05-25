@@ -1584,12 +1584,4 @@ public abstract class Root extends AbstractComponentContainer implements
         return dirtyConnectorTracker;
     }
 
-    public void componentAttached(Component component) {
-        getDirtyConnectorTracker().componentAttached(component);
-    }
-
-    public void componentDetached(Component component) {
-        getDirtyConnectorTracker().componentDetached(component);
-    }
-
 }

@@ -63,7 +63,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
                 layout.spacingMeasureElement);
 
         // Unregister caption size dependencies
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Cell cell = layout.widgetToCell.get(child.getWidget());
             cell.slot.setCaption(null);
         }
@@ -155,7 +155,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         if (needCaptionUpdate) {
             needCaptionUpdate = false;
 
-            for (ComponentConnector child : getChildren()) {
+            for (ComponentConnector child : getChildComponents()) {
                 updateCaption(child);
             }
         }

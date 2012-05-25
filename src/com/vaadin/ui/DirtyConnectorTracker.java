@@ -9,10 +9,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
+import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.ui.Component.RepaintRequestEvent;
-import com.vaadin.ui.Component.RepaintRequestListener;
 
 /**
  * A class that tracks dirty {@link ClientConnector}s. A {@link ClientConnector}
@@ -25,8 +23,8 @@ import com.vaadin.ui.Component.RepaintRequestListener;
  * @since 7.0.0
  * 
  */
-public class DirtyConnectorTracker implements RepaintRequestListener {
-    private Set<Component> dirtyComponents = new HashSet<Component>();
+public class DirtyConnectorTracker {
+    private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Root root;
 
     /**
@@ -43,90 +41,72 @@ public class DirtyConnectorTracker implements RepaintRequestListener {
         this.root = root;
     }
 
-    public void repaintRequested(RepaintRequestEvent event) {
-        markDirty((Component) event.getConnector());
-    }
-
-    public void componentAttached(Component component) {
-        component.addListener(this);
-        markDirty(component);
-    }
-
-    private void markDirty(Component component) {
+    public void markDirty(ClientConnector connector) {
         if (getLogger().isLoggable(Level.FINE)) {
-            if (!dirtyComponents.contains(component)) {
+            if (!dirtyConnectors.contains(connector)) {
                 getLogger()
-                        .fine(getDebugInfo(component) + " " + "is now dirty");
+                        .fine(getDebugInfo(connector) + " " + "is now dirty");
             }
         }
 
-        dirtyComponents.add(component);
+        dirtyConnectors.add(connector);
     }
 
-    private void markClean(Component component) {
+    public void markClean(ClientConnector connector) {
         if (getLogger().isLoggable(Level.FINE)) {
-            if (dirtyComponents.contains(component)) {
+            if (dirtyConnectors.contains(connector)) {
                 getLogger().fine(
-                        getDebugInfo(component) + " " + "is no longer dirty");
+                        getDebugInfo(connector) + " " + "is no longer dirty");
             }
         }
 
-        dirtyComponents.remove(component);
+        dirtyConnectors.remove(connector);
     }
 
-    private String getDebugInfo(Component component) {
-        String message = getObjectString(component);
-        if (component.getParent() != null) {
-            message += " (parent: " + getObjectString(component.getParent())
+    private String getDebugInfo(ClientConnector connector) {
+        String message = getObjectString(connector);
+        if (connector.getParent() != null) {
+            message += " (parent: " + getObjectString(connector.getParent())
                     + ")";
         }
         return message;
     }
 
-    private String getObjectString(Object component) {
-        return component.getClass().getName() + "@"
-                + Integer.toHexString(component.hashCode());
+    private String getObjectString(Object connector) {
+        return connector.getClass().getName() + "@"
+                + Integer.toHexString(connector.hashCode());
     }
 
-    public void componentDetached(Component component) {
-        component.removeListener(this);
-        markClean(component);
+    public void markAllConnectorsDirty() {
+        markConnectorsDirtyRecursively(root);
+        getLogger().fine("All connectors are now dirty");
     }
 
-    public void markAllComponentsDirty() {
-        markComponentsDirtyRecursively(root);
-        getLogger().fine("All components are now dirty");
-    }
-
-    public void markAllComponentsClean() {
-        dirtyComponents.clear();
-        getLogger().fine("All components are now clean");
+    public void markAllConnectorsClean() {
+        dirtyConnectors.clear();
+        getLogger().fine("All connectors are now clean");
     }
 
     /**
-     * Marks all visible components dirty, starting from the given component and
+     * Marks all visible connectors dirty, starting from the given connector and
      * going downwards in the hierarchy.
      * 
      * @param c
      *            The component to start iterating downwards from
      */
-    private void markComponentsDirtyRecursively(Component c) {
-        if (!c.isVisible()) {
+    private void markConnectorsDirtyRecursively(ClientConnector c) {
+        if (c instanceof Component && !((Component) c).isVisible()) {
             return;
         }
         markDirty(c);
-        if (c instanceof HasComponents) {
-            HasComponents container = (HasComponents) c;
-            for (Component child : AbstractCommunicationManager
-                    .getChildComponents(container)) {
-                markComponentsDirtyRecursively(child);
-            }
+        for (ClientConnector child : AbstractClientConnector
+                .getAllChildrenIteratable(c)) {
+            markConnectorsDirtyRecursively(child);
         }
-
     }
 
-    public Collection<Component> getDirtyComponents() {
-        return dirtyComponents;
+    public Collection<ClientConnector> getDirtyConnectors() {
+        return dirtyConnectors;
     }
 
 }

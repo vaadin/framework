@@ -75,7 +75,7 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
         updateHtmlTemplate();
 
         // For all contained widgets
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             String location = getState().getChildLocations().get(child);
             try {
                 getWidget().setWidget(child.getWidget(), location);

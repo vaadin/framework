@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -85,4 +86,32 @@ public interface ServerConnector extends Connector {
      */
     public void onUnregister();
 
+    /**
+     * Returns the parent of this connector. Can be null for only the root
+     * connector.
+     * 
+     * @return The parent of this connector, as set by
+     *         {@link #setParent(ServerConnector)}.
+     */
+    public ServerConnector getParent();
+
+    /**
+     * Sets the parent for this connector. This method should only be called by
+     * the framework to ensure that the connector hierarchy on the client side
+     * and the server side are in sync.
+     * <p>
+     * Note that calling this method does not fire a
+     * {@link ConnectorHierarchyChangeEvent}. The event is fired only when the
+     * whole hierarchy has been updated.
+     * 
+     * @param parent
+     *            The new parent of the connector
+     */
+    public void setParent(ServerConnector parent);
+
+    public void updateEnabledState(boolean enabledState);
+
+    public void setChildren(List<ServerConnector> children);
+
+    public List<ServerConnector> getChildren();
 }

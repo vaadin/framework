@@ -3705,13 +3705,6 @@ public class Table extends AbstractSelect implements Action.Container,
         super.attach();
 
         refreshRenderedCells();
-
-        if (visibleComponents != null) {
-            for (final Iterator<Component> i = visibleComponents.iterator(); i
-                    .hasNext();) {
-                i.next().attach();
-            }
-        }
     }
 
     /**
@@ -3722,13 +3715,6 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public void detach() {
         super.detach();
-
-        if (visibleComponents != null) {
-            for (final Iterator<Component> i = visibleComponents.iterator(); i
-                    .hasNext();) {
-                i.next().detach();
-            }
-        }
     }
 
     /**
@@ -4451,10 +4437,6 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             requestRepaintAll();
         }
-    }
-
-    public void requestRepaintAll() {
-        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**

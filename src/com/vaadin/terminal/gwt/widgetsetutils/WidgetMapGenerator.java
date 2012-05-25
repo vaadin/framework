@@ -22,8 +22,8 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
@@ -71,7 +71,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  */
 public class WidgetMapGenerator extends Generator {
 
-    private static String componentConnectorClassName = ComponentConnector.class
+    private static String serverConnectorClassName = ServerConnector.class
             .getName();
 
     private String packageName;
@@ -115,7 +115,7 @@ public class WidgetMapGenerator extends Generator {
             return;
         }
         logger.log(Type.INFO,
-                "Detecting Vaadin components in classpath to generate WidgetMapImpl.java ...");
+                "Detecting Vaadin connectors in classpath to generate WidgetMapImpl.java ...");
         Date date = new Date();
 
         // init composer, set class properties, create source writer
@@ -128,7 +128,7 @@ public class WidgetMapGenerator extends Generator {
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 
-        Collection<Class<? extends ComponentConnector>> connectors = getUsedConnectors(context
+        Collection<Class<? extends ServerConnector>> connectors = getUsedConnectors(context
                 .getTypeOracle());
 
         validateConnectors(logger, connectors);
@@ -149,12 +149,11 @@ public class WidgetMapGenerator extends Generator {
     }
 
     private void validateConnectors(TreeLogger logger,
-            Collection<Class<? extends ComponentConnector>> connectors) {
+            Collection<Class<? extends ServerConnector>> connectors) {
 
-        Iterator<Class<? extends ComponentConnector>> iter = connectors
-                .iterator();
+        Iterator<Class<? extends ServerConnector>> iter = connectors.iterator();
         while (iter.hasNext()) {
-            Class<? extends ComponentConnector> connectorClass = iter.next();
+            Class<? extends ServerConnector> connectorClass = iter.next();
             Connect annotation = connectorClass.getAnnotation(Connect.class);
             if (!ClientConnector.class.isAssignableFrom(annotation.value())) {
                 logger.log(
@@ -173,13 +172,13 @@ public class WidgetMapGenerator extends Generator {
     }
 
     private void logConnectors(TreeLogger logger, GeneratorContext context,
-            Collection<Class<? extends ComponentConnector>> connectors) {
+            Collection<Class<? extends ServerConnector>> connectors) {
         logger.log(Type.INFO,
                 "Widget set will contain implementations for following component connectors: ");
 
         TreeSet<String> classNames = new TreeSet<String>();
         HashMap<String, String> loadStyle = new HashMap<String, String>();
-        for (Class<? extends ComponentConnector> connectorClass : connectors) {
+        for (Class<? extends ServerConnector> connectorClass : connectors) {
             String className = connectorClass.getCanonicalName();
             classNames.add(className);
             if (getLoadStyle(connectorClass) == LoadStyle.DEFERRED) {
@@ -208,16 +207,16 @@ public class WidgetMapGenerator extends Generator {
      *         widgetset
      */
     @SuppressWarnings("unchecked")
-    private Collection<Class<? extends ComponentConnector>> getUsedConnectors(
+    private Collection<Class<? extends ServerConnector>> getUsedConnectors(
             TypeOracle typeOracle) {
         JClassType connectorType = typeOracle.findType(Connector.class
                 .getName());
-        Collection<Class<? extends ComponentConnector>> connectors = new HashSet<Class<? extends ComponentConnector>>();
+        Collection<Class<? extends ServerConnector>> connectors = new HashSet<Class<? extends ServerConnector>>();
         for (JClassType jClassType : connectorType.getSubtypes()) {
             Connect annotation = jClassType.getAnnotation(Connect.class);
             if (annotation != null) {
                 try {
-                    Class<? extends ComponentConnector> clazz = (Class<? extends ComponentConnector>) Class
+                    Class<? extends ServerConnector> clazz = (Class<? extends ServerConnector>) Class
                             .forName(jClassType.getQualifiedSourceName());
                     connectors.add(clazz);
                 } catch (ClassNotFoundException e) {
@@ -242,15 +241,14 @@ public class WidgetMapGenerator extends Generator {
      * @return true iff the widget for given component should be lazy loaded by
      *         the client side engine
      */
-    protected LoadStyle getLoadStyle(
-            Class<? extends ComponentConnector> connector) {
+    protected LoadStyle getLoadStyle(Class<? extends ServerConnector> connector) {
         Connect annotation = connector.getAnnotation(Connect.class);
         return annotation.loadStyle();
     }
 
     private void generateInstantiatorMethod(
             SourceWriter sourceWriter,
-            Collection<Class<? extends ComponentConnector>> connectorsHavingComponentAnnotation) {
+            Collection<Class<? extends ServerConnector>> connectorsHavingComponentAnnotation) {
 
         Collection<Class<?>> deferredWidgets = new LinkedList<Class<?>>();
 
@@ -258,16 +256,16 @@ public class WidgetMapGenerator extends Generator {
         // lookup with index than with the hashmap
 
         sourceWriter.println("public void ensureInstantiator(Class<? extends "
-                + componentConnectorClassName + "> classType) {");
+                + serverConnectorClassName + "> classType) {");
         sourceWriter.println("if(!instmap.containsKey(classType)){");
         boolean first = true;
 
-        ArrayList<Class<? extends ComponentConnector>> lazyLoadedWidgets = new ArrayList<Class<? extends ComponentConnector>>();
+        ArrayList<Class<? extends ServerConnector>> lazyLoadedConnectors = new ArrayList<Class<? extends ServerConnector>>();
 
-        HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>> connectorsWithInstantiator = new HashSet<Class<? extends com.vaadin.terminal.gwt.client.ComponentConnector>>();
+        HashSet<Class<? extends ServerConnector>> connectorsWithInstantiator = new HashSet<Class<? extends ServerConnector>>();
 
-        for (Class<? extends ComponentConnector> class1 : connectorsHavingComponentAnnotation) {
-            Class<? extends ComponentConnector> clientClass = class1;
+        for (Class<? extends ServerConnector> class1 : connectorsHavingComponentAnnotation) {
+            Class<? extends ServerConnector> clientClass = class1;
             if (connectorsWithInstantiator.contains(clientClass)) {
                 continue;
             }
@@ -284,7 +282,7 @@ public class WidgetMapGenerator extends Generator {
                     + ".class) {");
 
             String instantiator = "new WidgetInstantiator() {\n public "
-                    + componentConnectorClassName
+                    + serverConnectorClassName
                     + " get() {\n return GWT.create(" + clientClass.getName()
                     + ".class );\n}\n}\n";
 
@@ -298,7 +296,7 @@ public class WidgetMapGenerator extends Generator {
                                 + clientClass.getName()
                                 + ".class,"
                                 + instantiator + ");}});\n");
-                lazyLoadedWidgets.add(class1);
+                lazyLoadedConnectors.add(class1);
 
                 if (loadStyle == LoadStyle.DEFERRED) {
                     deferredWidgets.add(class1);
@@ -321,8 +319,8 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter.println("}");
 
         sourceWriter.println("public Class<? extends "
-                + componentConnectorClassName
-                + ">[] getDeferredLoadedWidgets() {");
+                + serverConnectorClassName
+                + ">[] getDeferredLoadedConnectors() {");
 
         sourceWriter.println("return new Class[] {");
         first = true;
@@ -344,11 +342,11 @@ public class WidgetMapGenerator extends Generator {
 
         // TODO an index of last ensured widget in array
 
-        sourceWriter.println("public " + componentConnectorClassName
-                + " instantiate(Class<? extends " + componentConnectorClassName
+        sourceWriter.println("public " + serverConnectorClassName
+                + " instantiate(Class<? extends " + serverConnectorClassName
                 + "> classType) {");
         sourceWriter.indent();
-        sourceWriter.println(componentConnectorClassName
+        sourceWriter.println(serverConnectorClassName
                 + " p = super.instantiate(classType); if(p!= null) return p;");
         sourceWriter.println("return instmap.get(classType).get();");
 
@@ -365,17 +363,17 @@ public class WidgetMapGenerator extends Generator {
      */
     private void generateImplementationDetector(
             SourceWriter sourceWriter,
-            Collection<Class<? extends ComponentConnector>> paintablesHavingWidgetAnnotation) {
+            Collection<Class<? extends ServerConnector>> paintablesHavingWidgetAnnotation) {
         sourceWriter
                 .println("public Class<? extends "
-                        + componentConnectorClassName
+                        + serverConnectorClassName
                         + "> "
                         + "getConnectorClassForServerSideClassName(String fullyQualifiedName) {");
         sourceWriter.indent();
         sourceWriter
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
 
-        for (Class<? extends ComponentConnector> connectorClass : paintablesHavingWidgetAnnotation) {
+        for (Class<? extends ServerConnector> connectorClass : paintablesHavingWidgetAnnotation) {
             Class<? extends ClientConnector> clientConnectorClass = getClientConnectorClass(connectorClass);
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(clientConnectorClass.getName());
@@ -393,7 +391,7 @@ public class WidgetMapGenerator extends Generator {
     }
 
     private static Class<? extends ClientConnector> getClientConnectorClass(
-            Class<? extends ComponentConnector> connectorClass) {
+            Class<? extends ServerConnector> connectorClass) {
         Connect annotation = connectorClass.getAnnotation(Connect.class);
         return (Class<? extends ClientConnector>) annotation.value();
     }

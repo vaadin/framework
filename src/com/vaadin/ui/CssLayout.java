@@ -11,9 +11,9 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutState;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.
@@ -185,7 +185,8 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void updateState() {
         super.updateState();
         getState().getChildCss().clear();
-        for (Component child : this) {
+        for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
+            Component child = ci.next();
             String componentCssString = getCss(child);
             if (componentCssString != null) {
                 getState().getChildCss().put(child, componentCssString);

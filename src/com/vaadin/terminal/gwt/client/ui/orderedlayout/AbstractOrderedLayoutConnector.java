@@ -61,7 +61,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         lm.unregisterDependency(this, layout.spacingMeasureElement);
 
         // Unregister child caption listeners
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
             slot.setCaption(null);
         }
@@ -105,7 +105,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         VMeasuringOrderedLayout layout = getWidget();
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
 
             AlignmentInfo alignment = new AlignmentInfo(getState()
@@ -285,7 +285,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         int currentIndex = 0;
         VMeasuringOrderedLayout layout = getWidget();
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Widget childWidget = child.getWidget();
             VLayoutSlot slot = layout.getSlotForChild(childWidget);
 

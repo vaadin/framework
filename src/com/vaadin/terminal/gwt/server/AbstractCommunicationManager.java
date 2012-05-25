@@ -49,6 +49,7 @@ import com.vaadin.Version;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
@@ -74,7 +75,6 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DirtyConnectorTracker;
 import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
 
@@ -769,7 +769,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         logger.log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
             getClientCache(root).clear();
-            rootConnectorTracker.markAllComponentsDirty();
+            rootConnectorTracker.markAllConnectorsDirty();
 
             // Reset sent locales
             locales = null;
@@ -777,7 +777,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         dirtyVisibleConnectors
-                .addAll(getDirtyVisibleComponents(rootConnectorTracker));
+                .addAll(getDirtyVisibleConnectors(rootConnectorTracker));
 
         logger.log(Level.FINE, "Found " + dirtyVisibleConnectors.size()
                 + " dirty connectors to paint");
@@ -786,7 +786,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 ((Component) connector).updateState();
             }
         }
-        rootConnectorTracker.markAllComponentsClean();
+        rootConnectorTracker.markAllConnectorsClean();
 
         outWriter.print("\"changes\":[");
 
@@ -893,25 +893,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         outWriter.print("\"hierarchy\":");
 
         JSONObject hierarchyInfo = new JSONObject();
-        for (Connector connector : dirtyVisibleConnectors) {
-            if (connector instanceof HasComponents) {
-                HasComponents parent = (HasComponents) connector;
-                String parentConnectorId = parent.getConnectorId();
-                JSONArray children = new JSONArray();
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            String connectorId = connector.getConnectorId();
+            JSONArray children = new JSONArray();
 
-                for (Component child : getChildComponents(parent)) {
-                    if (isVisible(child)) {
-                        children.put(child.getConnectorId());
-                    }
+            for (ClientConnector child : AbstractClientConnector
+                    .getAllChildrenIteratable(connector)) {
+                if (isVisible(child)) {
+                    children.put(child.getConnectorId());
                 }
-                try {
-                    hierarchyInfo.put(parentConnectorId, children);
-                } catch (JSONException e) {
-                    throw new PaintException(
-                            "Failed to send hierarchy information about "
-                                    + parentConnectorId + " to the client: "
-                                    + e.getMessage(), e);
-                }
+            }
+            try {
+                hierarchyInfo.put(connectorId, children);
+            } catch (JSONException e) {
+                throw new PaintException(
+                        "Failed to send hierarchy information about "
+                                + connectorId + " to the client: "
+                                + e.getMessage(), e);
             }
         }
         outWriter.append(hierarchyInfo.toString());
@@ -1223,6 +1221,30 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     /**
+     * Checks if the connector is visible in context. For Components,
+     * {@link #isVisible(Component)} is used. For other types of connectors, the
+     * contextual visibility of its first Component ancestor is used. If no
+     * Component ancestor is found, the connector is not visible.
+     * 
+     * @param connector
+     *            The connector to check
+     * @return <code>true</code> if the connector is visible to the client,
+     *         <code>false</code> otherwise
+     */
+    static boolean isVisible(ClientConnector connector) {
+        if (connector instanceof Component) {
+            return isVisible((Component) connector);
+        } else {
+            ClientConnector parent = connector.getParent();
+            if (parent == null) {
+                return false;
+            } else {
+                return isVisible(parent);
+            }
+        }
+    }
+
+    /**
      * Checks if the component is visible in context, i.e. returns false if the
      * child is hidden, the parent is hidden or the parent says the child should
      * not be rendered (using
@@ -1254,30 +1276,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         public void remove() {
         }
 
-    }
-
-    public static Iterable<Component> getChildComponents(HasComponents cc) {
-        // TODO This must be moved to Root/Panel
-        if (cc instanceof Root) {
-            Root root = (Root) cc;
-            List<Component> children = new ArrayList<Component>();
-            if (root.getContent() != null) {
-                children.add(root.getContent());
-            }
-            for (Window w : root.getWindows()) {
-                children.add(w);
-            }
-            return children;
-        } else if (cc instanceof Panel) {
-            // This is so wrong.. (#2924)
-            if (((Panel) cc).getContent() == null) {
-                return Collections.emptyList();
-            } else {
-                return Collections.singleton((Component) ((Panel) cc)
-                        .getContent());
-            }
-        }
-        return cc;
     }
 
     /**
@@ -2016,16 +2014,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
      *            root window for which dirty components is to be fetched
      * @return
      */
-    private ArrayList<Component> getDirtyVisibleComponents(
+    private ArrayList<ClientConnector> getDirtyVisibleConnectors(
             DirtyConnectorTracker dirtyConnectorTracker) {
-        ArrayList<Component> dirtyComponents = new ArrayList<Component>();
-        for (Component c : dirtyConnectorTracker.getDirtyComponents()) {
+        ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
+        for (ClientConnector c : dirtyConnectorTracker.getDirtyConnectors()) {
             if (isVisible(c)) {
-                dirtyComponents.add(c);
+                dirtyConnectors.add(c);
             }
         }
 
-        return dirtyComponents;
+        return dirtyConnectors;
     }
 
     /**

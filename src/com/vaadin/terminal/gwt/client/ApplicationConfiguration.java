@@ -209,7 +209,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<Integer, String> unknownComponents;
 
-    private Class<? extends ComponentConnector>[] classes = new Class[1024];
+    private Class<? extends ServerConnector>[] classes = new Class[1024];
 
     private boolean browserDetailsSent = false;
     private boolean widgetsetVersionSent = false;
@@ -393,7 +393,7 @@ public class ApplicationConfiguration implements EntryPoint {
         return useDebugIdInDom;
     }
 
-    public Class<? extends ComponentConnector> getWidgetClassByEncodedTag(
+    public Class<? extends ServerConnector> getConnectorClassByEncodedTag(
             int tag) {
         try {
             return classes[tag];
@@ -508,7 +508,7 @@ public class ApplicationConfiguration implements EntryPoint {
         public void run() {
             pending = false;
             if (!isBusy()) {
-                Class<? extends ComponentConnector> nextType = getNextType();
+                Class<? extends ServerConnector> nextType = getNextType();
                 if (nextType == null) {
                     // ensured that all widgets are loaded
                     deferredWidgetLoader = null;
@@ -521,13 +521,13 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         }
 
-        private Class<? extends ComponentConnector> getNextType() {
-            Class<? extends ComponentConnector>[] deferredLoadedWidgets = widgetSet
-                    .getDeferredLoadedWidgets();
-            if (deferredLoadedWidgets.length <= nextWidgetIndex) {
+        private Class<? extends ServerConnector> getNextType() {
+            Class<? extends ServerConnector>[] deferredLoadedConnectors = widgetSet
+                    .getDeferredLoadedConnectors();
+            if (deferredLoadedConnectors.length <= nextWidgetIndex) {
                 return null;
             } else {
-                return deferredLoadedWidgets[nextWidgetIndex++];
+                return deferredLoadedConnectors[nextWidgetIndex++];
             }
         }
 

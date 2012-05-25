@@ -416,11 +416,13 @@ public class LayoutManager {
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 // Delay the overflow fix if the involved connectors might still
                 // change
-                if (!currentDependencyTree
-                        .noMoreChangesExpected(componentConnector)
-                        || !currentDependencyTree
-                                .noMoreChangesExpected(componentConnector
-                                        .getParent())) {
+                boolean connectorChangesExpected = !currentDependencyTree
+                        .noMoreChangesExpected(componentConnector);
+                boolean parentChangesExcpected = componentConnector.getParent() instanceof ComponentConnector
+                        && !currentDependencyTree
+                                .noMoreChangesExpected((ComponentConnector) componentConnector
+                                        .getParent());
+                if (connectorChangesExpected || parentChangesExcpected) {
                     delayedOverflowFixes.add(componentConnector);
                     continue;
                 }

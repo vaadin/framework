@@ -304,39 +304,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * </p>
      * 
      * @return the parent component
-     * @see #setParent(Component)
      */
     public HasComponents getParent();
-
-    /**
-     * Sets the parent component of the component.
-     * 
-     * <p>
-     * This method automatically calls {@link #attach()} if the parent becomes
-     * attached to the application, regardless of whether it was attached
-     * previously. Conversely, if the parent is {@code null} and the component
-     * is attached to the application, {@link #detach()} is called for the
-     * component.
-     * </p>
-     * <p>
-     * This method is rarely called directly. The
-     * {@link ComponentContainer#addComponent(Component)} method is normally
-     * used for adding components to a container and it will call this method
-     * implicitly.
-     * </p>
-     * 
-     * <p>
-     * It is not possible to change the parent without first setting the parent
-     * to {@code null}.
-     * </p>
-     * 
-     * @param parent
-     *            the parent component
-     * @throws IllegalStateException
-     *             if a parent is given even though the component already has a
-     *             parent
-     */
-    public void setParent(HasComponents parent);
 
     /**
      * Tests whether the component is in the read-only mode. The user can not
@@ -564,15 +533,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public Application getApplication();
 
     /**
-     * Notifies the component that it is connected to an application.
-     * 
-     * <p>
-     * The caller of this method is {@link #setParent(Component)} if the parent
-     * is itself already attached to the application. If not, the parent will
-     * call the {@link #attach()} for all its children when it is attached to
-     * the application. This method is always called before the component is
-     * painted for the first time.
-     * </p>
+     * {@inheritDoc}
      * 
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
@@ -624,36 +585,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *     }
      * }
      * </pre>
-     * 
-     * <p>
-     * The attachment logic is implemented in {@link AbstractComponent}.
-     * </p>
-     * 
-     * @see #getApplication()
      */
     public void attach();
-
-    /**
-     * Notifies the component that it is detached from the application.
-     * 
-     * <p>
-     * The {@link #getApplication()} and {@link #getRoot()} methods might return
-     * <code>null</code> after this method is called.
-     * </p>
-     * 
-     * <p>
-     * This method must call {@link Root#componentDetached(Component)} to let
-     * the Root know that a new Component has been attached.
-     * </p>
-     * *
-     * <p>
-     * The caller of this method is {@link #setParent(Component)} if the parent
-     * is in the application. When the parent is detached from the application
-     * it is its response to call {@link #detach()} for all the children and to
-     * detach itself from the terminal.
-     * </p>
-     */
-    public void detach();
 
     /**
      * Gets the locale of the component.
@@ -718,75 +651,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return current debug id, null if not set
      */
     public String getDebugId();
-
-    /**
-     * Requests that the component should be repainted as soon as possible.
-     */
-    public void requestRepaint();
-
-    /**
-     * Repaint request event is thrown when the connector needs to be repainted.
-     * This is typically done when the <code>paint</code> method would return
-     * dissimilar UIDL from the previous call of the method.
-     */
-    @SuppressWarnings("serial")
-    public static class RepaintRequestEvent extends EventObject {
-
-        /**
-         * Constructs a new event.
-         * 
-         * @param source
-         *            the paintable needing repaint.
-         */
-        public RepaintRequestEvent(ClientConnector source) {
-            super(source);
-        }
-
-        /**
-         * Gets the connector needing repainting.
-         * 
-         * @return Paintable for which the <code>paint</code> method will return
-         *         dissimilar UIDL from the previous call of the method.
-         */
-        public ClientConnector getConnector() {
-            return (ClientConnector) getSource();
-        }
-    }
-
-    /**
-     * Listens repaint requests. The <code>repaintRequested</code> method is
-     * called when the paintable needs to be repainted. This is typically done
-     * when the <code>paint</code> method would return dissimilar UIDL from the
-     * previous call of the method.
-     */
-    public interface RepaintRequestListener extends Serializable {
-
-        /**
-         * Receives repaint request events.
-         * 
-         * @param event
-         *            the repaint request event specifying the paintable source.
-         */
-        public void repaintRequested(RepaintRequestEvent event);
-    }
-
-    /**
-     * Adds repaint request listener. In order to assure that no repaint
-     * requests are missed, the new repaint listener should paint the paintable
-     * right after adding itself as listener.
-     * 
-     * @param listener
-     *            the listener to be added.
-     */
-    public void addListener(RepaintRequestListener listener);
-
-    /**
-     * Removes repaint request listener.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     */
-    public void removeListener(RepaintRequestListener listener);
 
     /* Component event framework */
 

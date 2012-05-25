@@ -201,8 +201,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
         // We always have 1 child, unless the child is hidden
         Widget newChildWidget = null;
         ComponentConnector newChild = null;
-        if (getChildren().size() == 1) {
-            newChild = getChildren().get(0);
+        if (getChildComponents().size() == 1) {
+            newChild = getChildComponents().get(0);
             newChildWidget = newChild.getWidget();
         }
 

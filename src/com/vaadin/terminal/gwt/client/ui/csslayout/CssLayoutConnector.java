@@ -64,7 +64,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         getWidget().setMarginStyles(
                 new VMarginInfo(getState().getMarginsBitmask()));
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             if (!getState().getChildCss().containsKey(child)) {
                 continue;
             }
@@ -92,7 +92,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
         int index = 0;
         FlowPane cssLayoutWidgetContainer = getWidget().panel;
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childToCaption.get(child);
             if (childCaption != null) {
                 cssLayoutWidgetContainer.addOrMove(childCaption, index++);

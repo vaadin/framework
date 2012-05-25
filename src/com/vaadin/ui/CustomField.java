@@ -63,11 +63,9 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     @Override
     public void attach() {
         root = getContent();
-        super.attach();
         getContent().setParent(this);
-        getContent().attach();
-
         fireComponentAttachEvent(getContent());
+        super.attach();
     }
 
     /**
@@ -79,7 +77,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     @Override
     public void detach() {
         super.detach();
-        getContent().detach();
     }
 
     /**
@@ -152,10 +149,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
 
     public int getComponentCount() {
         return (null != getContent()) ? 1 : 0;
-    }
-
-    public void requestRepaintAll() {
-        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**

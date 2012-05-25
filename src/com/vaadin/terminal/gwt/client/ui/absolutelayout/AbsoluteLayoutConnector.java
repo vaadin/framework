@@ -109,7 +109,7 @@ public class AbsoluteLayoutConnector extends
 
         // TODO Margin handling
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             getWrapper(child).setPosition(
                     getState().getConnectorPosition(child));
         }
@@ -133,7 +133,7 @@ public class AbsoluteLayoutConnector extends
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             getWrapper(child);
         }
 
@@ -149,7 +149,7 @@ public class AbsoluteLayoutConnector extends
 
     public void layoutVertically() {
         VAbsoluteLayout layout = getWidget();
-        for (ComponentConnector paintable : getChildren()) {
+        for (ComponentConnector paintable : getChildComponents()) {
             Widget widget = paintable.getWidget();
             AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
             Style wrapperStyle = wrapper.getElement().getStyle();
@@ -181,7 +181,7 @@ public class AbsoluteLayoutConnector extends
 
     public void layoutHorizontally() {
         VAbsoluteLayout layout = getWidget();
-        for (ComponentConnector paintable : getChildren()) {
+        for (ComponentConnector paintable : getChildComponents()) {
             AbsoluteWrapper wrapper = getWrapper(paintable);
             Style wrapperStyle = wrapper.getElement().getStyle();
 

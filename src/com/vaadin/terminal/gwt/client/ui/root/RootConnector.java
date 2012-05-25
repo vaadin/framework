@@ -329,7 +329,7 @@ public class RootConnector extends AbstractComponentContainerConnector
      */
     @Deprecated
     public boolean hasSubWindow(WindowConnector wc) {
-        return getChildren().contains(wc);
+        return getChildComponents().contains(wc);
     }
 
     /**
@@ -340,7 +340,7 @@ public class RootConnector extends AbstractComponentContainerConnector
      */
     public List<WindowConnector> getSubWindows() {
         ArrayList<WindowConnector> windows = new ArrayList<WindowConnector>();
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
             }
@@ -380,7 +380,7 @@ public class RootConnector extends AbstractComponentContainerConnector
             onChildSizeChange();
         }
 
-        for (ComponentConnector c : getChildren()) {
+        for (ComponentConnector c : getChildComponents()) {
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;
                 wc.setWindowOrderAndPosition();

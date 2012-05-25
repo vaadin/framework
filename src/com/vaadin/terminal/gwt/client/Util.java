@@ -812,13 +812,12 @@ public class Util {
         return idx;
     }
 
-    private static void printPaintablesInvocations(
+    private static void printConnectorInvocations(
             ArrayList<MethodInvocation> invocations, String id,
             ApplicationConnection c) {
-        ComponentConnector paintable = (ComponentConnector) ConnectorMap.get(c)
-                .getConnector(id);
-        if (paintable != null) {
-            VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
+        ServerConnector connector = ConnectorMap.get(c).getConnector(id);
+        if (connector != null) {
+            VConsole.log("\t" + id + " (" + connector.getClass() + ") :");
             for (MethodInvocation invocation : invocations) {
                 Object[] parameters = invocation.getParameters();
                 String formattedParams = null;
@@ -842,7 +841,7 @@ public class Util {
                         + ")");
             }
         } else {
-            VConsole.log("\t" + id + ": Warning: no corresponding paintable!");
+            VConsole.log("\t" + id + ": Warning: no corresponding connector!");
         }
     }
 
@@ -858,14 +857,14 @@ public class Util {
                 if (curId == null) {
                     curId = id;
                 } else if (!curId.equals(id)) {
-                    printPaintablesInvocations(invocations, curId, c);
+                    printConnectorInvocations(invocations, curId, c);
                     invocations.clear();
                     curId = id;
                 }
                 invocations.add(loggedBurst.get(i));
             }
             if (!invocations.isEmpty()) {
-                printPaintablesInvocations(invocations, curId, c);
+                printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
             VConsole.error(e);

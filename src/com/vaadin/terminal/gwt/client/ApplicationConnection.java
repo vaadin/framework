@@ -1271,27 +1271,24 @@ public class ApplicationConnection {
                 List<ServerConnector> currentConnectors = new ArrayList<ServerConnector>(
                         connectorMap.getConnectors());
                 for (ServerConnector c : currentConnectors) {
-                    if (c instanceof ComponentConnector) {
-                        ComponentConnector cc = (ComponentConnector) c;
-                        if (cc.getParent() != null) {
-                            if (!cc.getParent().getChildren().contains(cc)) {
-                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
-                            }
-                        } else if ((cc instanceof RootConnector && cc == getRootConnector())) {
-                            // RootConnector for this connection, leave as-is
-                        } else if (cc instanceof WindowConnector
-                                && getRootConnector().hasSubWindow(
-                                        (WindowConnector) cc)) {
-                            // Sub window attached to this RootConnector, leave
-                            // as-is
-                        } else {
-                            // The connector has been detached from the
-                            // hierarchy, unregister it and any possible
-                            // children. The RootConnector should never be
-                            // unregistered even though it has no parent.
-                            connectorMap.unregisterConnector(cc);
-                            unregistered++;
+                    if (c.getParent() != null) {
+                        if (!c.getParent().getChildren().contains(c)) {
+                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
+                    } else if ((c instanceof RootConnector && c == getRootConnector())) {
+                        // RootConnector for this connection, leave as-is
+                    } else if (c instanceof WindowConnector
+                            && getRootConnector().hasSubWindow(
+                                    (WindowConnector) c)) {
+                        // Sub window attached to this RootConnector, leave
+                        // as-is
+                    } else {
+                        // The connector has been detached from the
+                        // hierarchy, unregister it and any possible
+                        // children. The RootConnector should never be
+                        // unregistered even though it has no parent.
+                        connectorMap.unregisterConnector(c);
+                        unregistered++;
                     }
 
                 }
@@ -1319,8 +1316,8 @@ public class ApplicationConnection {
                             continue;
                         }
 
-                        Class<? extends ComponentConnector> connectorClass = configuration
-                                .getWidgetClassByEncodedTag(connectorType);
+                        Class<? extends ServerConnector> connectorClass = configuration
+                                .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
                         if (connectorClass != RootConnector.class) {
@@ -1454,47 +1451,44 @@ public class ApplicationConnection {
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
                     try {
                         String connectorId = hierarchyKeys.get(i);
-                        ServerConnector connector = connectorMap
+                        ServerConnector parentConnector = connectorMap
                                 .getConnector(connectorId);
-                        if (!(connector instanceof ComponentContainerConnector)) {
-                            VConsole.error("Retrieved a hierarchy update for a connector ("
-                                    + connectorId
-                                    + ") that is not a ComponentContainerConnector");
-                            continue;
-                        }
-                        ComponentContainerConnector ccc = (ComponentContainerConnector) connector;
-
                         JsArrayString childConnectorIds = hierarchies
                                 .getJSStringArray(connectorId);
                         int childConnectorSize = childConnectorIds.length();
 
                         List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
+                        List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
                         for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
                             String childConnectorId = childConnectorIds
                                     .get(connectorIndex);
-                            ComponentConnector childConnector = (ComponentConnector) connectorMap
+                            ServerConnector childConnector = connectorMap
                                     .getConnector(childConnectorId);
                             if (childConnector == null) {
                                 VConsole.error("Hierarchy claims that "
                                         + childConnectorId + " is a child for "
                                         + connectorId + " ("
-                                        + connector.getClass().getName()
+                                        + parentConnector.getClass().getName()
                                         + ") but no connector with id "
                                         + childConnectorId
                                         + " has been registered");
                                 continue;
                             }
                             newChildren.add(childConnector);
-                            if (childConnector.getParent() != ccc) {
+                            if (childConnector instanceof ComponentConnector) {
+                                newComponents
+                                        .add((ComponentConnector) childConnector);
+                            }
+                            if (childConnector.getParent() != parentConnector) {
                                 // Avoid extra calls to setParent
-                                childConnector.setParent(ccc);
+                                childConnector.setParent(parentConnector);
                             }
                         }
 
                         // TODO This check should be done on the server side in
                         // the future so the hierarchy update is only sent when
                         // something actually has changed
-                        List<ComponentConnector> oldChildren = ccc
+                        List<ServerConnector> oldChildren = parentConnector
                                 .getChildren();
                         boolean actuallyChanged = !Util.collectionsEquals(
                                 oldChildren, newChildren);
@@ -1503,19 +1497,34 @@ public class ApplicationConnection {
                             continue;
                         }
 
-                        // Fire change event if the hierarchy has changed
-                        ConnectorHierarchyChangeEvent event = GWT
-                                .create(ConnectorHierarchyChangeEvent.class);
-                        event.setOldChildren(oldChildren);
-                        event.setConnector(ccc);
-                        ccc.setChildren((List) newChildren);
-                        events.add(event);
+                        if (parentConnector instanceof ComponentContainerConnector) {
+                            ComponentContainerConnector ccc = (ComponentContainerConnector) parentConnector;
+                            List<ComponentConnector> oldComponents = ccc
+                                    .getChildComponents();
+                            if (!Util.collectionsEquals(oldComponents,
+                                    newComponents)) {
+                                // Fire change event if the hierarchy has
+                                // changed
+                                ConnectorHierarchyChangeEvent event = GWT
+                                        .create(ConnectorHierarchyChangeEvent.class);
+                                event.setOldChildren(oldComponents);
+                                event.setConnector(parentConnector);
+                                ccc.setChildComponents(newComponents);
+                                events.add(event);
+                            }
+                        } else if (!newComponents.isEmpty()) {
+                            VConsole.error("Hierachy claims "
+                                    + Util.getConnectorString(parentConnector)
+                                    + " has component children even though it isn't a ComponentContainerConnector");
+                        }
+
+                        parentConnector.setChildren(newChildren);
 
                         // Remove parent for children that are no longer
                         // attached to this (avoid updating children if they
                         // have already been assigned to a new parent)
-                        for (ComponentConnector oldChild : oldChildren) {
-                            if (oldChild.getParent() != ccc) {
+                        for (ServerConnector oldChild : oldChildren) {
+                            if (oldChild.getParent() != parentConnector) {
                                 continue;
                             }
 
@@ -2079,7 +2088,9 @@ public class ApplicationConnection {
 
     @Deprecated
     public ComponentConnector getPaintable(UIDL uidl) {
-        return getConnector(uidl.getId(), Integer.parseInt(uidl.getTag()));
+        // Non-component connectors shouldn't be painted from legacy connectors
+        return (ComponentConnector) getConnector(uidl.getId(),
+                Integer.parseInt(uidl.getTag()));
     }
 
     /**
@@ -2098,17 +2109,17 @@ public class ApplicationConnection {
      * @return Either an existing ComponentConnector or a new ComponentConnector
      *         of the given type
      */
-    public ComponentConnector getConnector(String connectorId, int connectorType) {
+    public ServerConnector getConnector(String connectorId, int connectorType) {
         if (!connectorMap.hasConnector(connectorId)) {
             return createAndRegisterConnector(connectorId, connectorType);
         }
-        return (ComponentConnector) connectorMap.getConnector(connectorId);
+        return connectorMap.getConnector(connectorId);
     }
 
     /**
-     * Creates a new ComponentConnector with the given type and id.
+     * Creates a new ServerConnector with the given type and id.
      * 
-     * Creates and registers a new ComponentConnector of the given type. Should
+     * Creates and registers a new ServerConnector of the given type. Should
      * never be called with the connector id of an existing connector.
      * 
      * @param connectorId
@@ -2116,13 +2127,13 @@ public class ApplicationConnection {
      * @param connectorType
      *            Type of the connector, as passed from the server side
      * 
-     * @return A new ComponentConnector of the given type
+     * @return A new ServerConnector of the given type
      */
-    private ComponentConnector createAndRegisterConnector(String connectorId,
+    private ServerConnector createAndRegisterConnector(String connectorId,
             int connectorType) {
         // Create and register a new connector with the given type
-        ComponentConnector p = widgetSet.createWidget(connectorType,
-                configuration);
+        ServerConnector p = widgetSet
+                .createWidget(connectorType, configuration);
         connectorMap.registerConnector(connectorId, p);
         p.doInit(connectorId, this);
 

@@ -203,6 +203,7 @@ public class SerializerMapGenerator extends Generator {
         // Generate serializer classes for each subclass of SharedState
         JClassType serializerType = typeOracle.findType(SharedState.class
                 .getName());
+        types.add(serializerType);
         JClassType[] serializerSubtypes = serializerType.getSubtypes();
         for (JClassType type : serializerSubtypes) {
             types.add(type);

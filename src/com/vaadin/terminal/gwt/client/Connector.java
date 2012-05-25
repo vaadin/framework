@@ -46,4 +46,12 @@ public interface Connector extends Serializable {
      */
     public String getConnectorId();
 
+    /**
+     * Gets the parent connector of this connector, or <code>null</code> if the
+     * connector is not attached to any parent.
+     * 
+     * @return the parent connector, or <code>null</code> if there is no parent.
+     */
+    public Connector getParent();
+
 }

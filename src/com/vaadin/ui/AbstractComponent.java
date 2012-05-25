@@ -5,20 +5,13 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,18 +20,14 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
+import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
 import com.vaadin.terminal.gwt.server.ResourceReference;
-import com.vaadin.terminal.gwt.server.RpcManager;
-import com.vaadin.terminal.gwt.server.RpcTarget;
-import com.vaadin.terminal.gwt.server.ServerRpcManager;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -53,7 +42,8 @@ import com.vaadin.tools.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractComponent implements Component, MethodEventSource {
+public abstract class AbstractComponent extends AbstractClientConnector
+        implements Component, MethodEventSource {
 
     /* Private members */
 
@@ -62,11 +52,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * this.
      */
     private Object applicationData;
-
-    /**
-     * The container this component resides in.
-     */
-    private HasComponents parent = null;
 
     /**
      * The EventRouter used for the event model.
@@ -88,11 +73,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     private boolean delayedFocus;
 
-    /**
-     * List of repaint request listeners or null if not listened at all.
-     */
-    private LinkedList<RepaintRequestListener> repaintRequestListeners = null;
-
     /* Sizeable fields */
 
     private float width = SIZE_UNDEFINED;
@@ -109,31 +89,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * handling/notifying is delegated, usually to the containing window.
      */
     private ActionManager actionManager;
-
-    /**
-     * A map from client to server RPC interface class to the RPC call manager
-     * that handles incoming RPC calls for that interface.
-     */
-    private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
-
-    /**
-     * A map from server to client RPC interface class to the RPC proxy that
-     * sends ourgoing RPC calls for that interface.
-     */
-    private Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<Class<?>, ClientRpc>();
-
-    /**
-     * Shared state object to be communicated from the server to the client when
-     * modified.
-     */
-    private ComponentState sharedState;
-
-    /**
-     * Pending RPC method invocations to be sent.
-     */
-    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<ClientMethodInvocation>();
-
-    private String connectorId;
 
     /* Constructor */
 
@@ -287,6 +242,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (locale != null) {
             return locale;
         }
+        HasComponents parent = getParent();
         if (parent != null) {
             return parent.getLocale();
         }
@@ -378,21 +334,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
      */
+    @Override
     public boolean isConnectorEnabled() {
-        if (getParent() == null) {
-            // No parent -> the component cannot receive updates from the client
+        if (!isVisible()) {
+            return false;
+        } else if (!isEnabled()) {
+            return false;
+        } else if (!super.isConnectorEnabled()) {
+            return false;
+        } else if (!getParent().isComponentVisible(this)) {
             return false;
         } else {
-            boolean thisEnabledAndVisible = isEnabled() && isVisible();
-            if (!thisEnabledAndVisible) {
-                return false;
-            }
-
-            if (!getParent().isConnectorEnabled()) {
-                return false;
-            }
-
-            return getParent().isComponentVisible(this);
+            return true;
         }
     }
 
@@ -529,8 +482,20 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Gets the component's parent component. Don't add a JavaDoc comment here,
      * we use the default documentation from implemented interface.
      */
+    @Override
     public HasComponents getParent() {
-        return parent;
+        return (HasComponents) super.getParent();
+    }
+
+    @Override
+    public void setParent(ClientConnector parent) {
+        if (parent == null || parent instanceof HasComponents) {
+            super.setParent(parent);
+        } else {
+            throw new IllegalArgumentException(
+                    "The parent of a Component must implement HasComponents, which "
+                            + parent.getClass() + " doesn't do.");
+        }
     }
 
     /**
@@ -556,36 +521,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             p = p.getParent();
         }
         return null;
-    }
-
-    /*
-     * Sets the parent component. Don't add a JavaDoc comment here, we use the
-     * default documentation from implemented interface.
-     */
-    public void setParent(HasComponents parent) {
-
-        // If the parent is not changed, don't do anything
-        if (parent == this.parent) {
-            return;
-        }
-
-        if (parent != null && this.parent != null) {
-            throw new IllegalStateException(getClass().getName()
-                    + " already has a parent.");
-        }
-
-        // Send detach event if the component have been connected to a window
-        if (getApplication() != null) {
-            detach();
-        }
-
-        // Connect to new parent
-        this.parent = parent;
-
-        // Send attach event if connected to a window
-        if (getApplication() != null) {
-            attach();
-        }
     }
 
     /**
@@ -648,12 +583,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Gets the parent window of the component. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public Root getRoot() {
-        if (parent == null) {
-            return null;
-        } else {
-            return parent.getRoot();
-        }
+        // Just make method from implemented Component interface public
+        return super.getRoot();
     }
 
     /*
@@ -661,9 +594,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void attach() {
-        getRoot().componentAttached(this);
-        requestRepaint();
+        super.attach();
         if (delayedFocus) {
             focus();
         }
@@ -674,13 +607,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Detach the component from application. Don't add a JavaDoc comment here,
      * we use the default documentation from implemented interface.
      */
+    @Override
     public void detach() {
         if (actionManager != null) {
             // Remove any existing viewer. Root cast is just to make the
             // compiler happy
             actionManager.setViewer((Root) null);
         }
-        getRoot().componentDetached(this);
     }
 
     /**
@@ -717,12 +650,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @return the parent application of the component or <code>null</code>.
      * @see #attach()
      */
+    @Override
     public Application getApplication() {
-        if (parent == null) {
-            return null;
-        } else {
-            return parent.getApplication();
-        }
+        // Just make method inherited from Component interface public
+        return super.getApplication();
     }
 
     /**
@@ -762,11 +693,9 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * @return updated component shared state
      */
+    @Override
     public ComponentState getState() {
-        if (null == sharedState) {
-            sharedState = createState();
-        }
-        return sharedState;
+        return (ComponentState) super.getState();
     }
 
     /*
@@ -801,95 +730,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /**
-     * Creates the shared state bean to be used in server to client
-     * communication.
-     * <p>
-     * By default a state object of the defined return type of
-     * {@link #getState()} is created. Subclasses can override this method and
-     * return a new instance of the correct state class but this should rarely
-     * be necessary.
-     * </p>
-     * <p>
-     * No configuration of the values of the state should be performed in
-     * {@link #createState()}.
-     * 
-     * @since 7.0
-     * 
-     * @return new shared state object
-     */
-    protected ComponentState createState() {
-        try {
-            return getStateType().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(
-                    "Error creating state of type " + getStateType().getName()
-                            + " for " + getClass().getName(), e);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see com.vaadin.terminal.gwt.server.ClientConnector#getStateType()
-     */
-    public Class<? extends ComponentState> getStateType() {
-        try {
-            Method m = getClass().getMethod("getState", (Class[]) null);
-            Class<? extends ComponentState> type = (Class<? extends ComponentState>) m
-                    .getReturnType();
-            return type;
-        } catch (Exception e) {
-            throw new RuntimeException("Error finding state type for "
-                    + getClass().getName(), e);
-        }
-    }
-
     /* Documentation copied from interface */
+    @Override
     public void requestRepaint() {
         // Invisible components (by flag in this particular component) do not
         // need repaints
         if (!getState().isVisible()) {
             return;
         }
-
-        fireRequestRepaintEvent();
-    }
-
-    /**
-     * Fires the repaint request event.
-     * 
-     * @param alreadyNotified
-     */
-    // Notify listeners only once
-    private void fireRequestRepaintEvent() {
-        // Notify the listeners
-        if (repaintRequestListeners != null
-                && !repaintRequestListeners.isEmpty()) {
-            final Object[] listeners = repaintRequestListeners.toArray();
-            final RepaintRequestEvent event = new RepaintRequestEvent(this);
-            for (int i = 0; i < listeners.length; i++) {
-                ((RepaintRequestListener) listeners[i]).repaintRequested(event);
-            }
-        }
-    }
-
-    /* Documentation copied from interface */
-    public void addListener(RepaintRequestListener listener) {
-        if (repaintRequestListeners == null) {
-            repaintRequestListeners = new LinkedList<RepaintRequestListener>();
-        }
-        if (!repaintRequestListeners.contains(listener)) {
-            repaintRequestListeners.add(listener);
-        }
-    }
-
-    /* Documentation copied from interface */
-    public void removeListener(RepaintRequestListener listener) {
-        if (repaintRequestListeners != null) {
-            repaintRequestListeners.remove(listener);
-            if (repaintRequestListeners.isEmpty()) {
-                repaintRequestListeners = null;
-            }
-        }
+        super.requestRepaint();
     }
 
     /* General event framework */
@@ -1155,15 +1004,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *         are found.
      */
     public Collection<?> getListeners(Class<?> eventType) {
-        if (eventType.isAssignableFrom(RepaintRequestEvent.class)) {
-            // RepaintRequestListeners are not stored in eventRouter
-            if (repaintRequestListeners == null) {
-                return Collections.EMPTY_LIST;
-            } else {
-                return Collections
-                        .unmodifiableCollection(repaintRequestListeners);
-            }
-        }
         if (eventRouter == null) {
             return Collections.EMPTY_LIST;
         }
@@ -1511,160 +1351,5 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         if (actionManager != null) {
             actionManager.removeAction(shortcut);
         }
-    }
-
-    /**
-     * Registers an RPC interface implementation for this component.
-     * 
-     * A component can listen to multiple RPC interfaces, and subclasses can
-     * register additional implementations.
-     * 
-     * @since 7.0
-     * 
-     * @param implementation
-     *            RPC interface implementation
-     * @param rpcInterfaceType
-     *            RPC interface class for which the implementation should be
-     *            registered
-     */
-    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
-        rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
-                implementation, rpcInterfaceType));
-    }
-
-    /**
-     * Registers an RPC interface implementation for this component.
-     * 
-     * A component can listen to multiple RPC interfaces, and subclasses can
-     * register additional implementations.
-     * 
-     * @since 7.0
-     * 
-     * @param implementation
-     *            RPC interface implementation. Also used to deduce the type.
-     */
-    protected <T extends ServerRpc> void registerRpc(T implementation) {
-        Class<?> cls = implementation.getClass();
-        Class<?>[] interfaces = cls.getInterfaces();
-        while (interfaces.length == 0) {
-            // Search upwards until an interface is found. It must be found as T
-            // extends ServerRpc
-            cls = cls.getSuperclass();
-            interfaces = cls.getInterfaces();
-        }
-        if (interfaces.length != 1
-                || !(ServerRpc.class.isAssignableFrom(interfaces[0]))) {
-            throw new RuntimeException(
-                    "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
-        }
-        Class<T> type = (Class<T>) interfaces[0];
-        registerRpc(implementation, type);
-    }
-
-    /**
-     * Returns an RPC proxy for a given server to client RPC interface for this
-     * component.
-     * 
-     * TODO more javadoc, subclasses, ...
-     * 
-     * @param rpcInterface
-     *            RPC interface type
-     * 
-     * @since 7.0
-     */
-    public <T extends ClientRpc> T getRpcProxy(final Class<T> rpcInterface) {
-        // create, initialize and return a dynamic proxy for RPC
-        try {
-            if (!rpcProxyMap.containsKey(rpcInterface)) {
-                Class<T> proxyClass = (Class) Proxy.getProxyClass(
-                        rpcInterface.getClassLoader(), rpcInterface);
-                Constructor<T> constructor = proxyClass
-                        .getConstructor(InvocationHandler.class);
-                T rpcProxy = constructor.newInstance(new RpcInvoicationHandler(
-                        rpcInterface));
-                // cache the proxy
-                rpcProxyMap.put(rpcInterface, rpcProxy);
-            }
-            return (T) rpcProxyMap.get(rpcInterface);
-        } catch (Exception e) {
-            // TODO exception handling?
-            throw new RuntimeException(e);
-        }
-    }
-
-    private class RpcInvoicationHandler implements InvocationHandler,
-            Serializable {
-
-        private String rpcInterfaceName;
-
-        public RpcInvoicationHandler(Class<?> rpcInterface) {
-            rpcInterfaceName = rpcInterface.getName().replaceAll("\\$", ".");
-        }
-
-        public Object invoke(Object proxy, Method method, Object[] args)
-                throws Throwable {
-            addMethodInvocationToQueue(rpcInterfaceName, method, args);
-            // TODO no need to do full repaint if only RPC calls
-            requestRepaint();
-            return null;
-        }
-
-    }
-
-    /**
-     * For internal use: adds a method invocation to the pending RPC call queue.
-     * 
-     * @param interfaceName
-     *            RPC interface name
-     * @param methodName
-     *            RPC method name
-     * @param parameters
-     *            RPC vall parameters
-     * 
-     * @since 7.0
-     */
-    protected void addMethodInvocationToQueue(String interfaceName,
-            Method method, Object[] parameters) {
-        // add to queue
-        pendingInvocations.add(new ClientMethodInvocation(this, interfaceName,
-                method, parameters));
-    }
-
-    /**
-     * @see RpcTarget#getRpcManager(Class)
-     * 
-     * @param rpcInterface
-     *            RPC interface for which a call was made
-     * @return RPC Manager handling calls for the interface
-     * 
-     * @since 7.0
-     */
-    public RpcManager getRpcManager(Class<?> rpcInterface) {
-        return rpcManagerMap.get(rpcInterface);
-    }
-
-    public List<ClientMethodInvocation> retrievePendingRpcCalls() {
-        if (pendingInvocations.isEmpty()) {
-            return Collections.emptyList();
-        } else {
-            List<ClientMethodInvocation> result = pendingInvocations;
-            pendingInvocations = new ArrayList<ClientMethodInvocation>();
-            return Collections.unmodifiableList(result);
-        }
-    }
-
-    public String getConnectorId() {
-        if (connectorId == null) {
-            if (getApplication() == null) {
-                throw new RuntimeException(
-                        "Component must be attached to an application when getConnectorId() is called for the first time");
-            }
-            connectorId = getApplication().createConnectorId(this);
-        }
-        return connectorId;
-    }
-
-    private Logger getLogger() {
-        return Logger.getLogger(AbstractComponent.class.getName());
     }
 }
