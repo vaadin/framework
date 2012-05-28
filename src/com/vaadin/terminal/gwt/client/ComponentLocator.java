@@ -11,7 +11,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
@@ -452,7 +451,7 @@ public class ComponentLocator {
                 }
 
                 if (connector instanceof ComponentConnector) {
-                    w = ((SimplePanel) connector).getWidget();
+                    w = ((ComponentConnector) connector).getWidget();
                 } else {
                     // Not found
                     return null;
