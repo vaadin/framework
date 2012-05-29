@@ -643,11 +643,17 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
-        if (getContent() == null) {
-            return Collections.EMPTY_LIST.iterator();
+        // TODO could directly create some kind of combined iterator instead of
+        // creating a new ArrayList
+        ArrayList<Component> components = new ArrayList<Component>();
+
+        if (getContent() != null) {
+            components.add(getContent());
         }
 
-        return Collections.singleton((Component) getContent()).iterator();
+        components.addAll(windows);
+
+        return components.iterator();
     }
 
     /*
@@ -656,7 +662,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see com.vaadin.ui.ComponentContainer#getComponentCount()
      */
     public int getComponentCount() {
-        return getContent() == null ? 0 : 1;
+        return windows.size() + (getContent() == null ? 0 : 1);
     }
 
     /**

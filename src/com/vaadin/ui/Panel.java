@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -229,7 +230,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
-        return content.getComponentIterator();
+        return Collections.singleton((Component) content).iterator();
     }
 
     /**
