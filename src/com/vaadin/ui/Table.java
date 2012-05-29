@@ -205,7 +205,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private static final double CACHE_RATE_DEFAULT = 2;
 
     private static final String ROW_HEADER_COLUMN_KEY = "0";
-    private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new Object();
+    private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new UniqueSerializable() {
+    };
 
     /* Private table extensions to Select */
 
