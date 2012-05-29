@@ -1,12 +1,10 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
-@Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class TestRootWidgetset extends AbstractTestRoot {
+public class TestRootWidgetset2 extends AbstractTestRoot {
 
     @Override
     protected void setup(WrappedRequest request) {
@@ -15,7 +13,7 @@ public class TestRootWidgetset extends AbstractTestRoot {
 
     @Override
     public String getTestDescription() {
-        return "This contents if this root should work as the component is present in TestingWidgetSet";
+        return "This contents if this root should not work as the component is not present in DefaultWidgetSet";
     }
 
     @Override
