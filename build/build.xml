@@ -38,7 +38,7 @@
         <delete dir="${result-path}" includes="**/*" followsymlinks="false" defaultexcludes="false" includeemptydirs="true" failonerror="false"/>
     </target>
 
-	<target name="build.properties">
+	<target name="build.properties" depends="init-deps">
         <property file="build/build.properties" />
 		
         <property file="build/VERSION.properties" />
@@ -55,6 +55,12 @@
 		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
 		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
 
+		<!-- Default classpath for building widgetsets, overridden for testing widgetset -->
+		<path id="compile.classpath.widgetset">
+			<path refid="compile.classpath.client-side" />
+			<pathelement location="${result-classes-core}" />
+			<pathelement location="${result-src-core}" />
+		</path>
 	</target>
     <target name="clean-all" depends="clean-result">
     </target>
@@ -492,12 +498,7 @@
     	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
-        <java classname="com.google.gwt.dev.Compiler" failonerror="yes" fork="yes" maxmemory="512m">
-        	<classpath>
-        		   <path refid="compile.classpath.client-side" />
-        		   <pathelement location="${result-classes-core}" />
-        	       <pathelement location="${result-src-core}" />
-            </classpath>            
+        <java classname="com.google.gwt.dev.Compiler" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
             <arg value="-style" />
@@ -519,14 +520,27 @@
     
     <target name="compile-widgetset-default">
         <antcall target="compile-widgetset">
-            <reference refid="compile.classpath.client-side" />
+            <reference refid="compile.classpath.widgetset" />
             <param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
         </antcall>
     </target>
     
+    <target name="compile-widgetset-testing" depends="compile-tests">
+    	<!-- Crate a path reference containing default widgetset classpath + testbench files -->
+    	<path id="compile.classpath.testingwidgetset">
+    	 	<path refid="compile.classpath.widgetset" />
+    		<pathelement location="${result-classes-testbench}" />
+			<pathelement location="${result-src-testbench}" />
+    	</path>
+        <antcall target="compile-widgetset">
+            <reference refid="compile.classpath.testingwidgetset" torefid="compile.classpath.widgetset" />
+            <param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet"/>
+        </antcall>
+    </target>
+	
     <target name="compile-widgetset-portal-default" unless="compile.only.default-widgetset">
         <antcall target="compile-widgetset">
-            <reference refid="compile.classpath.client-side" />
+            <reference refid="compile.classpath.widgetset" />
             <param name="widgetset" value="com.vaadin.portal.gwt.PortalDefaultWidgetSet"/>
         </antcall>
     </target>
@@ -538,6 +552,7 @@
         <echo>Compiling widget sets in parallel.</echo>
         <parallel threadsperprocessor="1">
             <antcall inheritrefs="true" target="compile-widgetset-default"/>
+            <antcall inheritrefs="true" target="compile-widgetset-testing"/>
             <antcall inheritrefs="true" target="compile-widgetset-portal-default"/>
         </parallel>
     </target>
@@ -556,6 +571,7 @@
 
     <!-- Build each widgetset locally, i.e., not for an installation package. -->
     <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default" description="Compile the DefaultWidgetSet"/>
+    <target name="widgetset-testing" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-testing"/>
     <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
 
     <!-- ================================================================== -->
