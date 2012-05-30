@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -144,22 +145,24 @@ public class JsonDecoder {
     private static List<Object> decodeList(JSONArray jsonArray,
             ConnectorMap idMapper, ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
-        for (int i = 0; i < jsonArray.size(); ++i) {
-            // each entry always has two elements: type and value
-            JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(decodeValue(entryArray, null, idMapper, connection));
-        }
+        decodeIntoCollection(jsonArray, idMapper, connection, tokens);
         return tokens;
     }
 
     private static Set<Object> decodeSet(JSONArray jsonArray,
             ConnectorMap idMapper, ApplicationConnection connection) {
         Set<Object> tokens = new HashSet<Object>();
+        decodeIntoCollection(jsonArray, idMapper, connection, tokens);
+        return tokens;
+    }
+
+    private static void decodeIntoCollection(JSONArray jsonArray,
+            ConnectorMap idMapper, ApplicationConnection connection,
+            Collection<Object> tokens) {
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);
             tokens.add(decodeValue(entryArray, null, idMapper, connection));
         }
-        return tokens;
     }
 }
