@@ -26,9 +26,26 @@
     <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
         <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
-        <ivy:cachepath pathid="compile.classpath.server-side" conf="ss.compile"/>
-        <ivy:cachepath pathid="compile.classpath.client-side" conf="cs.compile"/>
-        <ivy:cachepath pathid="compile.classpath.server-side-tests" conf="ss.test.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server-side" conf="ss.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.client-side" conf="cs.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server-side-tests" conf="ss.test.compile"/>
+    	<!-- Extra JARs for custom builds - taken into account before JARs from Ivy. -->
+    	<!-- Note that this should not be used for permanent build dependencies. -->
+        <path id="additional.jar.path">
+            <fileset dir="build" includes="lib/**/*.jar" ></fileset>
+        </path>
+        <path id="compile.classpath.server-side">
+            <path refid="additional.jar.path" />
+            <path refid="ivy.compile.classpath.server-side" />
+        </path>
+        <path id="compile.classpath.client-side">
+           <path refid="additional.jar.path" />
+            <path refid="ivy.compile.classpath.client-side" />
+        </path>
+        <path id="compile.classpath.server-side-tests">
+            <path refid="additional.jar.path" />
+            <path refid="ivy.compile.classpath.server-side-tests" />
+        </path>
     </target>
 
     <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
