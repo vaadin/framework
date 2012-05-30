@@ -22,7 +22,7 @@ import com.vaadin.tools.ReflectTools;
  * AbstractSplitPanel.
  * 
  * <code>AbstractSplitPanel</code> is base class for a component container that
- * can contain two components. The comopnents are split by a divider element.
+ * can contain two components. The components are split by a divider element.
  * 
  * @author Vaadin Ltd.
  * @version
@@ -40,6 +40,14 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
     private int posUnit = UNITS_PERCENTAGE;
 
     private boolean posReversed = false;
+
+    private int posMin = 0;
+
+    private int posMinUnit = UNITS_PERCENTAGE;
+
+    private int posMax = 100;
+
+    private int posMaxUnit = UNITS_PERCENTAGE;
 
     private boolean locked = false;
 
@@ -210,8 +218,12 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         super.paintContent(target);
 
         final String position = pos + UNIT_SYMBOLS[posUnit];
+        final String minimumPosition = posMin + UNIT_SYMBOLS[posMinUnit];
+        final String maximumPosition = posMax + UNIT_SYMBOLS[posMaxUnit];
 
         target.addAttribute("position", position);
+        target.addAttribute("minimumPosition", minimumPosition);
+        target.addAttribute("maximumPosition", maximumPosition);
 
         if (isLocked()) {
             target.addAttribute("locked", true);
@@ -320,6 +332,102 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      */
     public int getSplitPositionUnit() {
         return posUnit;
+    }
+
+    /**
+     * Sets the minimum split position to the given position and unit. If the
+     * split position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param pos
+     *            the minimum position of the split
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
+     */
+    public void setMinimumSplitPosition(int pos, int unit) {
+        setSplitPositionLimits(pos, unit, posMax, posMaxUnit);
+    }
+
+    /**
+     * Returns the current minimum position of the splitter, in
+     * {@link #getMinSplitPositionUnit()} units.
+     * 
+     * @return the minimum position of the splitter
+     */
+    public int getMinSplitPosition() {
+        return posMin;
+    }
+
+    /**
+     * Returns the unit of the minimum position of the splitter.
+     * 
+     * @return the unit of the minimum position of the splitter
+     */
+    public int getMinSplitPositionUnit() {
+        return posMinUnit;
+    }
+
+    /**
+     * Sets the maximum split position to the given position and unit. If the
+     * split position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param pos
+     *            the maximum position of the split
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
+     */
+    public void setMaxSplitPosition(int pos, int unit) {
+        setSplitPositionLimits(posMin, posMinUnit, pos, unit);
+    }
+
+    /**
+     * Returns the current maximum position of the splitter, in
+     * {@link #getMaxSplitPositionUnit()} units.
+     * 
+     * @return the maximum position of the splitter
+     */
+    public int getMaxSplitPosition() {
+        return posMax;
+    }
+
+    /**
+     * Returns the unit of the maximum position of the splitter
+     * 
+     * @return the unit of the maximum position of the splitter
+     */
+    public int getMaxSplitPositionUnit() {
+        return posMaxUnit;
+    }
+
+    /**
+     * Sets the maximum and minimum position of the splitter. If the split
+     * position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param minPos
+     *            the new minimum position
+     * @param minPosUnit
+     *            the unit (from {@link Sizeable}) in which the minimum position
+     *            is given.
+     * @param maxPos
+     *            the new maximum position
+     * @param maxPosUnit
+     *            the unit (from {@link Sizeable}) in which the maximum position
+     *            is given.
+     */
+    private void setSplitPositionLimits(int minPos, int minPosUnit, int maxPos,
+            int maxPosUnit) {
+        if ((minPosUnit != UNITS_PERCENTAGE && minPosUnit != UNITS_PIXELS)
+                || (maxPosUnit != UNITS_PERCENTAGE && maxPosUnit != UNITS_PIXELS)) {
+            throw new IllegalArgumentException(
+                    "Only percentage and pixel units are allowed");
+        }
+
+        posMin = minPos;
+        posMinUnit = minPosUnit;
+        posMax = maxPos;
+        posMaxUnit = maxPosUnit;
+        requestRepaint();
     }
 
     /**
