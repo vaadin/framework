@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal;
 
 import com.vaadin.terminal.gwt.server.ClientConnector;

@@ -1,3 +1,6 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 package com.vaadin.terminal;
 
 import java.io.Serializable;
@@ -197,6 +200,27 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
+    private static final class AllChildrenIterable implements
+            Iterable<ClientConnector>, Serializable {
+        private final ClientConnector connector;
+
+        private AllChildrenIterable(ClientConnector connector) {
+            this.connector = connector;
+        }
+
+        public Iterator<ClientConnector> iterator() {
+            CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
+            iterator.addIterator(connector.getExtensionIterator());
+
+            if (connector instanceof HasComponents) {
+                HasComponents hasComponents = (HasComponents) connector;
+                iterator.addIterator(hasComponents.iterator());
+            }
+
+            return iterator;
+        }
+    }
+
     private class RpcInvoicationHandler implements InvocationHandler,
             Serializable {
 
@@ -349,19 +373,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
     public static Iterable<ClientConnector> getAllChildrenIteratable(
             final ClientConnector connector) {
-        return new Iterable<ClientConnector>() {
-            public Iterator<ClientConnector> iterator() {
-                CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
-                iterator.addIterator(connector.getExtensionIterator());
-
-                if (connector instanceof HasComponents) {
-                    HasComponents hasComponents = (HasComponents) connector;
-                    iterator.addIterator(hasComponents.iterator());
-                }
-
-                return iterator;
-            }
-        };
+        return new AllChildrenIterable(connector);
     }
 
     public Iterator<Extension> getExtensionIterator() {

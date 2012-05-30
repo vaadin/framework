@@ -3,6 +3,7 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * @since 7.0.0
  * 
  */
-public class DirtyConnectorTracker {
+public class DirtyConnectorTracker implements Serializable {
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Root root;
 

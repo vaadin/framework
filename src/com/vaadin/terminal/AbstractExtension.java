@@ -1,9 +1,13 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.terminal;
 
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
-public abstract class AbstractExtension extends AbstractClientConnector implements
-        Extension {
+public abstract class AbstractExtension extends AbstractClientConnector
+        implements Extension {
 
     protected Class<? extends ClientConnector> getAcceptedParentType() {
         return ClientConnector.class;
