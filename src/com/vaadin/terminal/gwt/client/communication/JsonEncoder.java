@@ -47,12 +47,6 @@ public class JsonEncoder {
     public static final String VTYPE_NULL = "n";
 
     /**
-     * Temporary hack to get variable changes decoded as internal types in
-     * JsonCodec.
-     */
-    public static final String VTYPE_UIDL_VALUE = "v";
-
-    /**
      * Encode a value to a JSON representation for transport from the client to
      * the server.
      * 
@@ -67,20 +61,18 @@ public class JsonEncoder {
             boolean restrictToInternalTypes, ConnectorMap connectorMap,
             ApplicationConnection connection) {
         if (null == value) {
-            return combineTypeAndValue(VTYPE_NULL, JSONNull.getInstance());
+            return JSONNull.getInstance();
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < array.length; ++i) {
                 jsonArray.set(i, new JSONString(array[i]));
             }
-            return combineTypeAndValue(VTYPE_STRINGARRAY, jsonArray);
+            return jsonArray;
         } else if (value instanceof String) {
-            return combineTypeAndValue(VTYPE_STRING, new JSONString(
-                    (String) value));
+            return new JSONString((String) value);
         } else if (value instanceof Boolean) {
-            return combineTypeAndValue(VTYPE_BOOLEAN,
-                    JSONBoolean.getInstance((Boolean) value));
+            return JSONBoolean.getInstance((Boolean) value);
         } else if (value instanceof Object[]) {
             return encodeObjectArray((Object[]) value, restrictToInternalTypes,
                     connectorMap, connection);
@@ -99,8 +91,7 @@ public class JsonEncoder {
                     connectorMap, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
-            return combineTypeAndValue(VTYPE_CONNECTOR, new JSONString(
-                    connector.getConnectorId()));
+            return new JSONString(connector.getConnectorId());
         } else if (value instanceof Collection) {
             return encodeCollection((Collection) value,
                     restrictToInternalTypes, connectorMap, connection);
@@ -110,8 +101,7 @@ public class JsonEncoder {
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
-                return combineTypeAndValue(transportType,
-                        new JSONString(String.valueOf(value)));
+                return new JSONString(String.valueOf(value));
             } else {
                 // Try to find a generated serializer object, class name is the
                 // type
@@ -120,18 +110,20 @@ public class JsonEncoder {
                         .getSerializer(transportType);
 
                 // TODO handle case with no serializer found
-                return combineTypeAndValue(transportType,
-                        serializer.serialize(value, connectorMap, connection));
+                return serializer.serialize(value, connectorMap, connection);
             }
         }
     }
 
-    private static JSONValue encodeVariableChange(UidlValue value,
+    private static JSONValue encodeVariableChange(UidlValue uidlValue,
             ConnectorMap connectorMap, ApplicationConnection connection) {
-        JSONArray encodedValue = encode(value.getValue(), true, connectorMap,
-                connection).isArray();
+        Object value = uidlValue.getValue();
 
-        return combineTypeAndValue(VTYPE_UIDL_VALUE, encodedValue);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.set(0, new JSONString(getTransportType(value)));
+        jsonArray.set(1, encode(value, true, connectorMap, connection));
+
+        return jsonArray;
     }
 
     private static JSONValue encodeMap(Map<Object, Object> map,
@@ -155,13 +147,12 @@ public class JsonEncoder {
                     connectorMap, connection);
             jsonMap.put(encodedKey.toString(), encodedValue);
         }
-        return combineTypeAndValue(VTYPE_MAP, jsonMap);
+        return jsonMap;
     }
 
     private static JSONValue encodeEnum(Enum e, ConnectorMap connectorMap,
             ApplicationConnection connection) {
-        return combineTypeAndValue(e.getClass().getName(),
-                new JSONString(e.toString()));
+        return new JSONString(e.toString());
     }
 
     private static JSONValue encodeObjectArray(Object[] array,
@@ -179,7 +170,7 @@ public class JsonEncoder {
                     encode(value, restrictToInternalTypes, connectorMap,
                             connection));
         }
-        return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
+        return jsonArray;
     }
 
     private static JSONValue encodeCollection(Collection collection,
@@ -193,21 +184,14 @@ public class JsonEncoder {
             jsonArray.set(idx++, encodedObject);
         }
         if (collection instanceof Set) {
-            return combineTypeAndValue(VTYPE_SET, jsonArray);
+            return jsonArray;
         } else if (collection instanceof List) {
-            return combineTypeAndValue(VTYPE_LIST, jsonArray);
+            return jsonArray;
         } else {
             throw new RuntimeException("Unsupport collection type: "
                     + collection.getClass().getName());
         }
 
-    }
-
-    private static JSONValue combineTypeAndValue(String type, JSONValue value) {
-        JSONArray outerArray = new JSONArray();
-        outerArray.set(0, new JSONString(type));
-        outerArray.set(1, value);
-        return outerArray;
     }
 
     /**

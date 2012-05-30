@@ -1628,12 +1628,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "Invalid parameters in legacy change variables call. Expected 2, was "
                             + parametersJson.length());
         }
-        String variableName = (String) JsonCodec
-                .decodeInternalType(String.class, true,
-                        parametersJson.getJSONArray(0), application);
+        String variableName = parametersJson.getString(0);
         UidlValue uidlValue = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, parametersJson.getJSONArray(1),
-                application);
+                UidlValue.class, true, parametersJson.get(1), application);
 
         Object value = uidlValue.getValue();
 
@@ -1658,10 +1655,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .getGenericParameterTypes();
 
         for (int j = 0; j < parametersJson.length(); ++j) {
-            JSONArray parameterJson = parametersJson.getJSONArray(j);
+            Object parameterValue = parametersJson.get(j);
             Type parameterType = declaredRpcMethodParameterTypes[j];
             parameters[j] = JsonCodec.decodeInternalOrCustomType(parameterType,
-                    parameterJson, application);
+                    parameterValue, application);
         }
         invocation.setParameters(parameters);
         return invocation;
