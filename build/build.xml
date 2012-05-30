@@ -499,7 +499,7 @@
     <target name="compile-widgetset" depends="init-deps">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <property name="widgetset-style" value="OBF" />
-    	<property name="widgetset-localWorkers" value="4" />
+    	<property name="widgetset-localWorkers" value="2" />
     	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
