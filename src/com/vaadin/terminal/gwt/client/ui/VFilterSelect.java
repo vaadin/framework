@@ -62,7 +62,7 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 @SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Paintable, Field,
         KeyDownHandler, KeyUpHandler, ClickHandler, FocusHandler, BlurHandler,
-        Focusable {
+        Focusable, SubPartAware {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -2007,5 +2007,25 @@ public class VFilterSelect extends Composite implements Paintable, Field,
     protected void onDetach() {
         super.onDetach();
         suggestionPopup.hide();
+    }
+
+    @Override
+    public Element getSubPartElement(String subPart) {
+        if ("textbox".equals(subPart)) {
+            return this.tb.getElement();
+        } else if ("button".equals(subPart)) {
+            return this.popupOpener.getElement();
+        }
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(Element subElement) {
+        if (tb.getElement().isOrHasChild(subElement)) {
+            return "textbox";
+        } else if (popupOpener.getElement().isOrHasChild(subElement)) {
+            return "button";
+        }
+        return null;
     }
 }
