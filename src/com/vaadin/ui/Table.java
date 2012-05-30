@@ -4360,19 +4360,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Table does not support lazy options loading mode. Setting this true will
-     * throw UnsupportedOperationException.
-     * 
-     * @see com.vaadin.ui.Select#setLazyLoading(boolean)
-     */
-    public void setLazyLoading(boolean useLazyLoading) {
-        if (useLazyLoading) {
-            throw new UnsupportedOperationException(
-                    "Lazy options loading is not supported by Table.");
-        }
-    }
-
-    /**
      * Used to create "generated columns"; columns that exist only in the Table,
      * not in the underlying Container. Implement this interface and pass it to
      * Table.addGeneratedColumn along with an id for the column to be generated.
