@@ -398,7 +398,7 @@ public class VSplitPanel extends ComplexPanel implements Container,
             if (positionReversed) {
                 posAsInt = offsetLength - posAsInt - getSplitterSize();
             }
-            posAsFloat = ((float) posAsInt / (float) getOffsetWidth() * 100);
+            posAsFloat = ((float) posAsInt / (float) offsetLength * 100);
 
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 1));
