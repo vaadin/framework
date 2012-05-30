@@ -63,6 +63,11 @@
 		</path>
 	</target>
     <target name="clean-all" depends="clean-result">
+		<delete failonerror="false">
+			<fileset dir="${com.vaadin.testbench.screenshot.directory}/errors">
+				<include name="*.png" />
+			</fileset>
+		</delete>
     </target>
 
     <!-- ================================================================== -->
