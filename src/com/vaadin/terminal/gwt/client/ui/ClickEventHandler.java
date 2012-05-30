@@ -70,10 +70,6 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
                 if (lastMouseDownTarget != null
                         && elementUnderMouse.cast() == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
-                } else {
-                    System.out.println("Ignoring mouseup from "
-                            + elementUnderMouse + " when mousedown was on "
-                            + lastMouseDownTarget);
                 }
             }
         }
