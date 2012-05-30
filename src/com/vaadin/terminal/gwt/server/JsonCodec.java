@@ -96,29 +96,8 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    public static String getTransportType(JSONArray encodedValue)
-            throws JSONException {
-        return encodedValue.getString(0);
-    }
-
     private static Class<?> getType(String transportType) {
         return transportTypeToType.get(transportType);
-    }
-
-    /**
-     * Decodes the given value and type, restricted to using only internal
-     * types.
-     * 
-     * @param valueAndType
-     * @param application
-     * @throws JSONException
-     */
-    @Deprecated
-    public static Object decodeInternalType(JSONArray valueAndType,
-            Application application) throws JSONException {
-        String transportType = getTransportType(valueAndType);
-        return decodeInternalType(getType(transportType), true, valueAndType,
-                application);
     }
 
     public static Object decodeInternalOrCustomType(Type targetType,
@@ -258,10 +237,10 @@ public class JsonCodec implements Serializable {
             Application application) throws JSONException {
         String type = encodedJsonValue.getString(0);
 
-        // Fake format used by decode method
         JSONArray valueAndType = new JSONArray(Arrays.asList(type,
                 encodedJsonValue.get(1)));
-        Object decodedValue = decodeInternalType(valueAndType, application);
+        Object decodedValue = decodeInternalType(getType(type), true,
+                valueAndType, application);
         return new UidlValue(decodedValue);
     }
 
@@ -322,9 +301,11 @@ public class JsonCodec implements Serializable {
             return decodeInternalOrCustomType(childType, encodedValueAndType,
                     application);
         } else {
-            // Only internal types when not enforcing a given type to avoid
-            // security issues
-            return decodeInternalType(encodedValueAndType, application);
+            // Only UidlValue when not enforcing a given type to avoid security
+            // issues
+            UidlValue decodeInternalType = (UidlValue) decodeInternalType(
+                    UidlValue.class, true, encodedValueAndType, application);
+            return decodeInternalType.getValue();
         }
     }
 

@@ -1632,7 +1632,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .decodeInternalType(String.class, true,
                         parametersJson.getJSONArray(0), application);
         UidlValue uidlValue = (UidlValue) JsonCodec.decodeInternalType(
-                parametersJson.getJSONArray(1), application);
+                UidlValue.class, true, parametersJson.getJSONArray(1),
+                application);
 
         Object value = uidlValue.getValue();
 

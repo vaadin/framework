@@ -88,8 +88,8 @@ public class JsonEncoder {
             if (restrictToInternalTypes) {
                 // Enums are encoded as strings in Vaadin 6 so we still do that
                 // for backwards copmatibility.
-                return encode(value.toString(), restrictToInternalTypes,
-                        connectorMap, connection);
+                return encode(new UidlValue(value.toString()),
+                        restrictToInternalTypes, connectorMap, connection);
             } else {
                 Enum e = (Enum) value;
                 return encodeEnum(e, connectorMap, connection);
@@ -140,6 +140,15 @@ public class JsonEncoder {
         JSONObject jsonMap = new JSONObject();
         for (Object mapKey : map.keySet()) {
             Object mapValue = map.get(mapKey);
+            if (restrictToInternalTypes) {
+                if (!(mapKey instanceof String)) {
+                    throw new IllegalStateException(
+                            "Only string keys supported for legacy maps");
+                }
+                // Wrap in UidlValue to send explicit type info
+                mapKey = new UidlValue(mapKey);
+                mapValue = new UidlValue(mapValue);
+            }
             JSONValue encodedKey = encode(mapKey, restrictToInternalTypes,
                     connectorMap, connection);
             JSONValue encodedValue = encode(mapValue, restrictToInternalTypes,
@@ -161,9 +170,13 @@ public class JsonEncoder {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array.length; ++i) {
             // TODO handle object graph loops?
+            Object value = array[i];
+            if (restrictToInternalTypes) {
+                value = new UidlValue(value);
+            }
             jsonArray.set(
                     i,
-                    encode(array[i], restrictToInternalTypes, connectorMap,
+                    encode(value, restrictToInternalTypes, connectorMap,
                             connection));
         }
         return combineTypeAndValue(VTYPE_ARRAY, jsonArray);
