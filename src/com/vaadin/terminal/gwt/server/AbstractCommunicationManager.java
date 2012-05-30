@@ -68,6 +68,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
@@ -1630,8 +1631,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String variableName = (String) JsonCodec
                 .decodeInternalType(String.class, true,
                         parametersJson.getJSONArray(0), application);
-        Object value = JsonCodec.decodeInternalType(
+        UidlValue uidlValue = (UidlValue) JsonCodec.decodeInternalType(
                 parametersJson.getJSONArray(1), application);
+
+        Object value = uidlValue.getValue();
 
         if (previousInvocation != null
                 && previousInvocation.getConnectorId().equals(connectorId)) {

@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.ui.Component;
 
 /**
@@ -64,6 +66,7 @@ public class JsonCodec implements Serializable {
         registerType(HashMap.class, JsonEncoder.VTYPE_MAP);
         registerType(List.class, JsonEncoder.VTYPE_LIST);
         registerType(Set.class, JsonEncoder.VTYPE_SET);
+        registerType(UidlValue.class, JsonEncoder.VTYPE_UIDL_VALUE);
     }
 
     private static void registerType(Class<?> type, String transportType) {
@@ -195,6 +198,13 @@ public class JsonCodec implements Serializable {
         if (JsonEncoder.VTYPE_NULL.equals(encodedTransportType)) {
             return null;
         }
+
+        // VariableChange
+        if (JsonEncoder.VTYPE_UIDL_VALUE.contentEquals(transportType)) {
+            return decodeVariableChange((JSONArray) encodedJsonValue,
+                    application);
+        }
+
         // Collections
         if (JsonEncoder.VTYPE_LIST.equals(transportType)) {
             return decodeList(targetType, restrictToInternalTypes,
@@ -242,6 +252,17 @@ public class JsonCodec implements Serializable {
         }
 
         throw new JSONException("Unknown type " + transportType);
+    }
+
+    private static UidlValue decodeVariableChange(JSONArray encodedJsonValue,
+            Application application) throws JSONException {
+        String type = encodedJsonValue.getString(0);
+
+        // Fake format used by decode method
+        JSONArray valueAndType = new JSONArray(Arrays.asList(type,
+                encodedJsonValue.get(1)));
+        Object decodedValue = decodeInternalType(valueAndType, application);
+        return new UidlValue(decodedValue);
     }
 
     private static boolean transportTypesCompatible(

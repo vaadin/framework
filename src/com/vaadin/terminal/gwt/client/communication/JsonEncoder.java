@@ -47,6 +47,12 @@ public class JsonEncoder {
     public static final String VTYPE_NULL = "n";
 
     /**
+     * Temporary hack to get variable changes decoded as internal types in
+     * JsonCodec.
+     */
+    public static final String VTYPE_UIDL_VALUE = "v";
+
+    /**
      * Encode a value to a JSON representation for transport from the client to
      * the server.
      * 
@@ -98,6 +104,9 @@ public class JsonEncoder {
         } else if (value instanceof Collection) {
             return encodeCollection((Collection) value,
                     restrictToInternalTypes, connectorMap, connection);
+        } else if (value instanceof UidlValue) {
+            return encodeVariableChange((UidlValue) value, connectorMap,
+                    connection);
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
@@ -115,6 +124,14 @@ public class JsonEncoder {
                         serializer.serialize(value, connectorMap, connection));
             }
         }
+    }
+
+    private static JSONValue encodeVariableChange(UidlValue value,
+            ConnectorMap connectorMap, ApplicationConnection connection) {
+        JSONArray encodedValue = encode(value.getValue(), true, connectorMap,
+                connection).isArray();
+
+        return combineTypeAndValue(VTYPE_UIDL_VALUE, encodedValue);
     }
 
     private static JSONValue encodeMap(Map<Object, Object> map,

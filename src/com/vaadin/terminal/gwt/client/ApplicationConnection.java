@@ -45,6 +45,7 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -1600,7 +1601,7 @@ public class ApplicationConnection {
         // TODO could eliminate invocations of same shared variable setter
         addMethodInvocationToQueue(new MethodInvocation(connectorId,
                 UPDATE_VARIABLE_INTERFACE, UPDATE_VARIABLE_METHOD,
-                new Object[] { variableName, value }), immediate);
+                new Object[] { variableName, new UidlValue(value) }), immediate);
     }
 
     /**
