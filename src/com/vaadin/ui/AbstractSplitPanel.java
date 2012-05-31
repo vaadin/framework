@@ -222,8 +222,12 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         final String maximumPosition = posMax + UNIT_SYMBOLS[posMaxUnit];
 
         target.addAttribute("position", position);
-        target.addAttribute("minimumPosition", minimumPosition);
-        target.addAttribute("maximumPosition", maximumPosition);
+        if (minimumPosition != "0%") {
+            target.addAttribute("minimumPosition", minimumPosition);
+        }
+        if (maximumPosition != "100%") {
+            target.addAttribute("maximumPosition", maximumPosition);
+        }
 
         if (isLocked()) {
             target.addAttribute("locked", true);

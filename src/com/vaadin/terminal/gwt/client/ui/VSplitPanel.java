@@ -147,9 +147,9 @@ public class VSplitPanel extends ComplexPanel implements Container,
     /* The current position of the split handle in either percentages or pixels */
     private String position;
 
-    private String maximumPosition;
+    private String maximumPosition = null;
 
-    private String minimumPosition;
+    private String minimumPosition = null;
 
     private final TouchScrollHandler touchScrollHandler;
 
@@ -277,8 +277,10 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
         position = uidl.getStringAttribute("position");
 
-        minimumPosition = uidl.getStringAttribute("minimumPosition");
-        maximumPosition = uidl.getStringAttribute("maximumPosition");
+        minimumPosition = uidl.hasAttribute("minimumPosition") ? uidl
+                .getStringAttribute("minimumPosition") : null;
+        maximumPosition = uidl.hasAttribute("maximumPosition") ? uidl
+                .getStringAttribute("maximumPosition") : null;
 
         setSplitPosition(position);
 
@@ -404,12 +406,12 @@ public class VSplitPanel extends ComplexPanel implements Container,
 
     private String checkSplitPositionLimits(String pos) {
         float positionAsFloat = convertToPixels(pos);
-        float maximumAsFloat = convertToPixels(maximumPosition);
-        float minimumAsFloat = convertToPixels(minimumPosition);
 
-        if (maximumAsFloat < positionAsFloat) {
+        if (maximumPosition != null
+                && convertToPixels(maximumPosition) < positionAsFloat) {
             pos = maximumPosition;
-        } else if (minimumAsFloat > positionAsFloat) {
+        } else if (minimumPosition != null
+                && convertToPixels(minimumPosition) > positionAsFloat) {
             pos = minimumPosition;
         }
         return pos;
@@ -870,8 +872,8 @@ public class VSplitPanel extends ComplexPanel implements Container,
         if (position.indexOf("%") > 0) {
             pos = Float.valueOf(position.substring(0, position.length() - 1));
         } else {
-            pos = Integer
-                    .parseInt(position.substring(0, position.length() - 2));
+            pos = Math.round(Float.parseFloat(position.substring(0,
+                    position.length() - 2)));
         }
         client.updateVariable(id, "position", pos, immediate);
     }
