@@ -16,15 +16,15 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.communication.GeneratedRpcMethodProvider;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
+import com.vaadin.terminal.gwt.client.communication.RpcMethod;
 
 /**
  * GWT generator that creates an implementation for {@link RpcManager} on the
@@ -32,7 +32,7 @@ import com.vaadin.terminal.gwt.client.communication.RpcManager;
  * 
  * @since 7.0
  */
-public class RpcManagerGenerator extends Generator {
+public class GeneratedRpcMethodProviderGenerator extends Generator {
 
     @Override
     public String generate(TreeLogger logger, GeneratorContext context,
@@ -90,12 +90,24 @@ public class RpcManagerGenerator extends Generator {
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
-        composer.addImplementedInterface(RpcManager.class.getName());
+        composer.addImport(RpcMethod.class.getName());
+        composer.addImport(ClientRpc.class.getName());
+        composer.addImport(com.vaadin.terminal.gwt.client.communication.Type.class
+                .getName());
+        composer.addImplementedInterface(GeneratedRpcMethodProvider.class
+                .getName());
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
         sourceWriter.indent();
 
-        List<JClassType> rpcInterfaces = new ArrayList<JClassType>();
+        List<JMethod> rpcMethods = new ArrayList<JMethod>();
+
+        sourceWriter
+                .println("public java.util.Collection<RpcMethod> getGeneratedRpcMethods() {");
+        sourceWriter.indent();
+
+        sourceWriter
+                .println("java.util.ArrayList<RpcMethod> list = new java.util.ArrayList<RpcMethod>();");
 
         // iterate over RPC interfaces and create helper methods for each
         // interface
@@ -104,81 +116,56 @@ public class RpcManagerGenerator extends Generator {
                 // only interested in interfaces here, not implementations
                 continue;
             }
-            rpcInterfaces.add(type);
-            // generate method to call methods of an RPC interface
-            sourceWriter.println("private void " + getInvokeMethodName(type)
-                    + "(" + MethodInvocation.class.getName() + " invocation, "
-                    + ConnectorMap.class.getName() + " connectorMap) {");
-            sourceWriter.indent();
 
             // loop over the methods of the interface and its superinterfaces
             // methods
             for (JClassType currentType : type.getFlattenedSupertypeHierarchy()) {
                 for (JMethod method : currentType.getMethods()) {
-                    sourceWriter.println("if (\"" + method.getName()
-                            + "\".equals(invocation.getMethodName())) {");
-                    sourceWriter.indent();
-                    // construct parameter string with appropriate casts
-                    String paramString = "";
+
+                    // RpcMethod(String interfaceName, String methodName,
+                    // Type... parameterTypes)
+                    sourceWriter.print("list.add(new RpcMethod(\""
+                            + type.getQualifiedSourceName() + "\", \""
+                            + method.getName() + "\"");
                     JType[] parameterTypes = method.getParameterTypes();
-                    for (int i = 0; i < parameterTypes.length; ++i) {
-                        paramString = paramString + "("
-                                + parameterTypes[i].getQualifiedSourceName()
-                                + ") invocation.getParameters()[" + i + "]";
-                        if (i < parameterTypes.length - 1) {
-                            paramString = paramString + ", ";
-                        }
+                    for (JType parameter : parameterTypes) {
+                        sourceWriter.print(", ");
+                        writeTypeCreator(sourceWriter, parameter);
                     }
-                    sourceWriter
-                            .println(ServerConnector.class.getName()
-                                    + " connector = connectorMap.getConnector(invocation.getConnectorId());");
-                    sourceWriter
-                            .println("for ("
-                                    + ClientRpc.class.getName()
-                                    + " rpcImplementation : connector.getRpcImplementations(\""
-                                    + type.getQualifiedSourceName() + "\")) {");
+                    sourceWriter.println(") {");
                     sourceWriter.indent();
-                    sourceWriter.println("((" + type.getQualifiedSourceName()
-                            + ") rpcImplementation)." + method.getName() + "("
-                            + paramString + ");");
+
+                    sourceWriter
+                            .println("public void applyInvocation(ClientRpc target, Object... parameters) {");
+                    sourceWriter.indent();
+
+                    sourceWriter.print("((" + type.getQualifiedSourceName()
+                            + ")target)." + method.getName() + "(");
+                    for (int i = 0; i < parameterTypes.length; i++) {
+                        JType parameterType = parameterTypes[i];
+                        if (i != 0) {
+                            sourceWriter.print(", ");
+                        }
+                        sourceWriter.print("("
+                                + parameterType.getQualifiedSourceName()
+                                + ") parameters[" + i + "]");
+                    }
+                    sourceWriter.println(");");
+
                     sourceWriter.outdent();
                     sourceWriter.println("}");
-                    sourceWriter.println("return;");
+
                     sourceWriter.outdent();
-                    sourceWriter.println("}");
+                    sourceWriter.println("});");
                 }
             }
-
-            sourceWriter.outdent();
-            sourceWriter.println("}");
-
-            logger.log(Type.DEBUG,
-                    "Constructed helper method for server to client RPC for "
-                            + type.getName());
         }
 
-        // generate top-level "switch-case" method to select the correct
-        // previously generated method based on the RPC interface
-        sourceWriter.println("public void applyInvocation("
-                + MethodInvocation.class.getName() + " invocation, "
-                + ConnectorMap.class.getName() + " connectorMap) {");
-        sourceWriter.indent();
+        sourceWriter.println("return list;");
 
-        for (JClassType type : rpcInterfaces) {
-            sourceWriter.println("if (\"" + type.getQualifiedSourceName()
-                    + "\".equals(invocation.getInterfaceName())) {");
-            sourceWriter.indent();
-            sourceWriter.println(getInvokeMethodName(type)
-                    + "(invocation, connectorMap);");
-            sourceWriter.println("return;");
-            sourceWriter.outdent();
-            sourceWriter.println("}");
-
-            logger.log(Type.INFO,
-                    "Configured server to client RPC for " + type.getName());
-        }
         sourceWriter.outdent();
         sourceWriter.println("}");
+        sourceWriter.println();
 
         // close generated class
         sourceWriter.outdent();
@@ -189,6 +176,24 @@ public class RpcManagerGenerator extends Generator {
                 "Done. (" + (new Date().getTime() - date.getTime()) / 1000
                         + "seconds)");
 
+    }
+
+    private void writeTypeCreator(SourceWriter sourceWriter, JType type) {
+        sourceWriter.print("new Type(\""
+                + type.getErasedType().getQualifiedSourceName() + "\", ");
+        JParameterizedType parameterized = type.isParameterized();
+        if (parameterized != null) {
+            sourceWriter.print("new Type[] {");
+            JClassType[] typeArgs = parameterized.getTypeArgs();
+            for (JClassType jClassType : typeArgs) {
+                writeTypeCreator(sourceWriter, jClassType);
+                sourceWriter.print(", ");
+            }
+            sourceWriter.print("}");
+        } else {
+            sourceWriter.print("null");
+        }
+        sourceWriter.print(")");
     }
 
     private String getInvokeMethodName(JClassType type) {
