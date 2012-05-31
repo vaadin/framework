@@ -41,11 +41,11 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
 
     private boolean posReversed = false;
 
-    private int posMin = 0;
+    private float posMin = 0;
 
     private int posMinUnit = UNITS_PERCENTAGE;
 
-    private int posMax = 100;
+    private float posMax = 100;
 
     private int posMaxUnit = UNITS_PERCENTAGE;
 
@@ -222,10 +222,10 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
         final String maximumPosition = posMax + UNIT_SYMBOLS[posMaxUnit];
 
         target.addAttribute("position", position);
-        if (minimumPosition != "0%") {
+        if (!minimumPosition.equals("0%")) {
             target.addAttribute("minimumPosition", minimumPosition);
         }
-        if (maximumPosition != "100%") {
+        if (!maximumPosition.equals("100%")) {
             target.addAttribute("maximumPosition", maximumPosition);
         }
 
@@ -348,7 +348,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the size is given.
      *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
      */
-    public void setMinimumSplitPosition(int pos, int unit) {
+    public void setMinSplitPosition(float pos, int unit) {
         setSplitPositionLimits(pos, unit, posMax, posMaxUnit);
     }
 
@@ -358,7 +358,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @return the minimum position of the splitter
      */
-    public int getMinSplitPosition() {
+    public float getMinSplitPosition() {
         return posMin;
     }
 
@@ -381,7 +381,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the size is given.
      *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
      */
-    public void setMaxSplitPosition(int pos, int unit) {
+    public void setMaxSplitPosition(float pos, int unit) {
         setSplitPositionLimits(posMin, posMinUnit, pos, unit);
     }
 
@@ -391,7 +391,7 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      * 
      * @return the maximum position of the splitter
      */
-    public int getMaxSplitPosition() {
+    public float getMaxSplitPosition() {
         return posMax;
     }
 
@@ -419,8 +419,8 @@ public abstract class AbstractSplitPanel extends AbstractLayout {
      *            the unit (from {@link Sizeable}) in which the maximum position
      *            is given.
      */
-    private void setSplitPositionLimits(int minPos, int minPosUnit, int maxPos,
-            int maxPosUnit) {
+    private void setSplitPositionLimits(float minPos, int minPosUnit,
+            float maxPos, int maxPosUnit) {
         if ((minPosUnit != UNITS_PERCENTAGE && minPosUnit != UNITS_PIXELS)
                 || (maxPosUnit != UNITS_PERCENTAGE && maxPosUnit != UNITS_PIXELS)) {
             throw new IllegalArgumentException(

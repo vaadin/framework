@@ -2,6 +2,7 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
@@ -19,8 +20,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
         horizontalSplitsLayout.setCaption("Horizontal splits");
 
         HorizontalSplitPanel percentagePositionWithPercentageLimitsHorizontal = new HorizontalSplitPanel();
-        percentagePositionWithPercentageLimitsHorizontal
-                .setMinimumSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+        percentagePositionWithPercentageLimitsHorizontal.setMinSplitPosition(
+                10, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsHorizontal.setMaxSplitPosition(
                 80, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsHorizontal
@@ -33,7 +34,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(percentagePositionWithPercentageLimitsHorizontal);
 
         HorizontalSplitPanel pixelPositionWithPercentageLimitsHorizontal = new HorizontalSplitPanel();
-        pixelPositionWithPercentageLimitsHorizontal.setMinimumSplitPosition(10,
+        pixelPositionWithPercentageLimitsHorizontal.setMinSplitPosition(10,
                 Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsHorizontal.setMaxSplitPosition(80,
                 Sizeable.UNITS_PERCENTAGE);
@@ -47,7 +48,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPercentageLimitsHorizontal);
 
         HorizontalSplitPanel pixelPositionWithPixelLimitsHorizontal = new HorizontalSplitPanel();
-        pixelPositionWithPixelLimitsHorizontal.setMinimumSplitPosition(100,
+        pixelPositionWithPixelLimitsHorizontal.setMinSplitPosition(100,
                 Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsHorizontal.setMaxSplitPosition(550,
                 Sizeable.UNITS_PIXELS);
@@ -61,8 +62,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPixelLimitsHorizontal);
 
         HorizontalSplitPanel percentagePositionWithPixelLimitsHorizontal = new HorizontalSplitPanel();
-        percentagePositionWithPixelLimitsHorizontal.setMinimumSplitPosition(
-                100, Sizeable.UNITS_PIXELS);
+        percentagePositionWithPixelLimitsHorizontal.setMinSplitPosition(100,
+                Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsHorizontal.setMaxSplitPosition(550,
                 Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsHorizontal
@@ -76,7 +77,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         HorizontalSplitPanel percentagePositionWithPercentageLimitsHorizontalResersed = new HorizontalSplitPanel();
         percentagePositionWithPercentageLimitsHorizontalResersed
-                .setMinimumSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+                .setMinSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsHorizontalResersed
                 .setMaxSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsHorizontalResersed
@@ -91,7 +92,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         HorizontalSplitPanel pixelPositionWithPercentageLimitsHorizontalResersed = new HorizontalSplitPanel();
         pixelPositionWithPercentageLimitsHorizontalResersed
-                .setMinimumSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+                .setMinSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsHorizontalResersed
                 .setMaxSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsHorizontalResersed
@@ -105,8 +106,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPercentageLimitsHorizontalResersed);
 
         HorizontalSplitPanel pixelPositionWithPixelLimitsHorizontalResersed = new HorizontalSplitPanel();
-        pixelPositionWithPixelLimitsHorizontalResersed.setMinimumSplitPosition(
-                100, Sizeable.UNITS_PIXELS);
+        pixelPositionWithPixelLimitsHorizontalResersed.setMinSplitPosition(100,
+                Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsHorizontalResersed.setMaxSplitPosition(550,
                 Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsHorizontalResersed
@@ -121,7 +122,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         HorizontalSplitPanel percentagePositionWithPixelLimitsHorizontalResersed = new HorizontalSplitPanel();
         percentagePositionWithPixelLimitsHorizontalResersed
-                .setMinimumSplitPosition(100, Sizeable.UNITS_PIXELS);
+                .setMinSplitPosition(100, Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsHorizontalResersed
                 .setMaxSplitPosition(550, Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsHorizontalResersed
@@ -141,8 +142,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
         verticalSplitsLayout.setCaption("Vertical splits");
 
         VerticalSplitPanel percentagePositionWithPercentageLimitsVertical = new VerticalSplitPanel();
-        percentagePositionWithPercentageLimitsVertical.setMinimumSplitPosition(
-                10, Sizeable.UNITS_PERCENTAGE);
+        percentagePositionWithPercentageLimitsVertical.setMinSplitPosition(10,
+                Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsVertical.setMaxSplitPosition(80,
                 Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsVertical
@@ -155,7 +156,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(percentagePositionWithPercentageLimitsVertical);
 
         VerticalSplitPanel pixelPositionWithPercentageLimitsVertical = new VerticalSplitPanel();
-        pixelPositionWithPercentageLimitsVertical.setMinimumSplitPosition(10,
+        pixelPositionWithPercentageLimitsVertical.setMinSplitPosition(10,
                 Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsVertical.setMaxSplitPosition(80,
                 Sizeable.UNITS_PERCENTAGE);
@@ -169,7 +170,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPercentageLimitsVertical);
 
         VerticalSplitPanel pixelPositionWithPixelLimitsVertical = new VerticalSplitPanel();
-        pixelPositionWithPixelLimitsVertical.setMinimumSplitPosition(100,
+        pixelPositionWithPixelLimitsVertical.setMinSplitPosition(100,
                 Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsVertical.setMaxSplitPosition(450,
                 Sizeable.UNITS_PIXELS);
@@ -182,7 +183,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
         verticalSplitsLayout.addComponent(pixelPositionWithPixelLimitsVertical);
 
         VerticalSplitPanel percentagePositionWithPixelLimitsVertical = new VerticalSplitPanel();
-        percentagePositionWithPixelLimitsVertical.setMinimumSplitPosition(100,
+        percentagePositionWithPixelLimitsVertical.setMinSplitPosition(100,
                 Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsVertical.setMaxSplitPosition(450,
                 Sizeable.UNITS_PIXELS);
@@ -197,7 +198,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         VerticalSplitPanel percentagePositionWithPercentageLimitsVerticalReversed = new VerticalSplitPanel();
         percentagePositionWithPercentageLimitsVerticalReversed
-                .setMinimumSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+                .setMinSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsVerticalReversed
                 .setMaxSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
         percentagePositionWithPercentageLimitsVerticalReversed
@@ -211,8 +212,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(percentagePositionWithPercentageLimitsVerticalReversed);
 
         VerticalSplitPanel pixelPositionWithPercentageLimitsVerticalReversed = new VerticalSplitPanel();
-        pixelPositionWithPercentageLimitsVerticalReversed
-                .setMinimumSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+        pixelPositionWithPercentageLimitsVerticalReversed.setMinSplitPosition(
+                10, Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsVerticalReversed.setMaxSplitPosition(
                 80, Sizeable.UNITS_PERCENTAGE);
         pixelPositionWithPercentageLimitsVerticalReversed
@@ -226,8 +227,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPercentageLimitsVerticalReversed);
 
         VerticalSplitPanel pixelPositionWithPixelLimitsVerticalReversed = new VerticalSplitPanel();
-        pixelPositionWithPixelLimitsVerticalReversed.setMinimumSplitPosition(
-                100, Sizeable.UNITS_PIXELS);
+        pixelPositionWithPixelLimitsVerticalReversed.setMinSplitPosition(100,
+                Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsVerticalReversed.setMaxSplitPosition(400,
                 Sizeable.UNITS_PIXELS);
         pixelPositionWithPixelLimitsVerticalReversed
@@ -241,8 +242,8 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 .addComponent(pixelPositionWithPixelLimitsVerticalReversed);
 
         VerticalSplitPanel percentagePositionWithPixelLimitsVerticalReversed = new VerticalSplitPanel();
-        percentagePositionWithPixelLimitsVerticalReversed
-                .setMinimumSplitPosition(100, Sizeable.UNITS_PIXELS);
+        percentagePositionWithPixelLimitsVerticalReversed.setMinSplitPosition(
+                100, Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsVerticalReversed.setMaxSplitPosition(
                 400, Sizeable.UNITS_PIXELS);
         percentagePositionWithPixelLimitsVerticalReversed
@@ -257,6 +258,61 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         tabs.addComponent(verticalSplitsLayout);
         verticalSplitsLayout.setSizeFull();
+
+        final VerticalLayout togglableSplitPanelLayout = new VerticalLayout();
+        togglableSplitPanelLayout.setCaption("Togglable minimum/maximum");
+
+        final HorizontalSplitPanel togglableSplitPanel = new HorizontalSplitPanel();
+        togglableSplitPanel.setMinSplitPosition(10, Sizeable.UNITS_PERCENTAGE);
+        togglableSplitPanel.setMaxSplitPosition(80, Sizeable.UNITS_PERCENTAGE);
+        togglableSplitPanel.setFirstComponent(new Label(
+                "Min 10 % - 50 % position"));
+        togglableSplitPanel.setSecondComponent(new Label("Max 80 %"));
+        togglableSplitPanel.setSplitPosition(50, Sizeable.UNITS_PERCENTAGE);
+        togglableSplitPanel.setHeight("250px");
+        togglableSplitPanelLayout.addComponent(togglableSplitPanel);
+
+        final HorizontalLayout buttonLayout = new HorizontalLayout();
+
+        Button disableMinimum = new Button("Disable min limit",
+                new Button.ClickListener() {
+                    public void buttonClick(Button.ClickEvent event) {
+                        togglableSplitPanel.setMinSplitPosition(0,
+                                Sizeable.UNITS_PERCENTAGE);
+
+                    }
+                });
+        Button enableMinimum = new Button("Enable min limit",
+                new Button.ClickListener() {
+                    public void buttonClick(Button.ClickEvent event) {
+                        togglableSplitPanel.setMinSplitPosition(10,
+                                Sizeable.UNITS_PERCENTAGE);
+
+                    }
+                });
+        Button disableMaximum = new Button("Disable max limit",
+                new Button.ClickListener() {
+                    public void buttonClick(Button.ClickEvent event) {
+                        togglableSplitPanel.setMaxSplitPosition(100,
+                                Sizeable.UNITS_PERCENTAGE);
+
+                    }
+                });
+        Button enableMaximum = new Button("Enable max limit",
+                new Button.ClickListener() {
+                    public void buttonClick(Button.ClickEvent event) {
+                        togglableSplitPanel.setMaxSplitPosition(80,
+                                Sizeable.UNITS_PERCENTAGE);
+
+                    }
+                });
+        buttonLayout.addComponent(disableMinimum);
+        buttonLayout.addComponent(enableMinimum);
+        buttonLayout.addComponent(disableMaximum);
+        buttonLayout.addComponent(enableMaximum);
+
+        togglableSplitPanelLayout.addComponent(buttonLayout);
+        tabs.addComponent(togglableSplitPanelLayout);
 
         addComponent(tabs);
         tabs.setHeight("550px");
