@@ -1187,31 +1187,38 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Sets whether a column can be collapsed or not.
+     * Sets whether the given column is collapsible. Note that collapsible
+     * columns can only be actually collapsed (via UI or with
+     * {@link #setColumnCollapsed(Object, boolean) setColumnCollapsed()}) if
+     * {@link #isColumnCollapsingAllowed()} is true. By default all columns are
+     * collapsible.
      * 
      * @param propertyId
      *            the propertyID identifying the column.
      * @param collapsible
-     *            the desired collapsibleness
+     *            true if the column should be collapsible, false otherwise.
      */
-    public void setColumnNoncollapsible(Object propertyId,
-            boolean noncollapsible) {
-        if (noncollapsible) {
+    public void setColumnCollapsible(Object propertyId, boolean collapsible) {
+        if (collapsible) {
+            noncollapsibleColumns.remove(propertyId);
+        } else {
             noncollapsibleColumns.add(propertyId);
             collapsedColumns.remove(propertyId);
-        } else {
-            noncollapsibleColumns.remove(propertyId);
         }
         refreshRowCache();
     }
 
     /**
-     * Checks if the column can be collapsed.
+     * Checks if the given column is collapsible. Note that even if this method
+     * returns <code>true</code>, the column can only be actually collapsed (via
+     * UI or with {@link #setColumnCollapsed(Object, boolean)
+     * setColumnCollapsed()}) if {@link #isColumnCollapsingAllowed()} is also
+     * true.
      * 
      * @return true if the column can be collapsed; false otherwise.
      */
-    public boolean isColumnNoncollapsible(Object propertyId) {
-        return noncollapsibleColumns.contains(propertyId);
+    public boolean isColumnCollapsible(Object propertyId) {
+        return !noncollapsibleColumns.contains(propertyId);
     }
 
     /**
