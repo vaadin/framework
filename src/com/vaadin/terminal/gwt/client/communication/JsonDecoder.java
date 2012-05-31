@@ -49,26 +49,25 @@ public class JsonDecoder {
      * @return decoded value (does not contain JSON types)
      */
     public static Object decodeValue(JSONArray jsonArray, Object target,
-            ConnectorMap idMapper, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         String type = ((JSONString) jsonArray.get(0)).stringValue();
-        return decodeValue(type, jsonArray.get(1), target, idMapper, connection);
+        return decodeValue(type, jsonArray.get(1), target, connection);
     }
 
     private static Object decodeValue(String variableType, JSONValue value,
-            Object target, ConnectorMap idMapper,
-            ApplicationConnection connection) {
+            Object target, ApplicationConnection connection) {
         Object val = null;
         // TODO type checks etc.
         if (JsonEncoder.VTYPE_NULL.equals(variableType)) {
             val = null;
         } else if (JsonEncoder.VTYPE_ARRAY.equals(variableType)) {
-            val = decodeArray((JSONArray) value, idMapper, connection);
+            val = decodeArray((JSONArray) value, connection);
         } else if (JsonEncoder.VTYPE_MAP.equals(variableType)) {
-            val = decodeMap((JSONObject) value, idMapper, connection);
+            val = decodeMap((JSONObject) value, connection);
         } else if (JsonEncoder.VTYPE_LIST.equals(variableType)) {
-            val = decodeList((JSONArray) value, idMapper, connection);
+            val = decodeList((JSONArray) value, connection);
         } else if (JsonEncoder.VTYPE_SET.equals(variableType)) {
-            val = decodeSet((JSONArray) value, idMapper, connection);
+            val = decodeSet((JSONArray) value, connection);
         } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(variableType)) {
             val = decodeStringArray((JSONArray) value);
         } else if (JsonEncoder.VTYPE_STRING.equals(variableType)) {
@@ -89,39 +88,44 @@ public class JsonDecoder {
             // TODO handle properly
             val = Boolean.valueOf(String.valueOf(value));
         } else if (JsonEncoder.VTYPE_CONNECTOR.equals(variableType)) {
-            val = idMapper.getConnector(((JSONString) value).stringValue());
+            val = ConnectorMap.get(connection).getConnector(
+                    ((JSONString) value).stringValue());
         } else {
-            return decodeObject(variableType, value, target, idMapper,
+            return decodeObject(new Type(variableType, null), value, target,
                     connection);
         }
 
         return val;
     }
 
-    private static Object decodeObject(String variableType,
-            JSONValue encodedValue, Object target, ConnectorMap idMapper,
-            ApplicationConnection connection) {
+    private static Object decodeObject(Type type, JSONValue encodedValue,
+            Object target, ApplicationConnection connection) {
         // object, class name as type
         JSONSerializer<Object> serializer = connection.getSerializerMap()
-                .getSerializer(variableType);
+                .getSerializer(type.getBaseTypeName());
         // TODO handle case with no serializer found
-        Object object = serializer.deserialize(encodedValue, target, idMapper,
-                connection);
-        return object;
+
+        if (target != null && serializer instanceof DiffJSONSerializer<?>) {
+            DiffJSONSerializer<Object> diffSerializer = (DiffJSONSerializer<Object>) serializer;
+            diffSerializer.update(target, type, encodedValue, connection);
+            return target;
+        } else {
+            Object object = serializer.deserialize(type, encodedValue,
+                    connection);
+            return object;
+        }
     }
 
     private static Map<Object, Object> decodeMap(JSONObject jsonMap,
-            ConnectorMap idMapper, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         HashMap<Object, Object> map = new HashMap<Object, Object>();
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
             JSONArray encodedKey = (JSONArray) JSONParser.parseStrict(key);
             JSONArray encodedValue = (JSONArray) jsonMap.get(key);
-            Object decodedKey = decodeValue(encodedKey, null, idMapper,
-                    connection);
-            Object decodedValue = decodeValue(encodedValue, null, idMapper,
-                    connection);
+            Object decodedKey = decodeValue(encodedKey, null, connection);
+            Object decodedValue = decodeValue(encodedValue, null, connection);
             map.put(decodedKey, decodedValue);
         }
         return map;
@@ -137,32 +141,31 @@ public class JsonDecoder {
     }
 
     private static Object[] decodeArray(JSONArray jsonArray,
-            ConnectorMap idMapper, ApplicationConnection connection) {
-        List<Object> list = decodeList(jsonArray, idMapper, connection);
+            ApplicationConnection connection) {
+        List<Object> list = decodeList(jsonArray, connection);
         return list.toArray(new Object[list.size()]);
     }
 
     private static List<Object> decodeList(JSONArray jsonArray,
-            ConnectorMap idMapper, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         List<Object> tokens = new ArrayList<Object>();
-        decodeIntoCollection(jsonArray, idMapper, connection, tokens);
+        decodeIntoCollection(jsonArray, connection, tokens);
         return tokens;
     }
 
     private static Set<Object> decodeSet(JSONArray jsonArray,
-            ConnectorMap idMapper, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         Set<Object> tokens = new HashSet<Object>();
-        decodeIntoCollection(jsonArray, idMapper, connection, tokens);
+        decodeIntoCollection(jsonArray, connection, tokens);
         return tokens;
     }
 
     private static void decodeIntoCollection(JSONArray jsonArray,
-            ConnectorMap idMapper, ApplicationConnection connection,
-            Collection<Object> tokens) {
+            ApplicationConnection connection, Collection<Object> tokens) {
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
             JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(decodeValue(entryArray, null, idMapper, connection));
+            tokens.add(decodeValue(entryArray, null, connection));
         }
     }
 }

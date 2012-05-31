@@ -1412,7 +1412,7 @@ public class ApplicationConnection {
                                     states.getJavaScriptObject(connectorId));
 
                             JsonDecoder.decodeValue(stateDataAndType,
-                                    connector.getState(), connectorMap,
+                                    connector.getState(),
                                     ApplicationConnection.this);
 
                             StateChangeEvent event = GWT
@@ -1578,8 +1578,7 @@ public class ApplicationConnection {
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(
-                    (JSONArray) parametersJson.get(j), null, getConnectorMap(),
-                    this);
+                    (JSONArray) parametersJson.get(j), null, this);
         }
         return new MethodInvocation(connectorId, interfaceName, methodName,
                 parameters);

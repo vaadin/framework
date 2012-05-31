@@ -30,6 +30,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.communication.DiffJSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
@@ -107,13 +108,20 @@ public class SerializerGenerator extends Generator {
                 serializerClassName);
         composer.addImport(GWT.class.getName());
         composer.addImport(JSONArray.class.getName());
+        composer.addImport(com.vaadin.terminal.gwt.client.communication.Type.class
+                .getName());
         // composer.addImport(JSONObject.class.getName());
         // composer.addImport(VPaintableMap.class.getName());
         composer.addImport(JsonDecoder.class.getName());
         // composer.addImport(VaadinSerializer.class.getName());
 
-        composer.addImplementedInterface(JSONSerializer.class.getName() + "<"
-                + beanQualifiedSourceName + ">");
+        if (isEnum) {
+            composer.addImplementedInterface(JSONSerializer.class.getName()
+                    + "<" + beanQualifiedSourceName + ">");
+        } else {
+            composer.addImplementedInterface(DiffJSONSerializer.class.getName()
+                    + "<" + beanQualifiedSourceName + ">");
+        }
 
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
@@ -138,20 +146,39 @@ public class SerializerGenerator extends Generator {
             writeBeanSerializer(logger, sourceWriter, beanType);
         }
         // }
+        sourceWriter.outdent();
         sourceWriter.println("}");
+        sourceWriter.println();
+
+        // Updater
+        // public void update(T target, Type type, JSONValue jsonValue,
+        // ApplicationConnection connection);
+        if (!isEnum) {
+            sourceWriter.println("public void update("
+                    + beanQualifiedSourceName + " target, Type type, "
+                    + JSONValue.class.getName() + " jsonValue, "
+                    + ApplicationConnection.class.getName() + " connection) {");
+            sourceWriter.indent();
+
+            writeBeanDeserializer(logger, sourceWriter, beanType, true);
+
+            sourceWriter.outdent();
+            sourceWriter.println("}");
+        }
 
         // Deserializer
+        // T deserialize(Type type, JSONValue jsonValue, ApplicationConnection
+        // connection);
         sourceWriter.println("public " + beanQualifiedSourceName
-                + " deserialize(" + JSONValue.class.getName() + " jsonValue, "
-                + beanQualifiedSourceName + " target, "
-                + ConnectorMap.class.getName() + " idMapper, "
-                + ApplicationConnection.class.getName() + " connection) {");
+                + " deserialize(Type type, " + JSONValue.class.getName()
+                + " jsonValue, " + ApplicationConnection.class.getName()
+                + " connection) {");
         sourceWriter.indent();
 
         if (isEnum) {
             writeEnumDeserializer(logger, sourceWriter, beanType.isEnum());
         } else {
-            writeBeanDeserializer(logger, sourceWriter, beanType);
+            writeBeanDeserializer(logger, sourceWriter, beanType, false);
         }
         sourceWriter.println("}");
         sourceWriter.outdent();
@@ -183,18 +210,14 @@ public class SerializerGenerator extends Generator {
     }
 
     private void writeBeanDeserializer(TreeLogger logger,
-            SourceWriter sourceWriter, JClassType beanType) {
+            SourceWriter sourceWriter, JClassType beanType, boolean update) {
         String beanQualifiedSourceName = beanType.getQualifiedSourceName();
 
-        // if (target == null) {
-        sourceWriter.println("if (target == null) {");
-        sourceWriter.indent();
-
-        // target = GWT.create(VButtonState.class);
-        sourceWriter.println("target = GWT.create(" + beanQualifiedSourceName
-                + ".class);");
-        sourceWriter.outdent();
-        sourceWriter.println("}");
+        if (!update) {
+            sourceWriter.println(beanQualifiedSourceName
+                    + " target = GWT.create(" + beanQualifiedSourceName
+                    + ".class);");
+        }
 
         // JSONOBject json = (JSONObject)jsonValue;
         sourceWriter.println(JSONObject.class.getName() + " json = ("
@@ -230,37 +253,26 @@ public class SerializerGenerator extends Generator {
                 fieldType = setterParameterType.getQualifiedSourceName();
             }
 
-            // String referenceValue;
-            sourceWriter.println(fieldType + " referenceValue;");
-            // if (target == null) {
-            sourceWriter.println("if (target == null) {");
-            sourceWriter.indent();
-            // referenceValue = null;
-            sourceWriter.println("referenceValue = null;");
-            // } else {
-            sourceWriter.println("} else {");
-            // referenceValue = target.getHeight();
-            sourceWriter.println("referenceValue = target." + getterName
-                    + "();");
-            // }
-            sourceWriter.outdent();
-            sourceWriter.println("}");
+            // String referenceValue = target.getHeight();
+            sourceWriter.println(fieldType + " referenceValue = target."
+                    + getterName + "();");
 
             // target.setHeight((String)
             // JsonDecoder.decodeValue(jsonFieldValue,referenceValue, idMapper,
             // connection));
             sourceWriter.println("target." + setterName + "((" + fieldType
                     + ") " + JsonDecoder.class.getName() + ".decodeValue("
-                    + jsonFieldName
-                    + ", referenceValue, idMapper, connection));");
+                    + jsonFieldName + ", referenceValue, connection));");
 
             // } ... end of if contains
             sourceWriter.println("}");
             sourceWriter.outdent();
         }
 
-        // return target;
-        sourceWriter.println("return target;");
+        if (!update) {
+            // return target;
+            sourceWriter.println("return target;");
+        }
 
     }
 

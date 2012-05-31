@@ -12,14 +12,14 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 public class URLReference_Serializer implements JSONSerializer<URLReference> {
 
-    public URLReference deserialize(JSONValue jsonValue, URLReference target,
-            ConnectorMap idMapper, ApplicationConnection connection) {
+    public URLReference deserialize(Type type, JSONValue jsonValue,
+            ApplicationConnection connection) {
         URLReference reference = GWT.create(URLReference.class);
         JSONObject json = (JSONObject) jsonValue;
         if (json.containsKey("URL")) {
             JSONArray jsonURL = (JSONArray) json.get("URL");
             String URL = (String) JsonDecoder.decodeValue(jsonURL, null,
-                    idMapper, connection);
+                    connection);
             reference.setURL(connection.translateVaadinUri(URL));
         }
         return reference;

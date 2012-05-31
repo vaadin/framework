@@ -34,14 +34,9 @@ public interface JSONSerializer<T> {
      * 
      * @param jsonValue
      *            JSON map from property name to property value
-     * @param target
-     *            The object to write the deserialized values to
-     * @param idMapper
-     *            mapper from paintable id to paintable, used to decode
-     *            references to paintables
      * @return A deserialized object
      */
-    T deserialize(JSONValue jsonValue, T target, ConnectorMap idMapper,
+    T deserialize(Type type, JSONValue jsonValue,
             ApplicationConnection connection);
 
     /**
