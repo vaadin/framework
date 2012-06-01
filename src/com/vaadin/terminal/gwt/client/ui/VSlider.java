@@ -20,6 +20,7 @@ import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         ContainerResizedListener {
@@ -113,6 +114,8 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
 
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
+
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -368,6 +371,9 @@ public class VSlider extends SimpleFocusablePanel implements Paintable, Field,
         if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
+        }
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
     }
 
