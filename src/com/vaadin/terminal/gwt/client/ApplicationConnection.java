@@ -44,7 +44,9 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.Type;
 import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -1411,8 +1413,9 @@ public class ApplicationConnection {
                             JSONArray stateDataAndType = new JSONArray(
                                     states.getJavaScriptObject(connectorId));
 
-                            JsonDecoder.decodeValue(stateDataAndType,
-                                    connector.getState(),
+                            SharedState state = connector.getState();
+                            JsonDecoder.decodeValue(new Type(state.getClass()
+                                    .getName(), null), stateDataAndType, state,
                                     ApplicationConnection.this);
 
                             StateChangeEvent event = GWT
@@ -1575,13 +1578,19 @@ public class ApplicationConnection {
         String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
         String methodName = ((JSONString) rpcCall.get(2)).stringValue();
         JSONArray parametersJson = (JSONArray) rpcCall.get(3);
+
+        MethodInvocation methodInvocation = new MethodInvocation(connectorId,
+                interfaceName, methodName);
+        Type[] parameterTypes = rpcManager.getParameterTypes(methodInvocation);
+
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
-            parameters[j] = JsonDecoder.decodeValue(
+            parameters[j] = JsonDecoder.decodeValue(parameterTypes[j],
                     (JSONArray) parametersJson.get(j), null, this);
         }
-        return new MethodInvocation(connectorId, interfaceName, methodName,
-                parameters);
+
+        methodInvocation.setParameters(parameters);
+        return methodInvocation;
     }
 
     // Redirect browser, null reloads current page

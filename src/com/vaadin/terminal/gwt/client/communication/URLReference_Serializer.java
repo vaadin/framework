@@ -18,8 +18,9 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
         JSONObject json = (JSONObject) jsonValue;
         if (json.containsKey("URL")) {
             JSONArray jsonURL = (JSONArray) json.get("URL");
-            String URL = (String) JsonDecoder.decodeValue(jsonURL, null,
-                    connection);
+            String URL = (String) JsonDecoder.decodeValue(
+                    new Type(String.class.getCanonicalName(), null), jsonURL,
+                    null, connection);
             reference.setURL(connection.translateVaadinUri(URL));
         }
         return reference;

@@ -260,13 +260,16 @@ public class SerializerGenerator extends Generator {
             // target.setHeight((String)
             // JsonDecoder.decodeValue(jsonFieldValue,referenceValue, idMapper,
             // connection));
-            sourceWriter.println("target." + setterName + "((" + fieldType
-                    + ") " + JsonDecoder.class.getName() + ".decodeValue("
-                    + jsonFieldName + ", referenceValue, connection));");
+            sourceWriter.print("target." + setterName + "((" + fieldType + ") "
+                    + JsonDecoder.class.getName() + ".decodeValue(");
+            GeneratedRpcMethodProviderGenerator.writeTypeCreator(sourceWriter,
+                    setterParameterType);
+            sourceWriter.println(", " + jsonFieldName
+                    + ", referenceValue, connection));");
 
             // } ... end of if contains
-            sourceWriter.println("}");
             sourceWriter.outdent();
+            sourceWriter.println("}");
         }
 
         if (!update) {

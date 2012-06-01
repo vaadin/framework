@@ -178,9 +178,15 @@ public class GeneratedRpcMethodProviderGenerator extends Generator {
 
     }
 
-    private void writeTypeCreator(SourceWriter sourceWriter, JType type) {
-        sourceWriter.print("new Type(\""
-                + type.getErasedType().getQualifiedSourceName() + "\", ");
+    public static void writeTypeCreator(SourceWriter sourceWriter, JType type) {
+        String typeName;
+        if (type.isPrimitive() != null) {
+            // Used boxed types for primitives
+            typeName = type.isPrimitive().getQualifiedBoxedSourceName();
+        } else {
+            typeName = type.getErasedType().getQualifiedBinaryName();
+        }
+        sourceWriter.print("new Type(\"" + typeName + "\", ");
         JParameterizedType parameterized = type.isParameterized();
         if (parameterized != null) {
             sourceWriter.print("new Type[] {");
