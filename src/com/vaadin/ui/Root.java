@@ -1072,6 +1072,8 @@ public abstract class Root extends AbstractComponentContainer implements
         if (content != null) {
             super.addComponent(content);
         }
+
+        requestRepaint();
     }
 
     /**
