@@ -13,19 +13,20 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
-import com.vaadin.external.json.JSONTokener;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.UidlValue;
@@ -178,7 +179,7 @@ public class JsonCodec implements Serializable {
                     (JSONArray) encodedJsonValue, application);
         } else if (JsonEncoder.VTYPE_MAP.equals(transportType)) {
             return decodeMap(targetType, restrictToInternalTypes,
-                    (JSONObject) encodedJsonValue, application);
+                    encodedJsonValue, application);
         }
 
         // Arrays
@@ -243,23 +244,92 @@ public class JsonCodec implements Serializable {
     }
 
     private static Map<Object, Object> decodeMap(Type targetType,
-            boolean restrictToInternalTypes, JSONObject jsonMap,
+            boolean restrictToInternalTypes, Object jsonMap,
             Application application) throws JSONException {
-        HashMap<Object, Object> map = new HashMap<Object, Object>();
-
-        Iterator<String> it = jsonMap.keys();
-        while (it.hasNext()) {
-            String key = it.next();
-            String keyString = (String) new JSONTokener(key).nextValue();
-            Object encodedKey = new JSONTokener(keyString).nextValue();
-            Object encodedValue = jsonMap.get(key);
-
-            Object decodedKey = decodeParametrizedType(targetType,
-                    restrictToInternalTypes, 0, encodedKey, application);
-            Object decodedValue = decodeParametrizedType(targetType,
-                    restrictToInternalTypes, 1, encodedValue, application);
-            map.put(decodedKey, decodedValue);
+        if (jsonMap instanceof JSONArray) {
+            // Client-side has no declared type information to determine
+            // encoding method for empty maps, so these are handled separately.
+            // See #8906.
+            JSONArray jsonArray = (JSONArray) jsonMap;
+            if (jsonArray.length() == 0) {
+                return new HashMap<Object, Object>();
+            }
         }
+
+        if (!restrictToInternalTypes && targetType instanceof ParameterizedType) {
+            Type keyType = ((ParameterizedType) targetType)
+                    .getActualTypeArguments()[0];
+            Type valueType = ((ParameterizedType) targetType)
+                    .getActualTypeArguments()[1];
+            if (keyType == String.class) {
+                return decodeStringMap(valueType, (JSONObject) jsonMap,
+                        application);
+            } else if (keyType == Connector.class) {
+                return decodeConnectorMap(valueType, (JSONObject) jsonMap,
+                        application);
+            } else {
+                return decodeObjectMap(keyType, valueType, (JSONArray) jsonMap,
+                        application);
+            }
+        } else {
+            return decodeStringMap(UidlValue.class, (JSONObject) jsonMap,
+                    application);
+        }
+    }
+
+    private static Map<Object, Object> decodeObjectMap(Type keyType,
+            Type valueType, JSONArray jsonMap, Application application)
+            throws JSONException {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        JSONArray keys = jsonMap.getJSONArray(0);
+        JSONArray values = jsonMap.getJSONArray(1);
+
+        assert (keys.length() == values.length());
+
+        for (int i = 0; i < keys.length(); i++) {
+            Object key = decodeInternalOrCustomType(keyType, keys.get(i),
+                    application);
+            Object value = decodeInternalOrCustomType(valueType, values.get(i),
+                    application);
+
+            map.put(key, value);
+        }
+
+        return map;
+    }
+
+    private static Map<Object, Object> decodeConnectorMap(Type valueType,
+            JSONObject jsonMap, Application application) throws JSONException {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        for (Iterator<?> iter = jsonMap.keys(); iter.hasNext();) {
+            String key = (String) iter.next();
+            Object value = decodeInternalOrCustomType(valueType,
+                    jsonMap.get(key), application);
+            if (valueType == UidlValue.class) {
+                value = ((UidlValue) value).getValue();
+            }
+            map.put(application.getConnector(key), value);
+        }
+
+        return map;
+    }
+
+    private static Map<Object, Object> decodeStringMap(Type valueType,
+            JSONObject jsonMap, Application application) throws JSONException {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        for (Iterator<?> iter = jsonMap.keys(); iter.hasNext();) {
+            String key = (String) iter.next();
+            Object value = decodeInternalOrCustomType(valueType,
+                    jsonMap.get(key), application);
+            if (valueType == UidlValue.class) {
+                value = ((UidlValue) value).getValue();
+            }
+            map.put(key, value);
+        }
+
         return map;
     }
 
@@ -429,7 +499,7 @@ public class JsonCodec implements Serializable {
             JSONArray jsonArray = encodeArrayContents(array, application);
             return jsonArray;
         } else if (value instanceof Map) {
-            JSONObject jsonMap = encodeMap(valueType, (Map<?, ?>) value,
+            Object jsonMap = encodeMap(valueType, (Map<?, ?>) value,
                     application);
             return jsonMap;
         } else if (value instanceof Connector) {
@@ -550,7 +620,7 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static JSONObject encodeMap(Type mapType, Map<?, ?> map,
+    private static Object encodeMap(Type mapType, Map<?, ?> map,
             Application application) throws JSONException {
         Type keyType, valueType;
 
@@ -561,13 +631,64 @@ public class JsonCodec implements Serializable {
             throw new JSONException("Map is missing generics");
         }
 
-        JSONObject jsonMap = new JSONObject();
-        for (Object mapKey : map.keySet()) {
-            Object mapValue = map.get(mapKey);
-            Object encodedKey = encode(mapKey, null, keyType, application);
-            Object encodedValue = encode(mapValue, null, valueType, application);
-            jsonMap.put(JSONObject.quote(encodedKey.toString()), encodedValue);
+        if (map.isEmpty()) {
+            // Client -> server encodes empty map as an empty array because of
+            // #8906. Do the same for server -> client to maintain symmetry.
+            return new JSONArray();
         }
+
+        if (keyType == String.class) {
+            return encodeStringMap(valueType, map, application);
+        } else if (keyType == Connector.class) {
+            return encodeConnectorMap(valueType, map, application);
+        } else {
+            return encodeObjectMap(keyType, valueType, map, application);
+        }
+    }
+
+    private static JSONArray encodeObjectMap(Type keyType, Type valueType,
+            Map<?, ?> map, Application application) throws JSONException {
+        JSONArray keys = new JSONArray();
+        JSONArray values = new JSONArray();
+
+        for (Entry<?, ?> entry : map.entrySet()) {
+            Object encodedKey = encode(entry.getKey(), null, keyType,
+                    application);
+            Object encodedValue = encode(entry.getValue(), null, valueType,
+                    application);
+
+            keys.put(encodedKey);
+            values.put(encodedValue);
+        }
+
+        return new JSONArray(Arrays.asList(keys, values));
+    }
+
+    private static JSONObject encodeConnectorMap(Type valueType, Map<?, ?> map,
+            Application application) throws JSONException {
+        JSONObject jsonMap = new JSONObject();
+
+        for (Entry<?, ?> entry : map.entrySet()) {
+            Connector key = (Connector) entry.getKey();
+            Object encodedValue = encode(entry.getValue(), null, valueType,
+                    application);
+            jsonMap.put(key.getConnectorId(), encodedValue);
+        }
+
+        return jsonMap;
+    }
+
+    private static JSONObject encodeStringMap(Type valueType, Map<?, ?> map,
+            Application application) throws JSONException {
+        JSONObject jsonMap = new JSONObject();
+
+        for (Entry<?, ?> entry : map.entrySet()) {
+            String key = (String) entry.getKey();
+            Object encodedValue = encode(entry.getValue(), null, valueType,
+                    application);
+            jsonMap.put(key, encodedValue);
+        }
+
         return jsonMap;
     }
 

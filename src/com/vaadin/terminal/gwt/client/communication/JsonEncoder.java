@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.client.communication;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.json.client.JSONArray;
@@ -129,24 +130,85 @@ public class JsonEncoder {
     private static JSONValue encodeMap(Map<Object, Object> map,
             boolean restrictToInternalTypes, ConnectorMap connectorMap,
             ApplicationConnection connection) {
-        JSONObject jsonMap = new JSONObject();
-        for (Object mapKey : map.keySet()) {
-            Object mapValue = map.get(mapKey);
-            if (restrictToInternalTypes) {
-                if (!(mapKey instanceof String)) {
-                    throw new IllegalStateException(
-                            "Only string keys supported for legacy maps");
-                }
-                // Wrap in UidlValue to send explicit type info
-                mapKey = new UidlValue(mapKey);
-                mapValue = new UidlValue(mapValue);
-            }
-            JSONValue encodedKey = encode(mapKey, restrictToInternalTypes,
-                    connectorMap, connection);
-            JSONValue encodedValue = encode(mapValue, restrictToInternalTypes,
-                    connectorMap, connection);
-            jsonMap.put(encodedKey.toString(), encodedValue);
+        /*
+         * As we have no info about declared types, we instead select encoding
+         * scheme based on actual type of first key. We can't do this if there's
+         * no first key, so instead we send some special value that the
+         * server-side decoding must check for. (see #8906)
+         */
+        if (map.isEmpty()) {
+            return new JSONArray();
         }
+
+        Object firstKey = map.keySet().iterator().next();
+        if (firstKey instanceof String) {
+            return encodeStringMap(map, restrictToInternalTypes, connectorMap,
+                    connection);
+        } else if (restrictToInternalTypes) {
+            throw new IllegalStateException(
+                    "Only string keys supported for legacy maps");
+        } else if (firstKey instanceof Connector) {
+            return encodeConenctorMap(map, connectorMap, connection);
+        } else {
+            return encodeObjectMap(map, connectorMap, connection);
+        }
+    }
+
+    private static JSONValue encodeObjectMap(Map<Object, Object> map,
+            ConnectorMap connectorMap, ApplicationConnection connection) {
+        JSONArray keys = new JSONArray();
+        JSONArray values = new JSONArray();
+        for (Entry<?, ?> entry : map.entrySet()) {
+            // restrictToInternalTypes always false if we end up here
+            keys.set(keys.size(),
+                    encode(entry.getKey(), false, connectorMap, connection));
+            values.set(values.size(),
+                    encode(entry.getValue(), false, connectorMap, connection));
+        }
+
+        JSONArray keysAndValues = new JSONArray();
+        keysAndValues.set(0, keys);
+        keysAndValues.set(1, values);
+
+        return keysAndValues;
+    }
+
+    private static JSONValue encodeConenctorMap(Map<Object, Object> map,
+            ConnectorMap connectorMap, ApplicationConnection connection) {
+        JSONObject jsonMap = new JSONObject();
+
+        for (Entry<?, ?> entry : map.entrySet()) {
+            Connector connector = (Connector) entry.getKey();
+
+            // restrictToInternalTypes always false if we end up here
+            JSONValue encodedValue = encode(entry.getValue(), false,
+                    connectorMap, connection);
+
+            jsonMap.put(connector.getConnectorId(), encodedValue);
+        }
+
+        return jsonMap;
+    }
+
+    private static JSONValue encodeStringMap(Map<Object, Object> map,
+            boolean restrictToInternalTypes, ConnectorMap connectorMap,
+            ApplicationConnection connection) {
+        JSONObject jsonMap = new JSONObject();
+
+        for (Entry<?, ?> entry : map.entrySet()) {
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
+
+            if (restrictToInternalTypes) {
+                value = new UidlValue(value);
+            }
+
+            JSONValue encodedValue = encode(value, restrictToInternalTypes,
+                    connectorMap, connection);
+
+            jsonMap.put(key, encodedValue);
+        }
+
         return jsonMap;
     }
 

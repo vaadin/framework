@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -58,7 +56,7 @@ public class JsonDecoder {
             return decodeArray(type, (JSONArray) jsonValue, connection);
         } else if (Map.class.getName().equals(baseTypeName)
                 || HashMap.class.getName().equals(baseTypeName)) {
-            return decodeMap(type, (JSONObject) jsonValue, connection);
+            return decodeMap(type, jsonValue, connection);
         } else if (List.class.getName().equals(baseTypeName)
                 || ArrayList.class.getName().equals(baseTypeName)) {
             return decodeList(type, (JSONArray) jsonValue, connection);
@@ -105,20 +103,80 @@ public class JsonDecoder {
         }
     }
 
-    private static Map<Object, Object> decodeMap(Type type, JSONObject jsonMap,
+    private static Map<Object, Object> decodeMap(Type type, JSONValue jsonMap,
             ApplicationConnection connection) {
-        HashMap<Object, Object> map = new HashMap<Object, Object>();
-        Iterator<String> it = jsonMap.keySet().iterator();
-        while (it.hasNext()) {
-            String key = it.next();
-            JSONValue encodedKey = JSONParser.parseStrict(key);
-            JSONValue encodedValue = jsonMap.get(key);
-            Object decodedKey = decodeValue(type.getParameterTypes()[0],
-                    encodedKey, null, connection);
-            Object decodedValue = decodeValue(type.getParameterTypes()[1],
-                    encodedValue, null, connection);
+        // Client -> server encodes empty map as an empty array because of
+        // #8906. Do the same for server -> client to maintain symmetry.
+        if (jsonMap instanceof JSONArray) {
+            JSONArray array = (JSONArray) jsonMap;
+            if (array.size() == 0) {
+                return new HashMap<Object, Object>();
+            }
+        }
+
+        Type keyType = type.getParameterTypes()[0];
+        Type valueType = type.getParameterTypes()[1];
+
+        if (keyType.getBaseTypeName().equals(String.class.getName())) {
+            return decodeStringMap(valueType, jsonMap, connection);
+        } else if (keyType.getBaseTypeName().equals(Connector.class.getName())) {
+            return decodeConnectorMap(valueType, jsonMap, connection);
+        } else {
+            return decodeObjectMap(keyType, valueType, jsonMap, connection);
+        }
+    }
+
+    private static Map<Object, Object> decodeObjectMap(Type keyType,
+            Type valueType, JSONValue jsonValue,
+            ApplicationConnection connection) {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        JSONArray mapArray = (JSONArray) jsonValue;
+        JSONArray keys = (JSONArray) mapArray.get(0);
+        JSONArray values = (JSONArray) mapArray.get(1);
+
+        assert (keys.size() == values.size());
+
+        for (int i = 0; i < keys.size(); i++) {
+            Object decodedKey = decodeValue(keyType, keys.get(i), null,
+                    connection);
+            Object decodedValue = decodeValue(valueType, values.get(i), null,
+                    connection);
+
             map.put(decodedKey, decodedValue);
         }
+
+        return map;
+    }
+
+    private static Map<Object, Object> decodeConnectorMap(Type valueType,
+            JSONValue jsonValue, ApplicationConnection connection) {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        JSONObject jsonMap = (JSONObject) jsonValue;
+        ConnectorMap connectorMap = ConnectorMap.get(connection);
+
+        for (String connectorId : jsonMap.keySet()) {
+            Object value = decodeValue(valueType, jsonMap.get(connectorId),
+                    null, connection);
+            map.put(connectorMap.getConnector(connectorId), value);
+        }
+
+        return map;
+    }
+
+    private static Map<Object, Object> decodeStringMap(Type valueType,
+            JSONValue jsonValue, ApplicationConnection connection) {
+        Map<Object, Object> map = new HashMap<Object, Object>();
+
+        JSONObject jsonMap = (JSONObject) jsonValue;
+
+        for (String key : jsonMap.keySet()) {
+            Object value = decodeValue(valueType, jsonMap.get(key), null,
+                    connection);
+            map.put(key, value);
+        }
+
         return map;
     }
 
