@@ -91,9 +91,6 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String DASHDASH = "--";
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractCommunicationManager.class.getName());
-
     /**
      * Generic interface of a (HTTP or Portlet) request to the application.
      * 
@@ -737,8 +734,9 @@ public abstract class AbstractCommunicationManager implements
                 if (window == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    logger.warning("Could not get window for application with request ID "
-                            + request.getRequestID());
+                    getLogger().warning(
+                            "Could not get window for application with request ID "
+                                    + request.getRequestID());
                     return;
                 }
             } else {
@@ -762,7 +760,7 @@ public abstract class AbstractCommunicationManager implements
                     // FIXME: Handle exception
                     // Not critical, but something is still wrong; print
                     // stacktrace
-                    logger.log(Level.WARNING,
+                    getLogger().log(Level.WARNING,
                             "getSystemMessages() failed - continuing", e2);
                 }
                 if (ci != null) {
@@ -808,7 +806,7 @@ public abstract class AbstractCommunicationManager implements
 
             printHighlightedComponentHierarchy(sb, component);
         }
-        logger.info(sb.toString());
+        getLogger().info(sb.toString());
     }
 
     protected void printHighlightedComponentHierarchy(StringBuilder sb,
@@ -1095,16 +1093,16 @@ public abstract class AbstractCommunicationManager implements
                     (Class[]) null);
             ci = (Application.SystemMessages) m.invoke(null, (Object[]) null);
         } catch (NoSuchMethodException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (IllegalAccessException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (InvocationTargetException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         }
 
@@ -1144,8 +1142,8 @@ public abstract class AbstractCommunicationManager implements
                         resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.FINER, "Failed to get theme resource stream.",
-                        e);
+                getLogger().log(Level.FINER,
+                        "Failed to get theme resource stream.", e);
             }
             if (is != null) {
 
@@ -1164,13 +1162,13 @@ public abstract class AbstractCommunicationManager implements
                     r.close();
                 } catch (final java.io.IOException e) {
                     // FIXME: Handle exception
-                    logger.log(Level.INFO, "Resource transfer failed", e);
+                    getLogger().log(Level.INFO, "Resource transfer failed", e);
                 }
                 outWriter.print("\""
                         + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
             } else {
                 // FIXME: Handle exception
-                logger.severe("CustomLayout not found: " + resource);
+                getLogger().severe("CustomLayout not found: " + resource);
             }
         }
         outWriter.print("}");
@@ -1444,7 +1442,7 @@ public abstract class AbstractCommunicationManager implements
                             + variable[VAR_PID];
                     success = false;
                 }
-                logger.warning(msg);
+                getLogger().warning(msg);
                 continue;
             }
         }
@@ -1779,8 +1777,9 @@ public abstract class AbstractCommunicationManager implements
             DateFormat dateFormat = DateFormat.getDateTimeInstance(
                     DateFormat.SHORT, DateFormat.SHORT, l);
             if (!(dateFormat instanceof SimpleDateFormat)) {
-                logger.warning("Unable to get default date pattern for locale "
-                        + l.toString());
+                getLogger().warning(
+                        "Unable to get default date pattern for locale "
+                                + l.toString());
                 dateFormat = new SimpleDateFormat();
             }
             final String df = ((SimpleDateFormat) dateFormat).toPattern();
@@ -2482,5 +2481,9 @@ public abstract class AbstractCommunicationManager implements
             }
             return b;
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractCommunicationManager.class.getName());
     }
 }

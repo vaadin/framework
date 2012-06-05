@@ -32,9 +32,6 @@ import com.vaadin.terminal.ApplicationResource;
 public abstract class AbstractWebApplicationContext implements
         ApplicationContext, HttpSessionBindingListener, Serializable {
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractWebApplicationContext.class.getName());
-
     protected Collection<TransactionListener> listeners = Collections
             .synchronizedList(new LinkedList<TransactionListener>());
 
@@ -145,7 +142,7 @@ public abstract class AbstractWebApplicationContext implements
             // remove same application here. Possible if you got e.g. session
             // lifetime 1 min but socket write may take longer than 1 min.
             // FIXME: Handle exception
-            logger.log(Level.SEVERE,
+            getLogger().log(Level.SEVERE,
                     "Could not remove application, leaking memory.", e);
         }
     }
@@ -250,6 +247,10 @@ public abstract class AbstractWebApplicationContext implements
      */
     public long getLastRequestTime() {
         return lastRequestTime;
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(AbstractWebApplicationContext.class.getName());
     }
 
 }

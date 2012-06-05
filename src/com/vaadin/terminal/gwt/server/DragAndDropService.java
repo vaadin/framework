@@ -23,9 +23,6 @@ import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner {
 
-    private static final Logger logger = Logger
-            .getLogger(DragAndDropService.class.getName());
-
     private int lastVisitId;
 
     private boolean lastVisitAccepted = false;
@@ -45,8 +42,9 @@ public class DragAndDropService implements VariableOwner {
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            logger.severe("DropHandler owner " + owner
-                    + " must implement DropTarget");
+            getLogger()
+                    .severe("DropHandler owner " + owner
+                            + " must implement DropTarget");
             return;
         }
         // owner cannot be null here
@@ -76,8 +74,9 @@ public class DragAndDropService implements VariableOwner {
         DropHandler dropHandler = (dropTarget).getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            logger.fine("DropTarget.getDropHandler() returned null for owner: "
-                    + dropTarget);
+            getLogger().fine(
+                    "DropTarget.getDropHandler() returned null for owner: "
+                            + dropTarget);
             return;
         }
 
@@ -211,5 +210,9 @@ public class DragAndDropService implements VariableOwner {
             return true;
         }
         return false;
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(DragAndDropService.class.getName());
     }
 }

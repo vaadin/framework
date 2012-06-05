@@ -50,9 +50,6 @@ import com.vaadin.ui.treetable.HierarchicalContainerOrderedWrapper;
 @ClientWidget(VTreeTable.class)
 public class TreeTable extends Table implements Hierarchical {
 
-    private static final Logger logger = Logger.getLogger(TreeTable.class
-            .getName());
-
     private interface ContainerStrategy extends Serializable {
         public int size();
 
@@ -223,9 +220,9 @@ public class TreeTable extends Table implements Hierarchical {
             boolean removed = openItems.remove(itemId);
             if (!removed) {
                 openItems.add(itemId);
-                logger.finest("Item " + itemId + " is now expanded");
+                getLogger().finest("Item " + itemId + " is now expanded");
             } else {
-                logger.finest("Item " + itemId + " is now collapsed");
+                getLogger().finest("Item " + itemId + " is now collapsed");
             }
             clearPreorderCache();
         }
@@ -785,6 +782,10 @@ public class TreeTable extends Table implements Hierarchical {
     public void setAnimationsEnabled(boolean animationsEnabled) {
         this.animationsEnabled = animationsEnabled;
         requestRepaint();
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(TreeTable.class.getName());
     }
 
 }

@@ -68,9 +68,6 @@ import com.vaadin.ui.Window;
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractApplicationPortlet.class.getName());
-
     /**
      * This portlet parameter is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element.
@@ -123,7 +120,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
              * Print an information/warning message about running with xsrf
              * protection disabled
              */
-            logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
+            getLogger().warning(WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -136,9 +133,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private void checkWidgetsetVersion(PortletRequest request) {
         if (!AbstractApplicationServlet.VERSION.equals(getHTTPRequestParameter(
                 request, "wsver"))) {
-            logger.warning(String.format(WIDGETSET_MISMATCH_INFO,
-                    AbstractApplicationServlet.VERSION,
-                    getHTTPRequestParameter(request, "wsver")));
+            getLogger().warning(
+                    String.format(WIDGETSET_MISMATCH_INFO,
+                            AbstractApplicationServlet.VERSION,
+                            getHTTPRequestParameter(request, "wsver")));
         }
     }
 
@@ -158,7 +156,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
             // TODO Maybe we need a different message for portlets?
-            logger.warning(NOT_PRODUCTION_MODE_INFO);
+            getLogger().warning(NOT_PRODUCTION_MODE_INFO);
         }
     }
 
@@ -473,11 +471,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with
                 // SessionExpiredExceptions
-                logger.finest("A user session has expired");
+                getLogger().finest("A user session has expired");
             } catch (final GeneralSecurityException e) {
                 // TODO Figure out a better way to deal with
                 // GeneralSecurityExceptions
-                logger.fine("General security exception, the security key was probably incorrect.");
+                getLogger()
+                        .fine("General security exception, the security key was probably incorrect.");
             } catch (final Throwable e) {
                 handleServiceException(request, response, application, e);
             } finally {
@@ -508,7 +507,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private void handleUnknownRequest(PortletRequest request,
             PortletResponse response) {
-        logger.warning("Unknown request type");
+        getLogger().warning("Unknown request type");
     }
 
     /**
@@ -705,8 +704,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 os.write(buffer, 0, bytes);
             }
         } else {
-            logger.info("Requested resource [" + resourceID
-                    + "] could not be found");
+            getLogger().info(
+                    "Requested resource [" + resourceID
+                            + "] could not be found");
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }
@@ -963,7 +963,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             appClass += getApplicationClass().getSimpleName();
         } catch (ClassNotFoundException e) {
             appClass += "unknown";
-            logger.log(Level.SEVERE, "Could not find application class", e);
+            getLogger()
+                    .log(Level.SEVERE, "Could not find application class", e);
         }
         String themeClass = "v-theme-"
                 + themeName.replaceAll("[^a-zA-Z0-9]", "");
@@ -1631,6 +1632,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     protected PortletApplicationContext2 getApplicationContext(
             PortletSession portletSession) {
         return PortletApplicationContext2.getApplicationContext(portletSession);
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractApplicationPortlet.class.getName());
     }
 
 }

@@ -92,9 +92,6 @@ import com.vaadin.ui.Window;
 public abstract class Application implements URIHandler,
         Terminal.ErrorListener, Serializable {
 
-    private final static Logger logger = Logger.getLogger(Application.class
-            .getName());
-
     /**
      * Id use for the next window that is opened. Access to this must be
      * synchronized.
@@ -1191,8 +1188,9 @@ public abstract class Application implements URIHandler,
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            logger.info("SocketException in CommunicationManager."
-                    + " Most likely client (browser) closed socket.");
+            getLogger().info(
+                    "SocketException in CommunicationManager."
+                            + " Most likely client (browser) closed socket.");
             return;
         }
 
@@ -1219,7 +1217,7 @@ public abstract class Application implements URIHandler,
         }
 
         // also print the error on console
-        logger.log(Level.SEVERE, "Terminal error:", t);
+        getLogger().log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**
@@ -1905,5 +1903,9 @@ public abstract class Application implements URIHandler,
             return throwable;
         }
 
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(Application.class.getName());
     }
 }

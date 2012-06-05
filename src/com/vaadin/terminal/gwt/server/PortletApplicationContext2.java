@@ -49,9 +49,6 @@ import com.vaadin.ui.Window;
 @SuppressWarnings("serial")
 public class PortletApplicationContext2 extends AbstractWebApplicationContext {
 
-    private static final Logger logger = Logger
-            .getLogger(PortletApplicationContext2.class.getName());
-
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
     protected transient PortletSession session;
@@ -77,11 +74,11 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(
-                        Level.INFO,
-                        "Cannot access base directory, possible security issue "
-                                + "with Application Server or Servlet Container",
-                        e);
+                getLogger()
+                        .log(Level.INFO,
+                                "Cannot access base directory, possible security issue "
+                                        + "with Application Server or Servlet Container",
+                                e);
             }
         }
         return null;
@@ -414,5 +411,9 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             throw new IllegalStateException(
                     "Portlet mode can only be changed from a portlet request");
         }
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(PortletApplicationContext2.class.getName());
     }
 }

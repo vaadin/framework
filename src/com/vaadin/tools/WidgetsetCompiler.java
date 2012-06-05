@@ -33,9 +33,6 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
  */
 public class WidgetsetCompiler {
 
-    private static final Logger logger = Logger
-            .getLogger(WidgetsetCompiler.class.getName());
-
     /**
      * @param args
      *            same arguments as for com.google.gwt.dev.Compiler
@@ -72,7 +69,7 @@ public class WidgetsetCompiler {
                                 String[].class);
                         method.invoke(null, new Object[] { args });
                     } catch (Throwable thr) {
-                        logger.log(Level.SEVERE,
+                        getLogger().log(Level.SEVERE,
                                 "Widgetset compilation failed", thr);
                     }
                 }
@@ -82,7 +79,11 @@ public class WidgetsetCompiler {
             runThread.join();
             System.out.println("Widgetset compilation finished");
         } catch (Throwable thr) {
-            logger.log(Level.SEVERE, "Widgetset compilation failed", thr);
+            getLogger().log(Level.SEVERE, "Widgetset compilation failed", thr);
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(WidgetsetCompiler.class.getName());
     }
 }

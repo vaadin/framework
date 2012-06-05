@@ -76,8 +76,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickSource,
         ItemClickNotifier, DragSource, DropTarget {
 
-    private static final Logger logger = Logger
-            .getLogger(Table.class.getName());
+    private transient Logger logger = null;
 
     /**
      * Modes that Table support as drag sourse.
@@ -1646,8 +1645,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        logger.finest("Insert " + rows + " rows at index " + firstIndex
-                + " to existing page buffer requested");
+        getLogger().finest(
+                "Insert " + rows + " rows at index " + firstIndex
+                        + " to existing page buffer requested");
 
         // Page buffer must not become larger than pageLength*cacheRate before
         // or after the current page
@@ -1750,11 +1750,14 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         pageBuffer = newPageBuffer;
-        logger.finest("Page Buffer now contains "
-                + pageBuffer[CELL_ITEMID].length + " rows ("
-                + pageBufferFirstIndex + "-"
-                + (pageBufferFirstIndex + pageBuffer[CELL_ITEMID].length - 1)
-                + ")");
+        getLogger().finest(
+                "Page Buffer now contains "
+                        + pageBuffer[CELL_ITEMID].length
+                        + " rows ("
+                        + pageBufferFirstIndex
+                        + "-"
+                        + (pageBufferFirstIndex
+                                + pageBuffer[CELL_ITEMID].length - 1) + ")");
         return cells;
     }
 
@@ -1771,8 +1774,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
-        logger.finest("Render visible cells for rows " + firstIndex + "-"
-                + (firstIndex + rows - 1));
+        getLogger().finest(
+                "Render visible cells for rows " + firstIndex + "-"
+                        + (firstIndex + rows - 1));
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -1954,8 +1958,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
-        logger.finest("Registered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Registered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -1986,8 +1991,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
-        logger.finest("Unregistering components in rows " + firstIx + "-"
-                + (firstIx + count - 1));
+        getLogger().finest(
+                "Unregistering components in rows " + firstIx + "-"
+                        + (firstIx + count - 1));
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -2067,8 +2073,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
-        logger.finest("Unregistered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Unregistered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2438,7 +2445,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         .get("lastToBeRendered")).intValue();
             } catch (Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.FINER,
+                getLogger().log(Level.FINER,
                         "Could not parse the first and/or last rows.", e);
             }
 
@@ -2458,8 +2465,9 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
-            logger.finest("Client wants rows " + reqFirstRowToPaint + "-"
-                    + (reqFirstRowToPaint + reqRowsToPaint - 1));
+            getLogger().finest(
+                    "Client wants rows " + reqFirstRowToPaint + "-"
+                            + (reqFirstRowToPaint + reqRowsToPaint - 1));
             clientNeedsContentRefresh = true;
         }
 
@@ -2505,7 +2513,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column collapsing state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2527,7 +2535,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column reordering state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2817,8 +2825,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.startTag("prows");
 
         if (!shouldHideAddedRows()) {
-            logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
-                    + count + ".");
+            getLogger().finest(
+                    "Paint rows for add. Index: " + firstIx + ", count: "
+                            + count + ".");
 
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
@@ -2841,8 +2850,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
-            logger.finest("Paint rows for remove. Index: " + firstIx
-                    + ", count: " + count + ".");
+            getLogger().finest(
+                    "Paint rows for remove. Index: " + firstIx + ", count: "
+                            + count + ".");
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
@@ -5216,5 +5226,12 @@ public class Table extends AbstractSelect implements Action.Container,
             setRowCacheInvalidated(true);
         }
         super.setVisible(visible);
+    }
+
+    private final Logger getLogger() {
+        if (logger == null) {
+            logger = Logger.getLogger(Table.class.getName());
+        }
+        return logger;
     }
 }

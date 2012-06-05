@@ -19,9 +19,6 @@ import com.vaadin.Application;
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
-    private static final Logger logger = Logger
-            .getLogger(ApplicationRunnerServlet.class.getName());
-
     /**
      * The name of the application class currently used. Only valid within one
      * request.
@@ -176,10 +173,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                         // Ignore as this is expected for many packages
                     } catch (Exception e2) {
                         // TODO: handle exception
-                        logger.log(
-                                Level.FINE,
-                                "Failed to find application class in the default package.",
-                                e2);
+                        getLogger()
+                                .log(Level.FINE,
+                                        "Failed to find application class in the default package.",
+                                        e2);
                     }
                     if (appClass != null) {
                         return appClass;
@@ -213,6 +210,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         }
 
         return staticFilesPath;
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(ApplicationRunnerServlet.class.getName());
     }
 
 }

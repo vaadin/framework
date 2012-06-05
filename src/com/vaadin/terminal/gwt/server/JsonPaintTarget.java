@@ -52,9 +52,6 @@ import com.vaadin.ui.CustomLayout;
 @SuppressWarnings("serial")
 public class JsonPaintTarget implements PaintTarget {
 
-    private static final Logger logger = Logger.getLogger(JsonPaintTarget.class
-            .getName());
-
     /* Document type declarations */
 
     private final static String UIDL_ARG_NAME = "name";
@@ -700,11 +697,11 @@ public class JsonPaintTarget implements PaintTarget {
         if (!manager.hasPaintableId(paintable)) {
             if (paintable instanceof Component
                     && ((Component) paintable).getApplication() == null) {
-                logger.log(
-                        Level.WARNING,
-                        "Painting reference to orphan "
-                                + paintable.getClass().getName()
-                                + ", the component will not be accessible on the client side.");
+                getLogger()
+                        .log(Level.WARNING,
+                                "Painting reference to orphan "
+                                        + paintable.getClass().getName()
+                                        + ", the component will not be accessible on the client side.");
                 return "Orphan";
             }
             if (identifiersCreatedDueRefPaint == null) {
@@ -1029,10 +1026,12 @@ public class JsonPaintTarget implements PaintTarget {
                         && Paintable.class.isAssignableFrom(superclass)) {
                     class1 = (Class<? extends Paintable>) superclass;
                 } else {
-                    logger.warning("No superclass of "
-                            + paintable.getClass().getName()
-                            + " has a @ClientWidget"
-                            + " annotation. Component will not be mapped correctly on client side.");
+                    getLogger()
+                            .warning(
+                                    "No superclass of "
+                                            + paintable.getClass().getName()
+                                            + " has a @ClientWidget"
+                                            + " annotation. Component will not be mapped correctly on client side.");
                     break;
                 }
             }
@@ -1136,18 +1135,19 @@ public class JsonPaintTarget implements PaintTarget {
                     // TODO could optimize to quit at the end attribute
                 }
             } catch (IOException e1) {
-                logger.log(Level.SEVERE,
+                getLogger().log(Level.SEVERE,
                         "An error occurred while finding widget mapping.", e1);
             } finally {
                 try {
                     bufferedReader.close();
                 } catch (IOException e1) {
-                    logger.log(Level.SEVERE, "Could not close reader.", e1);
+                    getLogger()
+                            .log(Level.SEVERE, "Could not close reader.", e1);
 
                 }
             }
         } catch (Throwable t) {
-            logger.log(Level.SEVERE,
+            getLogger().log(Level.SEVERE,
                     "An error occurred while finding widget mapping.", t);
         }
 
@@ -1174,6 +1174,10 @@ public class JsonPaintTarget implements PaintTarget {
      */
     public boolean isFullRepaint() {
         return !cacheEnabled;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(JsonPaintTarget.class.getName());
     }
 
 }
