@@ -18,7 +18,6 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -53,14 +52,11 @@ public class JsonEncoder {
      * 
      * @param value
      *            value to convert
-     * @param connectorMap
-     *            mapper from connectors to connector IDs
      * @param connection
      * @return JSON representation of the value
      */
     public static JSONValue encode(Object value,
-            boolean restrictToInternalTypes, ConnectorMap connectorMap,
-            ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ApplicationConnection connection) {
         if (null == value) {
             return JSONNull.getInstance();
         } else if (value instanceof String[]) {
@@ -76,29 +72,27 @@ public class JsonEncoder {
             return JSONBoolean.getInstance((Boolean) value);
         } else if (value instanceof Object[]) {
             return encodeObjectArray((Object[]) value, restrictToInternalTypes,
-                    connectorMap, connection);
+                    connection);
         } else if (value instanceof Enum) {
             if (restrictToInternalTypes) {
                 // Enums are encoded as strings in Vaadin 6 so we still do that
                 // for backwards copmatibility.
                 return encode(new UidlValue(value.toString()),
-                        restrictToInternalTypes, connectorMap, connection);
+                        restrictToInternalTypes, connection);
             } else {
                 Enum e = (Enum) value;
-                return encodeEnum(e, connectorMap, connection);
+                return encodeEnum(e, connection);
             }
         } else if (value instanceof Map) {
-            return encodeMap((Map) value, restrictToInternalTypes,
-                    connectorMap, connection);
+            return encodeMap((Map) value, restrictToInternalTypes, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return new JSONString(connector.getConnectorId());
         } else if (value instanceof Collection) {
             return encodeCollection((Collection) value,
-                    restrictToInternalTypes, connectorMap, connection);
+                    restrictToInternalTypes, connection);
         } else if (value instanceof UidlValue) {
-            return encodeVariableChange((UidlValue) value, connectorMap,
-                    connection);
+            return encodeVariableChange((UidlValue) value, connection);
         } else {
             String transportType = getTransportType(value);
             if (transportType != null) {
@@ -111,25 +105,24 @@ public class JsonEncoder {
                         .getSerializer(transportType);
 
                 // TODO handle case with no serializer found
-                return serializer.serialize(value, connectorMap, connection);
+                return serializer.serialize(value, connection);
             }
         }
     }
 
     private static JSONValue encodeVariableChange(UidlValue uidlValue,
-            ConnectorMap connectorMap, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         Object value = uidlValue.getValue();
 
         JSONArray jsonArray = new JSONArray();
         jsonArray.set(0, new JSONString(getTransportType(value)));
-        jsonArray.set(1, encode(value, true, connectorMap, connection));
+        jsonArray.set(1, encode(value, true, connection));
 
         return jsonArray;
     }
 
     private static JSONValue encodeMap(Map<Object, Object> map,
-            boolean restrictToInternalTypes, ConnectorMap connectorMap,
-            ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ApplicationConnection connection) {
         /*
          * As we have no info about declared types, we instead select encoding
          * scheme based on actual type of first key. We can't do this if there's
@@ -142,28 +135,26 @@ public class JsonEncoder {
 
         Object firstKey = map.keySet().iterator().next();
         if (firstKey instanceof String) {
-            return encodeStringMap(map, restrictToInternalTypes, connectorMap,
-                    connection);
+            return encodeStringMap(map, restrictToInternalTypes, connection);
         } else if (restrictToInternalTypes) {
             throw new IllegalStateException(
                     "Only string keys supported for legacy maps");
         } else if (firstKey instanceof Connector) {
-            return encodeConenctorMap(map, connectorMap, connection);
+            return encodeConenctorMap(map, connection);
         } else {
-            return encodeObjectMap(map, connectorMap, connection);
+            return encodeObjectMap(map, connection);
         }
     }
 
     private static JSONValue encodeObjectMap(Map<Object, Object> map,
-            ConnectorMap connectorMap, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         JSONArray keys = new JSONArray();
         JSONArray values = new JSONArray();
         for (Entry<?, ?> entry : map.entrySet()) {
             // restrictToInternalTypes always false if we end up here
-            keys.set(keys.size(),
-                    encode(entry.getKey(), false, connectorMap, connection));
+            keys.set(keys.size(), encode(entry.getKey(), false, connection));
             values.set(values.size(),
-                    encode(entry.getValue(), false, connectorMap, connection));
+                    encode(entry.getValue(), false, connection));
         }
 
         JSONArray keysAndValues = new JSONArray();
@@ -174,15 +165,14 @@ public class JsonEncoder {
     }
 
     private static JSONValue encodeConenctorMap(Map<Object, Object> map,
-            ConnectorMap connectorMap, ApplicationConnection connection) {
+            ApplicationConnection connection) {
         JSONObject jsonMap = new JSONObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector connector = (Connector) entry.getKey();
 
             // restrictToInternalTypes always false if we end up here
-            JSONValue encodedValue = encode(entry.getValue(), false,
-                    connectorMap, connection);
+            JSONValue encodedValue = encode(entry.getValue(), false, connection);
 
             jsonMap.put(connector.getConnectorId(), encodedValue);
         }
@@ -191,8 +181,7 @@ public class JsonEncoder {
     }
 
     private static JSONValue encodeStringMap(Map<Object, Object> map,
-            boolean restrictToInternalTypes, ConnectorMap connectorMap,
-            ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ApplicationConnection connection) {
         JSONObject jsonMap = new JSONObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
@@ -204,7 +193,7 @@ public class JsonEncoder {
             }
 
             JSONValue encodedValue = encode(value, restrictToInternalTypes,
-                    connectorMap, connection);
+                    connection);
 
             jsonMap.put(key, encodedValue);
         }
@@ -212,14 +201,13 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JSONValue encodeEnum(Enum e, ConnectorMap connectorMap,
+    private static JSONValue encodeEnum(Enum<?> e,
             ApplicationConnection connection) {
         return new JSONString(e.toString());
     }
 
     private static JSONValue encodeObjectArray(Object[] array,
-            boolean restrictToInternalTypes, ConnectorMap connectorMap,
-            ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array.length; ++i) {
             // TODO handle object graph loops?
@@ -227,22 +215,19 @@ public class JsonEncoder {
             if (restrictToInternalTypes) {
                 value = new UidlValue(value);
             }
-            jsonArray.set(
-                    i,
-                    encode(value, restrictToInternalTypes, connectorMap,
-                            connection));
+            jsonArray
+                    .set(i, encode(value, restrictToInternalTypes, connection));
         }
         return jsonArray;
     }
 
     private static JSONValue encodeCollection(Collection collection,
-            boolean restrictToInternalTypes, ConnectorMap connectorMap,
-            ApplicationConnection connection) {
+            boolean restrictToInternalTypes, ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         int idx = 0;
         for (Object o : collection) {
             JSONValue encodedObject = encode(o, restrictToInternalTypes,
-                    connectorMap, connection);
+                    connection);
             jsonArray.set(idx++, encodedObject);
         }
         if (collection instanceof Set) {

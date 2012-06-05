@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 
 public class URLReference_Serializer implements JSONSerializer<URLReference> {
 
@@ -25,11 +24,10 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
         return reference;
     }
 
-    public JSONValue serialize(URLReference value, ConnectorMap idMapper,
-            ApplicationConnection connection) {
+    public JSONValue serialize(URLReference value, ApplicationConnection connection) {
         JSONObject json = new JSONObject();
         json.put("URL",
-                JsonEncoder.encode(value.getURL(), true, idMapper, connection));
+                JsonEncoder.encode(value.getURL(), true, connection));
         return json;
     }
 

@@ -28,7 +28,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.communication.DiffJSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
@@ -128,11 +127,10 @@ public class SerializerGenerator extends Generator {
 
         // Serializer
 
-        // public JSONValue serialize(Object value, ConnectorMap idMapper,
+        // public JSONValue serialize(Object value,
         // ApplicationConnection connection) {
         sourceWriter.println("public " + JSONValue.class.getName()
                 + " serialize(" + beanQualifiedSourceName + " value, "
-                + ConnectorMap.class.getName() + " idMapper, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
         // MouseEventDetails castedValue = (MouseEventDetails) value;
@@ -306,7 +304,7 @@ public class SerializerGenerator extends Generator {
             // connection));
             sourceWriter.println("json.put(\"" + fieldName + "\",  "
                     + JsonEncoder.class.getName() + ".encode(castedValue."
-                    + getterName + "(), false, idMapper, connection));");
+                    + getterName + "(), false, connection));");
         }
         // return json;
         sourceWriter.println("return json;");

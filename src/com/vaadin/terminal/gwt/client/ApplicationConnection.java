@@ -1711,7 +1711,7 @@ public class ApplicationConnection {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
                             invocation.getParameters()[i],
-                            restrictToInternalTypes, getConnectorMap(), this));
+                            restrictToInternalTypes, this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);

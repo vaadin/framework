@@ -47,12 +47,8 @@ public interface JSONSerializer<T> {
      * 
      * @param value
      *            The object to serialize
-     * @param idMapper
-     *            mapper from paintable id to paintable, used to decode
-     *            references to paintables
      * @return A JSON serialized version of the object
      */
-    JSONValue serialize(T value, ConnectorMap idMapper,
-            ApplicationConnection connection);
+    JSONValue serialize(T value, ApplicationConnection connection);
 
 }
