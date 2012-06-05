@@ -157,7 +157,7 @@ public class SerializerGenerator extends Generator {
                     + ApplicationConnection.class.getName() + " connection) {");
             sourceWriter.indent();
 
-            writeBeanDeserializer(logger, sourceWriter, beanType, true);
+            writeBeanDeserializer(logger, sourceWriter, beanType);
 
             sourceWriter.outdent();
             sourceWriter.println("}");
@@ -175,14 +175,20 @@ public class SerializerGenerator extends Generator {
         if (isEnum) {
             writeEnumDeserializer(logger, sourceWriter, beanType.isEnum());
         } else {
-            writeBeanDeserializer(logger, sourceWriter, beanType, false);
+            sourceWriter.println(beanQualifiedSourceName
+                    + " target = GWT.create(" + beanQualifiedSourceName
+                    + ".class);");
+            sourceWriter
+                    .println("update(target, type, jsonValue, connection);");
+            // return target;
+            sourceWriter.println("return target;");
         }
-        sourceWriter.println("}");
         sourceWriter.outdent();
+        sourceWriter.println("}");
 
         // End of class
-        sourceWriter.println("}");
         sourceWriter.outdent();
+        sourceWriter.println("}");
 
         // commit generated class
         context.commit(logger, printWriter);
@@ -207,14 +213,8 @@ public class SerializerGenerator extends Generator {
     }
 
     private void writeBeanDeserializer(TreeLogger logger,
-            SourceWriter sourceWriter, JClassType beanType, boolean update) {
+            SourceWriter sourceWriter, JClassType beanType) {
         String beanQualifiedSourceName = beanType.getQualifiedSourceName();
-
-        if (!update) {
-            sourceWriter.println(beanQualifiedSourceName
-                    + " target = GWT.create(" + beanQualifiedSourceName
-                    + ".class);");
-        }
 
         // JSONOBject json = (JSONObject)jsonValue;
         sourceWriter.println(JSONObject.class.getName() + " json = ("
@@ -268,12 +268,6 @@ public class SerializerGenerator extends Generator {
             sourceWriter.outdent();
             sourceWriter.println("}");
         }
-
-        if (!update) {
-            // return target;
-            sourceWriter.println("return target;");
-        }
-
     }
 
     private void writeEnumSerializer(TreeLogger logger,
