@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -17,10 +16,10 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
         URLReference reference = GWT.create(URLReference.class);
         JSONObject json = (JSONObject) jsonValue;
         if (json.containsKey("URL")) {
-            JSONArray jsonURL = (JSONArray) json.get("URL");
+            JSONValue jsonURL = json.get("URL");
             String URL = (String) JsonDecoder.decodeValue(
-                    new Type(String.class.getCanonicalName(), null), jsonURL,
-                    null, connection);
+                    new Type(String.class.getName(), null), jsonURL, null,
+                    connection);
             reference.setURL(connection.translateVaadinUri(URL));
         }
         return reference;

@@ -250,7 +250,8 @@ public class JsonCodec implements Serializable {
         Iterator<String> it = jsonMap.keys();
         while (it.hasNext()) {
             String key = it.next();
-            Object encodedKey = new JSONTokener(key).nextValue();
+            String keyString = (String) new JSONTokener(key).nextValue();
+            Object encodedKey = new JSONTokener(keyString).nextValue();
             Object encodedValue = jsonMap.get(key);
 
             Object decodedKey = decodeParametrizedType(targetType,
@@ -394,55 +395,43 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    @Deprecated
-    private static JSONArray encode(Object value, Application application)
-            throws JSONException {
-        return encode(value, null, null, application);
-    }
-
-    public static JSONArray encode(Object value, Object referenceValue,
+    public static Object encode(Object value, Object referenceValue,
             Type valueType, Application application) throws JSONException {
+
+        if (valueType == null) {
+            throw new IllegalArgumentException("type must be defined");
+        }
 
         if (null == value) {
             return encodeNull();
         }
 
-        if (valueType == null) {
-            valueType = value.getClass();
-        }
-
-        String internalTransportType = getInternalTransportType(valueType);
         if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();
             for (int i = 0; i < array.length; ++i) {
                 jsonArray.put(array[i]);
             }
-            return combineTypeAndValue(JsonEncoder.VTYPE_STRINGARRAY, jsonArray);
+            return jsonArray;
         } else if (value instanceof String) {
-            return combineTypeAndValue(JsonEncoder.VTYPE_STRING, value);
+            return value;
         } else if (value instanceof Boolean) {
-            return combineTypeAndValue(JsonEncoder.VTYPE_BOOLEAN, value);
+            return value;
         } else if (value instanceof Number) {
-            return combineTypeAndValue(internalTransportType, value);
+            return value;
         } else if (value instanceof Collection) {
-            if (internalTransportType == null) {
-                throw new RuntimeException(
-                        "Unable to serialize unsupported type: " + valueType);
-            }
             Collection<?> collection = (Collection<?>) value;
             JSONArray jsonArray = encodeCollection(valueType, collection,
                     application);
-
-            return combineTypeAndValue(internalTransportType, jsonArray);
+            return jsonArray;
         } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
             JSONArray jsonArray = encodeArrayContents(array, application);
-            return combineTypeAndValue(JsonEncoder.VTYPE_ARRAY, jsonArray);
+            return jsonArray;
         } else if (value instanceof Map) {
             JSONObject jsonMap = encodeMap(valueType, (Map<?, ?>) value,
                     application);
-            return combineTypeAndValue(JsonEncoder.VTYPE_MAP, jsonMap);
+            return jsonMap;
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             if (value instanceof Component
@@ -450,24 +439,18 @@ public class JsonCodec implements Serializable {
                             .isVisible((Component) value))) {
                 return encodeNull();
             }
-            return combineTypeAndValue(JsonEncoder.VTYPE_CONNECTOR,
-                    connector.getConnectorId());
-        } else if (internalTransportType != null) {
-            return combineTypeAndValue(internalTransportType,
-                    String.valueOf(value));
+            return connector.getConnectorId();
         } else if (value instanceof Enum) {
-            return encodeEnum((Enum) value, application);
+            return encodeEnum((Enum<?>) value, application);
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return combineTypeAndValue(
-                    getCustomTransportType((Class<?>) valueType),
-                    encodeObject(value, referenceValue, application));
+            return encodeObject(value, referenceValue, application);
         }
     }
 
-    private static JSONArray encodeNull() {
-        return combineTypeAndValue(JsonEncoder.VTYPE_NULL, JSONObject.NULL);
+    private static Object encodeNull() {
+        return JSONObject.NULL;
     }
 
     private static Object encodeObject(Object value, Object referenceValue,
@@ -531,10 +514,9 @@ public class JsonCodec implements Serializable {
         return false;
     }
 
-    private static JSONArray encodeEnum(Enum e, Application application)
+    private static String encodeEnum(Enum<?> e, Application application)
             throws JSONException {
-        String enumIdentifier = e.name();
-        return combineTypeAndValue(e.getClass().getName(), enumIdentifier);
+        return e.name();
     }
 
     private static JSONArray encodeArrayContents(Object[] array,
@@ -556,15 +538,15 @@ public class JsonCodec implements Serializable {
         return jsonArray;
     }
 
-    private static JSONArray encodeChild(Type targetType, int typeIndex,
-            Object o, Application application) throws JSONException {
+    private static Object encodeChild(Type targetType, int typeIndex, Object o,
+            Application application) throws JSONException {
         if (targetType instanceof ParameterizedType) {
             Type childType = ((ParameterizedType) targetType)
                     .getActualTypeArguments()[typeIndex];
             // Encode using the given type
             return encode(o, null, childType, application);
         } else {
-            return encode(o, application);
+            throw new JSONException("Collection is missing generics");
         }
     }
 
@@ -582,23 +564,11 @@ public class JsonCodec implements Serializable {
         JSONObject jsonMap = new JSONObject();
         for (Object mapKey : map.keySet()) {
             Object mapValue = map.get(mapKey);
-            JSONArray encodedKey = encode(mapKey, null, keyType, application);
-            JSONArray encodedValue = encode(mapValue, null, valueType,
-                    application);
-            jsonMap.put(encodedKey.toString(), encodedValue);
+            Object encodedKey = encode(mapKey, null, keyType, application);
+            Object encodedValue = encode(mapValue, null, valueType, application);
+            jsonMap.put(JSONObject.quote(encodedKey.toString()), encodedValue);
         }
         return jsonMap;
-    }
-
-    private static JSONArray combineTypeAndValue(String type, Object value) {
-        if (type == null) {
-            throw new RuntimeException("Type for value " + value
-                    + " cannot be null!");
-        }
-        JSONArray outerArray = new JSONArray();
-        outerArray.put(type);
-        outerArray.put(value);
-        return outerArray;
     }
 
     /**

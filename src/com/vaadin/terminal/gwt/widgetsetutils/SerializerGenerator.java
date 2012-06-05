@@ -22,7 +22,6 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -107,7 +106,7 @@ public class SerializerGenerator extends Generator {
         composer = new ClassSourceFileComposerFactory(serializerPackageName,
                 serializerClassName);
         composer.addImport(GWT.class.getName());
-        composer.addImport(JSONArray.class.getName());
+        composer.addImport(JSONValue.class.getName());
         composer.addImport(com.vaadin.terminal.gwt.client.communication.Type.class
                 .getName());
         // composer.addImport(JSONObject.class.getName());
@@ -236,9 +235,9 @@ public class SerializerGenerator extends Generator {
                     + "\")) {");
             sourceWriter.indent();
             String jsonFieldName = "json_" + fieldName;
-            // JSONArray json_Height = (JSONArray) json.get("height");
-            sourceWriter.println("JSONArray " + jsonFieldName
-                    + " = (JSONArray) json.get(\"" + fieldName + "\");");
+            // JSONValue json_Height = json.get("height");
+            sourceWriter.println("JSONValue " + jsonFieldName
+                    + " = json.get(\"" + fieldName + "\");");
 
             String fieldType;
             String getterName = "get" + fieldName;

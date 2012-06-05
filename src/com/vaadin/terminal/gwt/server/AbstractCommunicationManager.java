@@ -846,11 +846,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                             + stateType.getName());
                         }
                     }
-                    JSONArray stateJsonArray = JsonCodec.encode(state,
-                            referenceState, stateType, application);
+                    Object stateJson = JsonCodec.encode(state, referenceState,
+                            stateType, application);
 
-                    sharedStates
-                            .put(connector.getConnectorId(), stateJsonArray);
+                    sharedStates.put(connector.getConnectorId(), stateJson);
                 } catch (JSONException e) {
                     throw new PaintException(
                             "Failed to serialize shared state for connector "

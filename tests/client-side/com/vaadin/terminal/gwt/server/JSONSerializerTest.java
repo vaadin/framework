@@ -13,7 +13,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.vaadin.external.json.JSONArray;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState;
@@ -43,8 +42,8 @@ public class JSONSerializerTest extends TestCase {
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 
-        JSONArray encodedMap = JsonCodec.encode(stringToStateMap, null,
-                mapType, null);
+        Object encodedMap = JsonCodec.encode(stringToStateMap, null, mapType,
+                null);
 
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
     }
@@ -60,13 +59,13 @@ public class JSONSerializerTest extends TestCase {
         stateToStringMap.put(s, "string - state 1");
         stateToStringMap.put(s2, "String - state 2");
 
-        JSONArray encodedMap = JsonCodec.encode(stateToStringMap, null,
-                mapType, null);
+        Object encodedMap = JsonCodec.encode(stateToStringMap, null, mapType,
+                null);
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }
 
-    private void ensureDecodedCorrectly(Object original, JSONArray encoded,
+    private void ensureDecodedCorrectly(Object original, Object encoded,
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);

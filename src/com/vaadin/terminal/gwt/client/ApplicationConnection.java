@@ -28,6 +28,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -1410,7 +1411,7 @@ public class ApplicationConnection {
                                 .getConnector(connectorId);
                         if (null != connector) {
 
-                            JSONArray stateDataAndType = new JSONArray(
+                            JSONObject stateDataAndType = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
 
                             SharedState state = connector.getState();
@@ -1586,7 +1587,7 @@ public class ApplicationConnection {
         Object[] parameters = new Object[parametersJson.size()];
         for (int j = 0; j < parametersJson.size(); ++j) {
             parameters[j] = JsonDecoder.decodeValue(parameterTypes[j],
-                    (JSONArray) parametersJson.get(j), null, this);
+                    parametersJson.get(j), null, this);
         }
 
         methodInvocation.setParameters(parameters);

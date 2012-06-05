@@ -21,7 +21,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**
  * Client side decoder for decodeing shared state and other values from JSON
@@ -40,21 +39,13 @@ public class JsonDecoder {
      * Decode a JSON array with two elements (type and value) into a client-side
      * type, recursively if necessary.
      * 
-     * @param jsonArray
-     *            JSON array with two elements
-     * @param idMapper
-     *            mapper between connector ID and {@link ServerConnector}
-     *            objects
+     * @param jsonValue
+     *            JSON value with encoded data
      * @param connection
      *            reference to the current ApplicationConnection
      * @return decoded value (does not contain JSON types)
      */
-    public static Object decodeValue(Type type, JSONArray jsonArray,
-            Object target, ApplicationConnection connection) {
-        return decodeValue(type, jsonArray.get(1), target, connection);
-    }
-
-    private static Object decodeValue(Type type, JSONValue jsonValue,
+    public static Object decodeValue(Type type, JSONValue jsonValue,
             Object target, ApplicationConnection connection) {
 
         // Null is null, regardless of type
@@ -120,8 +111,8 @@ public class JsonDecoder {
         Iterator<String> it = jsonMap.keySet().iterator();
         while (it.hasNext()) {
             String key = it.next();
-            JSONArray encodedKey = (JSONArray) JSONParser.parseStrict(key);
-            JSONArray encodedValue = (JSONArray) jsonMap.get(key);
+            JSONValue encodedKey = JSONParser.parseStrict(key);
+            JSONValue encodedValue = jsonMap.get(key);
             Object decodedKey = decodeValue(type.getParameterTypes()[0],
                     encodedKey, null, connection);
             Object decodedValue = decodeValue(type.getParameterTypes()[1],
@@ -162,8 +153,8 @@ public class JsonDecoder {
             Collection<Object> tokens) {
         for (int i = 0; i < jsonArray.size(); ++i) {
             // each entry always has two elements: type and value
-            JSONArray entryArray = (JSONArray) jsonArray.get(i);
-            tokens.add(decodeValue(childType, entryArray, null, connection));
+            JSONValue entryValue = jsonArray.get(i);
+            tokens.add(decodeValue(childType, entryValue, null, connection));
         }
     }
 }
