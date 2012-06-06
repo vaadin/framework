@@ -1369,15 +1369,11 @@ public abstract class AbstractCommunicationManager implements
                     // we have more than one value changes in row for
                     // one variable owner, collect them in HashMap
                     m = new HashMap<String, Object>();
-                    m.put(variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+                    m.put(variable[VAR_NAME], decodeVariable(variable));
                 } else {
                     // use optimized single value map
-                    m = Collections.singletonMap(
-                            variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+                    m = Collections.singletonMap(variable[VAR_NAME],
+                            decodeVariable(variable));
                 }
 
                 // collect following variable changes for this owner
@@ -1390,9 +1386,7 @@ public abstract class AbstractCommunicationManager implements
                     } else {
                         nextVariable = null;
                     }
-                    m.put(variable[VAR_NAME],
-                            convertVariableValue(variable[VAR_TYPE].charAt(0),
-                                    variable[VAR_VALUE]));
+                    m.put(variable[VAR_NAME], decodeVariable(variable));
                 }
                 try {
                     changeVariables(source, owner, m);
@@ -1558,6 +1552,19 @@ public abstract class AbstractCommunicationManager implements
             application.getErrorHandler().terminalError(errorEvent);
         }
 
+    }
+
+    private Object decodeVariable(String[] variable) {
+        try {
+            return convertVariableValue(variable[VAR_TYPE].charAt(0),
+                    variable[VAR_VALUE]);
+        } catch (Exception e) {
+            String pid = variable[VAR_PID];
+            VariableOwner variableOwner = getVariableOwner(pid);
+            throw new RuntimeException("Could not convert variable \""
+                    + variable[VAR_NAME] + "\" for "
+                    + variableOwner.getClass().getName() + " (" + pid + ")", e);
+        }
     }
 
     private Object convertVariableValue(char variableType, String strValue) {
