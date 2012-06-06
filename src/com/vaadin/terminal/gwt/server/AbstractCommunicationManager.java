@@ -1561,9 +1561,11 @@ public abstract class AbstractCommunicationManager implements
         } catch (Exception e) {
             String pid = variable[VAR_PID];
             VariableOwner variableOwner = getVariableOwner(pid);
+            String targetType = variableOwner == null ? "unknown VariableOwner"
+                    : variableOwner.getClass().getName();
             throw new RuntimeException("Could not convert variable \""
-                    + variable[VAR_NAME] + "\" for "
-                    + variableOwner.getClass().getName() + " (" + pid + ")", e);
+                    + variable[VAR_NAME] + "\" for " + targetType + " (" + pid
+                    + ")", e);
         }
     }
 
