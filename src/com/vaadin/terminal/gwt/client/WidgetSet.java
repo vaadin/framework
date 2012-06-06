@@ -5,7 +5,6 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class WidgetSet {
@@ -19,27 +18,28 @@ public class WidgetSet {
 
     /**
      * Create an uninitialized connector that best matches given UIDL. The
-     * connector must be a {@link Widget} that implements
-     * {@link ServerConnector}.
+     * connector must implement {@link ServerConnector}.
      * 
      * @param tag
      *            connector type tag for the connector to create
-     * @param client
-     *            the application connection that whishes to instantiate widget
+     * @param conf
+     *            the application configuration to use when creating the
+     *            connector
      * 
      * @return New uninitialized and unregistered connector that can paint given
      *         UIDL.
      */
-    public ServerConnector createWidget(int tag, ApplicationConfiguration conf) {
+    public ServerConnector createConnector(int tag,
+            ApplicationConfiguration conf) {
         /*
          * Yes, this (including the generated code in WidgetMap) may look very
          * odd code, but due the nature of GWT, we cannot do this any cleaner.
          * Luckily this is mostly written by WidgetSetGenerator, here are just
-         * some hacks. Extra instantiation code is needed if client side widget
-         * has no "native" counterpart on client side.
+         * some hacks. Extra instantiation code is needed if client side
+         * connector has no "native" counterpart on client side.
          */
 
-        Class<? extends ServerConnector> classType = resolveInheritedWidgetType(
+        Class<? extends ServerConnector> classType = resolveInheritedConnectorType(
                 conf, tag);
 
         if (classType == null || classType == UnknownComponentConnector.class) {
@@ -56,23 +56,23 @@ public class WidgetSet {
         }
     }
 
-    private Class<? extends ServerConnector> resolveInheritedWidgetType(
+    private Class<? extends ServerConnector> resolveInheritedConnectorType(
             ApplicationConfiguration conf, int tag) {
         Class<? extends ServerConnector> classType = null;
         Integer t = tag;
         do {
-            classType = resolveWidgetType(t, conf);
+            classType = resolveConnectorType(t, conf);
             t = conf.getParentTag(t);
         } while (classType == null && t != null);
         return classType;
     }
 
-    protected Class<? extends ServerConnector> resolveWidgetType(int tag,
+    protected Class<? extends ServerConnector> resolveConnectorType(int tag,
             ApplicationConfiguration conf) {
-        Class<? extends ServerConnector> widgetClass = conf
+        Class<? extends ServerConnector> connectorClass = conf
                 .getConnectorClassByEncodedTag(tag);
 
-        return widgetClass;
+        return connectorClass;
     }
 
     /**

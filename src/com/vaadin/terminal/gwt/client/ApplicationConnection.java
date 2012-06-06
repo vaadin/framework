@@ -2133,7 +2133,7 @@ public class ApplicationConnection {
             int connectorType) {
         // Create and register a new connector with the given type
         ServerConnector p = widgetSet
-                .createWidget(connectorType, configuration);
+                .createConnector(connectorType, configuration);
         connectorMap.registerConnector(connectorId, p);
         p.doInit(connectorId, this);
 
