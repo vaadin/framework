@@ -609,6 +609,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void detach() {
+        super.detach();
         if (actionManager != null) {
             // Remove any existing viewer. Root cast is just to make the
             // compiler happy
