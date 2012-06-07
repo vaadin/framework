@@ -16,6 +16,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.vaadin.terminal.gwt.client.ui.VUnknownComponent;
 
 public class ApplicationConfiguration implements EntryPoint {
@@ -496,12 +497,15 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @return true if client side is currently been debugged
      */
-    public native static boolean isDebugMode()
+    public static boolean isDebugMode() {
+        return isDebugAvailable()
+                && Window.Location.getParameter("debug") != null;
+    }
+
+    private native static boolean isDebugAvailable()
     /*-{
         if($wnd.vaadin.debug) {
-            var parameters = $wnd.location.search;
-            var re = /debug[^\/]*$/;
-            return re.test(parameters);
+            return true;
         } else {
             return false;
         }
@@ -512,11 +516,10 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @return <code>true</code> if debug logging should be quiet
      */
-    public native static boolean isQuietDebugMode()
-    /*-{
-        var uri = $wnd.location;
-        var re = /debug=q[^\/]*$/;
-        return re.test(uri);
-    }-*/;
+    public static boolean isQuietDebugMode() {
+        String debugParameter = Window.Location.getParameter("debug");
+        return isDebugAvailable() && debugParameter != null
+                && debugParameter.startsWith("q");
+    }
 
 }
