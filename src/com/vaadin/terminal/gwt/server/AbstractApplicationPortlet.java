@@ -76,6 +76,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
+    public static final String WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE = "writeAjaxPageScriptWidgetsetShouldWrite";
+
     // TODO some parts could be shared with AbstractApplicationServlet
 
     // TODO Can we close the application when the portlet is removed? Do we know
@@ -1071,7 +1073,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     /**
      * Writes the script to load the widgetset on the HTML fragment created by
-     * the portlet.
+     * the portlet if the request attribute
+     * WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE is set to Boolean.TRUE.
      * 
      * @param request
      * @param writer
@@ -1079,6 +1082,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      */
     protected void writeAjaxPageWidgetset(RenderRequest request,
             BufferedWriter writer) throws IOException {
+        /*
+         * If the old method that used to add this code using document.write has
+         * been overridden, we shouldn't do anything here because then the
+         * iframe and script tag have already been added.
+         */
+        if (request.getAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE) != Boolean.TRUE) {
+            return;
+        }
         String widgetsetURL = getWidgetsetURL(request);
         writer.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                 + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
@@ -1108,6 +1119,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         // But we still need to close this one block, for compatibility
         writer.append("\n}\n");
+
+        /*
+         * Set a flag so writeAjaxPageScriptWidgetset() knows that this method
+         * has not generated the old document.write code (happens if this method
+         * is overridden).
+         */
+        request.setAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE,
+                Boolean.TRUE);
     }
 
     /**
