@@ -1082,7 +1082,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         String widgetsetURL = getWidgetsetURL(request);
         writer.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                 + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;opacity:0;top:-100px;left:-100px;\" src=\"javascript:false\"></iframe>'\n");
+                + "hidden;opacity:0;top:-100px;left:-100px;\" src=\"javascript:false\"></iframe>\n");
         writer.write("<script language='javascript' src='" + widgetsetURL
                 + "'></script>\n");
     }
@@ -1107,7 +1107,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // No longer used as of #8924, but retained to maintain compatibility
 
         // But we still need to close this one block, for compatibility
-        writer.append("\\n}\\n");
+        writer.append("\n}\n");
     }
 
     /**
