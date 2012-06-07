@@ -410,7 +410,7 @@ public class JsonCodec implements Serializable {
      * Returns the name that should be used as field name in the JSON. We strip
      * "set" from the setter, keeping the result - this is easy to do on both
      * server and client, avoiding some issues with cASE. E.g setZIndex()
-     * becomes "ZIndex". Also ensures that both getter and setter are present,
+     * becomes "zIndex". Also ensures that both getter and setter are present,
      * returning null otherwise.
      * 
      * @param pd
@@ -421,7 +421,10 @@ public class JsonCodec implements Serializable {
         if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
             return null;
         }
-        return pd.getWriteMethod().getName().substring(3);
+        String fieldName = pd.getWriteMethod().getName().substring(3);
+        fieldName = Character.toLowerCase(fieldName.charAt(0))
+                + fieldName.substring(1);
+        return fieldName;
     }
 
     private static Object decodeObject(Type targetType,
@@ -547,6 +550,14 @@ public class JsonCodec implements Serializable {
                     equals = equals(fieldValue, referenceFieldValue);
                 }
                 if (!equals) {
+                    if (jsonMap.has(fieldName)) {
+                        throw new RuntimeException(
+                                "Can't encode "
+                                        + value.getClass().getName()
+                                        + " as it has multiple fields with the name "
+                                        + fieldName.toLowerCase()
+                                        + ". This can happen if only casing distinguishes one property name from another.");
+                    }
                     jsonMap.put(
                             fieldName,
                             encode(fieldValue, referenceFieldValue, fieldType,

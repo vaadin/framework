@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -79,10 +80,11 @@ public class SerializerGenerator extends Generator {
      *            bean type for which the serializer is to be generated
      * @param beanSerializerTypeName
      *            name of the serializer class to generate
+     * @throws UnableToCompleteException
      */
     private void generateClass(TreeLogger logger, GeneratorContext context,
             JClassType beanType, String serializerPackageName,
-            String serializerClassName) {
+            String serializerClassName) throws UnableToCompleteException {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
         printWriter = context.tryCreate(logger, serializerPackageName,
@@ -222,7 +224,9 @@ public class SerializerGenerator extends Generator {
 
         for (JMethod method : getSetters(beanType)) {
             String setterName = method.getName();
-            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
+            String baseName = setterName.substring(3);
+            String fieldName = getTransportFieldName(baseName); // setZIndex()
+                                                                // -> zIndex
             JType setterParameterType = method.getParameterTypes()[0];
 
             logger.log(Type.DEBUG, "* Processing field " + fieldName + " in "
@@ -238,13 +242,13 @@ public class SerializerGenerator extends Generator {
                     + " = json.get(\"" + fieldName + "\");");
 
             String fieldType;
-            String getterName = "get" + fieldName;
+            String getterName = "get" + baseName;
             JPrimitiveType primitiveType = setterParameterType.isPrimitive();
             if (primitiveType != null) {
                 // This is a primitive type -> must used the boxed type
                 fieldType = primitiveType.getQualifiedBoxedSourceName();
                 if (primitiveType == JPrimitiveType.BOOLEAN) {
-                    getterName = "is" + fieldName;
+                    getterName = "is" + baseName;
                 }
             } else {
                 fieldType = setterParameterType.getQualifiedSourceName();
@@ -278,15 +282,29 @@ public class SerializerGenerator extends Generator {
     }
 
     private void writeBeanSerializer(TreeLogger logger,
-            SourceWriter sourceWriter, JClassType beanType) {
+            SourceWriter sourceWriter, JClassType beanType)
+            throws UnableToCompleteException {
 
         // JSONObject json = new JSONObject();
         sourceWriter.println(JSONObject.class.getName() + " json = new "
                 + JSONObject.class.getName() + "();");
 
+        HashSet<String> usedFieldNames = new HashSet<String>();
+
         for (JMethod setterMethod : getSetters(beanType)) {
             String setterName = setterMethod.getName();
-            String fieldName = setterName.substring(3); // setZIndex() -> ZIndex
+            String fieldName = getTransportFieldName(setterName.substring(3)); // setZIndex()
+            // -> zIndex
+            if (!usedFieldNames.add(fieldName)) {
+                logger.log(
+                        TreeLogger.ERROR,
+                        "Can't encode "
+                                + beanType.getQualifiedSourceName()
+                                + " as it has multiple fields with the name "
+                                + fieldName.toLowerCase()
+                                + ". This can happen if only casing distinguishes one property name from another.");
+                throw new UnableToCompleteException();
+            }
             String getterName = findGetter(beanType, setterMethod);
 
             if (getterName == null) {
@@ -303,6 +321,11 @@ public class SerializerGenerator extends Generator {
         // return json;
         sourceWriter.println("return json;");
 
+    }
+
+    private static String getTransportFieldName(String baseName) {
+        return Character.toLowerCase(baseName.charAt(0))
+                + baseName.substring(1);
     }
 
     private String findGetter(JClassType beanType, JMethod setterMethod) {
