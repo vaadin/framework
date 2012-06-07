@@ -882,6 +882,30 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     /**
      * Returns the URL from which the widgetset is served on the portal.
      * 
+     * @param request
+     * @return
+     */
+    protected String getWidgetsetURL(RenderRequest request) {
+        String requestWidgetset = getApplicationOrSystemProperty(
+                PARAMETER_WIDGETSET, null);
+        String sharedWidgetset = getPortalProperty(
+                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
+
+        String widgetset;
+        if (requestWidgetset != null) {
+            widgetset = requestWidgetset;
+        } else if (sharedWidgetset != null) {
+            widgetset = sharedWidgetset;
+        } else {
+            widgetset = DEFAULT_WIDGETSET;
+        }
+        String widgetsetURL = getWidgetsetURL(widgetset, request);
+        return widgetsetURL;
+    }
+
+    /**
+     * Returns the URL from which the widgetset is served on the portal.
+     * 
      * @param widgetset
      * @param request
      * @return
@@ -1037,6 +1061,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         writer.write("</script>\n");
 
+        writeAjaxPageWidgetset(request, writer);
+
         writeAjaxPageHtmlTheme(request, writer, themeName, themeURI,
                 portalTheme);
 
@@ -1048,32 +1074,40 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * the portlet.
      * 
      * @param request
-     * @param response
      * @param writer
      * @throws IOException
      */
+    protected void writeAjaxPageWidgetset(RenderRequest request,
+            BufferedWriter writer) throws IOException {
+        String widgetsetURL = getWidgetsetURL(request);
+        writer.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
+                + "hidden;opacity:0;top:-100px;left:-100px;\" src=\"javascript:false\"></iframe>'\n");
+        writer.write("<script language='javascript' src='" + widgetsetURL
+                + "'></script>\n");
+    }
+
+    /**
+     * Writes the script to load the widgetset on the HTML fragment created by
+     * the portlet.
+     * 
+     * @param request
+     * @param response
+     * @param writer
+     * @throws IOException
+     * 
+     * @Deprecated As of 6.8, use
+     *             {@link #writeAjaxPageWidgetset(RenderRequest, BufferedWriter)}
+     *             instead to avoid using document.write
+     */
+    @Deprecated
     protected void writeAjaxPageScriptWidgetset(RenderRequest request,
             RenderResponse response, final BufferedWriter writer)
             throws IOException {
-        String requestWidgetset = getApplicationOrSystemProperty(
-                PARAMETER_WIDGETSET, null);
-        String sharedWidgetset = getPortalProperty(
-                PORTAL_PARAMETER_VAADIN_WIDGETSET, request.getPortalContext());
+        // No longer used as of #8924, but retained to maintain compatibility
 
-        String widgetset;
-        if (requestWidgetset != null) {
-            widgetset = requestWidgetset;
-        } else if (sharedWidgetset != null) {
-            widgetset = sharedWidgetset;
-        } else {
-            widgetset = DEFAULT_WIDGETSET;
-        }
-        String widgetsetURL = getWidgetsetURL(widgetset, request);
-        writer.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;opacity:0;top:-100px;left:-100px;\" src=\"javascript:false\"></iframe>');\n");
-        writer.write("document.write(\"<script language='javascript' src='"
-                + widgetsetURL + "'><\\/script>\");\n}\n");
+        // But we still need to close this one block, for compatibility
+        writer.append("\\n}\\n");
     }
 
     /**

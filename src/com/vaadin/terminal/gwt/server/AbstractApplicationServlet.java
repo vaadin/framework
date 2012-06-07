@@ -1929,11 +1929,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         if (!isProductionMode()) {
             page.write("vaadin.debug = true;\n");
         }
-        page.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;\" src=\"javascript:false\"></iframe>');\n");
-        page.write("document.write(\"<script language='javascript' src='"
-                + widgetsetFilePath + "'><\\/script>\");\n}\n");
+        page.write("}\n");
 
         page.write("vaadin.vaadinConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
@@ -1990,6 +1986,12 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     + "}");
         }
         page.write("};\n//]]>\n</script>\n");
+
+        page.write("<iframe tabIndex='-1' id='__gwt_historyFrame' "
+                + "style='position:absolute;width:0;height:0;border:0;overflow:"
+                + "hidden;' src='javascript:false'></iframe>\n");
+        page.write("<script language='javascript' src='" + widgetsetFilePath
+                + "'></script>\n");
 
         if (themeName != null) {
             // Custom theme's stylesheet, load only once, in different
