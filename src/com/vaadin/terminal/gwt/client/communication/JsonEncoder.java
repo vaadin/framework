@@ -74,15 +74,7 @@ public class JsonEncoder {
             return encodeObjectArray((Object[]) value, restrictToInternalTypes,
                     connection);
         } else if (value instanceof Enum) {
-            if (restrictToInternalTypes) {
-                // Enums are encoded as strings in Vaadin 6 so we still do that
-                // for backwards copmatibility.
-                return encode(new UidlValue(value.toString()),
-                        restrictToInternalTypes, connection);
-            } else {
-                Enum e = (Enum) value;
-                return encodeEnum(e, connection);
-            }
+            return encodeEnum((Enum<?>) value, connection);
         } else if (value instanceof Map) {
             return encodeMap((Map) value, restrictToInternalTypes, connection);
         } else if (value instanceof Connector) {
@@ -277,6 +269,9 @@ public class JsonEncoder {
             return VTYPE_ARRAY;
         } else if (value instanceof Map) {
             return VTYPE_MAP;
+        } else if (value instanceof Enum<?>) {
+            // Enum value is processed as a string
+            return VTYPE_STRING;
         }
         return null;
     }
