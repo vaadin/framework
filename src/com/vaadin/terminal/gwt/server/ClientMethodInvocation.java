@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 /**
  * Internal class for keeping track of pending server to client method
@@ -19,7 +20,7 @@ public class ClientMethodInvocation implements Serializable,
     private final String interfaceName;
     private final String methodName;
     private final Object[] parameters;
-    private Class<?>[] parameterTypes;
+    private Type[] parameterTypes;
 
     // used for sorting calls between different connectors in the same Root
     private final long sequenceNumber;
@@ -31,12 +32,12 @@ public class ClientMethodInvocation implements Serializable,
         this.connector = connector;
         this.interfaceName = interfaceName;
         methodName = method.getName();
-        parameterTypes = method.getParameterTypes();
+        parameterTypes = method.getGenericParameterTypes();
         this.parameters = (null != parameters) ? parameters : new Object[0];
         sequenceNumber = ++counter;
     }
 
-    public Class<?>[] getParameterTypes() {
+    public Type[] getParameterTypes() {
         return parameterTypes;
     }
 

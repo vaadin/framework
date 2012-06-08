@@ -935,7 +935,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 invocationJson.put(invocation.getMethodName());
                 JSONArray paramJson = new JSONArray();
                 for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
-                    Class<?> parameterType = invocation.getParameterTypes()[i];
+                    Type parameterType = invocation.getParameterTypes()[i];
                     Object referenceParameter = null;
                     // TODO Use default values for RPC parameter types
                     // if (!JsonCodec.isInternalType(parameterType)) {
