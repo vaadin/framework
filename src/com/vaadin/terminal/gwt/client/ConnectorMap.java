@@ -208,12 +208,20 @@ public class ConnectorMap {
      */
     @Deprecated
     public TooltipInfo getTooltipInfo(ComponentConnector paintable, Object key) {
-        return getComponentDetail(paintable).getTooltipInfo(key);
+        ComponentDetail componentDetail = getComponentDetail(paintable);
+        if (componentDetail == null) {
+            return null;
+        }
+        return componentDetail.getTooltipInfo(key);
     }
 
     @Deprecated
     public TooltipInfo getWidgetTooltipInfo(Widget widget, Object key) {
-        return getTooltipInfo(getConnector(widget), key);
+        ComponentConnector connector = getConnector(widget);
+        if (connector == null) {
+            return null;
+        }
+        return getTooltipInfo(connector, key);
     }
 
     public Collection<? extends ServerConnector> getConnectors() {
