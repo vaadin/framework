@@ -388,10 +388,9 @@ public class JsonCodec implements Serializable {
         List<Object> list = new ArrayList<Object>();
         for (int i = 0; i < jsonArray.length(); ++i) {
             // each entry always has two elements: type and value
-            JSONArray encodedValueAndType = jsonArray.getJSONArray(i);
+            Object encodedValue = jsonArray.get(i);
             Object decodedChild = decodeParametrizedType(targetType,
-                    restrictToInternalTypes, 0, encodedValueAndType,
-                    application);
+                    restrictToInternalTypes, 0, encodedValue, application);
             list.add(decodedChild);
         }
         return list;
