@@ -13,6 +13,10 @@ public abstract class AbstractExtension extends AbstractClientConnector
         return ClientConnector.class;
     }
 
+    protected void addExtensionTo(AbstractClientConnector parent) {
+        parent.addExtension(this);
+    }
+
     @Override
     public void setParent(ClientConnector parent) {
         Class<? extends ClientConnector> acceptedParentType = getAcceptedParentType();
