@@ -280,7 +280,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return null;
     }
 
-    public void removeExtension(Extension feature) {
+    public void removeExtension(Extension extension) {
         // TODO Auto-generated method stub
 
     }
