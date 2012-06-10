@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.Version;
+import com.vaadin.annotations.LoadScripts;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
@@ -467,15 +472,15 @@ public abstract class BootstrapHandler implements RequestHandler {
         page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
 
         page.write("<style type=\"text/css\">"
-                + "html, body {height:100%;margin:0;}</style>");
+                + "html, body {height:100%;margin:0;}</style>\n");
 
         // Add favicon links
         if (themeName != null) {
             String themeUri = getThemeUri(context, themeName);
             page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                    + themeUri + "/favicon.ico\" />");
+                    + themeUri + "/favicon.ico\" />\n");
             page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                    + themeUri + "/favicon.ico\" />");
+                    + themeUri + "/favicon.ico\" />\n");
         }
 
         Root root = context.getRoot();
@@ -484,7 +489,51 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         page.write("<title>"
                 + AbstractApplicationServlet.safeEscapeForHtml(title)
-                + "</title>");
+                + "</title>\n");
+
+        if (root != null) {
+            List<LoadScripts> loadScriptsAnnotations = getAnnotationsFor(
+                    root.getClass(), LoadScripts.class);
+            Collections.reverse(loadScriptsAnnotations);
+            // Begin from the end as a class might requests scripts that depend
+            // on script loaded by a super class
+            for (int i = loadScriptsAnnotations.size() - 1; i >= 0; i--) {
+                LoadScripts loadScripts = loadScriptsAnnotations.get(i);
+                String[] value = loadScripts.value();
+                if (value != null) {
+                    for (String script : value) {
+                        page.write("<script type='text/javascript' src='");
+                        page.write(script);
+                        page.write("'></script>\n");
+                    }
+                }
+            }
+
+        }
+    }
+
+    private static <T extends Annotation> List<T> getAnnotationsFor(
+            Class<?> type, Class<T> annotationType) {
+        List<T> list = new ArrayList<T>();
+        // Find from the class hierarchy
+        Class<?> currentType = type;
+        while (currentType != Object.class) {
+            T annotation = currentType.getAnnotation(annotationType);
+            if (annotation != null) {
+                list.add(annotation);
+            }
+            currentType = currentType.getSuperclass();
+        }
+
+        // Find from an implemented interface
+        for (Class<?> iface : type.getInterfaces()) {
+            T annotation = iface.getAnnotation(annotationType);
+            if (annotation != null) {
+                list.add(annotation);
+            }
+        }
+
+        return list;
     }
 
     /**
