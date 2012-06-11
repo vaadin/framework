@@ -1906,9 +1906,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return true;
             }
         } else {
-            if (scrollBody == null) {
-                return false;
-            }
             int fakeheight = (int) Math.round(scrollBody.getRowHeight()
                     * totalRows);
             int availableHeight = scrollBodyPanel.getElement().getPropertyInt(
@@ -5953,8 +5950,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     void updateHeight() {
         setContainerHeight();
 
-        updatePageLength();
-
+        if (initializedAndAttached) {
+            updatePageLength();
+        }
         if (!rendering) {
             // Webkit may sometimes get an odd rendering bug (white space
             // between header and body), see bug #3875. Running
