@@ -245,3 +245,8 @@ div.v-app-loading {
 .v-clip {
 	overflow: hidden;
 }
+
+.v-scrollable {
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+}
