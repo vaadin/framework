@@ -30,13 +30,10 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-<<<<<<< HEAD
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
-=======
-import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
->>>>>>> 8b064
 
 public class VAbstractSplitPanel extends ComplexPanel {
 
@@ -190,78 +187,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
-<<<<<<< HEAD
-=======
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
-        rendering = true;
-
-        immediate = uidl.hasAttribute("immediate");
-
-        if (client.updateComponent(this, uidl, true)) {
-            rendering = false;
-            return;
-        }
-        setEnabled(!uidl.getBooleanAttribute("disabled"));
-
-        clickEventHandler.handleEventHandlerRegistration(client);
-        if (uidl.hasAttribute("style")) {
-            componentStyleNames = uidl.getStringAttribute("style").split(" ");
-        } else {
-            componentStyleNames = new String[0];
-        }
-
-        setLocked(uidl.getBooleanAttribute("locked"));
-
-        setPositionReversed(uidl.getBooleanAttribute("reversed"));
-
-        setStylenames();
-
-        // Ensure panels are still scrollable
-        touchScrollHandler.setElements(firstContainer, secondContainer);
-
-        position = uidl.getStringAttribute("position");
-        setSplitPosition(position);
-
-        final Paintable newFirstChild = client.getPaintable(uidl
-                .getChildUIDL(0));
-        final Paintable newSecondChild = client.getPaintable(uidl
-                .getChildUIDL(1));
-        if (firstChild != newFirstChild) {
-            if (firstChild != null) {
-                client.unregisterPaintable((Paintable) firstChild);
-            }
-            setFirstWidget((Widget) newFirstChild);
-        }
-        if (secondChild != newSecondChild) {
-            if (secondChild != null) {
-                client.unregisterPaintable((Paintable) secondChild);
-            }
-            setSecondWidget((Widget) newSecondChild);
-        }
-        newFirstChild.updateFromUIDL(uidl.getChildUIDL(0), client);
-        newSecondChild.updateFromUIDL(uidl.getChildUIDL(1), client);
-
-        renderInformation.updateSize(getElement());
-
-        if (BrowserInfo.get().isIE7()) {
-            // Part III of IE7 hack
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    iLayout();
-                }
-            });
-        }
-
-        // This is needed at least for cases like #3458 to take
-        // appearing/disappearing scrollbars into account.
-        client.runDescendentsLayout(this);
-
-        rendering = false;
-    }
-
->>>>>>> 8b064
     @Override
     public boolean remove(Widget w) {
         boolean removed = super.remove(w);
