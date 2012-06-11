@@ -247,5 +247,4 @@ div.v-app-loading {
 
 .v-scrollable {
 	overflow: auto;
-	-webkit-overflow-scrolling: touch;
 }

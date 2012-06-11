@@ -60,13 +60,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      *            the application this resource will be added to.
      */
     public ClassResource(String resourceName, Application application) {
-        associatedClass = application.getClass();
-        this.resourceName = resourceName;
-        this.application = application;
-        if (resourceName == null) {
-            throw new NullPointerException();
-        }
-        application.addResource(this);
+        this(application.getClass(), resourceName, application);
     }
 
     /**
