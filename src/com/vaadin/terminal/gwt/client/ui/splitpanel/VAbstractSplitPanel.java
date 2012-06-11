@@ -91,8 +91,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     protected int origScrollTop;
 
-    private TouchScrollDelegate touchScrollDelegate;
-
     public VAbstractSplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -116,24 +114,27 @@ public class VAbstractSplitPanel extends ComplexPanel {
         setOrientation(orientation);
         sinkEvents(Event.MOUSEEVENTS);
 
+        TouchScrollDelegate.enableTouchScrolling(this, firstContainer,
+                secondContainer);
+
         addDomHandler(new TouchCancelHandler() {
+            @Override
             public void onTouchCancel(TouchCancelEvent event) {
                 // TODO When does this actually happen??
                 VConsole.log("TOUCH CANCEL");
             }
         }, TouchCancelEvent.getType());
         addDomHandler(new TouchStartHandler() {
+            @Override
             public void onTouchStart(TouchStartEvent event) {
                 Node target = event.getTouches().get(0).getTarget().cast();
                 if (splitter.isOrHasChild(target)) {
                     onMouseDown(Event.as(event.getNativeEvent()));
-                } else {
-                    getTouchScrollDelegate().onTouchStart(event);
                 }
             }
-
         }, TouchStartEvent.getType());
         addDomHandler(new TouchMoveHandler() {
+            @Override
             public void onTouchMove(TouchMoveEvent event) {
                 if (resizing) {
                     onMouseMove(Event.as(event.getNativeEvent()));
@@ -141,6 +142,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchMoveEvent.getType());
         addDomHandler(new TouchEndHandler() {
+            @Override
             public void onTouchEnd(TouchEndEvent event) {
                 if (resizing) {
                     onMouseUp(Event.as(event.getNativeEvent()));
@@ -148,14 +150,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchEndEvent.getType());
 
-    }
-
-    private TouchScrollDelegate getTouchScrollDelegate() {
-        if (touchScrollDelegate == null) {
-            touchScrollDelegate = new TouchScrollDelegate(firstContainer,
-                    secondContainer);
-        }
-        return touchScrollDelegate;
     }
 
     protected void constructDom() {
@@ -172,9 +166,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
-        DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-        DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-
+        setStylenames();
     }
 
     private void setOrientation(int orientation) {
@@ -190,11 +182,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(firstContainer, "width", "100%");
             DOM.setStyleAttribute(secondContainer, "width", "100%");
         }
-
-        DOM.setElementProperty(firstContainer, "className", CLASSNAME
-                + "-first-container");
-        DOM.setElementProperty(secondContainer, "className", CLASSNAME
-                + "-second-container");
     }
 
     @Override
@@ -375,7 +362,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
             break;
         }
-
     }
 
     void setFirstWidget(Widget w) {
@@ -658,31 +644,25 @@ public class VAbstractSplitPanel extends ComplexPanel {
         return splitterSize;
     }
 
-    void setStylenames() {
-        final String splitterSuffix = (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
-                : "-vsplitter");
-        final String firstContainerSuffix = "-first-container";
-        final String secondContainerSuffix = "-second-container";
-        String lockedSuffix = "";
+    private void setStylenames() {
+        final String splitterClass = CLASSNAME
+                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                        : "-vsplitter");
+        final String firstContainerClass = CLASSNAME + "-first-container";
+        final String secondContainerClass = CLASSNAME + "-second-container";
+        final String lockedSuffix = locked ? "-locked" : "";
 
-        String splitterStyle = CLASSNAME + splitterSuffix;
-        String firstStyle = CLASSNAME + firstContainerSuffix;
-        String secondStyle = CLASSNAME + secondContainerSuffix;
+        splitter.addClassName(splitterClass);
+        firstContainer.addClassName(firstContainerClass);
+        secondContainer.addClassName(secondContainerClass);
 
-        if (locked) {
-            splitterStyle = CLASSNAME + splitterSuffix + "-locked";
-            lockedSuffix = "-locked";
+        for (String styleName : componentStyleNames) {
+            splitter.addClassName(splitterClass + "-" + styleName
+                    + lockedSuffix);
+            firstContainer.addClassName(firstContainerClass + "-" + styleName);
+            secondContainer
+                    .addClassName(secondContainerClass + "-" + styleName);
         }
-        for (String style : componentStyleNames) {
-            splitterStyle += " " + CLASSNAME + splitterSuffix + "-" + style
-                    + lockedSuffix;
-            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-" + style;
-            secondStyle += " " + CLASSNAME + secondContainerSuffix + "-"
-                    + style;
-        }
-        DOM.setElementProperty(splitter, "className", splitterStyle);
-        DOM.setElementProperty(firstContainer, "className", firstStyle);
-        DOM.setElementProperty(secondContainer, "className", secondStyle);
     }
 
     public void setEnabled(boolean enabled) {
