@@ -108,6 +108,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         setWidth(100, UNITS_PERCENTAGE);
         setImmediate(true);
         setCloseHandler(new CloseHandler() {
+            @Override
             public void onTabClose(TabSheet tabsheet, Component c) {
                 tabsheet.removeComponent(c);
             }
@@ -120,6 +121,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @return the unmodifiable Iterator of the tab content components
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return Collections.unmodifiableList(components).iterator();
     }
@@ -130,6 +132,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @return the number of contained components
      */
+    @Override
     public int getComponentCount() {
         return components.size();
     }
@@ -359,6 +362,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (areTabsHidden()) {
@@ -683,6 +687,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     // inherits javadoc
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("selected")) {
             setSelectedTab(keyMapper.get((String) variables.get("selected")));
@@ -719,6 +724,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * {@inheritDoc}
      */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         if (selected == oldComponent) {
@@ -728,25 +734,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         Tab newTab = tabs.get(newComponent);
         Tab oldTab = tabs.get(oldComponent);
-
-        // Gets the captions
-        String oldCaption = null;
-        Resource oldIcon = null;
-        String newCaption = null;
-        Resource newIcon = null;
-
-        if (oldTab != null) {
-            oldCaption = oldTab.getCaption();
-            oldIcon = oldTab.getIcon();
-        }
-
-        if (newTab != null) {
-            newCaption = newTab.getCaption();
-            newIcon = newTab.getIcon();
-        } else {
-            newCaption = newComponent.getCaption();
-            newIcon = newComponent.getIcon();
-        }
 
         // Gets the locations
         int oldLocation = -1;
@@ -769,35 +756,21 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             addComponent(newComponent);
         } else if (newLocation == -1) {
             removeComponent(oldComponent);
-            keyMapper.remove(oldComponent);
-            newTab = addTab(newComponent);
-            components.remove(newComponent);
-            components.add(oldLocation, newComponent);
-            newTab.setCaption(oldCaption);
-            newTab.setIcon(oldIcon);
+            newTab = addTab(newComponent, oldLocation);
+            // Copy all relevant metadata to the new tab (#8793)
+            // TODO Should reuse the old tab instance instead?
+            copyTabMetadata(oldTab, newTab);
         } else {
-            if (oldLocation > newLocation) {
-                components.remove(oldComponent);
-                components.add(newLocation, oldComponent);
-                components.remove(newComponent);
-                components.add(oldLocation, newComponent);
-            } else {
-                components.remove(newComponent);
-                components.add(oldLocation, newComponent);
-                components.remove(oldComponent);
-                components.add(newLocation, oldComponent);
-            }
+            components.set(oldLocation, newComponent);
+            components.set(newLocation, oldComponent);
 
-            if (newTab != null) {
-                // This should always be true
-                newTab.setCaption(oldCaption);
-                newTab.setIcon(oldIcon);
-            }
-            if (oldTab != null) {
-                // This should always be true
-                oldTab.setCaption(newCaption);
-                oldTab.setIcon(newIcon);
-            }
+            // Tab associations are not changed, but metadata is swapped between
+            // the instances
+            // TODO Should reassociate the instances instead?
+            Tab tmp = new TabSheetTabImpl(null, null);
+            copyTabMetadata(newTab, tmp);
+            copyTabMetadata(oldTab, newTab);
+            copyTabMetadata(tmp, oldTab);
 
             requestRepaint();
         }
@@ -1106,28 +1079,34 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         /**
          * Returns the tab caption. Can never be null.
          */
+        @Override
         public String getCaption() {
             return caption;
         }
 
+        @Override
         public void setCaption(String caption) {
             this.caption = caption;
             requestRepaint();
         }
 
+        @Override
         public Resource getIcon() {
             return icon;
         }
 
+        @Override
         public void setIcon(Resource icon) {
             this.icon = icon;
             requestRepaint();
         }
 
+        @Override
         public boolean isEnabled() {
             return enabled;
         }
 
+        @Override
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
             if (updateSelection()) {
@@ -1136,10 +1115,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             requestRepaint();
         }
 
+        @Override
         public boolean isVisible() {
             return visible;
         }
 
+        @Override
         public void setVisible(boolean visible) {
             this.visible = visible;
             if (updateSelection()) {
@@ -1148,10 +1129,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             requestRepaint();
         }
 
+        @Override
         public boolean isClosable() {
             return closable;
         }
 
+        @Override
         public void setClosable(boolean closable) {
             this.closable = closable;
             requestRepaint();
@@ -1161,24 +1144,29 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         }
 
+        @Override
         public String getDescription() {
             return description;
         }
 
+        @Override
         public void setDescription(String description) {
             this.description = description;
             requestRepaint();
         }
 
+        @Override
         public ErrorMessage getComponentError() {
             return componentError;
         }
 
+        @Override
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
             requestRepaint();
         }
 
+        @Override
         public Component getComponent() {
             for (Map.Entry<Component, Tab> entry : tabs.entrySet()) {
                 if (entry.getValue() == this) {
@@ -1188,11 +1176,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             return null;
         }
 
+        @Override
         public void setStyleName(String styleName) {
             this.styleName = styleName;
             requestRepaint();
         }
 
+        @Override
         public String getStyleName() {
             return styleName;
         }
@@ -1268,29 +1258,35 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         super.focus();
     }
 
+    @Override
     public int getTabIndex() {
         return tabIndex;
     }
 
+    @Override
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
         requestRepaint();
     }
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
@@ -1299,5 +1295,24 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public boolean isComponentVisible(Component childComponent) {
         return childComponent == getSelectedTab();
+    }
+
+    /**
+     * Copies properties from one Tab to another.
+     * 
+     * @param from
+     *            The tab whose data to copy.
+     * @param to
+     *            The tab to which copy the data.
+     */
+    private static void copyTabMetadata(Tab from, Tab to) {
+        to.setCaption(from.getCaption());
+        to.setIcon(from.getIcon());
+        to.setDescription(from.getDescription());
+        to.setVisible(from.isVisible());
+        to.setEnabled(from.isEnabled());
+        to.setClosable(from.isClosable());
+        to.setStyleName(from.getStyleName());
+        to.setComponentError(from.getComponentError());
     }
 }
