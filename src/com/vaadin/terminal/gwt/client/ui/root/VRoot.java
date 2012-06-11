@@ -136,6 +136,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         // Allow focusing the view by using the focus() method, the view
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
+        TouchScrollDelegate.enableTouchScrolling(this, getElement());
     }
 
     @Override
