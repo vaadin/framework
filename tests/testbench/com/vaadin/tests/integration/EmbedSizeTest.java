@@ -22,6 +22,7 @@ public class EmbedSizeTest extends TestBase {
         CheckBox lazyCheckBox = new CheckBox("Lazy resize");
         lazyCheckBox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 CheckBox cb = (CheckBox) event.getProperty();
                 Boolean resizeLazy = cb.getValue();
@@ -34,11 +35,12 @@ public class EmbedSizeTest extends TestBase {
         addComponent(lazyCheckBox);
 
         addComponent(log);
+
         mainWindow.addListener(new Root.BrowserWindowResizeListener() {
+            @Override
             public void browserWindowResized(BrowserWindowResizeEvent event) {
                 log.log("Resize event: " + event.getWidth() + " x "
                         + event.getHeight());
-
             }
         });
     }
