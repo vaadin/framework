@@ -20,6 +20,8 @@ import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.terminal.gwt.client.ui.tabsheet.TabsheetBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetBase;
 
@@ -35,8 +37,11 @@ public class VAccordion extends VTabsheetBase {
 
     int selectedUIDLItemIndex = -1;
 
+    private final TouchScrollHandler touchScrollHandler;
+
     public VAccordion() {
         super(CLASSNAME);
+        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
 
     @Override
@@ -145,7 +150,6 @@ public class VAccordion extends VTabsheetBase {
                 }
             }
         }
-
         if (!alreadyOpen) {
             item.open();
             activeTabIndex = itemIndex;
@@ -342,11 +346,15 @@ public class VAccordion extends VTabsheetBase {
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
-            setStyleName(CLASSNAME + "-item");
-            DOM.setElementProperty(content, "className", CLASSNAME
-                    + "-item-content");
-            DOM.setElementProperty(captionNode, "className", CLASSNAME
-                    + "-item-caption");
+
+            getElement().addClassName(CLASSNAME + "-item");
+            captionNode.addClassName(CLASSNAME + "-item-caption");
+            content.addClassName(CLASSNAME + "-item-content");
+
+            touchScrollHandler.addElement(getContainerElement());
+
+            sinkEvents(Event.TOUCHEVENTS | Event.MOUSEEVENTS);
+
             close();
         }
 
@@ -428,6 +436,7 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
+        @Override
         public void onClick(ClickEvent event) {
             onSelectTab(this);
         }
@@ -488,6 +497,8 @@ public class VAccordion extends VTabsheetBase {
     protected void removeTab(int index) {
         StackItem item = getStackItem(index);
         remove(item);
+
+        touchScrollHandler.addElement(item.getContainerElement());
     }
 
     @Override
