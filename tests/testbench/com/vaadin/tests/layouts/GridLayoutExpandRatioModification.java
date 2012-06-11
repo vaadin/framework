@@ -21,10 +21,10 @@ public class GridLayoutExpandRatioModification extends TestBase implements
 
     @Override
     public void setup() {
-        LegacyWindow main = new LegacyWindow("The Main Window");
+        LegacyWindow main = getMainWindow();
+
         mainLayout = new GridLayout(3, 3);
         main.setContent(mainLayout);
-        setMainWindow(main);
 
         // The upper layout
         vl1 = new VerticalLayout();
@@ -59,6 +59,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
         vl2.setSizeFull();
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (isVisible) {
             mainLayout.setRowExpandRatio(2, 0);

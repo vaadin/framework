@@ -1,12 +1,12 @@
 package com.vaadin.tests.validation;
 
-import com.vaadin.tests.components.TestBase;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class RequiredErrorMessage extends TestBase {
+public class RequiredErrorMessage extends AbstractTestCase {
 
     @Override
     protected Integer getTicketNumber() {
@@ -19,7 +19,7 @@ public class RequiredErrorMessage extends TestBase {
     }
 
     @Override
-    public void setup() {
+    public void init() {
 
         final LegacyWindow main = new LegacyWindow(getClass().getName());
         setMainWindow(main);

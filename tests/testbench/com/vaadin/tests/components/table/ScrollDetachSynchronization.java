@@ -46,6 +46,7 @@ public class ScrollDetachSynchronization extends TestBase {
         mainLayout.setExpandRatio(firstLayout, 1);
 
         first.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (mainLayout.getComponent(1).equals(secondLayout)) {
                     mainLayout.replaceComponent(secondLayout, firstLayout);
@@ -54,6 +55,7 @@ public class ScrollDetachSynchronization extends TestBase {
             }
         });
         second.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (mainLayout.getComponent(1).equals(firstLayout)) {
                     mainLayout.replaceComponent(firstLayout, secondLayout);

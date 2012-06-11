@@ -20,10 +20,10 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
 
     @Override
     public void setup() {
-        LegacyWindow main = new LegacyWindow("The Main Window");
+        LegacyWindow main = getMainWindow();
+
         mainLayout = new VerticalLayout();
         main.setContent(mainLayout);
-        setMainWindow(main);
 
         // The upper layout
         vl1 = new VerticalLayout();
@@ -55,6 +55,7 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
         vl2.setSizeFull();
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (isVisible) {
             mainLayout.setExpandRatio(vl2, 0);
