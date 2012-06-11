@@ -149,7 +149,14 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
         TouchScrollDelegate.enableTouchScrolling(this, getElement());
+    }
 
+    /**
+     * Start to periodically monitor for parent element resizes if embedded
+     * application (e.g. portlet).
+     */
+    protected void onLoad() {
+        super.onLoad();
         if (isMonitoringParentSize()) {
             resizeTimer = new Timer() {
                 @Override
@@ -177,6 +184,18 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         super.onDetach();
         historyHandlerRegistration.removeHandler();
         historyHandlerRegistration = null;
+    }
+
+    /**
+     * Stop monitoring for parent element resizes.
+     */
+    @Override
+    protected void onUnload() {
+        if (resizeTimer != null) {
+            resizeTimer.cancel();
+            resizeTimer = null;
+        }
+        super.onUnload();
     }
 
     /**
