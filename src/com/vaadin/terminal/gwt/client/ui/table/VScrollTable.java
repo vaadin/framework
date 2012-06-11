@@ -44,8 +44,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
@@ -236,6 +234,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private boolean enableDebug = false;
 
+    private final static boolean requiresTouchScrollDelegate = BrowserInfo
+            .get().requiresTouchScrollDelegate();
+
     /**
      * Represents a select range of rows
      */
@@ -321,6 +322,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     final FocusableScrollPanel scrollBodyPanel = new FocusableScrollPanel(true);
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
+        @Override
         public void onKeyPress(KeyPressEvent keyPressEvent) {
             // This is used for Firefox only, since Firefox auto-repeat
             // works correctly only if we use a key press handler, other
@@ -358,6 +360,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private KeyUpHandler navKeyUpHandler = new KeyUpHandler() {
 
+        @Override
         public void onKeyUp(KeyUpEvent keyUpEvent) {
             NativeEvent event = keyUpEvent.getNativeEvent();
             int keyCode = event.getKeyCode();
@@ -385,6 +388,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private KeyDownHandler navKeyDownHandler = new KeyDownHandler() {
 
+        @Override
         public void onKeyDown(KeyDownEvent keyDownEvent) {
             NativeEvent event = keyDownEvent.getNativeEvent();
             // This is not used for Firefox
@@ -489,12 +493,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
 
-        scrollBodyPanel.setStyleName(CLASSNAME + "-body-wrapper");
+        scrollBodyPanel.addStyleName(CLASSNAME + "-body-wrapper");
         scrollBodyPanel.addFocusHandler(this);
         scrollBodyPanel.addBlurHandler(this);
 
         scrollBodyPanel.addScrollHandler(this);
-        scrollBodyPanel.setStyleName(CLASSNAME + "-body");
+        scrollBodyPanel.addStyleName(CLASSNAME + "-body");
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -509,14 +513,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         scrollBodyPanel.addKeyUpHandler(navKeyUpHandler);
 
         scrollBodyPanel.sinkEvents(Event.TOUCHEVENTS);
-        scrollBodyPanel.addDomHandler(new TouchStartHandler() {
-            public void onTouchStart(TouchStartEvent event) {
-                getTouchScrollDelegate().onTouchStart(event);
-            }
-        }, TouchStartEvent.getType());
 
         scrollBodyPanel.sinkEvents(Event.ONCONTEXTMENU);
         scrollBodyPanel.addDomHandler(new ContextMenuHandler() {
+            @Override
             public void onContextMenu(ContextMenuEvent event) {
                 handleBodyContextMenu(event);
             }
@@ -536,20 +536,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // Add a handler to clear saved context menu details when the menu
         // closes. See #8526.
         client.getContextMenu().addCloseHandler(new CloseHandler<PopupPanel>() {
+            @Override
             public void onClose(CloseEvent<PopupPanel> event) {
                 contextMenu = null;
             }
         });
-    }
-
-    protected TouchScrollDelegate getTouchScrollDelegate() {
-        if (touchScrollDelegate == null) {
-            touchScrollDelegate = new TouchScrollDelegate(
-                    scrollBodyPanel.getElement());
-            touchScrollDelegate.setScrollHandler(this);
-        }
-        return touchScrollDelegate;
-
     }
 
     private void handleBodyContextMenu(ContextMenuEvent event) {
@@ -1854,6 +1845,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // relative-height tables, but not deferring instead breaks tables
             // with explicit page length.
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     scrollBodyPanel
                             .setScrollPosition(measureRowHeightOffset(firstvisible));
@@ -1888,6 +1880,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         scrollBody.reLayoutComponents();
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
@@ -2218,6 +2211,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     setWidth(tdWidth + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
+                        @Override
                         public void execute() {
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth();
@@ -2814,6 +2808,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         final int newWidth = width;
                         Scheduler.get().scheduleDeferred(
                                 new ScheduledCommand() {
+                                    @Override
                                     public void execute() {
                                         setColWidth(colIx, newWidth, true);
                                     }
@@ -2841,6 +2836,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (refreshContentWidths) {
                 // Recalculate the column sizings if any column has changed
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
                     public void execute() {
                         triggerLazyColumnAdjustment(true);
                     }
@@ -2952,6 +2948,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             visibleCells.add(newIndex, hCell);
         }
 
+        @Override
         public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
@@ -3085,6 +3082,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         /*
          * Returns columns as Action array for column select popup
          */
+        @Override
         public Action[] getActions() {
             Object[] cols;
             if (columnReordering && columnOrder != null) {
@@ -3120,10 +3118,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return actions;
         }
 
+        @Override
         public ApplicationConnection getClient() {
             return client;
         }
 
+        @Override
         public String getPaintableId() {
             return paintableId;
         }
@@ -3299,6 +3299,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     setWidth(tdWidth + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
+                        @Override
                         public void execute() {
                             int borderWidths = 1;
                             int tdWidth = width
@@ -3561,6 +3562,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * 
          * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
          */
+        @Override
         public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
@@ -3839,7 +3841,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             DOM.appendChild(container, preSpacer);
             DOM.appendChild(container, table);
             DOM.appendChild(container, postSpacer);
-            if (BrowserInfo.get().isTouchDevice()) {
+            if (BrowserInfo.get().requiresTouchScrollDelegate()) {
                 NodeList<Node> childNodes = container.getChildNodes();
                 for (int i = 0; i < childNodes.getLength(); i++) {
                     Element item = (Element) childNodes.getItem(i);
@@ -4099,6 +4101,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             renderedRows.add(actualIx, row);
         }
 
+        @Override
         public Iterator<Widget> iterator() {
             return renderedRows.iterator();
         }
@@ -4400,6 +4403,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     + "-row-odd";
             private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
             private Timer contextTouchTimeout;
+            private Timer dragTouchTimeout;
             private int touchStartY;
             private int touchStartX;
 
@@ -4696,6 +4700,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 childWidgets.add(w);
             }
 
+            @Override
             public Iterator<Widget> iterator() {
                 return childWidgets.iterator();
             }
@@ -4789,11 +4794,198 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
             }
 
+            private boolean wasSignificantMove = false;
+            private boolean isDragging = false;
+
+            /**
+             * Special handler for touch devices
+             * 
+             * @param event
+             */
+            public void onTouchBrowserEvent(final Event event) {
+                VConsole.log("-- START ONTOUCHBROWSEREVENT");
+                if (enabled) {
+                    final Element targetTdOrTr = getEventTargetTdOrTr(event);
+                    final int type = event.getTypeInt();
+
+                    switch (type) {
+                    case Event.ONCONTEXTMENU:
+                        showContextMenu(event);
+                        if (enabled
+                                && (actionKeys != null || client
+                                        .hasEventListeners(VScrollTable.this,
+                                                ITEM_CLICK_EVENT_ID))) {
+                            /*
+                             * Prevent browser context menu only if there are
+                             * action handlers or item click listeners
+                             * registered
+                             */
+                            event.stopPropagation();
+                            event.preventDefault();
+                        }
+                        break;
+                    case Event.ONTOUCHSTART:
+                        touchStart = event;
+                        isDragging = false;
+                        wasSignificantMove = false;
+                        Touch touch = event.getChangedTouches().get(0);
+                        // save position to fields, touches in events are same
+                        // instance during the operation.
+                        touchStartX = touch.getClientX();
+                        touchStartY = touch.getClientY();
+
+                        if (dragmode != 0) {
+                            if (dragTouchTimeout == null) {
+                                dragTouchTimeout = new Timer() {
+                                    @Override
+                                    public void run() {
+                                        if (touchStart != null) {
+                                            VConsole.log("DRAGGING");
+                                            isDragging = true;
+                                        }
+                                    }
+                                };
+                                VConsole.log("START DRAG TIMEOUT");
+                                dragTouchTimeout.schedule(TOUCHSCROLL_TIMEOUT);
+                            }
+                        }
+
+                        if (actionKeys != null) {
+                            if (contextTouchTimeout == null) {
+                                contextTouchTimeout = new Timer() {
+                                    @Override
+                                    public void run() {
+                                        if (touchStart != null) {
+                                            VConsole.log("SHOW CONTEXT");
+                                            showContextMenu(touchStart);
+                                            event.preventDefault();
+                                            touchStart = null;
+
+                                        }
+                                    }
+                                };
+                                VConsole.log("START CONTEXT TIMEOUT");
+
+                                contextTouchTimeout.cancel();
+                                contextTouchTimeout
+                                        .schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+                            }
+                        }
+                        break;
+                    case Event.ONTOUCHMOVE:
+                        if (isSignificantMove(event)) {
+                            wasSignificantMove = true;
+                            if (contextTouchTimeout != null) {
+                                contextTouchTimeout.cancel();
+                            }
+                            if (!isDragging && dragTouchTimeout != null) {
+                                VConsole.log("CANCEL DRAG TIMEOUT");
+                                dragTouchTimeout.cancel();
+                                dragTouchTimeout = null;
+                            }
+                            if (isDragging) {
+                                if (dragmode != 0 && touchStart != null) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    VConsole.log("START DRAG");
+                                    startRowDrag(touchStart, type, targetTdOrTr);
+                                }
+                                isDragging = false;
+                            }
+                            touchStart = null;
+                        }
+                        break;
+                    case Event.ONTOUCHEND:
+                    case Event.ONTOUCHCANCEL:
+                        VConsole.log("ONTOUCHEND");
+                        if (contextTouchTimeout != null) {
+                            VConsole.log("CANCEL CONTEXT TIMEOUT");
+                            contextTouchTimeout.cancel();
+                        }
+                        if (dragTouchTimeout != null) {
+                            VConsole.log("CANCEL DRAG TIMEOUT");
+                            dragTouchTimeout.cancel();
+                        }
+                        if (touchStart != null) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            touchStart = null;
+                        }
+                        isDragging = false;
+                        VConsole.log("END ONTOUCHEND");
+                        break;
+                    case Event.ONMOUSEDOWN:
+                        VConsole.log("ONMOUSEDOWN");
+                        if (targetTdOrTr != null) {
+                            setRowFocus(this);
+                            ensureFocus();
+                            if (dragmode != 0
+                                    && (event.getButton() == NativeEvent.BUTTON_LEFT)) {
+                                startRowDrag(event, event.getTypeInt(),
+                                        targetTdOrTr);
+                            } else {
+                                event.stopPropagation();
+                            }
+
+                            event.preventDefault();
+                        }
+                        break;
+                    case Event.ONMOUSEOUT:
+                        VConsole.log("ONMOUSEOUT");
+                        break;
+                    case Event.ONMOUSEUP:
+                        VConsole.log("ONMOUSEUP");
+                        if (targetTdOrTr != null) {
+                            if (isSelectable()) {
+                                boolean currentlyJustThisRowSelected = selectedRowKeys
+                                        .size() == 1
+                                        && selectedRowKeys.contains(getKey());
+
+                                if (!currentlyJustThisRowSelected) {
+                                    if (isSingleSelectMode()
+                                            || isMultiSelectModeDefault()) {
+                                        deselectAll();
+                                    }
+                                    toggleSelection();
+                                } else if ((isSingleSelectMode() || isMultiSelectModeSimple())
+                                        && nullSelectionAllowed) {
+                                    toggleSelection();
+                                }
+
+                                selectionRangeStart = this;
+                                setRowFocus(this);
+
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                        }
+
+                        break;
+                    case Event.ONDBLCLICK:
+                        if (targetTdOrTr != null) {
+                            handleClickEvent(event, targetTdOrTr, true);
+                        }
+                        break;
+                    default:
+                    }
+                }
+                VConsole.log("-- SUPER ONBROWSEREVENT");
+
+                super.onBrowserEvent(event);
+                VConsole.log("-- END ONTOUCHBROWSEREVENT");
+            }
+
             /*
              * React on click that occur on content cells only
              */
             @Override
             public void onBrowserEvent(final Event event) {
+
+                if (!requiresTouchScrollDelegate) {
+                    onTouchBrowserEvent(event);
+                    return;
+                }
+
                 if (enabled) {
                     final int type = event.getTypeInt();
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
@@ -5294,6 +5486,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * 
              * @see com.vaadin.terminal.gwt.client.ui.IActionOwner#getActions ()
              */
+            @Override
             public Action[] getActions() {
                 if (actionKeys == null) {
                     return new Action[] {};
@@ -5316,10 +5509,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return actions;
             }
 
+            @Override
             public ApplicationConnection getClient() {
                 return client;
             }
 
+            @Override
             public String getPaintableId() {
                 return paintableId;
             }
@@ -5370,6 +5565,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // widths.
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+                    @Override
                     public void execute() {
                         if (showRowHeaders) {
                             setCellWidth(0, tHead.getHeaderCell(0).getWidth());
@@ -5699,6 +5895,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
             scrollBody.reLayoutComponents();
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
@@ -5837,6 +6034,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (initializedAndAttached) {
                 if (visible) {
                     Scheduler.get().scheduleDeferred(new Command() {
+                        @Override
                         public void execute() {
                             scrollBodyPanel
                                     .setScrollPosition(measureRowHeightOffset(firstRowInViewPort));
@@ -5870,6 +6068,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * This method has logic which rows needs to be requested from server when
      * user scrolls
      */
+    @Override
     public void onScroll(ScrollEvent event) {
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
@@ -5898,6 +6097,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // correct
             // value available soon.
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     onScroll(null);
                 }
@@ -5978,6 +6178,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return (int) Math.ceil(scrollTop / scrollBody.getRowHeight());
     }
 
+    @Override
     public VScrollTableDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -6057,6 +6258,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 deEmphasis();
                 final TableDDDetails newDetails = dropDetails;
                 VAcceptCallback cb = new VAcceptCallback() {
+                    @Override
                     public void accepted(VDragEvent event) {
                         if (newDetails.equals(dropDetails)) {
                             dragAccepted(event);
@@ -6133,6 +6335,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return ConnectorMap.get(client).getConnector(VScrollTable.this);
         }
 
+        @Override
         public ApplicationConnection getApplicationConnection() {
             return client;
         }
@@ -6463,6 +6666,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
+    @Override
     public void onFocus(FocusEvent event) {
         if (isFocusable()) {
             hasFocus = true;
@@ -6483,6 +6687,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
      */
+    @Override
     public void onBlur(BlurEvent event) {
         hasFocus = false;
         navKeyDown = false;
@@ -6555,6 +6760,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * 
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
+    @Override
     public void focus() {
         if (isFocusable()) {
             scrollBodyPanel.focus();
@@ -6634,6 +6840,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
+            @Override
             public void execute() {
                 if (currentlyFocusedRow != null) {
                     setRowFocus(currentlyFocusedRow);
@@ -6646,6 +6853,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         });
     }
 
+    @Override
     public Action[] getActions() {
         if (bodyActionKeys == null) {
             return new Action[] {};
@@ -6661,10 +6869,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return actions;
     }
 
+    @Override
     public ApplicationConnection getClient() {
         return client;
     }
 
+    @Override
     public String getPaintableId() {
         return paintableId;
     }
