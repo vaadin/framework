@@ -16,6 +16,7 @@ import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         Focusable {
@@ -43,6 +44,8 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     int scrollTop;
 
     int scrollLeft;
+
+    private final TouchScrollHandler touchScrollHandler;
 
     public VPanel() {
         super();
@@ -74,7 +77,8 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
 
-        TouchScrollDelegate.enableTouchScrolling(this, contentNode);
+        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this,
+                contentNode);
     }
 
     /**
