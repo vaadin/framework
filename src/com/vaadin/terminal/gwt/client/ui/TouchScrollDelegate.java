@@ -118,9 +118,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             } else {
                 delegate = null;
             }
-            for (Element scrollable : scrollables) {
-                addElement(scrollable);
-            }
+            setElements(scrollables);
         }
 
         public void onTouchStart(TouchStartEvent event) {
@@ -192,7 +190,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     public TouchScrollDelegate(Element... elements) {
-        scrollableElements = new HashSet<Element>(Arrays.asList(elements));
+        setElements(elements);
     }
 
     public void setScrollHandler(ScrollHandler scrollHandler) {
@@ -638,6 +636,10 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             event.cancel();
             break;
         }
+    }
+
+    public void setElements(Element[] elements) {
+        scrollableElements = new HashSet<Element>(Arrays.asList(elements));
     }
 
     /**
