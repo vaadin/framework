@@ -47,11 +47,12 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     ShortcutActionHandler actionHandler;
 
-    /** stored width for IE resize optimization */
-    private int width;
+    /** stored size for IE resize optimization */
+    private int windowWidth;
+    private int windowHeight;
 
-    /** stored height for IE resize optimization */
-    private int height;
+    private int viewWidth;
+    private int viewHeight;
 
     ApplicationConnection connection;
 
@@ -96,6 +97,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * whenever the value changes.
      */
     private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
+        @Override
         public void onValueChange(ValueChangeEvent<String> event) {
             String newFragment = event.getValue();
 
@@ -110,6 +112,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
+                @Override
                 public void execute() {
                     windowSizeMaybeChanged(Window.getClientWidth(),
                             Window.getClientHeight());
@@ -153,18 +156,18 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         boolean changed = false;
         ComponentConnector connector = ConnectorMap.get(connection)
                 .getConnector(this);
-        if (width != newWidth) {
-            width = newWidth;
+        if (windowWidth != newWidth) {
+            windowWidth = newWidth;
             changed = true;
             connector.getLayoutManager().reportOuterWidth(connector, newWidth);
-            VConsole.log("New window width: " + width);
+            VConsole.log("New window width: " + windowWidth);
         }
-        if (height != newHeight) {
-            height = newHeight;
+        if (windowHeight != newHeight) {
+            windowHeight = newHeight;
             changed = true;
             connector.getLayoutManager()
                     .reportOuterHeight(connector, newHeight);
-            VConsole.log("New window height: " + height);
+            VConsole.log("New window height: " + windowHeight);
         }
         if (changed) {
             VConsole.log("Running layout functions due to window resize");
@@ -251,6 +254,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google
      * .gwt.event.logical.shared.ResizeEvent)
      */
+    @Override
     public void onResize(ResizeEvent event) {
         onResize();
     }
@@ -283,8 +287,16 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * Send new dimensions to the server.
      */
     private void sendClientResized() {
-        connection.updateVariable(id, "height", height, false);
-        connection.updateVariable(id, "width", width, immediate);
+        int newViewHeight = getElement().getClientHeight();
+        int newViewWidth = getElement().getClientWidth();
+
+        // Send the view dimensions if they have changed
+        if (newViewHeight != viewHeight || newViewWidth != viewWidth) {
+            viewHeight = newViewHeight;
+            viewWidth = newViewWidth;
+            connection.updateVariable(id, "height", newViewHeight, false);
+            connection.updateVariable(id, "width", newViewWidth, immediate);
+        }
     }
 
     public native static void goTo(String url)
@@ -292,6 +304,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
        $wnd.location = url;
      }-*/;
 
+    @Override
     public void onWindowClosing(Window.ClosingEvent event) {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
@@ -311,10 +324,12 @@ public class VRoot extends SimplePanel implements ResizeHandler,
          }
      }-*/;
 
+    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;
     }
 
+    @Override
     public void focus() {
         getElement().focus();
     }
