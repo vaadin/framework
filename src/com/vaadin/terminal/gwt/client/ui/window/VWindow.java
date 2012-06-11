@@ -266,6 +266,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             Scheduler.get().scheduleFinally(new Command() {
                 public void execute() {
                     doServerSideOrdering();
+                    VNotification.bringNotificationsToFront();
                 }
             });
         }
