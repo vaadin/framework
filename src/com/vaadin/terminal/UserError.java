@@ -44,6 +44,16 @@ public class UserError extends AbstractErrorMessage {
         super(textErrorMessage);
     }
 
+    /**
+     * Creates an error message with level and content mode.
+     * 
+     * @param message
+     *            the error message.
+     * @param contentMode
+     *            the content Mode.
+     * @param errorLevel
+     *            the level of error.
+     */
     public UserError(String message, ContentMode contentMode,
             ErrorLevel errorLevel) {
         super(message);
