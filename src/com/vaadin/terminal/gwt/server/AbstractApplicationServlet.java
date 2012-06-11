@@ -74,6 +74,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.servlet = servlet;
         }
 
+        @Override
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
@@ -99,6 +100,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private int resourceCacheTime = 3600;
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+        @Override
         public String getStaticFileLocation(WrappedRequest request) {
             HttpServletRequest servletRequest = WrappedHttpServletRequest
                     .cast(request);
@@ -106,27 +108,32 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getStaticFilesLocation(servletRequest);
         }
 
+        @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
             return getApplicationOrSystemProperty(
                     AbstractApplicationServlet.PARAMETER_WIDGETSET,
                     AbstractApplicationServlet.DEFAULT_WIDGETSET);
         }
 
+        @Override
         public String getConfiguredTheme(WrappedRequest request) {
             // Use the default
             return AbstractApplicationServlet.getDefaultTheme();
         }
 
+        @Override
         public String getApplicationOrSystemProperty(String propertyName,
                 String defaultValue) {
             return AbstractApplicationServlet.this
                     .getApplicationOrSystemProperty(propertyName, defaultValue);
         }
 
+        @Override
         public boolean isStandalone(WrappedRequest request) {
             return true;
         }
 
+        @Override
         public ClassLoader getClassLoader() {
             try {
                 return AbstractApplicationServlet.this.getClassLoader();
@@ -478,9 +485,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     Root.setCurrentRoot(null);
                     Application.setCurrentApplication(null);
 
-                    requestTimer
-                            .stop((AbstractWebApplicationContext) application
-                                    .getContext());
+                    HttpSession session = request.getSession(false);
+                    if (session != null) {
+                        requestTimer.stop(getApplicationContext(session));
+                    }
                 }
             }
 
@@ -1672,6 +1680,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
