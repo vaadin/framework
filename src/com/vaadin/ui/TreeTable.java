@@ -84,6 +84,7 @@ public class TreeTable extends Table implements Hierarchical {
          * Consider adding getDepth to {@link Collapsible}, might help
          * scalability with some container implementations.
          */
+        @Override
         public int getDepth(Object itemId) {
             int depth = 0;
             Hierarchical hierarchicalContainer = getContainerDataSource();
@@ -94,6 +95,7 @@ public class TreeTable extends Table implements Hierarchical {
             return depth;
         }
 
+        @Override
         public void containerItemSetChange(ItemSetChangeEvent event) {
         }
 
@@ -112,44 +114,54 @@ public class TreeTable extends Table implements Hierarchical {
             return (Collapsible) getContainerDataSource();
         }
 
+        @Override
         public void toggleChildVisibility(Object itemId) {
             c().setCollapsed(itemId, !c().isCollapsed(itemId));
         }
 
+        @Override
         public boolean isNodeOpen(Object itemId) {
             return !c().isCollapsed(itemId);
         }
 
+        @Override
         public int size() {
             return TreeTable.super.size();
         }
 
+        @Override
         public Object getIdByIndex(int index) {
             return TreeTable.super.getIdByIndex(index);
         }
 
+        @Override
         public int indexOfId(Object id) {
             return TreeTable.super.indexOfId(id);
         }
 
+        @Override
         public boolean isLastId(Object itemId) {
             // using the default impl
             return TreeTable.super.isLastId(itemId);
         }
 
+        @Override
         public Object lastItemId() {
             // using the default impl
             return TreeTable.super.lastItemId();
         }
 
+        @Override
         public Object nextItemId(Object itemId) {
             return TreeTable.super.nextItemId(itemId);
         }
 
+        @Override
         public Object prevItemId(Object itemId) {
             return TreeTable.super.prevItemId(itemId);
         }
 
+        @Override
         public Collection<?> getItemIds() {
             return TreeTable.super.getItemIds();
         }
@@ -167,18 +179,22 @@ public class TreeTable extends Table implements Hierarchical {
 
         private final HashSet<Object> openItems = new HashSet<Object>();
 
+        @Override
         public boolean isNodeOpen(Object itemId) {
             return openItems.contains(itemId);
         }
 
+        @Override
         public int size() {
             return getPreOrder().size();
         }
 
+        @Override
         public Collection<Object> getItemIds() {
             return Collections.unmodifiableCollection(getPreOrder());
         }
 
+        @Override
         public boolean isLastId(Object itemId) {
             if (itemId == null) {
                 return false;
@@ -187,6 +203,7 @@ public class TreeTable extends Table implements Hierarchical {
             return itemId.equals(lastItemId());
         }
 
+        @Override
         public Object lastItemId() {
             if (getPreOrder().size() > 0) {
                 return getPreOrder().get(getPreOrder().size() - 1);
@@ -195,6 +212,7 @@ public class TreeTable extends Table implements Hierarchical {
             }
         }
 
+        @Override
         public Object nextItemId(Object itemId) {
             int indexOf = getPreOrder().indexOf(itemId);
             if (indexOf == -1) {
@@ -208,6 +226,7 @@ public class TreeTable extends Table implements Hierarchical {
             }
         }
 
+        @Override
         public Object prevItemId(Object itemId) {
             int indexOf = getPreOrder().indexOf(itemId);
             indexOf--;
@@ -218,6 +237,7 @@ public class TreeTable extends Table implements Hierarchical {
             }
         }
 
+        @Override
         public void toggleChildVisibility(Object itemId) {
             boolean removed = openItems.remove(itemId);
             if (!removed) {
@@ -267,10 +287,12 @@ public class TreeTable extends Table implements Hierarchical {
 
         }
 
+        @Override
         public int indexOfId(Object id) {
             return getPreOrder().indexOf(id);
         }
 
+        @Override
         public Object getIdByIndex(int index) {
             return getPreOrder().get(index);
         }
@@ -612,36 +634,44 @@ public class TreeTable extends Table implements Hierarchical {
         return getContainerStrategy().getItemIds();
     }
 
+    @Override
     public boolean areChildrenAllowed(Object itemId) {
         return getContainerDataSource().areChildrenAllowed(itemId);
     }
 
+    @Override
     public Collection<?> getChildren(Object itemId) {
         return getContainerDataSource().getChildren(itemId);
     }
 
+    @Override
     public Object getParent(Object itemId) {
         return getContainerDataSource().getParent(itemId);
     }
 
+    @Override
     public boolean hasChildren(Object itemId) {
         return getContainerDataSource().hasChildren(itemId);
     }
 
+    @Override
     public boolean isRoot(Object itemId) {
         return getContainerDataSource().isRoot(itemId);
     }
 
+    @Override
     public Collection<?> rootItemIds() {
         return getContainerDataSource().rootItemIds();
     }
 
+    @Override
     public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed)
             throws UnsupportedOperationException {
         return getContainerDataSource().setChildrenAllowed(itemId,
                 areChildrenAllowed);
     }
 
+    @Override
     public boolean setParent(Object itemId, Object newParentId)
             throws UnsupportedOperationException {
         return getContainerDataSource().setParent(itemId, newParentId);
