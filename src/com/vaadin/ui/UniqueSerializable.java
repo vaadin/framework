@@ -18,11 +18,6 @@ import java.io.Serializable;
  */
 public abstract class UniqueSerializable implements Serializable {
 
-    public static UniqueSerializable create() {
-        return new UniqueSerializable() {
-        };
-    }
-
     @Override
     public int hashCode() {
         return getClass().hashCode();
