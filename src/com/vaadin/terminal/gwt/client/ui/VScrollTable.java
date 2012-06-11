@@ -6120,7 +6120,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
                 // scrollbar appears/disappears)
-                int bodyHeight = scrollBody.getRequiredHeight();
+                int bodyHeight = Util.getRequiredHeight(scrollBody);
                 boolean needsSpaceForHorizontalScrollbar = (availW < usedMinimumWidth);
                 if (needsSpaceForHorizontalScrollbar) {
                     bodyHeight += Util.getNativeScrollbarSize();
@@ -6232,6 +6232,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     @Override
     public void setHeight(String height) {
+        if (height.equals(this.height)) {
+            return;
+        }
         this.height = height;
         super.setHeight(height);
         setContainerHeight();
@@ -6252,6 +6255,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             });
         }
+
+        triggerLazyColumnAdjustment(false);
 
         /*
          * setting height may affect wheter the component has scrollbars ->
