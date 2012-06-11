@@ -90,28 +90,34 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
             .isAndroidWithBrokenScrollTop();
 
+    /**
+     * A helper class for making a widget scrollable. Uses native scrolling if
+     * supported by the browser, otherwise registers a touch start handler
+     * delegating to a TouchScrollDelegate instance.
+     */
     public static class TouchScrollHandler implements TouchStartHandler {
+
+        private static final String SCROLLABLE_CLASSNAME = "v-scrollable";
 
         private final TouchScrollDelegate delegate;
         private final boolean requiresDelegate = BrowserInfo.get()
                 .requiresTouchScrollDelegate();
 
+        /**
+         * Constructs a scroll handler for the given widget.
+         * 
+         * @param widget
+         *            The widget that contains scrollable elements
+         * @param scrollables
+         *            The elements of the widget that should be scrollable.
+         */
         public TouchScrollHandler(Widget widget, Element... scrollables) {
             if (requiresDelegate) {
-                VConsole.log("REQUIRES DELEGATE");
                 delegate = new TouchScrollDelegate();
                 widget.addDomHandler(this, TouchStartEvent.getType());
             } else {
-                VConsole.log("DOES NOT REQUIRE DELEGATE");
                 delegate = null;
             }
-            VConsole.log(BrowserInfo.getBrowserString());
-            BrowserInfo bi = BrowserInfo.get();
-            VConsole.log("Is Android: " + bi.isAndroid());
-            VConsole.log("Is Android with broken scrolltop: "
-                    + bi.isAndroidWithBrokenScrollTop());
-            VConsole.log("Is IOS: " + bi.isIOS());
-            VConsole.log("Is Webkit: " + bi.isWebkit());
             for (Element scrollable : scrollables) {
                 addElement(scrollable);
             }
@@ -128,27 +134,40 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                     + e.getStyle().getProperty("WebkitOverflowScrolling"));
         }
 
+        /**
+         * Registers the given element as scrollable.
+         */
         public void addElement(Element scrollable) {
-            scrollable.addClassName("v-scrollable");
-            scrollable.getStyle().setProperty("WebkitOverflowScrolling",
-                    "touch");
-            scrollable.getStyle().setProperty("overflowY", "auto");
-            scrollable.getStyle().setProperty("overflowX", "auto");
+            scrollable.addClassName(SCROLLABLE_CLASSNAME);
             if (requiresDelegate) {
                 delegate.scrollableElements.add(scrollable);
             }
-            VConsole.log("Added scrollable: " + scrollable.getClassName());
         }
 
+        /**
+         * Unregisters the given element as scrollable. Should be called when a
+         * previously-registered element is removed from the DOM to prevent
+         * memory leaks.
+         */
         public void removeElement(Element scrollable) {
-            scrollable.removeClassName("v-scrollable");
+            scrollable.removeClassName(SCROLLABLE_CLASSNAME);
             if (requiresDelegate) {
                 delegate.scrollableElements.remove(scrollable);
             }
         }
 
+        /**
+         * Registers the given elements as scrollable, removing previously
+         * registered scrollables from this handler.
+         * 
+         * @param scrollables
+         *            The elements that should be scrollable
+         */
         public void setElements(Element... scrollables) {
             if (requiresDelegate) {
+                for (Element e : delegate.scrollableElements) {
+                    e.removeClassName(SCROLLABLE_CLASSNAME);
+                }
                 delegate.scrollableElements.clear();
             }
             for (Element e : scrollables) {
@@ -157,6 +176,16 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
     }
 
+    /**
+     * Makes the given elements scrollable, either natively or by using a
+     * TouchScrollDelegate, depending on platform capabilities.
+     * 
+     * @param widget
+     *            The widget that contains scrollable elements
+     * @param scrollables
+     *            The elements inside the widget that should be scrollable
+     * @return A scroll handler for the given widget.
+     */
     public static TouchScrollHandler enableTouchScrolling(Widget widget,
             Element... scrollables) {
         return new TouchScrollHandler(widget, scrollables);
