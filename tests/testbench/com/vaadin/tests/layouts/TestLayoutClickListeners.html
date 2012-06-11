@@ -59,8 +59,8 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/domChild[0]</td>
-	<td>87,42</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/domChild[0]/domChild[0]</td>
+	<td>491,79</td>
 </tr>
 <tr>
 	<td>waitForVaadin</td>
@@ -184,6 +184,130 @@
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[0]/VLabel[0]</td>
 	<td>exact:Button A button with its own click listener was clicked</td>
+</tr>
+<!--Drag in GridLayout-->
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/AbsolutePanel[0]/ChildComponentContainer[0]/VLabel[0]</td>
+	<td>40,8</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/AbsolutePanel[0]/ChildComponentContainer[0]/VLabel[0]</td>
+	<td>40,8</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:GridLayout: left click on This is label 1</td>
+</tr>
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/AbsolutePanel[0]/ChildComponentContainer[0]/VLabel[0]</td>
+	<td>24,7</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VGridLayout[0]/AbsolutePanel[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>46,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:GridLayout: left click on This is label 1</td>
+</tr>
+<!--Drag in VerticalLayout-->
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>25,9</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[4]/VTextField[0]</td>
+	<td>25,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:VerticalLayout: left click on This is tf5</td>
+</tr>
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/domChild[0]/domChild[8]/domChild[0]/domChild[0]</td>
+	<td>28,11</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[8]/VTextField[0]</td>
+	<td>39,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:VerticalLayout: left click on This is tf5</td>
+</tr>
+<!--Drag in AbsoluteLayout-->
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VAbsoluteLayout[0]/domChild[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>21,9</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VAbsoluteLayout[0]/domChild[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>21,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:AbsoluteLayout: left click on This is its caption</td>
+</tr>
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VAbsoluteLayout[0]/VAbsoluteLayout$AbsoluteWrapper[0]/VTextField[0]</td>
+	<td>54,7</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VAbsoluteLayout[0]/VAbsoluteLayout$AbsoluteWrapper[1]/VTextField[0]</td>
+	<td>52,10</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:AbsoluteLayout: left click on This is its caption</td>
+</tr>
+<!--Drag in CSSLayout-->
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[3]/VCssLayout[0]/VCssLayout$FlowPane[0]/VTextField[0]</td>
+	<td>51,7</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[3]/VCssLayout[0]/VCssLayout$FlowPane[0]/VTextField[0]</td>
+	<td>51,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:CSSLayout: left click on This is its caption</td>
+</tr>
+<tr>
+	<td>drag</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[3]/VCssLayout[0]/domChild[0]/domChild[0]/domChild[2]/domChild[0]</td>
+	<td>31,7</td>
+</tr>
+<tr>
+	<td>drop</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[3]/VCssLayout[0]/VCssLayout$FlowPane[0]/VTextField[1]</td>
+	<td>33,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestslayoutsTestLayoutClickListeners::PID_SLog_row_0</td>
+	<td>exact:CSSLayout: left click on This is its caption</td>
 </tr>
 </tbody></table>
 </body>

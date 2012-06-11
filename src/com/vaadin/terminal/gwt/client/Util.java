@@ -911,6 +911,22 @@ public class Util {
     }
 
     /**
+     * Find the element corresponding to the coordinates in the passed mouse
+     * event. Please note that this is not always the same as the target of the
+     * element e.g. if event capture is used.
+     * 
+     * @param event
+     *            the mouse event to get coordinates from
+     * @return the element at the coordinates of the event
+     */
+    public static Element getElementUnderMouse(NativeEvent event) {
+        int pageX = getTouchOrMouseClientX(event);
+        int pageY = getTouchOrMouseClientY(event);
+
+        return getElementFromPoint(pageX, pageY);
+    }
+
+    /**
      * A helper method to return the client position from an event. Returns
      * position from either first changed touch (if touch event) or from the
      * event itself.
