@@ -1900,6 +1900,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return true;
             }
         } else {
+            if (scrollBody == null) {
+                return false;
+            }
             int fakeheight = (int) Math.round(scrollBody.getRowHeight()
                     * totalRows);
             int availableHeight = scrollBodyPanel.getElement().getPropertyInt(
