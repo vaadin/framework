@@ -13,7 +13,7 @@ public abstract class AbstractExtension extends AbstractClientConnector
         return ClientConnector.class;
     }
 
-    protected void addExtensionTo(AbstractClientConnector parent) {
+    protected void attachTo(AbstractClientConnector parent) {
         parent.addExtension(this);
     }
 
