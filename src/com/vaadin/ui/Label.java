@@ -36,10 +36,9 @@ import com.vaadin.terminal.gwt.client.ui.label.LabelState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-// TODO generics for interface Property
-public class Label extends AbstractComponent implements Property,
+public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
-        Property.ValueChangeNotifier, Comparable<Object> {
+        Property.ValueChangeNotifier, Comparable<Label> {
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
@@ -79,7 +78,7 @@ public class Label extends AbstractComponent implements Property,
 
     private static final String DATASOURCE_MUST_BE_SET = "Datasource must be set";
 
-    private Property dataSource;
+    private Property<String> dataSource;
 
     /**
      * Creates an empty Label.
@@ -135,7 +134,7 @@ public class Label extends AbstractComponent implements Property,
         super.updateState();
         // We don't know when the text is updated so update it here before
         // sending the state to the client
-        getState().setText(getStringValue());
+        getState().setText(getValue());
     }
 
     @Override
@@ -149,7 +148,7 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @return the Value of the label.
      */
-    public Object getValue() {
+    public String getValue() {
         if (dataSource == null) {
             throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
         }
@@ -179,26 +178,7 @@ public class Label extends AbstractComponent implements Property,
     @Override
     public String toString() {
         throw new UnsupportedOperationException(
-                "Use Property.getValue() instead of Label.toString()");
-    }
-
-    /**
-     * Returns the value of the <code>Property</code> in human readable textual
-     * format.
-     * 
-     * This method exists to help migration from previous Vaadin versions by
-     * providing a simple replacement for {@link #toString()}. However, it is
-     * normally better to use the value of the label directly.
-     * 
-     * @return String representation of the value stored in the Property
-     * @since 7.0
-     */
-    public String getStringValue() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        Object value = dataSource.getValue();
-        return (null != value) ? value.toString() : null;
+                "Use getValue() instead of Label.toString()");
     }
 
     /**
@@ -206,11 +186,8 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @see com.vaadin.data.Property#getType()
      */
-    public Class getType() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        return dataSource.getType();
+    public Class<String> getType() {
+        return String.class;
     }
 
     /**
@@ -366,6 +343,21 @@ public class Label extends AbstractComponent implements Property,
         fireValueChange();
     }
 
+    private String getComparableValue() {
+        String stringValue = getValue();
+        if (stringValue == null) {
+            stringValue = "";
+        }
+
+        if (getContentMode() == ContentMode.XHTML
+                || getContentMode() == ContentMode.XML) {
+            return stripTags(stringValue);
+        } else {
+            return stringValue;
+        }
+
+    }
+
     /**
      * Compares the Label to other objects.
      * 
@@ -387,27 +379,10 @@ public class Label extends AbstractComponent implements Property,
      *         less than, equal to, or greater than the specified object.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public int compareTo(Object other) {
+    public int compareTo(Label other) {
 
-        String thisValue;
-        String otherValue;
-
-        if (getContentMode() == ContentMode.XML
-                || getContentMode() == ContentMode.XHTML) {
-            thisValue = stripTags(getStringValue());
-        } else {
-            thisValue = getStringValue();
-        }
-
-        if (other instanceof Label
-                && (((Label) other).getContentMode() == ContentMode.XML || ((Label) other)
-                        .getContentMode() == ContentMode.XHTML)) {
-            otherValue = stripTags(((Label) other).getStringValue());
-        } else {
-            // TODO not a good idea - and might assume that Field.toString()
-            // returns a string representation of the value
-            otherValue = other.toString();
-        }
+        String thisValue = getComparableValue();
+        String otherValue = other.getComparableValue();
 
         return thisValue.compareTo(otherValue);
     }
