@@ -408,6 +408,8 @@ public abstract class Root extends AbstractComponentContainer implements
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
 
+    private JavascriptManager javascriptManager;
+
     private RootServerRpc rpc = new RootServerRpc() {
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Root.this, mouseDetails));
@@ -1588,6 +1590,16 @@ public abstract class Root extends AbstractComponentContainer implements
 
     public DirtyConnectorTracker getDirtyConnectorTracker() {
         return dirtyConnectorTracker;
+    }
+
+    public JavascriptManager getJavascriptManager() {
+        if (javascriptManager == null) {
+            // Create and attach on first use
+            javascriptManager = new JavascriptManager();
+            addExtension(javascriptManager);
+        }
+
+        return javascriptManager;
     }
 
 }
