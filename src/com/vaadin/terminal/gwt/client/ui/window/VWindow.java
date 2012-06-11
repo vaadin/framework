@@ -160,6 +160,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         contentPanel.addKeyDownHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
+
+        TouchScrollDelegate.enableTouchScrolling(this, getContainerElement()
+                .getFirstChildElement());
     }
 
     public void bringToFront() {
