@@ -400,7 +400,7 @@ public class JsonCodec implements Serializable {
             boolean restrictToInternalTypes, JSONArray jsonArray,
             Application application) throws JSONException {
         HashSet<Object> set = new HashSet<Object>();
-        set.addAll(decodeList(List.class, restrictToInternalTypes, jsonArray,
+        set.addAll(decodeList(targetType, restrictToInternalTypes, jsonArray,
                 application));
         return set;
     }
