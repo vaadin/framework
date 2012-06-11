@@ -15,14 +15,9 @@ public class ClassBasedViewProviderTest extends TestCase {
     private ClassBasedViewProvider provider;
 
     public static class TestView extends Label implements View {
-        public boolean initialized = false;
         public String parameters = null;
 
-        public void init() {
-            initialized = true;
-        }
-
-        public void navigateTo(String parameters, Object... internalParameters) {
+        public void navigateTo(String parameters) {
             this.parameters = parameters;
         }
 
@@ -169,7 +164,6 @@ public class ClassBasedViewProviderTest extends TestCase {
         View view = provider.getView("test");
         assertNotNull("Did not get view from a provider", view);
         assertEquals("Incorrect view type", TestView.class, view.getClass());
-        assertTrue("View not initialized", ((TestView) view).initialized);
     }
 
     public void testGetViewMultipleRegistered() throws Exception {

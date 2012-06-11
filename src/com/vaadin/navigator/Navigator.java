@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -22,7 +23,7 @@ import com.vaadin.ui.Root.FragmentChangedListener;
  * The view switching can be based e.g. on URI fragments containing the view
  * name and parameters to the view. There are two types of parameters for views:
  * an optional parameter string that is included in the fragment (may be
- * bookmarkable) and optional internal parameters that are not.
+ * bookmarkable).
  * 
  * Views can be explicitly registered or dynamically generated and listening to
  * view changes is possible.
@@ -44,13 +45,12 @@ public class Navigator implements Serializable {
      * Empty view component.
      */
     public static class EmptyView extends CssLayout implements View {
-        public void init() {
+        public EmptyView() {
             setWidth("0px");
             setHeight("0px");
         }
 
-        public void navigateTo(String fragmentParameters,
-                Object... internalParameters) {
+        public void navigateTo(String fragmentParameters) {
             // nothing to do
         }
     }
@@ -228,7 +228,6 @@ public class Navigator implements Serializable {
             if (!classToView.containsKey(newViewClass)) {
                 try {
                     View view = newViewClass.newInstance();
-                    view.init();
                     classToView.put(newViewClass, view);
                 } catch (InstantiationException e) {
                     // TODO error handling
@@ -326,7 +325,6 @@ public class Navigator implements Serializable {
 
     private final FragmentManager fragmentManager;
     private final ViewDisplay display;
-    private String mainViewName = null;
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
@@ -341,6 +339,19 @@ public class Navigator implements Serializable {
      */
     public Navigator(Root root, ViewDisplay display) {
         this.display = display;
+        fragmentManager = new UriFragmentManager(root, this);
+    }
+
+    /**
+     * Create a navigator that is tracking the active view using URI fragments.
+     * By default, a {@link SimpleViewDisplay} is used and can be obtained using
+     * {@link #getDisplay()}.
+     * 
+     * @param root
+     *            whose URI fragments are used
+     */
+    public Navigator(Root root) {
+        display = new SimpleViewDisplay();
         fragmentManager = new UriFragmentManager(root, this);
     }
 
@@ -374,15 +385,8 @@ public class Navigator implements Serializable {
      * 
      * @param viewAndParameters
      *            view name and parameters
-     * @param internalParameters
-     *            parameters that are only passed when switching views
-     *            explicitly on the server side, not bookmarkable
      */
-    public void navigateTo(String viewAndParameters,
-            Object... internalParameters) {
-        if ("".equals(viewAndParameters)) {
-            viewAndParameters = mainViewName;
-        }
+    public void navigateTo(String viewAndParameters) {
         for (ViewProvider provider : providers) {
             String viewName = provider.getViewName(viewAndParameters);
             if (null != viewName) {
@@ -393,13 +397,13 @@ public class Navigator implements Serializable {
                 }
                 View view = provider.getView(viewName);
                 if (null != view) {
-                    navigateTo(view, viewName, parameters, internalParameters);
+                    navigateTo(view, viewName, parameters);
                     // stop after a view is found
                     return;
                 }
             }
         }
-        // TODO if no view is found, use main view or do nothing?
+        // TODO if no view is found, what to do?
     }
 
     /**
@@ -415,14 +419,12 @@ public class Navigator implements Serializable {
      *            (optional) name of the view or null not to set the fragment
      * @param fragmentParameters
      *            parameters passed in the fragment for the view
-     * @param internalParameters
-     *            parameters that are only passed when switching views
-     *            explicitly on the server side, not bookmarkable
      */
     protected void navigateTo(View view, String viewName,
-            String fragmentParameters, Object... internalParameters) {
-        if (!isViewChangeAllowed(currentView, view, viewName,
-                fragmentParameters, internalParameters)) {
+            String fragmentParameters) {
+        ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
+                viewName, fragmentParameters);
+        if (!isViewChangeAllowed(event)) {
             return;
         }
 
@@ -436,15 +438,14 @@ public class Navigator implements Serializable {
             }
         }
 
-        view.navigateTo(fragmentParameters, internalParameters);
-        View previousView = currentView;
+        view.navigateTo(fragmentParameters);
         currentView = view;
 
         if (display != null) {
             display.showView(view);
         }
 
-        fireViewChange(previousView);
+        fireViewChange(event);
     }
 
     /**
@@ -457,26 +458,14 @@ public class Navigator implements Serializable {
      * and save the parameters to re-initiate the navigation operation upon user
      * action.
      * 
-     * @param previous
-     *            the view being deactivated
-     * @param next
-     *            the view being activated
-     * @param viewName
-     *            name of the view being activated
-     * @param fragmentParameters
-     *            parameters passed in the fragment for the view
-     * @param internalParameters
-     *            parameters that are only passed on the server side, not
-     *            bookmarkable
+     * @param event
+     *            view change event (not null, view change not yet performed)
      * @return true if the view change should be allowed, false to silently
      *         block the navigation operation
      */
-    protected boolean isViewChangeAllowed(View previous, View next,
-            String viewName, String fragmentParameters,
-            Object[] internalParameters) {
+    protected boolean isViewChangeAllowed(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            if (!l.isViewChangeAllowed(previous, next, viewName,
-                    fragmentParameters, internalParameters)) {
+            if (!l.isViewChangeAllowed(event)) {
                 return false;
             }
         }
@@ -494,43 +483,25 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Get the main view.
+     * Returns the ViewDisplay used by the navigator. Unless another display is
+     * specified, a {@link SimpleViewDisplay} (which is a {@link Component}) is
+     * used by default.
      * 
-     * Main view is the default view shown to user when he opens application
-     * without specifying view name.
-     * 
-     * @return name of the main view.
+     * @return current ViewDisplay
      */
-    public String getMainView() {
-        return mainViewName;
-    }
-
-    /**
-     * Set the main view.
-     * 
-     * Main view is the default view shown to user when he opens application
-     * without specifying view name. If the {@link Navigator} does not have a
-     * current view, the main view is automatically selected when set.
-     * 
-     * @param mainViewName
-     *            name of the main view.
-     */
-    public void setMainView(String mainViewName) {
-        this.mainViewName = mainViewName;
-        // TODO should this be done?
-        if (currentView == null) {
-            navigateTo(mainViewName);
-        }
+    public ViewDisplay getDisplay() {
+        return display;
     }
 
     /**
      * Fire an event when the current view has changed.
      * 
-     * @param previousView
+     * @param event
+     *            view change event (not null)
      */
-    protected void fireViewChange(View previousView) {
+    protected void fireViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            l.navigatorViewChanged(previousView, currentView);
+            l.navigatorViewChanged(event);
         }
     }
 
