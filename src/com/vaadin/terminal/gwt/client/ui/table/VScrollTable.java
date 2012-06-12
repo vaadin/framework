@@ -1846,11 +1846,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         isNewBody = false;
 
         if (firstvisible > 0) {
-            // FIXME #7607
-            // Originally deferred due to Firefox oddities which should not
-            // occur any more. Currently deferring breaks Webkit scrolling with
-            // relative-height tables, but not deferring instead breaks tables
-            // with explicit page length.
+            // Deferred due to some Firefox oddities
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
@@ -5959,7 +5955,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // overflow hack here to shake body element a bit.
             // We must run the fix as a deferred command to prevent it from
             // overwriting the scroll position with an outdated value, see
-            // #7606.
+            // #7607.
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());

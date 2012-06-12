@@ -201,6 +201,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      */
     public static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
+    public static final String WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE = "writeAjaxPageScriptWidgetsetShouldWrite";
+
     // TODO some parts could be shared with AbstractApplicationServlet
 
     // TODO Can we close the application when the portlet is removed? Do we know
