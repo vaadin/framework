@@ -517,6 +517,8 @@ public class JsonCodec implements Serializable {
             return connector.getConnectorId();
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, application);
+        } else if (value instanceof JSONArray || value instanceof JSONObject) {
+            return value;
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
