@@ -913,7 +913,7 @@ public class Util {
     /**
      * Find the element corresponding to the coordinates in the passed mouse
      * event. Please note that this is not always the same as the target of the
-     * element e.g. if event capture is used.
+     * event e.g. if event capture is used.
      * 
      * @param event
      *            the mouse event to get coordinates from

@@ -69,7 +69,8 @@ import com.vaadin.terminal.gwt.client.ui.menubar.MenuItem;
  */
 @SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Field, KeyDownHandler,
-        KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable {
+        KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable,
+        SubPartAware {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -1688,5 +1689,25 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     protected void onDetach() {
         super.onDetach();
         suggestionPopup.hide();
+    }
+
+    @Override
+    public Element getSubPartElement(String subPart) {
+        if ("textbox".equals(subPart)) {
+            return this.tb.getElement();
+        } else if ("button".equals(subPart)) {
+            return this.popupOpener.getElement();
+        }
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(Element subElement) {
+        if (tb.getElement().isOrHasChild(subElement)) {
+            return "textbox";
+        } else if (popupOpener.getElement().isOrHasChild(subElement)) {
+            return "button";
+        }
+        return null;
     }
 }

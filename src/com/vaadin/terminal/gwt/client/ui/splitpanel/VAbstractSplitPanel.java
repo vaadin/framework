@@ -88,6 +88,10 @@ public class VAbstractSplitPanel extends ComplexPanel {
     /* The current position of the split handle in either percentages or pixels */
     String position;
 
+    String maximumPosition;
+
+    String minimumPosition;
+
     private final TouchScrollHandler touchScrollHandler;
 
     protected Element scrolledContainer;
@@ -222,9 +226,111 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
+    /**
+     * Converts given split position string (in pixels or percentage) to a
+     * floating point pixel value.
+     * 
+     * @param pos
+     * @return
+     */
+    private float convertToPixels(String pos) {
+        float posAsFloat;
+        if (pos.indexOf("%") > 0) {
+            posAsFloat = Math.round(Float.parseFloat(pos.substring(0,
+                    pos.length() - 1))
+                    / 100
+                    * (orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                            : getOffsetHeight()));
+        } else {
+            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
+        }
+        return posAsFloat;
+    }
+
+    /**
+     * Converts given split position string (in pixels or percentage) to a float
+     * percentage value.
+     * 
+     * @param pos
+     * @return
+     */
+    private float convertToPercentage(String pos) {
+        float posAsFloat = 0;
+
+        if (pos.indexOf("px") > 0) {
+            int posAsInt = Integer.parseInt(pos.substring(0, pos.length() - 2));
+            int offsetLength = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                    : getOffsetHeight();
+
+            // 100% needs special handling
+            if (posAsInt + getSplitterSize() >= offsetLength) {
+                posAsInt = offsetLength;
+            }
+            // Reversed position
+            if (positionReversed) {
+                posAsInt = offsetLength - posAsInt - getSplitterSize();
+            }
+            posAsFloat = ((float) posAsInt / (float) getOffsetWidth() * 100);
+
+        } else {
+            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 1));
+        }
+        return posAsFloat;
+    }
+
+    /**
+     * Returns the given position clamped to the range between current minimum
+     * and maximum positions.
+     * 
+     * TODO Should this be in the connector?
+     * 
+     * @param pos
+     *            Position of the splitter as a CSS string, either pixels or a
+     *            percentage.
+     * @return minimumPosition if pos is less than minimumPosition;
+     *         maximumPosition if pos is greater than maximumPosition; pos
+     *         otherwise.
+     */
+    private String checkSplitPositionLimits(String pos) {
+        float positionAsFloat = convertToPixels(pos);
+        float maximumAsFloat = convertToPixels(maximumPosition);
+        float minimumAsFloat = convertToPixels(minimumPosition);
+
+        if (maximumAsFloat < positionAsFloat) {
+            pos = maximumPosition;
+        } else if (minimumAsFloat > positionAsFloat) {
+            pos = minimumPosition;
+        }
+        return pos;
+    }
+
+    /**
+     * Converts given string to the same units as the split position is.
+     * 
+     * @param pos
+     *            position to be converted
+     * @return converted position string
+     */
+    private String convertToPositionUnits(String pos) {
+        if (position.indexOf("%") != -1 && pos.indexOf("%") == -1) {
+            // position is in percentage, pos in pixels
+            pos = convertToPercentage(pos) + "%";
+        } else if (position.indexOf("px") > 0 && pos.indexOf("px") == -1) {
+            // position is in pixels and pos in percentage
+            pos = convertToPixels(pos) + "px";
+        }
+
+        return pos;
+    }
+
     void setSplitPosition(String pos) {
         if (pos == null) {
             return;
+        }
+
+        pos = checkSplitPositionLimits(pos);
+        if (!pos.equals(position)) {
+            position = convertToPositionUnits(pos);
         }
 
         // Convert percentage values to pixels
@@ -470,16 +576,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         if (position.indexOf("%") > 0) {
-            float pos = newX;
-            // 100% needs special handling
-            if (newX + getSplitterSize() >= getOffsetWidth()) {
-                pos = getOffsetWidth();
-            }
-            // Reversed position
-            if (positionReversed) {
-                pos = getOffsetWidth() - pos - getSplitterSize();
-            }
-            position = (pos / getOffsetWidth() * 100) + "%";
+            position = convertToPositionUnits(newX + "px");
         } else {
             // Reversed position
             if (positionReversed) {
@@ -512,16 +609,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         if (position.indexOf("%") > 0) {
-            float pos = newY;
-            // 100% needs special handling
-            if (newY + getSplitterSize() >= getOffsetHeight()) {
-                pos = getOffsetHeight();
-            }
-            // Reversed position
-            if (positionReversed) {
-                pos = getOffsetHeight() - pos - getSplitterSize();
-            }
-            position = pos / getOffsetHeight() * 100 + "%";
+            position = convertToPositionUnits(newY + "px");
         } else {
             // Reversed position
             if (positionReversed) {
@@ -647,7 +735,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         return splitterSize;
     }
 
-    private void setStylenames() {
+    void setStylenames() {
         final String splitterClass = CLASSNAME
                 + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
                         : "-vsplitter");
