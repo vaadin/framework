@@ -1691,7 +1691,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         suggestionPopup.hide();
     }
 
-    @Override
     public Element getSubPartElement(String subPart) {
         if ("textbox".equals(subPart)) {
             return this.tb.getElement();
@@ -1701,7 +1700,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         return null;
     }
 
-    @Override
     public String getSubPartName(Element subElement) {
         if (tb.getElement().isOrHasChild(subElement)) {
             return "textbox";
