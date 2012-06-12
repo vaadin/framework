@@ -5823,7 +5823,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (isDynamicHeight() && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
                 // scrollbar appears/disappears)
-                int bodyHeight = scrollBody.getRequiredHeight();
+                int bodyHeight = Util.getRequiredHeight(scrollBody);
                 boolean needsSpaceForHorizontalScrollbar = (availW < usedMinimumWidth);
                 if (needsSpaceForHorizontalScrollbar) {
                     bodyHeight += Util.getNativeScrollbarSize();
@@ -5957,11 +5957,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // overwriting the scroll position with an outdated value, see
             // #7607.
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
             });
         }
+
+        triggerLazyColumnAdjustment(false);
 
         /*
          * setting height may affect wheter the component has scrollbars ->
