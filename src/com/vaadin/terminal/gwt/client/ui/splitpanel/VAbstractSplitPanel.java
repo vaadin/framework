@@ -289,12 +289,12 @@ public class VAbstractSplitPanel extends ComplexPanel {
      */
     private String checkSplitPositionLimits(String pos) {
         float positionAsFloat = convertToPixels(pos);
-        float maximumAsFloat = convertToPixels(maximumPosition);
-        float minimumAsFloat = convertToPixels(minimumPosition);
 
-        if (maximumAsFloat < positionAsFloat) {
+        if (maximumPosition != null
+                && convertToPixels(maximumPosition) < positionAsFloat) {
             pos = maximumPosition;
-        } else if (minimumAsFloat > positionAsFloat) {
+        } else if (minimumPosition != null
+                && convertToPixels(minimumPosition) > positionAsFloat) {
             pos = minimumPosition;
         }
         return pos;

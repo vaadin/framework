@@ -346,7 +346,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *            the unit (from {@link Sizeable}) in which the size is given.
      *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
      */
-    public void setMinimumSplitPosition(int pos, Unit unit) {
+    public void setMinSplitPosition(int pos, Unit unit) {
         setSplitPositionLimits(pos, unit, getSplitterState().getMaxPosition(),
                 posMaxUnit);
     }
@@ -380,7 +380,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *            the unit (from {@link Sizeable}) in which the size is given.
      *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
      */
-    public void setMaxSplitPosition(int pos, Unit unit) {
+    public void setMaxSplitPosition(float pos, Unit unit) {
         setSplitPositionLimits(getSplitterState().getMinPosition(), posMinUnit,
                 pos, unit);
     }
