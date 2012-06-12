@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.SimpleFocusablePanel;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -113,6 +114,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
+
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     void setFeedbackValue(double value) {
@@ -287,6 +290,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
+        }
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
     }
 
