@@ -92,9 +92,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static final String DASHDASH = "--";
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractCommunicationManager.class.getName());
-
     private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
 
     private static final RequestHandler UNSUPPORTED_BROWSER_HANDLER = new UnsupportedBrowserHandler();
@@ -539,7 +536,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 if (root == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    logger.warning("Could not get root for application");
+                    getLogger().warning("Could not get root for application");
                     return;
                 }
             } else {
@@ -562,7 +559,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // FIXME: Handle exception
                     // Not critical, but something is still wrong; print
                     // stacktrace
-                    logger.log(Level.WARNING,
+                    getLogger().log(Level.WARNING,
                             "getSystemMessages() failed - continuing", e2);
                 }
                 if (ci != null) {
@@ -604,8 +601,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         if (!Version.getFullVersion().equals(widgetsetVersion)) {
-            logger.warning(String.format(Constants.WIDGETSET_MISMATCH_INFO,
-                    Version.getFullVersion(), widgetsetVersion));
+            getLogger().warning(
+                    String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                            Version.getFullVersion(), widgetsetVersion));
         }
     }
 
@@ -638,7 +636,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             printHighlightedComponentHierarchy(sb, component);
         }
-        logger.info(sb.toString());
+        getLogger().info(sb.toString());
     }
 
     protected void printHighlightedComponentHierarchy(StringBuilder sb,
@@ -767,7 +765,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Paints components
         DirtyConnectorTracker rootConnectorTracker = root
                 .getDirtyConnectorTracker();
-        logger.log(Level.FINE, "* Creating response to client");
+        getLogger().log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
             getClientCache(root).clear();
             rootConnectorTracker.markAllConnectorsDirty();
@@ -780,8 +778,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         dirtyVisibleConnectors
                 .addAll(getDirtyVisibleConnectors(rootConnectorTracker));
 
-        logger.log(Level.FINE, "Found " + dirtyVisibleConnectors.size()
-                + " dirty connectors to paint");
+        getLogger().log(
+                Level.FINE,
+                "Found " + dirtyVisibleConnectors.size()
+                        + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
             if (connector instanceof Component) {
                 ((Component) connector).updateState();
@@ -841,7 +841,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         try {
                             referenceState = stateType.newInstance();
                         } catch (Exception e) {
-                            logger.log(Level.WARNING,
+                            getLogger().log(
+                                    Level.WARNING,
                                     "Error creating reference object for state of type "
                                             + stateType.getName());
                         }
@@ -1006,16 +1007,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     (Class[]) null);
             ci = (Application.SystemMessages) m.invoke(null, (Object[]) null);
         } catch (NoSuchMethodException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (IllegalArgumentException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (IllegalAccessException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         } catch (InvocationTargetException e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "getSystemMessages() failed - continuing", e);
         }
 
@@ -1054,8 +1055,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 is = getThemeResourceAsStream(root, getTheme(root), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.FINER, "Failed to get theme resource stream.",
-                        e);
+                getLogger().log(Level.FINER,
+                        "Failed to get theme resource stream.", e);
             }
             if (is != null) {
 
@@ -1074,13 +1075,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     r.close();
                 } catch (final java.io.IOException e) {
                     // FIXME: Handle exception
-                    logger.log(Level.INFO, "Resource transfer failed", e);
+                    getLogger().log(Level.INFO, "Resource transfer failed", e);
                 }
                 outWriter.print("\""
                         + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
             } else {
                 // FIXME: Handle exception
-                logger.severe("CustomLayout not found: " + resource);
+                getLogger().severe("CustomLayout not found: " + resource);
             }
         }
         outWriter.print("}");
@@ -1171,8 +1172,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         sortByHierarchy((List) legacyComponents);
         for (Vaadin6Component c : legacyComponents) {
-            logger.fine("Painting Vaadin6Component " + c.getClass().getName()
-                    + "@" + Integer.toHexString(c.hashCode()));
+            getLogger().fine(
+                    "Painting Vaadin6Component " + c.getClass().getName() + "@"
+                            + Integer.toHexString(c.hashCode()));
             paintTarget.startTag("change");
             final String pid = c.getConnectorId();
             paintTarget.addAttribute("pid", pid);
@@ -1187,6 +1189,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // containers rely on that their updateFromUIDL method has been called
         // before children start calling e.g. updateCaption
         Collections.sort(paintables, new Comparator<Component>() {
+            @Override
             public int compare(Component c1, Component c2) {
                 int depth1 = 0;
                 while (c1.getParent() != null) {
@@ -1273,14 +1276,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static class NullIterator<E> implements Iterator<E> {
 
+        @Override
         public boolean hasNext() {
             return false;
         }
 
+        @Override
         public E next() {
             return null;
         }
 
+        @Override
         public void remove() {
         }
 
@@ -1479,7 +1485,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         invocation.getConnectorId());
 
                 if (connector == null) {
-                    logger.log(
+                    getLogger().log(
                             Level.WARNING,
                             "RPC call to " + invocation.getInterfaceName()
                                     + "." + invocation.getMethodName()
@@ -1517,7 +1523,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                             msg += ", caption=" + caption;
                         }
                     }
-                    logger.warning(msg);
+                    getLogger().warning(msg);
                     continue;
                 }
 
@@ -1545,14 +1551,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         }
                         handleChangeVariablesError(app, errorComponent, e,
                                 changes);
-
                     }
                 }
             }
-
         } catch (JSONException e) {
-            logger.warning("Unable to parse RPC call from the client: "
-                    + e.getMessage());
+            getLogger().warning(
+                    "Unable to parse RPC call from the client: "
+                            + e.getMessage());
             // TODO or return success = false?
             throw new RuntimeException(e);
         }
@@ -1726,6 +1731,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
@@ -1895,8 +1901,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             DateFormat dateFormat = DateFormat.getDateTimeInstance(
                     DateFormat.SHORT, DateFormat.SHORT, l);
             if (!(dateFormat instanceof SimpleDateFormat)) {
-                logger.warning("Unable to get default date pattern for locale "
-                        + l.toString());
+                getLogger().warning(
+                        "Unable to get default date pattern for locale "
+                                + l.toString());
                 dateFormat = new SimpleDateFormat();
             }
             final String df = ((SimpleDateFormat) dateFormat).toPattern();
@@ -2095,7 +2102,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (id == null) {
             id = nextTypeKey++;
             typeToKey.put(class1, id);
-            logger.log(Level.FINE, "Mapping " + class1.getName() + " to " + id);
+            getLogger().log(Level.FINE,
+                    "Mapping " + class1.getName() + " to " + id);
         }
         return id.toString();
     }
@@ -2232,7 +2240,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         writeUidlResponse(request, true, pWriter, root, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
-        logger.log(Level.FINE, "Initial UIDL:" + initialUIDL);
+        getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
     }
 
@@ -2386,4 +2394,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractCommunicationManager.class.getName());
+    }
 }

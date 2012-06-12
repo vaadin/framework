@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * Utility class to collect widgetset related information from classpath.
@@ -53,15 +52,13 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  */
 public class ClassPathExplorer {
 
-    private static Logger logger = Logger.getLogger(ClassPathExplorer.class
-            .getName());
-
     private static final String VAADIN_ADDON_VERSION_ATTRIBUTE = "Vaadin-Package-Version";
 
     /**
      * File filter that only accepts directories.
      */
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
+        @Override
         public boolean accept(File f) {
             if (f.exists() && f.isDirectory()) {
                 return true;
@@ -98,10 +95,9 @@ public class ClassPathExplorer {
      * 
      * As a side effect, also accept criteria are searched under the same class
      * path entries and added into the acceptCriterion collection.
-     * 
-     * @return a collection of {@link ClientConnector} classes
      */
     public static void findAcceptCriteria() {
+        final Logger logger = getLogger();
         logger.info("Searching for accept criteria..");
         long start = System.currentTimeMillis();
         Set<String> keySet = classpathLocations.keySet();
@@ -154,6 +150,7 @@ public class ClassPathExplorer {
             sb.append(widgetsets.get(ws));
             sb.append("\n");
         }
+        final Logger logger = getLogger();
         logger.info(sb.toString());
         logger.info("Search took " + (end - start) + "ms");
         return widgetsets;
@@ -214,7 +211,7 @@ public class ClassPathExplorer {
                     } catch (MalformedURLException e) {
                         // should never happen as based on an existing URL,
                         // only changing end of file name/path part
-                        logger.log(Level.SEVERE,
+                        getLogger().log(Level.SEVERE,
                                 "Error locating the widgetset " + classname, e);
                     }
                 }
@@ -250,7 +247,7 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Error parsing jar file", e);
+                getLogger().log(Level.WARNING, "Error parsing jar file", e);
             }
 
         }
@@ -278,7 +275,7 @@ public class ClassPathExplorer {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        logger.fine("Classpath: " + classpath);
+        getLogger().fine("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {
@@ -312,6 +309,7 @@ public class ClassPathExplorer {
             include(null, file, locations);
         }
         long end = System.currentTimeMillis();
+        Logger logger = getLogger();
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("getClassPathLocations took " + (end - start) + "ms");
         }
@@ -352,7 +350,7 @@ public class ClassPathExplorer {
                     url = new URL("jar:" + url.toExternalForm() + "!/");
                     JarURLConnection conn = (JarURLConnection) url
                             .openConnection();
-                    logger.fine(url.toString());
+                    getLogger().fine(url.toString());
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
                     if (manifest != null) {
@@ -363,9 +361,11 @@ public class ClassPathExplorer {
                         }
                     }
                 } catch (MalformedURLException e) {
-                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
+                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
+                            e);
                 } catch (IOException e) {
-                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
+                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
+                            e);
                 }
 
                 return false;
@@ -510,7 +510,7 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                logger.warning(e.toString());
+                getLogger().warning(e.toString());
             }
         }
 
@@ -582,7 +582,8 @@ public class ClassPathExplorer {
 
         // Must be done here after stderr and stdout have been reset.
         if (errorToShow != null && logLevel != null) {
-            logger.log(logLevel,
+            getLogger().log(
+                    logLevel,
                     "Failed to load class " + fullclassName + ". "
                             + errorToShow.getClass().getName() + ": "
                             + errorToShow.getMessage());
@@ -601,6 +602,9 @@ public class ClassPathExplorer {
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
+
+        final Logger logger = getLogger();
+
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("classpathLocations values:");
             ArrayList<String> locations = new ArrayList<String>(
@@ -656,20 +660,24 @@ public class ClassPathExplorer {
      */
     public static void main(String[] args) {
         ClassPathExplorer.findAcceptCriteria();
-        logger.info("Found client criteria:");
+        getLogger().info("Found client criteria:");
         for (Class<? extends AcceptCriterion> cls : acceptCriterion) {
-            logger.info(cls.getCanonicalName());
+            getLogger().info(cls.getCanonicalName());
         }
 
-        logger.info("");
-        logger.info("Searching available widgetsets...");
+        getLogger().info("");
+        getLogger().info("Searching available widgetsets...");
 
         Map<String, URL> availableWidgetSets = ClassPathExplorer
                 .getAvailableWidgetSets();
         for (String string : availableWidgetSets.keySet()) {
 
-            logger.info(string + " in " + availableWidgetSets.get(string));
+            getLogger().info(string + " in " + availableWidgetSets.get(string));
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(ClassPathExplorer.class.getName());
     }
 
 }

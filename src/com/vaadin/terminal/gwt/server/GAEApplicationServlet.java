@@ -94,9 +94,6 @@ import com.vaadin.service.ApplicationContext;
  */
 public class GAEApplicationServlet extends ApplicationServlet {
 
-    private static final Logger logger = Logger
-            .getLogger(GAEApplicationServlet.class.getName());
-
     // memcache mutex is MUTEX_BASE + sessio id
     private static final String MUTEX_BASE = "_vmutex";
 
@@ -209,8 +206,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    logger.finer("Thread.sleep() interrupted while waiting for lock. Trying again. "
-                            + e);
+                    getLogger().finer(
+                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
+                                    + e);
                 }
             }
 
@@ -252,16 +250,16 @@ public class GAEApplicationServlet extends ApplicationServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            logger.warning("DeadlineExceeded for " + session.getId());
+            getLogger().warning("DeadlineExceeded for " + session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
-            logger.log(Level.SEVERE, "Not serializable!", e);
+            getLogger().log(Level.SEVERE, "Not serializable!", e);
 
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
         } catch (Exception e) {
-            logger.log(Level.WARNING,
+            getLogger().log(Level.WARNING,
                     "An exception occurred while servicing request.", e);
 
             sendCriticalErrorNotification(request, response);
@@ -308,12 +306,14 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 session.setAttribute(WebApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
-                logger.log(Level.WARNING,
+                getLogger().log(
+                        Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
                                 + " A new one will be created. ", e);
             } catch (ClassNotFoundException e) {
-                logger.log(Level.WARNING,
+                getLogger().log(
+                        Level.WARNING,
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
                                 + " A new one will be created. ", e);
@@ -368,8 +368,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    logger.info("Vaadin cleanup deleting " + entities.size()
-                            + " expired Vaadin sessions.");
+                    getLogger().info(
+                            "Vaadin cleanup deleting " + entities.size()
+                                    + " expired Vaadin sessions.");
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -387,8 +388,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    logger.info("Vaadin cleanup deleting " + entities.size()
-                            + " expired appengine sessions.");
+                    getLogger().info(
+                            "Vaadin cleanup deleting " + entities.size()
+                                    + " expired appengine sessions.");
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -397,7 +399,11 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Exception while cleaning.", e);
+            getLogger().log(Level.WARNING, "Exception while cleaning.", e);
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(GAEApplicationServlet.class.getName());
     }
 }

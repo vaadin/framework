@@ -34,9 +34,6 @@ import com.vaadin.ui.Window;
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
 
-    private final static Logger logger = Logger
-            .getLogger(ComponentSizeValidator.class.getName());
-
     private final static int LAYERS_SHOWN = 4;
 
     /**
@@ -134,7 +131,7 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineHeight(component);
         } catch (Exception e) {
-            logger.log(Level.FINER,
+            getLogger().log(Level.FINER,
                     "An exception occurred while validating sizes.", e);
             return true;
         }
@@ -154,7 +151,7 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineWidth(component);
         } catch (Exception e) {
-            logger.log(Level.FINER,
+            getLogger().log(Level.FINER,
                     "An exception occurred while validating sizes.", e);
             return true;
         }
@@ -653,11 +650,15 @@ public class ComponentSizeValidator implements Serializable {
                 return;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                logger.log(Level.FINER,
+                getLogger().log(Level.FINER,
                         "An exception occurred while validating sizes.", e);
             }
 
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ComponentSizeValidator.class.getName());
     }
 
 }

@@ -28,9 +28,6 @@ import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
-    private static final Logger logger = Logger
-            .getLogger(DragAndDropService.class.getName());
-
     private int lastVisitId;
 
     private boolean lastVisitAccepted = false;
@@ -45,13 +42,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         this.manager = manager;
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         Object owner = variables.get("dhowner");
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            logger.severe("DropHandler owner " + owner
-                    + " must implement DropTarget");
+            getLogger()
+                    .severe("DropHandler owner " + owner
+                            + " must implement DropTarget");
             return;
         }
         // owner cannot be null here
@@ -81,8 +80,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropHandler dropHandler = (dropTarget).getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            logger.fine("DropTarget.getDropHandler() returned null for owner: "
-                    + dropTarget);
+            getLogger().fine(
+                    "DropTarget.getDropHandler() returned null for owner: "
+                            + dropTarget);
             return;
         }
 
@@ -181,10 +181,12 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return transferable;
     }
 
+    @Override
     public boolean isEnabled() {
         return isConnectorEnabled();
     }
 
+    @Override
     public boolean isImmediate() {
         return true;
     }
@@ -218,70 +220,87 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return false;
     }
 
+    @Override
     public SharedState getState() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String getConnectorId() {
         return VDragAndDropManager.DD_SERVICE;
     }
 
+    @Override
     public boolean isConnectorEnabled() {
         // Drag'n'drop can't be disabled
         return true;
     }
 
+    @Override
     public List<ClientMethodInvocation> retrievePendingRpcCalls() {
         return null;
     }
 
+    @Override
     public RpcManager getRpcManager(Class<?> rpcInterface) {
         // TODO Use rpc for drag'n'drop
         return null;
     }
 
+    @Override
     public Class<? extends SharedState> getStateType() {
         return SharedState.class;
     }
 
+    @Override
     public void requestRepaint() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public ClientConnector getParent() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void requestRepaintAll() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void setParent(ClientConnector parent) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void attach() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void detach() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public Iterator<Extension> getExtensionIterator() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void removeExtension(Extension feature) {
         // TODO Auto-generated method stub
+    }
 
+    private Logger getLogger() {
+        return Logger.getLogger(DragAndDropService.class.getName());
     }
 }

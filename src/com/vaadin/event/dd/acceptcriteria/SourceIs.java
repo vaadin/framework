@@ -25,8 +25,6 @@ import com.vaadin.ui.Component;
 @SuppressWarnings("serial")
 @ClientCriterion(VDragSourceIs.class)
 public class SourceIs extends ClientSideCriterion {
-    private static final Logger logger = Logger.getLogger(SourceIs.class
-            .getName());
 
     private Component[] components;
 
@@ -43,11 +41,11 @@ public class SourceIs extends ClientSideCriterion {
             if (c.getApplication() != null) {
                 target.addAttribute("component" + paintedComponents++, c);
             } else {
-                logger.log(
-                        Level.WARNING,
-                        "SourceIs component {0} at index {1} is not attached to the component hierachy and will thus be ignored",
-                        new Object[] { c.getClass().getName(),
-                                Integer.valueOf(i) });
+                Logger.getLogger(SourceIs.class.getName())
+                        .log(Level.WARNING,
+                                "SourceIs component {0} at index {1} is not attached to the component hierachy and will thus be ignored",
+                                new Object[] { c.getClass().getName(),
+                                        Integer.valueOf(i) });
             }
         }
         target.addAttribute("c", paintedComponents);

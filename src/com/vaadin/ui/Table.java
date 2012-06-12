@@ -78,8 +78,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickNotifier, DragSource,
         DropTarget, HasComponents {
 
-    private static final Logger logger = Logger
-            .getLogger(Table.class.getName());
+    private transient Logger logger = null;
 
     /**
      * Modes that Table support as drag sourse.
@@ -1757,8 +1756,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        logger.finest("Insert " + rows + " rows at index " + firstIndex
-                + " to existing page buffer requested");
+        getLogger().finest(
+                "Insert " + rows + " rows at index " + firstIndex
+                        + " to existing page buffer requested");
 
         // Page buffer must not become larger than pageLength*cacheRate before
         // or after the current page
@@ -1861,11 +1861,14 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         pageBuffer = newPageBuffer;
-        logger.finest("Page Buffer now contains "
-                + pageBuffer[CELL_ITEMID].length + " rows ("
-                + pageBufferFirstIndex + "-"
-                + (pageBufferFirstIndex + pageBuffer[CELL_ITEMID].length - 1)
-                + ")");
+        getLogger().finest(
+                "Page Buffer now contains "
+                        + pageBuffer[CELL_ITEMID].length
+                        + " rows ("
+                        + pageBufferFirstIndex
+                        + "-"
+                        + (pageBufferFirstIndex
+                                + pageBuffer[CELL_ITEMID].length - 1) + ")");
         return cells;
     }
 
@@ -1882,8 +1885,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
-        logger.finest("Render visible cells for rows " + firstIndex + "-"
-                + (firstIndex + rows - 1));
+        getLogger().finest(
+                "Render visible cells for rows " + firstIndex + "-"
+                        + (firstIndex + rows - 1));
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -2065,8 +2069,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
-        logger.finest("Registered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Registered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -2097,8 +2102,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
-        logger.finest("Unregistering components in rows " + firstIx + "-"
-                + (firstIx + count - 1));
+        getLogger().finest(
+                "Unregistering components in rows " + firstIx + "-"
+                        + (firstIx + count - 1));
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -2178,8 +2184,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
-        logger.finest("Unregistered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Unregistered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2548,7 +2555,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         .get("lastToBeRendered")).intValue();
             } catch (Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.FINER,
+                getLogger().log(Level.FINER,
                         "Could not parse the first and/or last rows.", e);
             }
 
@@ -2568,8 +2575,9 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
-            logger.finest("Client wants rows " + reqFirstRowToPaint + "-"
-                    + (reqFirstRowToPaint + reqRowsToPaint - 1));
+            getLogger().finest(
+                    "Client wants rows " + reqFirstRowToPaint + "-"
+                            + (reqFirstRowToPaint + reqRowsToPaint - 1));
             clientNeedsContentRefresh = true;
         }
 
@@ -2615,7 +2623,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column collapsing state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2637,7 +2645,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column reordering state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2927,8 +2935,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.startTag("prows");
 
         if (!shouldHideAddedRows()) {
-            logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
-                    + count + ".");
+            getLogger().finest(
+                    "Paint rows for add. Index: " + firstIx + ", count: "
+                            + count + ".");
 
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
@@ -2951,8 +2960,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
-            logger.finest("Paint rows for remove. Index: " + firstIx
-                    + ", count: " + count + ".");
+            getLogger().finest(
+                    "Paint rows for remove. Index: " + firstIx + ", count: "
+                            + count + ".");
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
@@ -3666,6 +3676,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
+    @Override
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -3692,6 +3703,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
+    @Override
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -4089,6 +4101,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
+    @Override
     public Object nextItemId(Object itemId) {
         return ((Container.Ordered) items).nextItemId(itemId);
     }
@@ -4099,6 +4112,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
+    @Override
     public Object prevItemId(Object itemId) {
         return ((Container.Ordered) items).prevItemId(itemId);
     }
@@ -4108,6 +4122,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
+    @Override
     public Object firstItemId() {
         return ((Container.Ordered) items).firstItemId();
     }
@@ -4117,6 +4132,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
+    @Override
     public Object lastItemId() {
         return ((Container.Ordered) items).lastItemId();
     }
@@ -4127,6 +4143,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
+    @Override
     public boolean isFirstId(Object itemId) {
         return ((Container.Ordered) items).isFirstId(itemId);
     }
@@ -4137,6 +4154,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
+    @Override
     public boolean isLastId(Object itemId) {
         return ((Container.Ordered) items).isLastId(itemId);
     }
@@ -4146,6 +4164,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
+    @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         Object itemId = ((Container.Ordered) items)
@@ -4162,6 +4181,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
@@ -4254,6 +4274,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      boolean[])
      * 
      */
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
         final Container c = getContainerDataSource();
@@ -4289,6 +4310,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && !isSortDisabled()) {
@@ -4478,11 +4500,13 @@ public class Table extends AbstractSelect implements Action.Container,
         public abstract String getStyle(Object itemId, Object propertyId);
     }
 
+    @Override
     public void addListener(ItemClickListener listener) {
         addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    @Override
     public void removeListener(ItemClickListener listener) {
         removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
@@ -4558,11 +4582,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
+    @Override
     public TableTransferable getTransferable(Map<String, Object> rawVariables) {
         TableTransferable transferable = new TableTransferable(rawVariables);
         return transferable;
     }
 
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -4571,6 +4597,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
+    @Override
     public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new AbstractSelectTargetDetails(clientVariables);
@@ -4639,6 +4666,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
+        @Override
         @SuppressWarnings("unchecked")
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
@@ -5313,10 +5341,12 @@ public class Table extends AbstractSelect implements Action.Container,
         super.setVisible(visible);
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         if (visibleComponents == null) {
             Collection<Component> empty = Collections.emptyList();
@@ -5326,7 +5356,15 @@ public class Table extends AbstractSelect implements Action.Container,
         return visibleComponents.iterator();
     }
 
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
+    }
+
+    private final Logger getLogger() {
+        if (logger == null) {
+            logger = Logger.getLogger(Table.class.getName());
+        }
+        return logger;
     }
 }

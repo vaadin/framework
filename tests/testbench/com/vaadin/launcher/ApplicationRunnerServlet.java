@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,9 +43,6 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             return runnableClass.getCanonicalName();
         }
     }
-
-    private static final Logger logger = Logger
-            .getLogger(ApplicationRunnerServlet.class.getName());
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -241,8 +237,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                     // Ignore as this is expected for many packages
                 } catch (Exception e2) {
                     // TODO: handle exception
-                    logger.log(Level.FINE, "Failed to find application class "
-                            + pkg + "." + baseName, e2);
+                    getLogger().log(
+                            Level.FINE,
+                            "Failed to find application class " + pkg + "."
+                                    + baseName, e2);
                 }
                 if (appClass != null) {
                     return appClass;
@@ -287,6 +285,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                 return ApplicationRunnerServlet.this.getRequestPathInfo(this);
             }
         };
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(ApplicationRunnerServlet.class.getName());
     }
 
 }
