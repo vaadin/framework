@@ -103,14 +103,12 @@ public class TableInTabsheet extends AbstractTestRoot {
 
     @Override
     protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Chaning to a different tab and then back to the first tab should properly render the table.";
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return Integer.valueOf(8714);
     }
 
 }
