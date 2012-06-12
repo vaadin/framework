@@ -50,6 +50,7 @@ public class JavascriptRpcHelper {
         connector.addMethodInvocationToQueue(
                 JavascriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });
+        connector.requestRepaint();
     }
 
 }
