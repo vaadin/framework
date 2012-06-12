@@ -266,10 +266,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             if (posAsInt + getSplitterSize() >= offsetLength) {
                 posAsInt = offsetLength;
             }
-            // Reversed position
-            if (positionReversed) {
-                posAsInt = offsetLength - posAsInt - getSplitterSize();
-            }
             posAsFloat = ((float) posAsInt / (float) offsetLength * 100);
 
         } else {
