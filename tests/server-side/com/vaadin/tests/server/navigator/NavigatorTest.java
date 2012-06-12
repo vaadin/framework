@@ -13,16 +13,59 @@ import org.easymock.IMocksControl;
 
 import com.vaadin.navigator.FragmentManager;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.Navigator.SimpleViewDisplay;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
+import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
+import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
+import com.vaadin.ui.Root;
 
 public class NavigatorTest extends TestCase {
 
     // TODO test internal parameters (and absence of them)
     // TODO test listeners blocking navigation, multiple listeners
+
+    public static class NullDisplay implements ViewDisplay {
+        public void showView(View view) {
+            // do nothing
+        }
+    }
+
+    public static class NullFragmentManager implements FragmentManager {
+        public String getFragment() {
+            return null;
+        }
+
+        public void setFragment(String fragment) {
+            // do nothing
+        }
+    }
+
+    public static class TestDisplay implements ViewDisplay {
+        private View currentView;
+
+        public void showView(View view) {
+            currentView = view;
+        }
+
+        public View getCurrentView() {
+            return currentView;
+        }
+    }
+
+    public static class TestNavigator extends Navigator {
+        public TestNavigator() {
+            super(new NullFragmentManager(), new TestDisplay());
+        }
+
+        public View getView(String viewAndParameters) {
+            navigateTo(viewAndParameters);
+            return ((TestDisplay) getDisplay()).getCurrentView();
+        }
+    }
 
     public static class ViewChangeTestListener implements ViewChangeListener {
         private final LinkedList<ViewChangeEvent> referenceEvents = new LinkedList<ViewChangeListener.ViewChangeEvent>();
@@ -321,4 +364,206 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    public void testDefaultDisplayType() {
+        IMocksControl control = EasyMock.createControl();
+        Root root = control.createMock(Root.class);
+
+        Navigator navigator = new Navigator(root);
+
+        assertEquals("Default display should be a SimpleViewDisplay",
+                SimpleViewDisplay.class, navigator.getDisplay().getClass());
+    }
+
+    public void testAddViewInstance() throws Exception {
+        View view = new TestView();
+
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", view);
+
+        assertEquals("Registered view instance not returned by navigator",
+                view, navigator.getView("test"));
+    }
+
+    public void testAddViewInstanceSameName() throws Exception {
+        View view1 = new TestView();
+        View view2 = new TestView2();
+
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", view1);
+        navigator.addView("test", view2);
+
+        assertEquals(
+                "Adding second view with same name should override previous view",
+                view2, navigator.getView("test"));
+    }
+
+    public void testAddViewClass() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", TestView.class);
+
+        View view = navigator.getView("test");
+        assertNotNull("Received null view", view);
+        assertEquals("Received incorrect type of view", TestView.class,
+                view.getClass());
+    }
+
+    public void testAddViewClassSameName() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", TestView.class);
+        navigator.addView("test", TestView2.class);
+
+        assertEquals(
+                "Adding second view class with same name should override previous view",
+                TestView2.class, navigator.getView("test").getClass());
+    }
+
+    public void testAddViewInstanceAndClassSameName() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", TestView.class);
+        TestView2 view2 = new TestView2();
+        navigator.addView("test", view2);
+
+        assertEquals(
+                "Adding second view class with same name should override previous view",
+                view2, navigator.getView("test"));
+
+        navigator.addView("test", TestView.class);
+
+        assertEquals(
+                "Adding second view class with same name should override previous view",
+                TestView.class, navigator.getView("test").getClass());
+    }
+
+    public void testAddViewWithNullName() throws Exception {
+        Navigator navigator = new Navigator(new NullFragmentManager(),
+                new NullDisplay());
+
+        try {
+            navigator.addView(null, new TestView());
+            fail("addView() accepted null view name");
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            navigator.addView(null, TestView.class);
+            fail("addView() accepted null view name");
+        } catch (IllegalArgumentException e) {
+        }
+    }
+
+    public void testAddViewWithNullInstance() throws Exception {
+        Navigator navigator = new Navigator(new NullFragmentManager(),
+                new NullDisplay());
+
+        try {
+            navigator.addView("test", (View) null);
+            fail("addView() accepted null view instance");
+        } catch (IllegalArgumentException e) {
+        }
+    }
+
+    public void testAddViewWithNullClass() throws Exception {
+        Navigator navigator = new Navigator(new NullFragmentManager(),
+                new NullDisplay());
+
+        try {
+            navigator.addView("test", (Class<View>) null);
+            fail("addView() accepted null view class");
+        } catch (IllegalArgumentException e) {
+        }
+    }
+
+    public void testRemoveViewInstance() throws Exception {
+        View view = new TestView();
+
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", view);
+        navigator.removeView("test");
+
+        assertNull("View not removed", navigator.getView("test"));
+    }
+
+    public void testRemoveViewInstanceNothingElse() throws Exception {
+        View view = new TestView();
+        View view2 = new TestView2();
+
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", view);
+        navigator.addView("test2", view2);
+        navigator.removeView("test");
+
+        assertEquals("Removed extra views", view2, navigator.getView("test2"));
+    }
+
+    public void testRemoveViewClass() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", TestView.class);
+        navigator.removeView("test");
+
+        assertNull("View not removed", navigator.getView("test"));
+    }
+
+    public void testRemoveViewClassNothingElse() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test", TestView.class);
+        navigator.addView("test2", TestView2.class);
+        navigator.removeView("test");
+
+        assertEquals("Removed extra views", TestView2.class,
+                navigator.getView("test2").getClass());
+    }
+
+    public void testGetViewNestedNames() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test/subview", TestView2.class);
+        navigator.addView("test", TestView.class);
+
+        assertEquals("Incorrect view name found for subview string",
+                TestView2.class, navigator.getView("test/subview").getClass());
+        assertEquals(
+                "Incorrect view name found for subview string with empty parameters",
+                TestView2.class, navigator.getView("test/subview/").getClass());
+        assertEquals(
+                "Incorrect view name found for subview string with parameters",
+                TestView2.class, navigator.getView("test/subview/parameters")
+                        .getClass());
+        assertEquals("Incorrect view name found for top level view string",
+                TestView.class, navigator.getView("test").getClass());
+        assertEquals(
+                "Incorrect view name found for top level view string with empty parameters",
+                TestView.class, navigator.getView("test/").getClass());
+        assertEquals(
+                "Incorrect view name found for top level view string with parameters starting like subview name",
+                TestView.class, navigator.getView("test/subviewnothere")
+                        .getClass());
+    }
+
+    public void testGetViewLongestPrefixOrder() throws Exception {
+        TestNavigator navigator = new TestNavigator();
+
+        navigator.addView("test/subview", TestView2.class);
+        navigator.addView("test", TestView.class);
+
+        assertEquals("Incorrect view name found", TestView.class, navigator
+                .getView("test").getClass());
+
+        // other order
+
+        TestNavigator navigator2 = new TestNavigator();
+
+        navigator2.addView("test", TestView.class);
+        navigator2.addView("test/subview", TestView2.class);
+
+        assertEquals("Incorrect view name found", TestView.class, navigator2
+                .getView("test").getClass());
+    }
 }

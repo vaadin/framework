@@ -12,8 +12,6 @@ import com.vaadin.ui.Label;
 
 public class ClassBasedViewProviderTest extends TestCase {
 
-    private ClassBasedViewProvider provider;
-
     public static class TestView extends Label implements View {
         public String parameters = null;
 
@@ -27,86 +25,68 @@ public class ClassBasedViewProviderTest extends TestCase {
 
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        provider = new ClassBasedViewProvider();
-    }
-
-    public void testAddViewWithNullName() throws Exception {
+    public void testCreateProviderWithNullName() throws Exception {
         try {
-            provider.addView(null, TestView.class);
-            fail("Should not be able to add view with null name");
+            new ClassBasedViewProvider(null, TestView.class);
+            fail("Should not be able to create view provider with null name");
         } catch (IllegalArgumentException e) {
         }
     }
 
-    public void testAddViewWithEmptyStringName() throws Exception {
+    public void testCreateProviderWithEmptyStringName() throws Exception {
+        new ClassBasedViewProvider("", TestView.class);
+    }
+
+    public void testCreateProviderNullViewClass() throws Exception {
         try {
-            provider.addView("", TestView.class);
-            fail("Should not be able to add view with empty name");
+            new ClassBasedViewProvider("test", null);
+            fail("Should not be able to create view provider with null view class");
         } catch (IllegalArgumentException e) {
         }
     }
 
-    public void testAddViewNull() throws Exception {
-        try {
-            provider.addView("test", null);
-            fail("Should not be able to add null view");
-        } catch (IllegalArgumentException e) {
-        }
+    public void testViewNameGetter() throws Exception {
+        ClassBasedViewProvider provider1 = new ClassBasedViewProvider("",
+                TestView.class);
+        assertEquals("View name should be empty", "", provider1.getViewName());
+
+        ClassBasedViewProvider provider2 = new ClassBasedViewProvider("test",
+                TestView.class);
+        assertEquals("View name does not match", "test",
+                provider2.getViewName());
     }
 
-    public void testAddViewSameName() throws Exception {
-        try {
-            provider.addView("test", TestView.class);
-            provider.addView("test", TestView2.class);
-            fail("Should not be able to add two views with same name");
-        } catch (IllegalArgumentException e) {
-        }
-    }
-
-    public void testAddViewSameClass() throws Exception {
-        try {
-            provider.addView("test", TestView.class);
-            provider.addView("test2", TestView.class);
-            fail("Should not be able to add same view class with two different names");
-        } catch (IllegalArgumentException e) {
-        }
+    public void testViewClassGetter() throws Exception {
+        ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
+                TestView.class);
+        assertEquals("Incorrect view class returned by getter", TestView.class,
+                provider.getViewClass());
     }
 
     public void testGetViewNameForNullString() throws Exception {
-        assertNull(
-                "Found view name for null view string in an empty view provider",
+        ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
+                TestView.class);
+        assertNull("Received view name for null view string",
                 provider.getViewName((String) null));
-
-        provider.addView("test", TestView.class);
-        assertNull("Found view name for null view string",
-                provider.getViewName((String) null));
-    }
-
-    public void testGetViewNameForNullClass() throws Exception {
-        assertNull("Found view name for null class",
-                provider.getViewName((Class<View>) null));
     }
 
     public void testGetViewNameForEmptyString() throws Exception {
-        assertNull(
-                "Found view name for empty view string in an empty provider",
-                provider.getViewName(""));
-        provider.addView("test", TestView.class);
-        assertNull("Found view name for empty view string",
-                provider.getViewName(""));
-    }
+        ClassBasedViewProvider provider1 = new ClassBasedViewProvider("",
+                TestView.class);
+        assertEquals(
+                "Did not find view name for empty view string in a provider with empty string registered",
+                "", provider1.getViewName(""));
 
-    public void testGetViewNameForClass() throws Exception {
-        provider.addView("test", TestView.class);
-        assertEquals("No view name found for view class", "test",
-                provider.getViewName(TestView.class));
+        ClassBasedViewProvider provider2 = new ClassBasedViewProvider("test",
+                TestView.class);
+        assertNull(
+                "Found view name for empty view string when none registered",
+                provider2.getViewName(""));
     }
 
     public void testGetViewNameWithParameters() throws Exception {
-        provider.addView("test", TestView.class);
+        ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
+                TestView.class);
         assertEquals("Incorrect view name found for view string", "test",
                 provider.getViewName("test"));
         assertEquals(
@@ -117,86 +97,21 @@ public class ClassBasedViewProviderTest extends TestCase {
                 "test", provider.getViewName("test/params/are/here"));
     }
 
-    public void testGetViewNameMultipleRegisteredWithParameters()
-            throws Exception {
-        provider.addView("test", TestView.class);
-        provider.addView("test2", TestView2.class);
-        assertEquals("Incorrect view name found for view string", "test",
-                provider.getViewName("test/test2/params"));
-    }
+    public void testGetView() throws Exception {
+        ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
+                TestView.class);
 
-    public void testGetViewNameNestedNames() throws Exception {
-        provider.addView("test/subview", TestView2.class);
-        provider.addView("test", TestView.class);
-        assertEquals("Incorrect view name found for subview string",
-                "test/subview", provider.getViewName("test/subview"));
-        assertEquals(
-                "Incorrect view name found for subview string with empty parameters",
-                "test/subview", provider.getViewName("test/subview/"));
-        assertEquals(
-                "Incorrect view name found for subview string with parameters",
-                "test/subview", provider.getViewName("test/subview/parameters"));
-        assertEquals("Incorrect view name found for top level view string",
-                "test", provider.getViewName("test"));
-        assertEquals(
-                "Incorrect view name found for top level view string with empty parameters",
-                "test", provider.getViewName("test/"));
-        assertEquals(
-                "Incorrect view name found for top level view string with parameters starting like subview name",
-                "test", provider.getViewName("test/subviewnothere"));
-    }
-
-    public void testGetViewClass() throws Exception {
-        assertNull("View class found for empty view provider",
-                provider.getViewClass("test"));
-        provider.addView("test", TestView.class);
-        assertEquals("View class not found", TestView.class,
-                provider.getViewClass("test"));
-        assertNull("View class found for unregistered view name",
-                provider.getViewClass("test2"));
-    }
-
-    public void testGetViewSimple() throws Exception {
-        assertNull("Found view in an empty view provider",
-                provider.getViewName("test"));
-
-        provider.addView("test", TestView.class);
         View view = provider.getView("test");
         assertNotNull("Did not get view from a provider", view);
         assertEquals("Incorrect view type", TestView.class, view.getClass());
     }
 
-    public void testGetViewMultipleRegistered() throws Exception {
-        provider.addView("test", TestView.class);
-        provider.addView("test2", TestView2.class);
-        assertEquals("Incorrect view type", TestView.class,
-                provider.getView("test").getClass());
-        assertEquals("Incorrect view type", TestView2.class,
-                provider.getView("test2").getClass());
-        assertEquals("Incorrect view type", TestView.class,
-                provider.getView("test").getClass());
-    }
+    public void testGetViewIncorrectViewName() throws Exception {
+        ClassBasedViewProvider provider = new ClassBasedViewProvider("test",
+                TestView.class);
 
-    public void testRemoveView() throws Exception {
-        provider.addView("test", TestView.class);
-        assertNotNull("Did not get view from a provider",
-                provider.getView("test"));
-        provider.removeView("test");
-        assertNull("View class found for removed view name",
-                provider.getViewClass("test"));
-        assertNull("View name found for removed view",
-                provider.getViewName(TestView.class));
-        // cached view?
-        assertNull(
-                "Received view instance from a provider after removing view type",
-                provider.getView("test"));
-    }
-
-    public void testGetViewCached() throws Exception {
-        provider.addView("test", TestView.class);
-        View view1 = provider.getView("test");
-        View view2 = provider.getView("test");
-        assertSame("View instance not cached", view1, view2);
+        View view = provider.getView("test2");
+        assertNull("Got view from a provider for incorrect view name", view);
     }
 
 }
