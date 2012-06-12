@@ -898,7 +898,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             JSONArray children = new JSONArray();
 
             for (ClientConnector child : AbstractClientConnector
-                    .getAllChildrenIteratable(connector)) {
+                    .getAllChildrenIterable(connector)) {
                 if (isVisible(child)) {
                     children.put(child.getConnectorId());
                 }
