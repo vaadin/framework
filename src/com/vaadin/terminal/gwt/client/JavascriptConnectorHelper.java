@@ -103,16 +103,23 @@ public class JavascriptConnectorHelper {
             },
             'getRpcProxyFunction': function(iface, method) {
                     return $entry(function() {
-                        if (method == undefined) {
-                            var args = [iface, Array.prototype.slice.call(arguments, 0)];
-                            iface = "com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc";
-                            method = "call";
-                        } else {
-                            var args = arguments;
-                        }
-                        
-                        h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
+                        h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
                     });
+            },
+            'getCallback': function(name) {
+                return $entry(function() {
+                    var args = [name, Array.prototype.slice.call(arguments, 0)];
+                    var iface = "com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc";
+                    var method = "call";
+                    h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
+                });
+            },
+            'registerCallback': function(name, callback) {
+                //TODO maintain separate map
+                if (!registeredRpc[name]) {
+                    registeredRpc[name] = [];
+                }
+                registeredRpc[name].push(rpcHandler);
             },
             'registerRpc': function(iface, rpcHandler) {
                 if (!registeredRpc[iface]) {

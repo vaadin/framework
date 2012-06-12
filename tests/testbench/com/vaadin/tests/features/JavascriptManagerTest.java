@@ -20,18 +20,14 @@ public class JavascriptManagerTest extends AbstractTestRoot {
     protected void setup(WrappedRequest request) {
         addComponent(log);
         getJavascriptManager().addCallback("testing", new JavascriptCallback() {
-            public void call(JSONArray arguments) {
-                try {
-                    log.log("Got " + arguments.length() + " arguments");
-                    log.log("Argument 1 as a number: " + arguments.getInt(0));
-                    log.log("Argument 2 as a string: " + arguments.getString(1));
-                    log.log("Argument 3.p as a boolean: "
-                            + arguments.getJSONObject(2).getBoolean("p"));
-                    log.log("Argument 4 is JSONObject.NULL: "
-                            + (arguments.get(3) == JSONObject.NULL));
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+            public void call(JSONArray arguments) throws JSONException {
+                log.log("Got " + arguments.length() + " arguments");
+                log.log("Argument 1 as a number: " + arguments.getInt(0));
+                log.log("Argument 2 as a string: " + arguments.getString(1));
+                log.log("Argument 3.p as a boolean: "
+                        + arguments.getJSONObject(2).getBoolean("p"));
+                log.log("Argument 4 is JSONObject.NULL: "
+                        + (arguments.get(3) == JSONObject.NULL));
             }
         });
         executeJavaScript("window.testing(42, 'text', {p: true}, null)");

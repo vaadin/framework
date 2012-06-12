@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.external.json.JSONArray;
+import com.vaadin.external.json.JSONException;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavascriptCallback;
 import com.vaadin.ui.JavascriptManager.JavascriptCallbackRpc;
@@ -27,8 +28,8 @@ public class JavascriptRpcHelper {
         this.connector = connector;
     }
 
-    public void registerRpc(JavascriptCallback javascriptCallback,
-            String functionName) {
+    public void registerCallback(String functionName,
+            JavascriptCallback javascriptCallback) {
         callbacks.put(functionName, javascriptCallback);
         ensureRpc();
     }
@@ -38,14 +39,18 @@ public class JavascriptRpcHelper {
             javascriptCallbackRpc = new JavascriptCallbackRpc() {
                 public void call(String name, JSONArray arguments) {
                     JavascriptCallback callback = callbacks.get(name);
-                    callback.call(arguments);
+                    try {
+                        callback.call(arguments);
+                    } catch (JSONException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
             };
             connector.registerRpc(javascriptCallbackRpc);
         }
     }
 
-    public void callRpcFunction(String name, Object... arguments) {
+    public void invokeCallback(String name, Object... arguments) {
         JSONArray args = new JSONArray(Arrays.asList(arguments));
         connector.addMethodInvocationToQueue(
                 JavascriptCallbackRpc.class.getName(), CALL_METHOD,

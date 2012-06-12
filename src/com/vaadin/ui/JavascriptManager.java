@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.external.json.JSONArray;
+import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.AbstractExtension;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavascriptManagerState;
@@ -25,8 +26,12 @@ public class JavascriptManager extends AbstractExtension {
         registerRpc(new JavascriptCallbackRpc() {
             public void call(String name, JSONArray arguments) {
                 JavascriptCallback callback = callbacks.get(name);
-                // TODO error handling
-                callback.call(arguments);
+                // TODO handle situation if name is not registered
+                try {
+                    callback.call(arguments);
+                } catch (JSONException e) {
+                    throw new IllegalArgumentException(e);
+                }
             }
         });
     }
