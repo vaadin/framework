@@ -103,7 +103,15 @@ public class JavascriptConnectorHelper {
             },
             'getRpcProxyFunction': function(iface, method) {
                     return $entry(function() {
-                        h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
+                        if (method == undefined) {
+                            var args = [iface, Array.prototype.slice.call(arguments, 0)];
+                            iface = "com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc";
+                            method = "call";
+                        } else {
+                            var args = arguments;
+                        }
+                        
+                        h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
                     });
             },
             'registerRpc': function(iface, rpcHandler) {
@@ -158,9 +166,16 @@ public class JavascriptConnectorHelper {
 
     public void invokeJsRpc(MethodInvocation invocation,
             JSONArray parametersJson) {
-        invokeJsRpc(rpcMap, invocation.getInterfaceName(),
-                invocation.getMethodName(),
-                parametersJson.getJavaScriptObject());
+        if ("com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc"
+                .equals(invocation.getInterfaceName())
+                && "call".equals(invocation.getMethodName())) {
+            invokeJsRpc(rpcMap, parametersJson.get(0).isString().stringValue(),
+                    null, parametersJson.get(1).isArray().getJavaScriptObject());
+        } else {
+            invokeJsRpc(rpcMap, invocation.getInterfaceName(),
+                    invocation.getMethodName(),
+                    parametersJson.getJavaScriptObject());
+        }
     }
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,
@@ -172,7 +187,11 @@ public class JavascriptConnectorHelper {
         }
         for(var i = 0; i < targets.length; i++) {
             var target = targets[i];
-            target[methodName].apply(target, parameters);
+            if (methodName === null && typeof target === 'function') {
+                target.apply($wnd, parameters);
+            } else {
+                target[methodName].apply(target, parameters);
+            }
         }
     }-*/;
 
