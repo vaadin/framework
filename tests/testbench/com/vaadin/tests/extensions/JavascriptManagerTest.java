@@ -2,7 +2,7 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.tests.features;
+package com.vaadin.tests.extensions;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;

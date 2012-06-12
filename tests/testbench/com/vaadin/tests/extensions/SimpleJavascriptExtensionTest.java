@@ -2,7 +2,7 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.tests.features;
+package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.LoadScripts;
 import com.vaadin.terminal.AbstractJavascriptExtension;
