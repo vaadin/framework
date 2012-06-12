@@ -1478,6 +1478,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     enabledConnectors.add(connector);
                 }
             }
+
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
 
