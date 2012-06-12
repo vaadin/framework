@@ -119,7 +119,7 @@ public class JavascriptConnectorHelper {
                 if (!registeredRpc[name]) {
                     registeredRpc[name] = [];
                 }
-                registeredRpc[name].push(rpcHandler);
+                registeredRpc[name].push(callback);
             },
             'registerRpc': function(iface, rpcHandler) {
                 if (!registeredRpc[iface]) {
