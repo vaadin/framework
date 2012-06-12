@@ -13,7 +13,17 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;debug</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;debug&amp;otherparam</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?debug&amp;restartApplication</td>
 	<td></td>
 </tr>
 <tr>
@@ -24,6 +34,66 @@
 <tr>
 	<td>open</td>
 	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;mode=debug</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?nodebug&amp;restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;nodebug</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;debug=quiet</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?debug=quiet&amp;restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestsdebugDebugWindowPresent::Root/VDebugConsole[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.debug.DebugWindowPresent?restartApplication&amp;debug=quiet#/asdf</td>
 	<td></td>
 </tr>
 <tr>
