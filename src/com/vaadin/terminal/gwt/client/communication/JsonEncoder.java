@@ -59,6 +59,8 @@ public class JsonEncoder {
             boolean restrictToInternalTypes, ApplicationConnection connection) {
         if (null == value) {
             return JSONNull.getInstance();
+        } else if (value instanceof JSONValue) {
+            return (JSONValue) value;
         } else if (value instanceof String[]) {
             String[] array = (String[]) value;
             JSONArray jsonArray = new JSONArray();

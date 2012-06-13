@@ -5,10 +5,11 @@
 package com.vaadin.navigator;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -22,7 +23,7 @@ import com.vaadin.ui.Root.FragmentChangedListener;
  * The view switching can be based e.g. on URI fragments containing the view
  * name and parameters to the view. There are two types of parameters for views:
  * an optional parameter string that is included in the fragment (may be
- * bookmarkable) and optional internal parameters that are not.
+ * bookmarkable).
  * 
  * Views can be explicitly registered or dynamically generated and listening to
  * view changes is possible.
@@ -38,19 +39,21 @@ public class Navigator implements Serializable {
 
     // TODO divert navigation e.g. if no permissions? Or just show another view
     // but keep URL? how best to intercept
-    // TODO investigate relationship to TouchKit navigation support
+    // TODO investigate relationship with TouchKit navigation support
 
     /**
      * Empty view component.
      */
     public static class EmptyView extends CssLayout implements View {
-        public void init() {
+        /**
+         * Create minimally sized empty view.
+         */
+        public EmptyView() {
             setWidth("0px");
             setHeight("0px");
         }
 
-        public void navigateTo(String fragmentParameters,
-                Object... internalParameters) {
+        public void navigateTo(String fragmentParameters) {
             // nothing to do
         }
     }
@@ -75,7 +78,7 @@ public class Navigator implements Serializable {
          *            root whose URI fragment to get and modify
          * @param navigator
          *            {@link Navigator} to notify of fragment changes (using
-         *            {@link Navigator#navigateTo(String, Object...)}
+         *            {@link Navigator#navigateTo(String)}
          */
         public UriFragmentManager(Root root, Navigator navigator) {
             this.root = root;
@@ -130,106 +133,105 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * View provider which uses a map from view name to pre-created and
-     * registered view instances.
+     * View provider which supports mapping a single view name to a single
+     * pre-initialized view instance.
+     * 
+     * For most cases, ClassBasedViewProvider should be used instead of this.
      */
-    public static class RegisteredViewProvider implements ViewProvider {
+    public static class StaticViewProvider implements ViewProvider {
+        private final String viewName;
+        private final View view;
 
-        private HashMap<String, View> viewNameToView = new HashMap<String, View>();
+        /**
+         * Create a new view provider which returns a pre-created view instance.
+         * 
+         * @param viewName
+         *            name of the view (not null)
+         * @param view
+         *            view instance to return (not null), reused on every
+         *            request
+         */
+        public StaticViewProvider(String viewName, View view) {
+            this.viewName = viewName;
+            this.view = view;
+        }
 
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
             }
-            for (String viewName : viewNameToView.keySet()) {
-                if (viewAndParameters.equals(viewName)
-                        || viewAndParameters.startsWith(viewName + "/")) {
-                    return viewName;
-                }
+            if (viewAndParameters.startsWith(viewName)) {
+                return viewName;
             }
             return null;
         }
 
         public View getView(String viewName) {
-            return viewNameToView.get(viewName);
-        }
-
-        /**
-         * Register a view for a view name.
-         * 
-         * Registering another view with a name that is already registered
-         * overwrites the old registration.
-         * 
-         * @param viewName
-         *            String that identifies a view (not null nor empty string)
-         * @param view
-         *            {@link View} instance (not null)
-         */
-        public void addView(String viewName, View view) {
-
-            // Check parameters
-            if (viewName == null || view == null || viewName.length() == 0) {
-                throw new IllegalArgumentException(
-                        "view and viewName must be non-null and not empty");
+            if (this.viewName.equals(viewName)) {
+                return view;
             }
-
-            viewNameToView.put(viewName, view);
+            return null;
         }
 
         /**
-         * Remove view from navigator.
+         * Get the view name for this provider.
          * 
-         * @param viewName
-         *            name of the view to remove
+         * @return view name for this provider
          */
-        public void removeView(String viewName) {
-            viewNameToView.remove(viewName);
+        public String getViewName() {
+            return viewName;
         }
     }
 
     /**
-     * View provider which uses a map from view name to the class to instantiate
-     * for the view.
-     * 
-     * Views that have been created are cached and reused when the same view
-     * name is requested again.
+     * View provider which maps a single view name to a class to instantiate for
+     * the view.
      * 
      * Note that the view class must be accessible by the class loader used by
      * the provider. This may require its visibility to be public.
+     * 
+     * This class is primarily for internal use by {@link Navigator}.
      */
     public static class ClassBasedViewProvider implements ViewProvider {
 
-        private HashMap<String, Class<? extends View>> viewNameToClass = new HashMap<String, Class<? extends View>>();
-        private HashMap<Class<? extends View>, String> classToViewName = new HashMap<Class<? extends View>, String>();
+        private final String viewName;
+        private final Class<? extends View> viewClass;
+
         /**
-         * Already opened (cached) views that can be reopened or reused with new
-         * parameters.
+         * Create a new view provider which creates new view instances based on
+         * a view class.
+         * 
+         * @param viewName
+         *            name of the views to create (not null)
+         * @param viewClass
+         *            class to instantiate when a view is requested (not null)
          */
-        private HashMap<Class<? extends View>, View> classToView = new HashMap<Class<? extends View>, View>();
+        public ClassBasedViewProvider(String viewName,
+                Class<? extends View> viewClass) {
+            if (null == viewName || null == viewClass) {
+                throw new IllegalArgumentException(
+                        "View name and class should not be null");
+            }
+            this.viewName = viewName;
+            this.viewClass = viewClass;
+        }
 
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
             }
-            for (String viewName : viewNameToClass.keySet()) {
-                if (viewAndParameters.equals(viewName)
-                        || viewAndParameters.startsWith(viewName + "/")) {
-                    return viewName;
-                }
+            if (viewAndParameters.equals(viewName)
+                    || viewAndParameters.startsWith(viewName + "/")) {
+                return viewName;
             }
             return null;
         }
 
         public View getView(String viewName) {
-            Class<? extends View> newViewClass = viewNameToClass.get(viewName);
-            if (null == newViewClass) {
-                return null;
-            }
-            if (!classToView.containsKey(newViewClass)) {
+            if (this.viewName.equals(viewName)) {
                 try {
-                    View view = newViewClass.newInstance();
-                    view.init();
-                    classToView.put(newViewClass, view);
+                    View view = viewClass.newInstance();
+                    return view;
                 } catch (InstantiationException e) {
                     // TODO error handling
                     throw new RuntimeException(e);
@@ -238,95 +240,30 @@ public class Navigator implements Serializable {
                     throw new RuntimeException(e);
                 }
             }
-            // return already cached view
-            final View v = classToView.get(newViewClass);
-            return v;
+            return null;
         }
 
         /**
-         * Register a view class for a view name.
+         * Get the view name for this provider.
          * 
-         * @param viewName
-         *            String that identifies a view (not null nor empty string)
-         * @param viewClass
-         *            Component class that implements Navigator.View interface
-         *            (not null)
+         * @return view name for this provider
          */
-        public void addView(String viewName, Class<? extends View> viewClass) {
-
-            // Check parameters
-            if (viewName == null || viewClass == null || viewName.length() == 0) {
-                throw new IllegalArgumentException(
-                        "viewClass and viewName must be non-null and not empty");
-            }
-
-            if (!View.class.isAssignableFrom(viewClass)) {
-                throw new IllegalArgumentException(
-                        "viewClass must implement Navigator.View");
-            }
-
-            if (viewNameToClass.containsKey(viewName)) {
-                if (viewNameToClass.get(viewName) == viewClass) {
-                    return;
-                }
-
-                throw new IllegalArgumentException(viewNameToClass
-                        .get(viewName).getName()
-                        + " is already mapped to '"
-                        + viewName + "'");
-            }
-
-            if (classToViewName.containsKey(viewClass)) {
-                throw new IllegalArgumentException(
-                        "Each view class can only be added to Navigator with one view name");
-            }
-
-            viewNameToClass.put(viewName, viewClass);
-            classToViewName.put(viewClass, viewName);
+        public String getViewName() {
+            return viewName;
         }
 
         /**
-         * Remove view from navigator.
+         * Get the view class for this provider.
          * 
-         * @param viewName
-         *            name of the view to remove
+         * @return {@link View} class
          */
-        public void removeView(String viewName) {
-            Class<? extends View> c = viewNameToClass.get(viewName);
-            if (c != null) {
-                viewNameToClass.remove(viewName);
-                classToViewName.remove(c);
-                classToView.remove(c);
-            }
-        }
-
-        /**
-         * Get the view name for given view implementation class.
-         * 
-         * @param viewClass
-         *            Class that implements the view.
-         * @return view name for which the view class is registered, null if
-         *         none
-         */
-        public String getViewName(Class<? extends View> viewClass) {
-            return classToViewName.get(viewClass);
-        }
-
-        /**
-         * Get the view class for given view name.
-         * 
-         * @param viewName
-         *            view name to get view for
-         * @return View that corresponds to the name
-         */
-        public Class<? extends View> getViewClass(String viewName) {
-            return viewNameToClass.get(viewName);
+        public Class<? extends View> getViewClass() {
+            return viewClass;
         }
     }
 
     private final FragmentManager fragmentManager;
     private final ViewDisplay display;
-    private String mainViewName = null;
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
@@ -341,6 +278,19 @@ public class Navigator implements Serializable {
      */
     public Navigator(Root root, ViewDisplay display) {
         this.display = display;
+        fragmentManager = new UriFragmentManager(root, this);
+    }
+
+    /**
+     * Create a navigator that is tracking the active view using URI fragments.
+     * By default, a {@link SimpleViewDisplay} is used and can be obtained using
+     * {@link #getDisplay()}.
+     * 
+     * @param root
+     *            whose URI fragments are used
+     */
+    public Navigator(Root root) {
+        display = new SimpleViewDisplay();
         fragmentManager = new UriFragmentManager(root, this);
     }
 
@@ -369,37 +319,43 @@ public class Navigator implements Serializable {
      * and (fragment) parameters. ViewProviders are used to find and create the
      * correct type of view.
      * 
-     * If the view being left indicates it wants a confirmation for the
+     * If multiple providers return a matching view, the view with the longest
+     * name is selected. This way, e.g. hierarchies of subviews can be
+     * registered like "admin/", "admin/users", "admin/settings" and the longest
+     * match is used.
+     * 
+     * If the view being deactivated indicates it wants a confirmation for the
      * navigation operation, the user is asked for the confirmation.
+     * 
+     * Registered {@link ViewChangeListener}s are called upon successful view
+     * change.
      * 
      * @param viewAndParameters
      *            view name and parameters
-     * @param internalParameters
-     *            parameters that are only passed when switching views
-     *            explicitly on the server side, not bookmarkable
      */
-    public void navigateTo(String viewAndParameters,
-            Object... internalParameters) {
-        if ("".equals(viewAndParameters)) {
-            viewAndParameters = mainViewName;
-        }
+    public void navigateTo(String viewAndParameters) {
+        String longestViewName = "";
+        View viewWithLongestName = null;
         for (ViewProvider provider : providers) {
             String viewName = provider.getViewName(viewAndParameters);
-            if (null != viewName) {
-                String parameters = null;
-                if (viewAndParameters.length() > viewName.length() + 1) {
-                    parameters = viewAndParameters
-                            .substring(viewName.length() + 1);
-                }
+            if (null != viewName
+                    && viewName.length() > longestViewName.length()) {
                 View view = provider.getView(viewName);
                 if (null != view) {
-                    navigateTo(view, viewName, parameters, internalParameters);
-                    // stop after a view is found
-                    return;
+                    longestViewName = viewName;
+                    viewWithLongestName = view;
                 }
             }
         }
-        // TODO if no view is found, use main view or do nothing?
+        if (viewWithLongestName != null) {
+            String parameters = null;
+            if (viewAndParameters.length() > longestViewName.length() + 1) {
+                parameters = viewAndParameters.substring(longestViewName
+                        .length() + 1);
+            }
+            navigateTo(viewWithLongestName, longestViewName, parameters);
+        }
+        // TODO if no view is found, what to do?
     }
 
     /**
@@ -415,14 +371,12 @@ public class Navigator implements Serializable {
      *            (optional) name of the view or null not to set the fragment
      * @param fragmentParameters
      *            parameters passed in the fragment for the view
-     * @param internalParameters
-     *            parameters that are only passed when switching views
-     *            explicitly on the server side, not bookmarkable
      */
     protected void navigateTo(View view, String viewName,
-            String fragmentParameters, Object... internalParameters) {
-        if (!isViewChangeAllowed(currentView, view, viewName,
-                fragmentParameters, internalParameters)) {
+            String fragmentParameters) {
+        ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
+                viewName, fragmentParameters);
+        if (!isViewChangeAllowed(event)) {
             return;
         }
 
@@ -436,15 +390,14 @@ public class Navigator implements Serializable {
             }
         }
 
-        view.navigateTo(fragmentParameters, internalParameters);
-        View previousView = currentView;
+        view.navigateTo(fragmentParameters);
         currentView = view;
 
         if (display != null) {
             display.showView(view);
         }
 
-        fireViewChange(previousView);
+        fireViewChange(event);
     }
 
     /**
@@ -457,26 +410,14 @@ public class Navigator implements Serializable {
      * and save the parameters to re-initiate the navigation operation upon user
      * action.
      * 
-     * @param previous
-     *            the view being deactivated
-     * @param next
-     *            the view being activated
-     * @param viewName
-     *            name of the view being activated
-     * @param fragmentParameters
-     *            parameters passed in the fragment for the view
-     * @param internalParameters
-     *            parameters that are only passed on the server side, not
-     *            bookmarkable
+     * @param event
+     *            view change event (not null, view change not yet performed)
      * @return true if the view change should be allowed, false to silently
      *         block the navigation operation
      */
-    protected boolean isViewChangeAllowed(View previous, View next,
-            String viewName, String fragmentParameters,
-            Object[] internalParameters) {
+    protected boolean isViewChangeAllowed(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            if (!l.isViewChangeAllowed(previous, next, viewName,
-                    fragmentParameters, internalParameters)) {
+            if (!l.isViewChangeAllowed(event)) {
                 return false;
             }
         }
@@ -494,43 +435,101 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Get the main view.
+     * Returns the ViewDisplay used by the navigator. Unless another display is
+     * specified, a {@link SimpleViewDisplay} (which is a {@link Component}) is
+     * used by default.
      * 
-     * Main view is the default view shown to user when he opens application
-     * without specifying view name.
-     * 
-     * @return name of the main view.
+     * @return current ViewDisplay
      */
-    public String getMainView() {
-        return mainViewName;
-    }
-
-    /**
-     * Set the main view.
-     * 
-     * Main view is the default view shown to user when he opens application
-     * without specifying view name. If the {@link Navigator} does not have a
-     * current view, the main view is automatically selected when set.
-     * 
-     * @param mainViewName
-     *            name of the main view.
-     */
-    public void setMainView(String mainViewName) {
-        this.mainViewName = mainViewName;
-        // TODO should this be done?
-        if (currentView == null) {
-            navigateTo(mainViewName);
-        }
+    public ViewDisplay getDisplay() {
+        return display;
     }
 
     /**
      * Fire an event when the current view has changed.
      * 
-     * @param previousView
+     * @param event
+     *            view change event (not null)
      */
-    protected void fireViewChange(View previousView) {
+    protected void fireViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            l.navigatorViewChanged(previousView, currentView);
+            l.navigatorViewChanged(event);
+        }
+    }
+
+    /**
+     * Register a static, pre-initialized view instance for a view name.
+     * 
+     * Registering another view with a name that is already registered
+     * overwrites the old registration of the same type.
+     * 
+     * @param viewName
+     *            String that identifies a view (not null nor empty string)
+     * @param view
+     *            {@link View} instance (not null)
+     */
+    public void addView(String viewName, View view) {
+
+        // Check parameters
+        if (viewName == null || view == null) {
+            throw new IllegalArgumentException(
+                    "view and viewName must be non-null");
+        }
+
+        removeView(viewName);
+        registerProvider(new StaticViewProvider(viewName, view));
+    }
+
+    /**
+     * Register for a view name a view class.
+     * 
+     * Registering another view with a name that is already registered
+     * overwrites the old registration of the same type.
+     * 
+     * A new view instance is created every time a view is requested.
+     * 
+     * @param viewName
+     *            String that identifies a view (not null nor empty string)
+     * @param viewClass
+     *            {@link View} class to instantiate when a view is requested
+     *            (not null)
+     */
+    public void addView(String viewName, Class<? extends View> viewClass) {
+
+        // Check parameters
+        if (viewName == null || viewClass == null) {
+            throw new IllegalArgumentException(
+                    "view and viewClass must be non-null");
+        }
+
+        removeView(viewName);
+        registerProvider(new ClassBasedViewProvider(viewName, viewClass));
+    }
+
+    /**
+     * Remove view from navigator.
+     * 
+     * This method only applies to views registered using
+     * {@link #addView(String, View)} or {@link #addView(String, Class)}.
+     * 
+     * @param viewName
+     *            name of the view to remove
+     */
+    public void removeView(String viewName) {
+        Iterator<ViewProvider> it = providers.iterator();
+        while (it.hasNext()) {
+            ViewProvider provider = it.next();
+            if (provider instanceof StaticViewProvider) {
+                StaticViewProvider staticProvider = (StaticViewProvider) provider;
+                if (staticProvider.getViewName().equals(viewName)) {
+                    it.remove();
+                }
+            } else if (provider instanceof ClassBasedViewProvider) {
+                ClassBasedViewProvider classBasedProvider = (ClassBasedViewProvider) provider;
+                if (classBasedProvider.getViewName().equals(viewName)) {
+                    it.remove();
+                }
+            }
         }
     }
 

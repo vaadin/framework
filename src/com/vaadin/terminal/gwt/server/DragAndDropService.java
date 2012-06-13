@@ -296,7 +296,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public void removeExtension(Extension feature) {
+    public void removeExtension(Extension extension) {
         // TODO Auto-generated method stub
     }
 

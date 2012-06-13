@@ -1653,6 +1653,14 @@ public class Table extends AbstractSelect implements Action.Container,
         super.requestRepaint();
     }
 
+    @Override
+    public void requestRepaintAll() {
+        super.requestRepaintAll();
+
+        // Avoid sending a partial repaint (#8714)
+        refreshRowCache();
+    }
+
     private void removeRowsFromCacheAndFillBottom(int firstIndex, int rows) {
         int totalCachedRows = pageBuffer[CELL_ITEMID].length;
         int totalRows = size();

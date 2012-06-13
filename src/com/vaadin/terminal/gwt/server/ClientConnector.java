@@ -139,5 +139,5 @@ public interface ClientConnector extends Connector, RpcTarget {
 
     public Iterator<Extension> getExtensionIterator();
 
-    public void removeExtension(Extension feature);
+    public void removeExtension(Extension extension);
 }

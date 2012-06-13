@@ -101,7 +101,7 @@ public class DirtyConnectorTracker implements Serializable {
         }
         markDirty(c);
         for (ClientConnector child : AbstractClientConnector
-                .getAllChildrenIteratable(c)) {
+                .getAllChildrenIterable(c)) {
             markConnectorsDirtyRecursively(child);
         }
     }

@@ -334,7 +334,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void requestRepaintAll() {
         requestRepaint();
 
-        for (ClientConnector connector : getAllChildrenIteratable(this)) {
+        for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.requestRepaintAll();
         }
     }
@@ -371,7 +371,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
-    public static Iterable<ClientConnector> getAllChildrenIteratable(
+    public static Iterable<ClientConnector> getAllChildrenIterable(
             final ClientConnector connector) {
         return new AllChildrenIterable(connector);
     }
@@ -442,13 +442,13 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void attach() {
         requestRepaint();
 
-        for (ClientConnector connector : getAllChildrenIteratable(this)) {
+        for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
         }
     }
 
     public void detach() {
-        for (ClientConnector connector : getAllChildrenIteratable(this)) {
+        for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.detach();
         }
     }

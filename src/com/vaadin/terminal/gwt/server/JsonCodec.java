@@ -123,6 +123,9 @@ public class JsonCodec implements Serializable {
         // Try to decode object using fields
         if (value == JSONObject.NULL) {
             return null;
+        } else if (targetType == JSONObject.class
+                || targetType == JSONArray.class) {
+            return value;
         } else {
             return decodeObject(targetType, (JSONObject) value, application);
         }
@@ -400,7 +403,7 @@ public class JsonCodec implements Serializable {
             boolean restrictToInternalTypes, JSONArray jsonArray,
             Application application) throws JSONException {
         HashSet<Object> set = new HashSet<Object>();
-        set.addAll(decodeList(List.class, restrictToInternalTypes, jsonArray,
+        set.addAll(decodeList(targetType, restrictToInternalTypes, jsonArray,
                 application));
         return set;
     }
@@ -514,6 +517,8 @@ public class JsonCodec implements Serializable {
             return connector.getConnectorId();
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, application);
+        } else if (value instanceof JSONArray || value instanceof JSONObject) {
+            return value;
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields

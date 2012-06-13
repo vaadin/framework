@@ -20,15 +20,6 @@ import com.vaadin.ui.Component;
 public interface View extends Serializable {
 
     /**
-     * Init view.
-     * 
-     * Convenience method which navigator calls just before the view is rendered
-     * for the first time. This is called only once in the lifetime of each view
-     * instance.
-     */
-    public void init();
-
-    /**
      * This view is navigated to.
      * 
      * This method is always called before the view is shown on screen. If there
@@ -40,11 +31,6 @@ public interface View extends Serializable {
      * @param fragmentParameters
      *            parameters to the view or null if none given. This is the
      *            string that appears e.g. in URI after "viewname/"
-     * @param internalParameters
-     *            parameters given directly to
-     *            {@link Navigator#navigateTo(String, Object...)}, not passed
-     *            via the fragment and not preserved in bookmarks
      */
-    public void navigateTo(String fragmentParameters,
-            Object... internalParameters);
+    public void navigateTo(String fragmentParameters);
 }

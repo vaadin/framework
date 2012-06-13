@@ -1,7 +1,7 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.tests.features;
+package com.vaadin.tests.extensions;
 
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HelloWorldExtension;
 
-public class HelloWorldFeatureTest extends AbstractTestRoot {
+public class HelloWorldExtensionTest extends AbstractTestRoot {
 
     @Override
     protected void setup(WrappedRequest request) {
@@ -26,7 +26,7 @@ public class HelloWorldFeatureTest extends AbstractTestRoot {
 
     @Override
     protected String getTestDescription() {
-        return "Testing basic Feature";
+        return "Testing basic Extension";
     }
 
     @Override

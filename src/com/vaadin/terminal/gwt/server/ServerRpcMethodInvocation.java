@@ -79,6 +79,12 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
             }
         }
 
+        if (invocationMethod == null) {
+            throw new IllegalStateException("Can't find method " + methodName
+                    + " with " + parameterCount + " parameters in "
+                    + targetType.getName());
+        }
+
         return invocationMethod;
     }
 

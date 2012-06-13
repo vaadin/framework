@@ -40,6 +40,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
@@ -1438,12 +1439,19 @@ public class ApplicationConnection {
                                 .getConnector(connectorId);
                         if (null != connector) {
 
-                            JSONObject stateDataAndType = new JSONObject(
+                            JSONObject stateJson = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
+
+                            if (connector instanceof HasJavascriptConnectorHelper) {
+                                ((HasJavascriptConnectorHelper) connector)
+                                        .getJavascriptConnectorHelper()
+                                        .setNativeState(
+                                                stateJson.getJavaScriptObject());
+                            }
 
                             SharedState state = connector.getState();
                             JsonDecoder.decodeValue(new Type(state.getClass()
-                                    .getName(), null), stateDataAndType, state,
+                                    .getName(), null), stateJson, state,
                                     ApplicationConnection.this);
 
                             StateChangeEvent event = GWT
@@ -1584,11 +1592,8 @@ public class ApplicationConnection {
                     for (int i = 0; i < rpcLength; i++) {
                         try {
                             JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
-                            MethodInvocation invocation = parseMethodInvocation(rpcCall);
-                            VConsole.log("Server to client RPC call: "
-                                    + invocation);
-                            rpcManager.applyInvocation(invocation,
-                                    getConnectorMap());
+                            rpcManager.parseAndApplyInvocation(rpcCall,
+                                    ApplicationConnection.this);
                         } catch (final Throwable e) {
                             VConsole.error(e);
                         }
@@ -1599,26 +1604,6 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenWidgetsLoaded(c);
-    }
-
-    private MethodInvocation parseMethodInvocation(JSONArray rpcCall) {
-        String connectorId = ((JSONString) rpcCall.get(0)).stringValue();
-        String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
-        String methodName = ((JSONString) rpcCall.get(2)).stringValue();
-        JSONArray parametersJson = (JSONArray) rpcCall.get(3);
-
-        MethodInvocation methodInvocation = new MethodInvocation(connectorId,
-                interfaceName, methodName);
-        Type[] parameterTypes = rpcManager.getParameterTypes(methodInvocation);
-
-        Object[] parameters = new Object[parametersJson.size()];
-        for (int j = 0; j < parametersJson.size(); ++j) {
-            parameters[j] = JsonDecoder.decodeValue(parameterTypes[j],
-                    parametersJson.get(j), null, this);
-        }
-
-        methodInvocation.setParameters(parameters);
-        return methodInvocation;
     }
 
     // Redirect browser, null reloads current page
@@ -2169,8 +2154,8 @@ public class ApplicationConnection {
     private ServerConnector createAndRegisterConnector(String connectorId,
             int connectorType) {
         // Create and register a new connector with the given type
-        ServerConnector p = widgetSet
-                .createConnector(connectorType, configuration);
+        ServerConnector p = widgetSet.createConnector(connectorType,
+                configuration);
         connectorMap.registerConnector(connectorId, p);
         p.doInit(connectorId, this);
 
