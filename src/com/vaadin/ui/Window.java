@@ -24,6 +24,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
 import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
@@ -78,6 +79,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
@@ -165,24 +167,24 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         // size is handled in super class, but resize events only in windows ->
         // so detect if size change occurs before super.changeVariables()
         if (variables.containsKey("height")
-                && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
+                && (getHeightUnits() != Unit.PIXELS || (Integer) variables
                         .get("height") != getHeight())) {
             sizeHasChanged = true;
         }
         if (variables.containsKey("width")
-                && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
+                && (getWidthUnits() != Unit.PIXELS || (Integer) variables
                         .get("width") != getWidth())) {
             sizeHasChanged = true;
         }
         Integer browserHeightVar = (Integer) variables
-                .get(VView.BROWSER_HEIGHT_VAR);
+                .get(VRoot.BROWSER_HEIGHT_VAR);
         if (browserHeightVar != null
                 && browserHeightVar.intValue() != browserWindowHeight) {
             browserWindowHeight = browserHeightVar.intValue();
             sizeHasChanged = true;
         }
         Integer browserWidthVar = (Integer) variables
-                .get(VView.BROWSER_WIDTH_VAR);
+                .get(VRoot.BROWSER_WIDTH_VAR);
         if (browserWidthVar != null
                 && browserWidthVar.intValue() != browserWindowWidth) {
             browserWindowWidth = browserWidthVar.intValue();
@@ -806,11 +808,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
@@ -822,11 +826,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
@@ -863,7 +869,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         // Size only reported by VView -> data only available from application
         // level window
         if (getParent() != null) {
-            return (getParent()).getBrowserWindowHeight();
+            return ((Root) getParent()).getBrowserWindowHeight();
         }
 
         return browserWindowHeight;
@@ -879,7 +885,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         // Size only reported by VView -> data only available from application
         // level window
         if (getParent() != null) {
-            return (getParent()).getBrowserWindowWidth();
+            return ((Root) getParent()).getBrowserWindowWidth();
         }
 
         return browserWindowWidth;

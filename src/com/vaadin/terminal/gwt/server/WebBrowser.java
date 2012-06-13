@@ -41,6 +41,7 @@ public class WebBrowser implements Terminal {
      * 
      * @return Always returns null.
      */
+    @Override
     public String getDefaultTheme() {
         return null;
     }
@@ -50,6 +51,7 @@ public class WebBrowser implements Terminal {
      * 
      * @see com.vaadin.terminal.Terminal#getScreenHeight()
      */
+    @Override
     public int getScreenHeight() {
         return screenHeight;
     }
@@ -59,6 +61,7 @@ public class WebBrowser implements Terminal {
      * 
      * @see com.vaadin.terminal.Terminal#getScreenWidth()
      */
+    @Override
     public int getScreenWidth() {
         return screenWidth;
     }
@@ -424,8 +427,7 @@ public class WebBrowser implements Terminal {
 
         if (request.getParameter("sw") != null) {
             updateClientSideDetails(request.getParameter("sw"),
-                    request.getParameter("sh"), request.getParameter("cw"),
-                    request.getParameter("ch"), request.getParameter("tzo"),
+                    request.getParameter("sh"), request.getParameter("tzo"),
                     request.getParameter("rtzo"), request.getParameter("dstd"),
                     request.getParameter("dston"),
                     request.getParameter("curdate"),

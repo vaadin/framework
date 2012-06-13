@@ -1,23 +1,23 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.Application;
+import com.vaadin.Application.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
-public class TableFirstRowFlicker extends Application {
+public class TableFirstRowFlicker extends LegacyApplication {
 
     Table t;
 
     @Override
     public void init() {
-        Window mainWindow = new Window("Table Row Flicker");
-        mainWindow.getContent().setSizeFull();
+        LegacyWindow mainWindow = new LegacyWindow(getClass().getName());
         setMainWindow(mainWindow);
+        mainWindow.getContent().setSizeFull();
 
         t = new Table();
         t.setSizeFull();

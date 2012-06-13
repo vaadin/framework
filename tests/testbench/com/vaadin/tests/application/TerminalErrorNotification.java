@@ -6,8 +6,8 @@ package com.vaadin.tests.application;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Root;
 
 public class TerminalErrorNotification extends TestBase {
 
@@ -15,6 +15,7 @@ public class TerminalErrorNotification extends TestBase {
     protected void setup() {
         Button button = new Button("Throw exception",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         throw new RuntimeException("You asked for it");
                     }
@@ -27,7 +28,7 @@ public class TerminalErrorNotification extends TestBase {
     public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         event.getThrowable().printStackTrace();
 
-        Window mainWindow = getMainWindow();
+        Root mainWindow = getMainWindow();
         if (mainWindow != null) {
             Throwable throwable = event.getThrowable();
 

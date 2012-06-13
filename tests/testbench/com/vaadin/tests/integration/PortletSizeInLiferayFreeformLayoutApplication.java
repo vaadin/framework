@@ -1,9 +1,9 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.Application;
+import com.vaadin.Application.LegacyApplication;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * On Liferay in a freeform layout, this application should get its height from
@@ -11,10 +11,11 @@ import com.vaadin.ui.Window;
  * 
  * See ticket #5521.
  */
-public class PortletSizeInLiferayFreeformLayoutApplication extends Application {
+public class PortletSizeInLiferayFreeformLayoutApplication extends
+        LegacyApplication {
     @Override
     public void init() {
-        Window mainWindow = new Window("Portlet5521 Application");
+        LegacyWindow mainWindow = new LegacyWindow("Portlet5521 Application");
         ((VerticalLayout) mainWindow.getContent()).setMargin(false);
         ((VerticalLayout) mainWindow.getContent()).setSizeFull();
         // ((VerticalLayout) mainWindow.getContent()).setHeight("200px");

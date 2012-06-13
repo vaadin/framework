@@ -3,8 +3,8 @@ package com.vaadin.tests.components.notification;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 
 public class NotificationsAndModalWindow extends TestBase {
 
@@ -18,6 +18,7 @@ public class NotificationsAndModalWindow extends TestBase {
         Button b = new Button("Button");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 Window w = new Window("This is a window");
