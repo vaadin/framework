@@ -62,6 +62,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private static final String CLASSNAME = "v-ddwrapper";
     protected static final String DRAGGABLE = "draggable";
 
+    private boolean hasTooltip = false;
+
     public VDragAndDropWrapper() {
         super();
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -94,7 +96,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
-        if (client != null) {
+        if (hasTooltip && client != null) {
+            // Override child tooltips if the wrapper has a tooltip defined
             client.handleTooltipEvent(event, this);
         }
     }
@@ -158,6 +161,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         this.client = client;
         super.updateFromUIDL(uidl, client);
         if (!uidl.hasAttribute("cached") && !uidl.hasAttribute("hidden")) {
+
+            // Used to prevent wrapper from stealing tooltips when not defined
+            hasTooltip = uidl.hasAttribute("description");
+
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {
                 dropHandler = null;
