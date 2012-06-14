@@ -17,14 +17,14 @@ import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.JavaScript;
 
 @Connect(JavaScript.class)
-public class JavascriptManagerConnector extends AbstractExtensionConnector {
+public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     private Set<String> currentNames = new HashSet<String>();
 
     @Override
     protected void init() {
         registerRpc(ExecuteJavaScriptRpc.class, new ExecuteJavaScriptRpc() {
-            public void executeJavaScript(String script) {
-                eval(script);
+            public void executeJavaScript(String Script) {
+                eval(Script);
             }
         });
     }
@@ -55,7 +55,7 @@ public class JavascriptManagerConnector extends AbstractExtensionConnector {
         $wnd[name] = $entry(function() {
             //Must make a copy because arguments is an array-like object (not instanceof Array), causing suboptimal JSON encoding
             var args = Array.prototype.slice.call(arguments, 0);
-            m.@com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavascriptManagerConnector::sendRpc(Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(name, args);
+            m.@com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerConnector::sendRpc(Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(name, args);
         });
     }-*/;
 
@@ -65,10 +65,10 @@ public class JavascriptManagerConnector extends AbstractExtensionConnector {
         delete $wnd[name];
     }-*/;
 
-    private static native void eval(String script)
+    private static native void eval(String Script)
     /*-{
-      if(script) {
-         $wnd.eval(script);
+      if(Script) {
+         $wnd.eval(Script);
       }
     }-*/;
 
@@ -81,12 +81,12 @@ public class JavascriptManagerConnector extends AbstractExtensionConnector {
          */
         getConnection().addMethodInvocationToQueue(
                 new MethodInvocation(getConnectorId(),
-                        "com.vaadin.ui.JavaScript$JavascriptCallbackRpc",
+                        "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc",
                         "call", parameters), true);
     }
 
     @Override
-    public JavascriptManagerState getState() {
-        return (JavascriptManagerState) super.getState();
+    public JavaScriptManagerState getState() {
+        return (JavaScriptManagerState) super.getState();
     }
 }

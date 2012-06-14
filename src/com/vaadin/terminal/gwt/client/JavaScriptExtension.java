@@ -4,16 +4,16 @@
 
 package com.vaadin.terminal.gwt.client;
 
-import com.vaadin.terminal.AbstractJavascriptExtension;
-import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
+import com.vaadin.terminal.AbstractJavaScriptExtension;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 
-@Connect(AbstractJavascriptExtension.class)
-public class JavascriptExtension extends AbstractExtensionConnector implements
-        HasJavascriptConnectorHelper {
-    private final JavascriptConnectorHelper helper = new JavascriptConnectorHelper(
+@Connect(AbstractJavaScriptExtension.class)
+public class JavaScriptExtension extends AbstractExtensionConnector implements
+        HasJavaScriptConnectorHelper {
+    private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 
     @Override
@@ -27,7 +27,7 @@ public class JavascriptExtension extends AbstractExtensionConnector implements
         helper.fireNativeStateChange();
     }
 
-    public JavascriptConnectorHelper getJavascriptConnectorHelper() {
+    public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }
 }

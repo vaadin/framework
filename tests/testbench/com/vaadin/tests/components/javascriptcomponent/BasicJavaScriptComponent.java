@@ -11,11 +11,11 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.tests.components.AbstractTestRoot;
-import com.vaadin.ui.AbstractJavascriptComponent;
+import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Root;
 
 @LoadScripts({ "/statictestfiles/jsconnector.js" })
-public class BasicJavascriptComponent extends AbstractTestRoot {
+public class BasicJavaScriptComponent extends AbstractTestRoot {
 
     public interface ExampleClickRpc extends ServerRpc {
         public void onClick(String message);
@@ -33,7 +33,7 @@ public class BasicJavascriptComponent extends AbstractTestRoot {
         }
     }
 
-    public static class ExampleWidget extends AbstractJavascriptComponent {
+    public static class ExampleWidget extends AbstractJavaScriptComponent {
         public ExampleWidget() {
             registerRpc(new ExampleClickRpc() {
                 public void onClick(String message) {

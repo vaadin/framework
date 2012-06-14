@@ -40,7 +40,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
@@ -1416,8 +1416,8 @@ public class ApplicationConnection {
                             JSONObject stateJson = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
 
-                            if (connector instanceof HasJavascriptConnectorHelper) {
-                                ((HasJavascriptConnectorHelper) connector)
+                            if (connector instanceof HasJavaScriptConnectorHelper) {
+                                ((HasJavaScriptConnectorHelper) connector)
                                         .getJavascriptConnectorHelper()
                                         .setNativeState(
                                                 stateJson.getJavaScriptObject());

@@ -11,7 +11,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
-public class JavascriptConnectorHelper {
+public class JavaScriptConnectorHelper {
 
     private final ServerConnector connector;
     private final JavaScriptObject nativeState = JavaScriptObject
@@ -21,7 +21,7 @@ public class JavascriptConnectorHelper {
     private JavaScriptObject connectorWrapper;
     private int tag;
 
-    public JavascriptConnectorHelper(ServerConnector connector) {
+    public JavaScriptConnectorHelper(ServerConnector connector) {
         this.connector = connector;
     }
 
@@ -35,17 +35,17 @@ public class JavascriptConnectorHelper {
             String initFunctionName = serverSideClassName
                     .replaceAll("\\.", "_");
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
-                VConsole.log("Javascript connector initialized using "
+                VConsole.log("JavaScript connector initialized using "
                         + initFunctionName);
                 return true;
             } else {
-                VConsole.log("No javascript function " + initFunctionName
+                VConsole.log("No JavaScript function " + initFunctionName
                         + " found");
                 attemptedNames.add(initFunctionName);
                 tag = conf.getParentTag(tag.intValue());
             }
         }
-        VConsole.log("No javascript init for connector not found");
+        VConsole.log("No JavaScript init for connector not found");
         showInitProblem(attemptedNames);
         return false;
     }
@@ -91,7 +91,7 @@ public class JavascriptConnectorHelper {
     }-*/;
 
     private static native JavaScriptObject createConnectorWrapper(
-            JavascriptConnectorHelper h, JavaScriptObject nativeState,
+            JavaScriptConnectorHelper h, JavaScriptObject nativeState,
             JavaScriptObject registeredRpc, String connectorId)
     /*-{
         return {
@@ -103,15 +103,15 @@ public class JavascriptConnectorHelper {
             },
             'getRpcProxyFunction': function(iface, method) {
                     return $entry(function() {
-                        h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
+                        h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
                     });
             },
             'getCallback': function(name) {
                 return $entry(function() {
                     var args = [name, Array.prototype.slice.call(arguments, 0)];
-                    var iface = "com.vaadin.ui.JavaScript$JavascriptCallbackRpc";
+                    var iface = "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc";
                     var method = "call";
-                    h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
+                    h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
                 });
             },
             'registerCallback': function(name, callback) {
@@ -173,7 +173,7 @@ public class JavascriptConnectorHelper {
 
     public void invokeJsRpc(MethodInvocation invocation,
             JSONArray parametersJson) {
-        if ("com.vaadin.ui.JavaScript$JavascriptCallbackRpc".equals(invocation
+        if ("com.vaadin.ui.JavaScript$JavaScriptCallbackRpc".equals(invocation
                 .getInterfaceName())
                 && "call".equals(invocation.getMethodName())) {
             invokeJsRpc(rpcMap, parametersJson.get(0).isString().stringValue(),

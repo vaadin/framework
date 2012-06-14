@@ -5,7 +5,7 @@
 package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.LoadScripts;
-import com.vaadin.terminal.AbstractJavascriptExtension;
+import com.vaadin.terminal.AbstractJavaScriptExtension;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
@@ -16,9 +16,9 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Root;
 
 @LoadScripts({ "/statictestfiles/jsextension.js" })
-public class SimpleJavascriptExtensionTest extends AbstractTestRoot {
+public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
-    public static class SimpleJavascriptExtensionState extends SharedState {
+    public static class SimpleJavaScriptExtensionState extends SharedState {
         private String prefix;
 
         public void setPrefix(String prefix) {
@@ -30,21 +30,21 @@ public class SimpleJavascriptExtensionTest extends AbstractTestRoot {
         }
     }
 
-    public static interface SimpleJavascriptExtensionClientRpc extends
+    public static interface SimpleJavaScriptExtensionClientRpc extends
             ClientRpc {
         public void greet(String message);
     }
 
-    public static interface SimpleJavascriptExtensionServerRpc extends
+    public static interface SimpleJavaScriptExtensionServerRpc extends
             ServerRpc {
         public void greet(String message);
     }
 
     public static class SimpleJavascriptExtension extends
-            AbstractJavascriptExtension {
+            AbstractJavaScriptExtension {
 
         public SimpleJavascriptExtension() {
-            registerRpc(new SimpleJavascriptExtensionServerRpc() {
+            registerRpc(new SimpleJavaScriptExtensionServerRpc() {
                 public void greet(String message) {
                     Root.getCurrentRoot().showNotification(
                             getState().getPrefix() + message);
@@ -53,8 +53,8 @@ public class SimpleJavascriptExtensionTest extends AbstractTestRoot {
         }
 
         @Override
-        public SimpleJavascriptExtensionState getState() {
-            return (SimpleJavascriptExtensionState) super.getState();
+        public SimpleJavaScriptExtensionState getState() {
+            return (SimpleJavaScriptExtensionState) super.getState();
         }
 
         public void setPrefix(String prefix) {
@@ -63,7 +63,7 @@ public class SimpleJavascriptExtensionTest extends AbstractTestRoot {
         }
 
         public void greet(String message) {
-            getRpcProxy(SimpleJavascriptExtensionClientRpc.class)
+            getRpcProxy(SimpleJavaScriptExtensionClientRpc.class)
                     .greet(message);
         }
     }

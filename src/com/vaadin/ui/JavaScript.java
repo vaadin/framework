@@ -13,21 +13,21 @@ import com.vaadin.terminal.AbstractExtension;
 import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.ExecuteJavaScriptRpc;
-import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavascriptManagerState;
+import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerState;
 
 public class JavaScript extends AbstractExtension {
-    private Map<String, JavascriptCallback> callbacks = new HashMap<String, JavascriptCallback>();
+    private Map<String, JavaScriptCallback> callbacks = new HashMap<String, JavaScriptCallback>();
 
     // Can not be defined in client package as this JSONArray is not available
     // in GWT
-    public interface JavascriptCallbackRpc extends ServerRpc {
+    public interface JavaScriptCallbackRpc extends ServerRpc {
         public void call(String name, JSONArray arguments);
     }
 
     public JavaScript() {
-        registerRpc(new JavascriptCallbackRpc() {
+        registerRpc(new JavaScriptCallbackRpc() {
             public void call(String name, JSONArray arguments) {
-                JavascriptCallback callback = callbacks.get(name);
+                JavaScriptCallback callback = callbacks.get(name);
                 // TODO handle situation if name is not registered
                 try {
                     callback.call(arguments);
@@ -39,11 +39,11 @@ public class JavaScript extends AbstractExtension {
     }
 
     @Override
-    public JavascriptManagerState getState() {
-        return (JavascriptManagerState) super.getState();
+    public JavaScriptManagerState getState() {
+        return (JavaScriptManagerState) super.getState();
     }
 
-    public void addCallback(String name, JavascriptCallback callback) {
+    public void addCallback(String name, JavaScriptCallback callback) {
         callbacks.put(name, callback);
         if (getState().getNames().add(name)) {
             requestRepaint();

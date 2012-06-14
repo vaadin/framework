@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Widget;
 
-public class JavascriptWidget extends Widget {
-    public JavascriptWidget() {
+public class JavaScriptWidget extends Widget {
+    public JavaScriptWidget() {
         setElement(Document.get().createDivElement());
     }
 
     public void showNoInitFound(ArrayList<String> attemptedNames) {
-        String message = "Could not initialize JavascriptConnector because no javascript init function was found. Make sure one of these functions are defined: <ul>";
+        String message = "Could not initialize JavaScriptConnector because no JavaScript init function was found. Make sure one of these functions are defined: <ul>";
         for (String name : attemptedNames) {
             message += "<li>" + name + "</li>";
         }
