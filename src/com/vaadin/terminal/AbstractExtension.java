@@ -18,6 +18,10 @@ public abstract class AbstractExtension extends AbstractClientConnector
         target.addExtension(this);
     }
 
+    protected void removeFromTarget() {
+        getParent().removeExtension(this);
+    }
+
     @Override
     public void setParent(ClientConnector parent) {
         if (previouslyAttached && parent != null) {
