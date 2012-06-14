@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper.JavaScriptConnectorState;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.ui.JavaScriptCallback;
@@ -31,7 +32,17 @@ public class JavaScriptCallbackHelper {
     public void registerCallback(String functionName,
             JavaScriptCallback javaScriptCallback) {
         callbacks.put(functionName, javaScriptCallback);
+        JavaScriptConnectorState state = getConnectorState();
+        if (state.getCallbackNames().add(functionName)) {
+            connector.requestRepaint();
+        }
         ensureRpc();
+    }
+
+    private JavaScriptConnectorState getConnectorState() {
+        JavaScriptConnectorState state = (JavaScriptConnectorState) connector
+                .getState();
+        return state;
     }
 
     private void ensureRpc() {
@@ -51,6 +62,12 @@ public class JavaScriptCallbackHelper {
     }
 
     public void invokeCallback(String name, Object... arguments) {
+        if (callbacks.containsKey(name)) {
+            throw new IllegalStateException(
+                    "Can't call callback "
+                            + name
+                            + " on the client because a callback with the same name is registered on the server.");
+        }
         JSONArray args = new JSONArray(Arrays.asList(arguments));
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,

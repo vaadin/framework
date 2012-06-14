@@ -1,4 +1,5 @@
 window.com_vaadin_tests_extensions_SimpleJavaScriptExtensionTest_SimpleJavascriptExtension = function() {
+	var self = this;
 	var state = this.getState();
 	var greetBack = this.getRpcProxyFunction('com.vaadin.tests.extensions.SimpleJavaScriptExtensionTest$SimpleJavaScriptExtensionServerRpc', 'greet');
 
@@ -10,4 +11,11 @@ window.com_vaadin_tests_extensions_SimpleJavaScriptExtensionTest_SimpleJavascrip
 			}
 		}
 	});
+	
+	this.greetToClient = function(greeting) {
+		var response = window.prompt(state.prefix + greeting);
+		if (response !== null) {
+			self.greetToServer(response);
+		}
+	} 
 }

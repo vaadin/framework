@@ -7,11 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.annotations.LoadScripts;
+import com.vaadin.external.json.JSONArray;
+import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.ui.JavaScriptComponentState;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractJavaScriptComponent;
+import com.vaadin.ui.JavaScriptCallback;
 import com.vaadin.ui.Root;
 
 @LoadScripts({ "/statictestfiles/jsconnector.js" })
@@ -21,7 +24,7 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
         public void onClick(String message);
     }
 
-    public static class SpecialState extends ComponentState {
+    public static class SpecialState extends JavaScriptComponentState {
         private List<String> data;
 
         public List<String> getData() {
@@ -39,6 +42,12 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
                 public void onClick(String message) {
                     Root.getCurrentRoot().showNotification(
                             "Got a click: " + message);
+                }
+            });
+            registerCallback("onclick", new JavaScriptCallback() {
+                public void call(JSONArray arguments) throws JSONException {
+                    Root.getCurrentRoot().showNotification(
+                            "Got a callback: " + arguments.getString(0));
                 }
             });
             getState().setData(Arrays.asList("a", "b", "c"));

@@ -4,6 +4,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.terminal.JavaScriptCallbackHelper;
+import com.vaadin.terminal.gwt.client.ui.JavaScriptComponentState;
 
 public class AbstractJavaScriptComponent extends AbstractComponent {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
@@ -16,5 +17,10 @@ public class AbstractJavaScriptComponent extends AbstractComponent {
 
     protected void invokeCallback(String name, Object... arguments) {
         callbackHelper.invokeCallback(name, arguments);
+    }
+
+    @Override
+    public JavaScriptComponentState getState() {
+        return (JavaScriptComponentState) super.getState();
     }
 }

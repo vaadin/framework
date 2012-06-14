@@ -7,7 +7,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
-import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
 @Connect(AbstractJavaScriptComponent.class)
@@ -35,12 +34,6 @@ public class JavaScriptComponentConnector extends AbstractComponentConnector
         helper.init();
     }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        helper.fireNativeStateChange();
-    }
-
     private static native void addGetWidgetElement(
             JavaScriptObject connectorWrapper, Element element)
     /*-{
@@ -56,5 +49,10 @@ public class JavaScriptComponentConnector extends AbstractComponentConnector
 
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
+    }
+
+    @Override
+    public JavaScriptComponentState getState() {
+        return (JavaScriptComponentState) super.getState();
     }
 }

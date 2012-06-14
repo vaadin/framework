@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal;
 
+import com.vaadin.terminal.gwt.client.JavaScriptExtensionState;
 import com.vaadin.ui.JavaScriptCallback;
 
 public class AbstractJavaScriptExtension extends AbstractExtension {
@@ -17,5 +18,10 @@ public class AbstractJavaScriptExtension extends AbstractExtension {
 
     protected void invokeCallback(String name, Object... arguments) {
         callbackHelper.invokeCallback(name, arguments);
+    }
+
+    @Override
+    public JavaScriptExtensionState getState() {
+        return (JavaScriptExtensionState) super.getState();
     }
 }
