@@ -4,7 +4,8 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.PrintWriter;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -275,9 +276,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     }
 
-    public Iterator<Extension> getExtensionIterator() {
+    public Collection<Extension> getExtensions() {
         // TODO Auto-generated method stub
-        return null;
+        return Collections.emptySet();
     }
 
     public void removeExtension(Extension extension) {

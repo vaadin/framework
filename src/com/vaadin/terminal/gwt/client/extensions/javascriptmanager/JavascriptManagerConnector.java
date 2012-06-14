@@ -12,12 +12,12 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.AbstractConnector;
+import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.JavascriptManager;
 
 @Connect(JavascriptManager.class)
-public class JavascriptManagerConnector extends AbstractConnector {
+public class JavascriptManagerConnector extends AbstractExtensionConnector {
     private Set<String> currentNames = new HashSet<String>();
 
     @Override

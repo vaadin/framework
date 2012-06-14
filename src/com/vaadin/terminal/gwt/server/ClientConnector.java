@@ -3,7 +3,7 @@
  */
 package com.vaadin.terminal.gwt.server;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.List;
 
 import com.vaadin.terminal.AbstractClientConnector;
@@ -137,7 +137,7 @@ public interface ClientConnector extends Connector, RpcTarget {
      */
     public void detach();
 
-    public Iterator<Extension> getExtensionIterator();
+    public Collection<Extension> getExtensions();
 
     public void removeExtension(Extension extension);
 }
