@@ -34,16 +34,57 @@
         <path id="additional.jar.path">
             <fileset dir="build" includes="lib/**/*.jar" ></fileset>
         </path>
+
+    	<property name="gwt.build.dir" value="${gwt.root}/build"/>
+    	<property name="gwt.tools.lib" value="${gwt.root}/../tools/lib"/>
+    	
+    	<property name="gwt.user.jar" value="${gwt.build.dir}/lib/gwt-user.jar"/>
+    	<property name="gwt.dev.jar" value="${gwt.build.dir}/lib/gwt-dev.jar"/>
+    	<property name="gwt.codeserver.jar" value="${gwt.build.dir}/lib/gwt-codeserver.jar"/>
+
+    	<property name="gwt.user.dir" value="${gwt.root}/user"/>
+    	<property name="gwt.user.bin" value="${gwt.build.dir}/out/user/bin"/>
+
         <path id="compile.classpath.server-side">
             <path refid="additional.jar.path" />
+
+        	<!-- GWT -->
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+
+        	<!-- GWT dependencies -->
+            <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
+            <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+
             <path refid="ivy.compile.classpath.server-side" />
         </path>
         <path id="compile.classpath.client-side">
-           <path refid="additional.jar.path" />
-            <path refid="ivy.compile.classpath.client-side" />
+            <path refid="additional.jar.path" />
+        	
+        	<!-- GWT user -->
+        	<!--
+        	<pathelement path="${gwt.user.dir}/src" />
+        	<pathelement path="${gwt.user.dir}/super" />
+            <pathelement path="${gwt.user.dir}/out/user/bin"/>
+            -->
+        	<!-- GWT -->
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+
+        	<!-- GWT dependencies -->
+            <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
+            <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+
+        	<path refid="ivy.compile.classpath.client-side" />
         </path>
         <path id="compile.classpath.server-side-tests">
             <path refid="additional.jar.path" />
+
+        	<!-- GWT -->
+            <pathelement location="${gwt.user.jar}" />
+        	<!-- needed at least for Apache Commons -->
+            <pathelement location="${gwt.dev.jar}" />
+
             <path refid="ivy.compile.classpath.server-side-tests" />
         </path>
     </target>
@@ -265,7 +306,7 @@
             description="Build package required files, without packing them.">
     </target>
 
-    <target name="compile-server-side" depends="compile-core, webcontent"/>
+    <target name="compile-server-side" depends="compile-gwt, compile-core, webcontent"/>
 
     <!-- Copy and preprocess sources for packaging 
     NOTE: Replaces <version></version> tags with build version tag for some "textual" files
@@ -570,7 +611,7 @@
     <!-- Compiles all widgetsets.                                         -->
     <!-- This is called when building packages and when compiling all     -->
     <!-- widgetsets, but not when compiling individual widgetsets.        -->
-    <target name="compile-client-side" depends="compile-server-side, compile-tests">
+    <target name="compile-client-side" depends="compile-gwt, compile-server-side, compile-tests">
         <echo>Compiling widget sets in parallel.</echo>
         <parallel threadsperprocessor="1">
             <antcall inheritrefs="true" target="compile-widgetset-default"/>
@@ -599,6 +640,20 @@
     <!-- ================================================================== -->
     <!-- Libraries and Tests                                                -->
     <!-- ================================================================== -->
+
+    <target name="compile-gwt" depends="init">
+    	<!-- TODO Compile GWT in a directory defined by properties -->
+        <ant antfile="${gwt.root}/build.xml" target="user" dir="${gwt.root}" inheritall="false" inheritrefs="false">
+            <property name="gwt.root" value="${gwt.root}"/>
+        </ant>
+        <ant antfile="${gwt.root}/build.xml" target="dev" dir="${gwt.root}" inheritall="false" inheritrefs="false">
+            <property name="gwt.root" value="${gwt.root}"/>
+        </ant>
+    	<!-- TODO unnecessary with latest trunk? -->
+        <ant antfile="${gwt.root}/dev/codeserver/build.xml" target="build" dir="${gwt.root}/dev/codeserver" inheritall="false" inheritrefs="false">
+            <property name="gwt.root" value="${gwt.root}"/>
+        </ant>
+    </target>
 
     <!-- Compile the Vaadin library JAR.                                    -->
     <!-- Need only the default widgetset for this, but can't depend         -->
@@ -658,6 +713,17 @@
                     <include name="img/**" />
                 </patternset>
             </fileset>
+
+        	<!-- GWT -->
+            <fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
+            <fileset dir="${gwt.user.dir}/super" excludes="**/package.html" />
+            <fileset dir="${gwt.user.bin}" />
+
+            <zipfileset src="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
+            <zipfileset src="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+
+            <zipfileset src="${gwt.dev.jar}" />
+            <zipfileset src="${gwt.codeserver.jar}" />
         </jar>
         
         <!-- Generate the Export-Package attribute in the manifest of the JAR -->
