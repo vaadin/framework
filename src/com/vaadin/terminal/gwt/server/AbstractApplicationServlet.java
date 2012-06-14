@@ -1332,7 +1332,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * parameter in web.xml
              */
             response.setHeader("Cache-Control",
-                    "max-age: " + String.valueOf(resourceCacheTime));
+                    "max-age= " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
