@@ -50,6 +50,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.Type;
 import com.vaadin.terminal.gwt.client.communication.UidlValue;
+import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -1491,6 +1492,10 @@ public class ApplicationConnection {
                             if (childConnector instanceof ComponentConnector) {
                                 newComponents
                                         .add((ComponentConnector) childConnector);
+                            } else if (!(childConnector instanceof AbstractExtensionConnector)) {
+                                throw new IllegalStateException(
+                                        Util.getConnectorString(childConnector)
+                                                + " is not a ComponentConnector nor an AbstractExtensionConnector");
                             }
                             if (childConnector.getParent() != parentConnector) {
                                 // Avoid extra calls to setParent
