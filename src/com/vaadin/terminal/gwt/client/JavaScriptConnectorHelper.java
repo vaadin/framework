@@ -5,6 +5,10 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -18,6 +22,8 @@ public class JavaScriptConnectorHelper {
 
     public interface JavaScriptConnectorState {
         public Set<String> getCallbackNames();
+
+        public Map<String, Set<String>> getRpcInterfaces();
     }
 
     private final ServerConnector connector;
@@ -25,18 +31,58 @@ public class JavaScriptConnectorHelper {
             .createObject();
     private final JavaScriptObject rpcMap = JavaScriptObject.createObject();
 
+    private final Map<String, JavaScriptObject> rpcObjects = new HashMap<String, JavaScriptObject>();
+    private final Map<String, Set<String>> rpcMethods = new HashMap<String, Set<String>>();
+
     private JavaScriptObject connectorWrapper;
     private int tag;
 
+    private boolean inited = false;
+
     public JavaScriptConnectorHelper(ServerConnector connector) {
         this.connector = connector;
+
+        // Wildcard rpc object
+        rpcObjects.put("", JavaScriptObject.createObject());
+
         connector.addStateChangeHandler(new StateChangeHandler() {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 JavaScriptObject wrapper = getConnectorWrapper();
+                JavaScriptConnectorState state = getConnectorState();
 
-                for (String callback : getConnectorState().getCallbackNames()) {
+                for (String callback : state.getCallbackNames()) {
                     ensureCallback(JavaScriptConnectorHelper.this, wrapper,
                             callback);
+                }
+
+                for (Entry<String, Set<String>> entry : state
+                        .getRpcInterfaces().entrySet()) {
+                    String rpcName = entry.getKey();
+                    String jsName = getJsInterfaceName(rpcName);
+                    if (!rpcObjects.containsKey(jsName)) {
+                        Set<String> methods = entry.getValue();
+                        rpcObjects.put(jsName,
+                                createRpcObject(rpcName, methods));
+
+                        // Init all methods for wildcard rpc
+                        for (String method : methods) {
+                            JavaScriptObject wildcardRpcObject = rpcObjects
+                                    .get("");
+                            Set<String> interfaces = rpcMethods.get(method);
+                            if (interfaces == null) {
+                                interfaces = new HashSet<String>();
+                                rpcMethods.put(method, interfaces);
+                                attachRpcMethod(wildcardRpcObject, null, method);
+                            }
+                            interfaces.add(rpcName);
+                        }
+                    }
+                }
+
+                // Init after setting up callbacks & rpc
+                if (!inited) {
+                    init();
+                    inited = true;
                 }
 
                 fireNativeStateChange(wrapper);
@@ -44,7 +90,21 @@ public class JavaScriptConnectorHelper {
         });
     }
 
-    public boolean init() {
+    private static String getJsInterfaceName(String rpcName) {
+        return rpcName.replace('$', '.');
+    }
+
+    protected JavaScriptObject createRpcObject(String iface, Set<String> methods) {
+        JavaScriptObject object = JavaScriptObject.createObject();
+
+        for (String method : methods) {
+            attachRpcMethod(object, iface, method);
+        }
+
+        return object;
+    }
+
+    private boolean init() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> attemptedNames = new ArrayList<String>();
@@ -94,7 +154,7 @@ public class JavaScriptConnectorHelper {
 
     protected JavaScriptObject createConnectorWrapper() {
         return createConnectorWrapper(this, nativeState, rpcMap,
-                connector.getConnectorId());
+                connector.getConnectorId(), rpcObjects);
     }
 
     private static native void fireNativeStateChange(
@@ -107,7 +167,8 @@ public class JavaScriptConnectorHelper {
 
     private static native JavaScriptObject createConnectorWrapper(
             JavaScriptConnectorHelper h, JavaScriptObject nativeState,
-            JavaScriptObject registeredRpc, String connectorId)
+            JavaScriptObject registeredRpc, String connectorId,
+            Map<String, JavaScriptObject> rpcObjects)
     /*-{
         return {
             'getConnectorId': function() {
@@ -116,12 +177,18 @@ public class JavaScriptConnectorHelper {
             'getState': function() {
                 return nativeState;
             },
-            'getRpcProxyFunction': function(iface, method) {
-                    return $entry(function() {
-                        h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
-                    });
+            'getRpcProxy': function(iface) {
+                if (!iface) {
+                    iface = '';
+                }
+                return rpcObjects.@java.util.Map::get(Ljava/lang/Object;)(iface);
             },
             'registerRpc': function(iface, rpcHandler) {
+                //registerRpc(handler) -> registerRpc('', handler);
+                if (!rpcHandler) {
+                    rpcHandler = iface;
+                    iface = '';
+                }
                 if (!registeredRpc[iface]) {
                     registeredRpc[iface] = [];
                 }
@@ -130,8 +197,21 @@ public class JavaScriptConnectorHelper {
         };
     }-*/;
 
+    private native void attachRpcMethod(JavaScriptObject rpc, String iface,
+            String method)
+    /*-{
+        var self = this;
+        rpc[method] = $entry(function() {
+            self.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
+        });
+    }-*/;
+
     private void fireRpc(String iface, String method,
             JsArray<JavaScriptObject> arguments) {
+        if (iface == null) {
+            iface = findWildcardInterface(method);
+        }
+
         JSONArray argumentsArray = new JSONArray(arguments);
         Object[] parameters = new Object[arguments.length()];
         for (int i = 0; i < parameters.length; i++) {
@@ -140,6 +220,29 @@ public class JavaScriptConnectorHelper {
         connector.getConnection().addMethodInvocationToQueue(
                 new MethodInvocation(connector.getConnectorId(), iface, method,
                         parameters), true);
+    }
+
+    private String findWildcardInterface(String method) {
+        Set<String> interfaces = rpcMethods.get(method);
+        if (interfaces.size() == 1) {
+            return interfaces.iterator().next();
+        } else {
+            // TODO Resolve conflicts using argument count and types
+            String interfaceList = "";
+            for (String iface : interfaces) {
+                if (interfaceList.length() != 0) {
+                    interfaceList += ", ";
+                }
+                interfaceList += getJsInterfaceName(iface);
+            }
+
+            throw new IllegalStateException(
+                    "Can not call method "
+                            + method
+                            + " for wildcard rpc proxy because the function is defined for multiple rpc interfaces: "
+                            + interfaceList
+                            + ". Retrieve a rpc proxy for a specific interface using getRpcProxy(interfaceName) to use the function.");
+        }
     }
 
     private void fireCallback(String name, JsArray<JavaScriptObject> arguments) {
@@ -181,18 +284,20 @@ public class JavaScriptConnectorHelper {
 
     public void invokeJsRpc(MethodInvocation invocation,
             JSONArray parametersJson) {
-        if ("com.vaadin.ui.JavaScript$JavaScriptCallbackRpc".equals(invocation
-                .getInterfaceName())
-                && "call".equals(invocation.getMethodName())) {
+        String iface = invocation.getInterfaceName();
+        String method = invocation.getMethodName();
+        if ("com.vaadin.ui.JavaScript$JavaScriptCallbackRpc".equals(iface)
+                && "call".equals(method)) {
             String callbackName = parametersJson.get(0).isString()
                     .stringValue();
             JavaScriptObject arguments = parametersJson.get(1).isArray()
                     .getJavaScriptObject();
             invokeCallback(getConnectorWrapper(), callbackName, arguments);
         } else {
-            invokeJsRpc(rpcMap, invocation.getInterfaceName(),
-                    invocation.getMethodName(),
-                    parametersJson.getJavaScriptObject());
+            JavaScriptObject arguments = parametersJson.getJavaScriptObject();
+            invokeJsRpc(rpcMap, iface, method, arguments);
+            // Also invoke wildcard interface
+            invokeJsRpc(rpcMap, "", method, arguments);
         }
     }
 

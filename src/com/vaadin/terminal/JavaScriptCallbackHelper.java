@@ -7,7 +7,9 @@ package com.vaadin.terminal;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
@@ -73,6 +75,26 @@ public class JavaScriptCallbackHelper {
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });
         connector.requestRepaint();
+    }
+
+    public void registerRpc(Class<?> rpcInterfaceType) {
+        if (rpcInterfaceType == JavaScriptCallbackRpc.class) {
+            // Ignore
+            return;
+        }
+        Map<String, Set<String>> rpcInterfaces = getConnectorState()
+                .getRpcInterfaces();
+        String interfaceName = rpcInterfaceType.getName();
+        if (!rpcInterfaces.containsKey(interfaceName)) {
+            Set<String> methodNames = new HashSet<String>();
+
+            for (Method method : rpcInterfaceType.getMethods()) {
+                methodNames.add(method.getName());
+            }
+
+            rpcInterfaces.put(interfaceName, methodNames);
+            connector.requestRepaint();
+        }
     }
 
 }

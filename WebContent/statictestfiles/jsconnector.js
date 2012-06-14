@@ -4,7 +4,7 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 	var rootElement = connector.getWidgetElement();
 	rootElement.innerHTML = 'Hello world!';
 	rootElement.onclick = function() {
-		connector.getRpcProxyFunction("com.vaadin.tests.components.javascriptcomponent.BasicJavaScriptComponent$ExampleClickRpc", "onClick")("message");
+		connector.getRpcProxy().onClick("message");
 		connector.onclick("another message");
 	}
 	connector.onStateChange = function() {

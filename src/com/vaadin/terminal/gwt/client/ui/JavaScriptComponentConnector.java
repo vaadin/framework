@@ -29,11 +29,6 @@ public class JavaScriptComponentConnector extends AbstractComponentConnector
         }
     };
 
-    @Override
-    protected void init() {
-        helper.init();
-    }
-
     private static native void addGetWidgetElement(
             JavaScriptObject connectorWrapper, Element element)
     /*-{

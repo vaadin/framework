@@ -11,6 +11,13 @@ public class AbstractJavaScriptExtension extends AbstractExtension {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
+    @Override
+    protected <T> void registerRpc(T implementation,
+            java.lang.Class<T> rpcInterfaceType) {
+        super.registerRpc(implementation, rpcInterfaceType);
+        callbackHelper.registerRpc(rpcInterfaceType);
+    }
+
     protected void registerCallback(String functionName,
             JavaScriptCallback javaScriptCallback) {
         callbackHelper.registerCallback(functionName, javaScriptCallback);
