@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -39,7 +38,6 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
     private Container lo;
     private Element legend = DOM.createLegend();
     private Element caption = DOM.createSpan();
-    private Element errorIndicatorElement = DOM.createDiv();
     private Element desc = DOM.createDiv();
     private Icon icon;
     private VErrorMessage errorMessage = new VErrorMessage();
@@ -70,9 +68,6 @@ public class VForm extends ComplexPanel implements Container, KeyDownHandler {
         setStyleName(CLASSNAME);
         fieldSet.appendChild(legend);
         legend.appendChild(caption);
-        errorIndicatorElement.setClassName("v-errorindicator");
-        errorIndicatorElement.getStyle().setDisplay(Display.NONE);
-        errorIndicatorElement.setInnerText(" "); // needed for IE
         desc.setClassName("v-form-description");
         fieldSet.appendChild(desc); // Adding description for initial padding
                                     // measurements, removed later if no

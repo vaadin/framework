@@ -390,6 +390,17 @@ public class VWindow extends VOverlay implements Container,
         layoutRelativeWidth = uidl.hasAttribute("layoutRelativeWidth");
         layoutRelativeHeight = uidl.hasAttribute("layoutRelativeHeight");
 
+        // Ticket #8852: We have to override min height if height of both window
+        // and layout have undefined height. 0 is used to as undefined value and
+        // replacing it with 30 will lead to calculation errors (as browser
+        // takes care of height modifications).
+        if (dynamicHeight && !layoutRelativeHeight
+                && !childUidl.hasAttribute("height")) {
+            renderSpace.setHeight(0);
+        } else if (renderSpace.getHeight() < MIN_CONTENT_AREA_HEIGHT) {
+            renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
+        }
+
         if (dynamicWidth && layoutRelativeWidth) {
             /*
              * Relative layout width, fix window width before rendering (width
@@ -1161,12 +1172,17 @@ public class VWindow extends VOverlay implements Container,
             return;
         }
         if (height == null || "".equals(height)) {
+
             getElement().getStyle().clearHeight();
             contentPanel.getElement().getStyle().clearHeight();
-            // Reset to default, the exact value does not actually
-            // matter as an undefined-height parent should not have
-            // a relative-height child anyway.
-            renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
+
+            // If content and window both have undefined height do not set min
+            // height to render space
+            if (renderSpace.getHeight() != 0 || !dynamicHeight
+                    || layoutRelativeHeight) {
+                renderSpace.setHeight(MIN_CONTENT_AREA_HEIGHT);
+            }
+
         } else {
             getElement().getStyle().setProperty("height", height);
             int contentHeight = getElement().getOffsetHeight()
