@@ -15,6 +15,7 @@ public class TooltipHandlingWhenNotDefined extends TestBase {
         wrapperLayout.setWidth("100%");
 
         Label label = new Label("Can I has the tooltip?", Label.CONTENT_XHTML);
+        label.setDebugId("tooltipLabel");
         label.setDescription("Good! Tooltip works!");
         label.setSizeUndefined();
         wrapperLayout.addComponent(label);
