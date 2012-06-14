@@ -168,9 +168,6 @@ public class RootConnector extends AbstractComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "execJS") {
-                String script = childUidl.getStringAttribute("script");
-                VRoot.eval(script);
             } else if (tag == "notifications") {
                 for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {

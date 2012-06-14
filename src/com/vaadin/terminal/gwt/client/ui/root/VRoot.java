@@ -188,21 +188,6 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      }-*/;
 
     /**
-     * Evaluate the given script in the browser document.
-     * 
-     * @param script
-     *            Script to be executed.
-     */
-    static native void eval(String script)
-    /*-{
-      try {
-         if (script == null) return;
-         $wnd.eval(script);
-      } catch (e) {
-      }
-    }-*/;
-
-    /**
      * Returns true if the body is NOT generated, i.e if someone else has made
      * the page that we're running in. Otherwise we're in charge of the whole
      * page.

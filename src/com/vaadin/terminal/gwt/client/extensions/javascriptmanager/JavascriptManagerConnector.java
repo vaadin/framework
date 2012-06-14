@@ -14,11 +14,20 @@ import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.ui.JavascriptManager;
+import com.vaadin.ui.JavaScript;
 
-@Connect(JavascriptManager.class)
+@Connect(JavaScript.class)
 public class JavascriptManagerConnector extends AbstractExtensionConnector {
     private Set<String> currentNames = new HashSet<String>();
+
+    @Override
+    protected void init() {
+        registerRpc(ExecuteJavaScriptRpc.class, new ExecuteJavaScriptRpc() {
+            public void executeJavaScript(String script) {
+                eval(script);
+            }
+        });
+    }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
@@ -56,6 +65,13 @@ public class JavascriptManagerConnector extends AbstractExtensionConnector {
         delete $wnd[name];
     }-*/;
 
+    private static native void eval(String script)
+    /*-{
+      if(script) {
+         $wnd.eval(script);
+      }
+    }-*/;
+
     public void sendRpc(String name, JsArray<JavaScriptObject> arguments) {
         Object[] parameters = new Object[] { name, new JSONArray(arguments) };
 
@@ -63,12 +79,10 @@ public class JavascriptManagerConnector extends AbstractExtensionConnector {
          * Must invoke manually as the RPC interface can't be used in GWT
          * because of the JSONArray parameter
          */
-        getConnection()
-                .addMethodInvocationToQueue(
-                        new MethodInvocation(
-                                getConnectorId(),
-                                "com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc",
-                                "call", parameters), true);
+        getConnection().addMethodInvocationToQueue(
+                new MethodInvocation(getConnectorId(),
+                        "com.vaadin.ui.JavaScript$JavascriptCallbackRpc",
+                        "call", parameters), true);
     }
 
     @Override

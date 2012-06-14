@@ -12,8 +12,8 @@ import java.util.Map;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.tools.ReflectTools;
+import com.vaadin.ui.JavaScript.JavascriptCallbackRpc;
 import com.vaadin.ui.JavascriptCallback;
-import com.vaadin.ui.JavascriptManager.JavascriptCallbackRpc;
 
 public class JavascriptRpcHelper {
 

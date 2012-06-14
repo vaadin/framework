@@ -7,11 +7,11 @@ package com.vaadin.terminal.gwt.client;
 import com.vaadin.terminal.AbstractJavascriptExtension;
 import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.AbstractConnector;
+import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 
 @Connect(AbstractJavascriptExtension.class)
-public class JavascriptExtension extends AbstractConnector implements
+public class JavascriptExtension extends AbstractExtensionConnector implements
         HasJavascriptConnectorHelper {
     private final JavascriptConnectorHelper helper = new JavascriptConnectorHelper(
             this);

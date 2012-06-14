@@ -109,7 +109,7 @@ public class JavascriptConnectorHelper {
             'getCallback': function(name) {
                 return $entry(function() {
                     var args = [name, Array.prototype.slice.call(arguments, 0)];
-                    var iface = "com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc";
+                    var iface = "com.vaadin.ui.JavaScript$JavascriptCallbackRpc";
                     var method = "call";
                     h.@com.vaadin.terminal.gwt.client.JavascriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, args);
                 });
@@ -173,8 +173,8 @@ public class JavascriptConnectorHelper {
 
     public void invokeJsRpc(MethodInvocation invocation,
             JSONArray parametersJson) {
-        if ("com.vaadin.ui.JavascriptManager$JavascriptCallbackRpc"
-                .equals(invocation.getInterfaceName())
+        if ("com.vaadin.ui.JavaScript$JavascriptCallbackRpc".equals(invocation
+                .getInterfaceName())
                 && "call".equals(invocation.getMethodName())) {
             invokeJsRpc(rpcMap, parametersJson.get(0).isString().stringValue(),
                     null, parametersJson.get(1).isArray().getJavaScriptObject());

@@ -10,10 +10,12 @@ import java.util.Map;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.AbstractExtension;
+import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.ExecuteJavaScriptRpc;
 import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavascriptManagerState;
 
-public class JavascriptManager extends AbstractExtension {
+public class JavaScript extends AbstractExtension {
     private Map<String, JavascriptCallback> callbacks = new HashMap<String, JavascriptCallback>();
 
     // Can not be defined in client package as this JSONArray is not available
@@ -22,7 +24,7 @@ public class JavascriptManager extends AbstractExtension {
         public void call(String name, JSONArray arguments);
     }
 
-    public JavascriptManager() {
+    public JavaScript() {
         registerRpc(new JavascriptCallbackRpc() {
             public void call(String name, JSONArray arguments) {
                 JavascriptCallback callback = callbacks.get(name);
@@ -41,8 +43,8 @@ public class JavascriptManager extends AbstractExtension {
         return (JavascriptManagerState) super.getState();
     }
 
-    public void addCallback(String name, JavascriptCallback javascriptCallback) {
-        callbacks.put(name, javascriptCallback);
+    public void addCallback(String name, JavascriptCallback callback) {
+        callbacks.put(name, callback);
         if (getState().getNames().add(name)) {
             requestRepaint();
         }
@@ -53,6 +55,30 @@ public class JavascriptManager extends AbstractExtension {
         if (getState().getNames().remove(name)) {
             requestRepaint();
         }
+    }
+
+    public void execute(String script) {
+        getRpcProxy(ExecuteJavaScriptRpc.class).executeJavaScript(script);
+    }
+
+    public static JavaScript getCurrent() {
+        return Root.getCurrentRoot().getJavaScript();
+    }
+
+    private static JavaScript getJavascript(Root root) {
+        // TODO Add caching to avoid iterating collection every time
+        // Caching should use weak references to avoid memory leaks -> cache
+        // should be transient to avoid serialization problems
+        for (Extension extension : root.getExtensions()) {
+            if (extension instanceof JavaScript) {
+                return (JavaScript) extension;
+            }
+        }
+
+        // Extend root if it isn't yet done
+        JavaScript javascript = new JavaScript();
+        javascript.extend(root);
+        return javascript;
     }
 
 }
