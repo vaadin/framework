@@ -177,12 +177,12 @@ public class JavaScriptConnectorHelper {
             'getState': function() {
                 return nativeState;
             },
-            'getRpcProxy': function(iface) {
+            'getRpcProxy': $entry(function(iface) {
                 if (!iface) {
                     iface = '';
                 }
                 return rpcObjects.@java.util.Map::get(Ljava/lang/Object;)(iface);
-            },
+            }),
             'registerRpc': function(iface, rpcHandler) {
                 //registerRpc(handler) -> registerRpc('', handler);
                 if (!rpcHandler) {
