@@ -1622,6 +1622,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * sub-windows only. If the window is resized as a result of the size of its
      * content changing, it will keep itself centered as long as its position is
      * not explicitly changed programmatically or by the user.
+     * <p>
+     * <b>NOTE:</b> This method has several issues as currently implemented.
+     * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
         centerRequested = true;
