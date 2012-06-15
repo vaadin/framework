@@ -224,10 +224,11 @@ div.v-app-loading {
 
 .v-drag-element {
 	z-index: 60000;
-	position: absolute;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-    cursor: default;
+	/* override any other position: properties */
+	position: absolute !important;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	cursor: default;
 }
 
 .v-scrollable {
