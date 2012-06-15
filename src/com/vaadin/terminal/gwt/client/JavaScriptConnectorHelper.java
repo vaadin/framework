@@ -173,6 +173,9 @@ public class JavaScriptConnectorHelper {
             'getConnectorId': function() {
                 return connectorId;
             },
+            'getParentId': $entry(function(connectorId) {
+                return h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::getParentId(Ljava/lang/String;)(connectorId);
+            }),
             'getState': function() {
                 return nativeState;
             },
@@ -208,18 +211,35 @@ public class JavaScriptConnectorHelper {
         });
     }-*/;
 
-    private Element getWidgetElement(String connectorId) {
-        if (connectorId == null) {
-            connectorId = connector.getConnectorId();
+    private String getParentId(String connectorId) {
+        ServerConnector target = getConnector(connectorId);
+        if (target == null) {
+            return null;
         }
+        ServerConnector parent = target.getParent();
+        if (parent == null) {
+            return null;
+        } else {
+            return parent.getConnectorId();
+        }
+    }
 
-        ServerConnector target = ConnectorMap.get(connector.getConnection())
-                .getConnector(connectorId);
+    private Element getWidgetElement(String connectorId) {
+        ServerConnector target = getConnector(connectorId);
         if (target instanceof ComponentConnector) {
             return ((ComponentConnector) target).getWidget().getElement();
         } else {
             return null;
         }
+    }
+
+    private ServerConnector getConnector(String connectorId) {
+        if (connectorId == null || connectorId.length() == 0) {
+            return connector;
+        }
+
+        return ConnectorMap.get(connector.getConnection())
+                .getConnector(connectorId);
     }
 
     private void fireRpc(String iface, String method,
