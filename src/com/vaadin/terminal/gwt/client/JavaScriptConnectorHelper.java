@@ -306,7 +306,7 @@ public class JavaScriptConnectorHelper {
     private static native void invokeCallback(JavaScriptObject connector,
             String name, JavaScriptObject arguments)
     /*-{
-        connector[name](arguments);
+        connector[name].apply(connector, arguments);
     }-*/;
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,
