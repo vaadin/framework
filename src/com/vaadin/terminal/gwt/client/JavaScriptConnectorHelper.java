@@ -44,7 +44,9 @@ public class JavaScriptConnectorHelper {
 
         // Wildcard rpc object
         rpcObjects.put("", JavaScriptObject.createObject());
+    }
 
+    public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 JavaScriptObject wrapper = getConnectorWrapper();
@@ -81,7 +83,7 @@ public class JavaScriptConnectorHelper {
 
                 // Init after setting up callbacks & rpc
                 if (!inited) {
-                    init();
+                    initJavaScript();
                     inited = true;
                 }
 
@@ -104,7 +106,7 @@ public class JavaScriptConnectorHelper {
         return object;
     }
 
-    private boolean init() {
+    private boolean initJavaScript() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> attemptedNames = new ArrayList<String>();

@@ -42,6 +42,12 @@ public class JavaScriptComponentConnector extends AbstractComponentConnector
         return (JavaScriptWidget) super.getWidget();
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        helper.init();
+    }
+
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }
