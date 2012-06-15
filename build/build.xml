@@ -731,9 +731,11 @@
                 </patternset>
             </fileset>
         	
-        	<!-- Precompiled widgetsets (.gwtar files) -->
-        	<fileset dir="${result-precompiled-widgetsets}" includes="**/*.gwtar" excludes="com/vaadin/tests/**/*" />
+        	<!-- Precompiled widgetset (.gwtar file) - only include default widgetset, large file -->
+        	<fileset dir="${result-precompiled-widgetsets}" includes="com/vaadin/terminal.gwt.DefaultWidgetSet.gwtar" />
 
+        	<!-- TODO GWT related license files etc. should be in subdirectories -->
+        	
         	<!-- GWT -->
             <fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
             <fileset dir="${gwt.user.dir}/super" excludes="**/package.html" />
