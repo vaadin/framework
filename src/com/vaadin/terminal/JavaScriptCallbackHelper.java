@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.ui.JavaScriptCallback;
 
-public class JavaScriptCallbackHelper {
+public class JavaScriptCallbackHelper implements Serializable {
 
     private static final Method CALL_METHOD = ReflectTools.findMethod(
             JavaScriptCallbackRpc.class, "call", String.class, JSONArray.class);
