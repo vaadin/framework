@@ -3,8 +3,6 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.ui.AbstractJavaScriptComponent;
@@ -20,22 +18,7 @@ public class JavaScriptComponentConnector extends AbstractComponentConnector
                 java.util.ArrayList<String> attemptedNames) {
             getWidget().showNoInitFound(attemptedNames);
         }
-
-        @Override
-        protected JavaScriptObject createConnectorWrapper() {
-            JavaScriptObject connectorWrapper = super.createConnectorWrapper();
-            addGetWidgetElement(connectorWrapper, getWidget().getElement());
-            return connectorWrapper;
-        }
     };
-
-    private static native void addGetWidgetElement(
-            JavaScriptObject connectorWrapper, Element element)
-    /*-{
-        connectorWrapper.getWidgetElement = function() {
-            return element;
-        };
-    }-*/;
 
     @Override
     public JavaScriptWidget getWidget() {
