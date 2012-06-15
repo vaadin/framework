@@ -1618,8 +1618,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
     }
 
     /**
-     * Request to center this window on the screen. <b>Note:</b> affects
-     * sub-windows only.
+     * Sets this window to be centered relative to its parent window. Affects
+     * sub-windows only. If the window is resized as a result of the size of its
+     * content changing, it will keep itself centered as long as its position is
+     * not explicitly changed programmatically or by the user.
      */
     public void center() {
         centerRequested = true;
