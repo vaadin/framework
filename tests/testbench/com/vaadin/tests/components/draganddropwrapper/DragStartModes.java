@@ -19,10 +19,13 @@ public class DragStartModes extends TestBase {
         addComponent(makeWrapper(DragStartMode.COMPONENT));
         addComponent(makeWrapper(DragStartMode.WRAPPER));
         addComponent(makeWrapper(DragStartMode.HTML5));
+
+        addComponent(new Label("Drop here"));
     }
 
     private Component makeWrapper(DragStartMode mode) {
         Label label = new Label("Drag start mode: " + mode);
+        label.setDebugId("label" + mode);
         DragAndDropWrapper wrapper = new DragAndDropWrapper(label);
         wrapper.setHTML5DataFlavor("Text", "HTML5!");
         wrapper.setDragStartMode(mode);
