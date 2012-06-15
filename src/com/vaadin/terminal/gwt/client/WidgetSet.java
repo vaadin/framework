@@ -5,7 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
-import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class WidgetSet {
@@ -54,8 +54,8 @@ public class WidgetSet {
              * let the auto generated code instantiate this type
              */
             ServerConnector connector = widgetMap.instantiate(classType);
-            if (connector instanceof HasJavascriptConnectorHelper) {
-                ((HasJavascriptConnectorHelper) connector)
+            if (connector instanceof HasJavaScriptConnectorHelper) {
+                ((HasJavaScriptConnectorHelper) connector)
                         .getJavascriptConnectorHelper().setTag(tag);
             }
             return connector;

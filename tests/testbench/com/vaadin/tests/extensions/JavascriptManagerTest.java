@@ -10,7 +10,8 @@ import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.JavascriptCallback;
+import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.JavaScriptCallback;
 
 public class JavascriptManagerTest extends AbstractTestRoot {
 
@@ -19,7 +20,8 @@ public class JavascriptManagerTest extends AbstractTestRoot {
     @Override
     protected void setup(WrappedRequest request) {
         addComponent(log);
-        getJavascriptManager().addCallback("testing", new JavascriptCallback() {
+        JavaScript js = JavaScript.getCurrent();
+        js.addCallback("testing", new JavaScriptCallback() {
             public void call(JSONArray arguments) throws JSONException {
                 log.log("Got " + arguments.length() + " arguments");
                 log.log("Argument 1 as a number: " + arguments.getInt(0));
@@ -30,7 +32,7 @@ public class JavascriptManagerTest extends AbstractTestRoot {
                         + (arguments.get(3) == JSONObject.NULL));
             }
         });
-        executeJavaScript("window.testing(42, 'text', {p: true}, null)");
+        js.execute("window.testing(42, 'text', {p: true}, null)");
     }
 
     @Override

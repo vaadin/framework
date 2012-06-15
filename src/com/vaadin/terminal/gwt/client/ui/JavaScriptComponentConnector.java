@@ -5,16 +5,15 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.JavascriptConnectorHelper;
-import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
-import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.ui.AbstractJavascriptComponent;
+import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
+import com.vaadin.ui.AbstractJavaScriptComponent;
 
-@Connect(AbstractJavascriptComponent.class)
-public class JavascriptComponentConnector extends AbstractComponentConnector
-        implements HasJavascriptConnectorHelper {
+@Connect(AbstractJavaScriptComponent.class)
+public class JavaScriptComponentConnector extends AbstractComponentConnector
+        implements HasJavaScriptConnectorHelper {
 
-    private final JavascriptConnectorHelper helper = new JavascriptConnectorHelper(
+    private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this) {
         @Override
         protected void showInitProblem(
@@ -30,17 +29,6 @@ public class JavascriptComponentConnector extends AbstractComponentConnector
         }
     };
 
-    @Override
-    protected void init() {
-        helper.init();
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        helper.fireNativeStateChange();
-    }
-
     private static native void addGetWidgetElement(
             JavaScriptObject connectorWrapper, Element element)
     /*-{
@@ -50,11 +38,16 @@ public class JavascriptComponentConnector extends AbstractComponentConnector
     }-*/;
 
     @Override
-    public JavascriptWidget getWidget() {
-        return (JavascriptWidget) super.getWidget();
+    public JavaScriptWidget getWidget() {
+        return (JavaScriptWidget) super.getWidget();
     }
 
-    public JavascriptConnectorHelper getJavascriptConnectorHelper() {
+    public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
+    }
+
+    @Override
+    public JavaScriptComponentState getState() {
+        return (JavaScriptComponentState) super.getState();
     }
 }

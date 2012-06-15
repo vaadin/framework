@@ -9,6 +9,6 @@ import java.io.Serializable;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 
-public interface JavascriptCallback extends Serializable {
+public interface JavaScriptCallback extends Serializable {
     public void call(JSONArray arguments) throws JSONException;
 }

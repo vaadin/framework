@@ -357,12 +357,6 @@ public abstract class Root extends AbstractComponentContainer implements
     private List<Notification> notifications;
 
     /**
-     * A list of javascript commands that are waiting to be sent to the client.
-     * Cleared (set to null) when the commands have been sent.
-     */
-    private List<String> jsExecQueue = null;
-
-    /**
      * List of windows in this root.
      */
     private final LinkedHashSet<Window> windows = new LinkedHashSet<Window>();
@@ -408,7 +402,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
             this);
 
-    private JavascriptManager javascriptManager;
+    private JavaScript javaScript;
 
     private RootServerRpc rpc = new RootServerRpc() {
         public void click(MouseEventDetails mouseDetails) {
@@ -555,16 +549,6 @@ public abstract class Root extends AbstractComponentContainer implements
             }
             target.endTag("notifications");
             notifications = null;
-        }
-
-        // Add executable javascripts if needed
-        if (jsExecQueue != null) {
-            for (String script : jsExecQueue) {
-                target.startTag("execJS");
-                target.addAttribute("script", script);
-                target.endTag("execJS");
-            }
-            jsExecQueue = null;
         }
 
         if (scrollIntoView != null) {
@@ -1000,15 +984,12 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @param script
      *            JavaScript snippet that will be executed.
+     * 
+     * @deprecated as of 7.0, use getJavaScript().execute(String) instead
      */
+    @Deprecated
     public void executeJavaScript(String script) {
-        if (jsExecQueue == null) {
-            jsExecQueue = new ArrayList<String>();
-        }
-
-        jsExecQueue.add(script);
-
-        requestRepaint();
+        getJavaScript().execute(script);
     }
 
     /**
@@ -1592,14 +1573,14 @@ public abstract class Root extends AbstractComponentContainer implements
         return dirtyConnectorTracker;
     }
 
-    public JavascriptManager getJavascriptManager() {
-        if (javascriptManager == null) {
+    public JavaScript getJavaScript() {
+        if (javaScript == null) {
             // Create and attach on first use
-            javascriptManager = new JavascriptManager();
-            addExtension(javascriptManager);
+            javaScript = new JavaScript();
+            addExtension(javaScript);
         }
 
-        return javascriptManager;
+        return javaScript;
     }
 
 }

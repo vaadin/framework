@@ -210,7 +210,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
         public Iterator<ClientConnector> iterator() {
             CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
-            iterator.addIterator(connector.getExtensionIterator());
+            iterator.addIterator(connector.getExtensions().iterator());
 
             if (connector instanceof HasComponents) {
                 HasComponents hasComponents = (HasComponents) connector;
@@ -376,30 +376,22 @@ public abstract class AbstractClientConnector implements ClientConnector {
         return new AllChildrenIterable(connector);
     }
 
-    public Iterator<Extension> getExtensionIterator() {
-        return Collections.unmodifiableList(extensions).iterator();
+    public Collection<Extension> getExtensions() {
+        return Collections.unmodifiableCollection(extensions);
     }
 
     protected void addExtension(Extension extension) {
-        addExtensionAtIndex(extension, extensions.size());
-    }
-
-    protected void addExtensionAtIndex(Extension extension, int index) {
         ClientConnector previousParent = extension.getParent();
         if (previousParent == this) {
-            int oldIndex = extensions.indexOf(extension);
-            if (oldIndex < index) {
-                index--;
-            }
-            extensions.remove(oldIndex);
-            extensions.add(index, extension);
-        } else {
-            if (previousParent != null) {
-                previousParent.removeExtension(extension);
-            }
-            extensions.add(index, extension);
-            extension.setParent(this);
+            // Nothing to do, already attached
+            return;
+        } else if (previousParent != null) {
+            throw new IllegalStateException(
+                    "Moving an extension from one parent to another is not supported");
         }
+
+        extensions.add(extension);
+        extension.setParent(this);
         requestRepaint();
     }
 

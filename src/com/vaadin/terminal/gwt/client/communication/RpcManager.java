@@ -89,8 +89,8 @@ public class RpcManager {
 
         MethodInvocation invocation = new MethodInvocation(connectorId,
                 interfaceName, methodName);
-        if (connector instanceof HasJavascriptConnectorHelper) {
-            ((HasJavascriptConnectorHelper) connector)
+        if (connector instanceof HasJavaScriptConnectorHelper) {
+            ((HasJavaScriptConnectorHelper) connector)
                     .getJavascriptConnectorHelper().invokeJsRpc(invocation,
                             parametersJson);
         } else {
