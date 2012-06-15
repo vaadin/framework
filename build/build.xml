@@ -109,6 +109,7 @@
 		<property name="result-classes-core" value="${result-path}/classes/core"/>
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
+		<property name="result-precompiled-widgetsets" value="${result-path}/classes/widgetsets"/>
 		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
 		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
 		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
@@ -118,6 +119,7 @@
 			<path refid="compile.classpath.client-side" />
 			<pathelement location="${result-classes-core}" />
 			<pathelement location="${result-src-core}" />
+			<pathelement location="${result-precompiled-widgetsets}" />
 		</path>
 	</target>
     <target name="clean-all" depends="clean-result">
@@ -561,6 +563,20 @@
     	<property name="widgetset-extraParams" value="" />
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
+
+        <!-- precompile the widgetset to a .gwtar file -->
+        <java classname="com.google.gwt.dev.CompileModule" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="-out" />
+            <arg value="${result-precompiled-widgetsets}" />
+            <arg value="-strict" />
+            <arg value="${widgetset}" />
+
+            <jvmarg value="-Xss8M"/>
+            <jvmarg value="-XX:MaxPermSize=256M"/>  
+            <jvmarg value="-Djava.awt.headless=true"/>
+        </java>
+    	
+        <!-- compile the widgetset -->
         <java classname="com.google.gwt.dev.Compiler" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
             <arg value="-war" />
             <arg value="${widgetsets-output-dir}" />
@@ -569,13 +585,14 @@
             <arg value="-strict" />
             <arg value="-localWorkers" />
             <arg value="${widgetset-localWorkers}" />
-        	<arg line="${widgetset-extraParams}" />
+            <arg line="${widgetset-extraParams}" />
             <arg value="${widgetset}" />
 
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-XX:MaxPermSize=256M"/>  
             <jvmarg value="-Djava.awt.headless=true"/>
         </java>
+    	
         <antcall target="remove-widgetset-gwt-tmp"/>
         
         <echo>Compiled ${widgetset}</echo>
@@ -642,7 +659,7 @@
     <!-- ================================================================== -->
 
     <target name="compile-gwt" depends="init">
-    	<!-- TODO Compile GWT in a directory defined by properties -->
+    	<!-- Compile GWT in a directory defined by properties -->
         <ant antfile="${gwt.root}/build.xml" target="user" dir="${gwt.root}" inheritall="false" inheritrefs="false">
             <property name="gwt.root" value="${gwt.root}"/>
         </ant>
@@ -713,6 +730,9 @@
                     <include name="img/**" />
                 </patternset>
             </fileset>
+        	
+        	<!-- Precompiled widgetsets (.gwtar files) -->
+        	<fileset dir="${result-precompiled-widgetsets}" includes="**/*.gwtar" excludes="com/vaadin/tests/**/*" />
 
         	<!-- GWT -->
             <fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
