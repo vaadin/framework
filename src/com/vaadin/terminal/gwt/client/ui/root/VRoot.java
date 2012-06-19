@@ -28,6 +28,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
@@ -108,6 +109,8 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     private HandlerRegistration historyHandlerRegistration;
 
+    private TouchScrollHandler touchScrollHandler;
+
     /**
      * The current URI fragment, used to avoid sending updates if nothing has
      * changed.
@@ -148,7 +151,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         // Allow focusing the view by using the focus() method, the view
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
-        TouchScrollDelegate.enableTouchScrolling(this, getElement());
+        makeScrollable();
     }
 
     /**
@@ -440,4 +443,13 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         getElement().focus();
     }
 
+    /**
+     * Ensures the root is scrollable eg. after style name changes.
+     */
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(getElement());
+    }
 }

@@ -93,7 +93,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     String minimumPosition;
 
-    private final TouchScrollHandler touchScrollHandler;
+    private TouchScrollHandler touchScrollHandler;
 
     protected Element scrolledContainer;
 
@@ -122,8 +122,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         setOrientation(orientation);
         sinkEvents(Event.MOUSEEVENTS);
 
-        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this,
-                firstContainer, secondContainer);
+        makeScrollable();
 
         addDomHandler(new TouchCancelHandler() {
             public void onTouchCancel(TouchCancelEvent event) {
@@ -758,10 +757,13 @@ public class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Ensures the panels are still scrollable eg. after style sheet changes
+     * Ensures the panels are scrollable eg. after style name changes
      */
-    void ensureScrollable() {
-        touchScrollHandler.setElements(firstContainer, secondContainer);
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(firstContainer);
+        touchScrollHandler.addElement(secondContainer);
     }
-
 }

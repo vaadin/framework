@@ -98,6 +98,8 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
         getWidget().setStyleName(styles.trim());
 
+        getWidget().makeScrollable();
+
         clickEventHandler.handleEventHandlerRegistration();
 
         // Process children

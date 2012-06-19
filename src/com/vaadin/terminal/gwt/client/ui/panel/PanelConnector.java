@@ -111,6 +111,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
             getWidget().captionNode.setClassName(captionClass);
             getWidget().contentNode.setClassName(contentClass);
             getWidget().bottomDecoration.setClassName(decoClass);
+
+            getWidget().makeScrollable();
         }
 
         if (!isRealUpdate(uidl)) {

@@ -45,7 +45,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
 
     int scrollLeft;
 
-    private final TouchScrollHandler touchScrollHandler;
+    private TouchScrollHandler touchScrollHandler;
 
     public VPanel() {
         super();
@@ -77,8 +77,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         contentNode.getStyle().setProperty("position", "relative");
         getElement().getStyle().setProperty("overflow", "hidden");
 
-        touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this,
-                contentNode);
+        makeScrollable();
     }
 
     /**
@@ -179,4 +178,13 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         return shortcutHandler;
     }
 
+    /**
+     * Ensures the panel is scrollable eg. after style name changes
+     */
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(contentNode);
+    }
 }
