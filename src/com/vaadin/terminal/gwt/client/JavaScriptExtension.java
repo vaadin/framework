@@ -15,6 +15,12 @@ public class JavaScriptExtension extends AbstractExtensionConnector implements
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 
+    @Override
+    protected void init() {
+        super.init();
+        helper.init();
+    }
+
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }

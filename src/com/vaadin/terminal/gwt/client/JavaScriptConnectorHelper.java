@@ -14,6 +14,7 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.user.client.Element;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
@@ -44,7 +45,9 @@ public class JavaScriptConnectorHelper {
 
         // Wildcard rpc object
         rpcObjects.put("", JavaScriptObject.createObject());
+    }
 
+    public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 JavaScriptObject wrapper = getConnectorWrapper();
@@ -81,7 +84,7 @@ public class JavaScriptConnectorHelper {
 
                 // Init after setting up callbacks & rpc
                 if (!inited) {
-                    init();
+                    initJavaScript();
                     inited = true;
                 }
 
@@ -104,7 +107,7 @@ public class JavaScriptConnectorHelper {
         return object;
     }
 
-    private boolean init() {
+    private boolean initJavaScript() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> attemptedNames = new ArrayList<String>();
@@ -146,15 +149,11 @@ public class JavaScriptConnectorHelper {
 
     private JavaScriptObject getConnectorWrapper() {
         if (connectorWrapper == null) {
-            connectorWrapper = createConnectorWrapper();
+            connectorWrapper = createConnectorWrapper(this, nativeState,
+                    rpcMap, connector.getConnectorId(), rpcObjects);
         }
 
         return connectorWrapper;
-    }
-
-    protected JavaScriptObject createConnectorWrapper() {
-        return createConnectorWrapper(this, nativeState, rpcMap,
-                connector.getConnectorId(), rpcObjects);
     }
 
     private static native void fireNativeStateChange(
@@ -174,6 +173,9 @@ public class JavaScriptConnectorHelper {
             'getConnectorId': function() {
                 return connectorId;
             },
+            'getParentId': $entry(function(connectorId) {
+                return h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::getParentId(Ljava/lang/String;)(connectorId);
+            }),
             'getState': function() {
                 return nativeState;
             },
@@ -182,6 +184,9 @@ public class JavaScriptConnectorHelper {
                     iface = '';
                 }
                 return rpcObjects.@java.util.Map::get(Ljava/lang/Object;)(iface);
+            }),
+            'getWidgetElement': $entry(function(connectorId) {
+                return h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::getWidgetElement(Ljava/lang/String;)(connectorId);
             }),
             'registerRpc': function(iface, rpcHandler) {
                 //registerRpc(handler) -> registerRpc('', handler);
@@ -205,6 +210,37 @@ public class JavaScriptConnectorHelper {
             self.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::fireRpc(Ljava/lang/String;Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(iface, method, arguments);
         });
     }-*/;
+
+    private String getParentId(String connectorId) {
+        ServerConnector target = getConnector(connectorId);
+        if (target == null) {
+            return null;
+        }
+        ServerConnector parent = target.getParent();
+        if (parent == null) {
+            return null;
+        } else {
+            return parent.getConnectorId();
+        }
+    }
+
+    private Element getWidgetElement(String connectorId) {
+        ServerConnector target = getConnector(connectorId);
+        if (target instanceof ComponentConnector) {
+            return ((ComponentConnector) target).getWidget().getElement();
+        } else {
+            return null;
+        }
+    }
+
+    private ServerConnector getConnector(String connectorId) {
+        if (connectorId == null || connectorId.length() == 0) {
+            return connector;
+        }
+
+        return ConnectorMap.get(connector.getConnection())
+                .getConnector(connectorId);
+    }
 
     private void fireRpc(String iface, String method,
             JsArray<JavaScriptObject> arguments) {
@@ -304,7 +340,7 @@ public class JavaScriptConnectorHelper {
     private static native void invokeCallback(JavaScriptObject connector,
             String name, JavaScriptObject arguments)
     /*-{
-        connector[name](arguments);
+        connector[name].apply(connector, arguments);
     }-*/;
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,

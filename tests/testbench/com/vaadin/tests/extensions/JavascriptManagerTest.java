@@ -20,8 +20,8 @@ public class JavascriptManagerTest extends AbstractTestRoot {
     @Override
     protected void setup(WrappedRequest request) {
         addComponent(log);
-        JavaScript js = JavaScript.getCurrent();
-        js.addCallback("testing", new JavaScriptCallback() {
+        final JavaScript js = JavaScript.getCurrent();
+        js.addCallback("testing.doTest", new JavaScriptCallback() {
             public void call(JSONArray arguments) throws JSONException {
                 log.log("Got " + arguments.length() + " arguments");
                 log.log("Argument 1 as a number: " + arguments.getInt(0));
@@ -30,9 +30,10 @@ public class JavascriptManagerTest extends AbstractTestRoot {
                         + arguments.getJSONObject(2).getBoolean("p"));
                 log.log("Argument 4 is JSONObject.NULL: "
                         + (arguments.get(3) == JSONObject.NULL));
+                js.removeCallback("testing.doTest");
             }
         });
-        js.execute("window.testing(42, 'text', {p: true}, null)");
+        js.execute("window.testing.doTest(42, 'text', {p: true}, null)");
     }
 
     @Override

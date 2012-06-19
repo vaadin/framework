@@ -52,7 +52,18 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     private native void addCallback(String name)
     /*-{
         var m = this;
-        $wnd[name] = $entry(function() {
+        var target = $wnd;
+        var parts = name.split('.');
+        
+        for(var i = 0; i < parts.length - 1; i++) {
+            var part = parts[i];
+            if (target[part] === undefined) {
+                target[part] = {};
+            }
+            target = target[part];
+        }
+        
+        target[parts[parts.length - 1]] = $entry(function() {
             //Must make a copy because arguments is an array-like object (not instanceof Array), causing suboptimal JSON encoding
             var args = Array.prototype.slice.call(arguments, 0);
             m.@com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerConnector::sendRpc(Ljava/lang/String;Lcom/google/gwt/core/client/JsArray;)(name, args);
@@ -60,9 +71,25 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     }-*/;
 
     // TODO only remove what we actually added
+    // TODO We might leave empty objects behind, but there's no good way of
+    // knowing whether they are unused
     private native void removeCallback(String name)
     /*-{
-        delete $wnd[name];
+        var target = $wnd;
+        var parts = name.split('.');
+        
+        for(var i = 0; i < parts.length - 1; i++) {
+            var part = parts[i];
+            if (target[part] === undefined) {
+                $wnd.console.log(part,'not defined in',target);
+                // No longer attached -> nothing more to do
+                return;
+            }
+            target = target[part];
+        }
+
+        $wnd.console.log('removing',parts[parts.length - 1],'from',target);
+        delete target[parts[parts.length - 1]];
     }-*/;
 
     private static native void eval(String Script)
