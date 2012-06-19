@@ -60,7 +60,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private static final String CLASSNAME = "v-ddwrapper";
     protected static final String DRAGGABLE = "draggable";
 
-    private boolean hasTooltip = false;
+    boolean hasTooltip = false;
 
     public VDragAndDropWrapper() {
         super();
