@@ -10,14 +10,37 @@ import com.vaadin.Application;
 
 public class ConverterUtil implements Serializable {
 
-    public static <UITYPE, MODELTYPE> Converter<UITYPE, MODELTYPE> getConverter(
-            Class<UITYPE> uiType, Class<MODELTYPE> modelType) {
-        Converter<UITYPE, MODELTYPE> converter = null;
+    /**
+     * Finds a converter that can convert from the given presentation type to
+     * the given model type and back. Uses the given application to find a
+     * {@link ConverterFactory} or, if application is null, uses the
+     * {@link Application#getCurrentApplication()}.
+     * 
+     * @param <PRESENTATIONTYPE>
+     *            The presentation type
+     * @param <MODELTYPE>
+     *            The model type
+     * @param presentationType
+     *            The presentation type
+     * @param modelType
+     *            The model type
+     * @param application
+     *            The application to use to find a ConverterFactory or null to
+     *            use the current application
+     * @return A Converter capable of converting between the given types or null
+     *         if no converter was found
+     */
+    public static <PRESENTATIONTYPE, MODELTYPE> Converter<PRESENTATIONTYPE, MODELTYPE> getConverter(
+            Class<PRESENTATIONTYPE> presentationType,
+            Class<MODELTYPE> modelType, Application application) {
+        Converter<PRESENTATIONTYPE, MODELTYPE> converter = null;
+        if (application == null) {
+            application = Application.getCurrentApplication();
+        }
 
-        Application app = Application.getCurrentApplication();
-        if (app != null) {
-            ConverterFactory factory = app.getConverterFactory();
-            converter = factory.createConverter(uiType, modelType);
+        if (application != null) {
+            ConverterFactory factory = application.getConverterFactory();
+            converter = factory.createConverter(presentationType, modelType);
         }
         return converter;
 

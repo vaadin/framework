@@ -21,13 +21,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -3664,12 +3664,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            Application app = Application.getCurrentApplication();
-            if (app != null) {
-                converter = (Converter<String, Object>) app
-                        .getConverterFactory().createConverter(String.class,
-                                property.getType());
-            }
+            ConverterUtil.getConverter(String.class, property.getType(),
+                    getApplication());
         }
         Object value = property.getValue();
         if (converter != null) {

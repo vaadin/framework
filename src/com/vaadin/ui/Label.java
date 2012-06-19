@@ -228,7 +228,7 @@ public class Label extends AbstractComponent implements Property<String>,
                 newDataSource.getType())) {
             // Try to find a converter
             Converter<String, ?> c = ConverterUtil.getConverter(String.class,
-                    newDataSource.getType());
+                    newDataSource.getType(), getApplication());
             setConverter(c);
         }
         dataSource = newDataSource;
