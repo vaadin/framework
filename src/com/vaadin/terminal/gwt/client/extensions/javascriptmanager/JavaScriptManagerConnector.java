@@ -92,10 +92,10 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         delete target[parts[parts.length - 1]];
     }-*/;
 
-    private static native void eval(String Script)
+    private static native void eval(String script)
     /*-{
-      if(Script) {
-         $wnd.eval(Script);
+      if(script) {
+         $wnd.eval(script);
       }
     }-*/;
 
