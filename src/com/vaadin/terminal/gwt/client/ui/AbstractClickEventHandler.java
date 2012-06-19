@@ -173,7 +173,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
         if (hasEventListener()
                 && mouseUpPreviewMatched
                 && lastMouseDownTarget != null
-                && Util.getElementUnderMouse(event.getNativeEvent()) == lastMouseDownTarget) {
+                && Util.getElementUnderMouse(event.getNativeEvent()) == lastMouseDownTarget
+                && shouldFireEvent(event)) {
             // "Click" with left, right or middle button
             fireClick(event.getNativeEvent());
         }
