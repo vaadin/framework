@@ -10,6 +10,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -36,15 +37,13 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
         window.addComponent(new TextField());
         window.addListener(new FocusListener() {
             public void focus(FocusEvent event) {
-                event.getComponent().getRoot()
-                        .showNotification("Focused window");
+                Notification.show("Focused window");
             }
         });
 
         window.addListener(new BlurListener() {
             public void blur(BlurEvent event) {
-                event.getComponent().getRoot()
-                        .showNotification("Blurred window");
+                Notification.show("Blurred window");
             }
         });
 
@@ -57,7 +56,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
 
             public void handleAction(Action action, Object sender, Object target) {
-                window.getRoot().showNotification("Action!");
+                Notification.show("Action!");
             }
         });
 

@@ -15,7 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptComponentState;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptCallback;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Notification;
 
 @LoadScripts({ "/statictestfiles/jsconnector.js" })
 public class BasicJavaScriptComponent extends AbstractTestRoot {
@@ -40,14 +40,13 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
         public ExampleWidget() {
             registerRpc(new ExampleClickRpc() {
                 public void onClick(String message) {
-                    Root.getCurrentRoot().showNotification(
-                            "Got a click: " + message);
+                    Notification.show("Got a click: " + message);
                 }
             });
             registerCallback("onclick", new JavaScriptCallback() {
                 public void call(JSONArray arguments) throws JSONException {
-                    Root.getCurrentRoot().showNotification(
-                            "Got a callback: " + arguments.getString(0));
+                    Notification.show("Got a callback: "
+                            + arguments.getString(0));
                 }
             });
             getState().setData(Arrays.asList("a", "b", "c"));

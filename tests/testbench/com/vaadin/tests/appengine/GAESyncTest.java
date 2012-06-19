@@ -91,7 +91,8 @@ public class GAESyncTest extends Application.LegacyApplication {
 
                     public void buttonClick(ClickEvent event) {
                         if (getRoot() == getMainWindow()) {
-                            getRoot().showNotification("main");
+                            getRoot().getPage().showNotification(
+                                    new Notification("main"));
                             try {
                                 Thread.sleep((5000));
                             } catch (InterruptedException e) {

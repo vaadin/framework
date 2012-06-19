@@ -86,7 +86,7 @@ public class JSR286PortletRoot extends Root {
                     .getContext();
             ctx.addPortletListener(getApplication(), new DemoPortletListener());
         } else {
-            showNotification("Not inited via Portal!",
+            Notification.show("Not inited via Portal!",
                     Notification.TYPE_ERROR_MESSAGE);
         }
 
@@ -109,7 +109,7 @@ public class JSR286PortletRoot extends Root {
             tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
 
             // Show notification about current mode and state
-            showNotification(
+            Notification.show(
                     "Portlet status",
                     "Mode: " + request.getPortletMode() + " State: "
                             + request.getWindowState(),

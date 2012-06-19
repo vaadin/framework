@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 public class IntegerTextFieldDataSource extends AbstractTestRoot {
@@ -40,12 +40,9 @@ public class IntegerTextFieldDataSource extends AbstractTestRoot {
                 Integer propertyValue = integerProperty.getValue();
                 int dataModelValue = myBean.getValue();
 
-                Root.getCurrentRoot().showNotification(
-                        "UI value (String): " + uiValue
-                                + "<br />Property value (Integer): "
-                                + propertyValue
-                                + "<br />Data model value (int): "
-                                + dataModelValue);
+                Notification.show("UI value (String): " + uiValue
+                        + "<br />Property value (Integer): " + propertyValue
+                        + "<br />Data model value (int): " + dataModelValue);
             }
         });
 

@@ -15,7 +15,7 @@ public abstract class AbstractTestRoot extends Root {
 
     @Override
     public void init(WrappedRequest request) {
-        setCaption(getClass().getName());
+        getPage().setTitle(getClass().getName());
 
         Label label = new Label(getTestDescription(), ContentMode.XHTML);
         label.setWidth("100%");

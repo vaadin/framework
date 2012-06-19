@@ -9,6 +9,7 @@ import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 public class StringMyTypeConverter extends AbstractTestRoot {
@@ -26,12 +27,11 @@ public class StringMyTypeConverter extends AbstractTestRoot {
             public void buttonClick(ClickEvent event) {
                 try {
                     Name name = (Name) textField.getConvertedValue();
-                    getRoot().showNotification(
-                            "First name: " + name.getFirstName()
-                                    + "<br />Last name: " + name.getLastName());
+                    Notification.show("First name: " + name.getFirstName()
+                            + "<br />Last name: " + name.getLastName());
                 } catch (ConversionException e) {
                     e.printStackTrace();
-                    getRoot().showNotification(e.getCause().getMessage());
+                    Notification.show(e.getCause().getMessage());
                 }
             }
         }));

@@ -10,7 +10,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -92,12 +91,10 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
-                    Root.getCurrentRoot().showNotification("ERROR",
-                            "This should have failed",
+                    Notification.show("ERROR", "This should have failed",
                             Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    Root.getCurrentRoot().showNotification("OK",
-                            "threw, as expected",
+                    Notification.show("OK", "threw, as expected",
                             Notification.TYPE_ERROR_MESSAGE);
                 }
             }
@@ -111,12 +108,10 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 p.addComponent(p2);
                 try {
                     p3.addComponent(p);
-                    Root.getCurrentRoot().showNotification("ERROR",
-                            "This should have failed",
+                    Notification.show("ERROR", "This should have failed",
                             Notification.TYPE_ERROR_MESSAGE);
                 } catch (Exception e) {
-                    Root.getCurrentRoot().showNotification("OK",
-                            "threw, as expected",
+                    Notification.show("OK", "threw, as expected",
                             Notification.TYPE_ERROR_MESSAGE);
                 }
             }

@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.FragmentChangedEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.FragmentChangedEvent;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -32,7 +32,7 @@ public class Ticket34 extends Application.LegacyApplication {
                 "Test app for URI fragment management/reading", mainLayout);
         setMainWindow(mainWin);
 
-        mainWin.addListener(new Root.FragmentChangedListener() {
+        mainWin.getPage().addListener(new Page.FragmentChangedListener() {
 
             public void fragmentChanged(FragmentChangedEvent event) {
                 getMainWindow().showNotification(
@@ -93,7 +93,7 @@ public class Ticket34 extends Application.LegacyApplication {
                 public void buttonClick(ClickEvent event) {
                     String viewName = tf.getValue().toString();
                     // fragmentChangedListener will change the view if possible
-                    event.getButton().getRoot().setFragment(viewName);
+                    event.getButton().getRoot().getPage().setFragment(viewName);
                 }
             });
 

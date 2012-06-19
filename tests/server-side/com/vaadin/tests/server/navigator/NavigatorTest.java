@@ -19,9 +19,9 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
+import com.vaadin.terminal.Page;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
-import com.vaadin.ui.Root;
 
 public class NavigatorTest extends TestCase {
 
@@ -366,9 +366,9 @@ public class NavigatorTest extends TestCase {
 
     public void testDefaultDisplayType() {
         IMocksControl control = EasyMock.createControl();
-        Root root = control.createMock(Root.class);
+        Page page = control.createMock(Page.class);
 
-        Navigator navigator = new Navigator(root);
+        Navigator navigator = new Navigator(page);
 
         assertEquals("Default display should be a SimpleViewDisplay",
                 SimpleViewDisplay.class, navigator.getDisplay().getClass());

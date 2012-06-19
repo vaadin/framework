@@ -7,7 +7,7 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Notification;
 
 public abstract class AbstractBeanFieldGroupTest extends TestBase {
 
@@ -64,7 +64,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
                     } catch (CommitException e) {
                         msg = "Commit failed: " + e.getMessage();
                     }
-                    Root.getCurrentRoot().showNotification(msg);
+                    Notification.show(msg);
                     log.log(msg);
 
                 }
