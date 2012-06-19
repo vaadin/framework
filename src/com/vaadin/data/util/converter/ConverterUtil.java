@@ -3,11 +3,12 @@
  */
 package com.vaadin.data.util.converter;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import com.vaadin.Application;
 
-public class ConverterUtil {
+public class ConverterUtil implements Serializable {
 
     public static <UITYPE, MODELTYPE> Converter<UITYPE, MODELTYPE> getConverter(
             Class<UITYPE> uiType, Class<MODELTYPE> modelType) {
@@ -110,4 +111,32 @@ public class ConverterUtil {
 
     }
 
+    /**
+     * Checks if the given converter can handle conversion between the given
+     * presentation and model type
+     * 
+     * @param converter
+     *            The converter to check
+     * @param presentationType
+     *            The presentation type
+     * @param modelType
+     *            The model type
+     * @return true if the converter supports conversion between the given
+     *         presentation and model type, false otherwise
+     */
+    public static boolean canConverterHandle(Converter<?, ?> converter,
+            Class<?> presentationType, Class<?> modelType) {
+        if (converter == null) {
+            return false;
+        }
+
+        if (!modelType.isAssignableFrom(converter.getModelType())) {
+            return false;
+        }
+        if (!presentationType.isAssignableFrom(converter.getPresentationType())) {
+            return false;
+        }
+
+        return true;
+    }
 }
