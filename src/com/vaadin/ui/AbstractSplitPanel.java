@@ -33,8 +33,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     // TODO use Unit in AbstractSplitPanelState and remove these
     private Unit posUnit;
-    private Unit posMinUnit = Unit.PERCENTAGE;
-    private Unit posMaxUnit = Unit.PERCENTAGE;
+    private Unit posMinUnit;
+    private Unit posMaxUnit;
 
     private AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
 
@@ -53,6 +53,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     public AbstractSplitPanel() {
         registerRpc(rpc);
         setSplitPosition(50, Unit.PERCENTAGE, false);
+        setSplitPositionLimits(0, Unit.PERCENTAGE, 100, Unit.PERCENTAGE);
     }
 
     /**
@@ -430,11 +431,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         SplitterState state = getSplitterState();
 
         state.setMinPosition(minPos);
-        state.setMinPositionUnit("" + minPosUnit);
+        state.setMinPositionUnit(minPosUnit.getSymbol());
         posMinUnit = minPosUnit;
 
         state.setMaxPosition(maxPos);
-        state.setMaxPositionUnit("" + maxPosUnit);
+        state.setMaxPositionUnit(maxPosUnit.getSymbol());
         posMaxUnit = maxPosUnit;
 
         requestRepaint();

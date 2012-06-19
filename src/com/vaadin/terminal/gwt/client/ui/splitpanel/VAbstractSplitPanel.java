@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.dom.client.Node;
@@ -77,7 +78,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean positionReversed = false;
 
-    List<String> componentStyleNames;
+    List<String> componentStyleNames = Collections.emptyList();
 
     private Element draggingCurtain;
 
@@ -758,6 +759,13 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * Ensures the panels are still scrollable eg. after style sheet changes
+     */
+    void ensureScrollable() {
+        touchScrollHandler.setElements(firstContainer, secondContainer);
     }
 
 }

@@ -144,6 +144,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         getLayoutManager().setNeedsLayout(this);
 
+        getWidget().ensureScrollable();
     }
 
     @Override
