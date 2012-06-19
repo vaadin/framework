@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8888/" />
+<title>DisableEnableCascadeStyles</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">DisableEnableCascadeStyles</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.DisableEnableCascadeStyles?restartApplication</td>
+	<td></td>
+</tr>
+<!--disable tabsheet-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[1]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--enable tabsheet-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[1]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--disable layout containing components-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[2]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--enable layout containing components-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[2]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--disable all bottom level components-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[3]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--enable all bottom level components-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VButton[3]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--assert css class names for bottom level components-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VNativeButton[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/VTextArea[0]</td>
+	<td>v-disabled</td>
+</tr>
+<!--assert css class name for component captions-->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[2]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsDisableEnableCascadeStyles::/VVerticalLayout[0]/VVerticalLayout[0]/VPanel[0]/VTabsheet[0]/VTabsheetPanel[0]/VVerticalLayout[0]/domChild[3]/domChild[0]</td>
+	<td>v-disabled</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

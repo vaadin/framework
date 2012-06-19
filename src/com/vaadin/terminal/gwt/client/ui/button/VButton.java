@@ -338,12 +338,10 @@ public class VButton extends FocusWidget implements ClickHandler {
                 Accessibility.removeState(getElement(),
                         Accessibility.STATE_PRESSED);
                 super.setTabIndex(-1);
-                addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
             } else {
                 Accessibility.setState(getElement(),
                         Accessibility.STATE_PRESSED, "false");
                 super.setTabIndex(tabIndex);
-                removeStyleName(ApplicationConnection.DISABLED_CLASSNAME);
             }
         }
     }
