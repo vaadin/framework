@@ -10,6 +10,7 @@ import java.util.Map;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.AbstractExtension;
+import com.vaadin.terminal.Page;
 import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.ExecuteJavaScriptRpc;
 import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerState;
@@ -61,7 +62,11 @@ public class JavaScript extends AbstractExtension {
     }
 
     public static JavaScript getCurrent() {
-        return Root.getCurrentRoot().getJavaScript();
+        Page page = Page.getCurrent();
+        if (page == null) {
+            return null;
+        }
+        return page.getJavaScript();
     }
 
 }

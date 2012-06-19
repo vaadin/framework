@@ -24,6 +24,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -189,7 +190,7 @@ public class TouchScrollables extends TestBase {
             }
 
             public void handleAction(Action action, Object sender, Object target) {
-                getLayout().getRoot().showNotification(action.getCaption());
+                Notification.show(action.getCaption());
 
             }
         });

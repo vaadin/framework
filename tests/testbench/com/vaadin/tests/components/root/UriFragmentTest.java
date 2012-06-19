@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.root;
 
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.FragmentChangedEvent;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
@@ -14,7 +16,7 @@ public class UriFragmentTest extends AbstractTestRoot {
     protected void setup(WrappedRequest request) {
         addComponent(fragmentLabel);
         updateLabel();
-        addListener(new FragmentChangedListener() {
+        getPage().addListener(new Page.FragmentChangedListener() {
             public void fragmentChanged(FragmentChangedEvent event) {
                 updateLabel();
             }
@@ -22,13 +24,13 @@ public class UriFragmentTest extends AbstractTestRoot {
         addComponent(new Button("Navigate to #test",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        setFragment("test");
+                        getPage().setFragment("test");
                     }
                 }));
     }
 
     private void updateLabel() {
-        String fragment = getFragment();
+        String fragment = getPage().getFragment();
         if (fragment == null) {
             fragmentLabel.setValue("No URI fragment set");
         } else {

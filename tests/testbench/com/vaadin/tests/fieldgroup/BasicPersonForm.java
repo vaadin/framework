@@ -18,8 +18,8 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -125,7 +125,7 @@ public class BasicPersonForm extends TestBase {
                 } catch (CommitException e) {
                     msg = "Commit failed: " + e.getMessage();
                 }
-                Root.getCurrentRoot().showNotification(msg);
+                Notification.show(msg);
                 log.log(msg);
 
             }

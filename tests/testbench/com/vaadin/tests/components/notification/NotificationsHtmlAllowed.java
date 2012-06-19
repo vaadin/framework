@@ -6,7 +6,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -46,15 +45,13 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
 
     public void buttonClick(ClickEvent event) {
         Notification n = makeNotification();
-        Root.getCurrentRoot().showNotification(n);
-
+        n.show();
     }
 
     private Notification makeNotification() {
-        Notification n = new Notification((String) captionField.getValue(),
-                (String) messageField.getValue(),
-                Notification.TYPE_HUMANIZED_MESSAGE,
-                (Boolean) htmlAllowedBox.getValue());
+        Notification n = new Notification(captionField.getValue(),
+                messageField.getValue(), Notification.TYPE_HUMANIZED_MESSAGE,
+                htmlAllowedBox.getValue());
         return n;
     }
 }

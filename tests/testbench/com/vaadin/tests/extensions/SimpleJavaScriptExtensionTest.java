@@ -16,7 +16,7 @@ import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptCallback;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Notification;
 
 @LoadScripts({ "/statictestfiles/jsextension.js" })
 public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
@@ -50,14 +50,13 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         public SimpleJavascriptExtension() {
             registerRpc(new SimpleJavaScriptExtensionServerRpc() {
                 public void greet(String message) {
-                    Root.getCurrentRoot().showNotification(
-                            getState().getPrefix() + message);
+                    Notification.show(getState().getPrefix() + message);
                 }
             });
             registerCallback("greetToServer", new JavaScriptCallback() {
                 public void call(JSONArray arguments) throws JSONException {
-                    Root.getCurrentRoot().showNotification(
-                            getState().getPrefix() + arguments.getString(0));
+                    Notification.show(getState().getPrefix()
+                            + arguments.getString(0));
                 }
             });
         }

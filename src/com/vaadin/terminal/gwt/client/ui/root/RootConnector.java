@@ -61,6 +61,11 @@ public class RootConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
+        registerRpc(PageClientRpc.class, new PageClientRpc() {
+            public void setTitle(String title) {
+                com.google.gwt.user.client.Window.setTitle(title);
+            }
+        });
     }
 
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -94,11 +99,6 @@ public class RootConnector extends AbstractComponentContainerConnector
         getWidget().setStyleName(styles.trim());
 
         clickEventHandler.handleEventHandlerRegistration();
-
-        if (!getWidget().isEmbedded() && getState().getCaption() != null) {
-            // only change window title if we're in charge of the whole page
-            com.google.gwt.user.client.Window.setTitle(getState().getCaption());
-        }
 
         // Process children
         int childIndex = 0;

@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 public class IntegerTextFieldStandalone extends AbstractTestRoot {
@@ -24,14 +24,12 @@ public class IntegerTextFieldStandalone extends AbstractTestRoot {
                 try {
                     Integer convertedValue = (Integer) textField
                             .getConvertedValue();
-                    Root.getCurrentRoot().showNotification(
-                            "UI value (String): " + uiValue
-                                    + "<br />Converted value (Integer): "
-                                    + convertedValue);
+                    Notification.show("UI value (String): " + uiValue
+                            + "<br />Converted value (Integer): "
+                            + convertedValue);
                 } catch (ConversionException e) {
                     e.printStackTrace();
-                    Root.getCurrentRoot().showNotification(
-                            "Could not convert value: " + uiValue);
+                    Notification.show("Could not convert value: " + uiValue);
                 }
             }
         });

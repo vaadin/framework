@@ -4,6 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 
@@ -31,8 +32,7 @@ public class ProgrammaticCollapse extends TestBase {
                 new ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(1);
-                        table.getRoot().showNotification(
-                                "set collapsed: " + collapsed);
+                        Notification.show("set collapsed: " + collapsed);
                         table.setCollapsed(1, collapsed);
                     }
                 }));
@@ -40,8 +40,7 @@ public class ProgrammaticCollapse extends TestBase {
                 new ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         boolean collapsed = !table.isCollapsed(100);
-                        table.getRoot().showNotification(
-                                "set collapsed: " + collapsed);
+                        Notification.show("set collapsed: " + collapsed);
                         table.setCollapsed(100, collapsed);
                     }
                 }));
@@ -51,8 +50,7 @@ public class ProgrammaticCollapse extends TestBase {
 
                     public void buttonClick(ClickEvent event) {
                         collapsed = !collapsed;
-                        table.getRoot().showNotification(
-                                "set collapsed: " + collapsed);
+                        Notification.show("set collapsed: " + collapsed);
                         for (int i = 0; i < 50; ++i) {
                             table.setCollapsed(i * 2, collapsed);
                         }
