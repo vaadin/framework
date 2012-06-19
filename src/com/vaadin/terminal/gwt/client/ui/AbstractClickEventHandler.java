@@ -85,13 +85,13 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
         if (hasEventListener()) {
             if (mouseDownHandlerRegistration == null) {
                 mouseDownHandlerRegistration = registerHandler(this,
-                        MouseUpEvent.getType());
+                        MouseDownEvent.getType());
                 mouseUpHandlerRegistration = registerHandler(this,
                         MouseUpEvent.getType());
-                contextMenuHandlerRegistration = registerHandler(this,
-                        ContextMenuEvent.getType());
                 doubleClickHandlerRegistration = registerHandler(this,
                         DoubleClickEvent.getType());
+                contextMenuHandlerRegistration = registerHandler(this,
+                        ContextMenuEvent.getType());
             }
         } else {
             if (mouseDownHandlerRegistration != null) {
@@ -103,9 +103,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
 
                 mouseDownHandlerRegistration = null;
                 mouseUpHandlerRegistration = null;
-                contextMenuHandlerRegistration = null;
                 doubleClickHandlerRegistration = null;
-
+                contextMenuHandlerRegistration = null;
             }
         }
 
