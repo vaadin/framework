@@ -37,8 +37,7 @@ public class TerminalErrorNotification extends TestBase {
                 throwable = throwable.getCause();
             }
 
-            mainWindow.showNotification(
-                    "Got an exception: " + throwable.getMessage(),
+            Notification.show("Got an exception: " + throwable.getMessage(),
                     Notification.TYPE_ERROR_MESSAGE);
         } else {
             System.out.println("No main window found");
