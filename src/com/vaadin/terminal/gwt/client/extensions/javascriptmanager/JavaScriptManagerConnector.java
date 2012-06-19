@@ -94,9 +94,9 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
 
     private static native void eval(String script)
     /*-{
-      if(script) {
-         $wnd.eval(script);
-      }
+        if(script) {
+            (new $wnd.Function(script)).apply($wnd);
+        }
     }-*/;
 
     public void sendRpc(String name, JsArray<JavaScriptObject> arguments) {
