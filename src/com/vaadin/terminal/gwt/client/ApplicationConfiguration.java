@@ -347,7 +347,7 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public static void startApplication(final String applicationId) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
+
             public void execute() {
                 ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
                 ApplicationConnection a = GWT
@@ -553,7 +553,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private static DeferredWidgetLoader deferredWidgetLoader;
 
-    @Override
     public void onModuleLoad() {
 
         // Prepare VConsole for debugging
@@ -571,7 +570,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * GWT hosted mode.
          */
         GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
+
             public void onUncaughtException(Throwable e) {
                 /*
                  * Note in case of null console (without ?debug) we eat

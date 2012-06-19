@@ -15,8 +15,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 
-import org.junit.Test;
-
 import com.vaadin.Application;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -29,6 +27,9 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.BaseTheme;
+
+import org.junit.Test;
 
 @SuppressWarnings("deprecation")
 public class VaadinClasses {
@@ -65,6 +66,15 @@ public class VaadinClasses {
     public static List<Class<? extends Field>> getFields() {
         try {
             return findClasses(Field.class, "com.vaadin.ui");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Class<? extends BaseTheme>> getThemeClasses() {
+        try {
+            return findClasses(BaseTheme.class, "com.vaadin.ui.themes");
         } catch (IOException e) {
             e.printStackTrace();
             return null;

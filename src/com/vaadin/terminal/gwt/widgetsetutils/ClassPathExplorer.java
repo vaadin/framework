@@ -58,7 +58,6 @@ public class ClassPathExplorer {
      * File filter that only accepts directories.
      */
     private final static FileFilter DIRECTORIES_ONLY = new FileFilter() {
-        @Override
         public boolean accept(File f) {
             if (f.exists() && f.isDirectory()) {
                 return true;

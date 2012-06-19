@@ -17,15 +17,11 @@ public class NotificationsAndModalWindow extends TestBase {
 
         Button b = new Button("Button");
         b.addListener(new Button.ClickListener() {
-
-            @Override
             public void buttonClick(ClickEvent event) {
-
                 Window w = new Window("This is a window");
                 w.setModal(true);
                 getMainWindow().addWindow(w);
             }
-
         });
         addComponent(b);
     }

@@ -52,7 +52,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * hits.
      */
     private final NativePreviewHandler mouseUpPreviewHandler = new NativePreviewHandler() {
-        @Override
+
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             if (event.getTypeInt() == Event.ONMOUSEUP) {
                 mouseUpEventPreviewRegistration.removeHandler();
@@ -144,7 +144,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * Event handler for context menu. Prevents the browser context menu from
      * popping up if there is a listener for right clicks.
      */
-    @Override
+
     public void onContextMenu(ContextMenuEvent event) {
         if (hasEventListener() && shouldFireEvent(event)) {
             // Prevent showing the browser's context menu when there is a right
@@ -153,7 +153,6 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
         }
     }
 
-    @Override
     public void onMouseDown(MouseDownEvent event) {
         /*
          * When getting a mousedown event, we must detect where the
@@ -165,7 +164,6 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
                 .addNativePreviewHandler(mouseUpPreviewHandler);
     }
 
-    @Override
     public void onMouseUp(MouseUpEvent event) {
         /*
          * Only fire a click if the mouseup hits the same element as the
@@ -209,7 +207,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * that browsers typically fail to prevent the second click event so a
      * double click will result in two click events and one double click event.
      */
-    @Override
+
     public void onDoubleClick(DoubleClickEvent event) {
         if (hasEventListener() && shouldFireEvent(event)) {
             fireClick(event.getNativeEvent());

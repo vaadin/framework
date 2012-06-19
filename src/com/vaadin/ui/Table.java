@@ -1647,6 +1647,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * this method has been called. See {@link #refreshRowCache()} for forcing
      * an update of the contents.
      */
+
     @Override
     public void requestRepaint() {
         // Overridden only for javadoc
@@ -2504,6 +2505,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.ui.Select#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -2826,6 +2828,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.ui.AbstractSelect#paintContent(com.vaadin.
      * terminal.PaintTarget)
      */
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         /*
@@ -3684,7 +3687,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
-    @Override
+
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -3711,7 +3714,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
-    @Override
+
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -3751,6 +3754,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
+
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         if (event.getProperty() == this
@@ -3781,6 +3785,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Component#attach()
      */
+
     @Override
     public void attach() {
         super.attach();
@@ -3793,6 +3798,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Component#detach()
      */
+
     @Override
     public void detach() {
         super.detach();
@@ -3803,6 +3809,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeAllItems()
      */
+
     @Override
     public boolean removeAllItems() {
         currentPageFirstItemId = null;
@@ -3815,6 +3822,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeItem(Object)
      */
+
     @Override
     public boolean removeItem(Object itemId) {
         final Object nextItemId = nextItemId(itemId);
@@ -3833,6 +3841,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeContainerProperty(Object)
      */
+
     @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
@@ -3859,6 +3868,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container#addContainerProperty(Object, Class,
      *      Object)
      */
+
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -4014,6 +4024,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
+
     @Override
     public Collection<?> getVisibleItemIds() {
 
@@ -4037,6 +4048,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange(com.vaadin.data.Container.ItemSetChangeEvent)
      */
+
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
@@ -4053,6 +4065,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.PropertySetChangeListener#containerPropertySetChange(com.vaadin.data.Container.PropertySetChangeEvent)
      */
+
     @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
@@ -4096,6 +4109,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *             if set to true.
      * @see com.vaadin.ui.Select#setNewItemsAllowed(boolean)
      */
+
     @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
@@ -4109,7 +4123,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
-    @Override
+
     public Object nextItemId(Object itemId) {
         return ((Container.Ordered) items).nextItemId(itemId);
     }
@@ -4120,7 +4134,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
-    @Override
+
     public Object prevItemId(Object itemId) {
         return ((Container.Ordered) items).prevItemId(itemId);
     }
@@ -4130,7 +4144,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
-    @Override
+
     public Object firstItemId() {
         return ((Container.Ordered) items).firstItemId();
     }
@@ -4140,7 +4154,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
-    @Override
+
     public Object lastItemId() {
         return ((Container.Ordered) items).lastItemId();
     }
@@ -4151,7 +4165,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
-    @Override
+
     public boolean isFirstId(Object itemId) {
         return ((Container.Ordered) items).isFirstId(itemId);
     }
@@ -4162,7 +4176,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
-    @Override
+
     public boolean isLastId(Object itemId) {
         return ((Container.Ordered) items).isLastId(itemId);
     }
@@ -4172,7 +4186,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
-    @Override
+
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         Object itemId = ((Container.Ordered) items)
@@ -4189,7 +4203,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      *      java.lang.Object)
      */
-    @Override
+
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
@@ -4282,7 +4296,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      boolean[])
      * 
      */
-    @Override
+
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
         final Container c = getContainerDataSource();
@@ -4318,7 +4332,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
-    @Override
+
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && !isSortDisabled()) {
@@ -4508,19 +4522,18 @@ public class Table extends AbstractSelect implements Action.Container,
         public abstract String getStyle(Object itemId, Object propertyId);
     }
 
-    @Override
     public void addListener(ItemClickListener listener) {
         addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
-    @Override
     public void removeListener(ItemClickListener listener) {
         removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -4590,13 +4603,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
-    @Override
     public TableTransferable getTransferable(Map<String, Object> rawVariables) {
         TableTransferable transferable = new TableTransferable(rawVariables);
         return transferable;
     }
 
-    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -4605,7 +4616,6 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
-    @Override
     public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new AbstractSelectTargetDetails(clientVariables);
@@ -4662,6 +4672,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.ServerSideCriterion#getIdentifier
          * ()
          */
+
         @Override
         protected String getIdentifier() {
             return TableDropCriterion.class.getCanonicalName();
@@ -4674,7 +4685,6 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
-        @Override
         @SuppressWarnings("unchecked")
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
@@ -4694,6 +4704,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#paintResponse(
          * com.vaadin.terminal.PaintTarget)
          */
+
         @Override
         public void paintResponse(PaintTarget target) throws PaintException {
             /*
@@ -5349,12 +5360,10 @@ public class Table extends AbstractSelect implements Action.Container,
         super.setVisible(visible);
     }
 
-    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
 
-    @Override
     public Iterator<Component> getComponentIterator() {
         if (visibleComponents == null) {
             Collection<Component> empty = Collections.emptyList();
@@ -5364,7 +5373,6 @@ public class Table extends AbstractSelect implements Action.Container,
         return visibleComponents.iterator();
     }
 
-    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     }

@@ -31,7 +31,7 @@ public class Ticket6002 extends TestBase {
         final TextField tf1 = new TextField(
                 "Changing this field modifies only the textfield", property1);
         tf1.addListener(new Property.ValueChangeListener() {
-            @Override
+
             public void valueChange(ValueChangeEvent event) {
                 // This value change event is called twice if the new
                 // input value is an integer. The second time is during
@@ -56,7 +56,7 @@ public class Ticket6002 extends TestBase {
                 "Changing this field modifies the layout - do it twice",
                 property2);
         tf2.addListener(new Property.ValueChangeListener() {
-            @Override
+
             public void valueChange(ValueChangeEvent event) {
                 // This value change event is called twice if the new
                 // input value is an integer. The second time is during

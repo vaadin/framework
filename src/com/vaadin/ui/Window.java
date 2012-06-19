@@ -79,7 +79,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
-        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
@@ -125,6 +124,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#addComponent(com.vaadin.ui.Component)
      */
+
     @Override
     public void addComponent(Component c) {
         if (c instanceof Window) {
@@ -142,6 +142,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#paintContent(com.vaadin.terminal.PaintTarget)
      */
+
     @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
@@ -159,6 +160,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -624,8 +626,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Request to center this window on the screen. <b>Note:</b> affects
-     * sub-windows only.
+     * Sets this window to be centered relative to its parent window. Affects
+     * sub-windows only. If the window is resized as a result of the size of its
+     * content changing, it will keep itself centered as long as its position is
+     * not explicitly changed programmatically or by the user.
+     * <p>
+     * <b>NOTE:</b> This method has several issues as currently implemented.
+     * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
         getState().setCentered(true);
@@ -808,13 +815,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
-    @Override
+
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
@@ -826,13 +832,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
-    @Override
+
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
@@ -843,6 +848,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * If the window is a sub-window focusing will cause the sub-window to be
      * brought on top of other sub-windows on gain keyboard focus.
      */
+
     @Override
     public void focus() {
         /*
@@ -857,37 +863,5 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     @Override
     public WindowState getState() {
         return (WindowState) super.getState();
-    }
-
-    /**
-     * Gets the height of the viewport area of the browser window where this
-     * window is displayed.
-     * 
-     * @return the browser viewport height in pixels
-     */
-    public int getBrowserWindowHeight() {
-        // Size only reported by VView -> data only available from application
-        // level window
-        if (getParent() != null) {
-            return ((Root) getParent()).getBrowserWindowHeight();
-        }
-
-        return browserWindowHeight;
-    }
-
-    /**
-     * Gets the width of the viewport area of the browser window where this
-     * window is displayed.
-     * 
-     * @return the browser viewport width in pixels
-     */
-    public int getBrowserWindowWidth() {
-        // Size only reported by VView -> data only available from application
-        // level window
-        if (getParent() != null) {
-            return ((Root) getParent()).getBrowserWindowWidth();
-        }
-
-        return browserWindowWidth;
     }
 }

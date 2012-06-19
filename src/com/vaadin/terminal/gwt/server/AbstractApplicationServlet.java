@@ -74,7 +74,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.servlet = servlet;
         }
 
-        @Override
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
@@ -97,7 +96,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private int resourceCacheTime = 3600;
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
-        @Override
+
         public String getStaticFileLocation(WrappedRequest request) {
             HttpServletRequest servletRequest = WrappedHttpServletRequest
                     .cast(request);
@@ -105,32 +104,27 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getStaticFilesLocation(servletRequest);
         }
 
-        @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
             return getApplicationOrSystemProperty(
                     AbstractApplicationServlet.PARAMETER_WIDGETSET,
                     AbstractApplicationServlet.DEFAULT_WIDGETSET);
         }
 
-        @Override
         public String getConfiguredTheme(WrappedRequest request) {
             // Use the default
             return AbstractApplicationServlet.getDefaultTheme();
         }
 
-        @Override
         public String getApplicationOrSystemProperty(String propertyName,
                 String defaultValue) {
             return AbstractApplicationServlet.this
                     .getApplicationOrSystemProperty(propertyName, defaultValue);
         }
 
-        @Override
         public boolean isStandalone(WrappedRequest request) {
             return true;
         }
 
-        @Override
         public ClassLoader getClassLoader() {
             try {
                 return AbstractApplicationServlet.this.getClassLoader();
@@ -153,8 +147,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
@@ -337,6 +331,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      *             if the request for the TRACE cannot be handled.
      */
+
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -1137,7 +1132,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * parameter in web.xml
              */
             response.setHeader("Cache-Control",
-                    "max-age: " + String.valueOf(resourceCacheTime));
+                    "max-age= " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
@@ -1683,7 +1678,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.throwable = throwable;
         }
 
-        @Override
         public Throwable getThrowable() {
             return throwable;
         }

@@ -5,7 +5,7 @@ package com.vaadin.ui.themes;
 
 public class ChameleonTheme extends BaseTheme {
 
-    public static final String THEME_NAME = "Chameleon";
+    public static final String THEME_NAME = "chameleon";
 
     /***************************************************************************
      * Label styles

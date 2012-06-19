@@ -146,7 +146,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             new ScheduledCommand() {
 
-                @Override
                 public void execute() {
                     updateContentsSize();
                 }
@@ -266,7 +265,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (!orderingDefered) {
             orderingDefered = true;
             Scheduler.get().scheduleFinally(new Command() {
-                @Override
+
                 public void execute() {
                     doServerSideOrdering();
                     VNotification.bringNotificationsToFront();
@@ -279,7 +278,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         orderingDefered = false;
         VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
         Arrays.sort(array, new Comparator<VWindow>() {
-            @Override
+
             public int compare(VWindow o1, VWindow o2) {
                 /*
                  * Order by modality, then by bringtofront sequence.
@@ -857,12 +856,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 true);
     }
 
-    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
     }
 
-    @Override
     public void onScroll(ScrollEvent event) {
         client.updateVariable(id, "scrollTop",
                 contentPanel.getScrollPosition(), false);
@@ -871,7 +868,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     }
 
-    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (shortcutHandler != null) {
             shortcutHandler
@@ -880,21 +876,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    @Override
     public void onBlur(BlurEvent event) {
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
     }
 
-    @Override
     public void onFocus(FocusEvent event) {
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
     }
 
-    @Override
     public void focus() {
         contentPanel.focus();
     }

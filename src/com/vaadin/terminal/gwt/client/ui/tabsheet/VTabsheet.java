@@ -212,17 +212,14 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
         }
 
-        @Override
         public HandlerRegistration addFocusHandler(FocusHandler handler) {
             return addDomHandler(handler, FocusEvent.getType());
         }
 
-        @Override
         public HandlerRegistration addBlurHandler(BlurHandler handler) {
             return addDomHandler(handler, BlurEvent.getType());
         }
 
-        @Override
         public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
             return addDomHandler(handler, KeyDownEvent.getType());
         }
@@ -365,7 +362,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             setElement(el);
         }
 
-        @Override
         public void onClose(VCloseEvent event) {
             Tab tab = event.getTab();
             if (!tab.isEnabledOnServer()) {
@@ -401,7 +397,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return t;
         }
 
-        @Override
         public void onClick(ClickEvent event) {
             TabCaption caption = (TabCaption) event.getSource();
             Element targetElement = event.getNativeEvent().getEventTarget()
@@ -1038,7 +1033,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             final Style style = scroller.getStyle();
             style.setProperty("whiteSpace", "normal");
             Scheduler.get().scheduleDeferred(new Command() {
-                @Override
+
                 public void execute() {
                     style.setProperty("whiteSpace", "");
                 }
@@ -1123,7 +1118,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    @Override
     public void onBlur(BlurEvent event) {
         if (focusedTab != null && event.getSource() instanceof Tab) {
             focusedTab = null;
@@ -1133,7 +1127,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    @Override
     public void onFocus(FocusEvent event) {
         if (focusedTab == null && event.getSource() instanceof Tab) {
             focusedTab = (Tab) event.getSource();
@@ -1143,7 +1136,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    @Override
     public void focus() {
         tb.getTab(activeTabIndex).focus();
     }
@@ -1152,7 +1144,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         tb.getTab(activeTabIndex).blur();
     }
 
-    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (event.getSource() instanceof Tab) {
             int keycode = event.getNativeEvent().getKeyCode();

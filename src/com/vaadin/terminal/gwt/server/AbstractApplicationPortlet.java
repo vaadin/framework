@@ -175,7 +175,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             this.portlet = portlet;
         }
 
-        @Override
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
@@ -213,7 +212,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private boolean productionMode = false;
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
-        @Override
+
         public String getConfiguredWidgetset(WrappedRequest request) {
 
             String widgetset = getApplicationOrSystemProperty(
@@ -234,7 +233,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return widgetset;
         }
 
-        @Override
         public String getConfiguredTheme(WrappedRequest request) {
 
             // is the default theme defined by the portal?
@@ -249,14 +247,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return themeName;
         }
 
-        @Override
         public String getApplicationOrSystemProperty(String propertyName,
                 String defaultValue) {
             return AbstractApplicationPortlet.this
                     .getApplicationOrSystemProperty(propertyName, defaultValue);
         }
 
-        @Override
         public boolean isStandalone(WrappedRequest request) {
             return false;
         }
@@ -275,7 +271,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
          * @return The location of static resources (inside which there should
          * be a VAADIN directory). Does not end with a slash (/).
          */
-        @Override
+
         public String getStaticFileLocation(WrappedRequest request) {
             String staticFileLocation = WrappedPortletRequest.cast(request)
                     .getPortalProperty(
@@ -293,7 +289,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             }
         }
 
-        @Override
         public ClassLoader getClassLoader() {
             // Custom class loaders not currently supported in portlets (see
             // #8574)
@@ -1070,7 +1065,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             this.throwable = throwable;
         }
 
-        @Override
         public Throwable getThrowable() {
             return throwable;
         }

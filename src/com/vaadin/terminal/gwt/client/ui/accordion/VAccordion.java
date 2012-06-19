@@ -434,7 +434,6 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
-        @Override
         public void onClick(ClickEvent event) {
             onSelectTab(this);
         }

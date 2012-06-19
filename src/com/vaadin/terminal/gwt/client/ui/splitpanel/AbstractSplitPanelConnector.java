@@ -41,7 +41,6 @@ public abstract class AbstractSplitPanelConnector extends
 
         getWidget().addHandler(new SplitterMoveHandler() {
 
-            @Override
             public void splitterMoved(SplitterMoveEvent event) {
                 String position = getWidget().getSplitterPosition();
                 float pos = 0;
@@ -62,7 +61,6 @@ public abstract class AbstractSplitPanelConnector extends
         }, SplitterMoveEvent.TYPE);
     }
 
-    @Override
     public void updateCaption(ComponentConnector component) {
         // TODO Implement caption handling
     }
@@ -147,7 +145,6 @@ public abstract class AbstractSplitPanelConnector extends
         getWidget().ensureScrollable();
     }
 
-    @Override
     public void layout() {
         VAbstractSplitPanel splitPanel = getWidget();
         splitPanel.setSplitPosition(splitPanel.position);

@@ -119,7 +119,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * whenever the value changes.
      */
     private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
-        @Override
+
         public void onValueChange(ValueChangeEvent<String> event) {
             String newFragment = event.getValue();
 
@@ -134,7 +134,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
-                @Override
+
                 public void execute() {
                     performSizeCheck();
                 }
@@ -155,10 +155,12 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * Start to periodically monitor for parent element resizes if embedded
      * application (e.g. portlet).
      */
+    @Override
     protected void onLoad() {
         super.onLoad();
         if (isMonitoringParentSize()) {
             resizeTimer = new Timer() {
+
                 @Override
                 public void run() {
                     // trigger check to see if parent size has changed,
@@ -189,6 +191,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     /**
      * Stop monitoring for parent element resizes.
      */
+
     @Override
     protected void onUnload() {
         if (resizeTimer != null) {
@@ -354,7 +357,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google
      * .gwt.event.logical.shared.ResizeEvent)
      */
-    @Override
+
     public void onResize(ResizeEvent event) {
         triggerSizeChangeCheck();
     }
@@ -410,7 +413,6 @@ public class VRoot extends SimplePanel implements ResizeHandler,
        $wnd.location = url;
      }-*/;
 
-    @Override
     public void onWindowClosing(Window.ClosingEvent event) {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
@@ -430,12 +432,10 @@ public class VRoot extends SimplePanel implements ResizeHandler,
          }
      }-*/;
 
-    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;
     }
 
-    @Override
     public void focus() {
         getElement().focus();
     }

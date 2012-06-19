@@ -38,13 +38,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     private AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
 
-        @Override
         public void splitterClick(MouseEventDetails mouseDetails) {
             fireEvent(new SplitterClickEvent(AbstractSplitPanel.this,
                     mouseDetails));
         }
 
-        @Override
         public void setSplitterPosition(float position) {
             getSplitterState().setPosition(position);
         }
@@ -65,7 +63,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         int i = 0;
 
-        @Override
         public boolean hasNext() {
             if (i < getComponentCount()) {
                 return true;
@@ -73,7 +70,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
             return false;
         }
 
-        @Override
         public Component next() {
             if (!hasNext()) {
                 return null;
@@ -88,7 +84,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
             return null;
         }
 
-        @Override
         public void remove() {
             if (i == 1) {
                 if (getFirstComponent() != null) {
@@ -110,6 +105,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param c
      *            the component to be added.
      */
+
     @Override
     public void addComponent(Component c) {
         if (getFirstComponent() == null) {
@@ -197,6 +193,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param c
      *            the component to be removed.
      */
+
     @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
@@ -213,7 +210,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
-    @Override
+
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
@@ -224,7 +221,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @return the number of contained components (zero, one or two)
      */
-    @Override
+
     public int getComponentCount() {
         int count = 0;
         if (getFirstComponent() != null) {
@@ -237,7 +234,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /* Documented in superclass */
-    @Override
+
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (oldComponent == getFirstComponent()) {
             setFirstComponent(newComponent);

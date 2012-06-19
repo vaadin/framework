@@ -100,7 +100,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
      * 
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
-    @Override
+
     public void focus() {
         setFocus(true);
 
@@ -175,7 +175,6 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         }
     }
 
-    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
     }

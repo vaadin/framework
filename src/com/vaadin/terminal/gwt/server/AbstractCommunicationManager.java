@@ -1189,7 +1189,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // containers rely on that their updateFromUIDL method has been called
         // before children start calling e.g. updateCaption
         Collections.sort(paintables, new Comparator<Component>() {
-            @Override
+
             public int compare(Component c1, Component c2) {
                 int depth1 = 0;
                 while (c1.getParent() != null) {
@@ -1276,17 +1276,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static class NullIterator<E> implements Iterator<E> {
 
-        @Override
         public boolean hasNext() {
             return false;
         }
 
-        @Override
         public E next() {
             return null;
         }
 
-        @Override
         public void remove() {
         }
 
@@ -1732,7 +1729,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             this.throwable = throwable;
         }
 
-        @Override
         public Throwable getThrowable() {
             return throwable;
         }

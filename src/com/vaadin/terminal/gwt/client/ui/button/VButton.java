@@ -286,7 +286,6 @@ public class VButton extends FocusWidget implements ClickHandler {
      * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
      * .dom.client.ClickEvent)
      */
-    @Override
     public void onClick(ClickEvent event) {
         if (BrowserInfo.get().isSafari()) {
             VButton.this.setFocus(true);

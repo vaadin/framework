@@ -101,7 +101,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * contains an image tag with the rows icon (if an icon has been
          * specified) and the caption of the item
          */
-        @Override
+
         public String getDisplayString() {
             final StringBuffer sb = new StringBuffer();
             if (iconUri != null) {
@@ -124,7 +124,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Get a string that represents this item. This is used in the text box.
          */
-        @Override
+
         public String getReplacementString() {
             return caption;
         }
@@ -150,7 +150,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         /**
          * Executes a selection of this item.
          */
-        @Override
+
         public void execute() {
             onSuggestionSelected(this);
         }
@@ -396,6 +396,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
          */
+
         @Override
         public void onBrowserEvent(Event event) {
             if (event.getTypeInt() == Event.ONCLICK) {
@@ -453,7 +454,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
          * (int, int)
          */
-        @Override
+
         public void setPosition(int offsetWidth, int offsetHeight) {
 
             int top = -1;
@@ -546,6 +547,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google
          * .gwt.event.logical.shared.CloseEvent)
          */
+
         @Override
         public void onClose(CloseEvent<PopupPanel> event) {
             if (event.isAutoClosed()) {
@@ -590,7 +592,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
                 100, new ScheduledCommand() {
 
-                    @Override
                     public void execute() {
                         if (suggestionPopup.isVisible()
                                 && suggestionPopup.isAttached()) {
@@ -748,7 +749,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         private static final String SUBPART_PREFIX = "item";
 
-        @Override
         public Element getSubPartElement(String subPart) {
             int index = Integer.parseInt(subPart.substring(SUBPART_PREFIX
                     .length()));
@@ -758,7 +758,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return item.getElement();
         }
 
-        @Override
         public String getSubPartName(Element subElement) {
             if (!getElement().isOrHasChild(subElement)) {
                 return null;
@@ -781,7 +780,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return null;
         }
 
-        @Override
         public void onLoad(LoadEvent event) {
             // Handle icon onload events to ensure shadow is resized
             // correctly
@@ -833,6 +831,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * com.google.gwt.user.client.ui.TextBoxBase#onBrowserEvent(com.google
          * .gwt.user.client.Event)
          */
+
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -841,8 +840,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         }
 
-        @Override
         // Overridden to avoid selecting text when text input is disabled
+        @Override
         public void setSelectionRange(int pos, int length) {
             if (textInputEnabled) {
                 super.setSelectionRange(pos, length);
@@ -866,6 +865,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
          * .user.client.Event)
          */
+
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
@@ -960,7 +960,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public VFilterSelect() {
         selectedItemIcon.setStyleName("v-icon");
         selectedItemIcon.addLoadHandler(new LoadHandler() {
-            @Override
+
             public void onLoad(LoadEvent event) {
                 if (BrowserInfo.get().isIE8()) {
                     // IE8 needs some help to discover it should reposition the
@@ -1213,7 +1213,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
-    @Override
+
     public void onKeyDown(KeyDownEvent event) {
         if (enabled && !readonly) {
             int keyCode = event.getNativeKeyCode();
@@ -1375,7 +1375,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * @param event
      *            The KeyUpEvent of the key depressed
      */
-    @Override
+
     public void onKeyUp(KeyUpEvent event) {
         if (enabled && !readonly) {
             switch (event.getNativeKeyCode()) {
@@ -1423,7 +1423,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     /**
      * Listener for popupopener
      */
-    @Override
+
     public void onClick(ClickEvent event) {
         if (textInputEnabled
                 && event.getNativeEvent().getEventTarget().cast() == tb
@@ -1487,7 +1487,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
-    @Override
+
     public void onFocus(FocusEvent event) {
 
         /*
@@ -1525,7 +1525,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * .dom.client.BlurEvent)
      */
 
-    @Override
     public void onBlur(BlurEvent event) {
 
         if (BrowserInfo.get().isIE() && preventNextBlurEventInIE) {
@@ -1582,7 +1581,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * 
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
-    @Override
+
     public void focus() {
         focused = true;
         if (prompting && !readonly) {

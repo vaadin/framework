@@ -55,7 +55,6 @@ public class VerticalLayoutExpandRatioModification extends TestBase implements
         vl2.setSizeFull();
     }
 
-    @Override
     public void buttonClick(ClickEvent event) {
         if (isVisible) {
             mainLayout.setExpandRatio(vl2, 0);
