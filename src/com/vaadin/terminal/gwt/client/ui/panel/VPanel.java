@@ -6,8 +6,6 @@ package com.vaadin.terminal.gwt.client.ui.panel;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -18,6 +16,7 @@ import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         Focusable {
@@ -46,7 +45,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
 
     int scrollLeft;
 
-    private TouchScrollDelegate touchScrollDelegate;
+    private TouchScrollHandler touchScrollHandler;
 
     public VPanel() {
         super();
@@ -74,11 +73,11 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         setStyleName(CLASSNAME);
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
         DOM.sinkEvents(contentNode, Event.ONSCROLL | Event.TOUCHEVENTS);
-        addHandler(new TouchStartHandler() {
-            public void onTouchStart(TouchStartEvent event) {
-                getTouchScrollDelegate().onTouchStart(event);
-            }
-        }, TouchStartEvent.getType());
+
+        contentNode.getStyle().setProperty("position", "relative");
+        getElement().getStyle().setProperty("overflow", "hidden");
+
+        makeScrollable();
     }
 
     /**
@@ -100,6 +99,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
      * 
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
+
     public void focus() {
         setFocus(true);
 
@@ -174,16 +174,17 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
         }
     }
 
-    protected TouchScrollDelegate getTouchScrollDelegate() {
-        if (touchScrollDelegate == null) {
-            touchScrollDelegate = new TouchScrollDelegate(contentNode);
-        }
-        return touchScrollDelegate;
-
-    }
-
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
     }
 
+    /**
+     * Ensures the panel is scrollable eg. after style name changes
+     */
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(contentNode);
+    }
 }

@@ -23,9 +23,6 @@ import com.vaadin.util.SerializerHelper;
 public class MethodPropertyDescriptor<BT> implements
         VaadinPropertyDescriptor<BT> {
 
-    private static final Logger logger = Logger
-            .getLogger(MethodPropertyDescriptor.class.getName());
-
     private final String name;
     private Class<?> propertyType;
     private transient Method readMethod;
@@ -109,9 +106,9 @@ public class MethodPropertyDescriptor<BT> implements
                 readMethod = null;
             }
         } catch (SecurityException e) {
-            logger.log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         } catch (NoSuchMethodException e) {
-            logger.log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
     };
 
@@ -128,4 +125,7 @@ public class MethodPropertyDescriptor<BT> implements
                 writeMethod);
     }
 
+    private static final Logger getLogger() {
+        return Logger.getLogger(MethodPropertyDescriptor.class.getName());
+    }
 }

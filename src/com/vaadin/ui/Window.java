@@ -24,6 +24,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
 import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
@@ -83,6 +84,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
     };
 
+    private int browserWindowWidth = -1;
+
+    private int browserWindowHeight = -1;
+
     /**
      * Creates a new unnamed window with a default layout.
      */
@@ -119,6 +124,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#addComponent(com.vaadin.ui.Component)
      */
+
     @Override
     public void addComponent(Component c) {
         if (c instanceof Window) {
@@ -136,6 +142,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#paintContent(com.vaadin.terminal.PaintTarget)
      */
+
     @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
@@ -153,6 +160,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -161,13 +169,27 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         // size is handled in super class, but resize events only in windows ->
         // so detect if size change occurs before super.changeVariables()
         if (variables.containsKey("height")
-                && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
+                && (getHeightUnits() != Unit.PIXELS || (Integer) variables
                         .get("height") != getHeight())) {
             sizeHasChanged = true;
         }
         if (variables.containsKey("width")
-                && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
+                && (getWidthUnits() != Unit.PIXELS || (Integer) variables
                         .get("width") != getWidth())) {
+            sizeHasChanged = true;
+        }
+        Integer browserHeightVar = (Integer) variables
+                .get(VRoot.BROWSER_HEIGHT_VAR);
+        if (browserHeightVar != null
+                && browserHeightVar.intValue() != browserWindowHeight) {
+            browserWindowHeight = browserHeightVar.intValue();
+            sizeHasChanged = true;
+        }
+        Integer browserWidthVar = (Integer) variables
+                .get(VRoot.BROWSER_WIDTH_VAR);
+        if (browserWidthVar != null
+                && browserWidthVar.intValue() != browserWindowWidth) {
+            browserWindowWidth = browserWidthVar.intValue();
             sizeHasChanged = true;
         }
 
@@ -604,8 +626,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Request to center this window on the screen. <b>Note:</b> affects
-     * sub-windows only.
+     * Sets this window to be centered relative to its parent window. Affects
+     * sub-windows only. If the window is resized as a result of the size of its
+     * content changing, it will keep itself centered as long as its position is
+     * not explicitly changed programmatically or by the user.
+     * <p>
+     * <b>NOTE:</b> This method has several issues as currently implemented.
+     * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
         getState().setCentered(true);
@@ -788,6 +815,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
+
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
@@ -804,6 +832,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
+
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
@@ -819,6 +848,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * If the window is a sub-window focusing will cause the sub-window to be
      * brought on top of other sub-windows on gain keyboard focus.
      */
+
     @Override
     public void focus() {
         /*
@@ -834,5 +864,4 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public WindowState getState() {
         return (WindowState) super.getState();
     }
-
 }

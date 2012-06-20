@@ -194,6 +194,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @see #getWindow(String)
          * @see Application#getRoot(WrappedRequest)
          */
+
         @Override
         public Root.LegacyWindow getRoot(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
@@ -246,6 +247,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * <p>
          * {@inheritDoc}
          */
+
         @Override
         public String getThemeForRoot(Root root) {
             return theme;
@@ -1066,12 +1068,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
      *            the change event.
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
      */
+
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            logger.info("SocketException in CommunicationManager."
-                    + " Most likely client (browser) closed socket.");
+            getLogger().info(
+                    "SocketException in CommunicationManager."
+                            + " Most likely client (browser) closed socket.");
             return;
         }
 
@@ -1090,7 +1094,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         // also print the error on console
-        logger.log(Level.SEVERE, "Terminal error:", t);
+        getLogger().log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**
@@ -2415,5 +2419,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         }
 
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(Application.class.getName());
     }
 }

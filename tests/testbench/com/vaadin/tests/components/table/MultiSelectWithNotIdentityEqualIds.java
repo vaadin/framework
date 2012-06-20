@@ -5,6 +5,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 
 @SuppressWarnings("serial")
@@ -20,8 +21,7 @@ public class MultiSelectWithNotIdentityEqualIds extends TestBase {
         t.setImmediate(true);
         t.addListener(new Property.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                t.getRoot()
-                        .showNotification("Selected: " + event.getProperty());
+                Notification.show("Selected: " + event.getProperty());
 
             }
         });

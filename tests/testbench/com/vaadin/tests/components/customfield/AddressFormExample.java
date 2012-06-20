@@ -4,6 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Address;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification;
 
 /**
  * Demonstrate a custom field which is a form, and contains another custom field
@@ -23,10 +24,9 @@ public class AddressFormExample extends TestBase {
             public void buttonClick(ClickEvent event) {
                 field.commit();
                 Address address = field.getValue();
-                field.getRoot().showNotification(
-                        "Address saved: " + address.getStreetAddress() + ", "
-                                + address.getPostalCode() + ", "
-                                + address.getCity());
+                Notification.show("Address saved: "
+                        + address.getStreetAddress() + ", "
+                        + address.getPostalCode() + ", " + address.getCity());
             }
         });
         addComponent(commitButton);

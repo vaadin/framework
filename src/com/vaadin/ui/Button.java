@@ -38,6 +38,7 @@ public class Button extends AbstractComponent implements
         Action.ShortcutNotifier {
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
+
         public void click(MouseEventDetails mouseEventDetails) {
             fireClick(mouseEventDetails);
         }
@@ -50,6 +51,7 @@ public class Button extends AbstractComponent implements
     };
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
+
         @Override
         protected void fireEvent(Event event) {
             Button.this.fireEvent(event);

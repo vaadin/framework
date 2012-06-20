@@ -11,6 +11,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
 
+@AcceptCriterion("com.vaadin.ui.Tree.TargetInSubtree")
 final public class VTargetInSubtree extends VAcceptCriterion {
 
     @Override

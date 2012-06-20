@@ -78,6 +78,14 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         }
     };
 
+    private Command<T, Boolean> columnCollapsibleCommand = new Command<T, Boolean>() {
+
+        public void execute(T c, Boolean collapsible, Object propertyId) {
+            c.setColumnCollapsible(propertyId, collapsible);
+
+        }
+    };
+
     protected Command<T, Boolean> columnResizeListenerCommand = new Command<T, Boolean>() {
 
         public void execute(Table c, Boolean value, Object data) {
@@ -648,6 +656,9 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("Expand ratio", category, expandOptions,
                 "- remove -", columnExpandRatioCommand, propertyId);
         t.log("Expand");
+        createBooleanAction("Collapsible", category, true,
+                columnCollapsibleCommand, propertyId);
+
         // Footer text (move)
         // Header text (move)
 

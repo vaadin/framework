@@ -127,6 +127,12 @@ public abstract class AbstractSplitPanelConnector extends
 
         getWidget().setStylenames();
 
+        getWidget().minimumPosition = splitterState.getMinPosition()
+                + splitterState.getMinPositionUnit();
+
+        getWidget().maximumPosition = splitterState.getMaxPosition()
+                + splitterState.getMaxPositionUnit();
+
         getWidget().position = splitterState.getPosition()
                 + splitterState.getPositionUnit();
 
@@ -136,6 +142,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         getLayoutManager().setNeedsLayout(this);
 
+        getWidget().makeScrollable();
     }
 
     public void layout() {

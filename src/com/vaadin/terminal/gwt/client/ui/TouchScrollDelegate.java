@@ -4,6 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -15,10 +17,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.VConsole;
 
@@ -68,7 +72,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private static final double DECELERATION = 0.002;
     private static final int MAX_DURATION = 1500;
     private int origY;
-    private Element[] scrollableElements;
+    private HashSet<Element> scrollableElements;
     private Element scrolledElement;
     private int origScrollTop;
     private HandlerRegistration handlerRegistration;
@@ -86,8 +90,107 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
             .isAndroidWithBrokenScrollTop();
 
+    /**
+     * A helper class for making a widget scrollable. Uses native scrolling if
+     * supported by the browser, otherwise registers a touch start handler
+     * delegating to a TouchScrollDelegate instance.
+     */
+    public static class TouchScrollHandler implements TouchStartHandler {
+
+        private static final String SCROLLABLE_CLASSNAME = "v-scrollable";
+
+        private final TouchScrollDelegate delegate;
+        private final boolean requiresDelegate = BrowserInfo.get()
+                .requiresTouchScrollDelegate();
+
+        /**
+         * Constructs a scroll handler for the given widget.
+         * 
+         * @param widget
+         *            The widget that contains scrollable elements
+         * @param scrollables
+         *            The elements of the widget that should be scrollable.
+         */
+        public TouchScrollHandler(Widget widget, Element... scrollables) {
+            if (requiresDelegate) {
+                delegate = new TouchScrollDelegate();
+                widget.addDomHandler(this, TouchStartEvent.getType());
+            } else {
+                delegate = null;
+            }
+            setElements(scrollables);
+        }
+
+        public void onTouchStart(TouchStartEvent event) {
+            assert delegate != null;
+            delegate.onTouchStart(event);
+        }
+
+        public void debug(Element e) {
+            VConsole.log("Classes: " + e.getClassName() + " overflow: "
+                    + e.getStyle().getProperty("overflow") + " w-o-s: "
+                    + e.getStyle().getProperty("WebkitOverflowScrolling"));
+        }
+
+        /**
+         * Registers the given element as scrollable.
+         */
+        public void addElement(Element scrollable) {
+            scrollable.addClassName(SCROLLABLE_CLASSNAME);
+            if (requiresDelegate) {
+                delegate.scrollableElements.add(scrollable);
+            }
+        }
+
+        /**
+         * Unregisters the given element as scrollable. Should be called when a
+         * previously-registered element is removed from the DOM to prevent
+         * memory leaks.
+         */
+        public void removeElement(Element scrollable) {
+            scrollable.removeClassName(SCROLLABLE_CLASSNAME);
+            if (requiresDelegate) {
+                delegate.scrollableElements.remove(scrollable);
+            }
+        }
+
+        /**
+         * Registers the given elements as scrollable, removing previously
+         * registered scrollables from this handler.
+         * 
+         * @param scrollables
+         *            The elements that should be scrollable
+         */
+        public void setElements(Element... scrollables) {
+            if (requiresDelegate) {
+                for (Element e : delegate.scrollableElements) {
+                    e.removeClassName(SCROLLABLE_CLASSNAME);
+                }
+                delegate.scrollableElements.clear();
+            }
+            for (Element e : scrollables) {
+                addElement(e);
+            }
+        }
+    }
+
+    /**
+     * Makes the given elements scrollable, either natively or by using a
+     * TouchScrollDelegate, depending on platform capabilities.
+     * 
+     * @param widget
+     *            The widget that contains scrollable elements
+     * @param scrollables
+     *            The elements inside the widget that should be scrollable
+     * @return A scroll handler for the given widget.
+     */
+    public static TouchScrollHandler enableTouchScrolling(Widget widget,
+            Element... scrollables) {
+        return new TouchScrollHandler(widget, scrollables);
+    }
+
     public TouchScrollDelegate(Element... elements) {
-        scrollableElements = elements;
+        setElements(elements);
     }
 
     public void setScrollHandler(ScrollHandler scrollHandler) {
@@ -535,8 +638,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
     }
 
-    public void setElements(com.google.gwt.user.client.Element[] elements) {
-        scrollableElements = elements;
+    public void setElements(Element[] elements) {
+        scrollableElements = new HashSet<Element>(Arrays.asList(elements));
     }
 
     /**

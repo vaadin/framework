@@ -10,6 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 public class BooleanFieldExample extends TestBase {
@@ -62,13 +63,10 @@ public class BooleanFieldExample extends TestBase {
         Button submit = new Button("Submit", new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 form.commit();
-                layout.getRoot()
-                        .showNotification(
-                                "The custom boolean field value is "
-                                        + data.isCustom()
-                                        + ".<br>"
-                                        + "The checkbox (default boolean field) value is "
-                                        + data.isNormal() + ".");
+                Notification.show("The custom boolean field value is "
+                        + data.isCustom() + ".<br>"
+                        + "The checkbox (default boolean field) value is "
+                        + data.isNormal() + ".");
             }
         });
         layout.addComponent(submit);

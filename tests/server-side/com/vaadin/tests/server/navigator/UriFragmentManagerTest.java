@@ -11,20 +11,20 @@ import org.easymock.IMocksControl;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.UriFragmentManager;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.FragmentChangedEvent;
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.FragmentChangedEvent;
 
 public class UriFragmentManagerTest extends TestCase {
 
     public void testGetSetFragment() {
-        Root root = EasyMock.createMock(Root.class);
-        UriFragmentManager manager = new UriFragmentManager(root, null);
+        Page page = EasyMock.createMock(Page.class);
+        UriFragmentManager manager = new UriFragmentManager(page, null);
 
         // prepare mock
-        EasyMock.expect(root.getFragment()).andReturn("");
-        root.setFragment("test");
-        EasyMock.expect(root.getFragment()).andReturn("test");
-        EasyMock.replay(root);
+        EasyMock.expect(page.getFragment()).andReturn("");
+        page.setFragment("test");
+        EasyMock.expect(page.getFragment()).andReturn("test");
+        EasyMock.replay(page);
 
         // test manager using the mock
         assertEquals("Incorrect fragment value", "", manager.getFragment());
@@ -36,15 +36,15 @@ public class UriFragmentManagerTest extends TestCase {
         // create mocks
         IMocksControl control = EasyMock.createControl();
         Navigator navigator = control.createMock(Navigator.class);
-        Root root = control.createMock(Root.class);
+        Page page = control.createMock(Page.class);
 
-        UriFragmentManager manager = new UriFragmentManager(root, navigator);
+        UriFragmentManager manager = new UriFragmentManager(page, navigator);
 
-        EasyMock.expect(root.getFragment()).andReturn("test");
+        EasyMock.expect(page.getFragment()).andReturn("test");
         navigator.navigateTo("test");
         control.replay();
 
-        FragmentChangedEvent event = root.new FragmentChangedEvent(root,
+        FragmentChangedEvent event = page.new FragmentChangedEvent(page,
                 "oldtest");
         manager.fragmentChanged(event);
     }

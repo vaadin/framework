@@ -18,6 +18,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.SimpleFocusablePanel;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -51,6 +52,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
+
         @Override
         public void show() {
             super.show();
@@ -112,6 +114,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
+
+        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     void setFeedbackValue(double value) {
@@ -139,7 +143,11 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     void buildBase() {
         final String styleAttribute = vertical ? "height" : "width";
+        final String oppositeStyleAttribute = vertical ? "width" : "height";
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+
+        // clear unnecessary opposite style attribute
+        DOM.setStyleAttribute(base, oppositeStyleAttribute, "");
 
         final Element p = DOM.getParent(getElement());
         if (DOM.getElementPropertyInt(p, domProperty) > 50) {
@@ -153,6 +161,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             // (supposedly) been drawn completely.
             DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
             Scheduler.get().scheduleDeferred(new Command() {
+
                 public void execute() {
                     final Element p = DOM.getParent(getElement());
                     if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
@@ -173,8 +182,13 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     void buildHandle() {
         final String handleAttribute = vertical ? "marginTop" : "marginLeft";
+        final String oppositeHandleAttribute = vertical ? "marginLeft"
+                : "marginTop";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
+
+        // clear unnecessary opposite handle attribute
+        DOM.setStyleAttribute(handle, oppositeHandleAttribute, "");
 
         // Restore visibility
         DOM.setStyleAttribute(handle, "visibility", "visible");
@@ -276,6 +290,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         if (Util.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
+        }
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
     }
 

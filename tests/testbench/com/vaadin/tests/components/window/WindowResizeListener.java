@@ -2,13 +2,13 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.BrowserWindowResizeEvent;
 import com.vaadin.ui.Window;
 
 public class WindowResizeListener extends TestBase {
@@ -33,7 +33,7 @@ public class WindowResizeListener extends TestBase {
         final Label l = new Label();
         getLayout().addComponent(l);
 
-        getMainWindow().addListener(new Root.BrowserWindowResizeListener() {
+        getMainWindow().addListener(new Page.BrowserWindowResizeListener() {
             public void browserWindowResized(BrowserWindowResizeEvent event) {
                 l.setValue("Current browser window size: "
                         + getMainWindow().getBrowserWindowWidth() + " x "

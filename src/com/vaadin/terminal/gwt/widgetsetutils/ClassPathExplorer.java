@@ -6,32 +6,22 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * Utility class to collect widgetset related information from classpath.
@@ -52,9 +42,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * 
  */
 public class ClassPathExplorer {
-
-    private static Logger logger = Logger.getLogger(ClassPathExplorer.class
-            .getName());
 
     private static final String VAADIN_ADDON_VERSION_ATTRIBUTE = "Vaadin-Package-Version";
 
@@ -92,46 +79,6 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Finds server side widgets with ClientWidget annotation on the class path
-     * (entries that can contain widgets/widgetsets - see
-     * getRawClasspathEntries()).
-     * 
-     * As a side effect, also accept criteria are searched under the same class
-     * path entries and added into the acceptCriterion collection.
-     * 
-     * @return a collection of {@link ClientConnector} classes
-     */
-    public static void findAcceptCriteria() {
-        logger.info("Searching for accept criteria..");
-        long start = System.currentTimeMillis();
-        Set<String> keySet = classpathLocations.keySet();
-        for (String url : keySet) {
-            logger.fine("Searching for accept criteria in "
-                    + classpathLocations.get(url));
-            searchForPaintables(classpathLocations.get(url), url);
-        }
-        long end = System.currentTimeMillis();
-
-        logger.info("Search took " + (end - start) + "ms");
-
-    }
-
-    /**
-     * Finds all accept criteria having client side counterparts (classes with
-     * the {@link ClientCriterion} annotation).
-     * 
-     * @return Collection of AcceptCriterion classes
-     */
-    public static Collection<Class<? extends AcceptCriterion>> getCriterion() {
-        if (acceptCriterion.isEmpty()) {
-            // accept criterion are searched as a side effect, normally after
-            // paintable detection
-            findAcceptCriteria();
-        }
-        return acceptCriterion;
-    }
-
-    /**
      * Finds the names and locations of widgetsets available on the class path.
      * 
      * @return map from widgetset classname to widgetset location URL
@@ -154,6 +101,7 @@ public class ClassPathExplorer {
             sb.append(widgetsets.get(ws));
             sb.append("\n");
         }
+        final Logger logger = getLogger();
         logger.info(sb.toString());
         logger.info("Search took " + (end - start) + "ms");
         return widgetsets;
@@ -214,7 +162,7 @@ public class ClassPathExplorer {
                     } catch (MalformedURLException e) {
                         // should never happen as based on an existing URL,
                         // only changing end of file name/path part
-                        logger.log(Level.SEVERE,
+                        getLogger().log(Level.SEVERE,
                                 "Error locating the widgetset " + classname, e);
                     }
                 }
@@ -250,7 +198,7 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Error parsing jar file", e);
+                getLogger().log(Level.WARNING, "Error parsing jar file", e);
             }
 
         }
@@ -278,7 +226,7 @@ public class ClassPathExplorer {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        logger.fine("Classpath: " + classpath);
+        getLogger().fine("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {
@@ -312,6 +260,7 @@ public class ClassPathExplorer {
             include(null, file, locations);
         }
         long end = System.currentTimeMillis();
+        Logger logger = getLogger();
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("getClassPathLocations took " + (end - start) + "ms");
         }
@@ -352,7 +301,7 @@ public class ClassPathExplorer {
                     url = new URL("jar:" + url.toExternalForm() + "!/");
                     JarURLConnection conn = (JarURLConnection) url
                             .openConnection();
-                    logger.fine(url.toString());
+                    getLogger().fine(url.toString());
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
                     if (manifest != null) {
@@ -363,9 +312,11 @@ public class ClassPathExplorer {
                         }
                     }
                 } catch (MalformedURLException e) {
-                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
+                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
+                            e);
                 } catch (IOException e) {
-                    logger.log(Level.FINEST, "Failed to inspect JAR file", e);
+                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
+                            e);
                 }
 
                 return false;
@@ -445,151 +396,6 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Searches for all paintable classes and accept criteria under a location
-     * based on {@link ClientCriterion} annotations.
-     * 
-     * Note that client criteria are updated directly to the
-     * {@link #acceptCriterion} field, whereas paintables are added to the
-     * paintables map given as a parameter.
-     * 
-     * @param location
-     * @param locationString
-     */
-    private final static void searchForPaintables(URL location,
-            String locationString) {
-
-        // Get a File object for the package
-        File directory = new File(location.getFile());
-
-        if (directory.exists() && !directory.isHidden()) {
-            // Get the list of the files contained in the directory
-            String[] files = directory.list();
-            for (int i = 0; i < files.length; i++) {
-                // we are only interested in .class files
-                if (files[i].endsWith(".class")) {
-                    // remove the .class extension
-                    String classname = files[i].substring(0,
-                            files[i].length() - 6);
-                    String packageName = locationString
-                            .substring(locationString.lastIndexOf("/") + 1);
-                    classname = packageName + "." + classname;
-                    tryToAdd(classname);
-                }
-            }
-        } else {
-            try {
-                // check files in jar file, entries will list all directories
-                // and files in jar
-
-                URLConnection openConnection = location.openConnection();
-
-                if (openConnection instanceof JarURLConnection) {
-                    JarURLConnection conn = (JarURLConnection) openConnection;
-
-                    JarFile jarFile = conn.getJarFile();
-
-                    // Only scan for paintables in Vaadin add-ons
-                    if (!isVaadinAddon(jarFile)) {
-                        return;
-                    }
-
-                    Enumeration<JarEntry> e = jarFile.entries();
-                    while (e.hasMoreElements()) {
-                        JarEntry entry = e.nextElement();
-                        String entryname = entry.getName();
-                        if (!entry.isDirectory()
-                                && entryname.endsWith(".class")) {
-                            String classname = entryname.substring(0,
-                                    entryname.length() - 6);
-                            if (classname.startsWith("/")) {
-                                classname = classname.substring(1);
-                            }
-                            classname = classname.replace('/', '.');
-                            tryToAdd(classname);
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                logger.warning(e.toString());
-            }
-        }
-
-    }
-
-    /**
-     * A print stream that ignores all output.
-     * 
-     * This is used to hide error messages from static initializers of classes
-     * being inspected.
-     */
-    private static PrintStream devnull = new PrintStream(new OutputStream() {
-        @Override
-        public void write(int b) throws IOException {
-            // NOP
-        }
-    });
-
-    /**
-     * Collection of all {@link AcceptCriterion} classes, updated as a side
-     * effect of {@link #searchForPaintables(URL, String, Collection)} based on
-     * {@link ClientCriterion} annotations.
-     */
-    private static Set<Class<? extends AcceptCriterion>> acceptCriterion = new HashSet<Class<? extends AcceptCriterion>>();
-
-    /**
-     * Checks a class for the {@link ClientCriterion} annotations, and adds it
-     * to the appropriate collection.
-     * 
-     * @param fullclassName
-     */
-    @SuppressWarnings("unchecked")
-    private static void tryToAdd(final String fullclassName) {
-        PrintStream out = System.out;
-        PrintStream err = System.err;
-        Throwable errorToShow = null;
-        Level logLevel = null;
-        try {
-            System.setErr(devnull);
-            System.setOut(devnull);
-
-            Class<?> c = Class.forName(fullclassName);
-
-            if (c.getAnnotation(ClientCriterion.class) != null) {
-                acceptCriterion.add((Class<? extends AcceptCriterion>) c);
-            }
-        } catch (UnsupportedClassVersionError e) {
-            // Inform the user about this as the class might contain a Paintable
-            // Typically happens when using an add-on that is compiled using a
-            // newer Java version.
-            logLevel = Level.INFO;
-            errorToShow = e;
-        } catch (ClassNotFoundException e) {
-            // Don't show to avoid flooding the user with irrelevant messages
-            logLevel = Level.FINE;
-            errorToShow = e;
-        } catch (LinkageError e) {
-            // Don't show to avoid flooding the user with irrelevant messages
-            logLevel = Level.FINE;
-            errorToShow = e;
-        } catch (Exception e) {
-            // Don't show to avoid flooding the user with irrelevant messages
-            logLevel = Level.FINE;
-            errorToShow = e;
-        } finally {
-            System.setErr(err);
-            System.setOut(out);
-        }
-
-        // Must be done here after stderr and stdout have been reset.
-        if (errorToShow != null && logLevel != null) {
-            logger.log(logLevel,
-                    "Failed to load class " + fullclassName + ". "
-                            + errorToShow.getClass().getName() + ": "
-                            + errorToShow.getMessage());
-        }
-    }
-
-    /**
      * Find and return the default source directory where to create new
      * widgetsets.
      * 
@@ -601,6 +407,9 @@ public class ClassPathExplorer {
      * @return URL
      */
     public static URL getDefaultSourceDirectory() {
+
+        final Logger logger = getLogger();
+
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("classpathLocations values:");
             ArrayList<String> locations = new ArrayList<String>(
@@ -632,44 +441,21 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Checks if the given jarFile is a Vaadin add-on.
-     * 
-     * @param jarFile
-     * @return true if the file is an add-on, false otherwise
-     * @throws IOException
-     */
-    private static boolean isVaadinAddon(JarFile jarFile) throws IOException {
-        Manifest manifest = jarFile.getManifest();
-        if (manifest == null) {
-            return false;
-        }
-        Attributes mainAttributes = manifest.getMainAttributes();
-        if (mainAttributes == null) {
-            return false;
-        }
-
-        return (mainAttributes.getValue(VAADIN_ADDON_VERSION_ATTRIBUTE) != null);
-    }
-
-    /**
      * Test method for helper tool
      */
     public static void main(String[] args) {
-        ClassPathExplorer.findAcceptCriteria();
-        logger.info("Found client criteria:");
-        for (Class<? extends AcceptCriterion> cls : acceptCriterion) {
-            logger.info(cls.getCanonicalName());
-        }
-
-        logger.info("");
-        logger.info("Searching available widgetsets...");
+        getLogger().info("Searching available widgetsets...");
 
         Map<String, URL> availableWidgetSets = ClassPathExplorer
                 .getAvailableWidgetSets();
         for (String string : availableWidgetSets.keySet()) {
 
-            logger.info(string + " in " + availableWidgetSets.get(string));
+            getLogger().info(string + " in " + availableWidgetSets.get(string));
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(ClassPathExplorer.class.getName());
     }
 
 }

@@ -595,10 +595,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        event.getButton()
-                                .getRoot()
-                                .showNotification(title.getValue(),
-                                        message.getValue());
+                        Notification.show(title.getValue(), message.getValue());
 
                     }
                 });
@@ -607,10 +604,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Warning", ContentMode.XHTML));
         show = new Button("Warning Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                event.getButton()
-                        .getRoot()
-                        .showNotification(title.getValue(), message.getValue(),
-                                Notification.TYPE_WARNING_MESSAGE);
+                Notification.show(title.getValue(), message.getValue(),
+                        Notification.TYPE_WARNING_MESSAGE);
 
             }
         });
@@ -619,10 +614,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Error", ContentMode.XHTML));
         show = new Button("Error Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                event.getButton()
-                        .getRoot()
-                        .showNotification(title.getValue(), message.getValue(),
-                                Notification.TYPE_ERROR_MESSAGE);
+                Notification.show(title.getValue(), message.getValue(),
+                        Notification.TYPE_ERROR_MESSAGE);
 
             }
         });
@@ -631,10 +624,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Tray", ContentMode.XHTML));
         show = new Button("Tray Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                event.getButton()
-                        .getRoot()
-                        .showNotification(title.getValue(), message.getValue(),
-                                Notification.TYPE_TRAY_NOTIFICATION);
+                Notification.show(title.getValue(), message.getValue(),
+                        Notification.TYPE_TRAY_NOTIFICATION);
 
             }
         });

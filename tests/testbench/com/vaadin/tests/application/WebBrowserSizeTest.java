@@ -21,8 +21,10 @@ public class WebBrowserSizeTest extends TestBase {
             public void buttonClick(ClickEvent event) {
                 screenSizeLabel.setValue(getBrowser().getScreenWidth() + " x "
                         + getBrowser().getScreenHeight());
-                browserSizeLabel.setValue(getBrowser().getClientWidth() + " x "
-                        + getBrowser().getClientHeight());
+                browserSizeLabel.setValue(getMainWindow()
+                        .getBrowserWindowWidth()
+                        + " x "
+                        + getMainWindow().getBrowserWindowHeight());
             }
         });
 

@@ -11,6 +11,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 /**
  * 
  */
+@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.Or")
 final public class VOr extends VAcceptCriterion implements VAcceptCallback {
     private boolean accepted;
 

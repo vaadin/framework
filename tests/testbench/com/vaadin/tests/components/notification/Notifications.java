@@ -6,7 +6,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.TextArea;
 
 public class Notifications extends TestBase implements ClickListener {
@@ -53,7 +52,6 @@ public class Notifications extends TestBase implements ClickListener {
     public void buttonClick(ClickEvent event) {
         Notification n = new Notification(tf.getValue(),
                 (Integer) type.getValue());
-        Root.getCurrentRoot().showNotification(n);
-
+        n.show();
     }
 }

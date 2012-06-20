@@ -43,9 +43,6 @@ import com.vaadin.ui.CustomLayout;
 @SuppressWarnings("serial")
 public class JsonPaintTarget implements PaintTarget {
 
-    private static final Logger logger = Logger.getLogger(JsonPaintTarget.class
-            .getName());
-
     /* Document type declarations */
 
     private final static String UIDL_ARG_NAME = "name";
@@ -162,6 +159,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws Paintexception
      *             if the paint operation failed.
      */
+
     public void endTag(String tagName) throws PaintException {
         // In case of null data output nothing:
         if (tagName == null) {
@@ -328,6 +326,7 @@ public class JsonPaintTarget implements PaintTarget {
      *             if the paint operation failed.
      * 
      */
+
     public void addText(String str) throws PaintException {
         tag.addData("\"" + escapeJSON(str) + "\"");
     }
@@ -468,8 +467,8 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addVariable(new StringVariable(owner, name, escapeJSON(value)));
     }
 
-    public void addVariable(VariableOwner owner, String name,
-            Component value) throws PaintException {
+    public void addVariable(VariableOwner owner, String name, Component value)
+            throws PaintException {
         tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
     }
 
@@ -516,6 +515,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
+
     public void addUploadStreamVariable(VariableOwner owner, String name)
             throws PaintException {
         startTag("uploadstream");
@@ -535,6 +535,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
+
     public void addSection(String sectionTagName, String sectionData)
             throws PaintException {
         tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData)
@@ -549,6 +550,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
+
     public void addUIDL(String xml) throws PaintException {
 
         // Ensure that the target is open
@@ -582,6 +584,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#addXMLSection(String, String,
      *      String)
      */
+
     public void addXMLSection(String sectionTagName, String sectionData,
             String namespace) throws PaintException {
 
@@ -646,12 +649,14 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#startPaintable(com.vaadin.terminal
      * .Paintable, java.lang.String)
      */
+
     public PaintStatus startPaintable(Component connector, String tagName)
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
-        logger.fine("startPaintable for " + connector.getClass().getName()
-                + "@" + Integer.toHexString(connector.hashCode()));
+        getLogger().fine(
+                "startPaintable for " + connector.getClass().getName() + "@"
+                        + Integer.toHexString(connector.hashCode()));
         startTag(tagName, true);
 
         openPaintables.push(connector);
@@ -672,8 +677,9 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     public void endPaintable(Component paintable) throws PaintException {
-        logger.fine("endPaintable for " + paintable.getClass().getName() + "@"
-                + Integer.toHexString(paintable.hashCode()));
+        getLogger().fine(
+                "endPaintable for " + paintable.getClass().getName() + "@"
+                        + Integer.toHexString(paintable.hashCode()));
 
         ClientConnector openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {
@@ -692,6 +698,7 @@ public class JsonPaintTarget implements PaintTarget {
      * 
      * @see com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String )
      */
+
     public void addCharacterData(String text) throws PaintException {
         if (text != null) {
             tag.addData(text);
@@ -998,8 +1005,13 @@ public class JsonPaintTarget implements PaintTarget {
      * 
      * @see com.vaadin.terminal.PaintTarget#isFullRepaint()
      */
+
     public boolean isFullRepaint() {
         return !cacheEnabled;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(JsonPaintTarget.class.getName());
     }
 
 }

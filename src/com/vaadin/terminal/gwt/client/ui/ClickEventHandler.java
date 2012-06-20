@@ -28,6 +28,7 @@ public abstract class ClickEventHandler extends AbstractClickEventHandler {
      * @param event
      *            The native event that caused this click event
      */
+    @Override
     protected void fireClick(NativeEvent event) {
         MouseEventDetails mouseDetails = MouseEventDetailsBuilder
                 .buildMouseEventDetails(event, getRelativeToElement());

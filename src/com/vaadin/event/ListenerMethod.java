@@ -43,9 +43,6 @@ import java.util.logging.Logger;
 @SuppressWarnings("serial")
 public class ListenerMethod implements EventListener, Serializable {
 
-    private static final Logger logger = Logger.getLogger(ListenerMethod.class
-            .getName());
-
     /**
      * Type of the event that should trigger this listener. Also the subclasses
      * of this class are accepted to trigger the listener.
@@ -84,9 +81,10 @@ public class ListenerMethod implements EventListener, Serializable {
             out.writeObject(name);
             out.writeObject(paramTypes);
         } catch (NotSerializableException e) {
-            logger.warning("Error in serialization of the application: Class "
-                    + target.getClass().getName()
-                    + " must implement serialization.");
+            getLogger().warning(
+                    "Error in serialization of the application: Class "
+                            + target.getClass().getName()
+                            + " must implement serialization.");
             throw e;
         }
 
@@ -103,7 +101,7 @@ public class ListenerMethod implements EventListener, Serializable {
             // inner classes
             method = findHighestMethod(target.getClass(), name, paramTypes);
         } catch (SecurityException e) {
-            logger.log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
     };
 
@@ -656,6 +654,10 @@ public class ListenerMethod implements EventListener, Serializable {
      */
     public Object getTarget() {
         return target;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(ListenerMethod.class.getName());
     }
 
 }

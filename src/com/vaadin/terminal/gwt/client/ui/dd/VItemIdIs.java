@@ -9,6 +9,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 
+@AcceptCriterion("com.vaadin.ui.AbstractSelect.AcceptItem")
 final public class VItemIdIs extends VAcceptCriterion {
 
     @Override

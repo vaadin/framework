@@ -57,6 +57,9 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
             getWidget().initDragStartMode();
             getWidget().html5DataFlavors = uidl
                     .getMapAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS);
+
+            // Used to prevent wrapper from stealing tooltips when not defined
+            getWidget().hasTooltip = getState().hasDescription();
         }
     }
 

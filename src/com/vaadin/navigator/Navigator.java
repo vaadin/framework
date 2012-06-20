@@ -10,12 +10,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.FragmentChangedEvent;
+import com.vaadin.terminal.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.FragmentChangedEvent;
-import com.vaadin.ui.Root.FragmentChangedListener;
 
 /**
  * Navigator utility that allows switching of views in a part of an application.
@@ -67,7 +68,7 @@ public class Navigator implements Serializable {
      */
     public static class UriFragmentManager implements FragmentManager,
             FragmentChangedListener {
-        private final Root root;
+        private final Page page;
         private final Navigator navigator;
 
         /**
@@ -80,20 +81,20 @@ public class Navigator implements Serializable {
          *            {@link Navigator} to notify of fragment changes (using
          *            {@link Navigator#navigateTo(String)}
          */
-        public UriFragmentManager(Root root, Navigator navigator) {
-            this.root = root;
+        public UriFragmentManager(Page page, Navigator navigator) {
+            this.page = page;
             this.navigator = navigator;
 
-            root.addListener(this);
+            page.addListener(this);
         }
 
         public String getFragment() {
-            return root.getFragment();
+            return page.getFragment();
         }
 
         public void setFragment(String fragment) {
             // TODO ", false" ???
-            root.setFragment(fragment);
+            page.setFragment(fragment);
         }
 
         public void fragmentChanged(FragmentChangedEvent event) {
@@ -276,9 +277,9 @@ public class Navigator implements Serializable {
      * @param display
      *            where to display the views
      */
-    public Navigator(Root root, ViewDisplay display) {
+    public Navigator(Page page, ViewDisplay display) {
         this.display = display;
-        fragmentManager = new UriFragmentManager(root, this);
+        fragmentManager = new UriFragmentManager(page, this);
     }
 
     /**
@@ -289,9 +290,9 @@ public class Navigator implements Serializable {
      * @param root
      *            whose URI fragments are used
      */
-    public Navigator(Root root) {
+    public Navigator(Page page) {
         display = new SimpleViewDisplay();
-        fragmentManager = new UriFragmentManager(root, this);
+        fragmentManager = new UriFragmentManager(page, this);
     }
 
     /**

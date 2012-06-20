@@ -379,26 +379,34 @@ public class VTreeTable extends VScrollTable {
                     rowsToDelete.add(row);
                 }
             }
-            RowCollapseAnimation anim = new RowCollapseAnimation(rowsToDelete) {
-                @Override
-                protected void onComplete() {
-                    super.onComplete();
-                    // Actually unlink the rows and update the cache after the
-                    // animation is done.
-                    unlinkAndReindexRows(firstIndex, rows);
-                    discardRowsOutsideCacheWindow();
-                    ensureCacheFilled();
-                }
-            };
-            anim.run(150);
+            if (!rowsToDelete.isEmpty()) {
+                // #8810 Only animate if there's something to animate
+                RowCollapseAnimation anim = new RowCollapseAnimation(
+                        rowsToDelete) {
+                    @Override
+                    protected void onComplete() {
+                        super.onComplete();
+                        // Actually unlink the rows and update the cache after
+                        // the
+                        // animation is done.
+                        unlinkAndReindexRows(firstIndex, rows);
+                        discardRowsOutsideCacheWindow();
+                        ensureCacheFilled();
+                    }
+                };
+                anim.run(150);
+            }
         }
 
         protected List<VScrollTableRow> insertRowsAnimated(UIDL rowData,
                 int firstIndex, int rows) {
             List<VScrollTableRow> insertedRows = insertAndReindexRows(rowData,
                     firstIndex, rows);
-            RowExpandAnimation anim = new RowExpandAnimation(insertedRows);
-            anim.run(150);
+            if (!insertedRows.isEmpty()) {
+                // Only animate if there's something to animate (#8810)
+                RowExpandAnimation anim = new RowExpandAnimation(insertedRows);
+                anim.run(150);
+            }
             return insertedRows;
         }
 
@@ -521,6 +529,10 @@ public class VTreeTable extends VScrollTable {
             private Element cloneTable;
             private AnimationPreparator preparator;
 
+            /**
+             * @param rows
+             *            List of rows to animate. Must not be empty.
+             */
             public RowExpandAnimation(List<VScrollTableRow> rows) {
                 this.rows = rows;
                 buildAndInsertAnimatingDiv();
@@ -641,6 +653,10 @@ public class VTreeTable extends VScrollTable {
 
             private final List<VScrollTableRow> rows;
 
+            /**
+             * @param rows
+             *            List of rows to animate. Must not be empty.
+             */
             public RowCollapseAnimation(List<VScrollTableRow> rows) {
                 super(rows);
                 this.rows = rows;

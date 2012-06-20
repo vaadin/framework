@@ -13,7 +13,7 @@ public class HelloWorldExtension extends AbstractExtension {
     public HelloWorldExtension() {
         registerRpc(new HelloWorldRpc() {
             public void onMessageSent(String message) {
-                getRoot().showNotification(message);
+                Notification.show(message);
             }
         });
     }

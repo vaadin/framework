@@ -48,8 +48,6 @@ import com.vaadin.util.SerializerHelper;
 @SuppressWarnings("serial")
 public class MethodProperty<T> extends AbstractProperty<T> {
 
-    private static final Logger logger = Logger.getLogger(MethodProperty.class
-            .getName());
     /**
      * The object that includes the property the MethodProperty is bound to.
      */
@@ -130,9 +128,9 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 getMethod = null;
             }
         } catch (SecurityException e) {
-            logger.log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         } catch (NoSuchMethodException e) {
-            logger.log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
         }
     };
 
@@ -777,4 +775,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         super.fireValueChange();
     }
 
+    private static final Logger getLogger() {
+        return Logger.getLogger(MethodProperty.class.getName());
+    }
 }

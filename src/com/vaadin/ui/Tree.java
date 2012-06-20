@@ -34,7 +34,6 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
@@ -43,8 +42,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
-import com.vaadin.terminal.gwt.client.ui.dd.VTargetInSubtree;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.tree.TreeConnector;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree;
@@ -1396,7 +1393,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * initialized from server and no subsequent requests requests are needed
      * during that drag and drop operation.
      */
-    @ClientCriterion(VLazyInitItemIdentifiers.class)
     public static abstract class TreeDropCriterion extends ServerSideCriterion {
 
         private Tree tree;
@@ -1513,7 +1509,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * <p>
      * The root items is also consider to be valid target.
      */
-    @ClientCriterion(VTargetInSubtree.class)
     public class TargetInSubtree extends ClientSideCriterion {
 
         private Object rootId;

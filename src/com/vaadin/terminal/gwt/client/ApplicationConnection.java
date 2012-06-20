@@ -40,7 +40,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.terminal.gwt.client.communication.HasJavascriptConnectorHelper;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
@@ -50,6 +50,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.Type;
 import com.vaadin.terminal.gwt.client.communication.UidlValue;
+import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -367,6 +368,25 @@ public class ApplicationConnection {
     			}
     		}
     	}
+    }-*/;
+
+    /**
+     * If on Liferay and logged in, ask the client side session management
+     * JavaScript to extend the session duration.
+     * 
+     * Otherwise, Liferay client side JavaScript will explicitly expire the
+     * session even though the server side considers the session to be active.
+     * See ticket #8305 for more information.
+     */
+    protected native void extendLiferaySession()
+    /*-{
+    if ($wnd.Liferay && $wnd.Liferay.Session) {
+        $wnd.Liferay.Session.extend();
+        // if the extend banner is visible, hide it
+        if ($wnd.Liferay.Session.banner) {
+            $wnd.Liferay.Session.banner.remove();
+        }
+    }
     }-*/;
 
     /**
@@ -851,6 +871,14 @@ public class ApplicationConnection {
             public void execute() {
                 if (!hasActiveRequest()) {
                     hideLoadingIndicator();
+
+                    // If on Liferay and session expiration management is in
+                    // use, extend session duration on each request.
+                    // Doing it here rather than before the request to improve
+                    // responsiveness.
+                    // Postponed until the end of the next request if other
+                    // requests still pending.
+                    extendLiferaySession();
                 }
             }
         });
@@ -1415,8 +1443,8 @@ public class ApplicationConnection {
                             JSONObject stateJson = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
 
-                            if (connector instanceof HasJavascriptConnectorHelper) {
-                                ((HasJavascriptConnectorHelper) connector)
+                            if (connector instanceof HasJavaScriptConnectorHelper) {
+                                ((HasJavaScriptConnectorHelper) connector)
                                         .getJavascriptConnectorHelper()
                                         .setNativeState(
                                                 stateJson.getJavaScriptObject());
@@ -1491,6 +1519,10 @@ public class ApplicationConnection {
                             if (childConnector instanceof ComponentConnector) {
                                 newComponents
                                         .add((ComponentConnector) childConnector);
+                            } else if (!(childConnector instanceof AbstractExtensionConnector)) {
+                                throw new IllegalStateException(
+                                        Util.getConnectorString(childConnector)
+                                                + " is not a ComponentConnector nor an AbstractExtensionConnector");
                             }
                             if (childConnector.getParent() != parentConnector) {
                                 // Avoid extra calls to setParent

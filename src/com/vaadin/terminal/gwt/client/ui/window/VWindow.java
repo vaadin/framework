@@ -40,6 +40,7 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
+import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 
 /**
  * "Sub window" component.
@@ -264,8 +265,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (!orderingDefered) {
             orderingDefered = true;
             Scheduler.get().scheduleFinally(new Command() {
+
                 public void execute() {
                     doServerSideOrdering();
+                    VNotification.bringNotificationsToFront();
                 }
             });
         }
@@ -275,6 +278,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         orderingDefered = false;
         VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
         Arrays.sort(array, new Comparator<VWindow>() {
+
             public int compare(VWindow o1, VWindow o2) {
                 /*
                  * Order by modality, then by bringtofront sequence.

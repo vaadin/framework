@@ -29,7 +29,6 @@ div.v-app-loading {
 .v-view {
 	height: 100%;
 	width: 100%;
-	overflow: auto;
 	/* avoid scrollbars with margins in root layout */
 	outline: none;
 	position: relative;
@@ -236,12 +235,17 @@ div.v-app-loading {
 
 .v-drag-element {
 	z-index: 60000;
-	position: absolute;
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-    cursor: default;
+	/* override any other position: properties */
+	position: absolute !important;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	cursor: default;
 }
 
 .v-clip {
 	overflow: hidden;
+}
+
+.v-scrollable {
+	overflow: auto;
 }

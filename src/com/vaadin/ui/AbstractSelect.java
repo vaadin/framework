@@ -24,7 +24,6 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetailsImpl;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
@@ -33,8 +32,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.dd.VIsOverId;
-import com.vaadin.terminal.gwt.client.ui.dd.VItemIdIs;
 import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
@@ -1800,7 +1797,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @since 6.3
      */
-    @ClientCriterion(VIsOverId.class)
     public static class TargetItemIs extends AbstractItemSetCriterion {
 
         /**
@@ -1867,7 +1863,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @since 6.3
      */
-    @ClientCriterion(VItemIdIs.class)
     public static class AcceptItem extends AbstractItemSetCriterion {
 
         /**

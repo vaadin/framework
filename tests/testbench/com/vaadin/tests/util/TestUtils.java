@@ -112,7 +112,7 @@ public class TestUtils {
                 + "document.body.style.WebkitAppearance=='string') /* webkit only */ ? 'innerText' "
                 + ": 'innerHTML'] = '" + cssString + "';}";
 
-        w.executeJavaScript(script);
+        w.getPage().getJavaScript().execute(script);
     }
 
     public static IndexedContainer getISO3166Container() {

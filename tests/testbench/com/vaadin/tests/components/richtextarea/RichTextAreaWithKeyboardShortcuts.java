@@ -6,6 +6,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Window;
@@ -30,7 +31,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             String string = f.getValue().toString();
 
             msg += " Value: " + string;
-            f.getRoot().showNotification(msg);
+            Notification.show(msg);
 
         }
 

@@ -16,6 +16,8 @@ import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Page;
+import com.vaadin.terminal.Page.FragmentChangedEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -23,8 +25,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.FragmentChangedEvent;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
@@ -119,7 +119,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        mainWindow.addListener(new Root.FragmentChangedListener() {
+        mainWindow.getPage().addListener(new Page.FragmentChangedListener() {
             public void fragmentChanged(FragmentChangedEvent source) {
                 String fragment = source.getFragment();
                 if (fragment != null && !"".equals(fragment)) {

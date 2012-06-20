@@ -7,6 +7,7 @@ package com.vaadin.terminal.gwt.client.ui.root;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -26,6 +27,8 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
@@ -37,9 +40,15 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     public static final String FRAGMENT_VARIABLE = "fragment";
 
+    public static final String BROWSER_HEIGHT_VAR = "browserHeight";
+
+    public static final String BROWSER_WIDTH_VAR = "browserWidth";
+
     private static final String CLASSNAME = "v-view";
 
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
+
+    private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
     String theme;
 
@@ -47,11 +56,20 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     ShortcutActionHandler actionHandler;
 
-    /** stored width for IE resize optimization */
-    private int width;
+    /*
+     * Last known window size used to detect whether VView should be layouted
+     * again. Detection must check window size, because the VView size might be
+     * fixed and thus not automatically adapt to changed window sizes.
+     */
+    private int windowWidth;
+    private int windowHeight;
 
-    /** stored height for IE resize optimization */
-    private int height;
+    /*
+     * Last know view size used to detect whether new dimensions should be sent
+     * to the server.
+     */
+    private int viewWidth;
+    private int viewHeight;
 
     ApplicationConnection connection;
 
@@ -59,12 +77,18 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     public static final String CLICK_EVENT_ID = "click";
 
     /**
-     * We are postponing resize process with IE. IE bugs with scrollbars in some
-     * situations, that causes false onWindowResized calls. With Timer we will
-     * give IE some time to decide if it really wants to keep current size
-     * (scrollbars).
+     * Keep track of possible parent size changes when an embedded application.
+     * 
+     * Uses {@link #parentWidth} and {@link #parentHeight} as an optimization to
+     * keep track of when there is a real change.
      */
     private Timer resizeTimer;
+
+    /** stored width of parent for embedded application auto-resize */
+    private int parentWidth;
+
+    /** stored height of parent for embedded application auto-resize */
+    private int parentHeight;
 
     int scrollTop;
 
@@ -85,6 +109,8 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     private HandlerRegistration historyHandlerRegistration;
 
+    private TouchScrollHandler touchScrollHandler;
+
     /**
      * The current URI fragment, used to avoid sending updates if nothing has
      * changed.
@@ -96,6 +122,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * whenever the value changes.
      */
     private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
+
         public void onValueChange(ValueChangeEvent<String> event) {
             String newFragment = event.getValue();
 
@@ -110,9 +137,9 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
+
                 public void execute() {
-                    windowSizeMaybeChanged(Window.getClientWidth(),
-                            Window.getClientHeight());
+                    performSizeCheck();
                 }
 
             });
@@ -124,6 +151,29 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         // Allow focusing the view by using the focus() method, the view
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
+        makeScrollable();
+    }
+
+    /**
+     * Start to periodically monitor for parent element resizes if embedded
+     * application (e.g. portlet).
+     */
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        if (isMonitoringParentSize()) {
+            resizeTimer = new Timer() {
+
+                @Override
+                public void run() {
+                    // trigger check to see if parent size has changed,
+                    // recalculate layouts
+                    performSizeCheck();
+                    resizeTimer.schedule(MONITOR_PARENT_TIMER_INTERVAL);
+                }
+            };
+            resizeTimer.schedule(MONITOR_PARENT_TIMER_INTERVAL);
+        }
     }
 
     @Override
@@ -142,32 +192,95 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     }
 
     /**
-     * Called when the window might have been resized.
-     * 
-     * @param newWidth
-     *            The new width of the window
-     * @param newHeight
-     *            The new height of the window
+     * Stop monitoring for parent element resizes.
      */
-    protected void windowSizeMaybeChanged(int newWidth, int newHeight) {
+
+    @Override
+    protected void onUnload() {
+        if (resizeTimer != null) {
+            resizeTimer.cancel();
+            resizeTimer = null;
+        }
+        super.onUnload();
+    }
+
+    /**
+     * Called when the window or parent div might have been resized.
+     * 
+     * This immediately checks the sizes of the window and the parent div (if
+     * monitoring it) and triggers layout recalculation if they have changed.
+     */
+    protected void performSizeCheck() {
+        windowSizeMaybeChanged(Window.getClientWidth(),
+                Window.getClientHeight());
+    }
+
+    /**
+     * Called when the window or parent div might have been resized.
+     * 
+     * This immediately checks the sizes of the window and the parent div (if
+     * monitoring it) and triggers layout recalculation if they have changed.
+     * 
+     * @param newWindowWidth
+     *            The new width of the window
+     * @param newWindowHeight
+     *            The new height of the window
+     * 
+     * @deprecated use {@link #performSizeCheck()}
+     */
+    @Deprecated
+    protected void windowSizeMaybeChanged(int newWindowWidth,
+            int newWindowHeight) {
         boolean changed = false;
         ComponentConnector connector = ConnectorMap.get(connection)
                 .getConnector(this);
-        if (width != newWidth) {
-            width = newWidth;
+        if (windowWidth != newWindowWidth) {
+            windowWidth = newWindowWidth;
             changed = true;
-            connector.getLayoutManager().reportOuterWidth(connector, newWidth);
-            VConsole.log("New window width: " + width);
+            connector.getLayoutManager().reportOuterWidth(connector,
+                    newWindowWidth);
+            VConsole.log("New window width: " + windowWidth);
         }
-        if (height != newHeight) {
-            height = newHeight;
+        if (windowHeight != newWindowHeight) {
+            windowHeight = newWindowHeight;
             changed = true;
-            connector.getLayoutManager()
-                    .reportOuterHeight(connector, newHeight);
-            VConsole.log("New window height: " + height);
+            connector.getLayoutManager().reportOuterHeight(connector,
+                    newWindowHeight);
+            VConsole.log("New window height: " + windowHeight);
+        }
+        Element parentElement = getElement().getParentElement();
+        if (isMonitoringParentSize() && parentElement != null) {
+            // check also for parent size changes
+            int newParentWidth = parentElement.getClientWidth();
+            int newParentHeight = parentElement.getClientHeight();
+            if (parentWidth != newParentWidth) {
+                parentWidth = newParentWidth;
+                changed = true;
+                VConsole.log("New parent width: " + parentWidth);
+            }
+            if (parentHeight != newParentHeight) {
+                parentHeight = newParentHeight;
+                changed = true;
+                VConsole.log("New parent height: " + parentHeight);
+            }
         }
         if (changed) {
-            VConsole.log("Running layout functions due to window resize");
+            /*
+             * If the window size has changed, layout the VView again and send
+             * new size to the server if the size changed. (Just checking VView
+             * size would cause us to ignore cases when a relatively sized VView
+             * should shrink as the content's size is fixed and would thus not
+             * automatically shrink.)
+             */
+            VConsole.log("Running layout functions due to window or parent resize");
+
+            // update size to avoid (most) redundant re-layout passes
+            // there can still be an extra layout recalculation if webkit
+            // overflow fix updates the size in a deferred block
+            if (isMonitoringParentSize() && parentElement != null) {
+                parentWidth = parentElement.getClientWidth();
+                parentHeight = parentElement.getClientHeight();
+            }
 
             sendClientResized();
 
@@ -188,21 +301,6 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      }-*/;
 
     /**
-     * Evaluate the given script in the browser document.
-     * 
-     * @param script
-     *            Script to be executed.
-     */
-    static native void eval(String script)
-    /*-{
-      try {
-         if (script == null) return;
-         $wnd.eval(script);
-      } catch (e) {
-      }
-    }-*/;
-
-    /**
      * Returns true if the body is NOT generated, i.e if someone else has made
      * the page that we're running in. Otherwise we're in charge of the whole
      * page.
@@ -212,6 +310,17 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     public boolean isEmbedded() {
         return !getElement().getOwnerDocument().getBody().getClassName()
                 .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
+    }
+
+    /**
+     * Returns true if the size of the parent should be checked periodically and
+     * the application should react to its changes.
+     * 
+     * @return true if size of parent should be tracked
+     */
+    protected boolean isMonitoringParentSize() {
+        // could also perform a more specific check (Liferay portlet)
+        return isEmbedded();
     }
 
     @Override
@@ -251,14 +360,19 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * com.google.gwt.event.logical.shared.ResizeHandler#onResize(com.google
      * .gwt.event.logical.shared.ResizeEvent)
      */
+
     public void onResize(ResizeEvent event) {
-        onResize();
+        triggerSizeChangeCheck();
     }
 
     /**
      * Called when a resize event is received.
+     * 
+     * This may trigger a lazy refresh or perform the size check immediately
+     * depending on the browser used and whether the server side requests
+     * resizes to be lazy.
      */
-    void onResize() {
+    private void triggerSizeChangeCheck() {
         /*
          * IE (pre IE9 at least) will give us some false resize events due to
          * problems with scrollbars. Firefox 3 might also produce some extra
@@ -274,8 +388,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         if (lazy) {
             delayedResizeExecutor.trigger();
         } else {
-            windowSizeMaybeChanged(Window.getClientWidth(),
-                    Window.getClientHeight());
+            performSizeCheck();
         }
     }
 
@@ -283,8 +396,19 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * Send new dimensions to the server.
      */
     private void sendClientResized() {
-        connection.updateVariable(id, "height", height, false);
-        connection.updateVariable(id, "width", width, immediate);
+        Element parentElement = getElement().getParentElement();
+        int viewHeight = parentElement.getClientHeight();
+        int viewWidth = parentElement.getClientWidth();
+
+        connection.updateVariable(id, "height", viewHeight, false);
+        connection.updateVariable(id, "width", viewWidth, false);
+
+        int windowWidth = Window.getClientWidth();
+        int windowHeight = Window.getClientHeight();
+
+        connection.updateVariable(id, BROWSER_WIDTH_VAR, windowWidth, false);
+        connection.updateVariable(id, BROWSER_HEIGHT_VAR, windowHeight,
+                immediate);
     }
 
     public native static void goTo(String url)
@@ -319,4 +443,13 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         getElement().focus();
     }
 
+    /**
+     * Ensures the root is scrollable eg. after style name changes.
+     */
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(getElement());
+    }
 }

@@ -87,9 +87,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractApplicationServlet.class.getName());
-
     private Properties applicationProperties;
 
     private boolean productionMode = false;
@@ -99,6 +96,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private int resourceCacheTime = 3600;
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+
         public String getStaticFileLocation(WrappedRequest request) {
             HttpServletRequest servletRequest = WrappedHttpServletRequest
                     .cast(request);
@@ -149,8 +147,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
@@ -186,7 +184,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * Print an information/warning message about running with xsrf
              * protection disabled
              */
-            logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
+            getLogger().warning(WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -200,7 +198,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
-            logger.warning(NOT_PRODUCTION_MODE_INFO);
+            getLogger().warning(NOT_PRODUCTION_MODE_INFO);
         }
 
     }
@@ -214,7 +212,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         } catch (NumberFormatException nfe) {
             // Default is 1h
             resourceCacheTime = 3600;
-            logger.warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            getLogger().warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
         }
     }
 
@@ -333,6 +331,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      *             if the request for the TRACE cannot be handled.
      */
+
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -478,9 +477,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     Root.setCurrentRoot(null);
                     Application.setCurrentApplication(null);
 
-                    requestTimer
-                            .stop((AbstractWebApplicationContext) application
-                                    .getContext());
+                    HttpSession session = request.getSession(false);
+                    if (session != null) {
+                        requestTimer.stop(getApplicationContext(session));
+                    }
                 }
             }
 
@@ -796,8 +796,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.INFO, "Could not find resource path " + path,
-                        e);
+                getLogger().log(Level.INFO,
+                        "Could not find resource path " + path, e);
             }
         }
         return resultPath;
@@ -1054,10 +1054,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             if (resourceUrl == null) {
                 // cannot serve requested file
-                logger.info("Requested resource ["
-                        + filename
-                        + "] not found from filesystem or through class loader."
-                        + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
+                getLogger()
+                        .info("Requested resource ["
+                                + filename
+                                + "] not found from filesystem or through class loader."
+                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
@@ -1065,9 +1066,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // security check: do not permit navigation out of the VAADIN
             // directory
             if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
-                logger.info("Requested resource ["
-                        + filename
-                        + "] not accessible in the VAADIN directory or access to it is forbidden.");
+                getLogger()
+                        .info("Requested resource ["
+                                + filename
+                                + "] not accessible in the VAADIN directory or access to it is forbidden.");
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
@@ -1090,10 +1092,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         } catch (Exception e) {
             // Failed to find out last modified timestamp. Continue without it.
-            logger.log(
-                    Level.FINEST,
-                    "Failed to find out last modified timestamp. Continuing without it.",
-                    e);
+            getLogger()
+                    .log(Level.FINEST,
+                            "Failed to find out last modified timestamp. Continuing without it.",
+                            e);
         } finally {
             if (connection instanceof URLConnection) {
                 try {
@@ -1105,7 +1107,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                         is.close();
                     }
                 } catch (IOException e) {
-                    logger.log(Level.INFO,
+                    getLogger().log(Level.INFO,
                             "Error closing URLConnection input stream", e);
                 }
             }
@@ -1130,7 +1132,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * parameter in web.xml
              */
             response.setHeader("Cache-Control",
-                    "max-age: " + String.valueOf(resourceCacheTime));
+                    "max-age= " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
@@ -1173,12 +1175,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // loader sees it.
 
             if (!resourceUrl.getPath().contains("!/VAADIN/")) {
-                logger.info("Blocked attempt to access a JAR entry not starting with /VAADIN/: "
-                        + resourceUrl);
+                getLogger().info(
+                        "Blocked attempt to access a JAR entry not starting with /VAADIN/: "
+                                + resourceUrl);
                 return false;
             }
-            logger.fine("Accepted access to a JAR entry using a class loader: "
-                    + resourceUrl);
+            getLogger().fine(
+                    "Accepted access to a JAR entry using a class loader: "
+                            + resourceUrl);
             return true;
         } else {
             // Some servers such as GlassFish extract files from JARs (file:)
@@ -1188,11 +1192,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // "/../"
             if (!resourceUrl.getPath().contains("/VAADIN/")
                     || resourceUrl.getPath().contains("/../")) {
-                logger.info("Blocked attempt to access file: " + resourceUrl);
+                getLogger().info(
+                        "Blocked attempt to access file: " + resourceUrl);
                 return false;
             }
-            logger.fine("Accepted access to a file using a class loader: "
-                    + resourceUrl);
+            getLogger().fine(
+                    "Accepted access to a file using a class loader: "
+                            + resourceUrl);
             return true;
         }
     }
@@ -1732,5 +1738,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 c > 64 && c < 91 || // A-Z
                 c > 96 && c < 123 // a-z
         ;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractApplicationServlet.class.getName());
     }
 }
