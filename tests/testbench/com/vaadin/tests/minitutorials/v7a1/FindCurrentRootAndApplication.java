@@ -9,6 +9,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
 
 /**
@@ -30,9 +31,10 @@ public class FindCurrentRootAndApplication extends Root {
                 String msg = "Running in ";
                 msg += Application.getCurrentApplication().isProductionMode() ? "production"
                         : "debug";
-                msg += " mode";
-                Root.getCurrentRoot().showNotification(msg);
-                Root.getCurrentRoot().showNotification("Hello Vaadin user!");
+                msg += " mode in a Root with the caption "
+                        + Root.getCurrentRoot().getCaption();
+
+                Notification.show(msg);
             }
         });
 

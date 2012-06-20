@@ -29,7 +29,7 @@ public class UsingUriFragments extends Root {
         getContent().addComponent(label);
 
         // React to fragment changes
-        addListener(new FragmentChangedListener() {
+        getPage().addListener(new FragmentChangedListener() {
             public void fragmentChanged(FragmentChangedEvent source) {
                 handleFragment(source.getFragment());
             }
@@ -41,8 +41,8 @@ public class UsingUriFragments extends Root {
         addComponent(new Button("Show and set fragment",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        handleFragment(getFragment());
-                        setFragment("customFragment");
+                        handleFragment(getPage().getFragment());
+                        getPage().setFragment("customFragment");
                     }
                 }));
     }
