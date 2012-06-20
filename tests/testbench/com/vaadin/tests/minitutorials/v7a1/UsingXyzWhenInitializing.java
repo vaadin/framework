@@ -5,7 +5,6 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Root;
 
@@ -36,18 +35,18 @@ public class UsingXyzWhenInitializing extends Root {
             getContent().addComponent(new Label("Welcome to my application"));
         }
 
-        WebBrowser browser = request.getBrowserDetails().getWebBrowser();
-        String resolution = "Your browser window on startup was "
-                + browser.getClientWidth() + "x" + browser.getClientHeight();
-        if (browser.getClientWidth() > 1024) {
-            getContent().addComponent(
-                    new Label("The is the large version of the application. "
-                            + resolution));
-        } else {
-            getContent().addComponent(
-                    new Label("This is the small version of the application. "
-                            + resolution));
-        }
+        // WebBrowser browser = request.getBrowserDetails().getWebBrowser();
+        // String resolution = "Your browser window on startup was "
+        // + browser.getClientWidth() + "x" + browser.getClientHeight();
+        // if (browser.getClientWidth() > 1024) {
+        // getContent().addComponent(
+        // new Label("The is the large version of the application. "
+        // + resolution));
+        // } else {
+        // getContent().addComponent(
+        // new Label("This is the small version of the application. "
+        // + resolution));
+        // }
     }
 
 }
