@@ -8,8 +8,8 @@ import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
 @Connect(AbstractJavaScriptComponent.class)
-public class JavaScriptComponentConnector extends AbstractComponentConnector
-        implements HasJavaScriptConnectorHelper {
+public final class JavaScriptComponentConnector extends
+        AbstractComponentConnector implements HasJavaScriptConnectorHelper {
 
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this) {

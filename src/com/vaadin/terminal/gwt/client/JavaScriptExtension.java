@@ -10,8 +10,8 @@ import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 
 @Connect(AbstractJavaScriptExtension.class)
-public class JavaScriptExtension extends AbstractExtensionConnector implements
-        HasJavaScriptConnectorHelper {
+public final class JavaScriptExtension extends AbstractExtensionConnector
+        implements HasJavaScriptConnectorHelper {
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this);
 

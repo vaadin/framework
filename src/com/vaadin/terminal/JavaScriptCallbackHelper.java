@@ -14,11 +14,25 @@ import java.util.Set;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper.JavaScriptConnectorState;
 import com.vaadin.tools.ReflectTools;
+import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
 import com.vaadin.ui.JavaScriptCallback;
 
+/**
+ * Internal helper class used to implement functionality common to
+ * {@link AbstractJavaScriptComponent} and {@link AbstractJavaScriptExtension}.
+ * Corresponding support in client-side code is in
+ * {@link JavaScriptConnectorHelper}.
+ * <p>
+ * You should most likely no use this class directly.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ */
 public class JavaScriptCallbackHelper implements Serializable {
 
     private static final Method CALL_METHOD = ReflectTools.findMethod(

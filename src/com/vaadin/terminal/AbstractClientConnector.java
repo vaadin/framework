@@ -31,7 +31,12 @@ import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Root;
 
 /**
- *
+ * An abstract base class for ClientConnector implementations. This class
+ * provides all the basic functionality required for connectors.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
  */
 public abstract class AbstractClientConnector implements ClientConnector {
     /**
@@ -115,6 +120,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             throw new RuntimeException(
                     "Use registerRpc(T implementation, Class<T> rpcInterfaceType) if the Rpc implementation implements more than one interface");
         }
+        @SuppressWarnings("unchecked")
         Class<T> type = (Class<T>) interfaces[0];
         registerRpc(implementation, type);
     }
@@ -371,6 +377,14 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
+    /**
+     * Get an Iterable for iterating over all child connectors, including both
+     * extensions and child components.
+     * 
+     * @param connector
+     *            the connector to get children for
+     * @return an Iterable giving all child connectors.
+     */
     public static Iterable<ClientConnector> getAllChildrenIterable(
             final ClientConnector connector) {
         return new AllChildrenIterable(connector);
@@ -380,6 +394,13 @@ public abstract class AbstractClientConnector implements ClientConnector {
         return Collections.unmodifiableCollection(extensions);
     }
 
+    /**
+     * Add an extension to this connector. This method is protected to allow
+     * extensions to select which targets they can extend.
+     * 
+     * @param extension
+     *            the extension to add
+     */
     protected void addExtension(Extension extension) {
         ClientConnector previousParent = extension.getParent();
         if (previousParent == this) {
@@ -439,6 +460,14 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * The {@link #getApplication()} and {@link #getRoot()} methods might return
+     * <code>null</code> after this method is called.
+     * </p>
+     */
     public void detach() {
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.detach();
