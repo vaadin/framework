@@ -16,7 +16,7 @@ public class WidgetContainerConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        List<ComponentConnector> children = getChildren();
+        List<ComponentConnector> children = getChildComponents();
         VWidgetContainer widget = (VWidgetContainer) getWidget();
         widget.clear();
         for (ComponentConnector connector : children) {
