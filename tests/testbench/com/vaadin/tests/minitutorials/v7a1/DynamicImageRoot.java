@@ -1,4 +1,4 @@
-package com.vaadin.tests.minitutorials;
+package com.vaadin.tests.minitutorials.v7a1;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

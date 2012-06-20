@@ -1,4 +1,4 @@
-package com.vaadin.tests.minitutorials;
+package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;

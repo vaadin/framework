@@ -1,4 +1,4 @@
-package com.vaadin.tests.minitutorials;
+package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
