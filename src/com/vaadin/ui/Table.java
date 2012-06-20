@@ -39,7 +39,6 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.LegacyPaint;
@@ -47,7 +46,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
 
 /**
@@ -4658,7 +4656,6 @@ public class Table extends AbstractSelect implements Action.Container,
      * initialized from server and no subsequent requests requests are needed
      * during that drag and drop operation.
      */
-    @ClientCriterion(VLazyInitItemIdentifiers.class)
     public static abstract class TableDropCriterion extends ServerSideCriterion {
 
         private Table table;

@@ -9,7 +9,6 @@ package com.vaadin.event.dd.acceptcriteria;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VOr;
 
 /**
  * A compound criterion that accepts the drag if any of its criterion accepts
@@ -20,7 +19,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VOr;
  * @since 6.3
  * 
  */
-@ClientCriterion(VOr.class)
 public class Or extends ClientSideCriterion {
     private static final long serialVersionUID = 1L;
     private AcceptCriterion criteria[];

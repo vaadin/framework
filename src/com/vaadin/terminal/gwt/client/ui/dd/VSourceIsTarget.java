@@ -9,6 +9,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 
+@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.SourceIsTarget")
 final public class VSourceIsTarget extends VAcceptCriterion {
 
     @Override

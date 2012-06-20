@@ -10,7 +10,6 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VSourceIsTarget;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
@@ -26,7 +25,6 @@ import com.vaadin.ui.Tree;
  * @since 6.3
  * 
  */
-@ClientCriterion(VSourceIsTarget.class)
 public class SourceIsTarget extends ClientSideCriterion {
 
     private static final long serialVersionUID = -451399314705532584L;

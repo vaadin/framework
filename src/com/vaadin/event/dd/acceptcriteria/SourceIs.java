@@ -13,7 +13,6 @@ import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragSourceIs;
 import com.vaadin.ui.Component;
 
 /**
@@ -23,7 +22,6 @@ import com.vaadin.ui.Component;
  * @since 6.3
  */
 @SuppressWarnings("serial")
-@ClientCriterion(VDragSourceIs.class)
 public class SourceIs extends ClientSideCriterion {
 
     private Component[] components;

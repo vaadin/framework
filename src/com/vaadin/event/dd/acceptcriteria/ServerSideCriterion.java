@@ -8,7 +8,6 @@ import java.io.Serializable;
 import com.vaadin.event.Transferable;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
 
 /**
  * Parent class for criteria which are verified on the server side during a drag
@@ -27,7 +26,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VServerAccept;
  * 
  * @since 6.3
  */
-@ClientCriterion(VServerAccept.class)
 public abstract class ServerSideCriterion implements Serializable,
         AcceptCriterion {
 

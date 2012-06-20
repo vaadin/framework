@@ -13,6 +13,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
  * TODO implementation could now be simplified/optimized
  * 
  */
+@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.Not")
 final public class VNot extends VAcceptCriterion {
     private boolean b1;
     private VAcceptCriterion crit1;

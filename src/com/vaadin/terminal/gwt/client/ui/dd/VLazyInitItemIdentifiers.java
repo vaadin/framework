@@ -13,10 +13,22 @@ import com.vaadin.terminal.gwt.client.UIDL;
 /**
  * 
  */
-final public class VLazyInitItemIdentifiers extends VAcceptCriterion {
+public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;
+
+    @AcceptCriterion("com.vaadin.ui.Table.TableDropCriterion")
+    final public static class VTableLazyInitItemIdentifiers extends
+            VLazyInitItemIdentifiers {
+        // all logic in superclass
+    }
+
+    @AcceptCriterion("com.vaadin.ui.Tree.TreeDropCriterion")
+    final public static class VTreeLazyInitItemIdentifiers extends
+            VLazyInitItemIdentifiers {
+        // all logic in superclass
+    }
 
     @Override
     public void accept(final VDragEvent drag, UIDL configuration,

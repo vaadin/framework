@@ -8,6 +8,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.terminal.gwt.client.UIDL;
 
+@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.TargetDetailIs")
 final public class VTargetDetailIs extends VAcceptCriterion {
 
     @Override

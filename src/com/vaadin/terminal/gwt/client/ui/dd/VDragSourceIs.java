@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * 
  * @since 6.3
  */
+@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.SourceIs")
 final public class VDragSourceIs extends VAcceptCriterion {
 
     @Override
