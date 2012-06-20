@@ -45,6 +45,8 @@
     	<property name="gwt.user.dir" value="${gwt.root}/user"/>
     	<property name="gwt.user.bin" value="${gwt.build.dir}/out/user/bin"/>
 
+    	<property name="jarjar-jar" value="${gwt.tools.lib}/tonicsystems/jarjar-1.0rc8.jar"/>
+
         <path id="compile.classpath.server-side">
             <path refid="additional.jar.path" />
 
@@ -564,7 +566,8 @@
         <echo>Compiling widgetset ${widgetset}. Output directory: ${widgetsets-output-dir}</echo>
     	<mkdir dir="${widgetsets-output-dir}"/>
 
-        <!-- precompile the widgetset to a .gwtar file -->
+        <!-- Disabled to reduce JAR size: precompile the widgetset to a .gwtar file -->
+    	<!--
         <java classname="com.google.gwt.dev.CompileModule" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
             <arg value="-out" />
             <arg value="${result-precompiled-widgetsets}" />
@@ -575,6 +578,7 @@
             <jvmarg value="-XX:MaxPermSize=256M"/>  
             <jvmarg value="-Djava.awt.headless=true"/>
         </java>
+        -->
     	
         <!-- compile the widgetset -->
         <java classname="com.google.gwt.dev.Compiler" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
@@ -682,7 +686,6 @@
         <!-- Create Vaadin JAR -->
         <mkdir dir="${output-dir}/META-INF"/>
         <echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
-        <echo file="${output-dir}/META-INF/GWT-VERSION">${gwt-version}</echo> 
         	
 		<emma enabled="${emma.enabled}" >
 			<instr instrpath="${result-classes-core}"
@@ -694,9 +697,12 @@
 				<filter includes="com.vaadin.*" />
 				<filter excludes="com.vaadin.terminal.gwt.*" />
 			</instr>
-		</emma>    	
+		</emma>
     	
-        <jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"
+        <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
+            classpath="${jarjar-jar}"/>
+    	
+        <jarjar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}"
              compress="true" manifest="build/package/META-INF/MANIFEST.MF" duplicate="preserve" index="true">
             <metainf dir="${output-dir}/META-INF"/>
             <manifest>
@@ -731,22 +737,81 @@
                 </patternset>
             </fileset>
         	
-            <!-- Precompiled widgetset (.gwtar file) - only include default widgetset, large file -->
-            <fileset dir="${result-precompiled-widgetsets}" includes="com/vaadin/terminal.gwt.DefaultWidgetSet.gwtar" />
+        	<!-- Precompiled widgetset (.gwtar file) not included to limit JAR size -->
+            <!-- <fileset dir="${result-precompiled-widgetsets}" includes="com/vaadin/terminal.gwt.DefaultWidgetSet.gwtar" /> -->
 
             <!-- TODO GWT related license files etc. should be in subdirectories -->
         	
             <!-- GWT -->
             <fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
             <fileset dir="${gwt.user.dir}/super" excludes="**/package.html" />
-            <fileset dir="${gwt.user.bin}" />
+        	<!-- Precompiled GWT modules (.gwtar file) not included to limit JAR size -->
+            <fileset dir="${gwt.user.bin}" excludes="**/*.gwtar" />
 
             <zipfileset src="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
             <zipfileset src="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
 
-            <zipfileset src="${gwt.dev.jar}" excludes="javax/servlet/**/*" />
+        	<!-- GWT development JAR contents including many external dependencies -->
+            <zipfileset src="${gwt.dev.jar}" excludes="javax/servlet/**,javax/xml/**" />
+
+            <!-- Alternative approach: GWT compiler and its dependencies only from the dev JAR -->
+            <!--
+            <zipfileset src="${gwt.dev.jar}">
+                <include name="com/google/gwt/core/client/**"/>
+                <include name="com/google/gwt/core/shared/**"/>
+
+            	<include name="com/google/gwt/core/ext/**"/>
+                <include name="com/google/gwt/core/linker/**"/>
+                <include name="com/google/gwt/dev/About.java"/>
+                <include name="com/google/gwt/dev/GwtVersion.java"/>
+                <include name="com/google/gwt/dev/Permutation.java"/>
+                <include name="com/google/gwt/dev/asm/**"/>
+                <include name="com/google/gwt/dev/cfg/**"/>
+                <include name="com/google/gwt/dev/javac/**"/>
+                <include name="com/google/gwt/dev/jdt/**"/>
+                <include name="com/google/gwt/dev/jjs/**"/>
+                <include name="com/google/gwt/dev/js/**"/>
+                <include name="com/google/gwt/dev/json/**"/>
+                <include name="com/google/gwt/dev/resource/**"/>
+                <include name="com/google/gwt/dev/util/**"/>
+                <include name="com/google/gwt/soyc/**"/>
+                <include name="com/google/gwt/util/**"/>
+                <include name="org/eclipse/jdt/**"/>
+            </zipfileset>
+            <zipfileset src="${gwt.tools.lib}/apache/ant-1.6.5.jar" />
+            <zipfileset src="${gwt.tools.lib}/eclipse/jdt-3.4.2_r894.jar" />
+            <zipfileset src="${gwt.tools.lib}/tomcat/commons-collections-3.1.jar" />
+            <zipfileset src="${gwt.tools.lib}/guava/guava-10.0.1/guava-10.0.1-rebased.jar" />
+            <zipfileset src="${gwt.tools.lib}/jscomp/r1649/compiler-rebased.jar" />
+            -->
+        	
+        	<!-- GWT SuperDevMode -->
             <zipfileset src="${gwt.codeserver.jar}" />
-        </jar>
+
+        	<!-- jarjar rules: rebase packages from gwt-dev.jar but not those from gwt-user -->
+        	
+        	<!-- Don't rebase these -->
+        	<!-- xalan is used via reflection -->
+            <rule pattern="org.apache.xalan.**" result="@0"/>
+            <rule pattern="org.apache.xml.**" result="@0"/>
+        	<!-- Cannot rebase - used in APIs etc. -->
+            <!-- <rule pattern="org.mortbay.**" result="@0"/> -->
+            <!-- <rule pattern="org.xml.**" result="@0"/> -->
+
+        	<!-- Rebase these -->
+        	<rule pattern="com.gargoylesoftware.**" result="com.vaadin.external.@0"/>
+            <rule pattern="com.ibm.**" result="com.vaadin.external.@0"/>
+            <rule pattern="com.steadystate.**" result="com.vaadin.external.@0"/>
+            <rule pattern="mx4j.**" result="com.vaadin.external.@0"/>
+            <rule pattern="net.sourceforge.htmlunit.**" result="com.vaadin.external.@0"/>
+            <rule pattern="org.apache.**" result="com.vaadin.external.@0"/>
+            <rule pattern="org.cyberneko.**" result="com.vaadin.external.@0"/>
+            <rule pattern="org.eclipse.**" result="com.vaadin.external.@0"/>
+        	<!-- looked up based on class name? -->
+            <rule pattern="org.hibernate.validator.**" result="com.vaadin.external.@0"/>
+            <rule pattern="org.jdesktop.swingworker.**" result="com.vaadin.external.@0"/>
+            <rule pattern="org.kohsuke.args4j.**" result="com.vaadin.external.@0"/>
+        </jarjar>
         
         <!-- Generate the Export-Package attribute in the manifest of the JAR -->
         <java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
