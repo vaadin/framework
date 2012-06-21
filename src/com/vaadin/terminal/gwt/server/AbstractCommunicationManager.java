@@ -1535,8 +1535,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     Map<String, Object> changes = legacyInvocation
                             .getVariableChanges();
                     try {
-                        changeVariables(source, (VariableOwner) connector,
-                                changes);
+                        if (connector instanceof VariableOwner) {
+                            changeVariables(source, (VariableOwner) connector,
+                                    changes);
+                        } else {
+                            throw new IllegalStateException(
+                                    "Received legacy variable change for "
+                                            + connector.getClass().getName()
+                                            + " ("
+                                            + connector.getConnectorId()
+                                            + ") which is not a VariableOwner. The client-side connector sent these legacy varaibles: "
+                                            + changes.keySet());
+                        }
                     } catch (Exception e) {
                         Component errorComponent = null;
                         if (connector instanceof Component) {
