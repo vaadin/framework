@@ -421,25 +421,28 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                applicationManager.handleFileUpload(application, request,
-                        response);
-                return;
-            } else if (requestType == RequestType.UIDL) {
-                // Handles AJAX UIDL requests
                 Root root = application.getRootForRequest(request);
                 if (root == null) {
-                    throw new ServletException(ERROR_NO_WINDOW_FOUND);
+                    throw new ServletException(ERROR_NO_ROOT_FOUND);
                 }
+                applicationManager.handleFileUpload(root, request, response);
+                return;
+            } else if (requestType == RequestType.UIDL) {
+                Root root = application.getRootForRequest(request);
+                if (root == null) {
+                    throw new ServletException(ERROR_NO_ROOT_FOUND);
+                }// Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest(request, response,
                         servletWrapper, root);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
+                // Browser details - not related to a specific root
                 applicationManager.handleBrowserDetailsRequest(request,
                         response, application);
                 return;
             }
 
-            // Removes application if it has stopped (mayby by thread or
+            // Removes application if it has stopped (maybe by thread or
             // transactionlistener)
             if (!application.isRunning()) {
                 endApplication(request, response, application);

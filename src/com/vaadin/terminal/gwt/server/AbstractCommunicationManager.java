@@ -74,7 +74,7 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DirtyConnectorTracker;
+import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Window;
@@ -134,6 +134,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
+    /**
+     * The application this communication manager is used for
+     */
     private final Application application;
 
     private List<String> locales;
@@ -517,7 +520,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (request.getParameter(GET_PARAM_HIGHLIGHT_COMPONENT) != null) {
                 String pid = request
                         .getParameter(GET_PARAM_HIGHLIGHT_COMPONENT);
-                highlightedConnector = root.getApplication().getConnector(pid);
+                highlightedConnector = root.getConnectorTracker().getConnector(
+                        pid);
                 highlightConnector(highlightedConnector);
             }
         }
@@ -617,7 +621,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     protected void postPaint(Root root) {
         // Remove connectors that have been detached from the application during
         // handling of the request
-        root.getApplication().cleanConnectorMap();
+        root.getConnectorTracker().cleanConnectorMap();
     }
 
     protected void highlightConnector(Connector highlightedConnector) {
@@ -763,8 +767,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
         Application application = root.getApplication();
         // Paints components
-        DirtyConnectorTracker rootConnectorTracker = root
-                .getDirtyConnectorTracker();
+        ConnectorTracker rootConnectorTracker = root.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
             getClientCache(root).clear();
@@ -848,7 +851,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         }
                     }
                     Object stateJson = JsonCodec.encode(state, referenceState,
-                            stateType, application);
+                            stateType, root.getConnectorTracker());
 
                     sharedStates.put(connector.getConnectorId(), stateJson);
                 } catch (JSONException e) {
@@ -950,7 +953,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // }
                     paramJson.put(JsonCodec.encode(
                             invocation.getParameters()[i], referenceParameter,
-                            parameterType, application));
+                            parameterType, root.getConnectorTracker()));
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);
@@ -1411,7 +1414,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             for (int bi = 1; bi < bursts.length; bi++) {
                 // unescape any encoded separator characters in the burst
                 final String burst = unescapeBurst(bursts[bi]);
-                success &= handleBurst(request, application2, burst);
+                success &= handleBurst(request, root, burst);
 
                 // In case that there were multiple bursts, we know that this is
                 // a special synchronous case for closing window. Thus we are
@@ -1453,22 +1456,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * directly.
      * 
      * @param source
-     * @param app
-     *            application receiving the burst
+     * @param root
+     *            the root receiving the burst
      * @param burst
      *            the content of the burst as a String to be parsed
      * @return true if the processing of the burst was successful and there were
      *         no messages to non-existent components
      */
-    public boolean handleBurst(Object source, Application app,
+    public boolean handleBurst(WrappedRequest source, Root root,
             final String burst) {
         boolean success = true;
         try {
             Set<Connector> enabledConnectors = new HashSet<Connector>();
 
-            List<MethodInvocation> invocations = parseInvocations(burst);
+            List<MethodInvocation> invocations = parseInvocations(
+                    root.getConnectorTracker(), burst);
             for (MethodInvocation invocation : invocations) {
-                final ClientConnector connector = getConnector(app,
+                final ClientConnector connector = getConnector(root,
                         invocation.getConnectorId());
 
                 if (connector != null && connector.isConnectorEnabled()) {
@@ -1479,7 +1483,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             for (int i = 0; i < invocations.size(); i++) {
                 MethodInvocation invocation = invocations.get(i);
 
-                final ClientConnector connector = getConnector(app,
+                final ClientConnector connector = getConnector(root,
                         invocation.getConnectorId());
 
                 if (connector == null) {
@@ -1557,8 +1561,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                 errorComponent = (Component) dropHandlerOwner;
                             }
                         }
-                        handleChangeVariablesError(app, errorComponent, e,
-                                changes);
+                        handleChangeVariablesError(root.getApplication(),
+                                errorComponent, e, changes);
                     }
                 }
             }
@@ -1577,12 +1581,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Parse a message burst from the client into a list of MethodInvocation
      * instances.
      * 
+     * @param root
+     *            The root for this request
      * @param burst
      *            message string (JSON)
      * @return list of MethodInvocation to perform
      * @throws JSONException
      */
-    private List<MethodInvocation> parseInvocations(final String burst)
+    private List<MethodInvocation> parseInvocations(
+            ConnectorTracker connectorTracker, final String burst)
             throws JSONException {
         JSONArray invocationsJson = new JSONArray(burst);
 
@@ -1595,7 +1602,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
 
             MethodInvocation invocation = parseInvocation(invocationJson,
-                    previousInvocation);
+                    previousInvocation, connectorTracker);
             if (invocation != null) {
                 // Can be null iff the invocation was a legacy invocation and it
                 // was merged with the previous one
@@ -1607,7 +1614,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private MethodInvocation parseInvocation(JSONArray invocationJson,
-            MethodInvocation previousInvocation) throws JSONException {
+            MethodInvocation previousInvocation,
+            ConnectorTracker connectorTracker) throws JSONException {
         String connectorId = invocationJson.getString(0);
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
@@ -1623,10 +1631,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
             return parseLegacyChangeVariablesInvocation(connectorId,
                     interfaceName, methodName,
                     (LegacyChangeVariablesInvocation) previousInvocation,
-                    parametersJson);
+                    parametersJson, connectorTracker);
         } else {
             return parseServerRpcInvocation(connectorId, interfaceName,
-                    methodName, parametersJson);
+                    methodName, parametersJson, connectorTracker);
         }
 
     }
@@ -1634,7 +1642,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private LegacyChangeVariablesInvocation parseLegacyChangeVariablesInvocation(
             String connectorId, String interfaceName, String methodName,
             LegacyChangeVariablesInvocation previousInvocation,
-            JSONArray parametersJson) throws JSONException {
+            JSONArray parametersJson, ConnectorTracker connectorTracker)
+            throws JSONException {
         if (parametersJson.length() != 2) {
             throw new JSONException(
                     "Invalid parameters in legacy change variables call. Expected 2, was "
@@ -1642,7 +1651,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         String variableName = parametersJson.getString(0);
         UidlValue uidlValue = (UidlValue) JsonCodec.decodeInternalType(
-                UidlValue.class, true, parametersJson.get(1), application);
+                UidlValue.class, true, parametersJson.get(1), connectorTracker);
 
         Object value = uidlValue.getValue();
 
@@ -1658,7 +1667,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private ServerRpcMethodInvocation parseServerRpcInvocation(
             String connectorId, String interfaceName, String methodName,
-            JSONArray parametersJson) throws JSONException {
+            JSONArray parametersJson, ConnectorTracker connectorTracker)
+            throws JSONException {
         ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
                 connectorId, interfaceName, methodName, parametersJson.length());
 
@@ -1670,7 +1680,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             Object parameterValue = parametersJson.get(j);
             Type parameterType = declaredRpcMethodParameterTypes[j];
             parameters[j] = JsonCodec.decodeInternalOrCustomType(parameterType,
-                    parameterValue, application);
+                    parameterValue, connectorTracker);
         }
         invocation.setParameters(parameters);
         return invocation;
@@ -1681,8 +1691,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         owner.changeVariables(source, m);
     }
 
-    protected ClientConnector getConnector(Application app, String connectorId) {
-        ClientConnector c = app.getConnector(connectorId);
+    protected ClientConnector getConnector(Root root, String connectorId) {
+        ClientConnector c = root.getConnectorTracker()
+                .getConnector(connectorId);
         if (c == null
                 && connectorId.equals(getDragAndDropService().getConnectorId())) {
             return getDragAndDropService();
@@ -2037,9 +2048,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return
      */
     private ArrayList<ClientConnector> getDirtyVisibleConnectors(
-            DirtyConnectorTracker dirtyConnectorTracker) {
+            ConnectorTracker connectorTracker) {
         ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
-        for (ClientConnector c : dirtyConnectorTracker.getDirtyConnectors()) {
+        for (ClientConnector c : connectorTracker.getDirtyConnectors()) {
             if (isVisible(c)) {
                 dirtyConnectors.add(c);
             }
