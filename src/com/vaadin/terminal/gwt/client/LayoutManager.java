@@ -495,7 +495,7 @@ public class LayoutManager {
             ComponentConnector[] connectors = ConnectorMap.get(connection)
                     .getComponentConnectors();
             for (ComponentConnector connector : connectors) {
-                measueConnector(connector);
+                measureConnector(connector);
             }
             for (ComponentConnector connector : connectors) {
                 layoutDependencyTree.setNeedsMeasure(connector, false);
@@ -507,7 +507,7 @@ public class LayoutManager {
             Collection<ComponentConnector> measureTargets = layoutDependencyTree
                     .getMeasureTargets();
             for (ComponentConnector connector : measureTargets) {
-                measueConnector(connector);
+                measureConnector(connector);
                 measureCount++;
             }
             for (ComponentConnector connector : measureTargets) {
@@ -517,7 +517,7 @@ public class LayoutManager {
         return measureCount;
     }
 
-    private void measueConnector(ComponentConnector connector) {
+    private void measureConnector(ComponentConnector connector) {
         Element element = connector.getWidget().getElement();
         MeasuredSize measuredSize = getMeasuredSize(connector);
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
