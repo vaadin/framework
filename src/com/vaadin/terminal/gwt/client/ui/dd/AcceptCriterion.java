@@ -25,9 +25,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface AcceptCriterion {
     /**
-     * @return the fully qualified class name of the server side counterpart for
-     *         the annotated criterion
+     * @return the class of the server side counterpart for the annotated
+     *         criterion
      */
-    String value();
+    Class<?> value();
 
 }

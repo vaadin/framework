@@ -6,9 +6,10 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.terminal.gwt.client.UIDL;
 
-@AcceptCriterion("com.vaadin.event.dd.acceptcriteria.AcceptAll")
+@AcceptCriterion(AcceptAll.class)
 final public class VAcceptAll extends VAcceptCriterion {
 
     @Override

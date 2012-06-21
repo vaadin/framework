@@ -9,6 +9,8 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import java.util.HashSet;
 
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Tree;
 
 /**
  * 
@@ -18,13 +20,13 @@ public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;
 
-    @AcceptCriterion("com.vaadin.ui.Table.TableDropCriterion")
+    @AcceptCriterion(Table.TableDropCriterion.class)
     final public static class VTableLazyInitItemIdentifiers extends
             VLazyInitItemIdentifiers {
         // all logic in superclass
     }
 
-    @AcceptCriterion("com.vaadin.ui.Tree.TreeDropCriterion")
+    @AcceptCriterion(Tree.TreeDropCriterion.class)
     final public static class VTreeLazyInitItemIdentifiers extends
             VLazyInitItemIdentifiers {
         // all logic in superclass
