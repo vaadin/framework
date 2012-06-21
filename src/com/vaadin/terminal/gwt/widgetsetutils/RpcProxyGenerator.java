@@ -117,7 +117,7 @@ public class RpcProxyGenerator extends Generator {
             writer.println(" {");
             writer.indent();
 
-            writer.print("connector.getConnection().addMethodInvocationToQueue(new MethodInvocation(connector.getConnectorId(), \""
+            writer.print("this.connector.getConnection().addMethodInvocationToQueue(new MethodInvocation(this.connector.getConnectorId(), \""
                     + requestedType.getQualifiedBinaryName() + "\", \"");
             writer.print(m.getName());
             writer.print("\", new Object[] {");
