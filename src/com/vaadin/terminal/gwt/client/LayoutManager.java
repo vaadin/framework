@@ -120,7 +120,7 @@ public class LayoutManager {
 
     /**
      * Assigns a measured size to an element. Method defined as protected to
-     * allow separate implementation for IE8 in which delete not always works.
+     * allow separate implementation for IE8.
      * 
      * @param element
      *            the dom element to attach the measured size to
@@ -138,7 +138,17 @@ public class LayoutManager {
         }
     }-*/;
 
-    private static native final MeasuredSize getMeasuredSize(Element element,
+    /**
+     * Gets the measured size for an element. Method defined as protected to
+     * allow separate implementation for IE8.
+     * 
+     * @param element
+     *            The element to get measured size for
+     * @param defaultSize
+     *            The size to return if no measured size could be found
+     * @return The measured size for the element or {@literal defaultSize}
+     */
+    protected native MeasuredSize getMeasuredSize(Element element,
             MeasuredSize defaultSize)
     /*-{
         return element.vMeasuredSize || defaultSize;
@@ -389,8 +399,13 @@ public class LayoutManager {
                 ((PostLayoutListener) connector).postLayout();
             }
         }
-        VConsole.log("Invoke post layout listeners in "
-                + (totalDuration.elapsedMillis() - postLayoutStart) + " ms");
+        int postLayoutDone = (totalDuration.elapsedMillis() - postLayoutStart);
+        VConsole.log("Invoke post layout listeners in " + postLayoutDone
+                + " ms");
+
+        cleanMeasuredSizes();
+        int cleaningDone = (totalDuration.elapsedMillis() - postLayoutDone);
+        VConsole.log("Cleaned old measured sizes in " + cleaningDone + "ms");
 
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
@@ -1190,4 +1205,11 @@ public class LayoutManager {
     public void setEverythingNeedsMeasure() {
         everythingNeedsMeasure = true;
     }
+
+    /**
+     * Clean measured sizes which are no longer needed. Only for IE8.
+     */
+    protected void cleanMeasuredSizes() {
+    }
+
 }
