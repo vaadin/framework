@@ -107,8 +107,9 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
                     .getAnnotation(AcceptCriterion.class);
             if (annotation != null) {
                 String clientClassName = clientClass.getQualifiedSourceName();
-                String serverClassName = clientClass.getAnnotation(
+                Class<?> serverClass = clientClass.getAnnotation(
                         AcceptCriterion.class).value();
+                String serverClassName = serverClass.getCanonicalName();
                 logger.log(Type.INFO, "creating mapping for " + serverClassName);
                 sourceWriter.print("if (\"");
                 sourceWriter.print(serverClassName);
@@ -123,5 +124,4 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         sourceWriter.outdent();
         sourceWriter.println("}");
     }
-
 }
