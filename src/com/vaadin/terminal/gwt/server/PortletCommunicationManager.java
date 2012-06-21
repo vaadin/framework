@@ -43,12 +43,12 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         super(application);
     }
 
-    public void handleFileUpload(WrappedRequest request,
+    public void handleFileUpload(Root root, WrappedRequest request,
             WrappedResponse response) throws IOException {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
-        Connector owner = getConnector(getApplication(), ownerId);
+        Connector owner = getConnector(root, ownerId);
         StreamVariable streamVariable = ownerToNameToStreamVariable.get(owner)
                 .get(name);
 
@@ -73,7 +73,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     .iterator();
             while (iterator.hasNext()) {
                 Connector owner = iterator.next();
-                if (application.getConnector(owner.getConnectorId()) == null) {
+                if (getConnector(root, owner.getConnectorId()) == null) {
                     // Owner is no longer attached to the application
                     iterator.remove();
                 }

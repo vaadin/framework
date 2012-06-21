@@ -72,7 +72,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void requestRepaint() {
         Root root = getRoot();
         if (root != null) {
-            root.getDirtyConnectorTracker().markDirty(this);
+            root.getConnectorTracker().markDirty(this);
         }
     }
 
@@ -455,9 +455,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void attach() {
         requestRepaint();
 
+        getRoot().getConnectorTracker().registerConnector(this);
+
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
         }
+
     }
 
     /**
@@ -472,6 +475,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.detach();
         }
+
+        getRoot().getConnectorTracker().unregisterConnector(this);
     }
 
     public boolean isConnectorEnabled() {

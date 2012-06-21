@@ -560,8 +560,7 @@ public abstract class Root extends AbstractComponentContainer implements
     /** Identifies the click event */
     private static final String CLICK_EVENT_ID = VRoot.CLICK_EVENT_ID;
 
-    private DirtyConnectorTracker dirtyConnectorTracker = new DirtyConnectorTracker(
-            this);
+    private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
     private Page page = new Page(this);
 
@@ -1178,38 +1177,14 @@ public abstract class Root extends AbstractComponentContainer implements
         removeListener(CLICK_EVENT_ID, ClickEvent.class, listener);
     }
 
-    /**
-     * Notifies the child components and windows that the root is attached to
-     * the application.
-     */
-    @Override
-    public void attach() {
-        super.attach();
-        for (Window w : windows) {
-            w.attach();
-        }
-    }
-
-    /**
-     * Notifies the child components and windows that the root is detached from
-     * the application.
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        for (Window w : windows) {
-            w.detach();
-        }
-    }
-
     @Override
     public boolean isConnectorEnabled() {
         // TODO How can a Root be invisible? What does it mean?
         return isVisible() && isEnabled();
     }
 
-    public DirtyConnectorTracker getDirtyConnectorTracker() {
-        return dirtyConnectorTracker;
+    public ConnectorTracker getConnectorTracker() {
+        return connectorTracker;
     }
 
     public Page getPage() {

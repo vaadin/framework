@@ -497,21 +497,15 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setIcon(Resource icon);
 
     /**
-     * Gets the parent window of the component.
+     * Gets the Root the component is attached to.
      * 
      * <p>
-     * If the component is not attached to a window through a component
+     * If the component is not attached to a Root through a component
      * containment hierarchy, <code>null</code> is returned.
      * </p>
      * 
-     * <p>
-     * The window can be either an application-level window or a sub-window. If
-     * the component is itself a window, it returns a reference to itself, not
-     * to its containing window (of a sub-window).
-     * </p>
-     * 
-     * @return the parent window of the component or <code>null</code> if it is
-     *         not attached to a window or is itself a window
+     * @return the Root of the component or <code>null</code> if it is not
+     *         attached to a Root
      */
     public Root getRoot();
 
@@ -520,11 +514,16 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * <p>
      * The method will return {@code null} if the component is not currently
-     * attached to an application. This is often a problem in constructors of
-     * regular components and in the initializers of custom composite
-     * components. A standard workaround is to move the problematic
-     * initialization to {@link #attach()}, as described in the documentation of
-     * the method.
+     * attached to an application.
+     * </p>
+     * 
+     * <p>
+     * Getting a null value is often a problem in constructors of regular
+     * components and in the initializers of custom composite components. A
+     * standard workaround is to use {@link Application#getCurrentApplication()}
+     * to retrieve the application instance that the current request relates to.
+     * Another way is to move the problematic initialization to
+     * {@link #attach()}, as described in the documentation of the method.
      * </p>
      * 
      * @return the parent application of the component or <code>null</code>.

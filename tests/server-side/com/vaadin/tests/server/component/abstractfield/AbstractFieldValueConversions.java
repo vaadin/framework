@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import com.vaadin.Application;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
@@ -156,6 +157,47 @@ public class AbstractFieldValueConversions extends TestCase {
         cb.setValue(false);
         assertEquals(Boolean.FALSE, cb.getValue());
         assertEquals(Boolean.FALSE, property.getValue());
+
+    }
+
+    public static class NumberBean {
+        private Number number;
+
+        public Number getNumber() {
+            return number;
+        }
+
+        public void setNumber(Number number) {
+            this.number = number;
+        }
+
+    }
+
+    public void testNumberDoubleConverterChange() {
+        final Application a = new Application();
+        Application.setCurrentApplication(a);
+        TextField tf = new TextField() {
+            @Override
+            public Application getApplication() {
+                return a;
+            }
+        };
+        NumberBean nb = new NumberBean();
+        nb.setNumber(490);
+
+        tf.setPropertyDataSource(new MethodProperty<Number>(nb, "number"));
+        assertEquals(490, tf.getPropertyDataSource().getValue());
+        assertEquals("490", tf.getValue());
+
+        Converter c1 = tf.getConverter();
+
+        tf.setPropertyDataSource(new MethodProperty<Number>(nb, "number"));
+        Converter c2 = tf.getConverter();
+        assertTrue(
+                "StringToNumber converter is ok for integer types and should stay even though property is changed",
+                c1 == c2);
+        assertEquals(490, tf.getPropertyDataSource().getValue());
+        assertEquals("490", tf.getValue());
 
     }
 

@@ -7,7 +7,8 @@ package com.vaadin.ui;
 import java.lang.reflect.Method;
 
 import com.vaadin.data.Property;
-import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.client.ui.label.LabelState;
 
@@ -36,10 +37,9 @@ import com.vaadin.terminal.gwt.client.ui.label.LabelState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-// TODO generics for interface Property
-public class Label extends AbstractComponent implements Property,
+public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
-        Property.ValueChangeNotifier, Comparable<Object> {
+        Property.ValueChangeNotifier, Comparable<Label> {
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
@@ -77,9 +77,13 @@ public class Label extends AbstractComponent implements Property,
     @Deprecated
     public static final ContentMode CONTENT_DEFAULT = ContentMode.TEXT;
 
-    private static final String DATASOURCE_MUST_BE_SET = "Datasource must be set";
+    /**
+     * A converter used to convert from the data model type to the field type
+     * and vice versa. Label type is always String.
+     */
+    private Converter<String, Object> converter = null;
 
-    private Property dataSource;
+    private Property<String> dataSource = null;
 
     /**
      * Creates an empty Label.
@@ -114,7 +118,9 @@ public class Label extends AbstractComponent implements Property,
      * @param contentMode
      */
     public Label(String content, ContentMode contentMode) {
-        this(new ObjectProperty<String>(content, String.class), contentMode);
+        setValue(content);
+        setContentMode(contentMode);
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
@@ -127,15 +133,7 @@ public class Label extends AbstractComponent implements Property,
     public Label(Property contentSource, ContentMode contentMode) {
         setPropertyDataSource(contentSource);
         setContentMode(contentMode);
-        setWidth(100, UNITS_PERCENTAGE);
-    }
-
-    @Override
-    public void updateState() {
-        super.updateState();
-        // We don't know when the text is updated so update it here before
-        // sending the state to the client
-        getState().setText(getStringValue());
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     @Override
@@ -149,25 +147,35 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @return the Value of the label.
      */
-    public Object getValue() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
+    public String getValue() {
+        if (getPropertyDataSource() == null) {
+            // Use internal value if we are running without a data source
+            return getState().getText();
         }
-        return dataSource.getValue();
+        return ConverterUtil.convertFromModel(getPropertyDataSource()
+                .getValue(), String.class, getConverter(), getLocale());
     }
 
     /**
      * Set the value of the label. Value of the label is the XML contents of the
      * label.
      * 
-     * @param newValue
+     * @param newStringValue
      *            the New value of the label.
      */
-    public void setValue(Object newValue) {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
+    public void setValue(Object newStringValue) {
+        if (newStringValue != null && newStringValue.getClass() != String.class) {
+            throw new Converter.ConversionException("Value of type "
+                    + newStringValue.getClass() + " cannot be assigned to "
+                    + String.class.getName());
         }
-        dataSource.setValue(newValue);
+        if (getPropertyDataSource() == null) {
+            getState().setText((String) newStringValue);
+            requestRepaint();
+        } else {
+            throw new IllegalStateException(
+                    "Label is only a Property.Viewer and cannot update its data source");
+        }
     }
 
     /**
@@ -179,26 +187,7 @@ public class Label extends AbstractComponent implements Property,
     @Override
     public String toString() {
         throw new UnsupportedOperationException(
-                "Use Property.getValue() instead of Label.toString()");
-    }
-
-    /**
-     * Returns the value of the <code>Property</code> in human readable textual
-     * format.
-     * 
-     * This method exists to help migration from previous Vaadin versions by
-     * providing a simple replacement for {@link #toString()}. However, it is
-     * normally better to use the value of the label directly.
-     * 
-     * @return String representation of the value stored in the Property
-     * @since 7.0
-     */
-    public String getStringValue() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        Object value = dataSource.getValue();
-        return (null != value) ? value.toString() : null;
+                "Use getValue() instead of Label.toString()");
     }
 
     /**
@@ -206,11 +195,8 @@ public class Label extends AbstractComponent implements Property,
      * 
      * @see com.vaadin.data.Property#getType()
      */
-    public Class getType() {
-        if (dataSource == null) {
-            throw new IllegalStateException(DATASOURCE_MUST_BE_SET);
-        }
-        return dataSource.getType();
+    public Class<String> getType() {
+        return String.class;
     }
 
     /**
@@ -238,7 +224,13 @@ public class Label extends AbstractComponent implements Property,
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
-        // Sets the new data source
+        if (!ConverterUtil.canConverterHandle(getConverter(), String.class,
+                newDataSource.getType())) {
+            // Try to find a converter
+            Converter<String, ?> c = ConverterUtil.getConverter(String.class,
+                    newDataSource.getType(), getApplication());
+            setConverter(c);
+        }
         dataSource = newDataSource;
 
         // Listens the new data source if possible
@@ -354,7 +346,6 @@ public class Label extends AbstractComponent implements Property,
     protected void fireValueChange() {
         // Set the error message
         fireEvent(new Label.ValueChangeEvent(this));
-        requestRepaint();
     }
 
     /**
@@ -363,7 +354,26 @@ public class Label extends AbstractComponent implements Property,
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     public void valueChange(Property.ValueChangeEvent event) {
+        // Update the internal value from the data source
+        getState().setText(getValue());
+        requestRepaint();
+
         fireValueChange();
+    }
+
+    private String getComparableValue() {
+        String stringValue = getValue();
+        if (stringValue == null) {
+            stringValue = "";
+        }
+
+        if (getContentMode() == ContentMode.XHTML
+                || getContentMode() == ContentMode.XML) {
+            return stripTags(stringValue);
+        } else {
+            return stringValue;
+        }
+
     }
 
     /**
@@ -387,27 +397,10 @@ public class Label extends AbstractComponent implements Property,
      *         less than, equal to, or greater than the specified object.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public int compareTo(Object other) {
+    public int compareTo(Label other) {
 
-        String thisValue;
-        String otherValue;
-
-        if (getContentMode() == ContentMode.XML
-                || getContentMode() == ContentMode.XHTML) {
-            thisValue = stripTags(getStringValue());
-        } else {
-            thisValue = getStringValue();
-        }
-
-        if (other instanceof Label
-                && (((Label) other).getContentMode() == ContentMode.XML || ((Label) other)
-                        .getContentMode() == ContentMode.XHTML)) {
-            otherValue = stripTags(((Label) other).getStringValue());
-        } else {
-            // TODO not a good idea - and might assume that Field.toString()
-            // returns a string representation of the value
-            otherValue = other.toString();
-        }
+        String thisValue = getComparableValue();
+        String otherValue = other.getComparableValue();
 
         return thisValue.compareTo(otherValue);
     }
@@ -441,6 +434,28 @@ public class Label extends AbstractComponent implements Property,
         }
 
         return res.toString();
+    }
+
+    /**
+     * Gets the converter used to convert the property data source value to the
+     * label value.
+     * 
+     * @return The converter or null if none is set.
+     */
+    public Converter<String, Object> getConverter() {
+        return converter;
+    }
+
+    /**
+     * Sets the converter used to convert the label value to the property data
+     * source type. The converter must have a presentation type of String.
+     * 
+     * @param converter
+     *            The new converter to use.
+     */
+    public void setConverter(Converter<String, ?> converter) {
+        this.converter = (Converter<String, Object>) converter;
+        requestRepaint();
     }
 
 }
