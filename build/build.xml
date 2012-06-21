@@ -36,7 +36,8 @@
         </path>
 
     	<property name="gwt.build.dir" value="${gwt.root}/build"/>
-    	<property name="gwt.tools.lib" value="${gwt.root}/../tools/lib"/>
+    	<property name="gwt.tools" value="${gwt.root}/../tools"/>
+    	<property name="gwt.tools.lib" value="${gwt.tools}/lib"/>
     	
     	<property name="gwt.user.jar" value="${gwt.build.dir}/lib/gwt-user.jar"/>
     	<property name="gwt.dev.jar" value="${gwt.build.dir}/lib/gwt-dev.jar"/>
@@ -787,6 +788,9 @@
         	
         	<!-- GWT SuperDevMode -->
             <zipfileset src="${gwt.codeserver.jar}" />
+        	
+        	<!-- JSON library, required when precompiled JSON.gwtar is not included -->
+        	<zipfileset src="${gwt.tools}/redist/json/r2_20080312/json-1.5.jar" />
 
         	<!-- jarjar rules: rebase packages from gwt-dev.jar but not those from gwt-user -->
         	
