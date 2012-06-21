@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.label;
 /**
  * Content modes defining how the client should interpret a Label's value.
  * 
- * @sine 7.0
+ * @since 7.0.0
  */
 public enum ContentMode {
     /**
