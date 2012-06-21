@@ -712,7 +712,8 @@
                 <attribute name="Implementation-Vendor" value="Vaadin Ltd" />
                 <attribute name="Implementation-URL" value="http://vaadin.com" />
                 <attribute name="Implementation-Version" value="${version.full}" />
-                <attribute name="GWT-Version" value="${gwt-version}" />
+            	<!-- No separate GWT-Version attribute or file -->
+                <!-- <attribute name="GWT-Version" value="${gwt-version}" /> -->
                 <attribute name="GWT-Version-Dependencies" value="${gwt-version-dependencies}" />
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
