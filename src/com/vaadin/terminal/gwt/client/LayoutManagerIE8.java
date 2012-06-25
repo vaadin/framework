@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -36,11 +37,12 @@ public class LayoutManagerIE8 extends LayoutManager {
 
     @Override
     protected void cleanMeasuredSizes() {
+        Document document = RootPanel.get().getElement().getOwnerDocument();
+
         Iterator<Element> i = measuredSizes.keySet().iterator();
         while (i.hasNext()) {
             Element e = i.next();
-            if (e.getOwnerDocument() != RootPanel.get().getElement()
-                    .getOwnerDocument()) {
+            if (e.getOwnerDocument() != document) {
                 i.remove();
             }
         }
