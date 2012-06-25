@@ -120,8 +120,11 @@ public class ConverterUtil implements Serializable {
             return null;
         }
 
-        // check that the value class is compatible with the model type
-        if (modelType.isAssignableFrom(presentationValue.getClass())) {
+        if (modelType == null) {
+            // No model type, return original value
+            return (MODELTYPE) presentationValue;
+        } else if (modelType.isAssignableFrom(presentationValue.getClass())) {
+            // presentation type directly compatible with model type
             return modelType.cast(presentationValue);
         } else {
             throw new Converter.ConversionException(
