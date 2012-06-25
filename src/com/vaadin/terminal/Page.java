@@ -614,6 +614,16 @@ public class Page implements Serializable {
         addNotification(notification);
     }
 
+    /**
+     * Gets the Page to which the current root belongs. This is automatically
+     * defined when processing requests to the server. In other cases, (e.g.
+     * from background threads), the current root is not automatically defined.
+     * 
+     * @see Root#getCurrent()
+     * 
+     * @return the current page instance if available, otherwise
+     *         <code>null</code>
+     */
     public static Page getCurrent() {
         Root currentRoot = Root.getCurrent();
         if (currentRoot == null) {
@@ -622,6 +632,13 @@ public class Page implements Serializable {
         return currentRoot.getPage();
     }
 
+    /**
+     * Sets the page title. The page title is displayed by the browser e.g. as
+     * the title of the browser window or as the title of the tab.
+     * 
+     * @param title
+     *            the new page title to set
+     */
     public void setTitle(String title) {
         root.getRpcProxy(PageClientRpc.class).setTitle(title);
     }
