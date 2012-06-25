@@ -93,10 +93,10 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
         sortEnabledCheckbox.setImmediate(true);
-        sortEnabledCheckbox.setValue(!table.isSortDisabled());
+        sortEnabledCheckbox.setValue(table.isSortEnabled());
         sortEnabledCheckbox.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                table.setSortDisabled(!(Boolean) event.getProperty().getValue());
+                table.setSortEnabled((Boolean) event.getProperty().getValue());
             }
         });
 
