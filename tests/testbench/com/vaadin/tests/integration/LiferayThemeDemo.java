@@ -9,6 +9,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
@@ -595,8 +596,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        Notification.show(title.getValue(), message.getValue());
-
+                        new Notification(title.getValue(), message.getValue())
+                                .show(Page.getCurrent());
                     }
                 });
         l.addComponent(show);
@@ -604,8 +605,9 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Warning", ContentMode.XHTML));
         show = new Button("Warning Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Notification.show(title.getValue(), message.getValue(),
-                        Notification.TYPE_WARNING_MESSAGE);
+                new Notification(title.getValue(), message.getValue(),
+                        Notification.TYPE_WARNING_MESSAGE).show(Page
+                        .getCurrent());
 
             }
         });
@@ -614,8 +616,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Error", ContentMode.XHTML));
         show = new Button("Error Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Notification.show(title.getValue(), message.getValue(),
-                        Notification.TYPE_ERROR_MESSAGE);
+                new Notification(title.getValue(), message.getValue(),
+                        Notification.TYPE_ERROR_MESSAGE).show(Page.getCurrent());
 
             }
         });
@@ -624,8 +626,9 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Tray", ContentMode.XHTML));
         show = new Button("Tray Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                Notification.show(title.getValue(), message.getValue(),
-                        Notification.TYPE_TRAY_NOTIFICATION);
+                new Notification(title.getValue(), message.getValue(),
+                        Notification.TYPE_TRAY_NOTIFICATION).show(Page
+                        .getCurrent());
 
             }
         });

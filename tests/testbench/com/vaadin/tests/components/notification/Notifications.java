@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.notification;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -52,6 +53,6 @@ public class Notifications extends TestBase implements ClickListener {
     public void buttonClick(ClickEvent event) {
         Notification n = new Notification(tf.getValue(),
                 (Integer) type.getValue());
-        n.show();
+        n.show(Page.getCurrent());
     }
 }

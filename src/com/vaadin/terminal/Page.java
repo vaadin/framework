@@ -603,14 +603,13 @@ public class Page implements Serializable {
      * Shows a notification message.
      * 
      * @see Notification
-     * @see #showNotification(String)
-     * @see #showNotification(String, int)
-     * @see #showNotification(String, String)
-     * @see #showNotification(String, String, int)
      * 
      * @param notification
      *            The notification message to show
+     * 
+     * @deprecated Use Notification.show(Page) instead.
      */
+    @Deprecated
     public void showNotification(Notification notification) {
         addNotification(notification);
     }

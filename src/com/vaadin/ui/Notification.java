@@ -320,8 +320,15 @@ public class Notification implements Serializable {
         return htmlContentAllowed;
     }
 
-    public void show() {
-        Page.getCurrent().showNotification(this);
+    /**
+     * Shows this notification on a Page.
+     * 
+     * @param page
+     *            The page on which the notification should be shown
+     */
+    public void show(Page page) {
+        // TODO Can avoid deprecated API when Notification extends Extension
+        page.showNotification(this);
     }
 
     /**
@@ -331,14 +338,14 @@ public class Notification implements Serializable {
      * Care should be taken to to avoid XSS vulnerabilities as the caption is
      * rendered as html.
      * 
-     * @see #showNotification(Notification)
-     * @see Notification
+     * @see #Notification(String)
+     * @see #show(Page)
      * 
      * @param caption
      *            The message
      */
     public static void show(String caption) {
-        new Notification(caption).show();
+        new Notification(caption).show(Page.getCurrent());
     }
 
     /**
@@ -350,8 +357,8 @@ public class Notification implements Serializable {
      * Care should be taken to to avoid XSS vulnerabilities as the caption is
      * rendered as html.
      * 
-     * @see #showNotification(Notification)
-     * @see Notification
+     * @see #Notification(String, int)
+     * @see #show(Page)
      * 
      * @param caption
      *            The message
@@ -359,78 +366,6 @@ public class Notification implements Serializable {
      *            The message type
      */
     public static void show(String caption, int type) {
-        new Notification(caption, type).show();
-    }
-
-    /**
-     * Shows a notification consisting of a bigger caption and a smaller
-     * description on the middle of the current page. The message automatically
-     * disappears ("humanized message").
-     * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption and
-     * description are rendered as html.
-     * 
-     * @see #showNotification(Notification)
-     * @see Notification
-     * 
-     * @param caption
-     *            The caption of the message
-     * @param description
-     *            The message description
-     * 
-     */
-    public static void show(String caption, String description) {
-        new Notification(caption, description).show();
-    }
-
-    /**
-     * Shows a notification consisting of a bigger caption and a smaller
-     * description. The position and behavior of the message depends on the
-     * type, which is one of the basic types defined in {@link Notification},
-     * for instance Notification.TYPE_WARNING_MESSAGE.
-     * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption and
-     * description are rendered as html.
-     * 
-     * @see #showNotification(Notification)
-     * @see Notification
-     * 
-     * @param caption
-     *            The caption of the message
-     * @param description
-     *            The message description
-     * @param type
-     *            The message type
-     */
-    public static void show(String caption, String description, int type) {
-
-        new Notification(caption, description, type).show();
-    }
-
-    /**
-     * Shows a notification consisting of a bigger caption and a smaller
-     * description. The position and behavior of the message depends on the
-     * type, which is one of the basic types defined in {@link Notification},
-     * for instance Notification.TYPE_WARNING_MESSAGE.
-     * 
-     * Care should be taken to avoid XSS vulnerabilities if html content is
-     * allowed.
-     * 
-     * @see #showNotification(Notification)
-     * @see Notification
-     * 
-     * @param caption
-     *            The message caption
-     * @param description
-     *            The message description
-     * @param type
-     *            The type of message
-     * @param htmlContentAllowed
-     *            Whether html in the caption and description should be
-     *            displayed as html or as plain text
-     */
-    public static void show(String caption, String description, int type,
-            boolean htmlContentAllowed) {
-        new Notification(caption, description, type, htmlContentAllowed).show();
+        new Notification(caption, type).show(Page.getCurrent());
     }
 }

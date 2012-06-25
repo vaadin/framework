@@ -109,11 +109,10 @@ public class JSR286PortletRoot extends Root {
             tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
 
             // Show notification about current mode and state
-            Notification.show(
-                    "Portlet status",
-                    "Mode: " + request.getPortletMode() + " State: "
-                            + request.getWindowState(),
-                    Notification.TYPE_WARNING_MESSAGE);
+            new Notification("Portlet status", "Mode: "
+                    + request.getPortletMode() + " State: "
+                    + request.getWindowState(),
+                    Notification.TYPE_WARNING_MESSAGE).show(getPage());
 
             // Display current user info
             Map<?, ?> uinfo = (Map<?, ?>) request
