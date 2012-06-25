@@ -13,6 +13,7 @@ import java.util.Set;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -72,6 +73,10 @@ public class JsonEncoder {
             return new JSONString((String) value);
         } else if (value instanceof Boolean) {
             return JSONBoolean.getInstance((Boolean) value);
+        } else if (value instanceof Byte) {
+            return new JSONNumber((Byte) value);
+        } else if (value instanceof Character) {
+            return new JSONString(String.valueOf(value));
         } else if (value instanceof Object[]) {
             return encodeObjectArray((Object[]) value, restrictToInternalTypes,
                     connection);

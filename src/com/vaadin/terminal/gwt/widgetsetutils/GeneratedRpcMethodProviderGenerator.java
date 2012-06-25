@@ -146,8 +146,8 @@ public class GeneratedRpcMethodProviderGenerator extends Generator {
                         if (i != 0) {
                             sourceWriter.print(", ");
                         }
-                        sourceWriter.print("("
-                                + parameterType.getQualifiedSourceName()
+                        String parameterTypeName = getBoxedTypeName(parameterType);
+                        sourceWriter.print("(" + parameterTypeName
                                 + ") parameters[" + i + "]");
                     }
                     sourceWriter.println(");");
@@ -179,13 +179,7 @@ public class GeneratedRpcMethodProviderGenerator extends Generator {
     }
 
     public static void writeTypeCreator(SourceWriter sourceWriter, JType type) {
-        String typeName;
-        if (type.isPrimitive() != null) {
-            // Used boxed types for primitives
-            typeName = type.isPrimitive().getQualifiedBoxedSourceName();
-        } else {
-            typeName = type.getErasedType().getQualifiedBinaryName();
-        }
+        String typeName = getBoxedTypeName(type);
         sourceWriter.print("new Type(\"" + typeName + "\", ");
         JParameterizedType parameterized = type.isParameterized();
         if (parameterized != null) {
@@ -200,6 +194,15 @@ public class GeneratedRpcMethodProviderGenerator extends Generator {
             sourceWriter.print("null");
         }
         sourceWriter.print(")");
+    }
+
+    public static String getBoxedTypeName(JType type) {
+        if (type.isPrimitive() != null) {
+            // Used boxed types for primitives
+            return type.isPrimitive().getQualifiedBoxedSourceName();
+        } else {
+            return type.getErasedType().getQualifiedSourceName();
+        }
     }
 
     private String getInvokeMethodName(JClassType type) {

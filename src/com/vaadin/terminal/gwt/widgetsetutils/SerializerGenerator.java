@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,13 +15,15 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JEnumConstant;
 import com.google.gwt.core.ext.typeinfo.JEnumType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.core.ext.typeinfo.TypeOracleException;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -46,26 +47,32 @@ import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 public class SerializerGenerator extends Generator {
 
     private static final String SUBTYPE_SEPARATOR = "___";
-    private static String beanSerializerPackageName = SerializerMap.class
+    private static String serializerPackageName = SerializerMap.class
             .getPackage().getName();
 
     @Override
     public String generate(TreeLogger logger, GeneratorContext context,
-            String beanTypeName) throws UnableToCompleteException {
-        JClassType beanType = context.getTypeOracle().findType(beanTypeName);
-        String beanSerializerClassName = getSerializerSimpleClassName(beanType);
+            String typeName) throws UnableToCompleteException {
+        JClassType type;
+        try {
+            type = (JClassType) context.getTypeOracle().parse(typeName);
+        } catch (TypeOracleException e1) {
+            logger.log(Type.ERROR, "Could not find type " + typeName, e1);
+            throw new UnableToCompleteException();
+        }
+        String serializerClassName = getSerializerSimpleClassName(type);
         try {
             // Generate class source code
-            generateClass(logger, context, beanType, beanSerializerPackageName,
-                    beanSerializerClassName);
+            generateClass(logger, context, type, serializerPackageName,
+                    serializerClassName);
         } catch (Exception e) {
             logger.log(TreeLogger.ERROR, "SerializerGenerator failed for "
-                    + beanType.getQualifiedSourceName(), e);
+                    + type.getQualifiedSourceName(), e);
             throw new UnableToCompleteException();
         }
 
         // return the fully qualifed name of the class generated
-        return getFullyQualifiedSerializerClassName(beanType);
+        return getFullyQualifiedSerializerClassName(type);
     }
 
     /**
@@ -75,7 +82,7 @@ public class SerializerGenerator extends Generator {
      *            Logger object
      * @param context
      *            Generator context
-     * @param beanType
+     * @param type
      * @param beanTypeName
      *            bean type for which the serializer is to be generated
      * @param beanSerializerTypeName
@@ -83,7 +90,7 @@ public class SerializerGenerator extends Generator {
      * @throws UnableToCompleteException
      */
     private void generateClass(TreeLogger logger, GeneratorContext context,
-            JClassType beanType, String serializerPackageName,
+            JClassType type, String serializerPackageName,
             String serializerClassName) throws UnableToCompleteException {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
@@ -94,13 +101,12 @@ public class SerializerGenerator extends Generator {
         if (printWriter == null) {
             return;
         }
-        boolean isEnum = (beanType.isEnum() != null);
+        boolean isEnum = (type.isEnum() != null);
+        boolean isArray = (type.isArray() != null);
 
-        Date date = new Date();
-        TypeOracle typeOracle = context.getTypeOracle();
-        String beanQualifiedSourceName = beanType.getQualifiedSourceName();
+        String qualifiedSourceName = type.getQualifiedSourceName();
         logger.log(Type.DEBUG, "Processing serializable type "
-                + beanQualifiedSourceName + "...");
+                + qualifiedSourceName + "...");
 
         // init composer, set class properties, create source writer
         ClassSourceFileComposerFactory composer = null;
@@ -115,12 +121,12 @@ public class SerializerGenerator extends Generator {
         composer.addImport(JsonDecoder.class.getName());
         // composer.addImport(VaadinSerializer.class.getName());
 
-        if (isEnum) {
+        if (isEnum || isArray) {
             composer.addImplementedInterface(JSONSerializer.class.getName()
-                    + "<" + beanQualifiedSourceName + ">");
+                    + "<" + qualifiedSourceName + ">");
         } else {
             composer.addImplementedInterface(DiffJSONSerializer.class.getName()
-                    + "<" + beanQualifiedSourceName + ">");
+                    + "<" + qualifiedSourceName + ">");
         }
 
         SourceWriter sourceWriter = composer.createSourceWriter(context,
@@ -132,17 +138,19 @@ public class SerializerGenerator extends Generator {
         // public JSONValue serialize(Object value,
         // ApplicationConnection connection) {
         sourceWriter.println("public " + JSONValue.class.getName()
-                + " serialize(" + beanQualifiedSourceName + " value, "
+                + " serialize(" + qualifiedSourceName + " value, "
                 + ApplicationConnection.class.getName() + " connection) {");
         sourceWriter.indent();
         // MouseEventDetails castedValue = (MouseEventDetails) value;
-        sourceWriter.println(beanQualifiedSourceName + " castedValue = ("
-                + beanQualifiedSourceName + ") value;");
+        sourceWriter.println(qualifiedSourceName + " castedValue = ("
+                + qualifiedSourceName + ") value;");
 
         if (isEnum) {
-            writeEnumSerializer(logger, sourceWriter, beanType);
+            writeEnumSerializer(logger, sourceWriter, type);
+        } else if (isArray) {
+            writeArraySerializer(logger, sourceWriter, type.isArray());
         } else {
-            writeBeanSerializer(logger, sourceWriter, beanType);
+            writeBeanSerializer(logger, sourceWriter, type);
         }
         // }
         sourceWriter.outdent();
@@ -152,14 +160,14 @@ public class SerializerGenerator extends Generator {
         // Updater
         // public void update(T target, Type type, JSONValue jsonValue,
         // ApplicationConnection connection);
-        if (!isEnum) {
-            sourceWriter.println("public void update("
-                    + beanQualifiedSourceName + " target, Type type, "
-                    + JSONValue.class.getName() + " jsonValue, "
-                    + ApplicationConnection.class.getName() + " connection) {");
+        if (!isEnum && !isArray) {
+            sourceWriter.println("public void update(" + qualifiedSourceName
+                    + " target, Type type, " + JSONValue.class.getName()
+                    + " jsonValue, " + ApplicationConnection.class.getName()
+                    + " connection) {");
             sourceWriter.indent();
 
-            writeBeanDeserializer(logger, sourceWriter, beanType);
+            writeBeanDeserializer(logger, sourceWriter, type);
 
             sourceWriter.outdent();
             sourceWriter.println("}");
@@ -168,18 +176,19 @@ public class SerializerGenerator extends Generator {
         // Deserializer
         // T deserialize(Type type, JSONValue jsonValue, ApplicationConnection
         // connection);
-        sourceWriter.println("public " + beanQualifiedSourceName
+        sourceWriter.println("public " + qualifiedSourceName
                 + " deserialize(Type type, " + JSONValue.class.getName()
                 + " jsonValue, " + ApplicationConnection.class.getName()
                 + " connection) {");
         sourceWriter.indent();
 
         if (isEnum) {
-            writeEnumDeserializer(logger, sourceWriter, beanType.isEnum());
+            writeEnumDeserializer(logger, sourceWriter, type.isEnum());
+        } else if (isArray) {
+            writeArrayDeserializer(logger, sourceWriter, type.isArray());
         } else {
-            sourceWriter.println(beanQualifiedSourceName
-                    + " target = GWT.create(" + beanQualifiedSourceName
-                    + ".class);");
+            sourceWriter.println(qualifiedSourceName + " target = GWT.create("
+                    + qualifiedSourceName + ".class);");
             sourceWriter
                     .println("update(target, type, jsonValue, connection);");
             // return target;
@@ -195,7 +204,7 @@ public class SerializerGenerator extends Generator {
         // commit generated class
         context.commit(logger, printWriter);
         logger.log(TreeLogger.INFO, "Generated Serializer class "
-                + getFullyQualifiedSerializerClassName(beanType));
+                + getFullyQualifiedSerializerClassName(type));
     }
 
     private void writeEnumDeserializer(TreeLogger logger,
@@ -212,6 +221,43 @@ public class SerializerGenerator extends Generator {
             sourceWriter.println("}");
         }
         sourceWriter.println("return null;");
+    }
+
+    private void writeArrayDeserializer(TreeLogger logger,
+            SourceWriter sourceWriter, JArrayType type) {
+        JType leafType = type.getLeafType();
+        int rank = type.getRank();
+
+        sourceWriter.println(JSONArray.class.getName()
+                + " jsonArray = jsonValue.isArray();");
+
+        // Type value = new Type[jsonArray.size()][][];
+        sourceWriter.print(type.getQualifiedSourceName() + " value = new "
+                + leafType.getQualifiedSourceName() + "[jsonArray.size()]");
+        for (int i = 1; i < rank; i++) {
+            sourceWriter.print("[]");
+        }
+        sourceWriter.println(";");
+
+        sourceWriter.println("for(int i = 0 ; i < value.length; i++) {");
+        sourceWriter.indent();
+
+        JType componentType = type.getComponentType();
+
+        sourceWriter.print("value[i] = ("
+                + GeneratedRpcMethodProviderGenerator
+                        .getBoxedTypeName(componentType) + ") "
+                + JsonDecoder.class.getName() + ".decodeValue(");
+        GeneratedRpcMethodProviderGenerator.writeTypeCreator(sourceWriter,
+                componentType);
+        sourceWriter.print(", jsonArray.get(i), null, connection)");
+
+        sourceWriter.println(";");
+
+        sourceWriter.outdent();
+        sourceWriter.println("}");
+
+        sourceWriter.println("return value;");
     }
 
     private void writeBeanDeserializer(TreeLogger logger,
@@ -279,6 +325,23 @@ public class SerializerGenerator extends Generator {
         // return new JSONString(castedValue.name());
         sourceWriter.println("return new " + JSONString.class.getName()
                 + "(castedValue.name());");
+    }
+
+    private void writeArraySerializer(TreeLogger logger,
+            SourceWriter sourceWriter, JArrayType array) {
+        sourceWriter.println(JSONArray.class.getName() + " values = new "
+                + JSONArray.class.getName() + "();");
+        JType componentType = array.getComponentType();
+        // JPrimitiveType primitive = componentType.isPrimitive();
+        sourceWriter.println("for (int i = 0; i < castedValue.length; i++) {");
+        sourceWriter.indent();
+        sourceWriter.print("values.set(i, ");
+        sourceWriter.print(JsonEncoder.class.getName()
+                + ".encode(castedValue[i], false, connection)");
+        sourceWriter.println(");");
+        sourceWriter.outdent();
+        sourceWriter.println("}");
+        sourceWriter.println("return values;");
     }
 
     private void writeBeanSerializer(TreeLogger logger,
@@ -373,10 +436,15 @@ public class SerializerGenerator extends Generator {
         return getSimpleClassName(beanType) + "_Serializer";
     }
 
-    private static String getSimpleClassName(JClassType type) {
-        if (type.isMemberType()) {
+    private static String getSimpleClassName(JType type) {
+        JArrayType arrayType = type.isArray();
+        if (arrayType != null) {
+            return "Array" + getSimpleClassName(arrayType.getComponentType());
+        }
+        JClassType classType = type.isClass();
+        if (classType != null && classType.isMemberType()) {
             // Assumed to be static sub class
-            String baseName = getSimpleClassName(type.getEnclosingType());
+            String baseName = getSimpleClassName(classType.getEnclosingType());
             String name = baseName + SUBTYPE_SEPARATOR
                     + type.getSimpleSourceName();
             return name;
@@ -385,7 +453,6 @@ public class SerializerGenerator extends Generator {
     }
 
     public static String getFullyQualifiedSerializerClassName(JClassType type) {
-        return beanSerializerPackageName + "."
-                + getSerializerSimpleClassName(type);
+        return serializerPackageName + "." + getSerializerSimpleClassName(type);
     }
 }
