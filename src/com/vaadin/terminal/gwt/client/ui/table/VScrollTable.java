@@ -3288,20 +3288,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 DOM.setStyleAttribute(captionContainer, "width", "");
                 setWidth("");
             } else {
-
                 /*
                  * Reduce width with one pixel for the right border since the
                  * footers does not have any spacers between them.
                  */
-                int borderWidths = 1;
+                final int borderWidths = 1;
 
                 // Set the container width (check for negative value)
-                if (w - borderWidths >= 0) {
-                    captionContainer.getStyle().setPropertyPx("width",
-                            w - borderWidths);
-                } else {
-                    captionContainer.getStyle().setPropertyPx("width", 0);
-                }
+                captionContainer.getStyle().setPropertyPx("width",
+                        Math.max(w - borderWidths, 0));
 
                 /*
                  * if we already have tBody, set the header width properly, if
@@ -3309,22 +3304,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                  * unless TD width is not explicitly set.
                  */
                 if (scrollBody != null) {
-                    /*
-                     * Reduce with one since footer does not have any spacers,
-                     * instead a 1 pixel border.
-                     */
                     int tdWidth = width + scrollBody.getCellExtraWidth()
                             - borderWidths;
-                    setWidth(tdWidth + "px");
+                    setWidth(Math.max(tdWidth, 0) + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
 
                         public void execute() {
-                            int borderWidths = 1;
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth()
                                     - borderWidths;
-                            setWidth(tdWidth + "px");
+                            setWidth(Math.max(tdWidth, 0) + "px");
                         }
                     });
                 }
