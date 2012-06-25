@@ -175,7 +175,7 @@ public class AbstractFieldValueConversions extends TestCase {
 
     public void testNumberDoubleConverterChange() {
         final Application a = new Application();
-        Application.setCurrentApplication(a);
+        Application.setCurrent(a);
         TextField tf = new TextField() {
             @Override
             public Application getApplication() {

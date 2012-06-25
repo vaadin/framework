@@ -29,10 +29,10 @@ public class FindCurrentRootAndApplication extends Root {
         helloButton.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 String msg = "Running in ";
-                msg += Application.getCurrentApplication().isProductionMode() ? "production"
+                msg += Application.getCurrent().isProductionMode() ? "production"
                         : "debug";
                 msg += " mode in a Root with the caption "
-                        + Root.getCurrentRoot().getCaption();
+                        + Root.getCurrent().getCaption();
 
                 Notification.show(msg);
             }

@@ -14,7 +14,7 @@ public class ConverterUtil implements Serializable {
      * Finds a converter that can convert from the given presentation type to
      * the given model type and back. Uses the given application to find a
      * {@link ConverterFactory} or, if application is null, uses the
-     * {@link Application#getCurrentApplication()}.
+     * {@link Application#getCurrent()}.
      * 
      * @param <PRESENTATIONTYPE>
      *            The presentation type
@@ -35,7 +35,7 @@ public class ConverterUtil implements Serializable {
             Class<MODELTYPE> modelType, Application application) {
         Converter<PRESENTATIONTYPE, MODELTYPE> converter = null;
         if (application == null) {
-            application = Application.getCurrentApplication();
+            application = Application.getCurrent();
         }
 
         if (application != null) {

@@ -540,7 +540,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (application == null) {
                     return;
                 }
-                Application.setCurrentApplication(application);
+                Application.setCurrent(application);
 
                 /*
                  * Get or create an application context and an application
@@ -689,8 +689,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
-                        Root.setCurrentRoot(null);
-                        Application.setCurrentApplication(null);
+                        Root.setCurrent(null);
+                        Application.setCurrent(null);
 
                         PortletSession session = request
                                 .getPortletSession(false);

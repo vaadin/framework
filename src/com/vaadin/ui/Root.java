@@ -923,10 +923,10 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param root
      *            the root to register as the current root
      * 
-     * @see #getCurrentRoot()
+     * @see #getCurrent()
      * @see ThreadLocal
      */
-    public static void setCurrentRoot(Root root) {
+    public static void setCurrent(Root root) {
         currentRoot.set(root);
     }
 
@@ -938,9 +938,9 @@ public abstract class Root extends AbstractComponentContainer implements
      * @return the current root instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentRoot(Root)
+     * @see #setCurrent(Root)
      */
-    public static Root getCurrentRoot() {
+    public static Root getCurrent() {
         return currentRoot.get();
     }
 

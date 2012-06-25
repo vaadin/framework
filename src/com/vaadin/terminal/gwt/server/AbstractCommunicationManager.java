@@ -2194,7 +2194,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // if we do not yet have a currentRoot, it should be initialized
         // shortly, and we should send the initial UIDL
-        boolean sendUIDL = Root.getCurrentRoot() == null;
+        boolean sendUIDL = Root.getCurrent() == null;
 
         try {
             CombinedRequest combinedRequest = new CombinedRequest(request);

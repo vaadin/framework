@@ -25,7 +25,7 @@ public class LabelConverters extends TestCase {
     }
 
     public void testIntegerDataSource() {
-        Application.setCurrentApplication(new Application());
+        Application.setCurrent(new Application());
         Label l = new Label("Foo");
         Property ds = new MethodProperty<Integer>(Person.createTestPerson1(),
                 "age");

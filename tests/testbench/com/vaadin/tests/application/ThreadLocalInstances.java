@@ -16,8 +16,8 @@ import com.vaadin.ui.Root;
 
 public class ThreadLocalInstances extends AbstractTestApplication {
     private static final Application staticInitApplication = Application
-            .getCurrentApplication();
-    private static final Root staticInitRoot = Root.getCurrentRoot();
+            .getCurrent();
+    private static final Root staticInitRoot = Root.getCurrent();
 
     private final Root mainWindow = new Root() {
         boolean paintReported = false;
@@ -92,8 +92,8 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     private void reportCurrentStatus(String phase) {
-        reportStatus(phase, Application.getCurrentApplication(),
-                Root.getCurrentRoot());
+        reportStatus(phase, Application.getCurrent(),
+                Root.getCurrent());
     }
 
     private void reportStatus(String phase, Application application, Root root) {

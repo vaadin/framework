@@ -49,7 +49,7 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryInBackgroundThread() {
-        Application.setCurrentApplication(null);
+        Application.setCurrent(null);
         final Application appWithCustomIntegerConverter = new Application();
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
@@ -70,7 +70,7 @@ public class ConverterFactory extends TestCase {
         final Application appWithCustomIntegerConverter = new Application();
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        Application.setCurrentApplication(appWithCustomIntegerConverter);
+        Application.setCurrent(appWithCustomIntegerConverter);
 
         TextField tf = new TextField("", "123");
         tf.setConverter(Integer.class);
@@ -83,7 +83,7 @@ public class ConverterFactory extends TestCase {
         final Application fieldAppWithCustomIntegerConverter = new Application();
         fieldAppWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        Application.setCurrentApplication(new Application());
+        Application.setCurrent(new Application());
 
         TextField tf = new TextField("", "123") {
             @Override

@@ -615,7 +615,7 @@ public class Page implements Serializable {
     }
 
     public static Page getCurrent() {
-        Root currentRoot = Root.getCurrentRoot();
+        Root currentRoot = Root.getCurrent();
         if (currentRoot == null) {
             return null;
         }
