@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.data.Container;
@@ -247,8 +248,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<IDTYPE> getItemIds() {
-        return (Collection<IDTYPE>) super.getItemIds();
+    public List<IDTYPE> getItemIds() {
+        return (List<IDTYPE>) super.getItemIds();
     }
 
     /*
