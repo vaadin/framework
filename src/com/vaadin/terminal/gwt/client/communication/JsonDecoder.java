@@ -52,9 +52,7 @@ public class JsonDecoder {
         }
 
         String baseTypeName = type.getBaseTypeName();
-        if (baseTypeName.endsWith("[]")) {
-            return decodeArray(type, (JSONArray) jsonValue, connection);
-        } else if (Map.class.getName().equals(baseTypeName)
+        if (Map.class.getName().equals(baseTypeName)
                 || HashMap.class.getName().equals(baseTypeName)) {
             return decodeMap(type, jsonValue, connection);
         } else if (List.class.getName().equals(baseTypeName)
@@ -78,6 +76,13 @@ public class JsonDecoder {
         } else if (Boolean.class.getName().equals(baseTypeName)) {
             // TODO handle properly
             return Boolean.valueOf(String.valueOf(jsonValue));
+        } else if (Byte.class.getName().equals(baseTypeName)) {
+            // TODO handle properly
+            return Byte.valueOf(String.valueOf(jsonValue));
+        } else if (Character.class.getName().equals(baseTypeName)) {
+            // TODO handle properly
+            return Character.valueOf(((JSONString) jsonValue).stringValue()
+                    .charAt(0));
         } else if (Connector.class.getName().equals(baseTypeName)) {
             return ConnectorMap.get(connection).getConnector(
                     ((JSONString) jsonValue).stringValue());
@@ -178,16 +183,6 @@ public class JsonDecoder {
         }
 
         return map;
-    }
-
-    private static Object[] decodeArray(Type type, JSONArray jsonArray,
-            ApplicationConnection connection) {
-        String arrayTypeName = type.getBaseTypeName();
-        String chldTypeName = arrayTypeName.substring(0,
-                arrayTypeName.length() - 2);
-        List<Object> list = decodeList(new Type(chldTypeName, null), jsonArray,
-                connection);
-        return list.toArray(new Object[list.size()]);
     }
 
     private static List<Object> decodeList(Type type, JSONArray jsonArray,

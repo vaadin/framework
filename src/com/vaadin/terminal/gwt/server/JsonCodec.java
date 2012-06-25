@@ -8,6 +8,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -82,6 +83,10 @@ public class JsonCodec implements Serializable {
 
     public static boolean isInternalType(Type type) {
         if (type instanceof Class && ((Class<?>) type).isPrimitive()) {
+            if (type == byte.class || type == char.class) {
+                // Almost all primitive types are handled internally
+                return false;
+            }
             // All primitive types are handled internally
             return true;
         } else if (type == UidlValue.class) {
@@ -125,6 +130,16 @@ public class JsonCodec implements Serializable {
         // Try to decode object using fields
         if (value == JSONObject.NULL) {
             return null;
+        } else if (targetType == byte.class || targetType == Byte.class) {
+            return Byte.valueOf(String.valueOf(value));
+        } else if (targetType == char.class || targetType == Character.class) {
+            return Character.valueOf(String.valueOf(value).charAt(0));
+        } else if (targetType instanceof Class<?>
+                && ((Class<?>) targetType).isArray()) {
+            // Legacy Object[] and String[] handled elsewhere, this takes care
+            // of generic arrays
+            return decodeArray((Class<?>) targetType, (JSONArray) value,
+                    connectorTracker);
         } else if (targetType == JSONObject.class
                 || targetType == JSONArray.class) {
             return value;
@@ -132,6 +147,18 @@ public class JsonCodec implements Serializable {
             return decodeObject(targetType, (JSONObject) value,
                     connectorTracker);
         }
+    }
+
+    private static Object decodeArray(Class<?> targetType, JSONArray value,
+            ConnectorTracker connectorTracker) throws JSONException {
+        Class<?> componentType = targetType.getComponentType();
+        Object array = Array.newInstance(componentType, value.length());
+        for (int i = 0; i < value.length(); i++) {
+            Object decodedValue = decodeInternalOrCustomType(componentType,
+                    value.get(i), connectorTracker);
+            Array.set(array, i, decodedValue);
+        }
+        return array;
     }
 
     /**
@@ -207,7 +234,7 @@ public class JsonCodec implements Serializable {
             return connectorTracker.getConnector(stringValue);
         }
 
-        // Standard Java types
+        // Legacy types
 
         if (JsonEncoder.VTYPE_STRING.equals(transportType)) {
             return stringValue;
@@ -503,14 +530,17 @@ public class JsonCodec implements Serializable {
             return value;
         } else if (value instanceof Number) {
             return value;
+        } else if (value instanceof Character) {
+            // Character is not a Number
+            return value;
         } else if (value instanceof Collection) {
             Collection<?> collection = (Collection<?>) value;
             JSONArray jsonArray = encodeCollection(valueType, collection,
                     connectorTracker);
             return jsonArray;
-        } else if (value instanceof Object[]) {
-            Object[] array = (Object[]) value;
-            JSONArray jsonArray = encodeArrayContents(array, connectorTracker);
+        } else if (valueType instanceof Class<?>
+                && ((Class<?>) valueType).isArray()) {
+            JSONArray jsonArray = encodeArrayContents(value, connectorTracker);
             return jsonArray;
         } else if (value instanceof Map) {
             Object jsonMap = encodeMap(valueType, (Map<?, ?>) value,
@@ -613,11 +643,13 @@ public class JsonCodec implements Serializable {
         return e.name();
     }
 
-    private static JSONArray encodeArrayContents(Object[] array,
+    private static JSONArray encodeArrayContents(Object array,
             ConnectorTracker connectorTracker) throws JSONException {
         JSONArray jsonArray = new JSONArray();
-        for (Object o : array) {
-            jsonArray.put(encode(o, null, null, connectorTracker));
+        Class<?> componentType = array.getClass().getComponentType();
+        for (int i = 0; i < Array.getLength(array); i++) {
+            jsonArray.put(encode(Array.get(array, i), null, componentType,
+                    connectorTracker));
         }
         return jsonArray;
     }
