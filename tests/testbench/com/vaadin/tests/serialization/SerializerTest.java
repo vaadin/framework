@@ -40,7 +40,7 @@ public class SerializerTest extends AbstractTestRoot {
         rpc.sendBoolean(true, Boolean.FALSE, new boolean[] { true, true, false,
                 true, false, false });
         rpc.sendByte((byte) 5, Byte.valueOf((byte) -12), new byte[] { 3, 1, 2 });
-        rpc.sendChar('∫', Character.valueOf('å'), "aBcD".toCharArray());
+        rpc.sendChar('\u222b', Character.valueOf('å'), "aBcD".toCharArray());
         rpc.sendInt(Integer.MAX_VALUE, Integer.valueOf(0), new int[] { 5, 7 });
         rpc.sendLong(577431841358l, Long.valueOf(0), new long[] {
                 -57841235865l, 57 });
