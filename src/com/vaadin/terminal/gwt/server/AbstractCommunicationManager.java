@@ -1592,8 +1592,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Parse a message burst from the client into a list of MethodInvocation
      * instances.
      * 
-     * @param root
-     *            The root for this request
+     * @param connectorTracker
+     *            The ConnectorTracker used to lookup connectors
      * @param burst
      *            message string (JSON)
      * @return list of MethodInvocation to perform

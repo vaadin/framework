@@ -431,7 +431,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 Root root = application.getRootForRequest(request);
                 if (root == null) {
                     throw new ServletException(ERROR_NO_ROOT_FOUND);
-                }// Handles AJAX UIDL requests
+                }
+                // Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest(request, response,
                         servletWrapper, root);
                 return;
