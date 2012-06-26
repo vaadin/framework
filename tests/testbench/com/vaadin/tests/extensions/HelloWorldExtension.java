@@ -1,12 +1,13 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.ui;
+package com.vaadin.tests.extensions;
 
 import com.vaadin.terminal.AbstractExtension;
 import com.vaadin.terminal.gwt.client.ui.helloworldfeature.GreetAgainRpc;
 import com.vaadin.terminal.gwt.client.ui.helloworldfeature.HelloWorldRpc;
 import com.vaadin.terminal.gwt.client.ui.helloworldfeature.HelloWorldState;
+import com.vaadin.ui.Notification;
 
 public class HelloWorldExtension extends AbstractExtension {
 

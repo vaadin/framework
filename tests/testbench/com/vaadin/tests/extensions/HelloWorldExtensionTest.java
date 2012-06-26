@@ -7,7 +7,6 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.HelloWorldExtension;
 
 public class HelloWorldExtensionTest extends AbstractTestRoot {
 
