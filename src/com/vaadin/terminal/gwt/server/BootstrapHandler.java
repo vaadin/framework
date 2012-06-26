@@ -83,7 +83,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         public Root getRoot() {
             if (!rootFetched) {
-                root = Root.getCurrentRoot();
+                root = Root.getCurrent();
                 rootFetched = true;
             }
             return root;

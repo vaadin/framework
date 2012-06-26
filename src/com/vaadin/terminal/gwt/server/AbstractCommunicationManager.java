@@ -71,6 +71,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.terminal.gwt.server.RpcManager.RpcInvocationException;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
@@ -1530,8 +1531,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
 
                 if (invocation instanceof ServerRpcMethodInvocation) {
-                    ServerRpcManager.applyInvocation(connector,
-                            (ServerRpcMethodInvocation) invocation);
+                    try {
+                        ServerRpcManager.applyInvocation(connector,
+                                (ServerRpcMethodInvocation) invocation);
+                    } catch (RpcInvocationException e) {
+                        Throwable realException = e.getCause();
+                        Component errorComponent = null;
+                        if (connector instanceof Component) {
+                            errorComponent = (Component) connector;
+                        }
+                        handleChangeVariablesError(root.getApplication(),
+                                errorComponent, realException, null);
+                    }
                 } else {
 
                     // All code below is for legacy variable changes
@@ -1581,8 +1592,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Parse a message burst from the client into a list of MethodInvocation
      * instances.
      * 
-     * @param root
-     *            The root for this request
+     * @param connectorTracker
+     *            The ConnectorTracker used to lookup connectors
      * @param burst
      *            message string (JSON)
      * @return list of MethodInvocation to perform
@@ -1775,10 +1786,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
      *            map from variable names to values
      */
     private void handleChangeVariablesError(Application application,
-            Component owner, Exception e, Map<String, Object> m) {
+            Component owner, Throwable t, Map<String, Object> m) {
         boolean handled = false;
         ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
-                owner, e, m);
+                owner, t, m);
 
         if (owner instanceof AbstractField) {
             try {
@@ -2183,7 +2194,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // if we do not yet have a currentRoot, it should be initialized
         // shortly, and we should send the initial UIDL
-        boolean sendUIDL = Root.getCurrentRoot() == null;
+        boolean sendUIDL = Root.getCurrent() == null;
 
         try {
             CombinedRequest combinedRequest = new CombinedRequest(request);

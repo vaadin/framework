@@ -603,26 +603,42 @@ public class Page implements Serializable {
      * Shows a notification message.
      * 
      * @see Notification
-     * @see #showNotification(String)
-     * @see #showNotification(String, int)
-     * @see #showNotification(String, String)
-     * @see #showNotification(String, String, int)
      * 
      * @param notification
      *            The notification message to show
+     * 
+     * @deprecated Use Notification.show(Page) instead.
      */
+    @Deprecated
     public void showNotification(Notification notification) {
         addNotification(notification);
     }
 
+    /**
+     * Gets the Page to which the current root belongs. This is automatically
+     * defined when processing requests to the server. In other cases, (e.g.
+     * from background threads), the current root is not automatically defined.
+     * 
+     * @see Root#getCurrent()
+     * 
+     * @return the current page instance if available, otherwise
+     *         <code>null</code>
+     */
     public static Page getCurrent() {
-        Root currentRoot = Root.getCurrentRoot();
+        Root currentRoot = Root.getCurrent();
         if (currentRoot == null) {
             return null;
         }
         return currentRoot.getPage();
     }
 
+    /**
+     * Sets the page title. The page title is displayed by the browser e.g. as
+     * the title of the browser window or as the title of the tab.
+     * 
+     * @param title
+     *            the new page title to set
+     */
     public void setTitle(String title) {
         root.getRpcProxy(PageClientRpc.class).setTitle(title);
     }

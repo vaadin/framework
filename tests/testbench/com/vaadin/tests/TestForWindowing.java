@@ -85,7 +85,7 @@ public class TestForWindowing extends CustomComponent {
 
                         w.addComponent(s);
 
-                        Root.getCurrentRoot().addWindow(w);
+                        Root.getCurrent().addWindow(w);
 
                     }
 

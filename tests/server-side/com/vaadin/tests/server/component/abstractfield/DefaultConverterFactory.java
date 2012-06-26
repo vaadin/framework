@@ -27,7 +27,7 @@ public class DefaultConverterFactory extends TestCase {
 
     public void testDefaultNumberConversion() {
         Application app = new Application();
-        Application.setCurrentApplication(app);
+        Application.setCurrent(app);
         TextField tf = new TextField();
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean,

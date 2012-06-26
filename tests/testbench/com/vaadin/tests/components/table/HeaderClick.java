@@ -45,7 +45,7 @@ public class HeaderClick extends TestBase {
 
         CheckBox sortEnabledCheckbox = new CheckBox("Sortable");
         sortEnabledCheckbox.setImmediate(true);
-        sortEnabledCheckbox.setValue(!table.isSortDisabled());
+        sortEnabledCheckbox.setValue(table.isSortEnabled());
         sortEnabledCheckbox.addListener(new Property.ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {

@@ -476,10 +476,9 @@ public class Table extends AbstractSelect implements Action.Container,
     private Object sortContainerPropertyId = null;
 
     /**
-     * Is table sorting disabled alltogether; even if some of the properties
-     * would be sortable.
+     * Is table sorting by the user enabled.
      */
-    private boolean sortDisabled = false;
+    private boolean sortEnabled = true;
 
     /**
      * Number of rows explicitly requested by the client to be painted on next
@@ -2589,7 +2588,7 @@ public class Table extends AbstractSelect implements Action.Container,
             clientNeedsContentRefresh = true;
         }
 
-        if (!sortDisabled) {
+        if (isSortEnabled()) {
             // Sorting
             boolean doSort = false;
             if (variables.containsKey("sortcolumn")) {
@@ -4323,16 +4322,21 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the container property IDs, which can be used to sort the item.
+     * <p>
+     * Note that the {@link #isSortEnabled()} state affects what this method
+     * returns. Disabling sorting causes this method to always return an empty
+     * collection.
+     * </p>
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
 
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
-        if (c instanceof Container.Sortable && !isSortDisabled()) {
+        if (c instanceof Container.Sortable && isSortEnabled()) {
             return ((Container.Sortable) c).getSortableContainerPropertyIds();
         } else {
-            return new LinkedList<Object>();
+            return Collections.EMPTY_LIST;
         }
     }
 
@@ -4423,23 +4427,47 @@ public class Table extends AbstractSelect implements Action.Container,
      * would support this.
      * 
      * @return True iff sorting is disabled.
+     * @deprecated Use {@link #isSortEnabled()} instead
      */
+    @Deprecated
     public boolean isSortDisabled() {
-        return sortDisabled;
+        return !isSortEnabled();
     }
 
     /**
-     * Disables the sorting altogether.
+     * Checks if sorting is enabled.
      * 
-     * To disable sorting altogether, set to true. In this case no sortable
-     * columns are given even in the case where datasource would support this.
+     * @return true if sorting by the user is allowed, false otherwise
+     */
+    public boolean isSortEnabled() {
+        return sortEnabled;
+    }
+
+    /**
+     * Disables the sorting by the user altogether.
      * 
      * @param sortDisabled
      *            True iff sorting is disabled.
+     * @deprecated Use {@link #setSortEnabled(boolean)} instead
      */
+    @Deprecated
     public void setSortDisabled(boolean sortDisabled) {
-        if (this.sortDisabled != sortDisabled) {
-            this.sortDisabled = sortDisabled;
+        setSortEnabled(!sortDisabled);
+    }
+
+    /**
+     * Enables or disables sorting.
+     * <p>
+     * Setting this to false disallows sorting by the user. It is still possible
+     * to call {@link #sort()}.
+     * </p>
+     * 
+     * @param sortEnabled
+     *            true to allow the user to sort the table, false to disallow it
+     */
+    public void setSortEnabled(boolean sortEnabled) {
+        if (this.sortEnabled != sortEnabled) {
+            this.sortEnabled = sortEnabled;
             requestRepaint();
         }
     }

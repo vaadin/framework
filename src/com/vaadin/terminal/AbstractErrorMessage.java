@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,7 +158,10 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             }
             return error;
         } else {
-            return new SystemError(t);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            t.printStackTrace(pw);
+            return new SystemError(sw.toString());
         }
     }
 

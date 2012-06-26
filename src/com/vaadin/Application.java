@@ -2119,11 +2119,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return the current application instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentApplication(Application)
+     * @see #setCurrent(Application)
      * 
      * @since 7.0
      */
-    public static Application getCurrentApplication() {
+    public static Application getCurrent() {
         return currentApplication.get();
     }
 
@@ -2139,12 +2139,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @param application
      * 
-     * @see #getCurrentApplication()
+     * @see #getCurrent()
      * @see ThreadLocal
      * 
      * @since 7.0
      */
-    public static void setCurrentApplication(Application application) {
+    public static void setCurrent(Application application) {
         currentApplication.set(application);
     }
 
@@ -2188,7 +2188,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Root getRootForRequest(WrappedRequest request)
             throws RootRequiresMoreInformationException {
-        Root root = Root.getCurrentRoot();
+        Root root = Root.getCurrent();
         if (root != null) {
             return root;
         }
@@ -2240,7 +2240,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             // Set thread local here so it is available in init
-            Root.setCurrentRoot(root);
+            Root.setCurrent(root);
 
             if (!initedRoots.contains(rootId)) {
                 boolean initRequiresBrowserDetails = isRootPreserved()

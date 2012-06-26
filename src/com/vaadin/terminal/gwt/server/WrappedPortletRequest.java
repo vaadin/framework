@@ -130,7 +130,7 @@ public class WrappedPortletRequest implements WrappedRequest {
 
             public WebBrowser getWebBrowser() {
                 PortletApplicationContext2 context = (PortletApplicationContext2) Application
-                        .getCurrentApplication().getContext();
+                        .getCurrent().getContext();
                 return context.getBrowser();
             }
         };

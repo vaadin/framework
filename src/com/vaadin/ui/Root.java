@@ -338,152 +338,6 @@ public abstract class Root extends AbstractComponentContainer implements
         }
 
         /**
-         * Shows a notification message on the middle of the root. The message
-         * automatically disappears ("humanized message").
-         * 
-         * Care should be taken to to avoid XSS vulnerabilities as the caption
-         * is rendered as html.
-         * 
-         * @see #showNotification(Notification)
-         * @see Notification
-         * 
-         * @param caption
-         *            The message
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(String caption) {
-            getPage().showNotification(new Notification(caption));
-        }
-
-        /**
-         * Shows a notification message the root. The position and behavior of
-         * the message depends on the type, which is one of the basic types
-         * defined in {@link Notification}, for instance
-         * Notification.TYPE_WARNING_MESSAGE.
-         * 
-         * Care should be taken to to avoid XSS vulnerabilities as the caption
-         * is rendered as html.
-         * 
-         * @see #showNotification(Notification)
-         * @see Notification
-         * 
-         * @param caption
-         *            The message
-         * @param type
-         *            The message type
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(String caption, int type) {
-            getPage().showNotification(new Notification(caption, type));
-        }
-
-        /**
-         * Shows a notification consisting of a bigger caption and a smaller
-         * description on the middle of the root. The message automatically
-         * disappears ("humanized message").
-         * 
-         * Care should be taken to to avoid XSS vulnerabilities as the caption
-         * and description are rendered as html.
-         * 
-         * @see #showNotification(Notification)
-         * @see Notification
-         * 
-         * @param caption
-         *            The caption of the message
-         * @param description
-         *            The message description
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(String caption, String description) {
-            getPage().showNotification(new Notification(caption, description));
-        }
-
-        /**
-         * Shows a notification consisting of a bigger caption and a smaller
-         * description. The position and behavior of the message depends on the
-         * type, which is one of the basic types defined in {@link Notification}
-         * , for instance Notification.TYPE_WARNING_MESSAGE.
-         * 
-         * Care should be taken to to avoid XSS vulnerabilities as the caption
-         * and description are rendered as html.
-         * 
-         * @see #showNotification(Notification)
-         * @see Notification
-         * 
-         * @param caption
-         *            The caption of the message
-         * @param description
-         *            The message description
-         * @param type
-         *            The message type
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(String caption, String description,
-                int type) {
-            getPage().showNotification(
-                    new Notification(caption, description, type));
-        }
-
-        /**
-         * Shows a notification consisting of a bigger caption and a smaller
-         * description. The position and behavior of the message depends on the
-         * type, which is one of the basic types defined in {@link Notification}
-         * , for instance Notification.TYPE_WARNING_MESSAGE.
-         * 
-         * Care should be taken to avoid XSS vulnerabilities if html content is
-         * allowed.
-         * 
-         * @see #showNotification(Notification)
-         * @see Notification
-         * 
-         * @param caption
-         *            The message caption
-         * @param description
-         *            The message description
-         * @param type
-         *            The type of message
-         * @param htmlContentAllowed
-         *            Whether html in the caption and description should be
-         *            displayed as html or as plain text
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(String caption, String description,
-                int type, boolean htmlContentAllowed) {
-            getPage().showNotification(
-                    new Notification(caption, description, type,
-                            htmlContentAllowed));
-        }
-
-        /**
-         * Shows a notification message.
-         * 
-         * @see Notification
-         * @see #showNotification(String)
-         * @see #showNotification(String, int)
-         * @see #showNotification(String, String)
-         * @see #showNotification(String, String, int)
-         * 
-         * @param notification
-         *            The notification message to show
-         * 
-         * @deprecated As of 7.0, use Notification.show instead
-         */
-        @Deprecated
-        public void showNotification(Notification notification) {
-            getPage().showNotification(notification);
-        }
-
-        /**
          * Executes JavaScript in this window.
          * 
          * <p>
@@ -1069,10 +923,10 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param root
      *            the root to register as the current root
      * 
-     * @see #getCurrentRoot()
+     * @see #getCurrent()
      * @see ThreadLocal
      */
-    public static void setCurrentRoot(Root root) {
+    public static void setCurrent(Root root) {
         currentRoot.set(root);
     }
 
@@ -1084,9 +938,9 @@ public abstract class Root extends AbstractComponentContainer implements
      * @return the current root instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentRoot(Root)
+     * @see #setCurrent(Root)
      */
-    public static Root getCurrentRoot() {
+    public static Root getCurrent() {
         return currentRoot.get();
     }
 
@@ -1202,6 +1056,151 @@ public abstract class Root extends AbstractComponentContainer implements
     public void setCaption(String caption) {
         throw new IllegalStateException(
                 "You can not set the title of a Root. To set the title of the HTML page, use Page.setTitle");
+    }
+
+    /**
+     * Shows a notification message on the middle of the root. The message
+     * automatically disappears ("humanized message").
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
+     * 
+     * @see #showNotification(Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The message
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(String caption) {
+        getPage().showNotification(new Notification(caption));
+    }
+
+    /**
+     * Shows a notification message the root. The position and behavior of the
+     * message depends on the type, which is one of the basic types defined in
+     * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
+     * 
+     * @see #showNotification(Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The message
+     * @param type
+     *            The message type
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(String caption, int type) {
+        getPage().showNotification(new Notification(caption, type));
+    }
+
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description on the middle of the root. The message automatically
+     * disappears ("humanized message").
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are rendered as html.
+     * 
+     * @see #showNotification(Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The caption of the message
+     * @param description
+     *            The message description
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(String caption, String description) {
+        getPage().showNotification(new Notification(caption, description));
+    }
+
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description. The position and behavior of the message depends on the
+     * type, which is one of the basic types defined in {@link Notification} ,
+     * for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption and
+     * description are rendered as html.
+     * 
+     * @see #showNotification(Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The caption of the message
+     * @param description
+     *            The message description
+     * @param type
+     *            The message type
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(String caption, String description, int type) {
+        getPage()
+                .showNotification(new Notification(caption, description, type));
+    }
+
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description. The position and behavior of the message depends on the
+     * type, which is one of the basic types defined in {@link Notification} ,
+     * for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to avoid XSS vulnerabilities if html content is
+     * allowed.
+     * 
+     * @see #showNotification(Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *            The message caption
+     * @param description
+     *            The message description
+     * @param type
+     *            The type of message
+     * @param htmlContentAllowed
+     *            Whether html in the caption and description should be
+     *            displayed as html or as plain text
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(String caption, String description, int type,
+            boolean htmlContentAllowed) {
+        getPage()
+                .showNotification(
+                        new Notification(caption, description, type,
+                                htmlContentAllowed));
+    }
+
+    /**
+     * Shows a notification message.
+     * 
+     * @see Notification
+     * @see #showNotification(String)
+     * @see #showNotification(String, int)
+     * @see #showNotification(String, String)
+     * @see #showNotification(String, String, int)
+     * 
+     * @param notification
+     *            The notification message to show
+     * 
+     * @deprecated As of 7.0, use Notification.show instead
+     */
+    @Deprecated
+    public void showNotification(Notification notification) {
+        getPage().showNotification(notification);
     }
 
 }

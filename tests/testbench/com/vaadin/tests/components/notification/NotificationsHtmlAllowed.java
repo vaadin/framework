@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.notification;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -45,7 +46,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
 
     public void buttonClick(ClickEvent event) {
         Notification n = makeNotification();
-        n.show();
+        n.show(Page.getCurrent());
     }
 
     private Notification makeNotification() {

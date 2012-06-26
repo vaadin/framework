@@ -591,7 +591,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     // Commits the value to datasource
                     committingValueToDataSource = true;
                     getPropertyDataSource().setValue(
-                            convertToDataSource(newFieldValue));
+                            convertToModel(newFieldValue));
 
                     // The buffer is now unmodified
                     setModified(false);
@@ -792,13 +792,15 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
-    private Object convertToDataSource(T fieldValue)
+    private Object convertToModel(T fieldValue)
             throws Converter.ConversionException {
         try {
             Class<?> modelType = null;
             Property pd = getPropertyDataSource();
             if (pd != null) {
                 modelType = pd.getType();
+            } else if (getConverter() != null) {
+                modelType = getConverter().getModelType();
             }
             return ConverterUtil.convertToModel(fieldValue,
                     (Class<Object>) modelType, getConverter(), getLocale());
@@ -836,7 +838,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return The converted value that is compatible with the data source type
      */
     public Object getConvertedValue() {
-        return convertToDataSource(getFieldValue());
+        return convertToModel(getFieldValue());
     }
 
     /**

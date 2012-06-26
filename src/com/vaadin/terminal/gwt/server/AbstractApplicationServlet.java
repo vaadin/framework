@@ -385,7 +385,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             if (application == null) {
                 return;
             }
-            Application.setCurrentApplication(application);
+            Application.setCurrent(application);
 
             /*
              * Get or create a WebApplicationContext and an ApplicationManager
@@ -431,7 +431,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 Root root = application.getRootForRequest(request);
                 if (root == null) {
                     throw new ServletException(ERROR_NO_ROOT_FOUND);
-                }// Handles AJAX UIDL requests
+                }
+                // Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest(request, response,
                         servletWrapper, root);
                 return;
@@ -477,8 +478,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                                 .onRequestEnd(request, response);
                     }
                 } finally {
-                    Root.setCurrentRoot(null);
-                    Application.setCurrentApplication(null);
+                    Root.setCurrent(null);
+                    Application.setCurrent(null);
 
                     HttpSession session = request.getSession(false);
                     if (session != null) {

@@ -357,8 +357,6 @@ public class Button extends AbstractComponent implements
 
     protected ClickShortcut clickShortcut;
 
-    private int tabIndex = 0;
-
     /**
      * Makes it possible to invoke a click on this button by pressing the given
      * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
@@ -471,13 +469,23 @@ public class Button extends AbstractComponent implements
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component.Focusable#getTabIndex()
+     */
     public int getTabIndex() {
-        return tabIndex;
+        return getState().getTabIndex();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
+     */
     public void setTabIndex(int tabIndex) {
-        this.tabIndex = tabIndex;
-
+        getState().setTabIndex(tabIndex);
+        requestRepaint();
     }
 
     @Override

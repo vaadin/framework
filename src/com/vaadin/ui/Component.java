@@ -520,7 +520,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Getting a null value is often a problem in constructors of regular
      * components and in the initializers of custom composite components. A
-     * standard workaround is to use {@link Application#getCurrentApplication()}
+     * standard workaround is to use {@link Application#getCurrent()}
      * to retrieve the application instance that the current request relates to.
      * Another way is to move the problematic initialization to
      * {@link #attach()}, as described in the documentation of the method.

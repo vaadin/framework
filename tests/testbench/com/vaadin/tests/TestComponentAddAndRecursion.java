@@ -3,6 +3,7 @@
  */
 package com.vaadin.tests;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -91,11 +92,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
-                    Notification.show("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("ERROR", "This should have failed",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 } catch (Exception e) {
-                    Notification.show("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("OK", "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 }
             }
 
@@ -108,11 +111,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 p.addComponent(p2);
                 try {
                     p3.addComponent(p);
-                    Notification.show("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("ERROR", "This should have failed",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 } catch (Exception e) {
-                    Notification.show("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("OK", "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 }
             }
 

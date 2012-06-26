@@ -1,8 +1,8 @@
-/*
-@VaadinApache2LicenseForJavaFiles@
- */
-
 package com.vaadin.navigator;
+
+/*
+ @VaadinApache2LicenseForJavaFiles@
+ */
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -16,7 +16,6 @@ import com.vaadin.terminal.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Root;
 
 /**
  * Navigator utility that allows switching of views in a part of an application.
@@ -60,7 +59,7 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Fragment manager using URI fragments of a Root to track views and enable
+     * Fragment manager using URI fragments of a Page to track views and enable
      * listening to view changes.
      * 
      * This class is mostly for internal use by Navigator, and is only public
@@ -73,10 +72,10 @@ public class Navigator implements Serializable {
 
         /**
          * Create a new URIFragmentManager and attach it to listen to URI
-         * fragment changes of a {@link Root}.
+         * fragment changes of a {@link Page}.
          * 
-         * @param root
-         *            root whose URI fragment to get and modify
+         * @param page
+         *            page whose URI fragment to get and modify
          * @param navigator
          *            {@link Navigator} to notify of fragment changes (using
          *            {@link Navigator#navigateTo(String)}
@@ -93,8 +92,7 @@ public class Navigator implements Serializable {
         }
 
         public void setFragment(String fragment) {
-            // TODO ", false" ???
-            page.setFragment(fragment);
+            page.setFragment(fragment, false);
         }
 
         public void fragmentChanged(FragmentChangedEvent event) {
@@ -272,7 +270,16 @@ public class Navigator implements Serializable {
     /**
      * Create a navigator that is tracking the active view using URI fragments.
      * 
-     * @param root
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
+     * 
+     * @param page
      *            whose URI fragments are used
      * @param display
      *            where to display the views
@@ -287,7 +294,16 @@ public class Navigator implements Serializable {
      * By default, a {@link SimpleViewDisplay} is used and can be obtained using
      * {@link #getDisplay()}.
      * 
-     * @param root
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
+     * 
+     * @param page
      *            whose URI fragments are used
      */
     public Navigator(Page page) {
@@ -299,8 +315,11 @@ public class Navigator implements Serializable {
      * Create a navigator.
      * 
      * When a custom fragment manager is not needed, use the constructor
-     * {@link #Navigator(Root, ViewDisplay)} which uses a URI fragment based
+     * {@link #Navigator(Page, ViewDisplay)} which uses a URI fragment based
      * fragment manager.
+     * 
+     * Note that navigation to the initial view must be performed explicitly by
+     * the application after creating a Navigator using this constructor.
      * 
      * @param fragmentManager
      *            fragment manager keeping track of the active view and enabling
@@ -335,12 +354,13 @@ public class Navigator implements Serializable {
      *            view name and parameters
      */
     public void navigateTo(String viewAndParameters) {
-        String longestViewName = "";
+        String longestViewName = null;
         View viewWithLongestName = null;
         for (ViewProvider provider : providers) {
             String viewName = provider.getViewName(viewAndParameters);
             if (null != viewName
-                    && viewName.length() > longestViewName.length()) {
+                    && (longestViewName == null || viewName.length() > longestViewName
+                            .length())) {
                 View view = provider.getView(viewName);
                 if (null != view) {
                     longestViewName = viewName;
