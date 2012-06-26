@@ -270,6 +270,15 @@ public class Navigator implements Serializable {
     /**
      * Create a navigator that is tracking the active view using URI fragments.
      * 
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
+     * 
      * @param page
      *            whose URI fragments are used
      * @param display
@@ -278,7 +287,6 @@ public class Navigator implements Serializable {
     public Navigator(Page page, ViewDisplay display) {
         this.display = display;
         fragmentManager = new UriFragmentManager(page, this);
-        navigateTo(page.getFragment());
     }
 
     /**
@@ -286,13 +294,21 @@ public class Navigator implements Serializable {
      * By default, a {@link SimpleViewDisplay} is used and can be obtained using
      * {@link #getDisplay()}.
      * 
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
+     * 
      * @param page
      *            whose URI fragments are used
      */
     public Navigator(Page page) {
         display = new SimpleViewDisplay();
         fragmentManager = new UriFragmentManager(page, this);
-        navigateTo(page.getFragment());
     }
 
     /**
