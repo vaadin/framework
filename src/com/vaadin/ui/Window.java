@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -29,43 +28,21 @@ import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
 import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
- * A component that represents an application (browser native) window or a sub
- * window.
+ * A component that represents a floating popup window that can be added to a
+ * {@link Root}. A window is added to a {@code Root} using
+ * {@link Root#addWindow(Window)}. </p>
  * <p>
- * If the window is a application window or a sub window depends on how it is
- * added to the application. Adding a {@code Window} to a {@code Window} using
- * {@link Window#addWindow(Window)} makes it a sub window and adding a
- * {@code Window} to the {@code Application} using
- * {@link Application#addWindow(Window)} makes it an application window.
+ * The contents of a window is set using {@link #setContent(ComponentContainer)}
+ * or by using the {@link #Window(String, ComponentContainer)} constructor. The
+ * contents can in turn contain other components. By default, a
+ * {@link VerticalLayout} is used as content.
  * </p>
  * <p>
- * An application window is the base of any view in a Vaadin application. All
- * applications contain a main application window (set using
- * {@link Application#setMainWindow(Window)} which is what is initially shown to
- * the user. The contents of a window is set using
- * {@link #setContent(ComponentContainer)}. The contents can in turn contain
- * other components. For multi-tab applications there is one window instance per
- * opened tab.
+ * A window can be positioned on the screen using absolute coordinates (pixels)
+ * or set to be centered using {@link #center()}
  * </p>
  * <p>
- * A sub window is floating popup style window that can be added to an
- * application window. Like the application window its content is set using
- * {@link #setContent(ComponentContainer)}. A sub window can be positioned on
- * the screen using absolute coordinates (pixels). The default content of the
- * Window is set to be suitable for application windows. For sub windows it
- * might be necessary to set the size of the content to work as expected.
- * </p>
- * <p>
- * Window caption is displayed in the browser title bar for application level
- * windows and in the window header for sub windows.
- * </p>
- * <p>
- * Certain methods in this class are only meaningful for sub windows and other
- * parts only for application windows. These are marked using <b>Sub window
- * only</b> and <b>Application window only</b> respectively in the javadoc.
- * </p>
- * <p>
- * Sub window is to be split into a separate component in Vaadin 7.
+ * The caption is displayed in the window header.
  * </p>
  * 
  * @author Vaadin Ltd.
