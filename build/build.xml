@@ -790,9 +790,6 @@
         	<!-- GWT SuperDevMode -->
             <zipfileset src="${gwt.codeserver.jar}" />
         	
-        	<!-- JSON library, required when precompiled JSON.gwtar is not included -->
-        	<zipfileset src="${gwt.tools}/redist/json/r2_20080312/json-1.5.jar" />
-
         	<!-- jarjar rules: rebase packages from gwt-dev.jar but not those from gwt-user -->
         	
         	<!-- Don't rebase these -->
