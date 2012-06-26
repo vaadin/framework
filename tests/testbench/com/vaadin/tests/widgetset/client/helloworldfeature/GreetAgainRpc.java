@@ -1,7 +1,7 @@
 /* 
 @VaadinApache2LicenseForJavaFiles@
  */
-package com.vaadin.terminal.gwt.client.ui.helloworldfeature;
+package com.vaadin.tests.widgetset.client.helloworldfeature;
 
 import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 
