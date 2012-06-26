@@ -44,6 +44,10 @@ import com.vaadin.terminal.gwt.client.ui.window.WindowState;
  * <p>
  * The caption is displayed in the window header.
  * </p>
+ * <p>
+ * In Vaadin versions prior to 7.0.0, Window was also used as application level
+ * windows. This function is now covered by the {@link Root} class.
+ * </p>
  * 
  * @author Vaadin Ltd.
  * @version
