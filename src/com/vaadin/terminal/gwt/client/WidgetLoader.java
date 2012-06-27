@@ -9,12 +9,12 @@ import com.google.gwt.core.client.RunAsyncCallback;
 abstract class WidgetLoader implements RunAsyncCallback {
 
     public void onFailure(Throwable reason) {
-        ApplicationConfiguration.endWidgetLoading();
+        ApplicationConfiguration.endDependencyLoading();
     }
 
     public void onSuccess() {
         addInstantiator();
-        ApplicationConfiguration.endWidgetLoading();
+        ApplicationConfiguration.endDependencyLoading();
     }
 
     abstract void addInstantiator();

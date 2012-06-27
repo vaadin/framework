@@ -218,7 +218,7 @@ public class ApplicationConfiguration implements EntryPoint {
     static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
 
-    private static int widgetsLoading;
+    private static int dependenciesLoading;
 
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
@@ -454,26 +454,26 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @param c
      */
-    static void runWhenWidgetsLoaded(Command c) {
-        if (widgetsLoading == 0) {
+    static void runWhenDependenciesLoaded(Command c) {
+        if (dependenciesLoading == 0) {
             c.execute();
         } else {
             callbacks.add(c);
         }
     }
 
-    static void startWidgetLoading() {
-        widgetsLoading++;
+    static void startDependencyLoading() {
+        dependenciesLoading++;
     }
 
-    static void endWidgetLoading() {
-        widgetsLoading--;
-        if (widgetsLoading == 0 && !callbacks.isEmpty()) {
+    static void endDependencyLoading() {
+        dependenciesLoading--;
+        if (dependenciesLoading == 0 && !callbacks.isEmpty()) {
             for (Command cmd : callbacks) {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (widgetsLoading == 0 && deferredWidgetLoader != null) {
+        } else if (dependenciesLoading == 0 && deferredWidgetLoader != null) {
             deferredWidgetLoader.trigger();
         }
 
@@ -534,7 +534,7 @@ public class ApplicationConfiguration implements EntryPoint {
         }
 
         private boolean isBusy() {
-            if (widgetsLoading > 0) {
+            if (dependenciesLoading > 0) {
                 communicationFree = 0;
                 return true;
             }

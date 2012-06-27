@@ -1618,19 +1618,19 @@ public class ApplicationConnection {
             }
 
         };
-        ApplicationConfiguration.runWhenWidgetsLoaded(c);
+        ApplicationConfiguration.runWhenDependenciesLoaded(c);
     }
 
     private static void loadStyleDependencies(JsArrayString dependencies) {
         // Assuming no reason to interpret in a defined order
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
             public void onResourceLoad(ResourceLoadEvent event) {
-                ApplicationConfiguration.endWidgetLoading();
+                ApplicationConfiguration.endDependencyLoading();
             }
         };
         ResourceLoader loader = ResourceLoader.get();
         for (int i = 0; i < dependencies.length(); i++) {
-            ApplicationConfiguration.startWidgetLoading();
+            ApplicationConfiguration.startDependencyLoading();
             loader.loadStylesheet(dependencies.get(i), resourceLoadListener);
         }
     }
@@ -1644,20 +1644,20 @@ public class ApplicationConnection {
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
             public void onResourceLoad(ResourceLoadEvent event) {
                 if (dependencies.length() != 0) {
-                    ApplicationConfiguration.startWidgetLoading();
+                    ApplicationConfiguration.startDependencyLoading();
                     // Load next in chain (hopefully already preloaded)
                     event.getResourceLoader().loadScript(dependencies.shift(),
                             this);
                 }
                 // Call start for next before calling end for current
-                ApplicationConfiguration.endWidgetLoading();
+                ApplicationConfiguration.endDependencyLoading();
             }
         };
 
         ResourceLoader loader = ResourceLoader.get();
 
         // Start chain by loading first
-        ApplicationConfiguration.startWidgetLoading();
+        ApplicationConfiguration.startDependencyLoading();
         loader.loadScript(dependencies.shift(), resourceLoadListener);
 
         // Preload all remaining
