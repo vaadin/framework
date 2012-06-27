@@ -752,6 +752,7 @@
 
             <zipfileset src="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
             <zipfileset src="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+        	<zipfileset src="${gwt.tools.lib}/streamhtmlparser/streamhtmlparser-jsilver-r10/streamhtmlparser-jsilver-r10-1.5-rebased.jar" />
 
         	<!-- GWT development JAR contents including many external dependencies -->
             <zipfileset src="${gwt.dev.jar}" excludes="javax/servlet/**,javax/xml/**" />
