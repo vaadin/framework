@@ -4,7 +4,8 @@
 
 package com.vaadin.tests.extensions;
 
-import com.vaadin.annotations.LoadScripts;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.AbstractJavaScriptExtension;
@@ -18,7 +19,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptCallback;
 import com.vaadin.ui.Notification;
 
-@LoadScripts({ "/statictestfiles/jsextension.js" })
 public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
     public static class SimpleJavaScriptExtensionState extends
@@ -44,6 +44,8 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         public void greet(String message);
     }
 
+    @JavaScript("/statictestfiles/jsextension.js")
+    @StyleSheet("/VAADIN/external1.css")
     public static class SimpleJavascriptExtension extends
             AbstractJavaScriptExtension {
 

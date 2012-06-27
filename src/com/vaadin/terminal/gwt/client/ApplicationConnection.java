@@ -40,6 +40,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
+import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
@@ -1067,6 +1069,14 @@ public class ApplicationConnection {
                     json.getValueMap("typeMappings"), widgetSet);
         }
 
+        VConsole.log("Handling resource dependencies");
+        if (json.containsKey("scriptDependencies")) {
+            loadScriptDependencies(json.getJSStringArray("scriptDependencies"));
+        }
+        if (json.containsKey("styleDependencies")) {
+            loadStyleDependencies(json.getJSStringArray("styleDependencies"));
+        }
+
         handleUIDLDuration.logDuration(
                 " * Handling type mappings from server completed", 10);
         /*
@@ -1609,6 +1619,51 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenWidgetsLoaded(c);
+    }
+
+    private static void loadStyleDependencies(JsArrayString dependencies) {
+        // Assuming no reason to interpret in a defined order
+        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            public void onResourceLoad(ResourceLoadEvent event) {
+                ApplicationConfiguration.endWidgetLoading();
+            }
+        };
+        ResourceLoader loader = ResourceLoader.get();
+        for (int i = 0; i < dependencies.length(); i++) {
+            ApplicationConfiguration.startWidgetLoading();
+            loader.loadStylesheet(dependencies.get(i), resourceLoadListener);
+        }
+    }
+
+    private static void loadScriptDependencies(final JsArrayString dependencies) {
+        if (dependencies.length() == 0) {
+            return;
+        }
+
+        // Listener that loads the next when one is completed
+        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            public void onResourceLoad(ResourceLoadEvent event) {
+                if (dependencies.length() != 0) {
+                    ApplicationConfiguration.startWidgetLoading();
+                    // Load next in chain (hopefully already preloaded)
+                    event.getResourceLoader().loadScript(dependencies.shift(),
+                            this);
+                }
+                // Call start for next before calling end for current
+                ApplicationConfiguration.endWidgetLoading();
+            }
+        };
+
+        ResourceLoader loader = ResourceLoader.get();
+
+        // Start chain by loading first
+        ApplicationConfiguration.startWidgetLoading();
+        loader.loadScript(dependencies.shift(), resourceLoadListener);
+
+        // Preload all remaining
+        for (int i = 0; i < dependencies.length(); i++) {
+            loader.loadScript(dependencies.get(i), null);
+        }
     }
 
     // Redirect browser, null reloads current page

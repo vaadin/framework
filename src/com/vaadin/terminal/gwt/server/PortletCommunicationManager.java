@@ -104,7 +104,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     @Override
     public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
-            throws IOException, InvalidUIDLSecurityKeyException {
+            throws IOException, InvalidUIDLSecurityKeyException, JSONException {
         setCurrentMimeReponse(response);
         super.handleUidlRequest(request, response, callback, root);
         currentMimeResponse = null;
@@ -253,7 +253,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected String getInitialUIDL(WrappedRequest request, Root root)
-                    throws PaintException {
+                    throws PaintException, JSONException {
                 return PortletCommunicationManager.this.getInitialUIDL(request,
                         root);
             }

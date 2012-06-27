@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
+import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.WrappedRequest;
@@ -245,7 +246,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected String getInitialUIDL(WrappedRequest request, Root root)
-                    throws PaintException {
+                    throws PaintException, JSONException {
                 return CommunicationManager.this.getInitialUIDL(request, root);
             }
         };
