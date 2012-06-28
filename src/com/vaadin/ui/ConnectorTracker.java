@@ -164,7 +164,7 @@ public class ConnectorTracker implements Serializable {
                         .warning(
                                 "cleanConnectorMap unregistered connector "
                                         + getConnectorAndParentInfo(connector)
-                                        + "). This it should have been done when the connector was detached.");
+                                        + "). This should have been done when the connector was detached.");
                 iterator.remove();
             }
         }
