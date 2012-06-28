@@ -10,38 +10,36 @@ package com.vaadin.terminal.gwt.client.ui.label;
  */
 public enum ContentMode {
     /**
-     * Content mode, where the label contains only plain text. The getValue()
-     * result is coded to XML when painting.
+     * Content mode, where the label contains only plain text.
      */
     TEXT,
 
     /**
-     * Content mode, where the label contains preformatted text.
+     * Content mode, where the label contains pre formatted text. In this mode
+     * newlines are preserved when rendered on the screen.
      */
     PREFORMATTED,
 
     /**
-     * Content mode, where the label contains XHTML.
+     * Content mode, where the label contains XHTML. Care should be taken to
+     * ensure
      */
     XHTML,
 
     /**
      * Content mode, where the label contains well-formed or well-balanced XML.
-     * Each of the root elements must have their default namespace specified.
+     * This is handled in the same way as {@link #XHTML}.
      * 
-     * @deprecated Use {@link #XHTML}
+     * @deprecated Use {@link #XHTML} instead
      */
     @Deprecated
     XML,
 
     /**
-     * Content mode, where the label contains RAW output. Output is not required
-     * to comply to with XML. In Web Adapter output is inserted inside the
-     * resulting HTML document as-is. This is useful for some specific purposes
-     * where possibly broken HTML content needs to be shown, but in most cases
-     * XHTML mode should be preferred.
+     * Legacy content mode, where the label contains RAW output. This is handled
+     * in exactly the same way as {@link #XHTML}.
      * 
-     * @deprecated Use {@link #XHTML}, {@link #TEXT} or {@link #PREFORMATTED}.
+     * @deprecated Use {@link #XHTML} instead
      */
     @Deprecated
     RAW;

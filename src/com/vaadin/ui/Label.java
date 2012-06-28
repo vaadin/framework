@@ -142,10 +142,13 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * Gets the value of the label. Value of the label is the XML contents of
-     * the label.
+     * Gets the value of the label.
+     * <p>
+     * The value of the label is the text that is shown to the end user.
+     * Depending on the {@link ContentMode} it is plain text or markup.
+     * </p>
      * 
-     * @return the Value of the label.
+     * @return the value of the label.
      */
     public String getValue() {
         if (getPropertyDataSource() == null) {
@@ -180,8 +183,7 @@ public class Label extends AbstractComponent implements Property<String>,
 
     /**
      * @see java.lang.Object#toString()
-     * @deprecated use the data source value or {@link #getStringValue()}
-     *             instead
+     * @deprecated Use {@link #getValue()} instead
      */
     @Deprecated
     @Override
