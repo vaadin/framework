@@ -249,7 +249,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            getWidget().performSizeCheck();
+            getWidget().sendClientResized();
         }
         getWidget().rendering = false;
     }
