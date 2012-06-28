@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,6 +36,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * Default constructor
      */
     public AbstractComponentConnector() {
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        getConnection().getVTooltip().connectHandlersToWidget(getWidget());
     }
 
     /**
@@ -98,16 +105,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Style names
         String styleName = getStyleNames(getWidget().getStylePrimaryName());
         getWidget().setStyleName(styleName);
-
-        // Update tooltip
-        TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
-        if (getState().hasDescription()) {
-            tooltipInfo.setTitle(getState().getDescription());
-        } else {
-            tooltipInfo.setTitle(null);
-        }
-        // add error info to tooltip if present
-        tooltipInfo.setErrorMessage(getState().getErrorMessage());
 
         // Set captions
         if (delegateCaptionHandling()) {
@@ -314,5 +311,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     + Util.getConnectorString(this)
                     + ") has been unregistered. Widget was removed.");
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ComponentConnector#getTooltipInfo(com.
+     * google.gwt.dom.client.Element)
+     */
+    public TooltipInfo getTooltipInfo(Element element) {
+        return new TooltipInfo(getState().getDescription(), getState()
+                .getErrorMessage());
     }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.VOptionGroupBase;
 
@@ -17,23 +18,25 @@ public class VListSelect extends VOptionGroupBase {
 
     private static final int VISIBLE_COUNT = 10;
 
-    protected TooltipListBox select;
+    protected ListBox select;
 
     private int lastSelectedIndex = -1;
 
     public VListSelect() {
-        super(new TooltipListBox(true), CLASSNAME);
-        select = (TooltipListBox) optionsContainer;
-        select.setSelect(this);
+        super(new ListBox(true), CLASSNAME);
+        select = getOptionsContainer();
         select.addChangeHandler(this);
         select.addClickHandler(this);
         select.setStyleName(CLASSNAME + "-select");
         select.setVisibleItemCount(VISIBLE_COUNT);
     }
 
+    protected ListBox getOptionsContainer() {
+        return (ListBox) optionsContainer;
+    }
+
     @Override
     protected void buildOptions(UIDL uidl) {
-        select.setClient(client);
         select.setMultipleSelect(isMultiselect());
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
@@ -99,7 +102,7 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     protected void setTabIndex(int tabIndex) {
-        ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
+        getOptionsContainer().setTabIndex(tabIndex);
     }
 
     public void focus() {

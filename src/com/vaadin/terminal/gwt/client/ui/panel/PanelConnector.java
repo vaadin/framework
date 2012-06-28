@@ -46,6 +46,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(PanelServerRpc.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();

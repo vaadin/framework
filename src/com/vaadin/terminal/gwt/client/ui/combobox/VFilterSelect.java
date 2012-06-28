@@ -54,7 +54,6 @@ import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -824,21 +823,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * The text box where the filter is written
      */
     protected final TextBox tb = new TextBox() {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.google.gwt.user.client.ui.TextBoxBase#onBrowserEvent(com.google
-         * .gwt.user.client.Event)
-         */
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            if (client != null) {
-                client.handleTooltipEvent(event, VFilterSelect.this);
-            }
-        }
 
         // Overridden to avoid selecting text when text input is disabled
         @Override
@@ -869,9 +853,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
-            if (client != null) {
-                client.handleTooltipEvent(event, VFilterSelect.this);
-            }
 
             /*
              * Prevent the keyboard focus from leaving the textfield by
@@ -972,8 +953,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
         });
 
-        tb.sinkEvents(VTooltip.TOOLTIP_EVENTS);
-        popupOpener.sinkEvents(VTooltip.TOOLTIP_EVENTS | Event.ONMOUSEDOWN);
+        popupOpener.sinkEvents(Event.ONMOUSEDOWN);
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);

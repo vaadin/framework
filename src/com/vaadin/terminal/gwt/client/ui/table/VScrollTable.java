@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -4194,14 +4195,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void unlinkRowAtActualIndex(int index) {
             final VScrollTableRow toBeRemoved = (VScrollTableRow) renderedRows
                     .get(index);
-            // Unregister row tooltip
-            client.registerTooltip(VScrollTable.this, toBeRemoved.getElement(),
-                    null);
-            for (int i = 0; i < toBeRemoved.getElement().getChildCount(); i++) {
-                // Unregister cell tooltips
-                Element td = toBeRemoved.getElement().getChild(i).cast();
-                client.registerTooltip(VScrollTable.this, td, null);
-            }
             tBodyElement.removeChild(toBeRemoved.getElement());
             orphan(toBeRemoved);
             renderedRows.remove(index);
@@ -4423,6 +4416,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private Timer dragTouchTimeout;
             private int touchStartY;
             private int touchStartX;
+            private TooltipInfo tooltipInfo = null;
+            private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<TableCellElement, TooltipInfo>();
             private boolean isDragging = false;
 
             private VScrollTableRow(int rowKey) {
@@ -4450,11 +4445,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
-                    TooltipInfo info = new TooltipInfo(rowDescription);
-                    client.registerTooltip(VScrollTable.this, rowElement, info);
+                    tooltipInfo = new TooltipInfo(rowDescription);
                 } else {
-                    // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, rowElement, null);
+                    tooltipInfo = null;
                 }
 
                 tHead.getColumnAlignments();
@@ -4478,6 +4471,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (uidl.hasAttribute("selected") && !isSelected()) {
                     toggleSelection();
                 }
+            }
+
+            public TooltipInfo getTooltipInfo() {
+                return tooltipInfo;
             }
 
             /**
@@ -4665,10 +4662,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 if (description != null && !description.equals("")) {
                     TooltipInfo info = new TooltipInfo(description);
-                    client.registerTooltip(VScrollTable.this, td, info);
+                    cellToolTips.put(td, info);
                 } else {
-                    // Remove possibly previously set tooltip
-                    client.registerTooltip(VScrollTable.this, td, null);
+                    cellToolTips.remove(td);
                 }
 
                 td.appendChild(container);
@@ -4776,39 +4772,22 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return true;
             }
 
-            private void handleTooltips(final Event event, Element target) {
+            public TooltipInfo getTooltip(
+                    com.google.gwt.dom.client.Element target) {
+
+                TooltipInfo info = null;
+
                 if (target.hasTagName("TD")) {
-                    // Table cell (td)
-                    Element container = target.getFirstChildElement().cast();
-                    Element widget = container.getFirstChildElement().cast();
 
-                    boolean containsWidget = false;
-                    for (Widget w : childWidgets) {
-                        if (widget == w.getElement()) {
-                            containsWidget = true;
-                            break;
-                        }
-                    }
-
-                    if (!containsWidget) {
-                        // Only text nodes has tooltips
-                        if (ConnectorMap.get(client).getWidgetTooltipInfo(
-                                VScrollTable.this, target) != null) {
-                            // Cell has description, use it
-                            client.handleTooltipEvent(event, VScrollTable.this,
-                                    target);
-                        } else {
-                            // Cell might have row description, use row
-                            // description
-                            client.handleTooltipEvent(event, VScrollTable.this,
-                                    target.getParentElement());
-                        }
-                    }
-
-                } else {
-                    // Table row (tr)
-                    client.handleTooltipEvent(event, VScrollTable.this, target);
+                    TableCellElement td = (TableCellElement) target.cast();
+                    info = cellToolTips.get(td);
                 }
+
+                if (info == null) {
+                    info = tooltipInfo;
+                }
+
+                return info;
             }
 
             /**
@@ -4953,9 +4932,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     }
 
                     boolean targetCellOrRowFound = targetTdOrTr != null;
-                    if (targetCellOrRowFound) {
-                        handleTooltips(event, targetTdOrTr);
-                    }
 
                     switch (type) {
                     case Event.ONDBLCLICK:

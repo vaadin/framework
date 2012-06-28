@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,6 +18,7 @@ import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
@@ -326,6 +328,29 @@ public class TableConnector extends AbstractComponentContainerConnector
                 }
             }
         }
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+
+        TooltipInfo info = null;
+
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VScrollTableRow.class);
+
+            if (node != null) {
+                VScrollTableRow row = (VScrollTableRow) node;
+                info = row.getTooltip(element);
+            }
+        }
+
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 
 }

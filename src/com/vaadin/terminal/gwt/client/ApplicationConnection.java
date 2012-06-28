@@ -35,7 +35,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -2323,56 +2322,7 @@ public class ApplicationConnection {
 
     /* Extended title handling */
 
-    /**
-     * Data showed in tooltips are stored centrilized as it may be needed in
-     * varios place: caption, layouts, and in owner components themselves.
-     * 
-     * Updating TooltipInfo is done in updateComponent method.
-     * 
-     */
-    public TooltipInfo getTooltipTitleInfo(ComponentConnector titleOwner,
-            Object key) {
-        if (null == titleOwner) {
-            return null;
-        }
-        return connectorMap.getTooltipInfo(titleOwner, key);
-    }
-
     private final VTooltip tooltip = new VTooltip(this);
-
-    /**
-     * Component may want to delegate Tooltip handling to client. Layouts add
-     * Tooltip (description, errors) to caption, but some components may want
-     * them to appear one other elements too.
-     * 
-     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
-     * @param event
-     * @param owner
-     */
-    public void handleTooltipEvent(Event event, ComponentConnector owner) {
-        tooltip.handleTooltipEvent(event, owner, null);
-
-    }
-
-    /**
-     * Component may want to delegate Tooltip handling to client. Layouts add
-     * Tooltip (description, errors) to caption, but some components may want
-     * them to appear one other elements too.
-     * 
-     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
-     * @param event
-     * @param owner
-     * @param key
-     *            the key for tooltip if this is "additional" tooltip, null for
-     *            components "main tooltip"
-     */
-    public void handleTooltipEvent(Event event, ComponentConnector owner,
-            Object key) {
-        tooltip.handleTooltipEvent(event, owner, key);
-
-    }
 
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
@@ -2398,34 +2348,6 @@ public class ApplicationConnection {
      */
     public RootConnector getRootConnector() {
         return rootConnector;
-    }
-
-    /**
-     * If component has several tooltips in addition to the one provided by
-     * {@link com.vaadin.ui.AbstractComponent}, component can register them with
-     * this method.
-     * <p>
-     * Component must also pipe events to
-     * {@link #handleTooltipEvent(Event, ComponentConnector, Object)} method.
-     * <p>
-     * This method can also be used to deregister tooltips by using null as
-     * tooltip
-     * 
-     * @param paintable
-     *            Paintable "owning" this tooltip
-     * @param key
-     *            key assosiated with given tooltip. Can be any object. For
-     *            example a related dom element. Same key must be given for
-     *            {@link #handleTooltipEvent(Event, ComponentConnector, Object)}
-     *            method.
-     * 
-     * @param tooltip
-     *            the TooltipInfo object containing details shown in tooltip,
-     *            null if deregistering tooltip
-     */
-    public void registerTooltip(ComponentConnector paintable, Object key,
-            TooltipInfo tooltip) {
-        connectorMap.registerTooltip(paintable, key, tooltip);
     }
 
     /**
@@ -2510,13 +2432,13 @@ public class ApplicationConnection {
         // connectorMap.unregisterConnector(p);
     }
 
+    /**
+     * Get VTooltip instance related to application connection
+     * 
+     * @return VTooltip instance
+     */
     public VTooltip getVTooltip() {
         return tooltip;
-    }
-
-    @Deprecated
-    public void handleTooltipEvent(Event event, Widget owner, Object key) {
-        handleTooltipEvent(event, getConnectorMap().getConnector(owner), key);
     }
 
     /**
@@ -2544,17 +2466,6 @@ public class ApplicationConnection {
                     + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
         }
         return false;
-    }
-
-    @Deprecated
-    public void handleTooltipEvent(Event event, Widget owner) {
-        handleTooltipEvent(event, getConnectorMap().getConnector(owner));
-
-    }
-
-    @Deprecated
-    public void registerTooltip(Widget owner, Object key, TooltipInfo info) {
-        registerTooltip(getConnectorMap().getConnector(owner), key, info);
     }
 
     @Deprecated

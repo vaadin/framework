@@ -16,6 +16,11 @@ public class TooltipInfo {
         setTitle(tooltip);
     }
 
+    public TooltipInfo(String tooltip, String errorMessage) {
+        setTitle(tooltip);
+        setErrorMessage(errorMessage);
+    }
+
     public String getTitle() {
         return title;
     }
@@ -32,4 +37,18 @@ public class TooltipInfo {
         errorMessageHtml = errorMessage;
     }
 
+    /**
+     * Checks is a message has been defined for the tooltip.
+     * 
+     * @return true if title or error message is present, false if both are
+     *         empty
+     */
+    public boolean hasMessage() {
+        return (title != null && !title.isEmpty())
+                || (errorMessageHtml != null && errorMessageHtml.isEmpty());
+    }
+
+    public boolean equals(TooltipInfo other) {
+        return (other != null && other.title == title && other.errorMessageHtml == errorMessageHtml);
+    }
 }

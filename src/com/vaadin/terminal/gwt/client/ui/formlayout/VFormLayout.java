@@ -12,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -215,8 +214,6 @@ public class VFormLayout extends SimplePanel {
         public Caption(ComponentConnector component) {
             super();
             owner = component;
-
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         private void setStyles(String[] styles) {
@@ -324,12 +321,6 @@ public class VFormLayout extends SimplePanel {
         public ComponentConnector getOwner() {
             return owner;
         }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            owner.getConnection().handleTooltipEvent(event, owner);
-        }
     }
 
     class ErrorFlag extends HTML {
@@ -343,6 +334,10 @@ public class VFormLayout extends SimplePanel {
             setStyleName(CLASSNAME);
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
             this.owner = owner;
+        }
+
+        public ComponentConnector getOwner() {
+            return owner;
         }
 
         public void updateError(String errorMessage, boolean hideErrors) {
@@ -363,14 +358,6 @@ public class VFormLayout extends SimplePanel {
             } else if (errorIndicatorElement != null) {
                 DOM.removeChild(getElement(), errorIndicatorElement);
                 errorIndicatorElement = null;
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            if (owner != null) {
-                owner.getConnection().handleTooltipEvent(event, owner);
             }
         }
 

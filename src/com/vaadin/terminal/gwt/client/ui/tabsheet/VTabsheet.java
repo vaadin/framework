@@ -233,7 +233,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    private static class TabCaption extends VCaption {
+    public static class TabCaption extends VCaption {
 
         private boolean closable = false;
         private Element closeButton;
@@ -248,16 +248,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         public boolean updateCaption(UIDL uidl) {
             if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)) {
-                TooltipInfo tooltipInfo = new TooltipInfo();
-                tooltipInfo
-                        .setTitle(uidl
-                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
-                tooltipInfo
-                        .setErrorMessage(uidl
-                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE));
-                client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
+                setTooltipInfo(new TooltipInfo(
+                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
+                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE)));
             } else {
-                client.registerTooltip(getTabsheet(), getElement(), null);
+                setTooltipInfo(null);
             }
 
             // TODO need to call this instead of super because the caption does
@@ -292,7 +287,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             if (event.getTypeInt() == Event.ONLOAD) {
                 getTabsheet().tabSizeMightHaveChanged(getTab());
             }
-            client.handleTooltipEvent(event, getTabsheet(), getElement());
         }
 
         public Tab getTab() {

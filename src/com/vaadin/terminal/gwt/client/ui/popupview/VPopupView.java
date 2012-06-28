@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
@@ -73,7 +72,6 @@ public class VPopupView extends HTML {
         });
 
         popup.setAnimationEnabled(true);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     /**
@@ -336,13 +334,5 @@ public class VPopupView extends HTML {
         }
 
     }// class CustomPopup
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
-    }
 
 }// class VPopupView
