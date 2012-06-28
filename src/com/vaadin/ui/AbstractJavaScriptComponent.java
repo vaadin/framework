@@ -110,7 +110,7 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * @version @VERSION@
  * @since 7.0.0
  */
-public class AbstractJavaScriptComponent extends AbstractComponent {
+public abstract class AbstractJavaScriptComponent extends AbstractComponent {
     private JavaScriptCallbackHelper callbackHelper = new JavaScriptCallbackHelper(
             this);
 
