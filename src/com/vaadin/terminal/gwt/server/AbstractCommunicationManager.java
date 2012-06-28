@@ -2407,6 +2407,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Security check: avoid accidentally serving from the root of the
         // classpath instead of relative to the context class
         if (resourceName.startsWith("/")) {
+            getLogger().warning(
+                    "Connector resource request starting with / rejected: "
+                            + resourceName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
@@ -2420,6 +2423,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Security check: don't serve resource if the name hasn't been
         // registered in the map
         if (context == null) {
+            getLogger().warning(
+                    "Connector resource request for unkown resource rejected: "
+                            + resourceName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
@@ -2427,6 +2433,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(resourceName);
         if (in == null) {
+            getLogger().warning(
+                    resourceName + " defined by " + context.getName()
+                            + " not found. Verify that the file "
+                            + context.getPackage().getName().replace('.', '/')
+                            + '/' + resourceName
+                            + " is available on the classpath.");
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
