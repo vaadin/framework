@@ -26,6 +26,7 @@ public class VEmbedded extends HTML {
     protected Element browserElement;
 
     protected String type;
+    protected String mimetype;
 
     protected ApplicationConnection client;
 
