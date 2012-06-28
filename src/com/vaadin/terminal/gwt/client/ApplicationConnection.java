@@ -1680,7 +1680,8 @@ public class ApplicationConnection {
 
         // Preload all remaining
         for (int i = 0; i < dependencies.length(); i++) {
-            loader.loadScript(dependencies.get(i), null);
+            String preloadUrl = translateVaadinUri(dependencies.get(i));
+            loader.preloadResource(preloadUrl, null);
         }
     }
 
