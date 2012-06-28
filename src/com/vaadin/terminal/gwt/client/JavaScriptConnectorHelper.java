@@ -185,7 +185,7 @@ public class JavaScriptConnectorHelper {
                 }
                 return rpcObjects.@java.util.Map::get(Ljava/lang/Object;)(iface);
             }),
-            'getWidgetElement': $entry(function(connectorId) {
+            'getElement': $entry(function(connectorId) {
                 return h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::getWidgetElement(Ljava/lang/String;)(connectorId);
             }),
             'registerRpc': function(iface, rpcHandler) {

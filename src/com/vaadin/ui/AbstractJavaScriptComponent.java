@@ -37,9 +37,9 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * the connector's parent. If <code>connectorId</code> is provided, the id of
  * the parent of the corresponding connector with the passed id is returned
  * instead.</li>
- * <li><code>getWidgetElement([connectorId])</code> - returns the DOM Element
- * that is the root of a connector's widget. <code>null</code> is returned if
- * the connector can not be found or if the connector doesn't have a widget. If
+ * <li><code>getElement([connectorId])</code> - returns the DOM Element that is
+ * the root of a connector's widget. <code>null</code> is returned if the
+ * connector can not be found or if the connector doesn't have a widget. If
  * <code>connectorId</code> is not provided, the connector id of the current
  * connector will be used.</li>
  * <li><code>getState()</code> - returns an object corresponding to the shared
