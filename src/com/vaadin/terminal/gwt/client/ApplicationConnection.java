@@ -1621,7 +1621,7 @@ public class ApplicationConnection {
         ApplicationConfiguration.runWhenDependenciesLoaded(c);
     }
 
-    private static void loadStyleDependencies(JsArrayString dependencies) {
+    private void loadStyleDependencies(JsArrayString dependencies) {
         // Assuming no reason to interpret in a defined order
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
             public void onLoad(ResourceLoadEvent event) {
@@ -1637,12 +1637,13 @@ public class ApplicationConnection {
         };
         ResourceLoader loader = ResourceLoader.get();
         for (int i = 0; i < dependencies.length(); i++) {
+            String url = translateVaadinUri(dependencies.get(i));
             ApplicationConfiguration.startDependencyLoading();
-            loader.loadStylesheet(dependencies.get(i), resourceLoadListener);
+            loader.loadStylesheet(url, resourceLoadListener);
         }
     }
 
-    private static void loadScriptDependencies(final JsArrayString dependencies) {
+    private void loadScriptDependencies(final JsArrayString dependencies) {
         if (dependencies.length() == 0) {
             return;
         }
@@ -1651,10 +1652,10 @@ public class ApplicationConnection {
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
             public void onLoad(ResourceLoadEvent event) {
                 if (dependencies.length() != 0) {
+                    String url = translateVaadinUri(dependencies.shift());
                     ApplicationConfiguration.startDependencyLoading();
                     // Load next in chain (hopefully already preloaded)
-                    event.getResourceLoader().loadScript(dependencies.shift(),
-                            this);
+                    event.getResourceLoader().loadScript(url, this);
                 }
                 // Call start for next before calling end for current
                 ApplicationConfiguration.endDependencyLoading();
@@ -1670,8 +1671,9 @@ public class ApplicationConnection {
         ResourceLoader loader = ResourceLoader.get();
 
         // Start chain by loading first
+        String url = translateVaadinUri(dependencies.shift());
         ApplicationConfiguration.startDependencyLoading();
-        loader.loadScript(dependencies.shift(), resourceLoadListener);
+        loader.loadScript(url, resourceLoadListener);
 
         // Preload all remaining
         for (int i = 0; i < dependencies.length(); i++) {
@@ -2284,6 +2286,9 @@ public class ApplicationConnection {
         }
         if (uidlUri.startsWith("app://")) {
             uidlUri = getAppUri() + uidlUri.substring(6);
+        } else if (uidlUri.startsWith("connector://")) {
+            uidlUri = getAppUri() + "APP/CONNECTOR/"
+                    + uidlUri.substring("connector://".length());
         }
         return uidlUri;
     }

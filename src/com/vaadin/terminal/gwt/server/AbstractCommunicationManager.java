@@ -18,6 +18,8 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -25,7 +27,6 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +43,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
@@ -156,6 +159,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private int maxInactiveInterval;
 
     private Connector highlightedConnector;
+
+    private Map<String, Class<?>> connectoResourceContexts = new HashMap<String, Class<?>>();
 
     /**
      * TODO New constructor - document me!
@@ -1177,13 +1182,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
         for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
             JavaScript jsAnnotation = class1.getAnnotation(JavaScript.class);
             if (jsAnnotation != null) {
-                scriptDependencies.addAll(Arrays.asList(jsAnnotation.value()));
+                for (String resource : jsAnnotation.value()) {
+                    scriptDependencies.add(registerResource(resource, class1));
+                }
             }
 
             StyleSheet styleAnnotation = class1.getAnnotation(StyleSheet.class);
             if (styleAnnotation != null) {
-                styleDependencies
-                        .addAll(Arrays.asList(styleAnnotation.value()));
+                for (String resource : styleAnnotation.value()) {
+                    styleDependencies.add(registerResource(resource, class1));
+                }
             }
         }
 
@@ -1207,6 +1215,51 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         writePerformanceData(outWriter);
+    }
+
+    private String registerResource(String resource, Class<?> context) {
+        try {
+            URI uri = new URI(resource);
+            String protocol = uri.getScheme();
+
+            if ("connector".equals(protocol)) {
+                return registerContextResource(uri, context);
+            }
+
+            if (protocol != null || uri.getHost() != null) {
+                return resource;
+            }
+
+            String path = uri.getPath();
+            if (path.startsWith("/")) {
+                return resource;
+            }
+
+            // Default if just simple relative url
+            return registerContextResource(uri, context);
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.WARNING,
+                    "Could not parse resource url " + resource, e);
+            return resource;
+        }
+    }
+
+    private String registerContextResource(URI uri, Class<?> context) {
+        String path = uri.getPath();
+        synchronized (connectoResourceContexts) {
+            // Connector resource
+            if (connectoResourceContexts.containsKey(path)) {
+                Class<?> oldContext = connectoResourceContexts.get(path);
+                getLogger().warning(
+                        "Resource " + path + " defined by both " + context
+                                + " and " + oldContext + ". Resource from "
+                                + oldContext + " will be used.");
+            } else {
+                connectoResourceContexts.put(path, context);
+            }
+        }
+
+        return "connector://" + path;
     }
 
     /**
@@ -2330,6 +2383,60 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String initialUIDL = sWriter.toString();
         getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
+    }
+
+    public void serveConnectorResource(String resourceName,
+            WrappedRequest request, WrappedResponse response, String mimetype)
+            throws IOException {
+        if (resourceName.startsWith("/")) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        Class<?> context;
+        synchronized (connectoResourceContexts) {
+            context = connectoResourceContexts.get(resourceName);
+        }
+
+        if (context == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        InputStream in = context.getResourceAsStream(resourceName);
+        if (in == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+        OutputStream out = null;
+        try {
+            if (mimetype != null) {
+                response.setContentType(mimetype);
+            }
+
+            out = response.getOutputStream();
+
+            final byte[] buffer = new byte[Constants.DEFAULT_BUFFER_SIZE];
+
+            int bytesRead = 0;
+            while ((bytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.flush();
+        } finally {
+            try {
+                in.close();
+            } catch (Exception e) {
+                // Do nothing
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
     }
 
     /**
