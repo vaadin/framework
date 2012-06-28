@@ -160,7 +160,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private Connector highlightedConnector;
 
-    private Map<String, Class<?>> connectoResourceContexts = new HashMap<String, Class<?>>();
+    private Map<String, Class<?>> connectorResourceContexts = new HashMap<String, Class<?>>();
 
     /**
      * TODO New constructor - document me!
@@ -1217,49 +1217,50 @@ public abstract class AbstractCommunicationManager implements Serializable {
         writePerformanceData(outWriter);
     }
 
-    private String registerResource(String resource, Class<?> context) {
+    /**
+     * Resolves a resource URI, registering the URI with this
+     * {@code AbstractCommunicationManager} if needed and returns a fully
+     * qualified URI.
+     */
+    private String registerResource(String resourceUri, Class<?> context) {
         try {
-            URI uri = new URI(resource);
+            URI uri = new URI(resourceUri);
             String protocol = uri.getScheme();
 
             if ("connector".equals(protocol)) {
-                return registerContextResource(uri, context);
+                // Strip initial slash
+                String resourceName = uri.getPath().substring(1);
+                return registerConnecctorResource(resourceName, context);
             }
 
             if (protocol != null || uri.getHost() != null) {
-                return resource;
+                return resourceUri;
             }
 
-            String path = uri.getPath();
-            if (path.startsWith("/")) {
-                return resource;
-            }
-
-            // Default if just simple relative url
-            return registerContextResource(uri, context);
+            // Bare path interpreted as connector resource
+            return registerConnecctorResource(resourceUri, context);
         } catch (URISyntaxException e) {
             getLogger().log(Level.WARNING,
-                    "Could not parse resource url " + resource, e);
-            return resource;
+                    "Could not parse resource url " + resourceUri, e);
+            return resourceUri;
         }
     }
 
-    private String registerContextResource(URI uri, Class<?> context) {
-        String path = uri.getPath();
-        synchronized (connectoResourceContexts) {
-            // Connector resource
-            if (connectoResourceContexts.containsKey(path)) {
-                Class<?> oldContext = connectoResourceContexts.get(path);
+    private String registerConnecctorResource(String name, Class<?> context) {
+        synchronized (connectorResourceContexts) {
+            // Add to map of names accepted by serveConnectorResource
+            if (connectorResourceContexts.containsKey(name)) {
+                Class<?> oldContext = connectorResourceContexts.get(name);
                 getLogger().warning(
-                        "Resource " + path + " defined by both " + context
+                        "Resource " + name + " defined by both " + context
                                 + " and " + oldContext + ". Resource from "
                                 + oldContext + " will be used.");
             } else {
-                connectoResourceContexts.put(path, context);
+                connectorResourceContexts.put(name, context);
             }
         }
 
-        return "connector://" + path;
+        return "connector:///" + name;
     }
 
     /**
@@ -2385,29 +2386,53 @@ public abstract class AbstractCommunicationManager implements Serializable {
         return initialUIDL;
     }
 
+    /**
+     * Serve a connector resource from the classpath if the resource has
+     * previously been registered by calling
+     * {@link #registerResource(String, Class)}. Sending arbitrary files from
+     * the classpath is prevented by only accepting resource names that have
+     * explicitly been registered. Resources can currently only be registered by
+     * including a {@link JavaScript} or {@link StyleSheet} annotation on a
+     * Connector class.
+     * 
+     * @param resourceName
+     * @param request
+     * @param response
+     * @param mimetype
+     * @throws IOException
+     */
     public void serveConnectorResource(String resourceName,
             WrappedRequest request, WrappedResponse response, String mimetype)
             throws IOException {
+        // Security check: avoid accidentally serving from the root of the
+        // classpath instead of relative to the context class
         if (resourceName.startsWith("/")) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
 
+        // Check that the resource name has been registered
         Class<?> context;
-        synchronized (connectoResourceContexts) {
-            context = connectoResourceContexts.get(resourceName);
+        synchronized (connectorResourceContexts) {
+            context = connectorResourceContexts.get(resourceName);
         }
 
+        // Security check: don't serve resource if the name hasn't been
+        // registered in the map
         if (context == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
 
+        // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(resourceName);
         if (in == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
         }
+
+        // TODO Check and set cache headers
+
         OutputStream out = null;
         try {
             if (mimetype != null) {

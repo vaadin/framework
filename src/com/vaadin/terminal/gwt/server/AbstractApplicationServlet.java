@@ -136,8 +136,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
 
-    static final String CONNECTOR_RESOURCE_PREFIX = "/APP/CONNECTOR/";
-
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -400,8 +398,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
                 String pathInfo = getRequestPathInfo(request);
+                // + 2 to also remove beginning and ending slashes
                 String resourceName = pathInfo
-                        .substring(CONNECTOR_RESOURCE_PREFIX.length());
+                        .substring(ApplicationConnection.CONNECTOR_RESOURCE_PREFIX
+                                .length() + 2);
 
                 final String mimetype = getServletContext().getMimeType(
                         resourceName);
@@ -1295,7 +1295,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private boolean isConnectorResourceRequest(HttpServletRequest request) {
         String path = getRequestPathInfo(request);
-        if (path != null && path.startsWith(CONNECTOR_RESOURCE_PREFIX)) {
+        if (path != null
+                && path.startsWith('/' + ApplicationConnection.CONNECTOR_RESOURCE_PREFIX + '/')) {
             return true;
         }
         return false;
