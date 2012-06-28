@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
- * A class which takes care of book keeping of {@link ClientConnector}s for one
+ * A class which takes care of book keeping of {@link ClientConnector}s for a
  * Root.
  * <p>
  * Provides {@link #getConnector(String)} which can be used to lookup a
@@ -53,6 +53,14 @@ public class ConnectorTracker implements Serializable {
         return Logger.getLogger(ConnectorTracker.class.getName());
     }
 
+    /**
+     * Creates a new ConnectorTracker for the given root. A tracker is always
+     * attached to a root and the root cannot be changed during the lifetime of
+     * a {@link ConnectorTracker}.
+     * 
+     * @param root
+     *            The root to attach to. Cannot be null.
+     */
     public ConnectorTracker(Root root) {
         this.root = root;
     }
@@ -144,61 +152,134 @@ public class ConnectorTracker implements Serializable {
         while (iterator.hasNext()) {
             String connectorId = iterator.next();
             ClientConnector connector = connectorIdToConnector.get(connectorId);
-            if (connector instanceof Component) {
-                Component component = (Component) connector;
-                if (component.getRoot() != root) {
-                    // If component is no longer part of this application,
-                    // remove it from the map. If it is re-attached to the
-                    // application at some point it will be re-added through
-                    // registerConnector(connector)
-                    iterator.remove();
-                }
+            if (getRootForConnector(connector) != root) {
+                // If connector is no longer part of this root,
+                // remove it from the map. If it is re-attached to the
+                // application at some point it will be re-added through
+                // registerConnector(connector)
+
+                // This code should never be called as cleanup should take place
+                // in detach()
+                getLogger()
+                        .warning(
+                                "cleanConnectorMap unregistered connector "
+                                        + getConnectorAndParentInfo(connector)
+                                        + "). This it should have been done when the connector was detached.");
+                iterator.remove();
             }
         }
 
     }
 
+    /**
+     * Finds the root that the connector is attached to.
+     * 
+     * @param connector
+     *            The connector to lookup
+     * @return The root the connector is attached to or null if it is not
+     *         attached to any root.
+     */
+    private Root getRootForConnector(ClientConnector connector) {
+        if (connector == null) {
+            return null;
+        }
+        if (connector instanceof Component) {
+            return ((Component) connector).getRoot();
+        }
+
+        return getRootForConnector(connector.getParent());
+    }
+
+    /**
+     * Mark the connector as dirty.
+     * 
+     * @see #getDirtyConnectors()
+     * 
+     * @param connector
+     *            The connector that should be marked clean.
+     */
     public void markDirty(ClientConnector connector) {
         if (getLogger().isLoggable(Level.FINE)) {
             if (!dirtyConnectors.contains(connector)) {
-                getLogger()
-                        .fine(getDebugInfo(connector) + " " + "is now dirty");
+                getLogger().fine(
+                        getConnectorAndParentInfo(connector) + " "
+                                + "is now dirty");
             }
         }
 
         dirtyConnectors.add(connector);
     }
 
+    /**
+     * Mark the connector as clean.
+     * 
+     * @param connector
+     *            The connector that should be marked clean.
+     */
     public void markClean(ClientConnector connector) {
         if (getLogger().isLoggable(Level.FINE)) {
             if (dirtyConnectors.contains(connector)) {
                 getLogger().fine(
-                        getDebugInfo(connector) + " " + "is no longer dirty");
+                        getConnectorAndParentInfo(connector) + " "
+                                + "is no longer dirty");
             }
         }
 
         dirtyConnectors.remove(connector);
     }
 
-    private String getDebugInfo(ClientConnector connector) {
-        String message = getObjectString(connector);
+    /**
+     * Returns {@link #getConnectorString(ClientConnector)} for the connector
+     * and its parent (if it has a parent).
+     * 
+     * @param connector
+     *            The connector
+     * @return A string describing the connector and its parent
+     */
+    private String getConnectorAndParentInfo(ClientConnector connector) {
+        String message = getConnectorString(connector);
         if (connector.getParent() != null) {
-            message += " (parent: " + getObjectString(connector.getParent())
+            message += " (parent: " + getConnectorString(connector.getParent())
                     + ")";
         }
         return message;
     }
 
-    private String getObjectString(Object connector) {
-        return connector.getClass().getName() + "@"
-                + Integer.toHexString(connector.hashCode());
+    /**
+     * Returns a string with the connector name and id. Useful mostly for
+     * debugging and logging.
+     * 
+     * @param connector
+     *            The connector
+     * @return A string that describes the connector
+     */
+    private String getConnectorString(ClientConnector connector) {
+        if (connector == null) {
+            return "(null)";
+        }
+
+        String connectorId;
+        try {
+            connectorId = connector.getConnectorId();
+        } catch (RuntimeException e) {
+            // This happens if the connector is not attached to the application.
+            // SHOULD not happen in this case but theoretically can.
+            connectorId = "@" + Integer.toHexString(connector.hashCode());
+        }
+        return connector.getClass().getName() + "(" + connectorId + ")";
     }
 
+    /**
+     * Mark all connectors in this root as dirty.
+     */
     public void markAllConnectorsDirty() {
         markConnectorsDirtyRecursively(root);
         getLogger().fine("All connectors are now dirty");
     }
 
+    /**
+     * Mark all connectors in this root as clean.
+     */
     public void markAllConnectorsClean() {
         dirtyConnectors.clear();
         getLogger().fine("All connectors are now clean");
@@ -222,6 +303,16 @@ public class ConnectorTracker implements Serializable {
         }
     }
 
+    /**
+     * Returns a collection of all connectors which have been marked as dirty.
+     * <p>
+     * The state and pending RPC calls for dirty connectors are sent to the
+     * client in the following request.
+     * </p>
+     * 
+     * @return A collection of all dirty connectors for this root. This list may
+     *         contain invisible connectors.
+     */
     public Collection<ClientConnector> getDirtyConnectors() {
         return dirtyConnectors;
     }
