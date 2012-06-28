@@ -13,8 +13,8 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * If this annotation is present on a {@link ClientConnector} class, the
- * framework ensures the referenced JavaScript files are loaded before the
- * corresponding client-side connector is initialized.
+ * framework ensures the referenced JavaScript files are loaded before the init
+ * method for the corresponding client-side connector is invoked.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
