@@ -22,7 +22,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 
 /**
@@ -88,7 +87,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
         addFocusHandler(this);
         addBlurHandler(this);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     /*
@@ -107,9 +105,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
 
         if (listenTextChangeEvents
                 && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event

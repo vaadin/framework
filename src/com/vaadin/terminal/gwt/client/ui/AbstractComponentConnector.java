@@ -3,8 +3,11 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
@@ -21,6 +24,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
@@ -32,9 +36,25 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private String lastKnownHeight = "";
 
     /**
+     * The style names from getState().getStyles() which are currently applied
+     * to the widget.
+     */
+    protected List<String> styleNames = new ArrayList<String>();
+
+    /**
      * Default constructor
      */
     public AbstractComponentConnector() {
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        getConnection().getVTooltip().connectHandlersToWidget(getWidget());
+
+        // Set v-connector style names for the widget
+        getWidget().setStyleName("v-connector", true);
     }
 
     /**
@@ -96,18 +116,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         super.onStateChanged(stateChangeEvent);
 
         // Style names
-        String styleName = getStyleNames(getWidget().getStylePrimaryName());
-        getWidget().setStyleName(styleName);
-
-        // Update tooltip
-        TooltipInfo tooltipInfo = paintableMap.getTooltipInfo(this, null);
-        if (getState().hasDescription()) {
-            tooltipInfo.setTitle(getState().getDescription());
-        } else {
-            tooltipInfo.setTitle(null);
-        }
-        // add error info to tooltip if present
-        tooltipInfo.setErrorMessage(getState().getErrorMessage());
+        updateWidgetStyleNames();
 
         // Set captions
         if (delegateCaptionHandling()) {
@@ -130,12 +139,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     public void setWidgetEnabled(boolean widgetEnabled) {
+        // add or remove v-disabled style name from the widget
+        setWidgetStyleName(ApplicationConnection.DISABLED_CLASSNAME,
+                !widgetEnabled);
+
         if (getWidget() instanceof HasEnabled) {
             // set widget specific enabled state
             ((HasEnabled) getWidget()).setEnabled(widgetEnabled);
-            // add or remove v-disabled style name from the widget
-            getWidget().setStyleName(ApplicationConnection.DISABLED_CLASSNAME,
-                    !widgetEnabled);
+
             // make sure the caption has or has not v-disabled style
             if (delegateCaptionHandling()) {
                 ServerConnector parent = getParent();
@@ -213,58 +224,112 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * Generates the style name for the widget based on the given primary style
-     * name and the shared state.
+     * Updates the user defined, read-only and error style names for the widget
+     * based the shared state. User defined style names are prefixed with the
+     * primary style name of the widget returned by {@link #getWidget()}
      * <p>
      * This method can be overridden to provide additional style names for the
-     * component
+     * component, for example see
+     * {@link AbstractFieldConnector#updateWidgetStyleNames()}
      * </p>
-     * 
-     * @param primaryStyleName
-     *            The primary style name to use when generating the final style
-     *            names
-     * @return The style names, settable using
-     *         {@link Widget#setStyleName(String)}
      */
-    protected String getStyleNames(String primaryStyleName) {
+    protected void updateWidgetStyleNames() {
         ComponentState state = getState();
 
-        StringBuilder styleBuf = new StringBuilder();
-        styleBuf.append(primaryStyleName);
-        styleBuf.append(" v-connector");
+        String primaryStyleName = getWidget().getStylePrimaryName();
 
-        // Uses connector methods to enable connectors to take hierarchy or
-        // multiple state variables into account
-        if (!isEnabled()) {
-            styleBuf.append(" ");
-            styleBuf.append(ApplicationConnection.DISABLED_CLASSNAME);
-        }
-        if (isReadOnly()) {
-            styleBuf.append(" ");
-            styleBuf.append("v-readonly");
-        }
+        // should be in AbstractFieldConnector ?
+        // add / remove read-only style name
+        setWidgetStyleName("v-readonly", isReadOnly());
 
-        // add additional styles as css classes, prefixed with component default
-        // stylename
+        // add / remove error style name
+        setWidgetStyleNameWithPrefix(primaryStyleName,
+                ApplicationConnection.ERROR_CLASSNAME_EXT,
+                null != state.getErrorMessage());
+
+        // add additional user defined style names as class names, prefixed with
+        // component default class name. remove nonexistent style names.
         if (state.hasStyles()) {
-            for (String style : state.getStyles()) {
-                styleBuf.append(" ");
-                styleBuf.append(primaryStyleName);
-                styleBuf.append("-");
-                styleBuf.append(style);
-                styleBuf.append(" ");
-                styleBuf.append(style);
+            // add new style names
+            List<String> newStyles = new ArrayList<String>();
+            newStyles.addAll(state.getStyles());
+            newStyles.removeAll(styleNames);
+            for (String newStyle : newStyles) {
+                setWidgetStyleName(newStyle, true);
+                setWidgetStyleNameWithPrefix(primaryStyleName + "-", newStyle,
+                        true);
+            }
+            // remove nonexistent style names
+            styleNames.removeAll(state.getStyles());
+            for (String oldStyle : styleNames) {
+                setWidgetStyleName(oldStyle, false);
+                setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
+                        false);
+            }
+            styleNames.clear();
+            styleNames.addAll(state.getStyles());
+        } else {
+            // remove all old style names
+            for (String oldStyle : styleNames) {
+                setWidgetStyleName(oldStyle, false);
+                setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
+                        false);
+            }
+            styleNames.clear();
+        }
+
+    }
+
+    /**
+     * This is used to add / remove state related style names from the widget.
+     * <p>
+     * Override this method for example if the style name given here should be
+     * updated in another widget in addition to the one returned by the
+     * {@link #getWidget()}.
+     * </p>
+     * 
+     * @param styleName
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     */
+    protected void setWidgetStyleName(String styleName, boolean add) {
+        getWidget().setStyleName(styleName, add);
+    }
+
+    /**
+     * This is used to add / remove state related prefixed style names from the
+     * widget.
+     * <p>
+     * Override this method if the prefixed style name given here should be
+     * updated in another widget in addition to the one returned by the
+     * <code>Connector</code>'s {@link #getWidget()}, or if the prefix should be
+     * different. For example see
+     * {@link PopupDateFieldConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
+     * </p>
+     * 
+     * @param styleName
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     * @deprecated This will be removed once styles are no longer added with
+     *             prefixes.
+     */
+    @Deprecated
+    protected void setWidgetStyleNameWithPrefix(String prefix,
+            String styleName, boolean add) {
+        if (!styleName.startsWith("-")) {
+            if (!prefix.endsWith("-")) {
+                prefix += "-";
+            }
+        } else {
+            if (prefix.endsWith("-")) {
+                styleName.replaceFirst("-", "");
             }
         }
-
-        // add error classname to components w/ error
-        if (null != state.getErrorMessage()) {
-            styleBuf.append(" ");
-            styleBuf.append(primaryStyleName);
-            styleBuf.append(ApplicationConnection.ERROR_CLASSNAME_EXT);
-        }
-
-        return styleBuf.toString();
+        getWidget().setStyleName(prefix + styleName, add);
     }
 
     /*
@@ -314,5 +379,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     + Util.getConnectorString(this)
                     + ") has been unregistered. Widget was removed.");
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ComponentConnector#getTooltipInfo(com.
+     * google.gwt.dom.client.Element)
+     */
+    public TooltipInfo getTooltipInfo(Element element) {
+        return new TooltipInfo(getState().getDescription(), getState()
+                .getErrorMessage());
     }
 }

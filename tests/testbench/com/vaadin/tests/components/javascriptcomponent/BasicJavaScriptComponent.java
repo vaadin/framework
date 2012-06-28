@@ -6,7 +6,7 @@ package com.vaadin.tests.components.javascriptcomponent;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.annotations.LoadScripts;
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.WrappedRequest;
@@ -17,7 +17,6 @@ import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptCallback;
 import com.vaadin.ui.Notification;
 
-@LoadScripts({ "/statictestfiles/jsconnector.js" })
 public class BasicJavaScriptComponent extends AbstractTestRoot {
 
     public interface ExampleClickRpc extends ServerRpc {
@@ -36,6 +35,7 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
         }
     }
 
+    @JavaScript("/statictestfiles/jsconnector.js")
     public static class ExampleWidget extends AbstractJavaScriptComponent {
         public ExampleWidget() {
             registerRpc(new ExampleClickRpc() {

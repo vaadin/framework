@@ -33,10 +33,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.SimpleFocusablePanel;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
@@ -140,8 +138,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
                 | Event.ONLOAD);
-
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     @Override
@@ -338,15 +334,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
             if (DOM.isOrHasChild(item.getElement(), targetElement)) {
                 targetItem = item;
             }
-        }
-
-        // Handle tooltips
-        if (targetItem == null && client != null) {
-            // Handle root menubar tooltips
-            client.handleTooltipEvent(e, this);
-        } else if (targetItem != null) {
-            // Handle item tooltips
-            targetItem.onBrowserEvent(e);
         }
 
         if (targetItem != null) {
@@ -761,7 +748,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
             setSelected(false);
             setStyleName(CLASSNAME + "-menuitem");
 
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         public void setSelected(boolean selected) {
@@ -917,22 +903,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 addStyleDependentName(itemStyle);
             }
 
-            if (uidl.hasAttribute(ATTRIBUTE_ITEM_DESCRIPTION)) {
-                String description = uidl
-                        .getStringAttribute(ATTRIBUTE_ITEM_DESCRIPTION);
-                TooltipInfo info = new TooltipInfo(description);
-
-                VMenuBar root = findRootMenu();
-                client.registerTooltip(root, this, info);
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            if (client != null) {
-                client.handleTooltipEvent(event, findRootMenu(), this);
-            }
         }
 
         private VMenuBar findRootMenu() {

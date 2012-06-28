@@ -238,8 +238,8 @@ public class JavaScriptConnectorHelper {
             return connector;
         }
 
-        return ConnectorMap.get(connector.getConnection())
-                .getConnector(connectorId);
+        return ConnectorMap.get(connector.getConnection()).getConnector(
+                connectorId);
     }
 
     private void fireRpc(String iface, String method,

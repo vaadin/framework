@@ -35,11 +35,12 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
+import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
@@ -1067,6 +1068,14 @@ public class ApplicationConnection {
                     json.getValueMap("typeMappings"), widgetSet);
         }
 
+        VConsole.log("Handling resource dependencies");
+        if (json.containsKey("scriptDependencies")) {
+            loadScriptDependencies(json.getJSStringArray("scriptDependencies"));
+        }
+        if (json.containsKey("styleDependencies")) {
+            loadStyleDependencies(json.getJSStringArray("styleDependencies"));
+        }
+
         handleUIDLDuration.logDuration(
                 " * Handling type mappings from server completed", 10);
         /*
@@ -1608,7 +1617,67 @@ public class ApplicationConnection {
             }
 
         };
-        ApplicationConfiguration.runWhenWidgetsLoaded(c);
+        ApplicationConfiguration.runWhenDependenciesLoaded(c);
+    }
+
+    private void loadStyleDependencies(JsArrayString dependencies) {
+        // Assuming no reason to interpret in a defined order
+        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            public void onLoad(ResourceLoadEvent event) {
+                ApplicationConfiguration.endDependencyLoading();
+            }
+
+            public void onError(ResourceLoadEvent event) {
+                VConsole.error(event.getResourceUrl()
+                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
+                // The show must go on
+                onLoad(event);
+            }
+        };
+        ResourceLoader loader = ResourceLoader.get();
+        for (int i = 0; i < dependencies.length(); i++) {
+            String url = translateVaadinUri(dependencies.get(i));
+            ApplicationConfiguration.startDependencyLoading();
+            loader.loadStylesheet(url, resourceLoadListener);
+        }
+    }
+
+    private void loadScriptDependencies(final JsArrayString dependencies) {
+        if (dependencies.length() == 0) {
+            return;
+        }
+
+        // Listener that loads the next when one is completed
+        ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            public void onLoad(ResourceLoadEvent event) {
+                if (dependencies.length() != 0) {
+                    String url = translateVaadinUri(dependencies.shift());
+                    ApplicationConfiguration.startDependencyLoading();
+                    // Load next in chain (hopefully already preloaded)
+                    event.getResourceLoader().loadScript(url, this);
+                }
+                // Call start for next before calling end for current
+                ApplicationConfiguration.endDependencyLoading();
+            }
+
+            public void onError(ResourceLoadEvent event) {
+                VConsole.error(event.getResourceUrl() + " could not be loaded.");
+                // The show must go on
+                onLoad(event);
+            }
+        };
+
+        ResourceLoader loader = ResourceLoader.get();
+
+        // Start chain by loading first
+        String url = translateVaadinUri(dependencies.shift());
+        ApplicationConfiguration.startDependencyLoading();
+        loader.loadScript(url, resourceLoadListener);
+
+        // Preload all remaining
+        for (int i = 0; i < dependencies.length(); i++) {
+            loader.loadScript(dependencies.get(i), null);
+        }
     }
 
     // Redirect browser, null reloads current page
@@ -2216,6 +2285,9 @@ public class ApplicationConnection {
         }
         if (uidlUri.startsWith("app://")) {
             uidlUri = getAppUri() + uidlUri.substring(6);
+        } else if (uidlUri.startsWith("connector://")) {
+            uidlUri = getAppUri() + "APP/CONNECTOR/"
+                    + uidlUri.substring("connector://".length());
         }
         return uidlUri;
     }
@@ -2250,56 +2322,7 @@ public class ApplicationConnection {
 
     /* Extended title handling */
 
-    /**
-     * Data showed in tooltips are stored centrilized as it may be needed in
-     * varios place: caption, layouts, and in owner components themselves.
-     * 
-     * Updating TooltipInfo is done in updateComponent method.
-     * 
-     */
-    public TooltipInfo getTooltipTitleInfo(ComponentConnector titleOwner,
-            Object key) {
-        if (null == titleOwner) {
-            return null;
-        }
-        return connectorMap.getTooltipInfo(titleOwner, key);
-    }
-
     private final VTooltip tooltip = new VTooltip(this);
-
-    /**
-     * Component may want to delegate Tooltip handling to client. Layouts add
-     * Tooltip (description, errors) to caption, but some components may want
-     * them to appear one other elements too.
-     * 
-     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
-     * @param event
-     * @param owner
-     */
-    public void handleTooltipEvent(Event event, ComponentConnector owner) {
-        tooltip.handleTooltipEvent(event, owner, null);
-
-    }
-
-    /**
-     * Component may want to delegate Tooltip handling to client. Layouts add
-     * Tooltip (description, errors) to caption, but some components may want
-     * them to appear one other elements too.
-     * 
-     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
-     * 
-     * @param event
-     * @param owner
-     * @param key
-     *            the key for tooltip if this is "additional" tooltip, null for
-     *            components "main tooltip"
-     */
-    public void handleTooltipEvent(Event event, ComponentConnector owner,
-            Object key) {
-        tooltip.handleTooltipEvent(event, owner, key);
-
-    }
 
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
@@ -2325,34 +2348,6 @@ public class ApplicationConnection {
      */
     public RootConnector getRootConnector() {
         return rootConnector;
-    }
-
-    /**
-     * If component has several tooltips in addition to the one provided by
-     * {@link com.vaadin.ui.AbstractComponent}, component can register them with
-     * this method.
-     * <p>
-     * Component must also pipe events to
-     * {@link #handleTooltipEvent(Event, ComponentConnector, Object)} method.
-     * <p>
-     * This method can also be used to deregister tooltips by using null as
-     * tooltip
-     * 
-     * @param paintable
-     *            Paintable "owning" this tooltip
-     * @param key
-     *            key assosiated with given tooltip. Can be any object. For
-     *            example a related dom element. Same key must be given for
-     *            {@link #handleTooltipEvent(Event, ComponentConnector, Object)}
-     *            method.
-     * 
-     * @param tooltip
-     *            the TooltipInfo object containing details shown in tooltip,
-     *            null if deregistering tooltip
-     */
-    public void registerTooltip(ComponentConnector paintable, Object key,
-            TooltipInfo tooltip) {
-        connectorMap.registerTooltip(paintable, key, tooltip);
     }
 
     /**
@@ -2437,13 +2432,13 @@ public class ApplicationConnection {
         // connectorMap.unregisterConnector(p);
     }
 
+    /**
+     * Get VTooltip instance related to application connection
+     * 
+     * @return VTooltip instance
+     */
     public VTooltip getVTooltip() {
         return tooltip;
-    }
-
-    @Deprecated
-    public void handleTooltipEvent(Event event, Widget owner, Object key) {
-        handleTooltipEvent(event, getConnectorMap().getConnector(owner), key);
     }
 
     /**
@@ -2471,17 +2466,6 @@ public class ApplicationConnection {
                     + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
         }
         return false;
-    }
-
-    @Deprecated
-    public void handleTooltipEvent(Event event, Widget owner) {
-        handleTooltipEvent(event, getConnectorMap().getConnector(owner));
-
-    }
-
-    @Deprecated
-    public void registerTooltip(Widget owner, Object key, TooltipInfo info) {
-        registerTooltip(getConnectorMap().getConnector(owner), key, info);
     }
 
     @Deprecated

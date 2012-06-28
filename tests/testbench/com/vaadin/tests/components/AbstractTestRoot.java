@@ -57,8 +57,7 @@ public abstract class AbstractTestRoot extends Root {
     protected abstract Integer getTicketNumber();
 
     protected WebBrowser getBrowser() {
-        ApplicationContext context = Application.getCurrent()
-                .getContext();
+        ApplicationContext context = Application.getCurrent().getContext();
         if (context instanceof AbstractWebApplicationContext) {
             AbstractWebApplicationContext webContext = (AbstractWebApplicationContext) context;
             return webContext.getBrowser();

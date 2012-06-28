@@ -136,6 +136,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
 
+    static final String CONNECTOR_RESOURCE_PREFIX = "/APP/CONNECTOR/";
+
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -395,6 +397,19 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getSession());
             CommunicationManager applicationManager = webApplicationContext
                     .getApplicationManager(application, this);
+
+            if (requestType == RequestType.CONNECTOR_RESOURCE) {
+                String pathInfo = getRequestPathInfo(request);
+                String resourceName = pathInfo
+                        .substring(CONNECTOR_RESOURCE_PREFIX.length());
+
+                final String mimetype = getServletContext().getMimeType(
+                        resourceName);
+
+                applicationManager.serveConnectorResource(resourceName,
+                        request, response, mimetype);
+                return;
+            }
 
             /* Update browser information from the request */
             webApplicationContext.getBrowser().updateRequestDetails(request);
@@ -1250,12 +1265,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE;
     }
 
     protected RequestType getRequestType(HttpServletRequest request) {
         if (isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
+        } else if (isConnectorResourceRequest(request)) {
+            return RequestType.CONNECTOR_RESOURCE;
         } else if (isBrowserDetailsRequest(request)) {
             return RequestType.BROWSER_DETAILS;
         } else if (isUIDLRequest(request)) {
@@ -1274,6 +1291,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
         return "POST".equals(request.getMethod())
                 && request.getParameter("browserDetails") != null;
+    }
+
+    private boolean isConnectorResourceRequest(HttpServletRequest request) {
+        String path = getRequestPathInfo(request);
+        if (path != null && path.startsWith(CONNECTOR_RESOURCE_PREFIX)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isApplicationRequest(HttpServletRequest request) {

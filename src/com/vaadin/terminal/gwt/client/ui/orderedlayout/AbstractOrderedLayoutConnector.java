@@ -48,6 +48,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);

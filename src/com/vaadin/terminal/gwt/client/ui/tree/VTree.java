@@ -45,7 +45,6 @@ import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Action;
 import com.vaadin.terminal.gwt.client.ui.ActionOwner;
 import com.vaadin.terminal.gwt.client.ui.FocusElementPanel;
@@ -656,12 +655,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 return;
             }
 
-            if (target == nodeCaptionSpan) {
-                client.handleTooltipEvent(event, VTree.this, key);
-            }
-
-            final boolean inCaption = target == nodeCaptionSpan
-                    || (icon != null && target == icon.getElement());
+            final boolean inCaption = isCaptionElement(target);
             if (inCaption
                     && client
                             .hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
@@ -751,6 +745,18 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             }
         }
 
+        /**
+         * Checks if the given element is the caption or the icon.
+         * 
+         * @param target
+         *            The element to check
+         * @return true if the element is the caption or the icon
+         */
+        public boolean isCaptionElement(com.google.gwt.dom.client.Element target) {
+            return (target == nodeCaptionSpan || (icon != null && target == icon
+                    .getElement()));
+        }
+
         private void fireClick(final Event evt) {
             /*
              * Ensure we have focus in tree before sending variables. Otherwise
@@ -825,7 +831,6 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     + "-caption");
             Element wrapper = DOM.createDiv();
             nodeCaptionSpan = DOM.createSpan();
-            DOM.sinkEvents(nodeCaptionSpan, VTooltip.TOOLTIP_EVENTS);
             DOM.appendChild(getElement(), nodeCaptionDiv);
             DOM.appendChild(nodeCaptionDiv, wrapper);
             DOM.appendChild(wrapper, nodeCaptionSpan);

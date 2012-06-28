@@ -18,7 +18,7 @@ import com.vaadin.terminal.gwt.server.ResourceReference;
  * 
  * @author Vaadin Ltd
  */
-public class AbstractMedia extends AbstractComponent {
+public abstract class AbstractMedia extends AbstractComponent {
 
     @Override
     public AbstractMediaState getState() {

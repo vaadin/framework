@@ -167,10 +167,6 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
                 client.updateVariable(id, "scrollTop", scrollTop, false);
                 client.updateVariable(id, "scrollLeft", scrollLeft, false);
             }
-        } else if (captionNode.isOrHasChild(target)) {
-            if (client != null) {
-                client.handleTooltipEvent(event, this);
-            }
         }
     }
 

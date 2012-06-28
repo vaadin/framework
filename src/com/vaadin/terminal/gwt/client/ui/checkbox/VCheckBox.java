@@ -31,7 +31,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public VCheckBox() {
         setStyleName(CLASSNAME);
 
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
         Element el = DOM.getFirstChild(getElement());
         while (el != null) {
             DOM.sinkEvents(el,
@@ -52,9 +51,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         super.onBrowserEvent(event);
         if (event.getTypeInt() == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
-        }
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
         }
     }
 

@@ -35,14 +35,6 @@ public class PopupDateFieldConnector extends TextualDateConnector {
 
         super.updateFromUIDL(uidl, client);
 
-        String popupStyleNames = getStyleNames(VPopupCalendar.POPUP_PRIMARY_STYLE_NAME);
-        popupStyleNames += " "
-                + VDateField.CLASSNAME
-                + "-"
-                + VPopupCalendar
-                        .resolutionToString(getWidget().currentResolution);
-        getWidget().popup.setStyleName(popupStyleNames);
-
         getWidget().calendar.setDateTimeService(getWidget()
                 .getDateTimeService());
         getWidget().calendar.setShowISOWeekNumbers(getWidget()
@@ -114,4 +106,30 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     public VPopupCalendar getWidget() {
         return (VPopupCalendar) super.getWidget();
     }
+
+    @Override
+    protected void setWidgetStyleName(String styleName, boolean add) {
+        super.setWidgetStyleName(styleName, add);
+
+        // update the style change to popup calendar widget
+        getWidget().popup.setStyleName(styleName, add);
+    }
+
+    @Override
+    protected void setWidgetStyleNameWithPrefix(String prefix,
+            String styleName, boolean add) {
+        super.setWidgetStyleNameWithPrefix(prefix, styleName, add);
+
+        // update the style change to popup calendar widget with the correct
+        // prefix
+        if (!styleName.startsWith("-")) {
+            getWidget().popup.setStyleName(
+                    VPopupCalendar.POPUP_PRIMARY_STYLE_NAME + "-" + styleName,
+                    add);
+        } else {
+            getWidget().popup.setStyleName(
+                    VPopupCalendar.POPUP_PRIMARY_STYLE_NAME + styleName, add);
+        }
+    }
+
 }

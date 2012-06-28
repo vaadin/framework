@@ -18,6 +18,8 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -42,10 +44,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.Version;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -153,6 +159,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private int maxInactiveInterval;
 
     private Connector highlightedConnector;
+
+    private Map<String, Class<?>> connectoResourceContexts = new HashMap<String, Class<?>>();
 
     /**
      * TODO New constructor - document me!
@@ -497,10 +505,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
      *            found
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
+     * @throws JSONException
      */
     public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
-            throws IOException, InvalidUIDLSecurityKeyException {
+            throws IOException, InvalidUIDLSecurityKeyException, JSONException {
 
         checkWidgetsetVersion(request);
         requestThemeName = request.getParameter("theme");
@@ -696,11 +705,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param analyzeLayouts
      * @throws PaintException
      * @throws IOException
+     * @throws JSONException
      */
     private void paintAfterVariableChanges(WrappedRequest request,
             WrappedResponse response, Callback callback, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
-            throws PaintException, IOException {
+            throws PaintException, IOException, JSONException {
 
         // Removes application if it has stopped during variable changes
         if (!application.isRunning()) {
@@ -764,7 +774,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     @SuppressWarnings("unchecked")
     public void writeUidlResponse(WrappedRequest request, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
-            throws PaintException {
+            throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
         Application application = root.getApplication();
         // Paints components
@@ -1095,10 +1105,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
         boolean typeMappingsOpen = false;
         ClientCache clientCache = getClientCache(root);
 
+        List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
+
         for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
             if (clientCache.cache(class1)) {
                 // client does not know the mapping key for this type, send
                 // mapping to client
+                newConnectorTypes.add(class1);
+
                 if (!typeMappingsOpen) {
                     typeMappingsOpen = true;
                     outWriter.print(", \"typeMappings\" : { ");
@@ -1142,6 +1156,57 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
 
+        /*
+         * Ensure super classes come before sub classes to get script dependency
+         * order right. Sub class @JavaScript might assume that @JavaScript
+         * defined by super class is already loaded.
+         */
+        Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
+            public int compare(Class<?> o1, Class<?> o2) {
+                // TODO optimize using Class.isAssignableFrom?
+                return hierarchyDepth(o1) - hierarchyDepth(o2);
+            }
+
+            private int hierarchyDepth(Class<?> type) {
+                if (type == Object.class) {
+                    return 0;
+                } else {
+                    return hierarchyDepth(type.getSuperclass()) + 1;
+                }
+            }
+        });
+
+        List<String> scriptDependencies = new ArrayList<String>();
+        List<String> styleDependencies = new ArrayList<String>();
+
+        for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
+            JavaScript jsAnnotation = class1.getAnnotation(JavaScript.class);
+            if (jsAnnotation != null) {
+                for (String resource : jsAnnotation.value()) {
+                    scriptDependencies.add(registerResource(resource, class1));
+                }
+            }
+
+            StyleSheet styleAnnotation = class1.getAnnotation(StyleSheet.class);
+            if (styleAnnotation != null) {
+                for (String resource : styleAnnotation.value()) {
+                    styleDependencies.add(registerResource(resource, class1));
+                }
+            }
+        }
+
+        // Include script dependencies in output if there are any
+        if (!scriptDependencies.isEmpty()) {
+            outWriter.print(", \"scriptDependencies\": "
+                    + new JSONArray(scriptDependencies).toString());
+        }
+
+        // Include style dependencies in output if there are any
+        if (!styleDependencies.isEmpty()) {
+            outWriter.print(", \"styleDependencies\": "
+                    + new JSONArray(styleDependencies).toString());
+        }
+
         // add any pending locale definitions requested by the client
         printLocaleDeclarations(outWriter);
 
@@ -1150,6 +1215,51 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         writePerformanceData(outWriter);
+    }
+
+    private String registerResource(String resource, Class<?> context) {
+        try {
+            URI uri = new URI(resource);
+            String protocol = uri.getScheme();
+
+            if ("connector".equals(protocol)) {
+                return registerContextResource(uri, context);
+            }
+
+            if (protocol != null || uri.getHost() != null) {
+                return resource;
+            }
+
+            String path = uri.getPath();
+            if (path.startsWith("/")) {
+                return resource;
+            }
+
+            // Default if just simple relative url
+            return registerContextResource(uri, context);
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.WARNING,
+                    "Could not parse resource url " + resource, e);
+            return resource;
+        }
+    }
+
+    private String registerContextResource(URI uri, Class<?> context) {
+        String path = uri.getPath();
+        synchronized (connectoResourceContexts) {
+            // Connector resource
+            if (connectoResourceContexts.containsKey(path)) {
+                Class<?> oldContext = connectoResourceContexts.get(path);
+                getLogger().warning(
+                        "Resource " + path + " defined by both " + context
+                                + " and " + oldContext + ". Resource from "
+                                + oldContext + " will be used.");
+            } else {
+                connectoResourceContexts.put(path, context);
+            }
+        }
+
+        return "connector://" + path;
     }
 
     /**
@@ -1380,7 +1490,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private boolean handleVariables(WrappedRequest request,
             WrappedResponse response, Callback callback,
             Application application2, Root root) throws IOException,
-            InvalidUIDLSecurityKeyException {
+            InvalidUIDLSecurityKeyException, JSONException {
         boolean success = true;
 
         String changes = getRequestPayload(request);
@@ -2256,9 +2366,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return a string with the initial UIDL message
      * @throws PaintException
      *             if an exception occurs while painting
+     * @throws JSONException
+     *             if an exception occurs while encoding output
      */
     protected String getInitialUIDL(WrappedRequest request, Root root)
-            throws PaintException {
+            throws PaintException, JSONException {
         // TODO maybe unify writeUidlResponse()?
         StringWriter sWriter = new StringWriter();
         PrintWriter pWriter = new PrintWriter(sWriter);
@@ -2271,6 +2383,60 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String initialUIDL = sWriter.toString();
         getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
+    }
+
+    public void serveConnectorResource(String resourceName,
+            WrappedRequest request, WrappedResponse response, String mimetype)
+            throws IOException {
+        if (resourceName.startsWith("/")) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        Class<?> context;
+        synchronized (connectoResourceContexts) {
+            context = connectoResourceContexts.get(resourceName);
+        }
+
+        if (context == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        InputStream in = context.getResourceAsStream(resourceName);
+        if (in == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+        OutputStream out = null;
+        try {
+            if (mimetype != null) {
+                response.setContentType(mimetype);
+            }
+
+            out = response.getOutputStream();
+
+            final byte[] buffer = new byte[Constants.DEFAULT_BUFFER_SIZE];
+
+            int bytesRead = 0;
+            while ((bytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.flush();
+        } finally {
+            try {
+                in.close();
+            } catch (Exception e) {
+                // Do nothing
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
     }
 
     /**

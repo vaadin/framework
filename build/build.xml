@@ -394,10 +394,6 @@
             </fileset>
         </copy>
                 
-        <!-- Unify mix usage of mac/Linux/Win characters -->
-        <echo>Unifying mix usage of Mac/Linux/Win linefeeds for java/html/css/xml files.</echo>
-        <fixcrlf srcdir="${result-path}/src" eol="crlf" tablength="4" tab="asis" includes="**/*.java **/*.html **/*.css **/*.xml" />
-
         <!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
         <echo>Copying non java/html/css/xml files such as images.</echo>
         <copy todir="${result-src-core}">

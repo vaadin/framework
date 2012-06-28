@@ -29,7 +29,6 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.customcomponent.VCustomComponent;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
@@ -64,7 +63,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     public VDragAndDropWrapper() {
         super();
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
@@ -90,16 +88,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }, TouchStartEvent.getType());
 
         sinkEvents(Event.TOUCHEVENTS);
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-
-        if (hasTooltip && client != null) {
-            // Override child tooltips if the wrapper has a tooltip defined
-            client.handleTooltipEvent(event, this);
-        }
     }
 
     /**

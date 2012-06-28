@@ -552,11 +552,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         final Element target = DOM.eventGetTarget(event);
 
-        if (client != null && header.isOrHasChild(target)) {
-            // Handle window caption tooltips
-            client.handleTooltipEvent(event, this);
-        }
-
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
             bubble = false;
