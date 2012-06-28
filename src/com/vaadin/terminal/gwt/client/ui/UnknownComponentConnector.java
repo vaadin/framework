@@ -4,7 +4,6 @@
 
 package com.vaadin.terminal.gwt.client.ui;
 
-
 public class UnknownComponentConnector extends AbstractComponentConnector {
 
     @Override

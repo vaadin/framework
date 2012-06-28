@@ -92,8 +92,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     private void reportCurrentStatus(String phase) {
-        reportStatus(phase, Application.getCurrent(),
-                Root.getCurrent());
+        reportStatus(phase, Application.getCurrent(), Root.getCurrent());
     }
 
     private void reportStatus(String phase, Application application, Root root) {
