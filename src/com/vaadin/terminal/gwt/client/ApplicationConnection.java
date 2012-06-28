@@ -1624,8 +1624,15 @@ public class ApplicationConnection {
     private static void loadStyleDependencies(JsArrayString dependencies) {
         // Assuming no reason to interpret in a defined order
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            public void onResourceLoad(ResourceLoadEvent event) {
+            public void onLoad(ResourceLoadEvent event) {
                 ApplicationConfiguration.endDependencyLoading();
+            }
+
+            public void onError(ResourceLoadEvent event) {
+                VConsole.error(event.getResourceUrl()
+                        + " could not be loaded, or the load detection failed because the stylesheet is empty.");
+                // The show must go on
+                onLoad(event);
             }
         };
         ResourceLoader loader = ResourceLoader.get();
@@ -1642,7 +1649,7 @@ public class ApplicationConnection {
 
         // Listener that loads the next when one is completed
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
-            public void onResourceLoad(ResourceLoadEvent event) {
+            public void onLoad(ResourceLoadEvent event) {
                 if (dependencies.length() != 0) {
                     ApplicationConfiguration.startDependencyLoading();
                     // Load next in chain (hopefully already preloaded)
@@ -1651,6 +1658,12 @@ public class ApplicationConnection {
                 }
                 // Call start for next before calling end for current
                 ApplicationConfiguration.endDependencyLoading();
+            }
+
+            public void onError(ResourceLoadEvent event) {
+                VConsole.error(event.getResourceUrl() + " could not be loaded.");
+                // The show must go on
+                onLoad(event);
             }
         };
 
