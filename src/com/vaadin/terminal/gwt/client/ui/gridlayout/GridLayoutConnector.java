@@ -51,6 +51,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(GridLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
