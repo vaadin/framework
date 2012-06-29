@@ -29,6 +29,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
 
     @Override
     protected void init() {
+        super.init();
         getLayoutManager().registerDependency(this,
                 getWidget().captionWrapper.getElement());
     }
