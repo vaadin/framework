@@ -211,7 +211,7 @@ public class SuperDevMode {
            return true;
         }
 
-        return mod.canRedirect;
+        return !!mod.canRedirect;
     }-*/;
 
     /**
