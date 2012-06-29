@@ -139,8 +139,9 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     /**
      * Invoke a named function that the connector JavaScript has added to the
      * JavaScript connector wrapper object. The arguments should only contain
-     * data types that can be represented in JavaScript, including primitive
-     * boxing types, arrays, String, List, Set, Map, Connector and JavaBeans.
+     * data types that can be represented in JavaScript including primitives,
+     * their boxed types, arrays, String, List, Set, Map, Connector and
+     * JavaBeans.
      * 
      * @param name
      *            the name of the function

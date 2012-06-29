@@ -14,6 +14,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 
 /**
@@ -44,6 +45,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * The shadow element for this overlay.
      */
     private Element shadow;
+
+    /*
+     * Creator of VOverlow (widget that made the instance, not the layout
+     * parent)
+     */
+    private Widget owner;
 
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
@@ -413,5 +420,26 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     protected boolean isSinkShadowEvents() {
         return sinkShadowEvents;
+    }
+
+    /**
+     * Get owner (Widget that made this VOverlay, not the layout parent) of
+     * VOverlay
+     * 
+     * @return Owner (creator) or null if not defined
+     */
+    public Widget getOwner() {
+        return owner;
+    }
+
+    /**
+     * Set owner (Widget that made this VOverlay, not the layout parent) of
+     * VOverlay
+     * 
+     * @param owner
+     *            Owner (creator) of VOverlay
+     */
+    public void setOwner(Widget owner) {
+        this.owner = owner;
     }
 }

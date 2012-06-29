@@ -76,8 +76,7 @@ public class Notification implements Serializable {
     /**
      * Creates a "humanized" notification message.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption is by
-     * default rendered as html.
+     * The caption is rendered as plain text with HTML automatically escaped.
      * 
      * @param caption
      *            The message to show
@@ -89,8 +88,7 @@ public class Notification implements Serializable {
     /**
      * Creates a notification message of the specified type.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption is by
-     * default rendered as html.
+     * The caption is rendered as plain text with HTML automatically escaped.
      * 
      * @param caption
      *            The message to show
@@ -105,8 +103,8 @@ public class Notification implements Serializable {
      * Creates a "humanized" notification message with a bigger caption and
      * smaller description.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption and
-     * description are by default rendered as html.
+     * The caption and description are rendered as plain text with HTML
+     * automatically escaped.
      * 
      * @param caption
      *            The message caption
@@ -121,8 +119,8 @@ public class Notification implements Serializable {
      * Creates a notification message of the specified type, with a bigger
      * caption and smaller description.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption and
-     * description are by default rendered as html.
+     * The caption and description are rendered as plain text with HTML
+     * automatically escaped.
      * 
      * @param caption
      *            The message caption
@@ -132,7 +130,7 @@ public class Notification implements Serializable {
      *            The type of message
      */
     public Notification(String caption, String description, int type) {
-        this(caption, description, type, true);
+        this(caption, description, type, false);
     }
 
     /**
@@ -335,8 +333,7 @@ public class Notification implements Serializable {
      * Shows a notification message on the middle of the current page. The
      * message automatically disappears ("humanized message").
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption is
-     * rendered as html.
+     * The caption is rendered as plain text with HTML automatically escaped.
      * 
      * @see #Notification(String)
      * @see #show(Page)
@@ -354,8 +351,7 @@ public class Notification implements Serializable {
      * defined in {@link Notification}, for instance
      * Notification.TYPE_WARNING_MESSAGE.
      * 
-     * Care should be taken to to avoid XSS vulnerabilities as the caption is
-     * rendered as html.
+     * The caption is rendered as plain text with HTML automatically escaped.
      * 
      * @see #Notification(String, int)
      * @see #show(Page)

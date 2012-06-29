@@ -596,8 +596,10 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        new Notification(title.getValue(), message.getValue())
-                                .show(Page.getCurrent());
+                        Notification notification = new Notification(
+                                title.getValue(), message.getValue());
+                        notification.setHtmlContentAllowed(true);
+                        notification.show(Page.getCurrent());
                     }
                 });
         l.addComponent(show);
@@ -606,7 +608,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         show = new Button("Warning Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_WARNING_MESSAGE).show(Page
+                        Notification.TYPE_WARNING_MESSAGE, true).show(Page
                         .getCurrent());
 
             }
@@ -617,7 +619,8 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         show = new Button("Error Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_ERROR_MESSAGE).show(Page.getCurrent());
+                        Notification.TYPE_ERROR_MESSAGE, true).show(Page
+                        .getCurrent());
 
             }
         });
@@ -627,7 +630,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         show = new Button("Tray Notification", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
-                        Notification.TYPE_TRAY_NOTIFICATION).show(Page
+                        Notification.TYPE_TRAY_NOTIFICATION, true).show(Page
                         .getCurrent());
 
             }

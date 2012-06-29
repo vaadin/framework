@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Icon;
@@ -86,8 +87,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
     protected CustomMenuItem selected;
 
     boolean enabled = true;
-
-    private String width = "notinited";
 
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
@@ -524,6 +523,22 @@ public class VMenuBar extends SimpleFocusablePanel implements
         final int shadowSpace = 10;
 
         popup = new VOverlay(true, false, true);
+
+        // Setting owner and handlers to support tooltips. Needed for tooltip
+        // handling of overlay widgets (will direct queries to parent menu)
+        if (parentMenu == null) {
+            popup.setOwner(this);
+        } else {
+            VMenuBar parent = parentMenu;
+            while (parent.getParentMenu() != null) {
+                parent = parent.getParentMenu();
+            }
+            popup.setOwner(parent);
+        }
+        if (client != null) {
+            client.getVTooltip().connectHandlersToWidget(popup);
+        }
+
         popup.setStyleName(CLASSNAME + "-popup");
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
@@ -707,9 +722,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * A class to hold information on menu items
      * 
      */
-    protected static class CustomMenuItem extends Widget implements HasHTML {
-
-        private ApplicationConnection client;
+    public static class CustomMenuItem extends Widget implements HasHTML {
 
         protected String html = null;
         protected Command command = null;
@@ -719,6 +732,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         protected boolean isSeparator = false;
         protected boolean checkable = false;
         protected boolean checked = false;
+        protected String description = null;
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
@@ -884,7 +898,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            this.client = client;
             setSeparator(uidl.hasAttribute("separator"));
             setEnabled(!uidl.hasAttribute(ATTRIBUTE_ITEM_DISABLED));
 
@@ -903,17 +916,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 addStyleDependentName(itemStyle);
             }
 
+            if (uidl.hasAttribute(ATTRIBUTE_ITEM_DESCRIPTION)) {
+                description = uidl
+                        .getStringAttribute(ATTRIBUTE_ITEM_DESCRIPTION);
+            }
         }
 
-        private VMenuBar findRootMenu() {
-            VMenuBar menubar = getParentMenu();
-
-            // Traverse up until root menu is found
-            while (menubar.getParentMenu() != null) {
-                menubar = menubar.getParentMenu();
+        public TooltipInfo getTooltip() {
+            if (description == null) {
+                return null;
             }
 
-            return menubar;
+            return new TooltipInfo(description);
         }
 
         /**
@@ -1405,4 +1419,28 @@ public class VMenuBar extends SimpleFocusablePanel implements
         return null;
     }
 
+    /**
+     * Get menu item with given DOM element
+     * 
+     * @param element
+     *            Element used in search
+     * @return Menu item or null if not found
+     */
+    public CustomMenuItem getMenuItemWithElement(Element element) {
+        for (int i = 0; i < items.size(); i++) {
+            CustomMenuItem item = items.get(i);
+            if (DOM.isOrHasChild(item.getElement(), element)) {
+                return item;
+            }
+
+            if (item.getSubMenu() != null) {
+                item = item.getSubMenu().getMenuItemWithElement(element);
+                if (item != null) {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
 }

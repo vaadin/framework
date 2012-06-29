@@ -64,7 +64,7 @@ public class BooleanFieldExample extends TestBase {
             public void buttonClick(ClickEvent event) {
                 form.commit();
                 Notification.show("The custom boolean field value is "
-                        + data.isCustom() + ".<br>"
+                        + data.isCustom() + ".\n"
                         + "The checkbox (default boolean field) value is "
                         + data.isNormal() + ".");
             }
