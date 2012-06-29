@@ -5790,7 +5790,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (isDynamicHeight() && totalRows == pageLength) {
                 // fix body height (may vary if lazy loading is offhorizontal
                 // scrollbar appears/disappears)
-                int bodyHeight = Util.getRequiredHeight(scrollBody);
+                int bodyHeight = scrollBody.getRequiredHeight();
                 boolean needsSpaceForHorizontalScrollbar = (availW < usedMinimumWidth);
                 if (needsSpaceForHorizontalScrollbar) {
                     bodyHeight += Util.getNativeScrollbarSize();
