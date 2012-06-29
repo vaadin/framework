@@ -644,17 +644,17 @@ public class Util {
             ApplicationConnection client, Widget parent, Element element) {
         Element rootElement = parent.getElement();
         while (element != null && element != rootElement) {
-            ComponentConnector paintable = ConnectorMap.get(client)
+            ComponentConnector connector = ConnectorMap.get(client)
                     .getConnector(element);
-            if (paintable == null) {
+            if (connector == null) {
                 String ownerPid = VCaption.getCaptionOwnerPid(element);
                 if (ownerPid != null) {
-                    paintable = (ComponentConnector) ConnectorMap.get(client)
+                    connector = (ComponentConnector) ConnectorMap.get(client)
                             .getConnector(ownerPid);
                 }
             }
 
-            if (paintable != null) {
+            if (connector != null) {
                 // check that inside the rootElement
                 while (element != null && element != rootElement) {
                     element = (Element) element.getParentElement();
@@ -662,7 +662,7 @@ public class Util {
                 if (element != rootElement) {
                     return null;
                 } else {
-                    return paintable;
+                    return connector;
                 }
             }
 
