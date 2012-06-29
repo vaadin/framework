@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class Util {
 
@@ -642,12 +643,16 @@ public class Util {
      */
     public static ComponentConnector getConnectorForElement(
             ApplicationConnection client, Widget parent, Element element) {
+
+        Element browseElement = element;
         Element rootElement = parent.getElement();
-        while (element != null && element != rootElement) {
+
+        while (browseElement != null && browseElement != rootElement) {
             ComponentConnector connector = ConnectorMap.get(client)
-                    .getConnector(element);
+                    .getConnector(browseElement);
+
             if (connector == null) {
-                String ownerPid = VCaption.getCaptionOwnerPid(element);
+                String ownerPid = VCaption.getCaptionOwnerPid(browseElement);
                 if (ownerPid != null) {
                     connector = (ComponentConnector) ConnectorMap.get(client)
                             .getConnector(ownerPid);
@@ -656,17 +661,26 @@ public class Util {
 
             if (connector != null) {
                 // check that inside the rootElement
-                while (element != null && element != rootElement) {
-                    element = (Element) element.getParentElement();
+                while (browseElement != null && browseElement != rootElement) {
+                    browseElement = (Element) browseElement.getParentElement();
                 }
-                if (element != rootElement) {
+                if (browseElement != rootElement) {
                     return null;
                 } else {
                     return connector;
                 }
             }
 
-            element = (Element) element.getParentElement();
+            browseElement = (Element) browseElement.getParentElement();
+        }
+
+        if (browseElement == null) {
+            // Element is possibly inside a VOverlay
+            VOverlay overlay = findWidget(element, VOverlay.class);
+            if (overlay != null && overlay.getOwner() != null) {
+                return getConnectorForElement(client, RootPanel.get(), overlay
+                        .getOwner().getElement());
+            }
         }
 
         return null;

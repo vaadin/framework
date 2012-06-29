@@ -7,9 +7,11 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
@@ -120,6 +122,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
                 currentMenu = new VMenuBar(true, currentMenu);
+                client.getVTooltip().connectHandlersToWidget(currentMenu);
                 // this is the top-level style that also propagates to items -
                 // any item specific styles are set above in
                 // currentItem.updateFromUIDL(item, client)
@@ -159,5 +162,27 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
     public void layout() {
         getWidget().iLayout();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        TooltipInfo info = null;
+
+        // Check content of widget to find tooltip for element
+        if (element != getWidget().getElement()) {
+
+            CustomMenuItem item = getWidget().getMenuItemWithElement(
+                    (com.google.gwt.user.client.Element) element);
+            if (item != null) {
+                info = item.getTooltip();
+            }
+        }
+
+        // Use default tooltip if nothing found from DOM three
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 }
