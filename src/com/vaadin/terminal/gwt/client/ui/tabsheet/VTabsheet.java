@@ -685,24 +685,27 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public void onBrowserEvent(Event event) {
+        if (event.getTypeInt() == Event.ONCLICK) {
+            // Tab scrolling
+            if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
+                int newFirstIndex = tb.scrollLeft(scrollerIndex);
+                if (newFirstIndex != -1) {
+                    scrollerIndex = newFirstIndex;
+                    updateTabScroller();
+                }
+                return;
+            } else if (isClippedTabs()
+                    && DOM.eventGetTarget(event) == scrollerNext) {
+                int newFirstIndex = tb.scrollRight(scrollerIndex);
 
-        // Tab scrolling
-        if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
-            int newFirstIndex = tb.scrollLeft(scrollerIndex);
-            if (newFirstIndex != -1) {
-                scrollerIndex = newFirstIndex;
-                updateTabScroller();
+                if (newFirstIndex != -1) {
+                    scrollerIndex = newFirstIndex;
+                    updateTabScroller();
+                }
+                return;
             }
-        } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
-            int newFirstIndex = tb.scrollRight(scrollerIndex);
-
-            if (newFirstIndex != -1) {
-                scrollerIndex = newFirstIndex;
-                updateTabScroller();
-            }
-        } else {
-            super.onBrowserEvent(event);
         }
+        super.onBrowserEvent(event);
     }
 
     /**
