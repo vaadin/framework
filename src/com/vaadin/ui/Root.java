@@ -1071,7 +1071,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param caption
      *            The message
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use Notification.show instead but be aware that
+     *             Notification.show does not allow HTML.
      */
     @Deprecated
     public void showNotification(String caption) {
@@ -1096,7 +1097,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param type
      *            The message type
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use Notification.show instead but be aware that
+     *             Notification.show does not allow HTML.
      */
     @Deprecated
     public void showNotification(String caption, int type) {
@@ -1121,7 +1123,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param description
      *            The message description
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page) instead but
+     *             be aware that HTML by default not allowed.
      */
     @Deprecated
     public void showNotification(String caption, String description) {
@@ -1149,7 +1152,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param type
      *            The message type
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page) instead but
+     *             be aware that HTML by default not allowed.
      */
     @Deprecated
     public void showNotification(String caption, String description, int type) {
@@ -1180,7 +1184,7 @@ public abstract class Root extends AbstractComponentContainer implements
      *            Whether html in the caption and description should be
      *            displayed as html or as plain text
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page).
      */
     @Deprecated
     public void showNotification(String caption, String description, int type,
