@@ -1075,7 +1075,9 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     @Deprecated
     public void showNotification(String caption) {
-        getPage().showNotification(new Notification(caption));
+        Notification notification = new Notification(caption);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1098,7 +1100,9 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     @Deprecated
     public void showNotification(String caption, int type) {
-        getPage().showNotification(new Notification(caption, type));
+        Notification notification = new Notification(caption, type);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1121,7 +1125,9 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     @Deprecated
     public void showNotification(String caption, String description) {
-        getPage().showNotification(new Notification(caption, description));
+        Notification notification = new Notification(caption, description);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1147,8 +1153,9 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     @Deprecated
     public void showNotification(String caption, String description, int type) {
-        getPage()
-                .showNotification(new Notification(caption, description, type));
+        Notification notification = new Notification(caption, description, type);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**

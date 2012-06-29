@@ -41,8 +41,8 @@ public class IntegerTextFieldDataSource extends AbstractTestRoot {
                 int dataModelValue = myBean.getValue();
 
                 Notification.show("UI value (String): " + uiValue
-                        + "<br />Property value (Integer): " + propertyValue
-                        + "<br />Data model value (int): " + dataModelValue);
+                        + "\nProperty value (Integer): " + propertyValue
+                        + "\nData model value (int): " + dataModelValue);
             }
         });
 
