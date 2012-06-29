@@ -115,6 +115,16 @@ public class JavaScript extends AbstractExtension {
     }
 
     /**
+     * Executes the given JavaScript code in the browser.
+     * 
+     * @param script
+     *            The JavaScript code to run.
+     */
+    public static void eval(String script) {
+        getCurrent().execute(script);
+    }
+
+    /**
      * Get the JavaScript object for the current Page, or null if there is no
      * current page.
      * 
