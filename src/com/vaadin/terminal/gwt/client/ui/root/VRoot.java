@@ -395,7 +395,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     /**
      * Send new dimensions to the server.
      */
-    private void sendClientResized() {
+    void sendClientResized() {
         Element parentElement = getElement().getParentElement();
         int viewHeight = parentElement.getClientHeight();
         int viewWidth = parentElement.getClientWidth();

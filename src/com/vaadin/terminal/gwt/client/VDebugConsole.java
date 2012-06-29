@@ -24,6 +24,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.http.client.Request;
@@ -33,6 +35,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -160,7 +163,8 @@ public class VDebugConsole extends VOverlay implements Console {
     private Button savePosition = new Button("S");
     private Button highlight = new Button("H");
     private Button connectorStats = new Button("CS");
-    private CheckBox hostedMode = new CheckBox("GWT");
+    private CheckBox devMode = new CheckBox("Dev");
+    private CheckBox superDevMode = new CheckBox("SDev");
     private CheckBox autoScroll = new CheckBox("Autoscroll ");
     private HorizontalPanel actions;
     private boolean collapsed = false;
@@ -717,33 +721,8 @@ public class VDebugConsole extends VOverlay implements Console {
             savePosition
                     .setTitle("Saves the position and size of debug console to a cookie");
             actions.add(autoScroll);
-            actions.add(hostedMode);
-            if (Location.getParameter("gwt.codesvr") != null) {
-                hostedMode.setValue(true);
-            }
-            hostedMode.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    if (hostedMode.getValue()) {
-                        addHMParameter();
-                    } else {
-                        removeHMParameter();
-                    }
-                }
-
-                private void addHMParameter() {
-                    UrlBuilder createUrlBuilder = Location.createUrlBuilder();
-                    createUrlBuilder.setParameter("gwt.codesvr",
-                            "localhost:9997");
-                    Location.assign(createUrlBuilder.buildString());
-                }
-
-                private void removeHMParameter() {
-                    UrlBuilder createUrlBuilder = Location.createUrlBuilder();
-                    createUrlBuilder.removeParameter("gwt.codesvr");
-                    Location.assign(createUrlBuilder.buildString());
-
-                }
-            });
+            addDevMode();
+            addSuperDevMode();
 
             autoScroll
                     .setTitle("Automatically scroll so that new messages are visible");
@@ -859,6 +838,54 @@ public class VDebugConsole extends VOverlay implements Console {
                 + ApplicationConfiguration.VERSION
                 + " does not seem to match theme version </div>", true);
 
+    }
+
+    private void addSuperDevMode() {
+        final Storage sessionStorage = Storage.getSessionStorageIfSupported();
+        if (sessionStorage == null) {
+            return;
+        }
+        actions.add(superDevMode);
+        if (Location.getParameter("superdevmode") != null) {
+            superDevMode.setValue(true);
+        }
+        superDevMode.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                SuperDevMode.redirect(event.getValue());
+            }
+
+        });
+
+    }
+
+    private void addDevMode() {
+        actions.add(devMode);
+        if (Location.getParameter("gwt.codesvr") != null) {
+            devMode.setValue(true);
+        }
+        devMode.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                if (devMode.getValue()) {
+                    addHMParameter();
+                } else {
+                    removeHMParameter();
+                }
+            }
+
+            private void addHMParameter() {
+                UrlBuilder createUrlBuilder = Location.createUrlBuilder();
+                createUrlBuilder.setParameter("gwt.codesvr", "localhost:9997");
+                Location.assign(createUrlBuilder.buildString());
+            }
+
+            private void removeHMParameter() {
+                UrlBuilder createUrlBuilder = Location.createUrlBuilder();
+                createUrlBuilder.removeParameter("gwt.codesvr");
+                Location.assign(createUrlBuilder.buildString());
+
+            }
+        });
     }
 
     protected void dumpConnectorInfo(ApplicationConnection a) {

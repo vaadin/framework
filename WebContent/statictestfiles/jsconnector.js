@@ -1,7 +1,7 @@
 window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_ExampleWidget = function() {
 	var connector = this;
 	
-	var rootElement = connector.getWidgetElement();
+	var rootElement = connector.getElement();
 	rootElement.innerHTML = 'Hello world!';
 	rootElement.onclick = function() {
 		connector.getRpcProxy().onClick("message");

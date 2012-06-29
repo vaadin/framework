@@ -45,7 +45,7 @@ public class TooltipInfo {
      */
     public boolean hasMessage() {
         return (title != null && !title.isEmpty())
-                || (errorMessageHtml != null && errorMessageHtml.isEmpty());
+                || (errorMessageHtml != null && !errorMessageHtml.isEmpty());
     }
 
     public boolean equals(TooltipInfo other) {

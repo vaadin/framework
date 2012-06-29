@@ -581,6 +581,11 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         });
 
+        if (SuperDevMode.enableBasedOnParameter()) {
+            // Do not start any application as super dev mode will refresh the
+            // page once done compiling
+            return;
+        }
         registerCallback(GWT.getModuleName());
         deferredWidgetLoader = new DeferredWidgetLoader();
     }

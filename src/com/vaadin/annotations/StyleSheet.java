@@ -15,6 +15,12 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * If this annotation is present on a {@link ClientConnector} class, the
  * framework ensures the referenced style sheets are loaded before the init
  * method for the corresponding client-side connector is invoked.
+ * <p>
+ * Example: {@code @StyleSheet( "http://host.com/file1.css", "file2.css"})} on
+ * the class com.example.MyConnector would load the file
+ * http://host.com/file1.css as is and file2.css from /com/example/file2.css on
+ * the server's classpath using the ClassLoader that was used to load
+ * com.example.MyConnector.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
