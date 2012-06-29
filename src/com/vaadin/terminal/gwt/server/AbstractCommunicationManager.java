@@ -212,7 +212,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, Connector owner, String boundary)
+            String variableName, ClientConnector owner, String boundary)
             throws IOException {
         // multipart parsing, supports only one file for request, but that is
         // fine for our current terminal
@@ -275,14 +275,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
         final String mimeType = rawMimeType;
 
         try {
-            /*
-             * safe cast as in GWT terminal all variable owners are expected to
-             * be components.
-             */
-            Component component = (Component) owner;
-            if (component.isReadOnly()) {
+            // TODO Shouldn't this check connectorEnabled?
+            if (owner == null) {
                 throw new UploadException(
-                        "Warning: file upload ignored because the componente was read-only");
+                        "File upload ignored because the connector for the stream variable was not found");
+            }
+            if (owner instanceof Component) {
+                if (((Component) owner).isReadOnly()) {
+                    throw new UploadException(
+                            "Warning: file upload ignored because the componente was read-only");
+                }
             }
             boolean forgetVariable = streamToReceiver(simpleMultiPartReader,
                     streamVariable, filename, mimeType, contentLength);
@@ -311,7 +313,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     protected void doHandleXhrFilePost(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, Connector owner, int contentLength)
+            String variableName, ClientConnector owner, int contentLength)
             throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
@@ -2273,10 +2275,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     }
 
-    abstract String getStreamVariableTargetUrl(Connector owner, String name,
-            StreamVariable value);
+    abstract String getStreamVariableTargetUrl(ClientConnector owner,
+            String name, StreamVariable value);
 
-    abstract protected void cleanStreamVariable(Connector owner, String name);
+    abstract protected void cleanStreamVariable(ClientConnector owner,
+            String name);
 
     /**
      * Gets the bootstrap handler that should be used for generating the pages

@@ -638,8 +638,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    applicationManager.handleFileUpload(root, wrappedRequest,
-                            wrappedResponse);
+                    // Root is resolved in handleFileUpload by
+                    // PortletCommunicationManager
+                    applicationManager.handleFileUpload(application,
+                            wrappedRequest, wrappedResponse);
                     return;
                 } else if (requestType == RequestType.BROWSER_DETAILS) {
                     applicationManager.handleBrowserDetailsRequest(

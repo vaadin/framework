@@ -12,6 +12,7 @@ import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Root;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -136,4 +137,12 @@ public interface ClientConnector extends Connector, RpcTarget {
      *            the extension to remove.
      */
     public void removeExtension(Extension extension);
+
+    /**
+     * Returns the root this connector is attached to
+     * 
+     * @return The Root this connector is attached to or null if it is not
+     *         attached to any Root
+     */
+    public Root getRoot();
 }

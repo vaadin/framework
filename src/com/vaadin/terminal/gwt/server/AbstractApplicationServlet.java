@@ -436,11 +436,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                Root root = application.getRootForRequest(request);
-                if (root == null) {
-                    throw new ServletException(ERROR_NO_ROOT_FOUND);
-                }
-                applicationManager.handleFileUpload(root, request, response);
+                // Root is resolved in communication manager
+                applicationManager.handleFileUpload(application, request,
+                        response);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 Root root = application.getRootForRequest(request);

@@ -26,6 +26,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
@@ -286,5 +287,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private Logger getLogger() {
         return Logger.getLogger(DragAndDropService.class.getName());
+    }
+
+    public Root getRoot() {
+        return null;
     }
 }
