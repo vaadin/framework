@@ -24,7 +24,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
@@ -992,8 +991,8 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void addVariable(VariableOwner owner, String name,
             StreamVariable value) throws PaintException {
-        String url = manager.getStreamVariableTargetUrl((Connector) owner,
-                name, value);
+        String url = manager.getStreamVariableTargetUrl(
+                (ClientConnector) owner, name, value);
         if (url != null) {
             addVariable(owner, name, url);
         } // else { //NOP this was just a cleanup by component }

@@ -322,7 +322,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * @return the Root ancestor of this connector, or <code>null</code> if none
      *         is found.
      */
-    protected Root getRoot() {
+    public Root getRoot() {
         ClientConnector connector = this;
         while (connector != null) {
             if (connector instanceof Root) {

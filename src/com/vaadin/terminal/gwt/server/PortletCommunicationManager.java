@@ -43,12 +43,19 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         super(application);
     }
 
-    public void handleFileUpload(Root root, WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    public void handleFileUpload(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException {
         String contentType = request.getContentType();
         String name = request.getParameter("name");
         String ownerId = request.getParameter("rec-owner");
-        Connector owner = getConnector(root, ownerId);
+        String rootId = request.getParameter("rootId");
+
+        Root root = application.getRootById(Integer.parseInt(rootId));
+        Root.setCurrent(root);
+
+        ClientConnector owner = getConnector(root, ownerId);
+
         StreamVariable streamVariable = ownerToNameToStreamVariable.get(owner)
                 .get(name);
 
@@ -123,7 +130,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     private Map<Connector, Map<String, StreamVariable>> ownerToNameToStreamVariable;
 
     @Override
-    String getStreamVariableTargetUrl(Connector owner, String name,
+    String getStreamVariableTargetUrl(ClientConnector owner, String name,
             StreamVariable value) {
         if (ownerToNameToStreamVariable == null) {
             ownerToNameToStreamVariable = new HashMap<Connector, Map<String, StreamVariable>>();
@@ -139,8 +146,10 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         resurl.setResourceID("UPLOAD");
         resurl.setParameter("name", name);
         resurl.setParameter("rec-owner", owner.getConnectorId());
+        resurl.setParameter("rootId", "" + owner.getRoot().getRootId());
         resurl.setProperty("name", name);
         resurl.setProperty("rec-owner", owner.getConnectorId());
+        resurl.setProperty("rootId", "" + owner.getRoot().getRootId());
         return resurl.toString();
     }
 
@@ -153,7 +162,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void cleanStreamVariable(Connector owner, String name) {
+    protected void cleanStreamVariable(ClientConnector owner, String name) {
         Map<String, StreamVariable> map = ownerToNameToStreamVariable
                 .get(owner);
         map.remove(name);

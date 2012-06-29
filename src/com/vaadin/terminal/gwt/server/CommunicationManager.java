@@ -20,7 +20,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Root;
 
 /**
@@ -72,12 +71,13 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(Root root, WrappedRequest request,
-            WrappedResponse response) throws IOException,
-            InvalidUIDLSecurityKeyException {
+    public void handleFileUpload(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException, InvalidUIDLSecurityKeyException {
 
         /*
-         * URI pattern: APP/UPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
+         * URI pattern: APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY] See
+         * #createReceiverUrl
          */
 
         String pathInfo = request.getRequestPathInfo();
@@ -86,16 +86,20 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 .indexOf(AbstractApplicationServlet.UPLOAD_URL_PREFIX)
                 + AbstractApplicationServlet.UPLOAD_URL_PREFIX.length();
         String uppUri = pathInfo.substring(startOfData);
-        String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
-        String variableName = parts[1];
-        String connectorId = parts[0];
+        String[] parts = uppUri.split("/", 4); // 0= rootid, 1 = cid, 2= name, 3
+                                               // = sec key
+        String rootId = parts[0];
+        String connectorId = parts[1];
+        String variableName = parts[2];
+        Root root = application.getRootById(Integer.parseInt(rootId));
+        Root.setCurrent(root);
 
         StreamVariable streamVariable = pidToNameToStreamVariable.get(
                 connectorId).get(variableName);
         String secKey = streamVariableToSeckey.get(streamVariable);
-        if (secKey.equals(parts[2])) {
+        if (secKey.equals(parts[3])) {
 
-            Connector source = getConnector(root, connectorId);
+            ClientConnector source = getConnector(root, connectorId);
             String contentType = request.getContentType();
             if (contentType.contains("boundary")) {
                 // Multipart requests contain boundary string
@@ -143,13 +147,13 @@ public class CommunicationManager extends AbstractCommunicationManager {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String getStreamVariableTargetUrl(Connector owner, String name,
+    String getStreamVariableTargetUrl(ClientConnector owner, String name,
             StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
          * 
-         * eg. APP/UPLOAD/[PID]/[NAME]/[SECKEY]
+         * eg. APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY]
          * 
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).
@@ -158,7 +162,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * handling post
          */
         String paintableId = owner.getConnectorId();
-        String key = paintableId + "/" + name;
+        int rootId = owner.getRoot().getRootId();
+        String key = rootId + "/" + paintableId + "/" + name;
 
         if (pidToNameToStreamVariable == null) {
             pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
@@ -186,7 +191,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void cleanStreamVariable(Connector owner, String name) {
+    protected void cleanStreamVariable(ClientConnector owner, String name) {
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
                 .get(owner.getConnectorId());
         nameToStreamVar.remove("name");
