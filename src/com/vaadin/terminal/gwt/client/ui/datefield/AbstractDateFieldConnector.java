@@ -64,15 +64,21 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         }
 
         // Remove old stylename that indicates current resolution
-        setWidgetStyleNameWithPrefix(VDateField.CLASSNAME,
-                VDateField.resolutionToString(getWidget().currentResolution),
+        setWidgetStyleName(
+                VDateField.CLASSNAME
+                        + "-"
+                        + VDateField
+                                .resolutionToString(getWidget().currentResolution),
                 false);
 
         getWidget().currentResolution = newResolution;
 
         // Add stylename that indicates current resolution
-        setWidgetStyleNameWithPrefix(VDateField.CLASSNAME,
-                VDateField.resolutionToString(getWidget().currentResolution),
+        setWidgetStyleName(
+                VDateField.CLASSNAME
+                        + "-"
+                        + VDateField
+                                .resolutionToString(getWidget().currentResolution),
                 true);
 
         final int year = uidl.getIntVariable("year");
