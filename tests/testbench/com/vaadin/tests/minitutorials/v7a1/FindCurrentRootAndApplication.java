@@ -31,10 +31,14 @@ public class FindCurrentRootAndApplication extends Root {
                 String msg = "Running in ";
                 msg += Application.getCurrent().isProductionMode() ? "production"
                         : "debug";
-                msg += " mode in a Root with the caption "
-                        + Root.getCurrent().getCaption();
-
                 Notification.show(msg);
+            }
+        });
+
+        helloButton.addListener(new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Notification.show("This Root is "
+                        + Root.getCurrent().getClass().getSimpleName());
             }
         });
 
