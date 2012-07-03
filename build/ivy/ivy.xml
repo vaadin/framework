@@ -12,6 +12,9 @@
     <publications />        
 	<dependencies defaultconf="ss.compile" defaultconfmapping="ss.compile->master">
 
+		<!--Servlet API version 2.5 -->
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5" />   		
+
    		<!-- Liferay Portal Service -->
 		<dependency org="com.liferay.portal" name="portal-service" rev="6.0.2" />
 		<!--Portlet API version 2.0 (JSR-286) -->
@@ -26,7 +29,14 @@
    		<dependency org="junit" name="junit" rev="4.5" conf="ss.test.compile -> master"/>
    		<dependency org="org.easymock" name="easymock" rev="3.0" conf="ss.test.compile -> master, runtime(*)"/>  
    		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="ss.test.compile -> master, runtime(*)"/>  
-   		   		
+
+   		<!-- Additional libraries used by tests - also included from GWT -->
+   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.26" conf="ss.test.compile -> master"/>
+   		<dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.26" conf="ss.test.compile -> master"/>
+   		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="ss.test.compile -> master"/>
+   		<dependency org="commons-io" name="commons-io" rev="2.3" conf="ss.test.compile -> master"/>
+   		<dependency org="commons-codec" name="commons-codec" rev="1.6" conf="ss.test.compile -> master"/>
+
    		<!-- Ant tasks -->   	
    		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="taskdefs ->master"/>
    		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="taskdefs ->master"/>

@@ -35,6 +35,9 @@
             <fileset dir="build" includes="lib/**/*.jar" ></fileset>
         </path>
 
+    	<!-- Default location for GWT check-out: trunk and tools in a directory next to Vaadin project -->
+    	<property name="gwt.root" value="${basedir}/../trunk"/>
+
     	<property name="gwt.build.dir" value="${gwt.root}/build"/>
     	<property name="gwt.tools" value="${gwt.root}/../tools"/>
     	<property name="gwt.tools.lib" value="${gwt.tools}/lib"/>
