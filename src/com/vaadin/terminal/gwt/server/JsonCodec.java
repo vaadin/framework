@@ -9,6 +9,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -100,8 +101,10 @@ public class JsonCodec implements Serializable {
     private static Class<?> getClassForType(Type type) {
         if (type instanceof ParameterizedType) {
             return (Class<?>) (((ParameterizedType) type).getRawType());
-        } else {
+        } else if (type instanceof Class<?>) {
             return (Class<?>) type;
+        } else {
+            return null;
         }
     }
 
@@ -138,7 +141,13 @@ public class JsonCodec implements Serializable {
                 && ((Class<?>) targetType).isArray()) {
             // Legacy Object[] and String[] handled elsewhere, this takes care
             // of generic arrays
-            return decodeArray((Class<?>) targetType, (JSONArray) value,
+            Class<?> componentType = ((Class<?>) targetType).getComponentType();
+            return decodeArray(componentType, (JSONArray) value,
+                    connectorTracker);
+        } else if (targetType instanceof GenericArrayType) {
+            Type componentType = ((GenericArrayType) targetType)
+                    .getGenericComponentType();
+            return decodeArray(componentType, (JSONArray) value,
                     connectorTracker);
         } else if (targetType == JSONObject.class
                 || targetType == JSONArray.class) {
@@ -149,10 +158,10 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static Object decodeArray(Class<?> targetType, JSONArray value,
+    private static Object decodeArray(Type componentType, JSONArray value,
             ConnectorTracker connectorTracker) throws JSONException {
-        Class<?> componentType = targetType.getComponentType();
-        Object array = Array.newInstance(componentType, value.length());
+        Class<?> componentClass = getClassForType(componentType);
+        Object array = Array.newInstance(componentClass, value.length());
         for (int i = 0; i < value.length(); i++) {
             Object decodedValue = decodeInternalOrCustomType(componentType,
                     value.get(i), connectorTracker);
@@ -540,7 +549,15 @@ public class JsonCodec implements Serializable {
             return jsonArray;
         } else if (valueType instanceof Class<?>
                 && ((Class<?>) valueType).isArray()) {
-            JSONArray jsonArray = encodeArrayContents(value, connectorTracker);
+            JSONArray jsonArray = encodeArrayContents(
+                    ((Class<?>) valueType).getComponentType(), value,
+                    connectorTracker);
+            return jsonArray;
+        } else if (valueType instanceof GenericArrayType) {
+            Type componentType = ((GenericArrayType) valueType)
+                    .getGenericComponentType();
+            JSONArray jsonArray = encodeArrayContents(componentType, value,
+                    connectorTracker);
             return jsonArray;
         } else if (value instanceof Map) {
             Object jsonMap = encodeMap(valueType, (Map<?, ?>) value,
@@ -643,10 +660,10 @@ public class JsonCodec implements Serializable {
         return e.name();
     }
 
-    private static JSONArray encodeArrayContents(Object array,
-            ConnectorTracker connectorTracker) throws JSONException {
+    private static JSONArray encodeArrayContents(Type componentType,
+            Object array, ConnectorTracker connectorTracker)
+            throws JSONException {
         JSONArray jsonArray = new JSONArray();
-        Class<?> componentType = array.getClass().getComponentType();
         for (int i = 0; i < Array.getLength(array); i++) {
             jsonArray.put(encode(Array.get(array, i), null, componentType,
                     connectorTracker));
