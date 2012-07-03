@@ -41,11 +41,12 @@
     	<property name="gwt.build.dir" value="${gwt.root}/build"/>
     	<property name="gwt.tools" value="${gwt.root}/../tools"/>
     	<property name="gwt.tools.lib" value="${gwt.tools}/lib"/>
+    	<property name="gwt.lib.dir" value="${gwt.build.dir}/lib"/>
     	
-    	<property name="gwt.user.jar" value="${gwt.build.dir}/lib/gwt-user.jar"/>
-    	<property name="gwt.dev.jar" value="${gwt.build.dir}/lib/gwt-dev.jar"/>
-    	<property name="gwt.codeserver.jar" value="${gwt.build.dir}/lib/gwt-codeserver.jar"/>
-    	<property name="gwt.elemental.jar" value="${gwt.build.dir}/lib/gwt-elemental.jar"/>
+    	<property name="gwt.user.jar" value="${gwt.lib.dir}/gwt-user.jar"/>
+    	<property name="gwt.dev.jar" value="${gwt.lib.dir}/gwt-dev.jar"/>
+    	<property name="gwt.codeserver.jar" value="${gwt.lib.dir}/gwt-codeserver.jar"/>
+    	<property name="gwt.elemental.jar" value="${gwt.lib.dir}/gwt-elemental.jar"/>
 
     	<property name="gwt.user.dir" value="${gwt.root}/user"/>
     	<property name="gwt.user.bin" value="${gwt.build.dir}/out/user/bin"/>
