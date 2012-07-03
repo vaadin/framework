@@ -331,9 +331,9 @@ public class JavaScriptConnectorHelper {
             invokeCallback(getConnectorWrapper(), callbackName, arguments);
         } else {
             JavaScriptObject arguments = parametersJson.getJavaScriptObject();
-            invokeJsRpc(rpcMap, iface, method, arguments);
+            invokeJsRpc(rpcMap, iface, method, arguments, getConnectorWrapper());
             // Also invoke wildcard interface
-            invokeJsRpc(rpcMap, "", method, arguments);
+            invokeJsRpc(rpcMap, "", method, arguments, getConnectorWrapper());
         }
     }
 
@@ -344,7 +344,8 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,
-            String interfaceName, String methodName, JavaScriptObject parameters)
+            String interfaceName, String methodName,
+            JavaScriptObject parameters, JavaScriptObject connector)
     /*-{
         var targets = rpcMap[interfaceName];
         if (!targets) {
@@ -352,7 +353,7 @@ public class JavaScriptConnectorHelper {
         }
         for(var i = 0; i < targets.length; i++) {
             var target = targets[i];
-            target[methodName].apply(target, parameters);
+            target[methodName].apply(connector, parameters);
         }
     }-*/;
 
