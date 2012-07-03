@@ -63,13 +63,12 @@ public class SerializerTest extends AbstractTestRoot {
         rpc.sendList(Arrays.asList(5, 8, -234), Arrays.<Connector> asList(this,
                 testExtension), Arrays.asList(new SimpleTestBean(234),
                 new SimpleTestBean(-568)));
-        // Disabled because of #8861
-        // rpc.sendArrayList(
-        // Arrays.asList(new int[] { 1, 2 }, new int[] { 3, 4 }),
-        // Arrays.asList(new Integer[] { 5, 6 }, new Integer[] { 7, 8 }),
-        // Collections
-        // .singletonList(new SimpleTestBean[] { new SimpleTestBean(
-        // 7) }));
+        rpc.sendArrayList(
+                Arrays.asList(new int[] { 1, 2 }, new int[] { 3, 4 }),
+                Arrays.asList(new Integer[] { 5, 6 }, new Integer[] { 7, 8 }),
+                Collections
+                        .singletonList(new SimpleTestBean[] { new SimpleTestBean(
+                                7) }));
         // Disabled because of #8861
         // rpc.sendListArray(
         // new List[] { Arrays.asList(1, 2), Arrays.asList(3, 4) },
@@ -199,8 +198,10 @@ public class SerializerTest extends AbstractTestRoot {
             public void sendArrayList(List<int[]> primitiveArrayList,
                     List<Integer[]> objectArrayList,
                     List<SimpleTestBean[]> beanArrayList) {
-                log.log("sendArrayList: " + primitiveArrayList + ", "
-                        + objectArrayList + ", " + beanArrayList);
+                log.log("sendArrayList: "
+                        + Arrays.deepToString(primitiveArrayList.toArray())
+                        + ", " + Arrays.deepToString(objectArrayList.toArray())
+                        + ", " + Arrays.deepToString(beanArrayList.toArray()));
             }
 
             public void sendListArray(List<Integer>[] objectListArray,
