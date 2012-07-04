@@ -1232,7 +1232,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if ("connector".equals(protocol)) {
                 // Strip initial slash
                 String resourceName = uri.getPath().substring(1);
-                return registerConnecctorResource(resourceName, context);
+                return registerConnectorResource(resourceName, context);
             }
 
             if (protocol != null || uri.getHost() != null) {
@@ -1240,7 +1240,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
 
             // Bare path interpreted as connector resource
-            return registerConnecctorResource(resourceUri, context);
+            return registerConnectorResource(resourceUri, context);
         } catch (URISyntaxException e) {
             getLogger().log(Level.WARNING,
                     "Could not parse resource url " + resourceUri, e);
@@ -1248,7 +1248,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private String registerConnecctorResource(String name, Class<?> context) {
+    private String registerConnectorResource(String name, Class<?> context) {
         synchronized (connectorResourceContexts) {
             // Add to map of names accepted by serveConnectorResource
             if (connectorResourceContexts.containsKey(name)) {
@@ -2427,7 +2427,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // registered in the map
         if (context == null) {
             getLogger().warning(
-                    "Connector resource request for unkown resource rejected: "
+                    "Connector resource request for unknown resource rejected: "
                             + resourceName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
