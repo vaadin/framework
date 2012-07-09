@@ -1377,9 +1377,6 @@ public class VWindow extends VOverlay implements Container,
         if (shortcutHandler != null) {
             shortcutHandler
                     .handleKeyboardEvent(Event.as(event.getNativeEvent()));
-            // Don't let the event propagate to the RootPanel where VView
-            // listens to shortcut events of the main window.
-            event.stopPropagation();
             return;
         }
     }

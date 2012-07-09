@@ -18,8 +18,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.DomEvent.Type;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.EventHandler;
@@ -138,31 +136,12 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // should not be in the document focus flow
         getElement().setTabIndex(-1);
         TouchScrollDelegate.enableTouchScrolling(this, getElement());
-
-        // Handle shortcut actions originated from the main window. Subwindow
-        // shortcut actions are handled by the subwindows themselves.
-        RootPanel.get().addDomHandler(new KeyDownHandler() {
-            public void onKeyDown(KeyDownEvent event) {
-
-                Event nativeEvent = event.getNativeEvent().cast();
-                com.google.gwt.user.client.Element target = nativeEvent
-                        .getEventTarget().cast();
-                // Ensure the event originates from our application even in case
-                // we're embedded.
-                if (actionHandler != null
-                        && (!isEmbedded() || (Util.getPaintableForElement(
-                                connection, getParent(), target) != null))) {
-                    actionHandler.handleKeyboardEvent(nativeEvent);
-                }
-            }
-        }, KeyDownEvent.getType());
     }
 
     /**
      * Start to periodically monitor for parent element resizes if embedded
      * application (e.g. portlet).
      */
-    @Override
     protected void onLoad() {
         super.onLoad();
         if (isMonitoringParentSize()) {
@@ -590,7 +569,10 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         int type = DOM.eventGetType(event);
-        if (scrollable && type == Event.ONSCROLL) {
+        if (type == Event.ONKEYDOWN && actionHandler != null) {
+            actionHandler.handleKeyboardEvent(event);
+            return;
+        } else if (scrollable && type == Event.ONSCROLL) {
             updateScrollPosition();
         }
     }
@@ -952,4 +934,5 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
     public void focus() {
         getElement().focus();
     }
+
 }
