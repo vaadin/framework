@@ -332,7 +332,7 @@ public class VTreeTable extends VScrollTable {
                 if (cellIx == colIndexOfHierarchy + (showRowHeaders ? 1 : 0)) {
                     // take indentation padding into account if this is the
                     // hierarchy column
-                    width -= getIndent();
+                    width = Math.max(width - getIndent(), 0);
                 }
                 super.setCellWidth(cellIx, width);
             }
