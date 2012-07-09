@@ -252,6 +252,11 @@
 .v-off {
 	color: #ddd;
 }
+
+.v-table .v-checkbox {
+	display: inline-block;
+}
+
 /*************************************
  * Drag'n'drop styles
  *************************************/
