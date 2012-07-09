@@ -4,13 +4,13 @@
     height: 10px;
     /* defines the amount of indent per level */
     width: 18px;
-}
-.v-ie7 .v-treetable-treespacer{
-	height: 100%; /* #7388 */
+    position: absolute;
+    left: 0;
+    top: 5px;
 }
 
 .v-treetable-node-closed {
-    background: url(../treetable/img/arrow-right.png) right center no-repeat;
+    background: url(../treetable/img/arrow-right.png) right top no-repeat;
 }
 
 .v-ie6 .v-treetable-node-closed {
@@ -18,7 +18,7 @@
 } 
 
 .v-treetable-node-open {
-    background: url(../treetable/img/arrow-down.png) right center no-repeat;
+    background: url(../treetable/img/arrow-down.png) right top no-repeat;
 }
 
 .v-ie6 .v-treetable-node-open {
@@ -34,6 +34,10 @@
 .v-treetable .v-table-row-odd .v-table-cell-content {
     position: relative;
     z-index: 10;
+}
+
+.v-treetable .v-table-cell-wrapper {
+	position: relative;
 }
 
 .v-treetable .v-table-body .v-table-table .v-table-row-animating {

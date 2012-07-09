@@ -130,9 +130,9 @@
     text-shadow: #f3f5f8 0 1px 0;
     line-height: normal;
 }
-.v-table-generated-row .v-table-cell-content {
-    padding-top: 1px;
-    padding-bottom: 2px;
+.v-table-generated-row .v-table-cell-wrapper {
+    padding-top: 4px;
+    padding-bottom: 5px;
 }
 .v-table-cell-content:last-child {
 	border-right-color: transparent;

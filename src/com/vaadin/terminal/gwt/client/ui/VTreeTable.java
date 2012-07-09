@@ -173,7 +173,7 @@ public class VTreeTable extends VScrollTable {
     }
 
     class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {
-        private int identWidth = -1;
+        private int indentWidth = -1;
 
         VTreeTableScrollBody() {
             super();
@@ -241,7 +241,7 @@ public class VTreeTable extends VScrollTable {
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth") ? rowUidl
                             .getIntAttribute("depth") : 0;
-                    setIdent();
+                    setIndent();
                     isTreeCellAdded = true;
                     return true;
                 }
@@ -278,18 +278,19 @@ public class VTreeTable extends VScrollTable {
 
             }
 
-            private void setIdent() {
-                if (getIdentWidth() > 0 && depth != 0) {
-                    treeSpacer.getStyle().setWidth(
-                            (depth + 1) * getIdentWidth(), Unit.PX);
+            private void setIndent() {
+                if (getIndentWidth() > 0) {
+                    treeSpacer.getParentElement().getStyle()
+                            .setPaddingLeft(getIndent(), Unit.PX);
+                    treeSpacer.getStyle().setWidth(getIndent(), Unit.PX);
                 }
             }
 
             @Override
             protected void onAttach() {
                 super.onAttach();
-                if (getIdentWidth() < 0) {
-                    detectIdent(this);
+                if (getIndentWidth() < 0) {
+                    detectIndent(this);
                 }
             }
 
@@ -326,6 +327,19 @@ public class VTreeTable extends VScrollTable {
                 return consumedSpace;
             }
 
+            @Override
+            protected void setCellWidth(int cellIx, int width) {
+                if (cellIx == colIndexOfHierarchy + (showRowHeaders ? 1 : 0)) {
+                    // take indentation padding into account if this is the
+                    // hierarchy column
+                    width -= getIndent();
+                }
+                super.setCellWidth(cellIx, width);
+            }
+
+            private int getIndent() {
+                return (depth + 1) * getIndentWidth();
+            }
         }
 
         protected class VTreeTableGeneratedRow extends VTreeTableRow {
@@ -452,20 +466,20 @@ public class VTreeTable extends VScrollTable {
             }
         }
 
-        private int getIdentWidth() {
-            return identWidth;
+        private int getIndentWidth() {
+            return indentWidth;
         }
 
-        private void detectIdent(VTreeTableRow vTreeTableRow) {
-            identWidth = vTreeTableRow.treeSpacer.getOffsetWidth();
-            if (identWidth == 0) {
-                identWidth = -1;
+        private void detectIndent(VTreeTableRow vTreeTableRow) {
+            indentWidth = vTreeTableRow.treeSpacer.getOffsetWidth();
+            if (indentWidth == 0) {
+                indentWidth = -1;
                 return;
             }
             Iterator<Widget> iterator = iterator();
             while (iterator.hasNext()) {
                 VTreeTableRow next = (VTreeTableRow) iterator.next();
-                next.setIdent();
+                next.setIndent();
             }
         }
 
