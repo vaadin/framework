@@ -42,8 +42,8 @@
       <ul>
         <!-- <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li> -->
         <li><a href="#overview">Overview of Vaadin @version-minor@ Release</a></li>
-        <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
         <li><a href="#changes">Changes in Vaadin @version@</a></li>
+        <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
         <li><a href="#backwardsincompatibilities">Backwards
             incompatible changes in Vaadin @version-minor@</a></li>
         <li><a href="#overview">Package contents</a></li>
@@ -55,23 +55,57 @@
         <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
       </ul>
 
-      <!-- ================================================================ -->
-      <h2 id="overview">Overview of Vaadin @version-minor@ Release</h2>
-
       <p>
         <b>Vaadin</b> is a Java application development framework for building modern web
         applications that look great, perform well and make you and your users
-        happy. <b>Vaadin</b> is available under the Apache 2 license (see
-        <tt>license.html</tt> in the JAR).
+        happy. Vaadin is available under the Apache 2 license (see <tt>license.html</tt>
+        in the JAR).
       </p>
 
+      <!-- ================================================================ -->
+      <h2 id="overview">Overview of Vaadin @version@ Release</h2>
+
       <p>
-        This release @version-minor@ includes a number of significant enhancements in
-        addition to many bug fixes.
+        Vaadin @version@ is a maintenance release that includes a number of important bug
+        fixes.
+      </p>
+
+      <!-- ================================================================ -->
+      <!-- Change log                                                       -->
+      <!-- For maintenance releases, this should be above the enhancements  -->
+
+      <h3 id="changes">Changes in Vaadin @version@</h3>
+
+      <p>
+        This release includes the following closed issues:
+      </p>
+
+      <ul>
+  <li><a href="http://dev.vaadin.com/ticket/6039">#6039</a>: Extra scrollbars when resizing Table</li>
+  <li><a href="http://dev.vaadin.com/ticket/7387">#7387</a>: TreeTable loses formatting when using addGeneratedColumn</li>
+  <li><a href="http://dev.vaadin.com/ticket/7766">#7766</a>: component in Panel in DragAndDropWrapper fails to show tooltip</li>
+  <li><a href="http://dev.vaadin.com/ticket/7938">#7938</a>: Window.center() keeps the window centered on implicit resize</li>
+  <li><a href="http://dev.vaadin.com/ticket/8386">#8386</a>: ChameleonTheme.THEME_NAME is wrong typed</li>
+  <li><a href="http://dev.vaadin.com/ticket/8852">#8852</a>: Sizing problem of Form in a subwindow when error indicator is shown</li>
+  <li><a href="http://dev.vaadin.com/ticket/8941">#8941</a>: Malformed response header for Cache-Control max-age (problematic in MSIE)</li>
+  <li><a href="http://dev.vaadin.com/ticket/8949">#8949</a>: Drag&Drop image with DragStartMode.WRAPPER is broken since 6.8.0</li>
+  <li><a href="http://dev.vaadin.com/ticket/8957">#8957</a>: Table rendering broken in IE if paddings remove on cell-content and cell-wrapper</li>
+  <li><a href="http://dev.vaadin.com/ticket/9064">#9064</a>: Could not select row in edit mode on a row with a boolean value</li>
+      </ul>
+          
+      <p>
+        The <a
+        href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=id">full
+        list of the closed issues</a> can be found at <tt>dev.vaadin.com</tt>.
       </p>
 
       <!-- ================================================================ -->
       <h3 id="enhancements">Enhancements in Vaadin @version-minor@</h3>
+
+      <p>
+        Below is a list of enchacements in the current minor release branch, first
+        released in @version-minor@.0.
+      </p>
 
       <ul>
         <li>
@@ -143,80 +177,6 @@
       <p><i>-- To be done --</i></p>
       -->
       <!--  <h2 id="security-fixes">Security fixes in Vaadin @version-minor@</h2>-->
-
-      <!-- ================================================================ -->
-      <h3 id="changes">Changes in Vaadin @version@</h3>
-
-      <p>
-        This release includes the following changes:
-      </p>
-
-      <ul>
-  <li><a href="http://dev.vaadin.com/ticket/1744">#1744</a>: SplitPanel could have setMaxSplitPosition and setMinSplitPosition methods</li>
-  <li><a href="http://dev.vaadin.com/ticket/3789">#3789</a>: Create integration test for WebSphere Application Server 8</li>
-  <li><a href="http://dev.vaadin.com/ticket/4296">#4296</a>: SplitPanel percentage position rounding error after splitter drag</li>
-  <li><a href="http://dev.vaadin.com/ticket/5100">#5100</a>: TabSheet keyboard navigation</li>
-  <li><a href="http://dev.vaadin.com/ticket/5109">#5109</a>: DebugId should be window unique, not application unique</li>
-  <li><a href="http://dev.vaadin.com/ticket/5655">#5655</a>: Add getClientWidth() and getClientHeight() to WebBrowser</li>
-  <li><a href="http://dev.vaadin.com/ticket/6085">#6085</a>: It should be possible to set the alternate text for embedded images</li>
-  <li><a href="http://dev.vaadin.com/ticket/6155">#6155</a>: Memory leak in AbstractField when PropertyDataSources are used</li>
-  <li><a href="http://dev.vaadin.com/ticket/6718">#6718</a>: PopupDateField: extend its range</li>
-  <li><a href="http://dev.vaadin.com/ticket/7002">#7002</a>: Changing Slider orientation breaks it completely</li>
-  <li><a href="http://dev.vaadin.com/ticket/7495">#7495</a>: Table: Make some columns uncollapsable</li>
-  <li><a href="http://dev.vaadin.com/ticket/7614">#7614</a>: Add getComponentIndex(Component) and getComponent(int) to CssLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/7718">#7718</a>: Table footers are visible in IE6/IE7 even though footers have been turned off (Chameleon)</li>
-  <li><a href="http://dev.vaadin.com/ticket/7771">#7771</a>: Update to GWT 2.4</li>
-  <li><a href="http://dev.vaadin.com/ticket/7772">#7772</a>: Create build configurations for Vaadin 6.8</li>
-  <li><a href="http://dev.vaadin.com/ticket/7773">#7773</a>: Create branch for Vaadin 6.8</li>
-  <li><a href="http://dev.vaadin.com/ticket/7816">#7816</a>: Ensure an application that uses injection works on IBM WebSphere v8</li>
-  <li><a href="http://dev.vaadin.com/ticket/7833">#7833</a>: Make DragAndDropWrapper capable of starting an HTML5 drag</li>
-  <li><a href="http://dev.vaadin.com/ticket/7865">#7865</a>: "Tutorial uses deprecated ""SplitPanel"" rather than ""HorizontalSplitPanel""."</li>
-  <li><a href="http://dev.vaadin.com/ticket/7911">#7911</a>: Touch device identifiers to div.v-app</li>
-  <li><a href="http://dev.vaadin.com/ticket/7931">#7931</a>: Invalid top level window size for embedded applications</li>
-  <li><a href="http://dev.vaadin.com/ticket/7975">#7975</a>: Remove non-core classes from main source directory</li>
-  <li><a href="http://dev.vaadin.com/ticket/8203">#8203</a>: Add setSelectedTab(TabSheet.Tab) to TabSheet API</li>
-  <li><a href="http://dev.vaadin.com/ticket/8209">#8209</a>: Button: add public click() method</li>
-  <li><a href="http://dev.vaadin.com/ticket/8216">#8216</a>: Warning when compiling the widgetset</li>
-  <li><a href="http://dev.vaadin.com/ticket/8289">#8289</a>: Replace @ClientWidget annotation with an annotation that uses String instead of Class</li>
-  <li><a href="http://dev.vaadin.com/ticket/8297">#8297</a>: Static logger instances can cause memory leakage on redeploy</li>
-  <li><a href="http://dev.vaadin.com/ticket/8307">#8307</a>: Add Field.removeAllValidators</li>
-  <li><a href="http://dev.vaadin.com/ticket/8332">#8332</a>: Vaadin should use -webkit-overflow-scroll: touch for modern devices and also consider to use GWT:s TouchScroller helper</li>
-  <li><a href="http://dev.vaadin.com/ticket/8428">#8428</a>: Field ROW_HEADER_FAKE_PROPERTY_ID in com.vaadin.ui.Table does not implement Serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/8447">#8447</a>: Provide a compatibility jar file for servers that use broken classloaders</li>
-  <li><a href="http://dev.vaadin.com/ticket/8451">#8451</a>: Error while deploying Vaadin application on Websphere Application Server 8.0</li>
-  <li><a href="http://dev.vaadin.com/ticket/8513">#8513</a>: Remove steps from Tutorial project</li>
-  <li><a href="http://dev.vaadin.com/ticket/8523">#8523</a>: Change the default size for the debug window</li>
-  <li><a href="http://dev.vaadin.com/ticket/8551">#8551</a>: Notifications are displayed in parts on an Asus TF101</li>
-  <li><a href="http://dev.vaadin.com/ticket/8600">#8600</a>: Tree.hasChildren() works incorrectly after all children were removed</li>
-  <li><a href="http://dev.vaadin.com/ticket/8637">#8637</a>: Nightly builds are not deployed to Maven</li>
-  <li><a href="http://dev.vaadin.com/ticket/8638">#8638</a>: Build should fail with an error if Maven deployment fails</li>
-  <li><a href="http://dev.vaadin.com/ticket/8653">#8653</a>: TabSheet#getTab(int) unintentionally throws if index out of bounds</li>
-  <li><a href="http://dev.vaadin.com/ticket/8659">#8659</a>: Not possible to have editable cell in a table on IPad with IOS 5.x</li>
-  <li><a href="http://dev.vaadin.com/ticket/8663">#8663</a>: html in buttons is not possible</li>
-  <li><a href="http://dev.vaadin.com/ticket/8693">#8693</a>: setVisibile() in InlineDateSelect doesn't work correctly</li>
-  <li><a href="http://dev.vaadin.com/ticket/8694">#8694</a>: Provide profiling data for TestBench</li>
-  <li><a href="http://dev.vaadin.com/ticket/8699">#8699</a>: Wrap javascript callback entry points in $entry</li>
-  <li><a href="http://dev.vaadin.com/ticket/8716">#8716</a>: Implement native scrolling support for Panel (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8720">#8720</a>: Implement native scrolling support for Tabsheet (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8721">#8721</a>: Implement native scrolling support for Window/root (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8722">#8722</a>: Implement native scrolling support for sub windows (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8723">#8723</a>: Implement native scrolling support for Accordion (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8724">#8724</a>: Implement native scrolling support for Table (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8725">#8725</a>: Implement native scrolling support for SplitPanel (Android 3+ & iOS 5+)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8739">#8739</a>: Test using Firefox 12</li>
-  <li><a href="http://dev.vaadin.com/ticket/8763">#8763</a>: Utilities for native touch scrolling on Android 4+ and iOS 5+</li>
-  <li><a href="http://dev.vaadin.com/ticket/8798">#8798</a>: NPE from RequestTimer prevents showing the real error</li>
-  <li><a href="http://dev.vaadin.com/ticket/8878">#8878</a>: VFilterSelect should implement SubPartAware to always be able to find the text box</li>
-  <li><a href="http://dev.vaadin.com/ticket/8914">#8914</a>: Show better error message when variable change decoding fails</li>
-  <li><a href="http://dev.vaadin.com/ticket/8923">#8923</a>: ?debug=quiet not working with / in uri fragment</li>
-  <li><a href="http://dev.vaadin.com/ticket/8924">#8924</a>: Remove document.write from bootstrap to enable using SuperDevMode</li>
-      </ul>
-          
-      <p>
-        The <a
-        href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+6.8&order=id">full
-        list of the changes</a> can be found at <tt>dev.vaadin.com</tt>.
-      </p>
 
       <!-- ================================================================ -->
       <h3 id="overview">Package Contents</h3>
