@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
@@ -47,9 +48,22 @@ public class VUIDLBrowser extends SimpleTree {
         Set<String> keySet = u.getKeySet();
         for (String key : keySet) {
             if (key.equals("state")) {
-                // TODO print updated shared states
+
+                ValueMap stateJson = u.getValueMap(key);
+
+                for (String stateKey : stateJson.getKeySet()) {
+                    ValueMap valuesJson = stateJson.getValueMap(stateKey);
+
+                    SimpleTree values = new SimpleTree("state pid=" + stateKey);
+                    for (String valueKey : valuesJson.getKeySet()) {
+                        values.add(new HTML(valueKey + "="
+                                + valuesJson.getAsString(valueKey)));
+                    }
+                    add(values);
+                }
+
             } else if (key.equals("changes")) {
-                JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray("changes")
+                JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray(key)
                         .cast();
                 for (int i = 0; i < jsValueMapArray.length(); i++) {
                     UIDL uidl = jsValueMapArray.get(i);
@@ -89,6 +103,7 @@ public class VUIDLBrowser extends SimpleTree {
             }
 
             addDomHandler(new MouseOutHandler() {
+                @Override
                 public void onMouseOut(MouseOutEvent event) {
                     deHiglight();
                 }
@@ -218,6 +233,7 @@ public class VUIDLBrowser extends SimpleTree {
             if (highlightedPid != null && highlightedPid.equals(uidl.getId())) {
                 getElement().getStyle().setBackgroundColor("#fdd");
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
                     public void execute() {
                         getElement().scrollIntoView();
                     }

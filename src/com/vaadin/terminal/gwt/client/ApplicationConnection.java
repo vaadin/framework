@@ -136,7 +136,7 @@ public class ApplicationConnection {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final boolean debugLogging = false;
+    private final boolean debugLogging = true || false;
 
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
@@ -543,11 +543,13 @@ public class ApplicationConnection {
             final boolean synchronous) {
         if (!synchronous) {
             RequestCallback requestCallback = new RequestCallback() {
+                @Override
                 public void onError(Request request, Throwable exception) {
                     showCommunicationError(exception.getMessage(), -1);
                     endRequest();
                 }
 
+                @Override
                 public void onResponseReceived(Request request,
                         Response response) {
                     VConsole.log("Server visit took "
@@ -873,6 +875,7 @@ public class ApplicationConnection {
         }
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 if (!hasActiveRequest()) {
                     hideLoadingIndicator();
@@ -1090,6 +1093,7 @@ public class ApplicationConnection {
         }
 
         Command c = new Command() {
+            @Override
             public void execute() {
                 handleUIDLDuration.logDuration(" * Loading widgets completed",
                         10);
@@ -1627,10 +1631,12 @@ public class ApplicationConnection {
     private void loadStyleDependencies(JsArrayString dependencies) {
         // Assuming no reason to interpret in a defined order
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            @Override
             public void onLoad(ResourceLoadEvent event) {
                 ApplicationConfiguration.endDependencyLoading();
             }
 
+            @Override
             public void onError(ResourceLoadEvent event) {
                 VConsole.error(event.getResourceUrl()
                         + " could not be loaded, or the load detection failed because the stylesheet is empty.");
@@ -1653,6 +1659,7 @@ public class ApplicationConnection {
 
         // Listener that loads the next when one is completed
         ResourceLoadListener resourceLoadListener = new ResourceLoadListener() {
+            @Override
             public void onLoad(ResourceLoadEvent event) {
                 if (dependencies.length() != 0) {
                     String url = translateVaadinUri(dependencies.shift());
@@ -1664,6 +1671,7 @@ public class ApplicationConnection {
                 ApplicationConfiguration.endDependencyLoading();
             }
 
+            @Override
             public void onError(ResourceLoadEvent event) {
                 VConsole.error(event.getResourceUrl() + " could not be loaded.");
                 // The show must go on
@@ -1743,6 +1751,7 @@ public class ApplicationConnection {
     }
 
     private final ScheduledCommand sendPendingCommand = new ScheduledCommand() {
+        @Override
         public void execute() {
             deferedSendPending = false;
             doSendPendingVariableChanges();
@@ -2322,6 +2331,7 @@ public class ApplicationConnection {
             this.url = url;
         }
 
+        @Override
         public void notificationHidden(HideEvent event) {
             redirect(url);
         }
