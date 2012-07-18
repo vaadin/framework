@@ -419,8 +419,15 @@ public abstract class Root extends AbstractComponentContainer implements
     private Page page = new Page(this);
 
     private RootServerRpc rpc = new RootServerRpc() {
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Root.this, mouseDetails));
+        }
+
+        @Override
+        public void close() {
+            System.out.println(" --- ROOT CLOSE RPC " + rootId);
+            getApplication().removeRoot(rootId);
         }
     };
 
@@ -502,6 +509,7 @@ public abstract class Root extends AbstractComponentContainer implements
         return this;
     }
 
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         throw new UnsupportedOperationException();
     }
@@ -511,6 +519,7 @@ public abstract class Root extends AbstractComponentContainer implements
         return application;
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         page.paintContent(target);
 
@@ -550,6 +559,7 @@ public abstract class Root extends AbstractComponentContainer implements
         fireEvent(new ClickEvent(this, mouseDetails));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey(CLICK_EVENT_ID)) {
@@ -578,6 +588,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
@@ -597,6 +608,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentCount()
      */
+    @Override
     public int getComponentCount() {
         return windows.size() + (getContent() == null ? 0 : 1);
     }
@@ -956,11 +968,13 @@ public abstract class Root extends AbstractComponentContainer implements
         return actionManager;
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
             T action) {
         getActionManager().addAction(action);
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
         if (actionManager != null) {
@@ -968,10 +982,12 @@ public abstract class Root extends AbstractComponentContainer implements
         }
     }
 
+    @Override
     public void addActionHandler(Handler actionHandler) {
         getActionManager().addActionHandler(actionHandler);
     }
 
+    @Override
     public void removeActionHandler(Handler actionHandler) {
         if (actionManager != null) {
             actionManager.removeActionHandler(actionHandler);

@@ -8,4 +8,5 @@ import com.vaadin.terminal.gwt.client.ui.ClickRpc;
 
 public interface RootServerRpc extends ClickRpc, ServerRpc {
 
+    public void close();
 }

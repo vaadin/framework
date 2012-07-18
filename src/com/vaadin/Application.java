@@ -1066,6 +1066,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
      */
 
+    @Override
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
@@ -1810,6 +1811,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
@@ -2188,11 +2190,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Root getRootForRequest(WrappedRequest request)
             throws RootRequiresMoreInformationException {
+        System.out.println(" --- GET ROOT");
         Root root = Root.getCurrent();
         if (root != null) {
+            System.out.println(" ----- HAS CURRENT " + root.getRootId());
             return root;
         }
         Integer rootId = getRootId(request);
+        System.out.println(" ----- ROOT ID FROM REQUEST " + rootId);
 
         synchronized (this) {
             BrowserDetails browserDetails = request.getBrowserDetails();
@@ -2202,6 +2207,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             root = roots.get(rootId);
 
             if (root == null && isRootPreserved()) {
+                System.out.println(" ----- ROOT NOT FOUND, CHECK IF PRESERVED");
                 // Check for a known root
                 if (!retainOnRefreshRoots.isEmpty()) {
 
@@ -2214,6 +2220,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     }
 
                     if (retainedRootId != null) {
+                        System.out.println(" ----- RETAINED ROOT ID "
+                                + retainedRootId);
+
                         rootId = retainedRootId;
                         root = roots.get(rootId);
                     }
@@ -2221,8 +2230,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             if (root == null) {
+                System.out.println(" ----- ROOT STILL NULL");
+
                 // Throws exception if root can not yet be created
                 root = getRoot(request);
+
+                System.out.println(" ----- GET ROOT " + root.getRootId());
 
                 // Initialize some fields for a newly created root
                 if (root.getApplication() == null) {
@@ -2236,6 +2249,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     }
                     root.setRootId(rootId.intValue());
                     roots.put(rootId, root);
+                    System.out.println(" ----- CREATED ROOT " + rootId);
                 }
             }
 
@@ -2243,6 +2257,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
             Root.setCurrent(root);
 
             if (!initedRoots.contains(rootId)) {
+                System.out.println(" ----- INIT ROOT " + rootId);
+
                 boolean initRequiresBrowserDetails = isRootPreserved()
                         || !root.getClass()
                                 .isAnnotationPresent(EagerInit.class);
@@ -2263,6 +2279,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
         } // end synchronized block
 
+        System.out.println(" ----- USING ROOT " + root.getRootId());
         return root;
     }
 
@@ -2386,5 +2403,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Root getRootById(int rootId) {
         return roots.get(rootId);
+    }
+
+    public void removeRoot(int rootId) {
+        System.out.println(" --- REMOVE ROOT ID " + rootId);
+        System.out.println(" ----- EXISTS? " + roots.containsKey(rootId));
+        roots.remove(rootId);
     }
 }
