@@ -1479,9 +1479,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Collects the basic facts about the table page
         final int pagelen = getPageLength();
-        int firstIndex = getCurrentPageFirstItemIndex();
         int rows, totalRows;
         rows = totalRows = size();
+        int firstIndex = Math
+                .min(getCurrentPageFirstItemIndex(), totalRows - 1);
         if (rows > 0 && firstIndex >= 0) {
             rows -= firstIndex;
         }
