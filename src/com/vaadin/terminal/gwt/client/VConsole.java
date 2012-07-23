@@ -86,9 +86,9 @@ public class VConsole {
         }
     }
 
-    public static void dirUIDL(ValueMap u, ApplicationConfiguration cnf) {
+    public static void dirUIDL(ValueMap u, ApplicationConnection client) {
         if (impl != null) {
-            impl.dirUIDL(u, cnf);
+            impl.dirUIDL(u, client);
         }
     }
 

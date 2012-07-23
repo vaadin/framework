@@ -1106,14 +1106,6 @@ public class ApplicationConnection {
 
                 MultiStepDuration updateDuration = new MultiStepDuration();
 
-                if (debugLogging) {
-                    VConsole.log(" * Dumping UIDL to the console");
-                    VConsole.dirUIDL(json, configuration);
-
-                    updateDuration.logDuration(
-                            " * Dumping UIDL to the console completed", 10);
-                }
-
                 if (json.containsKey("locales")) {
                     VConsole.log(" * Handling locales");
                     // Store locale data
@@ -1169,6 +1161,16 @@ public class ApplicationConnection {
 
                 updateDuration.logDuration(" * Creating connectors completed",
                         10);
+
+                if (debugLogging) {
+                    VConsole.log(" * Dumping state changes to the console");
+                    VConsole.dirUIDL(json, ApplicationConnection.this);
+
+                    updateDuration
+                            .logDuration(
+                                    " * Dumping state changes to the console completed",
+                                    10);
+                }
 
                 // Update states, do not fire events
                 Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(json);
