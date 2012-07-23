@@ -8,8 +8,8 @@
 		<display-name>Vaadin Portlet 2.0 Test</display-name>
 		<portlet-class>com.vaadin.terminal.gwt.server.ApplicationPortlet2</portlet-class>
 		<init-param>
-			<name>application</name>
-			<value>com.vaadin.tests.integration.JSR286PortletApplication</value>
+			<name>root</name>
+			<value>com.vaadin.tests.integration.JSR286PortletRoot</value>
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
