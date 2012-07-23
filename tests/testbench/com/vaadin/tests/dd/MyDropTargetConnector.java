@@ -14,6 +14,7 @@ import com.vaadin.tests.dd.CustomDDImplementation.MyDropTarget;
 public class MyDropTargetConnector extends AbstractComponentConnector implements
         Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;

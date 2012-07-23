@@ -17,6 +17,7 @@ import com.vaadin.ui.RichTextArea;
 public class RichTextAreaConnector extends AbstractFieldConnector implements
         Paintable, BeforeShortcutActionListener {
 
+    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         getWidget().id = uidl.getId();
@@ -59,6 +60,7 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
 
     }
 
+    @Override
     public void onBeforeShortcutAction(Event e) {
         getWidget().synchronizeContentToServer();
     }

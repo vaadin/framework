@@ -32,6 +32,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * 
      * @see com.vaadin.ui.Layout#setMargin(boolean)
      */
+    @Override
     public void setMargin(boolean enabled) {
         margins.setMargins(enabled);
         getState().setMarginsBitmask(margins.getBitMask());
@@ -43,6 +44,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
+    @Override
     public MarginInfo getMargin() {
         return margins;
     }
@@ -52,6 +54,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
      */
+    @Override
     public void setMargin(MarginInfo marginInfo) {
         margins.setMargins(marginInfo);
         getState().setMarginsBitmask(margins.getBitMask());
@@ -63,6 +66,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * 
      * @see com.vaadin.ui.Layout#setMargin(boolean, boolean, boolean, boolean)
      */
+    @Override
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
         margins.setMargins(topEnabled, rightEnabled, bottomEnabled, leftEnabled);

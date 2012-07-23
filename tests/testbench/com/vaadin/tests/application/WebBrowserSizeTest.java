@@ -18,6 +18,7 @@ public class WebBrowserSizeTest extends TestBase {
 
         final Button update = new Button("Refresh", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 screenSizeLabel.setValue(getBrowser().getScreenWidth() + " x "
                         + getBrowser().getScreenHeight());

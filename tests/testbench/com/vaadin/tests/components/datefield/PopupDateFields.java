@@ -77,6 +77,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         return createSelectAction("Resolution", options, "Year",
                 new Command<PopupDateField, Resolution>() {
 
+                    @Override
                     public void execute(PopupDateField c, Resolution value,
                             Object data) {
                         c.setResolution(value);
@@ -94,6 +95,7 @@ public class PopupDateFields extends ComponentTestCase<PopupDateField> {
         return createSelectAction("Input prompt", options, "<none>",
                 new Command<PopupDateField, String>() {
 
+                    @Override
                     public void execute(PopupDateField c, String value,
                             Object data) {
                         c.setInputPrompt(value);

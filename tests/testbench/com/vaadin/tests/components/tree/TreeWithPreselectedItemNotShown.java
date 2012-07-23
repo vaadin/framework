@@ -11,6 +11,7 @@ public class TreeWithPreselectedItemNotShown extends TestBase {
     protected void setup() {
         Button open = new Button("Open modal window with tree",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         getMainWindow().addWindow(new SubwindowWithTree());
                     }

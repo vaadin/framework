@@ -46,6 +46,7 @@ public class Ticket2221 extends Application.LegacyApplication {
             Button b = new Button("Switch textfield/panel",
                     new ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             Component visible = tf;
 

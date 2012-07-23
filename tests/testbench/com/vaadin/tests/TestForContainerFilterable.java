@@ -60,6 +60,7 @@ public class TestForContainerFilterable extends CustomComponent {
 
         // Handler
         filterButton.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
                 if (fooFilter.getValue().length() > 0) {
@@ -77,6 +78,7 @@ public class TestForContainerFilterable extends CustomComponent {
         // Resetbutton
         lo.addComponent(new Button("Rebind table datasource",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         t.setContainerDataSource(ic);
                     }

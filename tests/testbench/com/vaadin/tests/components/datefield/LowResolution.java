@@ -16,6 +16,7 @@ public class LowResolution extends TestBase {
         dateField.setValue(new java.util.Date());
         dateField.setResolution(PopupDateField.RESOLUTION_MONTH);
         dateField.addListener(new PopupDateField.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(
                         "Date now" + event.getProperty());
@@ -28,6 +29,7 @@ public class LowResolution extends TestBase {
         // dateField.setValue(new java.util.Date());
         dateField3.setResolution(PopupDateField.RESOLUTION_YEAR);
         dateField3.addListener(new PopupDateField.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(
                         "Date now" + event.getProperty());
@@ -40,6 +42,7 @@ public class LowResolution extends TestBase {
         dateField2.setValue(new java.util.Date());
         dateField2.setResolution(PopupDateField.RESOLUTION_MONTH);
         dateField2.addListener(new PopupDateField.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 getMainWindow().showNotification(
                         "Date now" + event.getProperty());
@@ -52,6 +55,7 @@ public class LowResolution extends TestBase {
                 "Immediate (use sync button to change fields) ");
         immediate.setValue(true);
         immediate.addListener(new CheckBox.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean immediate = !dateField.isImmediate();
                 dateField.setImmediate(immediate);

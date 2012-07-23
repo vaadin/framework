@@ -15,6 +15,7 @@ public interface TreeImages extends com.google.gwt.user.client.ui.TreeImages {
      * @gwt.resource com/vaadin/terminal/gwt/public/default/tree/img/expanded
      *               .png
      */
+    @Override
     AbstractImagePrototype treeOpen();
 
     /**
@@ -24,6 +25,7 @@ public interface TreeImages extends com.google.gwt.user.client.ui.TreeImages {
      * @gwt.resource com/vaadin/terminal/gwt/public/default/tree/img/collapsed
      *               .png
      */
+    @Override
     AbstractImagePrototype treeClosed();
 
 }

@@ -12,6 +12,7 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
 
     private Command<T, Boolean> layoutClickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((LayoutClickListener) AbstractOrderedLayoutTest.this);
@@ -24,6 +25,7 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
 
     private Command<T, Integer> setComponentExpandRatio = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object ratio) {
             Component child = getComponentAtIndex(c, value);
             c.setExpandRatio(child, (Float) ratio);
@@ -74,6 +76,7 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
 
     }
 
+    @Override
     public void layoutClick(LayoutClickEvent event) {
         log(event.getClass().getSimpleName() + ": button="
                 + event.getButtonName() + ", childComponent="

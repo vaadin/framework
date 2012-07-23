@@ -47,6 +47,7 @@ public class TreeFiltering extends TestBase {
         filterType.setImmediate(true);
         filterType.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 cont.setIncludeParentsWhenFiltering((Boolean) ((CheckBox) event
                         .getProperty()).getValue());
@@ -56,6 +57,7 @@ public class TreeFiltering extends TestBase {
         addComponent(filterType);
 
         final Button b = new Button("Add filter 'foo'", new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "foo", true, false);
 
@@ -63,6 +65,7 @@ public class TreeFiltering extends TestBase {
         });
         addComponent(b);
         final Button b2 = new Button("Add filter 'Num'", new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "Num", true, false);
 
@@ -71,6 +74,7 @@ public class TreeFiltering extends TestBase {
 
         addComponent(b2);
         final Button num = new Button("Add filter '0'", new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "0", true, false);
 
@@ -79,6 +83,7 @@ public class TreeFiltering extends TestBase {
 
         addComponent(num);
         final Button num2 = new Button("Add filter '0-'", new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cont.addContainerFilter("caption", "0-", true, false);
 
@@ -88,6 +93,7 @@ public class TreeFiltering extends TestBase {
         addComponent(num2);
         final Button num3 = new Button("Add filter 'Number 4'",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(final ClickEvent event) {
                         cont.addContainerFilter("caption", "Number 4", true,
                                 false);
@@ -98,6 +104,7 @@ public class TreeFiltering extends TestBase {
         addComponent(num3);
         final Button p1 = new Button("Set Number 3 parent to Number 0",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(final ClickEvent event) {
                         cont.setParent(3, 0);
 
@@ -105,6 +112,7 @@ public class TreeFiltering extends TestBase {
                 });
         addComponent(p1);
         final Button r = new Button("Remove filters", new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 cont.removeAllContainerFilters();
 

@@ -60,6 +60,7 @@ public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
      * Handle tree expand event, populate expanded node's childs with new files
      * and directories.
      */
+    @Override
     public void nodeExpand(ExpandEvent event) {
         final Item i = tree.getItem(event.getItemId());
         if (!tree.hasChildren(i)) {

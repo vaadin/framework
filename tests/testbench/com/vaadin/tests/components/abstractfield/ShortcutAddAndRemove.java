@@ -20,6 +20,7 @@ public class ShortcutAddAndRemove extends TestBase {
         final Button logButton = new Button("Log a row (enter shortcut)");
         logButton.setClickShortcut(KeyCode.ENTER);
         logButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Log button was clicked");
             }
@@ -27,6 +28,7 @@ public class ShortcutAddAndRemove extends TestBase {
 
         final Button removeShortcut = new Button("Remove shortcut");
         removeShortcut.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 logButton.removeClickShortcut();
                 logButton.setCaption("Log a row (no shortcut)");
@@ -34,6 +36,7 @@ public class ShortcutAddAndRemove extends TestBase {
         });
         final Button addShortcut = new Button("Add shortcut");
         addShortcut.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 logButton.setClickShortcut(KeyCode.ENTER);
                 logButton.setCaption("Log a row (enter shortcut)");

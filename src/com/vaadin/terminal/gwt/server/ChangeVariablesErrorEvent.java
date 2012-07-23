@@ -23,6 +23,7 @@ public class ChangeVariablesErrorEvent implements ComponentErrorEvent {
         this.variableChanges = variableChanges;
     }
 
+    @Override
     public Throwable getThrowable() {
         return throwable;
     }

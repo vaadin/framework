@@ -65,6 +65,7 @@ public class TestLayoutPerformance extends TestBase {
 
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 int components = Integer.parseInt(n.getValue());
                 Layout layout = getCurrentLayout();

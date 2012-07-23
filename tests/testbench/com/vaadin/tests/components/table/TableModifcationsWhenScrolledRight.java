@@ -28,6 +28,7 @@ public class TableModifcationsWhenScrolledRight extends TestBase {
         btn.addListener(new ClickListener() {
             Integer row = 2;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 t.addItem(row).getItemProperty("name").setValue("Row" + row);
                 row++;

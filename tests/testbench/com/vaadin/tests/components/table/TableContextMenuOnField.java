@@ -22,11 +22,13 @@ public class TableContextMenuOnField extends TestBase {
         table.setMultiSelect(true);
 
         table.addActionHandler(new Action.Handler() {
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 // TODO Auto-generated method stub
 
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { ACTION_MYACTION };
             }
@@ -34,6 +36,7 @@ public class TableContextMenuOnField extends TestBase {
 
         table.addGeneratedColumn("layout", new Table.ColumnGenerator() {
 
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
 
@@ -42,6 +45,7 @@ public class TableContextMenuOnField extends TestBase {
 
                 layout.addListener(new LayoutClickListener() {
 
+                    @Override
                     public void layoutClick(LayoutClickEvent event) {
                         getMainWindow().showNotification("HELLO");
 
@@ -53,6 +57,7 @@ public class TableContextMenuOnField extends TestBase {
         });
 
         table.addGeneratedColumn("textfield", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new TextField();
@@ -60,6 +65,7 @@ public class TableContextMenuOnField extends TestBase {
         });
 
         table.addGeneratedColumn("link", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Link("Link", null);
@@ -67,6 +73,7 @@ public class TableContextMenuOnField extends TestBase {
         });
 
         table.addGeneratedColumn("button", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Button("Button");

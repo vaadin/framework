@@ -60,6 +60,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
@@ -797,11 +798,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
@@ -814,11 +817,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }

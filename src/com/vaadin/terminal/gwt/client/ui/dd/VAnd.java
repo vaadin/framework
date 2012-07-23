@@ -33,6 +33,7 @@ final public class VAnd extends VAcceptCriterion implements VAcceptCallback {
         return true;
     }
 
+    @Override
     public void accepted(VDragEvent event) {
         b1 = true;
     }

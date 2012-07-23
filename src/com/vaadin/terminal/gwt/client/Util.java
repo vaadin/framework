@@ -447,6 +447,7 @@ public class Util {
             elem.getStyle().setProperty("overflow", "hidden");
 
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     // Dough, Safari scroll auto means actually just a moped
                     elem.getStyle().setProperty("overflow", originalOverflow);
@@ -1021,6 +1022,7 @@ public class Util {
         }
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
             public void execute() {
                 try {
                     target.dispatchEvent(createMouseDownEvent);

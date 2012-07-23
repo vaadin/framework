@@ -246,6 +246,7 @@ public class MenuBar extends Widget implements PopupListener {
         }
     }
 
+    @Override
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
         // If the menu popup was auto-closed, close all of its parents as well.
         if (autoClosed) {

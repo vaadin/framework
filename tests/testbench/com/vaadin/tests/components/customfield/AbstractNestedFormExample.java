@@ -52,6 +52,7 @@ public abstract class AbstractNestedFormExample extends TestBase {
     private Property.ValueChangeListener getTableValueChangeListener() {
         return new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (personForm != null) {
                     removeComponent(personForm);

@@ -47,6 +47,7 @@ public class HiddenHorizontalLayout extends TestBase {
         Button b = new Button("toggle layout visibility",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         hl.setVisible(!hl.isVisible());
                     }

@@ -48,6 +48,7 @@ public class Ticket1919 extends com.vaadin.Application.LegacyApplication {
         p.setSizeFull();
 
         Button b = new Button("toggle Values", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 toggleStyleName();
             }

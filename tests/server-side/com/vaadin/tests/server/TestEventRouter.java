@@ -15,9 +15,11 @@ public class TestEventRouter extends TestCase {
 
         final ValueChangeListener outer = new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 ValueChangeListener inner = new ValueChangeListener() {
 
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         innerListenerCalls++;
                         System.out.println("The inner listener was called");

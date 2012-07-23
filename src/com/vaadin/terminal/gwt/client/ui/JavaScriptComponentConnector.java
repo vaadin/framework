@@ -31,6 +31,7 @@ public final class JavaScriptComponentConnector extends
         helper.init();
     }
 
+    @Override
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }

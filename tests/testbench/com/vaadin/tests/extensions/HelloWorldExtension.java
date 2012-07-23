@@ -13,6 +13,7 @@ public class HelloWorldExtension extends AbstractExtension {
 
     public HelloWorldExtension() {
         registerRpc(new HelloWorldRpc() {
+            @Override
             public void onMessageSent(String message) {
                 Notification.show(message);
             }

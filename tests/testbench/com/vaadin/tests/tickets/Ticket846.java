@@ -35,6 +35,7 @@ public class Ticket846 extends Application.LegacyApplication {
 
         mainWin.addComponent(new Button("Validate integer",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
                         mainWin.showNotification("The field is "

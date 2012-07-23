@@ -83,6 +83,7 @@ public class Ticket1983 extends Application.LegacyApplication {
 
             Button button = new Button("Change col value to short");
             button.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(Button.ClickEvent event) {
                     // Change the column value to a short one --> Should remove
                     // the scrollbar
@@ -117,6 +118,7 @@ public class Ticket1983 extends Application.LegacyApplication {
             CheckBox checkBox = new CheckBox("Two col");
             checkBox.addListener(new ValueChangeListener() {
 
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     if ((Boolean) event.getProperty().getValue()) {
                         table.setVisibleColumns(new Object[] { propId, propId2 });

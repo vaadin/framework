@@ -35,6 +35,7 @@ public class CssLayoutSizeChangePropagation extends TestBase {
         button.addListener(new ClickListener() {
             boolean bool = true;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 sp.setExpandRatio(cssLayout, bool ? 1 : 0);
                 bool = !bool;

@@ -29,6 +29,7 @@ public class WindowClickEvents extends TestBase {
     protected void setup() {
         VerticalLayout layout = new VerticalLayout();
         layout.addListener(new LayoutClickListener() {
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 WindowClickEvents.this.click("Sub window layout", event);
             }
@@ -36,6 +37,7 @@ public class WindowClickEvents extends TestBase {
 
         ((VerticalLayout) getMainWindow().getContent())
                 .addListener(new LayoutClickListener() {
+                    @Override
                     public void layoutClick(LayoutClickEvent event) {
                         WindowClickEvents.this.click("Main window layout",
                                 event);
@@ -45,6 +47,7 @@ public class WindowClickEvents extends TestBase {
         Window centered = new Window("A window with a click listener", layout);
         centered.addListener(new ClickListener() {
 
+            @Override
             public void click(ClickEvent event) {
                 WindowClickEvents.this.click("Sub window", event);
             }
@@ -60,6 +63,7 @@ public class WindowClickEvents extends TestBase {
                 "Clicking here should not produce a layout click event");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
                 log.log("Click on button");
             }
@@ -73,6 +77,7 @@ public class WindowClickEvents extends TestBase {
         addComponent(log);
         getMainWindow().addListener(new ClickListener() {
 
+            @Override
             public void click(ClickEvent event) {
                 WindowClickEvents.this.click("Main window", event);
             }

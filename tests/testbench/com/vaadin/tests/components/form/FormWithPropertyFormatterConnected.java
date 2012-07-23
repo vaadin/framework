@@ -18,6 +18,7 @@ public class FormWithPropertyFormatterConnected extends TestBase {
         Form form2 = new Form();
         form2.setFormFieldFactory(new FormFieldFactory() {
 
+            @Override
             public Field createField(Item item, Object propertyId,
                     Component uiContext) {
                 AbstractField f = (AbstractField) DefaultFieldFactory.get()

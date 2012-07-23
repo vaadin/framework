@@ -66,6 +66,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setFocusOutListener(new FocusOutListener() {
+            @Override
             public boolean onFocusOut(DomEvent<?> event) {
                 event.preventDefault();
                 closeCalendarPanel();
@@ -74,6 +75,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
         });
 
         calendar.setSubmitListener(new SubmitListener() {
+            @Override
             public void onSubmit() {
                 // Update internal value and send valuechange event if immediate
                 updateValue(calendar.getDate());
@@ -84,6 +86,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 closeCalendarPanel();
             }
 
+            @Override
             public void onCancel() {
                 closeCalendarPanel();
             }
@@ -164,6 +167,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
             popup.setWidth("");
             popup.setHeight("");
             popup.setPopupPositionAndShow(new PositionCallback() {
+                @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {
                     final int w = offsetWidth;
                     final int h = offsetHeight;
@@ -232,6 +236,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
      * .dom.client.ClickEvent)
      */
+    @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
             openCalendarPanel();
@@ -245,6 +250,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
      * com.google.gwt.event.logical.shared.CloseHandler#onClose(com.google.gwt
      * .event.logical.shared.CloseEvent)
      */
+    @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         if (event.getSource() == popup) {
             buildDate();

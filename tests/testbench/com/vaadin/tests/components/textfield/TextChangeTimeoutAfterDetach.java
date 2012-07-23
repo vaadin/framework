@@ -18,6 +18,7 @@ public class TextChangeTimeoutAfterDetach extends TestBase {
         field.setTextChangeTimeout(2000);
         field.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
         field.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 // Need to add a listener for events to occur
             }
@@ -26,6 +27,7 @@ public class TextChangeTimeoutAfterDetach extends TestBase {
 
         Button detachBtn = new Button("detach field",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         removeComponent(field);
                         getLayout().addComponentAsFirst(

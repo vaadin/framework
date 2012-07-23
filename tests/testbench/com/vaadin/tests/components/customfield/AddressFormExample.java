@@ -21,6 +21,7 @@ public class AddressFormExample extends TestBase {
         addComponent(field);
 
         Button commitButton = new Button("Save", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 field.commit();
                 Address address = field.getValue();

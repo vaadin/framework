@@ -51,6 +51,7 @@ public class WidgetsetCompiler {
             // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6316197)
 
             Runnable runCompiler = new Runnable() {
+                @Override
                 public void run() {
                     try {
                         // GWTCompiler.main(args);

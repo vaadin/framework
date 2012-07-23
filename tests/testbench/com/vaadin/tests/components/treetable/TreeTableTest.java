@@ -27,6 +27,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
     private int rootItemIds = 3;
     private CellStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Table.CellStyleGenerator() {
 
+        @Override
         public String getStyle(Object itemId, Object propertyId) {
             if (propertyId != null) {
                 return null;
@@ -54,6 +55,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
 
     private CellStyleGenerator evenItemsBold = new CellStyleGenerator() {
 
+        @Override
         public String getStyle(Object itemId, Object propertyId) {
             if (propertyId != null) {
                 return null;
@@ -235,6 +237,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
      */
     private Command<TreeTable, Integer> rootItemIdsCommand = new Command<TreeTable, Integer>() {
 
+        @Override
         public void execute(TreeTable c, Integer value, Object data) {
             rootItemIds = value;
             updateContainer();
@@ -243,6 +246,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
 
     private Command<TreeTable, Object> expandItemCommand = new Command<TreeTable, Object>() {
 
+        @Override
         public void execute(TreeTable c, Object itemId, Object data) {
             c.setCollapsed(itemId, false);
         }
@@ -250,6 +254,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
 
     private Command<TreeTable, Object> collapseItemCommand = new Command<TreeTable, Object>() {
 
+        @Override
         public void execute(TreeTable c, Object itemId, Object data) {
             c.setCollapsed(itemId, true);
         }
@@ -257,6 +262,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
 
     private Command<TreeTable, Boolean> setChildrenAllowedCommand = new Command<TreeTable, Boolean>() {
 
+        @Override
         public void execute(TreeTable c, Boolean areChildrenAllowed,
                 Object itemId) {
             c.setChildrenAllowed(itemId, areChildrenAllowed);
@@ -264,6 +270,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
     };
 
     private Command<TreeTable, Boolean> expandListenerCommand = new Command<TreeTable, Boolean>() {
+        @Override
         public void execute(TreeTable c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ExpandListener) TreeTableTest.this);
@@ -274,6 +281,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
     };
 
     private Command<TreeTable, Boolean> collapseListenerCommand = new Command<TreeTable, Boolean>() {
+        @Override
         public void execute(TreeTable c, Boolean value, Object data) {
             if (value) {
                 c.addListener((CollapseListener) TreeTableTest.this);
@@ -285,15 +293,18 @@ public class TreeTableTest extends Tables<TreeTable> implements
 
     protected Command<TreeTable, Boolean> animationCommand = new Command<TreeTable, Boolean>() {
 
+        @Override
         public void execute(TreeTable c, Boolean enabled, Object data) {
             c.setAnimationsEnabled(enabled);
         }
     };
 
+    @Override
     public void nodeCollapse(CollapseEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getItemId());
     }
 
+    @Override
     public void nodeExpand(ExpandEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getItemId());
     }

@@ -21,6 +21,7 @@ public final class JavaScriptExtension extends AbstractExtensionConnector
         helper.init();
     }
 
+    @Override
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }

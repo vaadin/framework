@@ -113,6 +113,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     }
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

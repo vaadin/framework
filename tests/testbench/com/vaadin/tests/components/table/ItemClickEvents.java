@@ -27,6 +27,7 @@ public class ItemClickEvents extends TestBase {
 
         HorizontalLayout ol = createHorizontalLayout(tree);
         Button b = new Button("icon", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (tree.getItemIconPropertyId() == null) {
                     tree.setItemIconPropertyId("icon");
@@ -55,6 +56,7 @@ public class ItemClickEvents extends TestBase {
                         "http://www.itmill.com/res/images/itmill_logo.gif"));
 
         tree.addListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 logEvent(event, "tree");
             }
@@ -73,6 +75,7 @@ public class ItemClickEvents extends TestBase {
 
         }
         table.addListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 logEvent(event, "table");
             }
@@ -82,6 +85,7 @@ public class ItemClickEvents extends TestBase {
         addComponent(log);
         addComponent(new Button("Clear log", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.clear();
             }

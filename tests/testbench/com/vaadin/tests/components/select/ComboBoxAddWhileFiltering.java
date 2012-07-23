@@ -22,6 +22,7 @@ public class ComboBoxAddWhileFiltering extends TestBase {
 
         Button b = new Button("add item (^N)");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 addItem(comboBox);
             }

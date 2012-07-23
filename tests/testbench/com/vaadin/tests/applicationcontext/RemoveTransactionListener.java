@@ -15,10 +15,12 @@ public class RemoveTransactionListener extends TestBase {
         // Add one listener that will remove itself from within transactionEnd
         getMainWindow().getApplication().getContext()
                 .addTransactionListener(new TransactionListener() {
+                    @Override
                     public void transactionStart(Application application,
                             Object transactionData) {
                     }
 
+                    @Override
                     public void transactionEnd(Application application,
                             Object transactionData) {
                         removeListener(this);
@@ -29,12 +31,14 @@ public class RemoveTransactionListener extends TestBase {
         // Add one listener that will remove itself from within transactionStart
         getMainWindow().getApplication().getContext()
                 .addTransactionListener(new TransactionListener() {
+                    @Override
                     public void transactionStart(Application application,
                             Object transactionData) {
                         removeListener(this);
                         log.log("Listener removed in transactionStart");
                     }
 
+                    @Override
                     public void transactionEnd(Application application,
                             Object transactionData) {
                     }
@@ -45,11 +49,13 @@ public class RemoveTransactionListener extends TestBase {
         // ignored
         getMainWindow().getApplication().getContext()
                 .addTransactionListener(new TransactionListener() {
+                    @Override
                     public void transactionStart(Application application,
                             Object transactionData) {
                         log.log("transactionStart from last listener");
                     }
 
+                    @Override
                     public void transactionEnd(Application application,
                             Object transactionData) {
                         log.log("transactionEnd from last listener");

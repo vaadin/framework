@@ -14,6 +14,7 @@ public class MyComponent extends AbstractComponent {
     private int clickCount = 0;
 
     private MyComponentServerRpc rpc = new MyComponentServerRpc() {
+        @Override
         public void clicked(MouseEventDetails mouseDetails) {
             clickCount++;
 

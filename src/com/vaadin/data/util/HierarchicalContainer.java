@@ -77,6 +77,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * Can the specified Item have any children? Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public boolean areChildrenAllowed(Object itemId) {
         if (noChildrenAllowed.contains(itemId)) {
             return false;
@@ -89,6 +90,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> getChildren(Object itemId) {
         LinkedList<Object> c;
 
@@ -109,6 +111,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Object getParent(Object itemId) {
         if (filteredParent != null) {
             return filteredParent.get(itemId);
@@ -121,6 +124,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public boolean hasChildren(Object itemId) {
         if (filteredChildren != null) {
             return filteredChildren.containsKey(itemId);
@@ -134,6 +138,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public boolean isRoot(Object itemId) {
         // If the container is filtered the itemId must be among filteredRoots
         // to be a root.
@@ -156,6 +161,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> rootItemIds() {
         if (filteredRoots != null) {
             return Collections.unmodifiableCollection(filteredRoots);
@@ -183,6 +189,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
+    @Override
     public boolean setChildrenAllowed(Object itemId, boolean childrenAllowed) {
 
         // Checks that the item is in the container
@@ -217,6 +224,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
+    @Override
     public boolean setParent(Object itemId, Object newParentId) {
 
         // Checks that the item is in the container

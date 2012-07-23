@@ -81,6 +81,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
     private String altText;
 
     private EmbeddedServerRpc rpc = new EmbeddedServerRpc() {
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Embedded.this, mouseDetails));
         }
@@ -120,6 +121,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
     /**
      * Invoked when the component state should be painted.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         switch (type) {
@@ -521,6 +523,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
                 ClickEvent.class, listener);
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
     }

@@ -91,6 +91,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         main.addComponent(test);
 
         final Button b = new Button("refresh view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 createNewView();
             }
@@ -146,6 +147,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         final Panel status = new Panel("Events");
         final Button clear = new Button("clear event log");
         clear.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 status.removeAllComponents();
                 status.addComponent(ol2);
@@ -162,6 +164,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         ol.addComponent(status);
 
         t.addListener(new Listener() {
+            @Override
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()
@@ -173,10 +176,12 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         return ol;
     }
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         return actions;
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (action == actions[1]) {
             al.addComponent(new Label("Delete selected on " + target));

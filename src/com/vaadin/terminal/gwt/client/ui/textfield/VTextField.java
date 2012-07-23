@@ -274,6 +274,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         return maxLength;
     }
 
+    @Override
     public void onChange(ChangeEvent event) {
         valueChange(false);
     }
@@ -349,6 +350,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         addStyleDependentName(CLASSNAME_FOCUS);
         if (prompting) {
@@ -362,6 +364,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
@@ -387,6 +390,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         setWidth(columns + "em");
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             valueChange(false);

@@ -17,6 +17,7 @@ public class NewItemsESCPress extends TestBase {
         final ComboBox box = new ComboBox("New items are allowed");
         box.setNewItemsAllowed(true);
         box.setNewItemHandler(new NewItemHandler() {
+            @Override
             public void addNewItem(String newItemCaption) {
                 String value = (String) addedItems.getValue();
                 addedItems.setValue(value + newItemCaption + "\n");

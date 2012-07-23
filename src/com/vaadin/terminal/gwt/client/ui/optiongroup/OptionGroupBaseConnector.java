@@ -14,6 +14,7 @@ import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         // Save details

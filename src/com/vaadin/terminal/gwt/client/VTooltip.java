@@ -82,6 +82,7 @@ public class VTooltip extends VOverlay {
             // first to 0,0 position so that the calculation goes correctly.
             setPopupPosition(0, 0);
             setPopupPositionAndShow(new PositionCallback() {
+                @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {
 
                     if (offsetWidth > MAX_WIDTH) {
@@ -294,6 +295,7 @@ public class VTooltip extends VOverlay {
             currentTooltipInfo = null;
         }
 
+        @Override
         public void onMouseMove(MouseMoveEvent mme) {
             Event event = Event.as(mme.getNativeEvent());
             com.google.gwt.dom.client.Element element = Element.as(event
@@ -322,10 +324,12 @@ public class VTooltip extends VOverlay {
             }
         }
 
+        @Override
         public void onClick(ClickEvent event) {
             handleHideEvent();
         }
 
+        @Override
         public void onKeyDown(KeyDownEvent event) {
             handleHideEvent();
         }

@@ -61,6 +61,7 @@ public class TableClickValueChangeInteraction extends TestBase {
         if (listenClicks) {
             table.addListener(new ItemClickListener() {
 
+                @Override
                 public void itemClick(ItemClickEvent event) {
                     table.requestRepaint();
                     clickLabel.setValue("Click " + event.getItemId());
@@ -70,6 +71,7 @@ public class TableClickValueChangeInteraction extends TestBase {
         if (listenValueChanges) {
             table.addListener(new ValueChangeListener() {
 
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     valueChangeLabel.setValue("Value "
                             + event.getProperty().getValue());

@@ -42,6 +42,7 @@ public class WebBrowser implements Terminal {
      * @return Always returns null.
      */
 
+    @Override
     public String getDefaultTheme() {
         return null;
     }
@@ -52,6 +53,7 @@ public class WebBrowser implements Terminal {
      * @see com.vaadin.terminal.Terminal#getScreenHeight()
      */
 
+    @Override
     public int getScreenHeight() {
         return screenHeight;
     }
@@ -62,6 +64,7 @@ public class WebBrowser implements Terminal {
      * @see com.vaadin.terminal.Terminal#getScreenWidth()
      */
 
+    @Override
     public int getScreenWidth() {
         return screenWidth;
     }

@@ -39,10 +39,12 @@ public class Button extends AbstractComponent implements
 
     private ButtonServerRpc rpc = new ButtonServerRpc() {
 
+        @Override
         public void click(MouseEventDetails mouseEventDetails) {
             fireClick(mouseEventDetails);
         }
 
+        @Override
         public void disableOnClick() {
             // Could be optimized so the button is not repainted because of
             // this (client side has already disabled the button)
@@ -332,20 +334,24 @@ public class Button extends AbstractComponent implements
         fireEvent(new Button.ClickEvent(this, details));
     }
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 
@@ -474,6 +480,7 @@ public class Button extends AbstractComponent implements
      * 
      * @see com.vaadin.ui.Component.Focusable#getTabIndex()
      */
+    @Override
     public int getTabIndex() {
         return getState().getTabIndex();
     }
@@ -483,6 +490,7 @@ public class Button extends AbstractComponent implements
      * 
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
         requestRepaint();

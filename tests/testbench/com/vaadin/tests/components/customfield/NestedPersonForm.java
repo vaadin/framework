@@ -48,6 +48,7 @@ public class NestedPersonForm extends Form {
         buttons.setSpacing(true);
         Button discardChanges = new Button("Discard changes",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         NestedPersonForm.this.discard();
                     }
@@ -56,6 +57,7 @@ public class NestedPersonForm extends Form {
         buttons.setComponentAlignment(discardChanges, Alignment.MIDDLE_LEFT);
 
         Button apply = new Button("Apply", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     NestedPersonForm.this.commit();

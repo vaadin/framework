@@ -20,6 +20,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         ShortcutAction save = new ShortcutAction("^Save");
         private Action[] actions = new Action[] { save };
 
+        @Override
         public void handleAction(Action action, Object sender, Object target) {
             String msg = "Action: " + action.getCaption();
             msg += " From : " + sender.getClass().getSimpleName() + " '"
@@ -38,6 +39,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
 
         }
 
+        @Override
         public Action[] getActions(Object target, Object sender) {
             return actions;
         }

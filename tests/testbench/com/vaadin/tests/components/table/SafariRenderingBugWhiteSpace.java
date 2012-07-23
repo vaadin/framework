@@ -33,6 +33,7 @@ public class SafariRenderingBugWhiteSpace extends TestBase {
         table.setSizeFull();
         table.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (table.getValue() == null) {
                     split.setSplitPosition(100, Sizeable.UNITS_PERCENTAGE);

@@ -43,6 +43,7 @@ public class VMyDragSource extends Composite implements MouseDownHandler,
      * mouse is moved 5 pixels with left mouse key down.
      */
 
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
             mouseDown = true;
@@ -50,6 +51,7 @@ public class VMyDragSource extends Composite implements MouseDownHandler,
         }
     }
 
+    @Override
     public void onMouseMove(MouseMoveEvent event) {
         if (mouseDown) {
             int deltaX = Math.abs(mDownEvent.getClientX() - event.getClientX());
@@ -74,6 +76,7 @@ public class VMyDragSource extends Composite implements MouseDownHandler,
 
     }
 
+    @Override
     public void onMouseOut(MouseOutEvent event) {
         mouseDown = false;
         mDownEvent = null;

@@ -21,6 +21,7 @@ public class ForceSubmit extends TestBase implements Receiver {
         return 6630;
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         return new ByteArrayOutputStream();
     }
@@ -40,6 +41,7 @@ public class ForceSubmit extends TestBase implements Receiver {
         addComponent(u);
 
         u.addListener(new Upload.FinishedListener() {
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 String filename = event.getFilename();
                 long length = event.getLength();
@@ -49,12 +51,14 @@ public class ForceSubmit extends TestBase implements Receiver {
         });
 
         u.addListener(new Upload.FailedListener() {
+            @Override
             public void uploadFailed(FailedEvent event) {
                 getMainWindow().showNotification("Failed. No file selected?");
             }
         });
 
         u.addListener(new Upload.StartedListener() {
+            @Override
             public void uploadStarted(StartedEvent event) {
                 getMainWindow().showNotification(
                         "Started upload. TF value :" + textField.getValue());
@@ -64,6 +68,7 @@ public class ForceSubmit extends TestBase implements Receiver {
         Button button = new Button(
                 "I'm an external button (not the uploads builtin), hit me to start upload.");
         button.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 u.submitUpload();
             }

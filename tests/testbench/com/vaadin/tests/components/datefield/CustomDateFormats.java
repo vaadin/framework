@@ -37,6 +37,7 @@ public class CustomDateFormats extends TestBase {
 
         s.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setDateFieldLocale((Locale) s.getValue());
             }
@@ -155,6 +156,7 @@ public class CustomDateFormats extends TestBase {
         df.setValue(cal.getTime());
         df.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateServerSideLabel((DateField) event.getProperty());
             }

@@ -172,6 +172,7 @@ public class VRichTextToolbar extends Composite {
     private class EventHandler implements ClickHandler, ChangeHandler,
             KeyUpHandler {
 
+        @Override
         @SuppressWarnings("deprecation")
         public void onChange(ChangeEvent event) {
             Object sender = event.getSource();
@@ -193,6 +194,7 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
+        @Override
         @SuppressWarnings("deprecation")
         public void onClick(ClickEvent event) {
             Object sender = event.getSource();
@@ -249,6 +251,7 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
+        @Override
         public void onKeyUp(KeyUpEvent event) {
             if (event.getSource() == richText) {
                 // We use the RichTextArea's onKeyUp event to update the toolbar

@@ -54,10 +54,12 @@ public class HorizontalLayoutSortableWithWrappers extends Window {
         AcceptCriterion crit = new And(new TargetDetailIs("horizontalLocation",
                 "LEFT"), new Not(SourceIsTarget.get()));
 
+        @Override
         public AcceptCriterion getAcceptCriterion() {
             return crit;
         }
 
+        @Override
         public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
             if (transferable instanceof TransferableImpl) {

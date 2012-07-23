@@ -37,18 +37,22 @@ public class AbstractFieldValueConversions extends TestCase {
         TextField tf = new TextField();
         tf.setConverter(new Converter<String, String>() {
 
+            @Override
             public String convertToModel(String value, Locale locale) {
                 return value;
             }
 
+            @Override
             public String convertToPresentation(String value, Locale locale) {
                 return value;
             }
 
+            @Override
             public Class<String> getModelType() {
                 return String.class;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 return String.class;
             }
@@ -67,19 +71,23 @@ public class AbstractFieldValueConversions extends TestCase {
         TextField tf = new TextField();
         tf.setConverter(new Converter<String, Integer>() {
 
+            @Override
             public Integer convertToModel(String value, Locale locale) {
                 throw new ConversionException("Failed");
             }
 
+            @Override
             public String convertToPresentation(Integer value, Locale locale) {
                 throw new ConversionException("Failed");
             }
 
+            @Override
             public Class<Integer> getModelType() {
                 // TODO Auto-generated method stub
                 return null;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 // TODO Auto-generated method stub
                 return null;
@@ -112,6 +120,7 @@ public class AbstractFieldValueConversions extends TestCase {
         CheckBox cb = new CheckBox();
         cb.setConverter(new Converter<Boolean, Boolean>() {
 
+            @Override
             public Boolean convertToModel(Boolean value, Locale locale) {
                 // value from a CheckBox should never be null as long as it is
                 // not set to null (handled by conversion below).
@@ -119,6 +128,7 @@ public class AbstractFieldValueConversions extends TestCase {
                 return value;
             }
 
+            @Override
             public Boolean convertToPresentation(Boolean value, Locale locale) {
                 // Datamodel -> field
                 if (value == null) {
@@ -128,10 +138,12 @@ public class AbstractFieldValueConversions extends TestCase {
                 return value;
             }
 
+            @Override
             public Class<Boolean> getModelType() {
                 return Boolean.class;
             }
 
+            @Override
             public Class<Boolean> getPresentationType() {
                 return Boolean.class;
             }

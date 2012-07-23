@@ -37,6 +37,7 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
         tt.addListener((CollapseListener) this);
         tt.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 recalculatePageLength(tt);
                 tt.requestRepaint();
@@ -49,6 +50,7 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
         Button b = new Button("Set pagelength to 10",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tt.setPageLength(10);
                     }
@@ -56,6 +58,7 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
         addComponent(b);
         b = new Button("Set pagelength to 20", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tt.setPageLength(20);
             }
@@ -63,6 +66,7 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
         addComponent(b);
         b = new Button("Set pagelength to 0", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tt.setPageLength(0);
             }
@@ -121,11 +125,13 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
         return 7292;
     }
 
+    @Override
     public void nodeCollapse(CollapseEvent event) {
         recalculatePageLength((TreeTable) event.getSource());
 
     }
 
+    @Override
     public void nodeExpand(ExpandEvent event) {
         recalculatePageLength((TreeTable) event.getSource());
     }

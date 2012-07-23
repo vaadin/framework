@@ -39,6 +39,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
         main.addComponent(new Button("click when rendered",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         endTest();
                     }
@@ -47,6 +48,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
         main.addComponent(new Button(
                 "Click for layout repaint (cached components)",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         testContainer.requestRepaint();
                     }

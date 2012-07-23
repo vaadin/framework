@@ -328,6 +328,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private KeyPressHandler navKeyPressHandler = new KeyPressHandler() {
 
+        @Override
         public void onKeyPress(KeyPressEvent keyPressEvent) {
             // This is used for Firefox only, since Firefox auto-repeat
             // works correctly only if we use a key press handler, other
@@ -365,6 +366,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private KeyUpHandler navKeyUpHandler = new KeyUpHandler() {
 
+        @Override
         public void onKeyUp(KeyUpEvent keyUpEvent) {
             NativeEvent event = keyUpEvent.getNativeEvent();
             int keyCode = event.getKeyCode();
@@ -392,6 +394,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private KeyDownHandler navKeyDownHandler = new KeyDownHandler() {
 
+        @Override
         public void onKeyDown(KeyDownEvent keyDownEvent) {
             NativeEvent event = keyDownEvent.getNativeEvent();
             // This is not used for Firefox
@@ -520,6 +523,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         scrollBodyPanel.sinkEvents(Event.ONCONTEXTMENU);
         scrollBodyPanel.addDomHandler(new ContextMenuHandler() {
 
+            @Override
             public void onContextMenu(ContextMenuEvent event) {
                 handleBodyContextMenu(event);
             }
@@ -540,6 +544,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // closes. See #8526.
         client.getContextMenu().addCloseHandler(new CloseHandler<PopupPanel>() {
 
+            @Override
             public void onClose(CloseEvent<PopupPanel> event) {
                 contextMenu = null;
             }
@@ -1849,6 +1854,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Deferred due to some Firefox oddities
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     scrollBodyPanel
                             .setScrollPosition(measureRowHeightOffset(firstvisible));
@@ -1884,6 +1890,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         scrollBody.reLayoutComponents();
         Scheduler.get().scheduleDeferred(new Command() {
 
+            @Override
             public void execute() {
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
@@ -2215,6 +2222,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
 
+                        @Override
                         public void execute() {
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth();
@@ -2813,6 +2821,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         Scheduler.get().scheduleDeferred(
                                 new ScheduledCommand() {
 
+                                    @Override
                                     public void execute() {
                                         setColWidth(colIx, newWidth, true);
                                     }
@@ -2841,6 +2850,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // Recalculate the column sizings if any column has changed
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+                    @Override
                     public void execute() {
                         triggerLazyColumnAdjustment(true);
                     }
@@ -2952,6 +2962,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             visibleCells.add(newIndex, hCell);
         }
 
+        @Override
         public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
@@ -3101,6 +3112,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Returns columns as Action array for column select popup
          */
 
+        @Override
         public Action[] getActions() {
             Object[] cols;
             if (columnReordering && columnOrder != null) {
@@ -3139,10 +3151,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return actions;
         }
 
+        @Override
         public ApplicationConnection getClient() {
             return client;
         }
 
+        @Override
         public String getPaintableId() {
             return paintableId;
         }
@@ -3310,6 +3324,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
 
+                        @Override
                         public void execute() {
                             int tdWidth = width
                                     + scrollBody.getCellExtraWidth()
@@ -3573,6 +3588,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * @see com.google.gwt.user.client.ui.HasWidgets#iterator()
          */
 
+        @Override
         public Iterator<Widget> iterator() {
             return visibleCells.iterator();
         }
@@ -4111,6 +4127,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             renderedRows.add(actualIx, row);
         }
 
+        @Override
         public Iterator<Widget> iterator() {
             return renderedRows.iterator();
         }
@@ -4704,6 +4721,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 childWidgets.add(w);
             }
 
+            @Override
             public Iterator<Widget> iterator() {
                 return childWidgets.iterator();
             }
@@ -5396,6 +5414,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * @see com.vaadin.terminal.gwt.client.ui.IActionOwner#getActions ()
              */
 
+            @Override
             public Action[] getActions() {
                 if (actionKeys == null) {
                     return new Action[] {};
@@ -5419,10 +5438,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 return actions;
             }
 
+            @Override
             public ApplicationConnection getClient() {
                 return client;
             }
 
+            @Override
             public String getPaintableId() {
                 return paintableId;
             }
@@ -5473,6 +5494,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 // widths.
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+                    @Override
                     public void execute() {
                         if (showRowHeaders) {
                             setCellWidth(0, tHead.getHeaderCell(0).getWidth());
@@ -5804,6 +5826,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             scrollBody.reLayoutComponents();
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
@@ -5925,6 +5948,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // #7607.
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
                 }
@@ -5955,6 +5979,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (visible) {
                     Scheduler.get().scheduleDeferred(new Command() {
 
+                        @Override
                         public void execute() {
                             scrollBodyPanel
                                     .setScrollPosition(measureRowHeightOffset(firstRowInViewPort));
@@ -5989,6 +6014,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * user scrolls
      */
 
+    @Override
     public void onScroll(ScrollEvent event) {
         scrollLeft = scrollBodyPanel.getElement().getScrollLeft();
         scrollTop = scrollBodyPanel.getScrollPosition();
@@ -6018,6 +6044,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // value available soon.
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     onScroll(null);
                 }
@@ -6098,6 +6125,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return (int) Math.ceil(scrollTop / scrollBody.getRowHeight());
     }
 
+    @Override
     public VScrollTableDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -6178,6 +6206,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 final TableDDDetails newDetails = dropDetails;
                 VAcceptCallback cb = new VAcceptCallback() {
 
+                    @Override
                     public void accepted(VDragEvent event) {
                         if (newDetails.equals(dropDetails)) {
                             dragAccepted(event);
@@ -6254,6 +6283,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             return ConnectorMap.get(client).getConnector(VScrollTable.this);
         }
 
+        @Override
         public ApplicationConnection getApplicationConnection() {
             return client;
         }
@@ -6585,6 +6615,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * .dom.client.FocusEvent)
      */
 
+    @Override
     public void onFocus(FocusEvent event) {
         if (isFocusable()) {
             hasFocus = true;
@@ -6606,6 +6637,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * .dom.client.BlurEvent)
      */
 
+    @Override
     public void onBlur(BlurEvent event) {
         hasFocus = false;
         navKeyDown = false;
@@ -6679,6 +6711,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * @see com.vaadin.terminal.gwt.client.Focusable#focus()
      */
 
+    @Override
     public void focus() {
         if (isFocusable()) {
             scrollBodyPanel.focus();
@@ -6760,6 +6793,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     public void lazyRevertFocusToRow(final VScrollTableRow currentlyFocusedRow) {
         Scheduler.get().scheduleFinally(new ScheduledCommand() {
 
+            @Override
             public void execute() {
                 if (currentlyFocusedRow != null) {
                     setRowFocus(currentlyFocusedRow);
@@ -6772,6 +6806,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         });
     }
 
+    @Override
     public Action[] getActions() {
         if (bodyActionKeys == null) {
             return new Action[] {};
@@ -6787,10 +6822,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return actions;
     }
 
+    @Override
     public ApplicationConnection getClient() {
         return client;
     }
 
+    @Override
     public String getPaintableId() {
         return paintableId;
     }

@@ -33,10 +33,12 @@ public class Ticket1365 extends com.vaadin.Application.LegacyApplication
             new ShortcutAction("CTRL-S", ShortcutAction.KeyCode.S,
                     new int[] { ShortcutAction.ModifierKey.CTRL }), };
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         return actions;
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         status.setValue("Pressed " + action.getCaption()
                 + " to fire shortcut. Texfield value: " + f.getValue());

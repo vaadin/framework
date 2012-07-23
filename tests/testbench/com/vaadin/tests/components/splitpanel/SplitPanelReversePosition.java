@@ -26,6 +26,7 @@ public class SplitPanelReversePosition extends TestBase {
         hsplit.setImmediate(true);
         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS, hsplitReversed);
         hsplit.addListener(new HorizontalSplitPanel.SplitterClickListener() {
+            @Override
             public void splitterClick(SplitterClickEvent event) {
                 getMainWindow().showNotification("Horizontal Splitter Clicked");
             }
@@ -40,6 +41,7 @@ public class SplitPanelReversePosition extends TestBase {
         vsplit.setImmediate(true);
         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE, vsplitReversed);
         vsplit.addListener(new SplitterClickListener() {
+            @Override
             public void splitterClick(SplitterClickEvent event) {
                 getMainWindow().showNotification("Vertical Splitter Clicked");
             }
@@ -61,6 +63,7 @@ public class SplitPanelReversePosition extends TestBase {
 
         buttons.addComponent(new Button("Swap horizontal positioning",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         hsplitReversed = !hsplitReversed;
                         hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS,
@@ -71,6 +74,7 @@ public class SplitPanelReversePosition extends TestBase {
 
         buttons.addComponent(new Button("Swap vertical positioning",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         vsplitReversed = !vsplitReversed;
                         vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE,

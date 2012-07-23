@@ -16,6 +16,7 @@ public class TabSheetTest<T extends TabSheet> extends
 
     private Command<T, Integer> setTabCaption = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.getTab(value).setCaption((String) data);
 
@@ -23,6 +24,7 @@ public class TabSheetTest<T extends TabSheet> extends
     };
     private Command<T, Integer> setTabIcon = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.getTab(value).setIcon((Resource) data);
 
@@ -30,15 +32,18 @@ public class TabSheetTest<T extends TabSheet> extends
     };
     private Command<T, Integer> setTabClosable = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.getTab(value).setClosable((Boolean) data);
         }
     };
     private Command<T, Boolean> setCloseHandlerListener = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.setCloseHandler(new CloseHandler() {
+                    @Override
                     public void onTabClose(TabSheet tabsheet, Component c) {
                         tabClosed(tabsheet, tabsheet.getTab(c));
                         tabsheet.removeComponent(c);
@@ -47,6 +52,7 @@ public class TabSheetTest<T extends TabSheet> extends
                 });
             } else {
                 c.setCloseHandler(new CloseHandler() {
+                    @Override
                     public void onTabClose(TabSheet tabsheet, Component c) {
                         tabsheet.removeComponent(c);
                     }
@@ -57,6 +63,7 @@ public class TabSheetTest<T extends TabSheet> extends
     };
     private Command<T, Boolean> setSelectedTabListener = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((SelectedTabChangeListener) TabSheetTest.this);
@@ -68,12 +75,14 @@ public class TabSheetTest<T extends TabSheet> extends
     };
 
     private Command<T, Integer> selectTab = new Command<T, Integer>() {
+        @Override
         public void execute(T c, Integer index, Object data) {
             c.setSelectedTab(c.getTab(index).getComponent());
         }
     };
     private Command<T, Boolean> hideTabs = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.hideTabs(value);
 
@@ -194,6 +203,7 @@ public class TabSheetTest<T extends TabSheet> extends
         log("Tab " + tabSheet.getTabPosition(tab) + " closed");
     }
 
+    @Override
     public void selectedTabChange(SelectedTabChangeEvent event) {
         TabSheet ts = event.getTabSheet();
         log("Tab " + ts.getTabPosition(ts.getTab(ts.getSelectedTab()))

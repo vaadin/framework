@@ -21,12 +21,14 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         addComponent(tt);
         Button page1 = new Button("Set new data source (20 items)");
         page1.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 20);
             }
         });
         Button page2 = new Button("Set new data source (10 items)");
         page2.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 setupContainer(tt, 10);
             }
@@ -35,6 +37,7 @@ public class ChangeDataSourcePageLengthZero extends TestBase {
         addButton.addListener(new Button.ClickListener() {
             private int i = 1;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 HierarchicalContainer container = (HierarchicalContainer) tt
                         .getContainerDataSource();

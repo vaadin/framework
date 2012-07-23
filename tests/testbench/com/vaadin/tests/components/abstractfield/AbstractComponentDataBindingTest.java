@@ -45,6 +45,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateLocale((Locale) localeSelect.getValue());
             }
@@ -91,6 +92,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
         return null;
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         AbstractField field = (AbstractField) event.getProperty();
         // if (field == localeSelect) {

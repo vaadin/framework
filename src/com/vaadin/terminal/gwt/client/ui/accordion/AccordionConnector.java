@@ -57,10 +57,12 @@ public class AccordionConnector extends TabsheetBaseConnector implements
         return (VAccordion) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         /* Accordion does not render its children's captions */
     }
 
+    @Override
     public void layout() {
         VAccordion accordion = getWidget();
 

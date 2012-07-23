@@ -26,6 +26,7 @@ public class NativeWindowing extends Application.LegacyApplication {
 
         main.addComponent(new Button("Add new subwindow",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         final Window w = new Window("sw "
                                 + System.currentTimeMillis());
@@ -40,6 +41,7 @@ public class NativeWindowing extends Application.LegacyApplication {
 
                         final Button closebutton = new Button("Close "
                                 + w.getCaption(), new Button.ClickListener() {
+                            @Override
                             public void buttonClick(ClickEvent event) {
                                 main.removeWindow(w);
                             }
@@ -78,6 +80,7 @@ public class NativeWindowing extends Application.LegacyApplication {
         main.addComponent(new Button(
                 "Open a currently uncreated application level window",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         try {
                             main.open(
@@ -114,6 +117,7 @@ public class NativeWindowing extends Application.LegacyApplication {
             ww.addComponent(new Button("Click me", new Button.ClickListener() {
                 int state = 0;
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     ww.addComponent(new Label("Button clicked " + (++state)
                             + " times"));

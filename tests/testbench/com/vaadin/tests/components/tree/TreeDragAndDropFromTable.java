@@ -38,10 +38,12 @@ public class TreeDragAndDropFromTable extends TestBase {
         final Tree tree = new Tree();
         tree.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return TargetItemAllowsChildren.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 // criteria verify that this is safe
                 DataBoundTransferable t = (DataBoundTransferable) dropEvent

@@ -51,6 +51,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             treeTable.setColumnWidth("Name", 400);
             treeTable.addListener(new ExpandListener() {
 
+                @Override
                 public void nodeExpand(ExpandEvent event) {
                     logExpandCollapse(event.getItemId(), "expanded");
 
@@ -58,6 +59,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             });
             treeTable.addListener(new CollapseListener() {
 
+                @Override
                 public void nodeCollapse(CollapseEvent event) {
                     logExpandCollapse(event.getItemId(), "collapsed");
 
@@ -71,6 +73,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             buttonLayout.setSpacing(true);
             buttonLayout.addComponent(new Button("Create dir11",
                     new Button.ClickListener() {
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             new File(folder, "dir11").mkdir();
                             log.log("Row dir11 created");
@@ -78,6 +81,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
                     }));
             buttonLayout.addComponent(new Button("Delete dir11",
                     new Button.ClickListener() {
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             new File(folder, "dir11").delete();
                             log.log("Row dir11 deleted");
@@ -86,6 +90,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             // to clean up explicitly before ending an automated test
             buttonLayout.addComponent(new Button("Clean all files",
                     new Button.ClickListener() {
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             folder.delete();
                         }

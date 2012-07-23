@@ -20,6 +20,7 @@ public class CustomComponentSizeUpdate extends TestBase {
 
         nb.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 cc.setWidth((cc.getWidth() - 20) + "px");
                 cc.setHeight((cc.getHeight() - 20) + "px");

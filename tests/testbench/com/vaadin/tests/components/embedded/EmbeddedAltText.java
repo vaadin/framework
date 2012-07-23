@@ -38,6 +38,7 @@ public class EmbeddedAltText extends TestBase {
 
         Button changeAltTexts = new Button("Change alt texts",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         e.setAlternateText("New alt text of the image!");
                         player.setAlternateText("New alt text of the object!");

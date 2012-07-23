@@ -20,6 +20,7 @@ public class NativeButtonHtml extends TestBase {
         final NativeButton swapButton = new NativeButton("<i>Swap button<i>");
         swapButton.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 swapButton.setHtmlContentAllowed(!swapButton
                         .isHtmlContentAllowed());

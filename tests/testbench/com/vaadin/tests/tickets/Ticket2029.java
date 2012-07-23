@@ -81,6 +81,7 @@ public class Ticket2029 extends Application.LegacyApplication {
             tf.setImmediate(true);
             tf.addListener(new ValueChangeListener() {
 
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     Component c = ((Component) event.getProperty());
                     c.setCaption("askfdj");

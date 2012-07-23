@@ -99,6 +99,7 @@ public class FreeformQuery implements QueryDelegate {
      * 
      * {@inheritDoc}
      */
+    @Override
     public int getCount() throws SQLException {
         // First try the delegate
         int count = countByDelegate();
@@ -187,6 +188,7 @@ public class FreeformQuery implements QueryDelegate {
      * 
      * @see FreeformQueryDelegate#getQueryString(int, int)
      */
+    @Override
     @SuppressWarnings("deprecation")
     public ResultSet getResults(int offset, int pagelength) throws SQLException {
         if (activeConnection == null) {
@@ -218,6 +220,7 @@ public class FreeformQuery implements QueryDelegate {
         return rs;
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public boolean implementationRespectsPagingLimits() {
         if (delegate == null) {
@@ -251,6 +254,7 @@ public class FreeformQuery implements QueryDelegate {
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setFilters(java
      * .util.List)
      */
+    @Override
     public void setFilters(List<Filter> filters)
             throws UnsupportedOperationException {
         if (delegate != null) {
@@ -268,6 +272,7 @@ public class FreeformQuery implements QueryDelegate {
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#setOrderBy(java
      * .util.List)
      */
+    @Override
     public void setOrderBy(List<OrderBy> orderBys)
             throws UnsupportedOperationException {
         if (delegate != null) {
@@ -285,6 +290,7 @@ public class FreeformQuery implements QueryDelegate {
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
      * .data.util.sqlcontainer.RowItem)
      */
+    @Override
     public int storeRow(RowItem row) throws SQLException {
         if (activeConnection == null) {
             throw new IllegalStateException("No transaction is active!");
@@ -307,6 +313,7 @@ public class FreeformQuery implements QueryDelegate {
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
      * .data.util.sqlcontainer.RowItem)
      */
+    @Override
     public boolean removeRow(RowItem row) throws SQLException {
         if (activeConnection == null) {
             throw new IllegalStateException("No transaction is active!");
@@ -328,6 +335,7 @@ public class FreeformQuery implements QueryDelegate {
      * @see
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#beginTransaction()
      */
+    @Override
     public synchronized void beginTransaction()
             throws UnsupportedOperationException, SQLException {
         if (activeConnection != null) {
@@ -342,6 +350,7 @@ public class FreeformQuery implements QueryDelegate {
      * 
      * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#commit()
      */
+    @Override
     public synchronized void commit() throws UnsupportedOperationException,
             SQLException {
         if (activeConnection == null) {
@@ -359,6 +368,7 @@ public class FreeformQuery implements QueryDelegate {
      * 
      * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#rollback()
      */
+    @Override
     public synchronized void rollback() throws UnsupportedOperationException,
             SQLException {
         if (activeConnection == null) {
@@ -376,6 +386,7 @@ public class FreeformQuery implements QueryDelegate {
      * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns
      * ()
      */
+    @Override
     public List<String> getPrimaryKeyColumns() {
         return primaryKeyColumns;
     }
@@ -403,6 +414,7 @@ public class FreeformQuery implements QueryDelegate {
      * @see FreeformQueryDelegate#getContainsRowQueryString(Object...)
      * 
      */
+    @Override
     @SuppressWarnings("deprecation")
     public boolean containsRowWithKey(Object... keys) throws SQLException {
         String query = null;

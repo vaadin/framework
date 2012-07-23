@@ -22,6 +22,7 @@ public interface ComponentConnector extends ServerConnector {
      * 
      * @see com.vaadin.terminal.gwt.client.VPaintable#getState()
      */
+    @Override
     public ComponentState getState();
 
     /**

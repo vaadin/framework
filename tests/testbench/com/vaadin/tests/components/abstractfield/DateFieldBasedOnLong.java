@@ -24,6 +24,7 @@ public class DateFieldBasedOnLong extends AbstractComponentDataBindingTest {
         addComponent(new Button("Set property value to 10000L",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         property.setValue(10000L);
 

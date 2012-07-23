@@ -286,6 +286,7 @@ public class DateField extends AbstractField<Date> implements
      * Paints this component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Adds the locale as attribute
@@ -339,6 +340,7 @@ public class DateField extends AbstractField<Date> implements
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
         if (!isReadOnly()
@@ -729,20 +731,24 @@ public class DateField extends AbstractField<Date> implements
         return lenient;
     }
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }

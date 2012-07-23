@@ -30,6 +30,7 @@ public class UsingUriFragments extends Root {
 
         // React to fragment changes
         getPage().addListener(new FragmentChangedListener() {
+            @Override
             public void fragmentChanged(FragmentChangedEvent source) {
                 handleFragment(source.getFragment());
             }
@@ -40,6 +41,7 @@ public class UsingUriFragments extends Root {
 
         addComponent(new Button("Show and set fragment",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         handleFragment(getPage().getFragment());
                         getPage().setFragment("customFragment");

@@ -42,6 +42,7 @@ public class FooterClick extends TestBase {
 
         // Add a footer click listener
         table.addListener(new Table.FooterClickListener() {
+            @Override
             public void footerClick(FooterClickEvent event) {
                 columnField.setValue(String.valueOf(event.getPropertyId()));
                 log.log("Clicked on footer: " + event.getPropertyId());
@@ -53,6 +54,7 @@ public class FooterClick extends TestBase {
         immediateCheckbox.setValue(table.isImmediate());
         immediateCheckbox.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setImmediate((Boolean) event.getProperty().getValue());
             }
@@ -65,6 +67,7 @@ public class FooterClick extends TestBase {
         columnReorderingCheckbox
                 .addListener(new Property.ValueChangeListener() {
 
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         table.setColumnReorderingAllowed((Boolean) event
                                 .getProperty().getValue());

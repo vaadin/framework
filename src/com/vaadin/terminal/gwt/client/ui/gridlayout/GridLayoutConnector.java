@@ -83,6 +83,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         VGridLayout layout = getWidget();
         layout.client = client;
@@ -186,6 +187,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
+    @Override
     public void updateCaption(ComponentConnector childConnector) {
         if (!childConnector.delegateCaptionHandling()) {
             // Check not required by interface but by workarounds in this class
@@ -224,10 +226,12 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         return (VGridLayout) super.getWidget();
     }
 
+    @Override
     public void layoutVertically() {
         getWidget().updateHeight();
     }
 
+    @Override
     public void layoutHorizontally() {
         getWidget().updateWidth();
     }

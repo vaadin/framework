@@ -41,6 +41,7 @@ public class LongMultiselect extends TestBase {
 
         // Add action button
         layout.addComponent(new Button("Do It", new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 // Set ItemProperty.COLUMN2 for all selected values of table
                 Collection selectedIds = (Collection) table.getValue();

@@ -24,10 +24,12 @@ public class PopupViewShouldCloseOnTabOut extends TestBase {
     protected void setup() {
         PopupView pv = new PopupView(new Content() {
 
+            @Override
             public String getMinimizedValueAsHTML() {
                 return "<b>click me</b>";
             }
 
+            @Override
             public Component getPopupComponent() {
                 VerticalLayout vl = new VerticalLayout();
                 TextField field1 = new TextField();

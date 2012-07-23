@@ -46,6 +46,7 @@ public class TestImmediateUploadInFormLayout extends
         return Collections.emptyList();
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         getMainWindow().showNotification("Receiving upload");
         return new ByteArrayOutputStream();

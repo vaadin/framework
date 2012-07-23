@@ -62,6 +62,7 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         fieldSet.appendChild(footerContainer);
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }

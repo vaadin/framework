@@ -44,6 +44,7 @@ public class Ticket2209OL2 extends Application.LegacyApplication {
 
         Button b = new Button("Add label text", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 labelLong.setValue(labelLong.getValue() + "-12345");
             }

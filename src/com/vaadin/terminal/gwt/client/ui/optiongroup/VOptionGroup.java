@@ -51,6 +51,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     protected List<HandlerRegistration> blurHandlers = null;
 
     private final LoadHandler iconLoadHandler = new LoadHandler() {
+        @Override
         public void onLoad(LoadEvent event) {
             Util.notifyParentOfSizeChange(VOptionGroup.this, true);
         }
@@ -154,6 +155,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         }
     }
 
+    @Override
     public void focus() {
         Iterator<Widget> iterator = panel.iterator();
         if (iterator.hasNext()) {
@@ -161,6 +163,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         }
     }
 
+    @Override
     public void onFocus(FocusEvent arg0) {
         if (!blurOccured) {
             // no blur occured before this focus event
@@ -178,10 +181,12 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent arg0) {
         blurOccured = true;
         if (sendBlurEvents) {
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     // check whether blurOccured still is true and then send the
                     // event out to the server

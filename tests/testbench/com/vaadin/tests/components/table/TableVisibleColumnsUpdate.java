@@ -46,6 +46,7 @@ public class TableVisibleColumnsUpdate extends TestBase {
         Button updateButton = new Button("Change columns", new ClickListener() {
             private boolean one = true;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setVisibleColumns((one ? cols2 : cols1));
                 one = !one;

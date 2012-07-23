@@ -36,18 +36,22 @@ public class SimpleFocusablePanel extends SimplePanel implements
         setTabIndex(0);
     }
 
+    @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
         return addDomHandler(handler, FocusEvent.getType());
     }
 
+    @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
         return addDomHandler(handler, BlurEvent.getType());
     }
 
+    @Override
     public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
         return addDomHandler(handler, KeyDownEvent.getType());
     }
 
+    @Override
     public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
         return addDomHandler(handler, KeyPressEvent.getType());
     }
@@ -64,6 +68,7 @@ public class SimpleFocusablePanel extends SimplePanel implements
         }
     }
 
+    @Override
     public void focus() {
         setFocus(true);
     }

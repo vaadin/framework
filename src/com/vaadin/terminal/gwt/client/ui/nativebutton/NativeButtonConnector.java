@@ -107,12 +107,14 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
         return (ButtonState) super.getState();
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurRpc.focus();
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side

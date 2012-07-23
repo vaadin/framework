@@ -100,20 +100,24 @@ public class CustomComponent extends AbstractComponentContainer {
             Serializable {
         boolean first = getCompositionRoot() != null;
 
+        @Override
         public boolean hasNext() {
             return first;
         }
 
+        @Override
         public Component next() {
             first = false;
             return root;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
@@ -124,6 +128,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @return the number of contained components (zero or one)
      */
+    @Override
     public int getComponentCount() {
         return (root != null ? 1 : 0);
     }
@@ -134,6 +139,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * @see com.vaadin.ui.ComponentContainer#replaceComponent(com.vaadin.ui.Component,
      *      com.vaadin.ui.Component)
      */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         throw new UnsupportedOperationException();
     }

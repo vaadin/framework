@@ -28,6 +28,7 @@ public class UndefinedHeightSubWindowAndContent extends TestBase {
         field1.setImmediate(true);
         field1.addValidator(new Validator() {
 
+            @Override
             public void validate(Object value) throws InvalidValueException {
                 if (!isValid(value)) {
                     throw new InvalidValueException("FAIL!");

@@ -30,6 +30,7 @@ public class CtrlShiftMultiselect extends TestBase {
         tree.expandItemsRecursively("Item 4");
 
         tree.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (tree.getValue() instanceof Set) {
                     @SuppressWarnings("unchecked")

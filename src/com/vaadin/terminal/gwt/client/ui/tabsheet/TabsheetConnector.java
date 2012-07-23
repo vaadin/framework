@@ -68,10 +68,12 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         return (VTabsheet) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         /* Tabsheet does not render its children's captions */
     }
 
+    @Override
     public void layout() {
         VTabsheet tabsheet = getWidget();
 

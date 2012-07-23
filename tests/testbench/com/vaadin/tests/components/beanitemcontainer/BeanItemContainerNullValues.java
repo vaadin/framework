@@ -29,6 +29,7 @@ public class BeanItemContainerNullValues extends TestBase {
 
         Button b = new Button("Disable sorting", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setSortEnabled(!table.isSortEnabled());
                 if (table.isSortEnabled()) {

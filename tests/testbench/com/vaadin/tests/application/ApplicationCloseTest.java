@@ -27,6 +27,7 @@ public class ApplicationCloseTest extends TestBase {
         Label thisApp = new Label("This applications: " + this);
         Button close = new Button("Close this", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton().getApplication().close();
             }

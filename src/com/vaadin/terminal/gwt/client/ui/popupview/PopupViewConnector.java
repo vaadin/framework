@@ -31,6 +31,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
      * @see com.vaadin.terminal.gwt.client.ComponentConnector#updateFromUIDL(com.vaadin.terminal.gwt.client.UIDL,
      *      com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -81,6 +82,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
         }
     }// updateFromUIDL
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         if (VCaption.isNeeded(component.getState())) {
             if (getWidget().popup.captionWrapper != null) {
@@ -104,6 +106,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
         return (VPopupView) super.getWidget();
     }
 
+    @Override
     public void postLayout() {
         if (centerAfterLayout) {
             centerAfterLayout = false;

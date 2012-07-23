@@ -46,6 +46,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
     private ComponentPosition componentPosition = null;
 
     private class MyAttachListener implements ComponentAttachListener {
+        @Override
         public void componentAttachedToContainer(ComponentAttachEvent event) {
             attachCounter++;
             attachedComponent = event.getAttachedComponent();
@@ -75,6 +76,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
     }
 
     private class MyDetachListener implements ComponentDetachListener {
+        @Override
         public void componentDetachedFromContainer(ComponentDetachEvent event) {
             detachCounter++;
             detachedComponent = event.getDetachedComponent();

@@ -48,6 +48,7 @@ public class VDragAndDropManager {
     private final class DefaultDragAndDropEventHandler implements
             NativePreviewHandler {
 
+        @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             NativeEvent nativeEvent = event.getNativeEvent();
 
@@ -307,6 +308,7 @@ public class VDragAndDropManager {
 
         final Command startDrag = new Command() {
 
+            @Override
             public void execute() {
                 isStarted = true;
                 addActiveDragSourceStyleName();
@@ -352,6 +354,7 @@ public class VDragAndDropManager {
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
 
+                        @Override
                         public void onPreviewNativeEvent(
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
@@ -509,6 +512,7 @@ public class VDragAndDropManager {
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+                        @Override
                         public boolean execute() {
                             if (!client.hasActiveRequest()) {
                                 removeActiveDragSourceStyleName(dragSource);

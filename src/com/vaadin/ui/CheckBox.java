@@ -18,6 +18,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
 
+        @Override
         public void setChecked(boolean checked,
                 MouseEventDetails mouseEventDetails) {
             if (isReadOnly()) {

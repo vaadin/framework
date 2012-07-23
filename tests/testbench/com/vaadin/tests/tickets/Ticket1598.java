@@ -32,6 +32,7 @@ public class Ticket1598 extends Application.LegacyApplication {
         for (int i = 0; i < 5; i++) {
             first.addItem(new String("Submenu item" + i), null, new Command() {
 
+                @Override
                 public void menuSelected(MenuItem selected) {
                     main.showNotification("Action " + selected.getText());
                 }
@@ -44,6 +45,7 @@ public class Ticket1598 extends Application.LegacyApplication {
             firstSubItem1.addItem(new String("Subsubmenu item" + i), null,
                     new Command() {
 
+                        @Override
                         public void menuSelected(MenuItem selected) {
                             main.showNotification("Action "
                                     + selected.getText());
@@ -56,6 +58,7 @@ public class Ticket1598 extends Application.LegacyApplication {
             firstSubItem2.addItem(new String("Subsubmenu item" + i), null,
                     new Command() {
 
+                        @Override
                         public void menuSelected(MenuItem selected) {
                             main.showNotification("Action "
                                     + selected.getText());
@@ -69,6 +72,7 @@ public class Ticket1598 extends Application.LegacyApplication {
             second.addItem(new String("Second submenu item" + i), null,
                     new Command() {
 
+                        @Override
                         public void menuSelected(MenuItem selected) {
                             main.showNotification("Action "
                                     + selected.getText());
@@ -82,6 +86,7 @@ public class Ticket1598 extends Application.LegacyApplication {
         for (int i = 2; i <= 3; i++) {
             (menuBar.getItems().get(i)).setCommand(new Command() {
 
+                @Override
                 public void menuSelected(MenuItem selectedItem) {
                     main.showNotification("Action " + selectedItem.getText());
                 }
@@ -92,6 +97,7 @@ public class Ticket1598 extends Application.LegacyApplication {
         fourth.setText("Add new item");
 
         fourth.setCommand(new Command() {
+            @Override
             public void menuSelected(MenuItem selected) {
                 menuBar.addItem("Newborn", null, null);
             }
@@ -108,6 +114,7 @@ public class Ticket1598 extends Application.LegacyApplication {
         // A command for removing the selected menuitem
         Command removeCommand = new Command() {
 
+            @Override
             public void menuSelected(MenuItem selected) {
                 MenuItem parent = selected.getParent();
                 if (parent != null) {

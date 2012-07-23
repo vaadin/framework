@@ -106,6 +106,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
 
                 Button b = new Button("Close", new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         TestCaseWindow.this.close();
                     }
@@ -122,6 +123,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
         LegacyWindow mainWindow = new LegacyWindow();
         setMainWindow(mainWindow);
         Button open = new Button("Open window", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().addWindow(new TestCaseWindow());
             }

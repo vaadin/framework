@@ -19,6 +19,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
 
     public MyComponentConnector() {
         getWidget().addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
 
                 final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
@@ -29,6 +30,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
             }
         });
         registerRpc(MyComponentClientRpc.class, new MyComponentClientRpc() {
+            @Override
             public void alert(String message) {
                 Window.alert(message);
             }

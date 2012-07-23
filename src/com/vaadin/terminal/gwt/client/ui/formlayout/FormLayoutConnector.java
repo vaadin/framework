@@ -79,6 +79,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         getWidget().table.updateCaption(component.getWidget(),
                 component.getState(), component.isEnabled());

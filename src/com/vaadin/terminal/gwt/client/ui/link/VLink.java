@@ -53,6 +53,7 @@ public class VLink extends HTML implements ClickHandler {
         setStyleName(CLASSNAME);
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         if (enabled) {
             if (target == null) {

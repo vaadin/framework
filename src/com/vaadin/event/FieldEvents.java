@@ -261,10 +261,12 @@ public interface FieldEvents {
 
         protected abstract void fireEvent(Event event);
 
+        @Override
         public void blur() {
             fireEvent(new BlurEvent(component));
         }
 
+        @Override
         public void focus() {
             fireEvent(new FocusEvent(component));
         }

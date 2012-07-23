@@ -43,6 +43,7 @@ public class GridLayoutWidthChange extends TestBase {
         Button testButton = new Button("Reduce GridLayout parent width",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cc.setWidth((cc.getWidth() - 10) + "px");
                     }

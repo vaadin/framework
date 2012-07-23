@@ -27,6 +27,7 @@ public class Ticket2106 extends Application.LegacyApplication {
         setMainWindow(new LegacyWindow("#2106"));
         getMainWindow().addComponent(
                 new Button("Do nothing", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().addComponent(
                                 new Label("Last time did nothing: "

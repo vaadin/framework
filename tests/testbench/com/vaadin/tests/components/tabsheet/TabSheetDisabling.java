@@ -20,6 +20,7 @@ public class TabSheetDisabling extends TestBase {
                 buttons[i] = new Button("Disable this tab",
                         new ClickListener() {
 
+                            @Override
                             public void buttonClick(ClickEvent event) {
                                 Button b = event.getButton();
                                 tabSheet.getTab(b).setEnabled(false);
@@ -30,6 +31,7 @@ public class TabSheetDisabling extends TestBase {
             } else {
                 buttons[i] = new Button("Hide this tab", new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Button b = event.getButton();
                         tabSheet.getTab(b).setVisible(false);
@@ -41,6 +43,7 @@ public class TabSheetDisabling extends TestBase {
         }
 
         Button button = new Button("Enable/disable", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 tabSheet.setEnabled(!tabSheet.isEnabled());
             }

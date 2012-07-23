@@ -59,6 +59,7 @@ public class GridLayoutExpandRatioModification extends TestBase implements
         vl2.setSizeFull();
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (isVisible) {
             mainLayout.setRowExpandRatio(2, 0);

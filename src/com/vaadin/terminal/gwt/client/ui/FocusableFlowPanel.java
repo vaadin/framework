@@ -39,6 +39,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
      * com.google.gwt.event.dom.client.HasFocusHandlers#addFocusHandler(com.
      * google.gwt.event.dom.client.FocusHandler)
      */
+    @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
         return addDomHandler(handler, FocusEvent.getType());
     }
@@ -50,6 +51,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
      * com.google.gwt.event.dom.client.HasBlurHandlers#addBlurHandler(com.google
      * .gwt.event.dom.client.BlurHandler)
      */
+    @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
         return addDomHandler(handler, BlurEvent.getType());
     }
@@ -61,6 +63,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
      * com.google.gwt.event.dom.client.HasKeyDownHandlers#addKeyDownHandler(
      * com.google.gwt.event.dom.client.KeyDownHandler)
      */
+    @Override
     public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
         return addDomHandler(handler, KeyDownEvent.getType());
     }
@@ -72,6 +75,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
      * com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler
      * (com.google.gwt.event.dom.client.KeyPressHandler)
      */
+    @Override
     public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
         return addDomHandler(handler, KeyPressEvent.getType());
     }
@@ -94,6 +98,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
     /**
      * Focus the panel
      */
+    @Override
     public void focus() {
         setFocus(true);
     }

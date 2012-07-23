@@ -16,6 +16,7 @@ public class TreeTableOutOfSync extends TestBase {
         TreeTable tt = new TreeTable();
         tt.addContainerProperty("i", Integer.class, null);
         tt.addGeneratedColumn("text", new Table.ColumnGenerator() {
+            @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
                 if ("text".equals(columnId)) {
@@ -23,6 +24,7 @@ public class TreeTableOutOfSync extends TestBase {
                             + source.getContainerDataSource().getItem(itemId)
                                     .getItemProperty("i").getValue());
                     button.addListener(new Button.ClickListener() {
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             getMainWindow().showNotification("click");
                         }

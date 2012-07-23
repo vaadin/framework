@@ -18,6 +18,7 @@ public class ReopenPopupView extends AbstractTestRoot {
         addComponent(log);
         addComponent(new PopupView("PopupView", new Button("Button",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         log.log("Button clicked");
                     }

@@ -20,6 +20,7 @@ public class TextFieldValueGoesMissing extends TestBase {
         Button button = new Button("Replace label");
         button.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (verticalLayout.getComponentIndex(label1) > -1) {
                     verticalLayout.replaceComponent(label1, label2);

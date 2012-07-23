@@ -21,6 +21,7 @@ public class TestFileUpload extends TestBase implements Receiver {
     protected void setup() {
         Upload u = new Upload("Upload", new Upload.Receiver() {
 
+            @Override
             public OutputStream receiveUpload(String filename, String mimeType) {
                 return baos;
             }
@@ -28,6 +29,7 @@ public class TestFileUpload extends TestBase implements Receiver {
         u.setDebugId("UPL");
         u.addListener(new Upload.FinishedListener() {
 
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 String hash = DigestUtils.md5Hex(baos.toByteArray());
                 log.log("Upload finished. Name: " + event.getFilename()
@@ -40,6 +42,7 @@ public class TestFileUpload extends TestBase implements Receiver {
         addComponent(u);
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         getMainWindow().showNotification("Receiving upload");
         return new ByteArrayOutputStream();

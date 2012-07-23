@@ -62,6 +62,7 @@ public abstract class AbstractContainerTest extends TestCase {
     protected static class ItemSetChangeCounter extends AbstractEventCounter
             implements ItemSetChangeListener {
 
+        @Override
         public void containerItemSetChange(ItemSetChangeEvent event) {
             increment();
         }

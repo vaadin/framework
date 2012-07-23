@@ -50,6 +50,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         text.addStyleName(CLASSNAME + "-textfield");
         text.addChangeHandler(this);
         text.addFocusHandler(new FocusHandler() {
+            @Override
             public void onFocus(FocusEvent event) {
                 text.addStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
@@ -66,6 +67,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             }
         });
         text.addBlurHandler(new BlurHandler() {
+            @Override
             public void onBlur(BlurEvent event) {
                 text.removeStyleName(VTextField.CLASSNAME + "-"
                         + VTextField.CLASSNAME_FOCUS);
@@ -168,6 +170,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         }
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
         if (!text.getText().equals("")) {
@@ -291,6 +294,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         return format.trim();
     }
 
+    @Override
     public void focus() {
         text.setFocus(true);
     }
@@ -315,6 +319,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     private final String TEXTFIELD_ID = "field";
 
+    @Override
     public Element getSubPartElement(String subPart) {
         if (subPart.equals(TEXTFIELD_ID)) {
             return text.getElement();
@@ -323,6 +328,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         return null;
     }
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (text.getElement().isOrHasChild(subElement)) {
             return TEXTFIELD_ID;

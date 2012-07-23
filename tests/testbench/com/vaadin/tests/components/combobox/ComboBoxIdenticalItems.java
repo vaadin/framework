@@ -27,6 +27,7 @@ public class ComboBoxIdenticalItems extends TestBase {
         select.addListener(new Property.ValueChangeListener() {
             private static final long serialVersionUID = -7932700771673919620L;
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Item " + select.getValue() + " selected");
 

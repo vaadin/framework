@@ -137,6 +137,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         return (VCssLayout) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector child) {
         Widget childWidget = child.getWidget();
         FlowPane cssLayoutWidgetContainer = getWidget().panel;

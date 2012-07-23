@@ -22,6 +22,7 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         testButton = new Button("Click to move to inner layout",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         vl.addComponent(testButton);
                     }
@@ -37,6 +38,7 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         Button b = new Button("Repaint inner layout",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         vl.requestRepaint();
                     }

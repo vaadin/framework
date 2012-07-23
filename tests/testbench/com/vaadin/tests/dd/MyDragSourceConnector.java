@@ -14,6 +14,7 @@ import com.vaadin.tests.dd.CustomDDImplementation.MyDragSource;
 public class MyDragSourceConnector extends AbstractComponentConnector implements
         Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;

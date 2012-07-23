@@ -150,6 +150,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @return the value of the label.
      */
+    @Override
     public String getValue() {
         if (getPropertyDataSource() == null) {
             // Use internal value if we are running without a data source
@@ -166,6 +167,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @param newStringValue
      *            the New value of the label.
      */
+    @Override
     public void setValue(Object newStringValue) {
         if (newStringValue != null && newStringValue.getClass() != String.class) {
             throw new Converter.ConversionException("Value of type "
@@ -197,6 +199,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @see com.vaadin.data.Property#getType()
      */
+    @Override
     public Class<String> getType() {
         return String.class;
     }
@@ -207,6 +210,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @return the data source property.
      * @see com.vaadin.data.Property.Viewer#getPropertyDataSource()
      */
+    @Override
     public Property getPropertyDataSource() {
         return dataSource;
     }
@@ -218,6 +222,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the new data source Property
      * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(com.vaadin.data.Property)
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
         // Stops listening the old data source changes
         if (dataSource != null
@@ -314,6 +319,7 @@ public class Label extends AbstractComponent implements Property<String>,
          * 
          * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
@@ -326,6 +332,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the Listener to be added.
      * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void addListener(Property.ValueChangeListener listener) {
         addListener(Label.ValueChangeEvent.class, listener, VALUE_CHANGE_METHOD);
     }
@@ -337,6 +344,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the Listener to be removed.
      * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com.vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void removeListener(Property.ValueChangeListener listener) {
         removeListener(Label.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
@@ -355,6 +363,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         // Update the internal value from the data source
         getState().setText(getValue());
@@ -399,6 +408,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *         less than, equal to, or greater than the specified object.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Label other) {
 
         String thisValue = getComparableValue();

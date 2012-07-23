@@ -30,6 +30,7 @@ public class SetCurrentPageFirstItemId extends TestBase {
 
         Button addrowButton = new Button("Add row");
         addrowButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent pEvent) {
                 Object id = addRow();
                 table.setCurrentPageFirstItemId(id);

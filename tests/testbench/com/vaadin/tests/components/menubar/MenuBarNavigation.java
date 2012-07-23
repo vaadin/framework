@@ -47,6 +47,7 @@ public class MenuBarNavigation extends TestBase implements Command {
         return 5174;
     }
 
+    @Override
     public void menuSelected(MenuItem selectedItem) {
         log.log("MenuItem " + getName(selectedItem) + " selected");
     }

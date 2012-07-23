@@ -88,6 +88,7 @@ public class EditableTableLeak extends TestBase {
         useFieldFactory.setImmediate(true);
         useFieldFactory.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (useFieldFactory.getValue()) {
                     table.setTableFieldFactory(new CachingFieldFactory());
@@ -111,6 +112,7 @@ public class EditableTableLeak extends TestBase {
         addComponent(sizeLabel);
 
         addComponent(new Button("Show size of the table", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.requestRepaintAll();
                 updateSize();
@@ -119,6 +121,7 @@ public class EditableTableLeak extends TestBase {
         }));
 
         addComponent(new Button("Select the second row", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.select("AL");
                 updateSize();

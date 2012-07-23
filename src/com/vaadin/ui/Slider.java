@@ -278,6 +278,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
         super.setValue(newFieldValue);
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         target.addAttribute("min", min);
@@ -307,6 +308,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      * @param source
      * @param variables
      */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("value")) {
             final Object value = variables.get("value");

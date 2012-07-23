@@ -37,6 +37,7 @@ public class IntegrationTestApplication extends Application.LegacyApplication {
 
         final Label selectedLabel = new Label();
         table.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 selectedLabel.setValue(table.getValue());
             }

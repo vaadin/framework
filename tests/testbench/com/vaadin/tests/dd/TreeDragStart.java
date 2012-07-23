@@ -38,6 +38,7 @@ public class TreeDragStart extends TestBase {
         checkBox.setImmediate(true);
         checkBox.setValue(true);
         checkBox.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 tree.setEnabled(!tree.isEnabled());
             }
@@ -47,6 +48,7 @@ public class TreeDragStart extends TestBase {
         checkBox.setImmediate(true);
         checkBox.setValue(true);
         checkBox.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) ((CheckBox) event.getProperty()).getValue()) {
                     tree.setDragMode(TreeDragMode.NODE);
@@ -75,6 +77,7 @@ public class TreeDragStart extends TestBase {
 
         // Allow the tree to receive drag drops and handle them
         tree.setDropHandler(new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 // Accept drops in the middle of container items
                 // and below and above all items.
@@ -82,6 +85,7 @@ public class TreeDragStart extends TestBase {
                         VerticalLocationIs.MIDDLE));
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 // Wrapper for the object that is dragged
                 DataBoundTransferable t = (DataBoundTransferable) event
@@ -152,10 +156,12 @@ public class TreeDragStart extends TestBase {
 
         // Allow the table to receive drops and handle them
         table.setDropHandler(new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return new Not(VerticalLocationIs.MIDDLE);
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 // Wrapper for the object that is dragged
                 DataBoundTransferable t = (DataBoundTransferable) event

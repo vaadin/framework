@@ -30,6 +30,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
         inner = new VerticalLayout();
         outer.addComponent(inner);
         button = new Button("foo", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 newState();
             }
@@ -92,6 +93,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
         }
     }
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

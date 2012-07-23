@@ -23,16 +23,19 @@ public class VDateFieldCalendar extends VDateField {
         calendarPanel = new VCalendarPanel();
         add(calendarPanel);
         calendarPanel.setSubmitListener(new SubmitListener() {
+            @Override
             public void onSubmit() {
                 updateValueFromPanel();
             }
 
+            @Override
             public void onCancel() {
                 // TODO Auto-generated method stub
 
             }
         });
         calendarPanel.setFocusOutListener(new FocusOutListener() {
+            @Override
             public boolean onFocusOut(DomEvent<?> event) {
                 updateValueFromPanel();
                 return false;

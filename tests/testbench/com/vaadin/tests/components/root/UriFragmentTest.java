@@ -17,12 +17,14 @@ public class UriFragmentTest extends AbstractTestRoot {
         addComponent(fragmentLabel);
         updateLabel();
         getPage().addListener(new Page.FragmentChangedListener() {
+            @Override
             public void fragmentChanged(FragmentChangedEvent event) {
                 updateLabel();
             }
         });
         addComponent(new Button("Navigate to #test",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getPage().setFragment("test");
                     }

@@ -71,6 +71,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return false;
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (isRealUpdate(uidl)) {
 
@@ -165,6 +166,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         getWidget().contentNode.setTabIndex(getState().getTabIndex());
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP: layouts caption, errors etc not rendered in Panel
     }
@@ -174,6 +176,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return (VPanel) super.getWidget();
     }
 
+    @Override
     public void layout() {
         updateSizes();
     }
@@ -200,6 +203,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         panel.scrollLeft = panel.contentNode.getScrollLeft();
     }
 
+    @Override
     public void postLayout() {
         VPanel panel = getWidget();
         if (uidlScrollTop != null) {

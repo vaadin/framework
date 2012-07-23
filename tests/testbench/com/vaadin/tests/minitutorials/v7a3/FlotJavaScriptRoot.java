@@ -21,6 +21,7 @@ public class FlotJavaScriptRoot extends Root {
         addComponent(flot);
 
         addComponent(new Button("Highlight point", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 flot.highlight(0, 3);
             }

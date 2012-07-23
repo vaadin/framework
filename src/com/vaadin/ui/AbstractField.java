@@ -178,6 +178,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return the type of the Field
      */
+    @Override
     public abstract Class<? extends T> getType();
 
     /**
@@ -206,6 +207,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.data.BufferedValidatable#isInvalidCommitted()
      */
+    @Override
     public boolean isInvalidCommitted() {
         return invalidCommitted;
     }
@@ -215,6 +217,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.data.BufferedValidatable#setInvalidCommitted(boolean)
      */
+    @Override
     public void setInvalidCommitted(boolean isCommitted) {
         invalidCommitted = isCommitted;
     }
@@ -223,6 +226,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Saves the current value to the data source Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
+    @Override
     public void commit() throws Buffered.SourceException, InvalidValueException {
         if (dataSource != null && !dataSource.isReadOnly()) {
             if ((isInvalidCommitted() || isValid())) {
@@ -271,6 +275,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Updates the value from the data source. Don't add a JavaDoc comment here,
      * we use the default documentation from the implemented interface.
      */
+    @Override
     public void discard() throws Buffered.SourceException {
         if (dataSource != null) {
 
@@ -343,6 +348,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * comment here, we use the default documentation from the implemented
      * interface.
      */
+    @Override
     public boolean isModified() {
         return getState().isModified();
     }
@@ -356,6 +362,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Tests if the field is in write-through mode. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
+    @Override
     public boolean isWriteThrough() {
         return writeThroughMode;
     }
@@ -381,6 +388,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             setReadThrough(true), setWriteThrough(true) equals
      *             setBuffered(false)
      */
+    @Override
     @Deprecated
     public void setWriteThrough(boolean writeThrough)
             throws Buffered.SourceException, InvalidValueException {
@@ -397,6 +405,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Tests if the field is in read-through mode. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
+    @Override
     public boolean isReadThrough() {
         return readThroughMode;
     }
@@ -420,6 +429,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             setReadThrough(true), setWriteThrough(true) equals
      *             setBuffered(false)
      */
+    @Override
     @Deprecated
     public void setReadThrough(boolean readThrough)
             throws Buffered.SourceException {
@@ -452,6 +462,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param buffered
      *            true if buffered mode should be turned on, false otherwise
      */
+    @Override
     public void setBuffered(boolean buffered) {
         setReadThrough(!buffered);
         setWriteThrough(!buffered);
@@ -464,6 +475,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return true if buffered mode is on, false otherwise
      */
+    @Override
     public boolean isBuffered() {
         return !isReadThrough() && !isWriteThrough();
     }
@@ -517,6 +529,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @return the current value of the field.
      */
+    @Override
     public T getValue() {
         return getFieldValue();
     }
@@ -528,6 +541,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            the New value of the field.
      * @throws Property.ReadOnlyException
      */
+    @Override
     public void setValue(Object newFieldValue)
             throws Property.ReadOnlyException, Converter.ConversionException {
         // This check is needed as long as setValue accepts Object instead of T
@@ -644,6 +658,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return the current data source as a Property, or <code>null</code> if
      *         none defined.
      */
+    @Override
     public Property getPropertyDataSource() {
         return dataSource;
     }
@@ -686,6 +701,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param newDataSource
      *            the new data source Property.
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
 
         // Saves the old value
@@ -863,6 +879,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param validator
      *            the new validator to be added.
      */
+    @Override
     public void addValidator(Validator validator) {
         if (validators == null) {
             validators = new LinkedList<Validator>();
@@ -877,6 +894,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return the Unmodifiable collection that holds all validators for the
      *         field.
      */
+    @Override
     public Collection<Validator> getValidators() {
         if (validators == null || validators.isEmpty()) {
             return null;
@@ -890,6 +908,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param validator
      *            the validator to remove.
      */
+    @Override
     public void removeValidator(Validator validator) {
         if (validators != null) {
             validators.remove(validator);
@@ -919,6 +938,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *         current value is valid or if the field is empty and not required,
      *         <code>false</code> otherwise.
      */
+    @Override
     public boolean isValid() {
 
         try {
@@ -943,6 +963,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.data.Validatable#validate()
      */
+    @Override
     public void validate() throws Validator.InvalidValueException {
 
         if (isRequired() && isEmpty()) {
@@ -1014,6 +1035,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return true iff the invalid values are allowed.
      * @see com.vaadin.data.Validatable#isInvalidAllowed()
      */
+    @Override
     public boolean isInvalidAllowed() {
         return invalidAllowed;
     }
@@ -1031,6 +1053,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.data.Validatable#setInvalidAllowed(boolean)
      */
+    @Override
     public void setInvalidAllowed(boolean invalidAllowed)
             throws UnsupportedOperationException {
         this.invalidAllowed = invalidAllowed;
@@ -1103,6 +1126,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Adds a value change listener for the field. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
+    @Override
     public void addListener(Property.ValueChangeListener listener) {
         addListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
@@ -1113,6 +1137,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * comment here, we use the default documentation from the implemented
      * interface.
      */
+    @Override
     public void removeListener(Property.ValueChangeListener listener) {
         removeListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
@@ -1152,6 +1177,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see Property.ReadOnlyStatusChangeListener
      */
+    @Override
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
         getState().setPropertyReadOnly(event.getProperty().isReadOnly());
         requestRepaint();
@@ -1184,6 +1210,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
          * 
          * @return the Source of the event.
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
@@ -1194,6 +1221,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
+    @Override
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         addListener(Property.ReadOnlyStatusChangeEvent.class, listener,
                 READ_ONLY_STATUS_CHANGE_METHOD);
@@ -1204,6 +1232,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
+    @Override
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         removeListener(Property.ReadOnlyStatusChangeEvent.class, listener,
                 READ_ONLY_STATUS_CHANGE_METHOD);
@@ -1228,6 +1257,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            the value change event telling the data source contents have
      *            changed.
      */
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         if (isReadThrough()) {
             if (committingValueToDataSource) {
@@ -1271,6 +1301,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.ui.Component.Focusable#getTabIndex()
      */
+    @Override
     public int getTabIndex() {
         return getState().getTabIndex();
     }
@@ -1280,6 +1311,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * 
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
         requestRepaint();
@@ -1362,6 +1394,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return <code>true</code> if the field is required, otherwise
      *         <code>false</code>.
      */
+    @Override
     public boolean isRequired() {
         return getState().isRequired();
     }
@@ -1381,6 +1414,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param required
      *            Is the field required.
      */
+    @Override
     public void setRequired(boolean required) {
         getState().setRequired(required);
         requestRepaint();
@@ -1395,11 +1429,13 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @param requiredMessage
      *            Message to be shown when this field is required, but empty.
      */
+    @Override
     public void setRequiredError(String requiredMessage) {
         requiredError = requiredMessage;
         requestRepaint();
     }
 
+    @Override
     public String getRequiredError() {
         return requiredError;
     }

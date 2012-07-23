@@ -13,6 +13,7 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
     // setURL() -> uRL as first char becomes lower case...
     private static final String URL_FIELD = "uRL";
 
+    @Override
     public URLReference deserialize(Type type, JSONValue jsonValue,
             ApplicationConnection connection) {
         URLReference reference = GWT.create(URLReference.class);
@@ -27,6 +28,7 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
         return reference;
     }
 
+    @Override
     public JSONValue serialize(URLReference value,
             ApplicationConnection connection) {
         JSONObject json = new JSONObject();

@@ -26,6 +26,7 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
 
         listener = new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 String style = (String) event.getButton().getData();
                 setComponentsStyle(style, !popupDateField.getStyleName()
@@ -43,6 +44,7 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
 
         button3 = new Button("Set thestyle", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (popupDateField.getStyleName().contains(thestyle)) {
                     popupDateField.removeStyleName(thestyle);

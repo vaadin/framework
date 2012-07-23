@@ -61,6 +61,7 @@ public class FileResource implements ApplicationResource {
      * 
      * @see com.vaadin.terminal.ApplicationResource#getStream()
      */
+    @Override
     public DownloadStream getStream() {
         try {
             final DownloadStream ds = new DownloadStream(new FileInputStream(
@@ -74,6 +75,7 @@ public class FileResource implements ApplicationResource {
             // Log the exception using the application error handler
             getApplication().getErrorHandler().terminalError(new ErrorEvent() {
 
+                @Override
                 public Throwable getThrowable() {
                     return e;
                 }
@@ -106,6 +108,7 @@ public class FileResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.ApplicationResource#getApplication()
      */
+    @Override
     public Application getApplication() {
         return application;
     }
@@ -113,6 +116,7 @@ public class FileResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.ApplicationResource#getFilename()
      */
+    @Override
     public String getFilename() {
         return sourceFile.getName();
     }
@@ -120,6 +124,7 @@ public class FileResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
+    @Override
     public String getMIMEType() {
         return FileTypeResolver.getMIMEType(sourceFile);
     }
@@ -132,6 +137,7 @@ public class FileResource implements ApplicationResource {
      * 
      * @return Cache time in milliseconds.
      */
+    @Override
     public long getCacheTime() {
         return cacheTime;
     }
@@ -150,6 +156,7 @@ public class FileResource implements ApplicationResource {
     }
 
     /* documented in superclass */
+    @Override
     public int getBufferSize() {
         return bufferSize;
     }

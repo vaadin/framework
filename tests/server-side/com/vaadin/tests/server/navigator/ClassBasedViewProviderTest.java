@@ -15,6 +15,7 @@ public class ClassBasedViewProviderTest extends TestCase {
     public static class TestView extends Label implements View {
         public String parameters = null;
 
+        @Override
         public void navigateTo(String parameters) {
             this.parameters = parameters;
         }

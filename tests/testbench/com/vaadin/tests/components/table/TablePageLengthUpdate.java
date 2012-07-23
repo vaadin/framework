@@ -47,6 +47,7 @@ public class TablePageLengthUpdate extends TestBase {
         Button updateButton = new Button("Update pageLength",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         updatePageLengthLabel();
                     }

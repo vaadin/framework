@@ -16,6 +16,7 @@ public class ConverterThatEnforcesAFormat extends TestBase {
                 "This field should always be formatted with 3 digits");
         tf.setConverter(new StringToDoubleConverterWithThreeFractionDigits());
         tf.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value changed to "
                         + event.getProperty().getValue()

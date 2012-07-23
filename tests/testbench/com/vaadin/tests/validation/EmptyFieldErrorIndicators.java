@@ -58,6 +58,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
 
         Button validate = new Button("Validate fields");
         validate.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     form.validate();
@@ -96,6 +97,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
         form.getLayout().addComponent(setDateButton);
         // form.addField("Set Date", setDateButton);
         setDateButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 form.getField("Date").setValue(new Date(0));
             }

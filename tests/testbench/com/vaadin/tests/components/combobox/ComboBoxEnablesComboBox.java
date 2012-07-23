@@ -16,6 +16,7 @@ public class ComboBoxEnablesComboBox extends TestBase {
         populate(cb);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 cb2.setEnabled(true);
             }

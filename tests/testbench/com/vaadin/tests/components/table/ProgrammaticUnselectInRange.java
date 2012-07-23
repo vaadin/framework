@@ -29,6 +29,7 @@ public class ProgrammaticUnselectInRange extends TestBase {
             table.addItem(new Object[] { value }, value);
         }
         table.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateSelectionLabel();
             }
@@ -37,6 +38,7 @@ public class ProgrammaticUnselectInRange extends TestBase {
         addComponent(table);
         addComponent(selectionLabel);
         addComponent(new Button("Deselect item 2", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.unselect(Integer.valueOf(2));
             }

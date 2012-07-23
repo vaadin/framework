@@ -41,6 +41,7 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
         rpc = RpcProxy.create(EmbeddedServerRpc.class, this);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;

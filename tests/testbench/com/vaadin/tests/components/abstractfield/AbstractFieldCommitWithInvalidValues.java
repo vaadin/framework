@@ -33,6 +33,7 @@ public class AbstractFieldCommitWithInvalidValues extends TestBase {
 
         Button b = new Button("Commit", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     tf.commit();

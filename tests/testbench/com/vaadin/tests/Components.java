@@ -137,6 +137,7 @@ public class Components extends Application.LegacyApplication {
         naviTree = new Tree();
         naviTree.setItemStyleGenerator(new ItemStyleGenerator() {
 
+            @Override
             public String getStyle(Object itemId) {
                 Class<?> cls = (Class<?>) itemId;
                 if (!isAbstract(cls)) {
@@ -182,6 +183,7 @@ public class Components extends Application.LegacyApplication {
 
         naviTree.addListener(new ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 Class<?> cls = (Class<?>) event.getItemId();
                 if (!isAbstract(cls)) {

@@ -9,10 +9,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class AndTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof And;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         return QueryBuilder.group(QueryBuilder.getJoinedFilterString(
                 ((And) filter).getFilters(), "AND", sh));

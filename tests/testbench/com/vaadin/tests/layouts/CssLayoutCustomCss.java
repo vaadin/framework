@@ -46,6 +46,7 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 layout.setMargin(cb.getValue());
             }
@@ -73,6 +74,7 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
         return null;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         Button b = event.getButton();
         if (b.getCaption().contains("not ")) {

@@ -32,6 +32,7 @@ public class SubWindows extends TestBase {
         Button b = new Button("Remove");
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Button b = event.getButton();
                 ComponentContainer cc = (ComponentContainer) b.getParent();
@@ -51,6 +52,7 @@ public class SubWindows extends TestBase {
         autoWideWindow.addComponent(new TextField("Field 2"));
         autoWideWindow.addComponent(new Button("Add", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 autoWideWindow.addComponent(createRemoveButton());
 

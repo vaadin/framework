@@ -54,6 +54,7 @@ public class Navigator implements Serializable {
             setHeight("0px");
         }
 
+        @Override
         public void navigateTo(String fragmentParameters) {
             // nothing to do
         }
@@ -88,14 +89,17 @@ public class Navigator implements Serializable {
             page.addListener(this);
         }
 
+        @Override
         public String getFragment() {
             return page.getFragment();
         }
 
+        @Override
         public void setFragment(String fragment) {
             page.setFragment(fragment, false);
         }
 
+        @Override
         public void fragmentChanged(FragmentChangedEvent event) {
             UriFragmentManager.this.navigator.navigateTo(getFragment());
         }
@@ -122,6 +126,7 @@ public class Navigator implements Serializable {
             setSizeFull();
         }
 
+        @Override
         public void showView(View view) {
             if (view instanceof Component) {
                 setCompositionRoot((Component) view);
@@ -155,6 +160,7 @@ public class Navigator implements Serializable {
             this.container = container;
         }
 
+        @Override
         public void showView(View view) {
             if (view instanceof Component) {
                 container.removeAllComponents();
@@ -190,6 +196,7 @@ public class Navigator implements Serializable {
             this.view = view;
         }
 
+        @Override
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
@@ -200,6 +207,7 @@ public class Navigator implements Serializable {
             return null;
         }
 
+        @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
                 return view;
@@ -250,6 +258,7 @@ public class Navigator implements Serializable {
             this.viewClass = viewClass;
         }
 
+        @Override
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
@@ -261,6 +270,7 @@ public class Navigator implements Serializable {
             return null;
         }
 
+        @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
                 try {

@@ -32,6 +32,7 @@ public class TabSheetDiscardsMovedComponents extends TestBase {
     private void addTestComponent(final Component component) {
         grid.addComponent(component);
         grid.addComponent(new Button("Move to tab", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 tabSheet.addTab(component);
                 grid.removeComponent(event.getButton());

@@ -8,12 +8,14 @@ import com.vaadin.ui.ListSelect;
 public class ListSelects extends AbstractSelectTestCase<ListSelect> {
 
     private Command<ListSelect, Integer> rowsCommand = new Command<ListSelect, Integer>() {
+        @Override
         public void execute(ListSelect c, Integer value, Object data) {
             c.setRows(value);
         }
     };
 
     private Command<ListSelect, Integer> colsCommand = new Command<ListSelect, Integer>() {
+        @Override
         public void execute(ListSelect c, Integer value, Object data) {
             c.setColumns(value);
         }

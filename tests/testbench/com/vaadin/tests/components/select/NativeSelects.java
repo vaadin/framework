@@ -108,6 +108,7 @@ public class NativeSelects extends ComponentTestCase<NativeSelect> {
         actions.add(createBooleanAction("Null selection allowed", false,
                 new Command<NativeSelect, Boolean>() {
 
+                    @Override
                     public void execute(NativeSelect c, Boolean value,
                             Object data) {
                         c.setNullSelectionAllowed(value);

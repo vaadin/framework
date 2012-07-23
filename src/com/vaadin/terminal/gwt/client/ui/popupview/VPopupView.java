@@ -59,6 +59,7 @@ public class VPopupView extends HTML {
 
         // When we click to open the popup...
         addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 updateState(true);
             }
@@ -66,6 +67,7 @@ public class VPopupView extends HTML {
 
         // ..and when we close it
         popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+            @Override
             public void onClose(CloseEvent<PopupPanel> event) {
                 updateState(false);
             }

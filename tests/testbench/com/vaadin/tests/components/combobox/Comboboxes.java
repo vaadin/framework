@@ -136,6 +136,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         return createSelectAction("Icon", options, "<None>",
                 new Command<ComboBox, String>() {
 
+                    @Override
                     public void execute(ComboBox c, String value, Object data) {
                         for (Object id : c.getItemIds()) {
                             if (value == null) {

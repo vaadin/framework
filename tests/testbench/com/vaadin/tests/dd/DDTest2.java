@@ -88,6 +88,7 @@ public class DDTest2 extends TestBase {
         };
 
         tree3.setDropHandler(new DropHandler() {
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 Transferable transferable = dropEvent.getTransferable();
 
@@ -110,6 +111,7 @@ public class DDTest2 extends TestBase {
 
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
@@ -136,6 +138,7 @@ public class DDTest2 extends TestBase {
 
         DropHandler dropHandler = new DropHandler() {
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 /*
                  * We know transferrable is from table, so it is of type
@@ -177,6 +180,7 @@ public class DDTest2 extends TestBase {
 
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return and;
             }
@@ -194,6 +198,7 @@ public class DDTest2 extends TestBase {
          */
 
         dropHandler = new DropHandler() {
+            @Override
             public void drop(DragAndDropEvent event) {
                 AbstractSelectTargetDetails details = (AbstractSelectTargetDetails) event
                         .getTargetDetails();
@@ -233,6 +238,7 @@ public class DDTest2 extends TestBase {
                 }
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptItem.ALL;
             }

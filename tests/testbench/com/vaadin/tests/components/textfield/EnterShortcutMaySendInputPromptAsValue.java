@@ -31,10 +31,12 @@ public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
             final Action enter = new ShortcutAction("enter",
                     ShortcutAction.KeyCode.ENTER, null);
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { enter };
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 if (action == enter) {
 
@@ -43,6 +45,7 @@ public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
 
         });
         testField.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 String value = event.getProperty().getValue().toString();
                 addComponent(new Label("TextField sent value: " + value));

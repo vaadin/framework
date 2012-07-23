@@ -16,6 +16,7 @@ public class DisabledDateFieldWidth extends TestBase {
 
         Button button = new Button("Repaint datefield",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         dateField1.requestRepaint();
                     }

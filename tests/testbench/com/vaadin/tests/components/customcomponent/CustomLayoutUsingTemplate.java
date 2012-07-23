@@ -54,6 +54,7 @@ public class CustomLayoutUsingTemplate extends TestBase implements
         return null;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         layout.addComponent(new TextField("A text field!"), "location2");
     }

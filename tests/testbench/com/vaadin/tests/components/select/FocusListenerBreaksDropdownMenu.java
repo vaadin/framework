@@ -14,6 +14,7 @@ public class FocusListenerBreaksDropdownMenu extends TestBase {
         }
 
         comboBox.addListener(new FieldEvents.FocusListener() {
+            @Override
             public void focus(FieldEvents.FocusEvent event) {
                 comboBox.addItem();
             }

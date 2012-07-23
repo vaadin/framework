@@ -27,6 +27,7 @@ public class FindCurrentRootAndApplication extends Root {
     protected void init(WrappedRequest request) {
         Button helloButton = new Button("Say Hello");
         helloButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 String msg = "Running in ";
                 msg += Application.getCurrent().isProductionMode() ? "production"
@@ -36,6 +37,7 @@ public class FindCurrentRootAndApplication extends Root {
         });
 
         helloButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Notification.show("This Root is "
                         + Root.getCurrent().getClass().getSimpleName());

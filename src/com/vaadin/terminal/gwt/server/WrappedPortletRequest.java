@@ -46,10 +46,12 @@ public class WrappedPortletRequest implements WrappedRequest {
         this.deploymentConfiguration = deploymentConfiguration;
     }
 
+    @Override
     public Object getAttribute(String name) {
         return request.getAttribute(name);
     }
 
+    @Override
     public int getContentLength() {
         try {
             return ((ClientDataRequest) request).getContentLength();
@@ -59,6 +61,7 @@ public class WrappedPortletRequest implements WrappedRequest {
         }
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
         try {
             return ((ClientDataRequest) request).getPortletInputStream();
@@ -68,18 +71,22 @@ public class WrappedPortletRequest implements WrappedRequest {
         }
     }
 
+    @Override
     public String getParameter(String name) {
         return request.getParameter(name);
     }
 
+    @Override
     public Map<String, String[]> getParameterMap() {
         return request.getParameterMap();
     }
 
+    @Override
     public void setAttribute(String name, Object o) {
         request.setAttribute(name, o);
     }
 
+    @Override
     public String getRequestPathInfo() {
         if (request instanceof ResourceRequest) {
             return ((ResourceRequest) request).getResourceID();
@@ -88,14 +95,17 @@ public class WrappedPortletRequest implements WrappedRequest {
         }
     }
 
+    @Override
     public int getSessionMaxInactiveInterval() {
         return request.getPortletSession().getMaxInactiveInterval();
     }
 
+    @Override
     public Object getSessionAttribute(String name) {
         return request.getPortletSession().getAttribute(name);
     }
 
+    @Override
     public void setSessionAttribute(String name, Object attribute) {
         request.getPortletSession().setAttribute(name, attribute);
     }
@@ -109,6 +119,7 @@ public class WrappedPortletRequest implements WrappedRequest {
         return request;
     }
 
+    @Override
     public String getContentType() {
         try {
             return ((ResourceRequest) request).getContentType();
@@ -118,16 +129,20 @@ public class WrappedPortletRequest implements WrappedRequest {
         }
     }
 
+    @Override
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
+            @Override
             public String getUriFragment() {
                 return null;
             }
 
+            @Override
             public String getWindowName() {
                 return null;
             }
 
+            @Override
             public WebBrowser getWebBrowser() {
                 PortletApplicationContext2 context = (PortletApplicationContext2) Application
                         .getCurrent().getContext();
@@ -136,18 +151,22 @@ public class WrappedPortletRequest implements WrappedRequest {
         };
     }
 
+    @Override
     public Locale getLocale() {
         return request.getLocale();
     }
 
+    @Override
     public String getRemoteAddr() {
         return null;
     }
 
+    @Override
     public boolean isSecure() {
         return request.isSecure();
     }
 
+    @Override
     public String getHeader(String string) {
         return null;
     }
@@ -164,6 +183,7 @@ public class WrappedPortletRequest implements WrappedRequest {
         return request.getPortalContext().getProperty(name);
     }
 
+    @Override
     public DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }

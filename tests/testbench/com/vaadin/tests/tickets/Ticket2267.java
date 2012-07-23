@@ -21,6 +21,7 @@ public class Ticket2267 extends Application.LegacyApplication {
 
         Button button = new Button("1", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Button b = event.getButton();
                 l.setValue(l.getValue() + b.getCaption());

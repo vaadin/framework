@@ -27,6 +27,7 @@ public class LoginFormWithMultipleWindows extends Application {
 
                 private static final long serialVersionUID = 1L;
 
+                @Override
                 public void onLogin(LoginEvent event) {
                     showNotification(event.getLoginParameter("username") + ":"
                             + event.getLoginParameter("password"));

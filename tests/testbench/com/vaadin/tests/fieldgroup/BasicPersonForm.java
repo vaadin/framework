@@ -84,6 +84,7 @@ public class BasicPersonForm extends TestBase {
         final FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
         fieldGroup.addCommitHandler(new CommitHandler() {
 
+            @Override
             public void preCommit(CommitEvent commitEvent)
                     throws CommitException {
                 if (configuration.preCommitFails) {
@@ -95,6 +96,7 @@ public class BasicPersonForm extends TestBase {
 
             }
 
+            @Override
             public void postCommit(CommitEvent commitEvent)
                     throws CommitException {
                 if (configuration.postCommitFails) {
@@ -118,6 +120,7 @@ public class BasicPersonForm extends TestBase {
 
         Button commitButton = new Button("Commit", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 String msg = "Commit succesful";
                 try {
@@ -133,6 +136,7 @@ public class BasicPersonForm extends TestBase {
         Button discardButton = new Button("Discard",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         fieldGroup.discard();
                         log.log("Discarded changes");
@@ -142,6 +146,7 @@ public class BasicPersonForm extends TestBase {
         Button showBean = new Button("Show bean values",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         log.log(getPerson(fieldGroup).toString());
 

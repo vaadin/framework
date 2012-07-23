@@ -372,6 +372,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
+    @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         removeShadowIfPresent();
     }

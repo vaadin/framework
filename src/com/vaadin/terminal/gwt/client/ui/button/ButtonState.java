@@ -102,6 +102,7 @@ public class ButtonState extends ComponentState implements TabIndexState {
      * 
      * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#getTabIndex()
      */
+    @Override
     public int getTabIndex() {
         return tabIndex;
     }
@@ -111,6 +112,7 @@ public class ButtonState extends ComponentState implements TabIndexState {
      * 
      * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#setTabIndex(int)
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
     }

@@ -51,6 +51,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
 
         u.addListener(new Upload.StartedListener() {
 
+            @Override
             public void uploadStarted(StartedEvent event) {
                 /*
                  * Remove component before upload from the same vertical layout.
@@ -63,6 +64,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         });
 
         u.addListener(new Upload.FinishedListener() {
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 getMainWindow().showNotification("Done");
                 l.setValue(getUploadcount());
@@ -81,6 +83,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         actions.add(createButtonAction("Toggle Enabled",
                 new Command<Upload, Boolean>() {
 
+                    @Override
                     public void execute(Upload c, Boolean value, Object data) {
                         c.setEnabled(!c.isEnabled());
                     }
@@ -89,6 +92,7 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         return actions;
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         // sleep to ensure change before upload is complete
         try {

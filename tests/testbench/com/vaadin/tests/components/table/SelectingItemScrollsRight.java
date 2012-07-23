@@ -14,6 +14,7 @@ public class SelectingItemScrollsRight extends TestBase {
         table.setWidth("300px");
         table.setColumnWidth("Column", 500);
         table.addGeneratedColumn("Column", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Label(

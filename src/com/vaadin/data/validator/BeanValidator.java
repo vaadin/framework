@@ -67,10 +67,12 @@ public class BeanValidator implements Validator {
             this.descriptor = descriptor;
         }
 
+        @Override
         public ConstraintDescriptor<?> getConstraintDescriptor() {
             return descriptor;
         }
 
+        @Override
         public Object getValidatedValue() {
             return value;
         }
@@ -96,6 +98,7 @@ public class BeanValidator implements Validator {
      * 
      * @see com.vaadin.data.Validator#validate(java.lang.Object)
      */
+    @Override
     public void validate(final Object value) throws InvalidValueException {
         Set<?> violations = getJavaxBeanValidator().validateValue(beanClass,
                 propertyName, value);

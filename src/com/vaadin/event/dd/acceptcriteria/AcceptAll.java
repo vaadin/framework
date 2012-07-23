@@ -29,6 +29,7 @@ public final class AcceptAll extends ClientSideCriterion {
         return singleton;
     }
 
+    @Override
     public boolean accept(DragAndDropEvent dragEvent) {
         return true;
     }

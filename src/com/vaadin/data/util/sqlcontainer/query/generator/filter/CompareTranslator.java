@@ -9,10 +9,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class CompareTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof Compare;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         Compare compare = (Compare) filter;
         sh.addParameterValue(compare.getValue());

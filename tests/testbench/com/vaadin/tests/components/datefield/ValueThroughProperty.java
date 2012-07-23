@@ -44,6 +44,7 @@ public class ValueThroughProperty extends TestBase {
         cal.set(Calendar.DAY_OF_MONTH, 14);
         Button setDateButton1 = new Button(
                 "Set value to 12/14/10 using property", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         dateProperty.setValue(cal.getTime());
                     }
@@ -53,6 +54,7 @@ public class ValueThroughProperty extends TestBase {
 
         Button setDateButton2 = new Button(
                 "Set value to 12/14/10 using setValue", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         df.setValue(cal.getTime());
                     }

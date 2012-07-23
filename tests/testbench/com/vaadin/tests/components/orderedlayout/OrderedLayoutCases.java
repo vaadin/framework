@@ -29,18 +29,21 @@ public class OrderedLayoutCases extends AbstractTestRoot {
             setStyleName("sampleChild");
             addComponent(createSimpleSelector("Child width",
                     new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             setWidth(event.getProperty().getValue().toString());
                         }
                     }, dimensionValues));
             addComponent(createSimpleSelector("Child height",
                     new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             setHeight(event.getProperty().getValue().toString());
                         }
                     }, dimensionValues));
             addComponent(createSimpleSelector("Caption",
                     new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             String value = event.getProperty().getValue()
                                     .toString();
@@ -56,6 +59,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
             addComponent(createSimpleSelector("Expand ratio",
                     new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             AbstractOrderedLayout parent = (AbstractOrderedLayout) getParent();
                             if (parent == null) {
@@ -79,6 +83,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
             }
             addComponent(createSimpleSelector("Alignment",
                     new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             String value = event.getProperty().getValue()
                                     .toString();
@@ -128,6 +133,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
         sizeBar.addComponent(createSimpleSelector("Layout width",
                 new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         currentLayout.setWidth(event.getProperty().getValue()
                                 .toString());
@@ -135,6 +141,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }, dimensionValues));
         sizeBar.addComponent(createSimpleSelector("Layout height",
                 new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         currentLayout.setHeight(event.getProperty().getValue()
                                 .toString());
@@ -142,6 +149,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }, dimensionValues));
         sizeBar.addComponent(createSimpleSelector("Spacing",
                 new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         currentLayout.setSpacing(Boolean.parseBoolean(event
                                 .getProperty().getValue().toString()));
@@ -149,6 +157,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }, "false", "true"));
         sizeBar.addComponent(createSimpleSelector("Margin",
                 new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         currentLayout.setMargin(Boolean.parseBoolean(event
                                 .getProperty().getValue().toString()));
@@ -156,6 +165,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }, "false", "true"));
         sizeBar.addComponent(createSimpleSelector("Direction",
                 new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         Object value = event.getProperty().getValue();
 
@@ -189,6 +199,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
         HorizontalLayout caseBar = new HorizontalLayout();
         caseBar.addComponent(new Button("Undefined without relative",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         setState(sizeBar, 2, 1);
@@ -202,6 +213,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }));
         caseBar.addComponent(new Button("Undefined with relative",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // width: 100% to middle child
@@ -210,6 +222,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }));
         caseBar.addComponent(new Button("Fixed with overflow",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // layout width: 350px
@@ -220,6 +233,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
                 }));
         caseBar.addComponent(new Button("Fixed with extra space",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // Layout width: 800px
@@ -237,6 +251,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
         caseBar.addComponent(new Button("Expand with alignment",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // Layout width: 800px
@@ -254,6 +269,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
         caseBar.addComponent(new Button("Multiple expands",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // Layout width: 800px
@@ -276,6 +292,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
         caseBar.addComponent(new Button("Fixed + relative height",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // Layout height: 100%
@@ -293,6 +310,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
 
         caseBar.addComponent(new Button("Undefined + relative height",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         resetState();
                         // Height: 350px to left child

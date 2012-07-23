@@ -42,6 +42,7 @@ public class TabSheetCaptions extends TestBase {
 
         Button button = new Button("Update tab caption");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 tabSheet.getTab(panel1).setCaption(
                         "This is a new tab caption "
@@ -51,6 +52,7 @@ public class TabSheetCaptions extends TestBase {
 
         Button button2 = new Button("Update panel caption");
         button2.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 panel1.setCaption("This is a new panel caption "
                         + dateFormatter.format(date));

@@ -11,6 +11,7 @@ public class ButtonErrorMessage extends TestBase {
     protected void setup() {
         Button b = new Button("Click for error");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 throw new NullPointerException();
             }

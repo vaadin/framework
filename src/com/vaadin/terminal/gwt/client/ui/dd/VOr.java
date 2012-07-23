@@ -41,6 +41,7 @@ final public class VOr extends VAcceptCriterion implements VAcceptCallback {
         return false; // not used here
     }
 
+    @Override
     public void accepted(VDragEvent event) {
         accepted = true;
     }

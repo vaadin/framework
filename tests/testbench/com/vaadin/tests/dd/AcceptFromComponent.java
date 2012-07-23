@@ -37,6 +37,7 @@ public class AcceptFromComponent extends Window {
 
         final ServerSideCriterion serverSideCriterion = new ServerSideCriterion() {
 
+            @Override
             public boolean accept(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
                 if (transferable instanceof TransferableImpl) {
@@ -51,10 +52,12 @@ public class AcceptFromComponent extends Window {
 
         wrapper.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return serverSideCriterion;
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
 
                 WrapperTargetDetails ed = (WrapperTargetDetails) event

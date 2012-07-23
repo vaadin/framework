@@ -64,10 +64,12 @@ public class DDTest4 extends TestBase {
             // accept only drags from this table
             AcceptCriterion crit = new SourceIs(table);
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
                         .getTargetDetails();

@@ -125,6 +125,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     // Container interface methods with more specific return class
 
     // default implementation, can be overridden
+    @Override
     public ITEMCLASS getItem(Object itemId) {
         if (containsId(itemId)) {
             return getUnfilteredItem(itemId);
@@ -152,10 +153,12 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     // Container interface method implementations
 
+    @Override
     public int size() {
         return getVisibleItemIds().size();
     }
 
+    @Override
     public boolean containsId(Object itemId) {
         // only look at visible items after filtering
         if (itemId == null) {
@@ -165,12 +168,14 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
+    @Override
     public List<?> getItemIds() {
         return Collections.unmodifiableList(getVisibleItemIds());
     }
 
     // Container.Ordered
 
+    @Override
     public ITEMIDTYPE nextItemId(Object itemId) {
         int index = indexOfId(itemId);
         if (index >= 0 && index < size() - 1) {
@@ -181,6 +186,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
+    @Override
     public ITEMIDTYPE prevItemId(Object itemId) {
         int index = indexOfId(itemId);
         if (index > 0) {
@@ -191,6 +197,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
+    @Override
     public ITEMIDTYPE firstItemId() {
         if (size() > 0) {
             return getIdByIndex(0);
@@ -199,6 +206,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
+    @Override
     public ITEMIDTYPE lastItemId() {
         if (size() > 0) {
             return getIdByIndex(size() - 1);
@@ -207,6 +215,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
+    @Override
     public boolean isFirstId(Object itemId) {
         if (itemId == null) {
             return false;
@@ -214,6 +223,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         return itemId.equals(firstItemId());
     }
 
+    @Override
     public boolean isLastId(Object itemId) {
         if (itemId == null) {
             return false;
@@ -223,66 +233,78 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     // Container.Indexed
 
+    @Override
     public ITEMIDTYPE getIdByIndex(int index) {
         return getVisibleItemIds().get(index);
     }
 
+    @Override
     public int indexOfId(Object itemId) {
         return getVisibleItemIds().indexOf(itemId);
     }
 
     // methods that are unsupported by default, override to support
 
+    @Override
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public Item addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding items not supported. Override the relevant addItem*() methods if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Removing items not supported. Override the removeItem() method if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Removing items not supported. Override the removeAllItems() method if required as specified in AbstractInMemoryContainer javadoc.");
     }
 
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Adding container properties not supported. Override the addContainerProperty() method if required.");
     }
 
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(

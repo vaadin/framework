@@ -113,6 +113,7 @@ public class TableSelectTest extends CustomComponent implements
         return id;
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         final Object val = event.getProperty().getValue();
 

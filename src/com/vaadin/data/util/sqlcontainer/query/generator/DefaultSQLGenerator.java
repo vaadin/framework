@@ -51,6 +51,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
      * generateSelectQuery(java.lang.String, java.util.List, java.util.List,
      * int, int, java.lang.String)
      */
+    @Override
     public StatementHelper generateSelectQuery(String tableName,
             List<Filter> filters, List<OrderBy> orderBys, int offset,
             int pagelength, String toSelect) {
@@ -84,6 +85,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
      * generateUpdateQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
      */
+    @Override
     public StatementHelper generateUpdateQuery(String tableName, RowItem item) {
         if (tableName == null || tableName.trim().equals("")) {
             throw new IllegalArgumentException("Table name must be given.");
@@ -133,6 +135,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
      * generateInsertQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
      */
+    @Override
     public StatementHelper generateInsertQuery(String tableName, RowItem item) {
         if (tableName == null || tableName.trim().equals("")) {
             throw new IllegalArgumentException("Table name must be given.");
@@ -184,6 +187,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
      * generateDeleteQuery(java.lang.String,
      * com.vaadin.addon.sqlcontainer.RowItem)
      */
+    @Override
     public StatementHelper generateDeleteQuery(String tableName,
             List<String> primaryKeyColumns, String versionColumn, RowItem item) {
         if (tableName == null || tableName.trim().equals("")) {

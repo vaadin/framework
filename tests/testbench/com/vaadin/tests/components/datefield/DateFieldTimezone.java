@@ -51,6 +51,7 @@ public class DateFieldTimezone extends TestBase {
         timezoneSelector.setNullSelectionItemId(nullValue);
         timezoneSelector.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
         timezoneSelector.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 TimeZone timeZone;
@@ -75,6 +76,7 @@ public class DateFieldTimezone extends TestBase {
         dateField.setTimeZone(cal.getTimeZone());
         dateField.setLocale(EN);
         dateField.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Date date = dateField.getValue();
                 DateFormat format = DateFormat.getDateTimeInstance(

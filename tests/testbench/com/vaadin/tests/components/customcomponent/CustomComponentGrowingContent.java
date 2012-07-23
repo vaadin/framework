@@ -24,6 +24,7 @@ public class CustomComponentGrowingContent extends TestBase {
         });
 
         addComponent(new Button("Set long content", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 label.setValue("Longer content that should be fully visible");
             }

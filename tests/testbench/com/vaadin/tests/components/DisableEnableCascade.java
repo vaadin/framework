@@ -33,6 +33,7 @@ public class DisableEnableCascade extends TestBase {
         enableDisablePanelButton = new Button("Disable panel",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(outerPanel, enableDisablePanelButton);
 
@@ -42,6 +43,7 @@ public class DisableEnableCascade extends TestBase {
         enableDisableTabSheetButton = new Button("Disable TabSheet",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(innerTabsheet,
                                 enableDisableTabSheetButton);
@@ -52,6 +54,7 @@ public class DisableEnableCascade extends TestBase {
         enableDisableButtonButton = new Button("Disable Button",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(button, enableDisableButtonButton);
 

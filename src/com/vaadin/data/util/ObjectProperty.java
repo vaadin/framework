@@ -91,6 +91,7 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      * 
      * @return type of the Property
      */
+    @Override
     public final Class<T> getType() {
         return type;
     }
@@ -100,6 +101,7 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      * 
      * @return the value stored in the Property
      */
+    @Override
     public T getValue() {
         return value;
     }
@@ -115,6 +117,7 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      * @throws <code>Property.ReadOnlyException</code> if the object is in
      *         read-only mode
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException {
 

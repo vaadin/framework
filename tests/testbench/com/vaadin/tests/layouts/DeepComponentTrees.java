@@ -44,6 +44,7 @@ public class DeepComponentTrees extends TestBase {
         final Button b = new Button("Go try your luck with " + i + " layouts!");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 FF2KILLER(i++);
                 b.setCaption("Go try your luck with " + i + " layouts!");
@@ -60,6 +61,7 @@ public class DeepComponentTrees extends TestBase {
         s.addItem(GridLayout.class);
         s.addListener(new ComboBox.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Object value = s.getValue();
                 if (!value.equals("-- Choose value --")) {

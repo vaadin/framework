@@ -27,6 +27,7 @@ public class FormLayoutWithInvisibleComponent extends TestBase {
         CheckBox control = new CheckBox("Messages On/Off");
         control.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 messages.setVisible((Boolean) event.getProperty().getValue());
                 messages.setRequired(true);

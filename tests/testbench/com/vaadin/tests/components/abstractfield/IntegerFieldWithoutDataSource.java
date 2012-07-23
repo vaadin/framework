@@ -29,6 +29,7 @@ public class IntegerFieldWithoutDataSource extends TestBase {
         tf.setImmediate(true);
         tf.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 try {
                     log.log("Value for " + tf.getCaption() + " changed to "

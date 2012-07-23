@@ -16,6 +16,7 @@ public class TerminalErrorNotification extends TestBase {
         Button button = new Button("Throw exception",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         throw new RuntimeException("You asked for it");
                     }

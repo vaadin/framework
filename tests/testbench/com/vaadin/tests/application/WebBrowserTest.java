@@ -38,6 +38,7 @@ public class WebBrowserTest extends TestBase {
         final Button update = new Button("Get TimeZone from browser",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         TimeZone hkiTZ = TimeZone
                                 .getTimeZone("Europe/Helsinki");

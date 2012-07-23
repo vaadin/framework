@@ -45,6 +45,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         return (VTwinColSelect) super.getWidget();
     }
 
+    @Override
     public void layoutVertically() {
         if (isUndefinedHeight()) {
             getWidget().clearInternalHeights();
@@ -53,6 +54,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         if (isUndefinedWidth()) {
             getWidget().clearInternalWidths();

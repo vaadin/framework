@@ -21,6 +21,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
     private Command<T, Date> setValue = new Command<T, Date>() {
 
+        @Override
         public void execute(T c, Date value, Object data) {
             c.setValue(value);
         }
@@ -109,6 +110,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
     private Command<T, Resolution> resolutionCommand = new Command<T, Resolution>() {
 
+        @Override
         public void execute(T c, Resolution value, Object data) {
             c.setResolution(value);
 
@@ -116,6 +118,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
     };
     private Command<T, Boolean> lenientCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setLenient(false);
 
@@ -123,6 +126,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
     };
     private Command<T, Boolean> weekNumberCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setShowISOWeekNumbers(value);
 
@@ -130,6 +134,7 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
     };
     private Command<T, String> dateFormatCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String value, Object data) {
             c.setDateFormat(value);
         }

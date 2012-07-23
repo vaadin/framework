@@ -113,6 +113,7 @@ public class DDTest8 extends TestBase {
 
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 TreeTargetDetails details = (TreeTargetDetails) event
                         .getTargetDetails();
@@ -149,6 +150,7 @@ public class DDTest8 extends TestBase {
                 return;
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return new Or(new AbstractSelect.TargetItemIs(t, "Foo", "Bar"),
                         new AbstractSelect.AcceptItem(t, "Foo"),

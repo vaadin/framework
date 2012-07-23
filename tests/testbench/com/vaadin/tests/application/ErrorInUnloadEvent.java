@@ -50,6 +50,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         mainWindow.setContent(formLayout);
 
         login.addListener(new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 String username = userField.getValue();
                 String password = passwordField.getValue();
@@ -81,6 +82,7 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         header.addComponent(title);
         Button logout = new Button("Logout");
         logout.addListener(new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 setUser(null);
                 showLoginWindow();

@@ -89,6 +89,7 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
          * 
          * @return the Source Property of the event.
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }

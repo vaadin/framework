@@ -16,10 +16,12 @@ public class TableContextMenu extends TestBase {
         table.setMultiSelect(true);
 
         table.addActionHandler(new Action.Handler() {
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 Notification.show("Done that :-)");
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { ACTION_MYACTION };
             }

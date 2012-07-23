@@ -30,6 +30,7 @@ public final class Or extends AbstractJunctionFilter {
         super(filters);
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedFilterException {
         for (Filter filter : getFilters()) {

@@ -1164,6 +1164,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * defined by super class is already loaded.
          */
         Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
+            @Override
             public int compare(Class<?> o1, Class<?> o2) {
                 // TODO optimize using Class.isAssignableFrom?
                 return hierarchyDepth(o1) - hierarchyDepth(o2);
@@ -1307,6 +1308,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // before children start calling e.g. updateCaption
         Collections.sort(paintables, new Comparator<Component>() {
 
+            @Override
             public int compare(Component c1, Component c2) {
                 int depth1 = 0;
                 while (c1.getParent() != null) {
@@ -1393,14 +1395,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static class NullIterator<E> implements Iterator<E> {
 
+        @Override
         public boolean hasNext() {
             return false;
         }
 
+        @Override
         public E next() {
             return null;
         }
 
+        @Override
         public void remove() {
         }
 
@@ -1874,6 +1879,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }

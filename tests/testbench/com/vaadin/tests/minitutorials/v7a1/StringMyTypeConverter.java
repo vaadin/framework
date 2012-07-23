@@ -24,6 +24,7 @@ public class StringMyTypeConverter extends AbstractTestRoot {
 
         addComponent(textField);
         addComponent(new Button("Submit value", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     Name name = (Name) textField.getConvertedValue();
@@ -50,6 +51,7 @@ public class StringMyTypeConverter extends AbstractTestRoot {
 }
 
 class StringToNameConverter implements Converter<String, Name> {
+    @Override
     public Name convertToModel(String text, Locale locale)
             throws ConversionException {
         if (text == null) {
@@ -63,6 +65,7 @@ class StringToNameConverter implements Converter<String, Name> {
         return new Name(parts[0], parts[1]);
     }
 
+    @Override
     public String convertToPresentation(Name name, Locale locale)
             throws ConversionException {
         if (name == null) {
@@ -72,10 +75,12 @@ class StringToNameConverter implements Converter<String, Name> {
         }
     }
 
+    @Override
     public Class<Name> getModelType() {
         return Name.class;
     }
 
+    @Override
     public Class<String> getPresentationType() {
         return String.class;
     }

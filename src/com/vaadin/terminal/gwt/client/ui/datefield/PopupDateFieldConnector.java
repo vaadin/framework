@@ -53,6 +53,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         if (getWidget().currentResolution <= VPopupCalendar.RESOLUTION_MONTH) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
+                        @Override
                         public void focusChanged(Date date) {
                             getWidget().updateValue(date);
                             getWidget().buildDate();
@@ -68,6 +69,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         if (getWidget().currentResolution > VPopupCalendar.RESOLUTION_DAY) {
             getWidget().calendar
                     .setTimeChangeListener(new TimeChangeListener() {
+                        @Override
                         public void changed(int hour, int min, int sec, int msec) {
                             Date d = getWidget().getDate();
                             if (d == null) {

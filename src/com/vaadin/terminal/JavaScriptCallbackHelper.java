@@ -65,6 +65,7 @@ public class JavaScriptCallbackHelper implements Serializable {
     private void ensureRpc() {
         if (javascriptCallbackRpc == null) {
             javascriptCallbackRpc = new JavaScriptCallbackRpc() {
+                @Override
                 public void call(String name, JSONArray arguments) {
                     JavaScriptCallback callback = callbacks.get(name);
                     try {

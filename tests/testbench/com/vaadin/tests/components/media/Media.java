@@ -27,6 +27,7 @@ public class Media extends TestBase {
         addComponent(v);
         addComponent(new Button("Play video", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 v.play();
             }
@@ -34,6 +35,7 @@ public class Media extends TestBase {
         }));
         addComponent(new Button("Pause video", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 v.pause();
             }
@@ -50,6 +52,7 @@ public class Media extends TestBase {
 
         addComponent(new Button("Play audio", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 a.play();
             }
@@ -57,6 +60,7 @@ public class Media extends TestBase {
         }));
         addComponent(new Button("Pause audio", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 a.pause();
             }

@@ -35,6 +35,7 @@ public class NativeSelects extends AbstractSelectTestCase<NativeSelect> {
 
     private Command<NativeSelect, Integer> columnsAction = new Command<NativeSelect, Integer>() {
 
+        @Override
         public void execute(NativeSelect c, Integer value, Object data) {
             c.setColumns(value);
         }

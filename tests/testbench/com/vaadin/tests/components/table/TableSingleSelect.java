@@ -22,6 +22,7 @@ public class TableSingleSelect extends TestBase {
         t.setImmediate(true);
         t.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Selected value: " + event.getProperty().getValue());
             }

@@ -103,6 +103,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         main.addComponent(t);
 
         final Button b = new Button("refresh view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 createNewView();
             }
@@ -125,6 +126,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
             }
             Button button = new Button("b", new Button.ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     System.out.println("b click");
 

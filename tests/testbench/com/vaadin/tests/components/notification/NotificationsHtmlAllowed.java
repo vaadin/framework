@@ -44,6 +44,7 @@ public class NotificationsHtmlAllowed extends TestBase implements ClickListener 
         return 6097;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         Notification n = makeNotification();
         n.show(Page.getCurrent());

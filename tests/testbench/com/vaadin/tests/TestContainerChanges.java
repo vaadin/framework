@@ -70,6 +70,7 @@ public class TestContainerChanges extends CustomComponent {
         tbl2.setMultiSelect(false);
         tbl2.setImmediate(true);
         tbl2.addListener(new Table.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 System.err.println("Value now "
                         + event.getProperty().getValue());
@@ -85,6 +86,7 @@ public class TestContainerChanges extends CustomComponent {
 
         Button b = new Button("table.commit()", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tbl.commit();
             }
@@ -95,6 +97,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("indexedcontainer.addItem()",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cont.addItem(new Integer(cnt++));
                     }
@@ -104,6 +107,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("indexedcontainer.addItem(null)",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cont.addItem(null);
                     }
@@ -113,6 +117,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("indexedcontainer.removeItem(table.lastItemId()",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cont.removeItem(tbl.lastItemId());
                     }
@@ -123,6 +128,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("indexedcontainer.addContainerProperty()",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cont.addContainerProperty("prop" + cnt, String.class,
                                 "#" + cnt++);
@@ -133,6 +139,7 @@ public class TestContainerChanges extends CustomComponent {
 
         b = new Button("indexedcontainer.clear()", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 cont.removeAllItems();
             }
@@ -142,6 +149,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("table.setContainerDataSource(indexedcontainer)",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setContainerDataSource(cont);
                     }
@@ -151,6 +159,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("table.setContainerDataSource(orderedwrapper)",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setContainerDataSource(ordered);
                     }
@@ -160,6 +169,7 @@ public class TestContainerChanges extends CustomComponent {
         b = new Button("table.setContainerDataSource(hierarchicalwrapper)",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setContainerDataSource(hierarchical);
                     }

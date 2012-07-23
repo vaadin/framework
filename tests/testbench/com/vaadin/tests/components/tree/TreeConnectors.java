@@ -27,6 +27,7 @@ public class TreeConnectors extends TestBase {
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     tree.addStyleName(BaseTheme.TREE_CONNECTORS);
@@ -50,11 +51,13 @@ public class TreeConnectors extends TestBase {
         tree.setDragMode(TreeDragMode.NODE);
         tree.setDropHandler(new DropHandler() {
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 // TODO Auto-generated method stub
 
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }

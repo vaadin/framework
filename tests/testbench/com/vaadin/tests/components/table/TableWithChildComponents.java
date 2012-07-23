@@ -27,6 +27,7 @@ public class TableWithChildComponents extends TestBase implements ClickListener 
 
         table.addGeneratedColumn(COL2, new ColumnGenerator() {
 
+            @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Button(
@@ -58,6 +59,7 @@ public class TableWithChildComponents extends TestBase implements ClickListener 
         return null;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         log.log("Click on " + event.getButton().getCaption());
 

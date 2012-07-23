@@ -16,6 +16,7 @@ public class Ticket1659 extends Application.LegacyApplication {
                 "Change URI using Application.getURL()",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         mainWin.open(new ExternalResource(getURL() + "#"
                                 + System.currentTimeMillis()));
@@ -24,6 +25,7 @@ public class Ticket1659 extends Application.LegacyApplication {
         mainWin.addComponent(new Button("Change URI uring Window.getURL()",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         mainWin.open(new ExternalResource(mainWin.getURL()
                                 + "#" + System.currentTimeMillis()));

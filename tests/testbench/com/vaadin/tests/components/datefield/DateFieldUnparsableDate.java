@@ -15,6 +15,7 @@ public class DateFieldUnparsableDate extends TestBase {
         public MyDateField(String caption) {
             super(caption);
             addListener(new Property.ValueChangeListener() {
+                @Override
                 public void valueChange(
                         com.vaadin.data.Property.ValueChangeEvent event) {
                     oldDate = getValue();

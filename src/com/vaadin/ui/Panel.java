@@ -49,6 +49,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     protected ActionManager actionManager;
 
     private PanelServerRpc rpc = new PanelServerRpc() {
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Panel.this, mouseDetails));
         }
@@ -188,6 +189,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * com.vaadin.terminal.Vaadin6Component#paintContent(com.vaadin.terminal
      * .PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (actionManager != null) {
             actionManager.paintActions(null, target);
@@ -229,6 +231,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @return the Iterator of the components inside the container.
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return Collections.singleton((Component) content).iterator();
     }
@@ -239,6 +242,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Get new size
@@ -277,6 +281,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
      */
+    @Override
     public int getScrollLeft() {
         return getState().getScrollLeft();
     }
@@ -286,6 +291,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
      */
+    @Override
     public int getScrollTop() {
         return getState().getScrollTop();
     }
@@ -295,6 +301,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollLeft(int)
      */
+    @Override
     public void setScrollLeft(int scrollLeft) {
         if (scrollLeft < 0) {
             throw new IllegalArgumentException(
@@ -309,6 +316,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.terminal.Scrollable#setScrollTop(int)
      */
+    @Override
     public void setScrollTop(int scrollTop) {
         if (scrollTop < 0) {
             throw new IllegalArgumentException(
@@ -319,6 +327,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /* Documented in superclass */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         content.replaceComponent(oldComponent, newComponent);
@@ -329,6 +338,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.ui.ComponentContainer.ComponentAttachListener#componentAttachedToContainer(com.vaadin.ui.ComponentContainer.ComponentAttachEvent)
      */
+    @Override
     public void componentAttachedToContainer(ComponentAttachEvent event) {
         if (event.getContainer() == content) {
             fireComponentAttachEvent(event.getAttachedComponent());
@@ -340,6 +350,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.ui.ComponentContainer.ComponentDetachListener#componentDetachedFromContainer(com.vaadin.ui.ComponentContainer.ComponentDetachEvent)
      */
+    @Override
     public void componentDetachedFromContainer(ComponentDetachEvent event) {
         if (event.getContainer() == content) {
             fireComponentDetachEvent(event.getDetachedComponent());
@@ -367,11 +378,13 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         return actionManager;
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
             T action) {
         getActionManager().addAction(action);
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
         if (actionManager != null) {
@@ -379,10 +392,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
+    @Override
     public void addActionHandler(Handler actionHandler) {
         getActionManager().addActionHandler(actionHandler);
     }
 
+    @Override
     public void removeActionHandler(Handler actionHandler) {
         if (actionManager != null) {
             actionManager.removeActionHandler(actionHandler);
@@ -429,6 +444,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getTabIndex() {
         return getState().getTabIndex();
     }
@@ -436,6 +452,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
         requestRepaint();
@@ -455,6 +472,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentCount()
      */
+    @Override
     public int getComponentCount() {
         // This is so wrong... (#2924)
         return content.getComponentCount();

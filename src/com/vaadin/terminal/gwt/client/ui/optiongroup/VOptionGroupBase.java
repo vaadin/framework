@@ -126,6 +126,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
 
     abstract protected void setTabIndex(int tabIndex);
 
+    @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == newItemButton
                 && !newItemField.getText().equals("")) {
@@ -135,6 +136,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         }
     }
 
+    @Override
     public void onChange(ChangeEvent event) {
         if (multiselect) {
             client.updateVariable(paintableId, "selected", getSelectedItems(),
@@ -145,6 +147,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         }
     }
 
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         if (event.getSource() == newItemField
                 && event.getCharCode() == KeyCodes.KEY_ENTER) {

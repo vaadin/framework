@@ -60,6 +60,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             ol.addComponent(new Label(name));
             up = new Button("up");
             up.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) - 1;
                     MyComponent old = order.get(newIndex);
@@ -77,6 +78,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
 
             down = new Button("down");
             down.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     int newIndex = order.indexOf(MyComponent.this) + 1;
                     MyComponent old = order.get(newIndex);

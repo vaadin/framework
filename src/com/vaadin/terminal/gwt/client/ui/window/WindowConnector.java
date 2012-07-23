@@ -72,6 +72,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         lm.unregisterDependency(this, window.footer);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().id = getConnectorId();
         getWidget().client = client;
@@ -180,10 +181,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, window has own caption, layout caption not rendered
     }
 
+    @Override
     public void onBeforeShortcutAction(Event e) {
         // NOP, nothing to update just avoid workaround ( causes excess
         // blur/focus )
@@ -210,6 +213,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getWidget().contentPanel.setWidget(newChildWidget);
     }
 
+    @Override
     public void layout() {
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
@@ -274,6 +278,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     }
 
+    @Override
     public void postLayout() {
         minWidthChecked = false;
         VWindow window = getWidget();

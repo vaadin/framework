@@ -15,6 +15,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
     protected static final String CATEGORY_LAYOUT_FEATURES = "Layout features";
     private Command<T, MarginInfo> marginCommand = new Command<T, MarginInfo>() {
 
+        @Override
         public void execute(T c, MarginInfo value, Object data) {
             c.setMargin(value);
 
@@ -22,6 +23,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
     };
 
     protected Command<T, Boolean> spacingCommand = new Command<T, Boolean>() {
+        @Override
         public void execute(T c, Boolean value, Object data) {
             ((SpacingHandler) c).setSpacing(value);
         }
@@ -29,6 +31,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
 
     private Command<T, Integer> setComponentAlignment = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object alignment) {
             Component child = getComponentAtIndex(c, value);
             ((AlignmentHandler) c).setComponentAlignment(child,

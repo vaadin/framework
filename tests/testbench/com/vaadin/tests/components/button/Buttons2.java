@@ -13,6 +13,7 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
 
     private Command<T, Boolean> disableOnClickCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setDisableOnClick(value);
         }
@@ -20,6 +21,7 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
 
     private Command<T, Boolean> clickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((Button.ClickListener) Buttons2.this);
@@ -62,6 +64,7 @@ public class Buttons2<T extends Button> extends AbstractComponentTest<T>
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         log(event.getClass().getSimpleName());
     }

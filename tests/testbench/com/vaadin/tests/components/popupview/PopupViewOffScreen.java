@@ -42,6 +42,7 @@ public class PopupViewOffScreen extends TestBase {
 
         Button showall = new Button("Popup all", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 for (PopupView pv : popupViews) {
                     pv.setPopupVisible(true);

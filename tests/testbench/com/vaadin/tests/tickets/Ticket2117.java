@@ -39,6 +39,7 @@ public class Ticket2117 extends Application.LegacyApplication {
         w.addComponent(new Label("It has also been redirected to " + w.getURL()
                 + " to support reloading"));
         w.addComponent(new Button("button", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 w.showNotification("Button clicked");
                 w.addComponent(new Label("clicked"));

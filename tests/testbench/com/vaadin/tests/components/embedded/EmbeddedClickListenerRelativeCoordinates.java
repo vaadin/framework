@@ -14,6 +14,7 @@ public class EmbeddedClickListenerRelativeCoordinates extends TestBase {
                 "../runo/icons/64/ok.png"));
         e.addListener(new ClickListener() {
 
+            @Override
             public void click(ClickEvent event) {
                 getMainWindow()
                         .showNotification(

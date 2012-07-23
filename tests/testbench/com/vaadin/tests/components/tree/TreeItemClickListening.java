@@ -28,6 +28,7 @@ public class TreeItemClickListening extends TestBase {
         tree.setItemCaptionPropertyId("caption");
 
         tree.addListener(new ItemClickEvent.ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 clickCounter++;
                 switch (event.getButton()) {

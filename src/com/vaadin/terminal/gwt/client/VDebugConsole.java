@@ -84,6 +84,7 @@ public class VDebugConsole extends VOverlay implements Console {
             this.label = label;
         }
 
+        @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             if (event.getTypeInt() == Event.ONKEYDOWN
                     && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
@@ -199,6 +200,7 @@ public class VDebugConsole extends VOverlay implements Console {
 
     private EventPreview dragpreview = new EventPreview() {
 
+        @Override
         public boolean onEventPreview(Event event) {
             onBrowserEvent(event);
             return false;
@@ -346,6 +348,7 @@ public class VDebugConsole extends VOverlay implements Console {
      * 
      * @see com.vaadin.terminal.gwt.client.Console#log(java.lang.String)
      */
+    @Override
     public void log(String msg) {
         if (msg == null) {
             msg = "null";
@@ -362,6 +365,7 @@ public class VDebugConsole extends VOverlay implements Console {
     private List<String> msgQueue = new LinkedList<String>();
 
     private ScheduledCommand doSend = new ScheduledCommand() {
+        @Override
         public void execute() {
             if (!msgQueue.isEmpty()) {
                 RequestBuilder requestBuilder = new RequestBuilder(
@@ -375,12 +379,14 @@ public class VDebugConsole extends VOverlay implements Console {
                     requestBuilder.sendRequest(requestData,
                             new RequestCallback() {
 
+                                @Override
                                 public void onResponseReceived(Request request,
                                         Response response) {
                                     // TODO Auto-generated method stub
 
                                 }
 
+                                @Override
                                 public void onError(Request request,
                                         Throwable exception) {
                                     // TODO Auto-generated method stub
@@ -438,6 +444,7 @@ public class VDebugConsole extends VOverlay implements Console {
      * 
      * @see com.vaadin.terminal.gwt.client.Console#error(java.lang.String)
      */
+    @Override
     public void error(String msg) {
         if (msg == null) {
             msg = "null";
@@ -466,6 +473,7 @@ public class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#printObject(java.lang.
      * Object)
      */
+    @Override
     public void printObject(Object msg) {
         String str;
         if (msg == null) {
@@ -483,6 +491,7 @@ public class VDebugConsole extends VOverlay implements Console {
      * @see com.vaadin.terminal.gwt.client.Console#dirUIDL(com.vaadin
      * .terminal.gwt.client.UIDL)
      */
+    @Override
     public void dirUIDL(ValueMap u, ApplicationConfiguration conf) {
         if (panel.isAttached()) {
             VUIDLBrowser vuidlBrowser = new VUIDLBrowser(u, conf);
@@ -522,6 +531,7 @@ public class VDebugConsole extends VOverlay implements Console {
          }
      }-*/;
 
+    @Override
     public void printLayoutProblems(ValueMap meta, ApplicationConnection ac,
             Set<ComponentConnector> zeroHeightComponents,
             Set<ComponentConnector> zeroWidthComponents) {
@@ -576,6 +586,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 final CheckBox emphasisInUi = new CheckBox(
                         "Emphasize components parent in UI (the actual component is not visible)");
                 emphasisInUi.addClickHandler(new ClickHandler() {
+                    @Override
                     public void onClick(ClickEvent event) {
                         Element element2 = layout.getElement();
                         Widget.setStyleName(element2, "invalidlayout",
@@ -609,6 +620,7 @@ public class VDebugConsole extends VOverlay implements Console {
         }
         final CheckBox emphasisInUi = new CheckBox("Emphasize component in UI");
         emphasisInUi.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 if (paintable != null) {
                     Element element2 = paintable.getWidget().getElement();
@@ -634,6 +646,7 @@ public class VDebugConsole extends VOverlay implements Console {
         root.add(errorNode);
     }
 
+    @Override
     public void log(Throwable e) {
         if (e instanceof UmbrellaException) {
             UmbrellaException ue = (UmbrellaException) e;
@@ -646,6 +659,7 @@ public class VDebugConsole extends VOverlay implements Console {
         GWT.log(e.getMessage(), e);
     }
 
+    @Override
     public void error(Throwable e) {
         handleError(e, this);
     }
@@ -677,6 +691,7 @@ public class VDebugConsole extends VOverlay implements Console {
         }
     }
 
+    @Override
     public void init() {
         panel = new FlowPanel();
         if (!quietMode) {
@@ -732,6 +747,7 @@ public class VDebugConsole extends VOverlay implements Console {
             panel.add(new HTML("<i>" + help + "</i>"));
 
             clear.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
                     int width = panel.getOffsetWidth();
                     int height = panel.getOffsetHeight();
@@ -744,6 +760,7 @@ public class VDebugConsole extends VOverlay implements Console {
             });
 
             restart.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
 
                     String queryString = Window.Location.getQueryString();
@@ -771,6 +788,7 @@ public class VDebugConsole extends VOverlay implements Console {
             });
 
             forceLayout.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
                     for (ApplicationConnection applicationConnection : ApplicationConfiguration
                             .getRunningApplications()) {
@@ -780,6 +798,7 @@ public class VDebugConsole extends VOverlay implements Console {
             });
 
             analyzeLayout.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
                     List<ApplicationConnection> runningApplications = ApplicationConfiguration
                             .getRunningApplications();
@@ -795,6 +814,7 @@ public class VDebugConsole extends VOverlay implements Console {
                             + " all non committed variables form client side.");
 
             savePosition.addClickHandler(new ClickHandler() {
+                @Override
                 public void onClick(ClickEvent event) {
                     String pos = getAbsoluteLeft() + "," + getAbsoluteTop()
                             + "," + getOffsetWidth() + "," + getOffsetHeight()
@@ -805,6 +825,7 @@ public class VDebugConsole extends VOverlay implements Console {
 
             highlight.addClickHandler(new ClickHandler() {
 
+                @Override
                 public void onClick(ClickEvent event) {
                     final Label label = new Label("--");
                     log("<i>Use mouse to select a component or click ESC to exit highlight mode.</i>");
@@ -819,6 +840,7 @@ public class VDebugConsole extends VOverlay implements Console {
         }
         connectorStats.addClickHandler(new ClickHandler() {
 
+            @Override
             public void onClick(ClickEvent event) {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
@@ -851,6 +873,7 @@ public class VDebugConsole extends VOverlay implements Console {
         }
         superDevMode.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
+            @Override
             public void onValueChange(ValueChangeEvent<Boolean> event) {
                 SuperDevMode.redirect(event.getValue());
             }
@@ -865,6 +888,7 @@ public class VDebugConsole extends VOverlay implements Console {
             devMode.setValue(true);
         }
         devMode.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 if (devMode.getValue()) {
                     addHMParameter();
@@ -951,6 +975,7 @@ public class VDebugConsole extends VOverlay implements Console {
             }
         };
         simpleTree.addDomHandler(new MouseOutHandler() {
+            @Override
             public void onMouseOut(MouseOutEvent event) {
                 VUIDLBrowser.deHiglight();
             }
@@ -972,6 +997,7 @@ public class VDebugConsole extends VOverlay implements Console {
         return Util.getConnectorString(connector);
     }
 
+    @Override
     public void setQuietMode(boolean quietDebugMode) {
         quietMode = quietDebugMode;
     }

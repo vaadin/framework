@@ -323,6 +323,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1132,6 +1133,7 @@ public class SQLContainerTest {
                 delegate.storeRow(EasyMock.isA(Connection.class),
                         EasyMock.isA(RowItem.class)))
                 .andAnswer(new IAnswer<Integer>() {
+                    @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
@@ -1163,6 +1165,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1231,6 +1234,7 @@ public class SQLContainerTest {
                 delegate.storeRow(EasyMock.isA(Connection.class),
                         EasyMock.isA(RowItem.class)))
                 .andAnswer(new IAnswer<Integer>() {
+                    @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
@@ -1262,6 +1266,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1337,6 +1342,7 @@ public class SQLContainerTest {
                 delegate.removeRow(EasyMock.isA(Connection.class),
                         EasyMock.isA(RowItem.class)))
                 .andAnswer(new IAnswer<Boolean>() {
+                    @Override
                     public Boolean answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
@@ -1352,6 +1358,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1414,6 +1421,7 @@ public class SQLContainerTest {
                 delegate.storeRow(EasyMock.isA(Connection.class),
                         EasyMock.isA(RowItem.class)))
                 .andAnswer(new IAnswer<Integer>() {
+                    @Override
                     public Integer answer() throws Throwable {
                         Connection conn = (Connection) EasyMock
                                 .getCurrentArguments()[0];
@@ -1432,6 +1440,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1644,6 +1653,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<OrderBy> orders = (List<OrderBy>) EasyMock
                         .getCurrentArguments()[0];
@@ -1655,6 +1665,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1756,6 +1767,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<OrderBy> orders = (List<OrderBy>) EasyMock
                         .getCurrentArguments()[0];
@@ -1767,6 +1779,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1861,6 +1874,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -1872,6 +1886,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1882,6 +1897,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
@@ -1931,6 +1947,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -1942,6 +1959,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -1952,6 +1970,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
@@ -2000,6 +2019,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -2011,6 +2031,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -2021,6 +2042,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
                         StringBuffer query = new StringBuffer(
@@ -2069,6 +2091,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -2080,6 +2103,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -2090,6 +2114,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
@@ -2145,6 +2170,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -2156,6 +2182,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -2166,6 +2193,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
@@ -2221,6 +2249,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -2232,6 +2261,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -2242,6 +2272,7 @@ public class SQLContainerTest {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
@@ -2323,6 +2354,7 @@ public class SQLContainerTest {
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<OrderBy> orders = (List<OrderBy>) EasyMock
                         .getCurrentArguments()[0];
@@ -2334,6 +2366,7 @@ public class SQLContainerTest {
         EasyMock.expect(
                 delegate.getQueryString(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<String>() {
+                    @Override
                     public String answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);

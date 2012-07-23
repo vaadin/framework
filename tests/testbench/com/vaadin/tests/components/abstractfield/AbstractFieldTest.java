@@ -65,6 +65,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
                     .addItem("AbstractField", null);
             abstractField.addItem("Show value", new MenuBar.Command() {
 
+                @Override
                 public void menuSelected(MenuItem selectedItem) {
                     for (T a : getTestComponents()) {
                         log(a.getClass().getSimpleName() + " value: "
@@ -101,6 +102,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ValueChangeListener) AbstractFieldTest.this);
@@ -111,6 +113,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
     };
     protected Command<T, Boolean> readonlyStatusChangeListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
@@ -122,11 +125,13 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     protected Command<T, Object> setValueCommand = new Command<T, Object>() {
 
+        @Override
         public void execute(T c, Object value, Object data) {
             c.setValue(value);
         }
     };
 
+    @Override
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         log(event.getClass().getSimpleName() + ", new value: "
                 + getValue(event.getProperty()));
@@ -168,6 +173,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     }
 
+    @Override
     public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {
         log(event.getClass().getSimpleName());
     }

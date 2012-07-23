@@ -52,6 +52,7 @@ public class Ticket1878 extends Application.LegacyApplication {
         switchToGridButton = new Button("Switch to GridLayout",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         changeLayout(switchToGridButton, gridLayout);
                     }
@@ -60,6 +61,7 @@ public class Ticket1878 extends Application.LegacyApplication {
         switchToOrderedButton = new Button("Switch to OrderedLayout",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         changeLayout(switchToOrderedButton, orderedLayout);
                     }
@@ -69,6 +71,7 @@ public class Ticket1878 extends Application.LegacyApplication {
 
         switchToFormsButton = new Button("Switch to Form", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 changeLayout(switchToFormsButton, formLayout);
             }

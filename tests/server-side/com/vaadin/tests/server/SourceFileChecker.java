@@ -148,6 +148,7 @@ public class SourceFileChecker extends TestCase {
     }
 
     abstract class FileContentsValidator implements FileValidator {
+        @Override
         public void validateFile(File f) throws Exception {
             FileInputStream fis = new FileInputStream(f);
             String contents = IOUtils.toString(fis);

@@ -14,6 +14,7 @@ public class RichTextAreaTest extends AbstractFieldTest<RichTextArea> {
 
     private Command<RichTextArea, Boolean> nullSelectionAllowedCommand = new Command<RichTextArea, Boolean>() {
 
+        @Override
         public void execute(RichTextArea c, Boolean value, Object data) {
             c.setNullSettingAllowed(value);
 
@@ -21,6 +22,7 @@ public class RichTextAreaTest extends AbstractFieldTest<RichTextArea> {
     };
     private Command<RichTextArea, String> nullRepresentationCommand = new Command<RichTextArea, String>() {
 
+        @Override
         public void execute(RichTextArea c, String value, Object data) {
             c.setNullRepresentation(value);
         }

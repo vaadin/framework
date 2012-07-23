@@ -30,6 +30,7 @@ public class TableWithNoncollapsibleColumns extends TestBase {
 
         final Button button1 = new Button("Column 1: collapse/show",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.setColumnCollapsed(
                                 "Column 1 - noncollapsible",
@@ -38,6 +39,7 @@ public class TableWithNoncollapsibleColumns extends TestBase {
                 });
         final Button button2 = new Button("Column 2: collapse/show",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.setColumnCollapsed(
                                 "Column 2 - collapsible",
@@ -47,6 +49,7 @@ public class TableWithNoncollapsibleColumns extends TestBase {
 
         final Button button3 = new Button("Column 3: collapse/show",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.setColumnCollapsed(
                                 "Column 3 - toggle collapsing",
@@ -56,6 +59,7 @@ public class TableWithNoncollapsibleColumns extends TestBase {
         final Button button4 = new Button(
                 "Column 3: make noncollapsible/collapsible",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.setColumnCollapsible(
                                 "Column 3 - toggle collapsing",

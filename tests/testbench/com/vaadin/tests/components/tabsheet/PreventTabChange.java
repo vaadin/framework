@@ -46,6 +46,7 @@ public class PreventTabChange extends TestBase implements
         addComponent(tabSheet);
     }
 
+    @Override
     public void selectedTabChange(SelectedTabChangeEvent event) {
 
         TabSheet tabsheet = event.getTabSheet();

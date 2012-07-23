@@ -20,6 +20,7 @@ public class FormLayoutCaptionStyles extends TestBase {
         fl.addComponent(new Button("Toggle Text field 2 bold style",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         if ("bold".equals(f2.getStyleName())) {
                             f2.setStyleName("");

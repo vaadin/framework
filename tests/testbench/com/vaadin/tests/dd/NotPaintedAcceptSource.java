@@ -26,10 +26,12 @@ public class NotPaintedAcceptSource extends TestBase {
         source2.setDragMode(TableDragMode.ROW);
 
         target.setDropHandler(new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return new SourceIs(source1, source2);
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 TableTransferable transferable = (TableTransferable) event
                         .getTransferable();
@@ -55,6 +57,7 @@ public class NotPaintedAcceptSource extends TestBase {
         addComponent(horizontalLayout);
 
         addComponent(new Button("Swap sources", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (source1.getParent() != null) {
                     horizontalLayout.replaceComponent(source1, source2);

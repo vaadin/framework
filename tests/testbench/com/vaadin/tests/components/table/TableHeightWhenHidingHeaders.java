@@ -34,6 +34,7 @@ public class TableHeightWhenHidingHeaders extends AbstractTestCase {
         CheckBox showHeaders = new CheckBox("Show headers");
         showHeaders.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     // table body height is now 77px, which together

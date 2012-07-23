@@ -19,6 +19,7 @@ public class HelloWorldExtensionTest extends AbstractTestRoot {
         addExtension(extension);
 
         addComponent(new Button("Greet again", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 extension.greetAgain();
             }

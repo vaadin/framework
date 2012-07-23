@@ -23,6 +23,7 @@ public class ActiveDragSourceClassName extends TestBase {
     private static final String GREENBOXES = ".greenblock {float:left; width:60px;height:60px;background: green !important; padding:0; margin:2px;-webkit-transition: width 0.3s ease-in-out;}";
     private static final String HIDEDRAGSOURCE = ".v-active-drag-source { overflow:hidden; width:0px !important;}";
 
+    @Override
     protected void setup() {
         TestUtils.injectCSS(getMainWindow(), GREENBOXES + HIDEDRAGSOURCE);
 
@@ -69,10 +70,12 @@ public class ActiveDragSourceClassName extends TestBase {
 
     private DropHandler dh = new DropHandler() {
 
+        @Override
         public AcceptCriterion getAcceptCriterion() {
             return AcceptAll.get();
         }
 
+        @Override
         public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
             if (transferable instanceof TransferableImpl) {

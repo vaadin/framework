@@ -121,6 +121,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             setElements(scrollables);
         }
 
+        @Override
         public void onTouchStart(TouchStartEvent event) {
             assert delegate != null;
             delegate.onTouchStart(event);
@@ -593,6 +594,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 - scrolledElement.getClientHeight();
     }
 
+    @Override
     public void onPreviewNativeEvent(NativePreviewEvent event) {
         int typeInt = event.getTypeInt();
         if (transitionOn) {

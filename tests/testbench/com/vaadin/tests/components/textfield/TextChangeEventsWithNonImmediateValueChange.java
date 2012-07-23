@@ -18,6 +18,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
 
         TextChangeListener inputEventListener = new TextChangeListener() {
 
+            @Override
             public void textChange(TextChangeEvent event) {
                 l.log("Text change event, text content currently:'"
                         + event.getText() + "' Cursor at index:"
@@ -31,6 +32,7 @@ public class TextChangeEventsWithNonImmediateValueChange extends TestBase {
 
         tf.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 l.log("Value change: '" + event.getProperty().getValue() + "'");
             }

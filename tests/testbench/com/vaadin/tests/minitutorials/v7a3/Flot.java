@@ -21,12 +21,14 @@ import com.vaadin.ui.Notification;
 public class Flot extends AbstractJavaScriptComponent {
     public Flot() {
         registerRpc(new FlotClickRpc() {
+            @Override
             public void onPlotClick(int seriesIndex, int dataIndex) {
                 Notification.show("Clicked on [" + seriesIndex + ", "
                         + dataIndex + "]");
             }
         });
         registerCallback("onPlotClick", new JavaScriptCallback() {
+            @Override
             public void call(JSONArray arguments) throws JSONException {
                 int seriesIndex = arguments.getInt(0);
                 int dataIndex = arguments.getInt(1);

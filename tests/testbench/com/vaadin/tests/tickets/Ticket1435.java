@@ -118,6 +118,7 @@ public class Ticket1435 extends Application.LegacyApplication {
 
             collapse.setStyleName("collapse");
             collapse.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(Button.ClickEvent event) {
                     if (useWorkaround) {
                         container.setVisible(false);
@@ -144,6 +145,7 @@ public class Ticket1435 extends Application.LegacyApplication {
             if (useWorkaround) {
                 expand.addListener(new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         container.setVisible(true);
                         root.setHeight(lastHeight, lastHeightUnit);

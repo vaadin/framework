@@ -30,10 +30,12 @@ public class Ticket2431 extends Application.LegacyApplication {
 
             Action[] actions = new Action[] { a1, a2 };
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return actions;
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 if (action == a1) {
                     getMainWindow().addComponent(new Label("CTRL X hit"));

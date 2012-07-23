@@ -71,6 +71,7 @@ public class Ticket2048 extends Application.LegacyApplication {
                 "Replace image with new embedded component (flashes)",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Embedded newEmbedded = new Embedded(null,
                                 new ThemeResource("icons/64/folder-add.png"));
@@ -85,6 +86,7 @@ public class Ticket2048 extends Application.LegacyApplication {
 
         b = new Button("Change image source (is fine)", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 String img = "folder-add";
                 if (((ThemeResource) embedded.getSource()).getResourceId()

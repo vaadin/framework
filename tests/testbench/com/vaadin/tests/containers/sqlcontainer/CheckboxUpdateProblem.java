@@ -45,6 +45,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
 
         databaseHelper.getTestContainer().addListener(
                 new ItemSetChangeListener() {
+                    @Override
                     public void containerItemSetChange(ItemSetChangeEvent event) {
                         Object selected = testList.getValue();
                         if (selected != null) {
@@ -62,6 +63,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
         getMainWindow().setContent(horizontalSplit);
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
 
         Property<?> property = event.getProperty();
@@ -89,6 +91,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
             getFooter().setVisible(false);
         }
 
+        @Override
         public void buttonClick(ClickEvent event) {
             if (event.getSource() == save) {
                 super.commit();

@@ -20,6 +20,7 @@ public class AddItemToEmptyTable extends TestBase {
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     rightTable.setColumnWidth("name", 150);
@@ -36,6 +37,7 @@ public class AddItemToEmptyTable extends TestBase {
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     rightTable.setColumnWidth("info", 20);
@@ -71,6 +73,7 @@ public class AddItemToEmptyTable extends TestBase {
 
         Button b = new Button("Add item", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Object id = rightTable.addItem();
                 Item item = rightTable.getItem(id);
@@ -83,6 +86,7 @@ public class AddItemToEmptyTable extends TestBase {
 
         b = new Button("Clear", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 rightTable.removeAllItems();
             }

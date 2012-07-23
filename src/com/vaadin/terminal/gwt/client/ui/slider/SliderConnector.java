@@ -16,6 +16,7 @@ import com.vaadin.ui.Slider;
 public class SliderConnector extends AbstractFieldConnector implements
         Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         getWidget().client = client;
@@ -51,6 +52,7 @@ public class SliderConnector extends AbstractFieldConnector implements
         if (!getWidget().vertical) {
             // Draw handle with a delay to allow base to gain maximum width
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     getWidget().buildHandle();
                     getWidget().setValue(getWidget().value, false);

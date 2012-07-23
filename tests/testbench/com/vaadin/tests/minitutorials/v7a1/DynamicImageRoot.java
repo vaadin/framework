@@ -55,6 +55,7 @@ class DynamicImageRequestHandler implements RequestHandler {
 
     public static final String IMAGE_URL = "myimage.png";
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

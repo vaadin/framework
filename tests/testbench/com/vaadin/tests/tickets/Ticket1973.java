@@ -30,6 +30,7 @@ public class Ticket1973 extends com.vaadin.Application.LegacyApplication {
 
         Button refreshTable = new Button("Change table container");
         refreshTable.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent e) {
                 table.setContainerDataSource(container2);
                 table.setContainerDataSource(container1);

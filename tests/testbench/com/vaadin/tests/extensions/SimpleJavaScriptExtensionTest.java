@@ -51,11 +51,13 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
         public SimpleJavascriptExtension() {
             registerRpc(new SimpleJavaScriptExtensionServerRpc() {
+                @Override
                 public void greet(String message) {
                     Notification.show(getState().getPrefix() + message);
                 }
             });
             registerCallback("greetToServer", new JavaScriptCallback() {
+                @Override
                 public void call(JSONArray arguments) throws JSONException {
                     Notification.show(getState().getPrefix()
                             + arguments.getString(0));
@@ -90,12 +92,14 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         addExtension(simpleJavascriptExtension);
         addComponent(new Button("Send rpc greeting",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         simpleJavascriptExtension.greetRpc("Rpc greeting");
                     }
                 }));
         addComponent(new Button("Send callback greeting",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         simpleJavascriptExtension
                                 .greetCallback("Callback greeting");

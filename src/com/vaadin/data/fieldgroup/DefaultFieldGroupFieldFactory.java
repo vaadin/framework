@@ -23,6 +23,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
     public static final Object CAPTION_PROPERTY_ID = "Caption";
 
+    @Override
     public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);

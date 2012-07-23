@@ -37,6 +37,7 @@ public class TestForWindowing extends CustomComponent {
         final Button create = new Button("Create a new window",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Window w = new Window("Testing Window");
 
@@ -59,6 +60,7 @@ public class TestForWindowing extends CustomComponent {
 
                         s1.addListener(new ValueChangeListener() {
 
+                            @Override
                             public void valueChange(ValueChangeEvent event) {
                                 String v = (String) event.getProperty()
                                         .getValue();

@@ -22,6 +22,7 @@ public class RemovalOfSelectedIcon extends TestBase {
         btClear.setImmediate(true);
         btClear.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 cb2.removeAllItems();
                 cb2.setContainerDataSource(null);

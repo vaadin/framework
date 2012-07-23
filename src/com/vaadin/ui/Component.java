@@ -305,6 +305,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @return the parent component
      */
+    @Override
     public HasComponents getParent();
 
     /**
@@ -507,6 +508,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return the Root of the component or <code>null</code> if it is not
      *         attached to a Root
      */
+    @Override
     public Root getRoot();
 
     /**
@@ -585,6 +587,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * }
      * </pre>
      */
+    @Override
     public void attach();
 
     /**
@@ -620,6 +623,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @since 7.0
      */
+    @Override
     public ComponentState getState();
 
     /**

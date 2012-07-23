@@ -20,6 +20,7 @@ public class AddAndRemoveTabs extends TestBase {
         Button addTabBtn = new Button("Add new tab",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         addTab();
                     }
@@ -34,6 +35,7 @@ public class AddAndRemoveTabs extends TestBase {
 
         Button closeTab = new Button("Close tab", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tabSheet.removeComponent(layout);
 

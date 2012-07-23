@@ -16,6 +16,7 @@ import com.vaadin.ui.ProgressIndicator;
 public class ProgressIndicatorConnector extends AbstractFieldConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         if (!isRealUpdate(uidl)) {

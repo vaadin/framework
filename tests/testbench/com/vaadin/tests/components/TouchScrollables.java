@@ -79,12 +79,14 @@ public class TouchScrollables extends TestBase {
         final Label l = l50;
         Button button = new Button("Scroll to label 50",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getLayout().getRoot().scrollIntoView(l);
                     }
                 });
         cssLayout.addComponent(button);
         button = new Button("Scroll to 100px", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 p.setScrollTop(100);
             }
@@ -117,6 +119,7 @@ public class TouchScrollables extends TestBase {
 
         Button button = new Button("Toggle lazyloading");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (table.getCacheRate() == 100) {
                     table.setCacheRate(2);
@@ -131,6 +134,7 @@ public class TouchScrollables extends TestBase {
 
         button = new Button("Toggle selectable");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setSelectable(!table.isSelectable());
             }
@@ -159,6 +163,7 @@ public class TouchScrollables extends TestBase {
 
     private Component getSubWindowTest() {
         Button b = new Button("Open subwindow", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Window w = new Window("Subwindow");
                 w.center();
@@ -185,10 +190,12 @@ public class TouchScrollables extends TestBase {
             Action[] actions = new Action[] { new Action("FOO"),
                     new Action("BAR"), new Action("CAR") };
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return actions;
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 Notification.show(action.getCaption());
 
@@ -206,10 +213,12 @@ public class TouchScrollables extends TestBase {
             // accept only drags from this table
             AcceptCriterion crit = new SourceIs(table);
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
                         .getTargetDetails();

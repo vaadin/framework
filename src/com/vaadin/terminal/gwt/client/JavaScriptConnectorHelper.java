@@ -49,6 +49,7 @@ public class JavaScriptConnectorHelper {
 
     public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
+            @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 JavaScriptObject wrapper = getConnectorWrapper();
                 JavaScriptConnectorState state = getConnectorState();

@@ -39,6 +39,7 @@ public final class SimpleStringFilter implements Filter {
         this.onlyMatchPrefix = onlyMatchPrefix;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item) {
         final Property<?> p = item.getItemProperty(propertyId);
         if (p == null) {
@@ -62,6 +63,7 @@ public final class SimpleStringFilter implements Filter {
         return true;
     }
 
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return this.propertyId.equals(propertyId);
     }

@@ -23,6 +23,7 @@ public class ProgrammaticSelect extends TestBase {
         Button selectItem = new Button("Select first row",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Object id = tt.getItemIds().iterator().next();
                         tt.select(id);

@@ -22,6 +22,7 @@ public class LinkConnector extends AbstractComponentConnector implements
         return false;
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         if (!isRealUpdate(uidl)) {

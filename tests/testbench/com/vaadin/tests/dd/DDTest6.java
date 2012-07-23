@@ -97,10 +97,12 @@ public class DDTest6 extends TestBase {
         tree1.setDragMode(TreeDragMode.NODE);
 
         DropHandler dropHandler = new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 File file = null;
                 Folder folder = null;
@@ -127,12 +129,14 @@ public class DDTest6 extends TestBase {
 
             private Action[] actions = new Action[] { new Action("Remove") };
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 ContainerHierarchicalWrapper containerDataSource = (ContainerHierarchicalWrapper) tree1
                         .getContainerDataSource();
                 containerDataSource.removeItemRecursively(target);
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return actions;
             }
@@ -140,6 +144,7 @@ public class DDTest6 extends TestBase {
         tree1.addActionHandler(actionHandler);
 
         tree1.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 if (value != null && !(value instanceof Folder)) {
@@ -215,6 +220,7 @@ public class DDTest6 extends TestBase {
 
         public Resource getResource() {
             StreamSource streamSource = new StreamSource() {
+                @Override
                 public InputStream getStream() {
                     if (bas != null) {
                         byte[] byteArray = bas.toByteArray();
@@ -355,6 +361,7 @@ public class DDTest6 extends TestBase {
 
         }
 
+        @Override
         @SuppressWarnings("static-access")
         public void drop(DragAndDropEvent dropEvent) {
 
@@ -402,29 +409,36 @@ public class DDTest6 extends TestBase {
 
                         StreamVariable streamVariable = new StreamVariable() {
 
+                            @Override
                             public OutputStream getOutputStream() {
                                 return bas;
                             }
 
+                            @Override
                             public boolean listenProgress() {
                                 return false;
                             }
 
+                            @Override
                             public void onProgress(StreamingProgressEvent event) {
                             }
 
+                            @Override
                             public void streamingStarted(
                                     StreamingStartEvent event) {
                             }
 
+                            @Override
                             public void streamingFinished(
                                     StreamingEndEvent event) {
                             }
 
+                            @Override
                             public void streamingFailed(
                                     StreamingErrorEvent event) {
                             }
 
+                            @Override
                             public boolean isInterrupted() {
                                 return false;
                             }
@@ -448,6 +462,7 @@ public class DDTest6 extends TestBase {
             }
         }
 
+        @Override
         public AcceptCriterion getAcceptCriterion() {
             return AcceptAll.get();
         }
@@ -473,6 +488,7 @@ public class DDTest6 extends TestBase {
             l.addComponent(new Label(name));
 
             l.addListener(new LayoutClickListener() {
+                @Override
                 @SuppressWarnings("static-access")
                 public void layoutClick(LayoutClickEvent event) {
                     if (event.isDoubleClick()) {
@@ -506,10 +522,12 @@ public class DDTest6 extends TestBase {
 
                 setDropHandler(new DropHandler() {
 
+                    @Override
                     public AcceptCriterion getAcceptCriterion() {
                         return new Not(SourceIsTarget.get());
                     }
 
+                    @Override
                     public void drop(DragAndDropEvent dropEvent) {
                         File f = null;
 

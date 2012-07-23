@@ -22,6 +22,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
         mockCtx = ctx;
     }
 
+    @Override
     public Context getInitialContext(java.util.Hashtable<?, ?> environment)
             throws NamingException {
         if (mockCtx == null) {

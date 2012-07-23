@@ -41,6 +41,7 @@ public class JavaScript extends AbstractExtension {
      */
     public JavaScript() {
         registerRpc(new JavaScriptCallbackRpc() {
+            @Override
             public void call(String name, JSONArray arguments) {
                 JavaScriptCallback callback = callbacks.get(name);
                 // TODO handle situation if name is not registered

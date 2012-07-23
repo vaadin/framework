@@ -19,6 +19,7 @@ public class SplitPanelSwapComponents extends TestBase {
         getLayout().addComponent(hsplit);
 
         Button swap = new Button("Swap components", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Component first = hsplit.getFirstComponent();
                 hsplit.removeComponent(first);

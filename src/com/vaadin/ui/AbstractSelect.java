@@ -320,6 +320,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         // Paints select attributes
@@ -422,6 +423,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
         // New option entered (and it is allowed)
@@ -542,6 +544,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      */
     public class DefaultNewItemHandler implements NewItemHandler {
+        @Override
         public void addNewItem(String newItemCaption) {
             // Checks for readonly
             if (isReadOnly()) {
@@ -692,6 +695,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            the item id.
      * @return the item from the container.
      */
+    @Override
     public Item getItem(Object itemId) {
         return items.getItem(itemId);
     }
@@ -701,6 +705,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @return the Collection of item ids.
      */
+    @Override
     public Collection<?> getItemIds() {
         return items.getItemIds();
     }
@@ -710,6 +715,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @return the Collection of property ids.
      */
+    @Override
     public Collection<?> getContainerPropertyIds() {
         return items.getContainerPropertyIds();
     }
@@ -721,6 +727,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      *            the Id identifying the property.
      * @see com.vaadin.data.Container#getType(java.lang.Object)
      */
+    @Override
     public Class<?> getType(Object propertyId) {
         return items.getType(propertyId);
     }
@@ -732,6 +739,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container#size()
      */
+    @Override
     public int size() {
         return items.size();
     }
@@ -742,6 +750,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @param itemId
      *            the Id the of item to be tested.
      */
+    @Override
     public boolean containsId(Object itemId) {
         if (itemId != null) {
             return items.containsId(itemId);
@@ -756,6 +765,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container#getContainerProperty(Object, Object)
      */
+    @Override
     public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         return items.getContainerProperty(itemId, propertyId);
     }
@@ -771,6 +781,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.data.Container#addContainerProperty(java.lang.Object,
      *      java.lang.Class, java.lang.Object)
      */
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
@@ -791,6 +802,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return True if the operation succeeded.
      * @see com.vaadin.data.Container#removeAllItems()
      */
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
 
         final boolean retval = items.removeAllItems();
@@ -812,6 +824,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return the Id of the created item or null in case of failure.
      * @see com.vaadin.data.Container#addItem()
      */
+    @Override
     public Object addItem() throws UnsupportedOperationException {
 
         final Object retval = items.addItem();
@@ -836,6 +849,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return the Created item with the given id, or null in case of failure.
      * @see com.vaadin.data.Container#addItem(java.lang.Object)
      */
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
         final Item retval = items.addItem(itemId);
@@ -851,6 +865,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container#removeItem(java.lang.Object)
      */
+    @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
 
@@ -873,6 +888,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return True if the operation succeeded.
      * @see com.vaadin.data.Container#removeContainerProperty(java.lang.Object)
      */
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
 
@@ -896,6 +912,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @param newDataSource
      *            the new data source.
      */
+    @Override
     public void setContainerDataSource(Container newDataSource) {
         if (newDataSource == null) {
             newDataSource = new IndexedContainer();
@@ -950,6 +967,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.Viewer#getContainerDataSource()
      */
+    @Override
     public Container getContainerDataSource() {
         return items;
     }
@@ -1432,6 +1450,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.PropertySetChangeListener#containerPropertySetChange(com.vaadin.data.Container.PropertySetChangeEvent)
      */
+    @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
         firePropertySetChange();
@@ -1442,6 +1461,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#addListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
+    @Override
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
             propertySetEventListeners = new LinkedHashSet<Container.PropertySetChangeListener>();
@@ -1454,6 +1474,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#removeListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
+    @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners != null) {
             propertySetEventListeners.remove(listener);
@@ -1468,6 +1489,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
+    @Override
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners == null) {
             itemSetEventListeners = new LinkedHashSet<Container.ItemSetChangeListener>();
@@ -1480,6 +1502,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#removeListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
+    @Override
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners != null) {
             itemSetEventListeners.remove(listener);
@@ -1516,6 +1539,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * 
      * @see com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange(com.vaadin.data.Container.ItemSetChangeEvent)
      */
+    @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         // Clears the item id mapping table
         itemIdMapper.removeAll();
@@ -1566,6 +1590,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          * 
          * @see com.vaadin.data.Container.ItemSetChangeEvent#getContainer()
          */
+        @Override
         public Container getContainer() {
             return AbstractSelect.this;
         }
@@ -1583,6 +1608,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          * 
          * @see com.vaadin.data.Container.PropertySetChangeEvent#getContainer()
          */
+        @Override
         public Container getContainer() {
             return AbstractSelect.this;
         }
@@ -1778,10 +1804,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             captionChangeNotifiers.clear();
         }
 
+        @Override
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
             requestRepaint();
         }
 
+        @Override
         public void itemPropertySetChange(
                 com.vaadin.data.Item.PropertySetChangeEvent event) {
             requestRepaint();
@@ -1809,6 +1837,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             super(select, itemId);
         }
 
+        @Override
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getTargetDetails();
@@ -1875,6 +1904,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             super(select, itemId);
         }
 
+        @Override
         public boolean accept(DragAndDropEvent dragEvent) {
             DataBoundTransferable transferable = (DataBoundTransferable) dragEvent
                     .getTransferable();

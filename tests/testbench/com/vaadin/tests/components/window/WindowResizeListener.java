@@ -34,6 +34,7 @@ public class WindowResizeListener extends TestBase {
         getLayout().addComponent(l);
 
         getMainWindow().addListener(new Page.BrowserWindowResizeListener() {
+            @Override
             public void browserWindowResized(BrowserWindowResizeEvent event) {
                 l.setValue("Current browser window size: "
                         + getMainWindow().getBrowserWindowWidth() + " x "
@@ -45,6 +46,7 @@ public class WindowResizeListener extends TestBase {
         subwindow.setImmediate(true);
         subwindow.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) event.getProperty().getValue()) {
                     getMainWindow().addWindow(subwin);
@@ -58,6 +60,7 @@ public class WindowResizeListener extends TestBase {
         CheckBox immediate = new CheckBox("immediate");
         immediate.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean booleanValue = (Boolean) event.getProperty().getValue();
                 getMainWindow().setImmediate(booleanValue);
@@ -87,6 +90,7 @@ class ResizeListenerWindow extends Window {
         hl.addComponent(sizeLabel);
 
         addListener(new ResizeListener() {
+            @Override
             public void windowResized(ResizeEvent e) {
                 updateLabel();
             }

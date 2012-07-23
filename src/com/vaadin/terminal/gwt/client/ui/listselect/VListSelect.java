@@ -105,6 +105,7 @@ public class VListSelect extends VOptionGroupBase {
         getOptionsContainer().setTabIndex(tabIndex);
     }
 
+    @Override
     public void focus() {
         select.setFocus(true);
     }

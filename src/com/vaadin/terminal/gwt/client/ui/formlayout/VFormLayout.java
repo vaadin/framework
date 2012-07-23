@@ -87,6 +87,7 @@ public class VFormLayout extends SimplePanel {
          * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
          * .event.dom.client.ClickEvent)
          */
+        @Override
         public void onClick(ClickEvent event) {
             Caption caption = (Caption) event.getSource();
             if (caption.getOwner() != null) {

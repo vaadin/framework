@@ -27,6 +27,7 @@ public class MyPickerWidget extends ComplexPanel {
         add(button, getElement());
 
         button.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 Window.alert("Calendar picker not yet supported!");
             }

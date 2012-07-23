@@ -50,6 +50,7 @@ public class TestCurrentPageFirstItem extends TestBase implements ClickListener 
         baseLayout.addComponent(buttonItem);
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         Item item = container.addItem(++counter);
         item.getItemProperty("row").setValue(counter + "");

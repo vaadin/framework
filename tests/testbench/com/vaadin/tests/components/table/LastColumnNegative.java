@@ -16,6 +16,7 @@ public class LastColumnNegative extends TestBase {
         Button addButton = new Button("Add a table",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         wrapper.addComponent(table);
                     }
@@ -24,6 +25,7 @@ public class LastColumnNegative extends TestBase {
         Button removeButton = new Button("Remove a table",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         wrapper.removeComponent(table);
                     }
@@ -31,6 +33,7 @@ public class LastColumnNegative extends TestBase {
         Button shrinkWrapper = new Button("Shrink wrapper",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         wrapper.setWidth("400px");
                     }

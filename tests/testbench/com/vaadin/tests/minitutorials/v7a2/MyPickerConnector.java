@@ -29,6 +29,7 @@ public class MyPickerConnector extends AbstractComponentConnector implements
     }
 
     private final ElementResizeListener listener = new ElementResizeListener() {
+        @Override
         public void onElementResize(ElementResizeEvent e) {
             int buttonWidth = getLayoutManager().getOuterWidth(e.getElement());
             buttonWidth -= getLayoutManager().getMarginRight(e.getElement());
@@ -52,6 +53,7 @@ public class MyPickerConnector extends AbstractComponentConnector implements
         getLayoutManager().unregisterDependency(this, button);
     }
 
+    @Override
     public void layout() {
         Element button = getWidget().getWidget(1).getElement();
         int buttonWidth = getLayoutManager().getOuterWidth(button);

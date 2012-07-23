@@ -39,6 +39,7 @@ public class DateFieldMinResolution extends TestBase {
         idf.setImmediate(true);
 
         idf.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 lbl.setValue(dformat.format(event.getProperty().getValue()));
             }

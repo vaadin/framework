@@ -9,10 +9,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class IsNullTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof IsNull;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         IsNull in = (IsNull) filter;
         return QueryBuilder.quote(in.getPropertyId()) + " IS NULL";

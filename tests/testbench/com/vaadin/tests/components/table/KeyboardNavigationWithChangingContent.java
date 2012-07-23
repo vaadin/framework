@@ -35,6 +35,7 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
                 new Button("Change elements and selection",
                         new ClickListener() {
 
+                            @Override
                             public void buttonClick(ClickEvent event) {
 
                                 bic.removeAllItems();

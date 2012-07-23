@@ -149,6 +149,7 @@ public class ShortcutActionHandler {
         } else {
             shakeTarget(et);
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     shakeTarget(et);
                 }
@@ -156,6 +157,7 @@ public class ShortcutActionHandler {
         }
 
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 if (finalTarget != null) {
                     client.updateVariable(paintableId, "actiontarget",
@@ -187,6 +189,7 @@ public class ShortcutActionHandler {
             // deferred. Will cause a small flickering, so not doing it for all
             // browsers.
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     focus(e);
                 }

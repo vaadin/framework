@@ -53,6 +53,7 @@ public class TestForChildComponentRendering extends CustomComponent {
         se.addItem("Valinta 2");
 
         Button b = new Button("refresh view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 createNewView();
             }
@@ -60,6 +61,7 @@ public class TestForChildComponentRendering extends CustomComponent {
         main.addComponent(b);
 
         b = new Button("reorder view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 randomReorder();
             }
@@ -68,6 +70,7 @@ public class TestForChildComponentRendering extends CustomComponent {
 
         b = new Button("remove randomly one component",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         removeRandomComponent();
                     }

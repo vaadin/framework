@@ -71,6 +71,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             this.itemIds = itemIds;
         }
 
+        @Override
         public int compare(Object o1, Object o2) {
             if (o1.equals(o2)) {
                 return 0;
@@ -233,6 +234,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Can the specified Item have any children? Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public boolean areChildrenAllowed(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
@@ -253,6 +255,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> getChildren(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
@@ -272,6 +275,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Object getParent(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
@@ -287,6 +291,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public boolean hasChildren(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
@@ -303,6 +308,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public boolean isRoot(Object itemId) {
 
         // If the wrapped container implements the method directly, use it
@@ -322,6 +328,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> rootItemIds() {
 
         // If the wrapped container implements the method directly, use it
@@ -351,6 +358,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
+    @Override
     public boolean setChildrenAllowed(Object itemId, boolean childrenAllowed) {
 
         // If the wrapped container implements the method directly, use it
@@ -391,6 +399,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
+    @Override
     public boolean setParent(Object itemId, Object newParentId) {
 
         // If the wrapped container implements the method directly, use it
@@ -483,6 +492,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the addItem is not supported.
      */
+    @Override
     public Object addItem() throws UnsupportedOperationException {
 
         final Object id = container.addItem();
@@ -502,6 +512,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the addItem is not supported.
      */
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
         // Null ids are not accepted
@@ -524,6 +535,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the removeAllItems is not supported.
      */
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
 
         final boolean success = container.removeAllItems();
@@ -548,6 +560,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the removeItem is not supported.
      */
+    @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
 
@@ -586,6 +599,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the addContainerProperty is not supported.
      */
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
 
@@ -606,6 +620,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * @throws UnsupportedOperationException
      *             if the removeContainerProperty is not supported.
      */
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         return container.removeContainerProperty(propertyId);
@@ -616,6 +631,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public boolean containsId(Object itemId) {
         return container.containsId(itemId);
     }
@@ -624,6 +640,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Gets the specified Item from the container. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public Item getItem(Object itemId) {
         return container.getItem(itemId);
     }
@@ -633,6 +650,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> getItemIds() {
         return container.getItemIds();
     }
@@ -642,6 +660,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Container Don't add a JavaDoc comment here, we use the default
      * documentation from implemented interface.
      */
+    @Override
     public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         return container.getContainerProperty(itemId, propertyId);
     }
@@ -651,6 +670,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public Collection<?> getContainerPropertyIds() {
         return container.getContainerPropertyIds();
     }
@@ -660,6 +680,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public Class<?> getType(Object propertyId) {
         return container.getType(propertyId);
     }
@@ -668,6 +689,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * Gets the number of Items in the Container. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public int size() {
         return container.size();
     }
@@ -677,6 +699,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void addListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
@@ -689,6 +712,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
@@ -701,6 +725,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public void addListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
@@ -713,6 +738,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
@@ -736,6 +762,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             listener = realListener;
         }
 
+        @Override
         public void containerItemSetChange(ItemSetChangeEvent event) {
             updateHierarchicalWrapper();
             ((Container.ItemSetChangeListener) listener)
@@ -743,6 +770,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         }
 
+        @Override
         public void containerPropertySetChange(PropertySetChangeEvent event) {
             updateHierarchicalWrapper();
             ((Container.PropertySetChangeListener) listener)

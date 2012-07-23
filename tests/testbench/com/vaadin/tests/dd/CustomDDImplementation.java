@@ -38,14 +38,17 @@ public class CustomDDImplementation extends CustomComponent {
      * 
      */
     class MyDropTarget extends AbstractComponent implements DropTarget {
+        @Override
         public DropHandler getDropHandler() {
             return new DropHandler() {
 
+                @Override
                 public void drop(DragAndDropEvent event) {
                     // Do something with data
                     return;
                 }
 
+                @Override
                 public AcceptCriterion getAcceptCriterion() {
                     return AcceptAll.get();
                 }
@@ -53,6 +56,7 @@ public class CustomDDImplementation extends CustomComponent {
             };
         }
 
+        @Override
         public TargetDetails translateDropTargetDetails(
                 Map<String, Object> clientVariables) {
             // If component has some special drop details that it needs to

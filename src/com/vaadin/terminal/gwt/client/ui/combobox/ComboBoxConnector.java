@@ -27,6 +27,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
@@ -230,6 +231,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         return (VFilterSelect) super.getWidget();
     }
 
+    @Override
     public void layout() {
         VFilterSelect widget = getWidget();
         if (widget.initDone) {

@@ -16,6 +16,7 @@ import com.vaadin.ui.Upload;
 public class UploadConnector extends AbstractComponentConnector implements
         Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;

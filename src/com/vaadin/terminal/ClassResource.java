@@ -89,6 +89,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * 
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
+    @Override
     public String getMIMEType() {
         return FileTypeResolver.getMIMEType(resourceName);
     }
@@ -98,6 +99,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * 
      * @see com.vaadin.terminal.ApplicationResource#getApplication()
      */
+    @Override
     public Application getApplication() {
         return application;
     }
@@ -108,6 +110,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * @return the file name associated to this resource.
      * @see com.vaadin.terminal.ApplicationResource#getFilename()
      */
+    @Override
     public String getFilename() {
         int index = 0;
         int next = 0;
@@ -123,6 +126,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * 
      * @see com.vaadin.terminal.ApplicationResource#getStream()
      */
+    @Override
     public DownloadStream getStream() {
         final DownloadStream ds = new DownloadStream(
                 associatedClass.getResourceAsStream(resourceName),
@@ -133,6 +137,7 @@ public class ClassResource implements ApplicationResource, Serializable {
     }
 
     /* documented in superclass */
+    @Override
     public int getBufferSize() {
         return bufferSize;
     }
@@ -148,6 +153,7 @@ public class ClassResource implements ApplicationResource, Serializable {
     }
 
     /* documented in superclass */
+    @Override
     public long getCacheTime() {
         return cacheTime;
     }

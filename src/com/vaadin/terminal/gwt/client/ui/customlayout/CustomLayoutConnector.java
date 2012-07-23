@@ -102,10 +102,12 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
         return (VCustomLayout) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector paintable) {
         getWidget().updateCaption(paintable);
     }
 
+    @Override
     public void layout() {
         getWidget().iLayoutJS(DOM.getFirstChild(getWidget().getElement()));
     }

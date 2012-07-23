@@ -70,6 +70,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
         up.addListener(new Upload.ProgressListener() {
 
+            @Override
             public void updateProgress(long readBytes, long contentLenght) {
                 pi.setValue(new Float(readBytes / (float) contentLenght));
 
@@ -83,6 +84,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
         final Button b = new Button("Update status",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         readState();
                     }
@@ -90,6 +92,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
         final Button c = new Button("Update status with gc",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         gc();
                     }
@@ -112,6 +115,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
         Button cancel = new Button("Cancel current upload");
         cancel.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 buffer.cancel();
             }
@@ -122,6 +126,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
         final Button restart = new Button("Restart demo application");
         restart.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 TestForStyledUpload.this.close();
             }
@@ -156,6 +161,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
         refreshMemUsage();
     }
 
+    @Override
     public void uploadFinished(FinishedEvent event) {
         status.removeAllComponents();
         final InputStream stream = buffer.getStream();
@@ -208,6 +214,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
             up.interruptUpload();
         }
 
+        @Override
         public InputStream getStream() {
             if (file == null) {
                 return null;
@@ -225,6 +232,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
         /**
          * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
+        @Override
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;
             mimeType = MIMEType;
@@ -242,6 +250,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
          * 
          * @return String
          */
+        @Override
         public String getFileName() {
             return fileName;
         }
@@ -257,11 +266,13 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
     }
 
+    @Override
     public void uploadFailed(FailedEvent event) {
         pi.setVisible(false);
         l.setValue("Upload was interrupted");
     }
 
+    @Override
     public void uploadSucceeded(SucceededEvent event) {
         pi.setVisible(false);
         l.setValue("Finished upload, idle");
@@ -280,6 +291,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
 
     }
 
+    @Override
     public void uploadStarted(StartedEvent event) {
         pi.setVisible(true);
         l.setValue("Started uploading file " + event.getFilename());

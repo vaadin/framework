@@ -111,6 +111,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
+    @Override
     public void applyInvocation(ServerRpcMethodInvocation invocation)
             throws RpcInvocationException {
         Method method = invocation.getMethod();

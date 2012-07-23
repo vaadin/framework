@@ -33,6 +33,7 @@ public final class IsNull implements Filter {
         this.propertyId = propertyId;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedOperationException {
         final Property<?> p = item.getItemProperty(getPropertyId());
@@ -42,6 +43,7 @@ public final class IsNull implements Filter {
         return null == p.getValue();
     }
 
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return getPropertyId().equals(propertyId);
     }

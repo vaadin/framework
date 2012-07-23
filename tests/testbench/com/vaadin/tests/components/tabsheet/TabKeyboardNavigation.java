@@ -32,12 +32,14 @@ public class TabKeyboardNavigation extends TestBase {
         ts.setHeight("500px");
 
         ts.addListener(new FocusListener() {
+            @Override
             public void focus(FocusEvent event) {
                 focusblur.log("Tabsheet focused!");
             }
         });
 
         ts.addListener(new BlurListener() {
+            @Override
             public void blur(BlurEvent event) {
                 focusblur.log("Tabsheet blurred!");
             }
@@ -48,11 +50,13 @@ public class TabKeyboardNavigation extends TestBase {
         }
 
         Button addTab = new Button("Add a tab", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 addTab();
             }
         });
         Button focus = new Button("Focus tabsheet", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 ts.focus();
             }

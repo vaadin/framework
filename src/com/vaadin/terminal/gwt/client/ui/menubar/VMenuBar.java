@@ -91,6 +91,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     iLayout(true);
                 }
@@ -635,6 +636,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     /**
      * Listener method, fired when this menu is closed
      */
+    @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         hideChildren();
         if (event.isAutoClosed()) {
@@ -849,10 +851,12 @@ public class VMenuBar extends SimpleFocusablePanel implements
             return command;
         }
 
+        @Override
         public String getHTML() {
             return html;
         }
 
+        @Override
         public void setHTML(String html) {
             this.html = html;
             DOM.setInnerHTML(getElement(), html);
@@ -862,10 +866,12 @@ public class VMenuBar extends SimpleFocusablePanel implements
             Util.sinkOnloadForImages(getElement());
         }
 
+        @Override
         public String getText() {
             return html;
         }
 
+        @Override
         public void setText(String text) {
             setHTML(Util.escapeHTML(text));
         }
@@ -1048,6 +1054,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
      */
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(),
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1063,6 +1070,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(),
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1383,12 +1391,14 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
+    @Override
     public void onFocus(FocusEvent event) {
 
     }
 
     private final String SUBPART_PREFIX = "item";
 
+    @Override
     public Element getSubPartElement(String subPart) {
         int index = Integer
                 .parseInt(subPart.substring(SUBPART_PREFIX.length()));
@@ -1397,6 +1407,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         return item.getElement();
     }
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (!getElement().isOrHasChild(subElement)) {
             return null;

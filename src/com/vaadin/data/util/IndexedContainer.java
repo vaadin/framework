@@ -128,6 +128,7 @@ public class IndexedContainer extends
      * 
      * @see com.vaadin.data.Container#getContainerPropertyIds()
      */
+    @Override
     public Collection<?> getContainerPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
     }
@@ -139,6 +140,7 @@ public class IndexedContainer extends
      *            the ID of the Property.
      * @return Type of the requested Property
      */
+    @Override
     public Class<?> getType(Object propertyId) {
         return types.get(propertyId);
     }
@@ -149,6 +151,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
+    @Override
     public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (!containsId(itemId)) {
             return null;
@@ -466,6 +469,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
@@ -488,6 +492,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.
      * vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void addListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
             propertyValueChangeListeners = new LinkedList<Property.ValueChangeListener>();
@@ -501,6 +506,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com
      * .vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void removeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners != null) {
             propertyValueChangeListeners.remove(listener);
@@ -679,10 +685,12 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
          */
+        @Override
         public Property<?> getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 
+        @Override
         public Collection<?> getItemPropertyIds() {
             return Collections.unmodifiableCollection(propertyIds);
         }
@@ -753,6 +761,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Item#addProperty(Object, Property)
          */
+        @Override
         public boolean addItemProperty(Object id, Property property)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException("Indexed container item "
@@ -766,6 +775,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Item#removeProperty(Object)
          */
+        @Override
         public boolean removeItemProperty(Object id)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException(
@@ -824,6 +834,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#getType()
          */
+        @Override
         public Class<?> getType() {
             return types.get(propertyId);
         }
@@ -833,6 +844,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#getValue()
          */
+        @Override
         public Object getValue() {
             return items.get(itemId).get(propertyId);
         }
@@ -842,6 +854,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#isReadOnly()
          */
+        @Override
         public boolean isReadOnly() {
             return readOnlyProperties.contains(this);
         }
@@ -851,6 +864,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#setReadOnly(boolean)
          */
+        @Override
         public void setReadOnly(boolean newStatus) {
             if (newStatus) {
                 readOnlyProperties.add(this);
@@ -864,6 +878,7 @@ public class IndexedContainer extends
          * 
          * @see com.vaadin.data.Property#setValue(java.lang.Object)
          */
+        @Override
         public void setValue(Object newValue) throws Property.ReadOnlyException {
             // Gets the Property set
             final Map<Object, Object> propertySet = items.get(itemId);
@@ -946,6 +961,7 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(
          * com.vaadin.data.Property.ValueChangeListener)
          */
+        @Override
         public void addListener(Property.ValueChangeListener listener) {
             addSinglePropertyChangeListener(propertyId, itemId, listener);
         }
@@ -956,6 +972,7 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener
          * (com.vaadin.data.Property.ValueChangeListener)
          */
+        @Override
         public void removeListener(Property.ValueChangeListener listener) {
             removeSinglePropertyChangeListener(propertyId, itemId, listener);
         }
@@ -972,6 +989,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sortContainer(propertyId, ascending);
     }
@@ -982,6 +1000,7 @@ public class IndexedContainer extends
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds
      * ()
      */
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         return getSortablePropertyIds();
     }
@@ -1054,6 +1073,7 @@ public class IndexedContainer extends
         return nc;
     }
 
+    @Override
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         try {
@@ -1065,19 +1085,23 @@ public class IndexedContainer extends
         }
     }
 
+    @Override
     public void removeAllContainerFilters() {
         removeAllFilters();
     }
 
+    @Override
     public void removeContainerFilters(Object propertyId) {
         removeFilters(propertyId);
     }
 
+    @Override
     public void addContainerFilter(Filter filter)
             throws UnsupportedFilterException {
         addFilter(filter);
     }
 
+    @Override
     public void removeContainerFilter(Filter filter) {
         removeFilter(filter);
     }

@@ -58,10 +58,12 @@ public class PopupView extends AbstractComponentContainer implements
             first = (component == null);
         }
 
+        @Override
         public boolean hasNext() {
             return !first;
         }
 
+        @Override
         public Component next() {
             if (!first) {
                 first = true;
@@ -71,6 +73,7 @@ public class PopupView extends AbstractComponentContainer implements
             }
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -90,10 +93,12 @@ public class PopupView extends AbstractComponentContainer implements
      */
     public PopupView(final java.lang.String small, final Component large) {
         this(new PopupView.Content() {
+            @Override
             public java.lang.String getMinimizedValueAsHTML() {
                 return small;
             }
 
+            @Override
             public Component getPopupComponent() {
                 return large;
             }
@@ -223,6 +228,7 @@ public class PopupView extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return new SingleComponentIterator(visibleComponent);
     }
@@ -233,6 +239,7 @@ public class PopupView extends AbstractComponentContainer implements
      * 
      * @return the number of contained components (zero or one)
      */
+    @Override
     public int getComponentCount() {
         return (visibleComponent != null ? 1 : 0);
     }
@@ -280,6 +287,7 @@ public class PopupView extends AbstractComponentContainer implements
      *      com.vaadin.ui.Component)
      * @throws UnsupportedOperationException
      */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent)
             throws UnsupportedOperationException {
 
@@ -307,6 +315,7 @@ public class PopupView extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget)
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         String html = content.getMinimizedValueAsHTML();
         if (html == null) {
@@ -331,6 +340,7 @@ public class PopupView extends AbstractComponentContainer implements
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("popupVisibility")) {
             setPopupVisible(((Boolean) variables.get("popupVisibility"))

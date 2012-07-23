@@ -30,6 +30,7 @@ public class WidgetContainerConnector extends
         return GWT.create(VWidgetContainer.class);
     }
 
+    @Override
     public void updateCaption(ComponentConnector connector) {
     }
 }

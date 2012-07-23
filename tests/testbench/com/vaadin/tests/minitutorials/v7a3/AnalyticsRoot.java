@@ -17,6 +17,7 @@ public class AnalyticsRoot extends Root {
         analytics.extend(this);
 
         addComponent(new Button("Track pageview", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 analytics.trackPageview("/fake/url");
             }

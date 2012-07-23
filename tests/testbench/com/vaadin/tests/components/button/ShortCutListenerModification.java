@@ -60,6 +60,7 @@ public class ShortCutListenerModification extends TestBase implements
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         Component c = event.getButton();
         while (!(c instanceof Window)) {

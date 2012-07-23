@@ -14,6 +14,7 @@ public class ButtonMouseDetails extends TestBase {
 
     private Button.ClickListener clickListener = new Button.ClickListener() {
 
+        @Override
         public void buttonClick(ClickEvent event) {
             StringBuilder str = new StringBuilder(out.getValue().toString());
             str.append(clickCounter + ":\t");

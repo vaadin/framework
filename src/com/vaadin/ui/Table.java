@@ -3681,6 +3681,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
 
+    @Override
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -3708,6 +3709,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
 
+    @Override
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -4117,6 +4119,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
 
+    @Override
     public Object nextItemId(Object itemId) {
         return ((Container.Ordered) items).nextItemId(itemId);
     }
@@ -4128,6 +4131,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
 
+    @Override
     public Object prevItemId(Object itemId) {
         return ((Container.Ordered) items).prevItemId(itemId);
     }
@@ -4138,6 +4142,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
 
+    @Override
     public Object firstItemId() {
         return ((Container.Ordered) items).firstItemId();
     }
@@ -4148,6 +4153,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
 
+    @Override
     public Object lastItemId() {
         return ((Container.Ordered) items).lastItemId();
     }
@@ -4159,6 +4165,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
 
+    @Override
     public boolean isFirstId(Object itemId) {
         return ((Container.Ordered) items).isFirstId(itemId);
     }
@@ -4170,6 +4177,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
 
+    @Override
     public boolean isLastId(Object itemId) {
         return ((Container.Ordered) items).isLastId(itemId);
     }
@@ -4180,6 +4188,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
 
+    @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         Object itemId = ((Container.Ordered) items)
@@ -4197,6 +4206,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      java.lang.Object)
      */
 
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
@@ -4290,6 +4300,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      */
 
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
         final Container c = getContainerDataSource();
@@ -4331,6 +4342,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
 
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && isSortEnabled()) {
@@ -4544,11 +4556,13 @@ public class Table extends AbstractSelect implements Action.Container,
         public abstract String getStyle(Object itemId, Object propertyId);
     }
 
+    @Override
     public void addListener(ItemClickListener listener) {
         addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    @Override
     public void removeListener(ItemClickListener listener) {
         removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
@@ -4625,11 +4639,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
+    @Override
     public TableTransferable getTransferable(Map<String, Object> rawVariables) {
         TableTransferable transferable = new TableTransferable(rawVariables);
         return transferable;
     }
 
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -4638,6 +4654,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
+    @Override
     public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new AbstractSelectTargetDetails(clientVariables);
@@ -4706,6 +4723,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
+        @Override
         @SuppressWarnings("unchecked")
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
@@ -5381,10 +5399,12 @@ public class Table extends AbstractSelect implements Action.Container,
         super.setVisible(visible);
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         if (visibleComponents == null) {
             Collection<Component> empty = Collections.emptyList();
@@ -5394,6 +5414,7 @@ public class Table extends AbstractSelect implements Action.Container,
         return visibleComponents.iterator();
     }
 
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     }

@@ -46,6 +46,7 @@ public class Ticket2126 extends com.vaadin.Application.LegacyApplication {
         refreshTable.addListener(new Button.ClickListener() {
             boolean full = true;
 
+            @Override
             public void buttonClick(Button.ClickEvent e) {
                 if (full) {
                     table.setContainerDataSource(container2);

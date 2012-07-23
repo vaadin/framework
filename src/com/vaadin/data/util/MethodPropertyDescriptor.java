@@ -112,14 +112,17 @@ public class MethodPropertyDescriptor<BT> implements
         }
     };
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Class<?> getPropertyType() {
         return propertyType;
     }
 
+    @Override
     public Property<?> createProperty(Object bean) {
         return new MethodProperty<Object>(propertyType, bean, readMethod,
                 writeMethod);

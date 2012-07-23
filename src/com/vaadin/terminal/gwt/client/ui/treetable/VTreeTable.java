@@ -257,6 +257,7 @@ public class VTreeTable extends VScrollTable {
                 // widths.
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+                    @Override
                     public void execute() {
                         if (showRowHeaders) {
                             setCellWidth(0, tHead.getHeaderCell(0).getWidth());

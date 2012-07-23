@@ -165,6 +165,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         this.setMethod = setMethod;
     }
 
+    @Override
     public Class<? extends T> getType() {
         return type;
     }
@@ -180,6 +181,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * 
      * @return the value of the Property
      */
+    @Override
     public T getValue() {
         try {
             Object object = instance;
@@ -202,6 +204,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      *         read-only mode.
      * @see #invokeSetMethod(Object)
      */
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException {
         // Checks the mode
         if (isReadOnly()) {

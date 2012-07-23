@@ -108,6 +108,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         getOptionsContainer().setTabIndex(tabIndex);
     }
 
+    @Override
     public void focus() {
         select.setFocus(true);
     }

@@ -120,6 +120,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
         lo.addComponent(menu);
 
         mainWindow.getPage().addListener(new Page.FragmentChangedListener() {
+            @Override
             public void fragmentChanged(FragmentChangedEvent source) {
                 String fragment = source.getFragment();
                 if (fragment != null && !"".equals(fragment)) {
@@ -238,6 +239,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
     }
 
     // Handle menu selection and update body
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         bodyLayout.removeAllComponents();
         bodyLayout.setCaption(null);

@@ -63,6 +63,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
 
+    @Override
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
         if (resultPath != null) {

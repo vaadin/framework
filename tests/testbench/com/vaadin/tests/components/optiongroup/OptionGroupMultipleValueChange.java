@@ -33,6 +33,7 @@ public class OptionGroupMultipleValueChange extends TestBase {
 
         og.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 String s = "ValueChange: " + event.getProperty().getValue();
                 events.setValue(events.getValue() + "\n" + s);

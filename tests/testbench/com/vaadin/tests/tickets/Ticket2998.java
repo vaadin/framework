@@ -174,6 +174,7 @@ public class Ticket2998 extends Application.LegacyApplication {
                 if (propertyId.equals("kilometers")) {
                     f.setWidth("4em");
                     f.addValidator(new Validator() {
+                        @Override
                         public void validate(Object value)
                                 throws InvalidValueException {
                             // FIXME this does not follow the standard pattern

@@ -20,6 +20,7 @@ public class TwinColSelectCaptionStyles extends TestBase {
         Button b = new Button("Set height and width to 500px",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         sel.setHeight("500px");
                         sel.setWidth("500px");

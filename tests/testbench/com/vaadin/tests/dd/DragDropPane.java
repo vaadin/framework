@@ -51,6 +51,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
         this.crit = crit;
     }
 
+    @Override
     public void drop(DragAndDropEvent event) {
 
         WrapperTargetDetails ed = (WrapperTargetDetails) event
@@ -135,28 +136,35 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
                     html5File.setStreamVariable(new StreamVariable() {
                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
+                        @Override
                         public OutputStream getOutputStream() {
                             return byteArrayOutputStream;
                         }
 
+                        @Override
                         public boolean listenProgress() {
                             return false;
                         }
 
+                        @Override
                         public void onProgress(StreamingProgressEvent event) {
                         }
 
+                        @Override
                         public void streamingStarted(StreamingStartEvent event) {
                         }
 
+                        @Override
                         public void streamingFinished(StreamingEndEvent event) {
                             l.setValue((new String(byteArrayOutputStream
                                     .toByteArray()).substring(0, 80) + "..."));
                         }
 
+                        @Override
                         public void streamingFailed(StreamingErrorEvent event) {
                         }
 
+                        @Override
                         public boolean isInterrupted() {
                             return false;
                         }
@@ -172,6 +180,7 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
         return;
     }
 
+    @Override
     public AcceptCriterion getAcceptCriterion() {
         return crit != null ? crit : AcceptAll.get();
     }

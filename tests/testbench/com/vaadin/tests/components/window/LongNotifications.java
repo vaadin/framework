@@ -25,6 +25,7 @@ public class LongNotifications extends TestBase {
         Button b = new Button("Show loooong notification",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
 
                         getMainWindow().showNotification(
@@ -38,6 +39,7 @@ public class LongNotifications extends TestBase {
 
         b = new Button("Show notifications", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 getMainWindow().showNotification("Example failed",
@@ -51,6 +53,7 @@ public class LongNotifications extends TestBase {
         b = new Button("Show loooong notification  (error)",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
 
                         getMainWindow()
@@ -65,6 +68,7 @@ public class LongNotifications extends TestBase {
 
         b = new Button("Show notification (error)", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 getMainWindow().showNotification("Example failed",

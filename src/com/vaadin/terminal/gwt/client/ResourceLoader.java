@@ -206,10 +206,12 @@ public class ResourceLoader {
         if (preloadListeners.containsKey(url)) {
             // Preload going on, continue when preloaded
             preloadResource(url, new ResourceLoadListener() {
+                @Override
                 public void onLoad(ResourceLoadEvent event) {
                     loadScript(url, resourceLoadListener);
                 }
 
+                @Override
                 public void onError(ResourceLoadEvent event) {
                     // Preload failed -> signal error to own listener
                     if (resourceLoadListener != null) {
@@ -225,10 +227,12 @@ public class ResourceLoader {
             scriptTag.setSrc(url);
             scriptTag.setType("text/javascript");
             addOnloadHandler(scriptTag, new ResourceLoadListener() {
+                @Override
                 public void onLoad(ResourceLoadEvent event) {
                     fireLoad(event);
                 }
 
+                @Override
                 public void onError(ResourceLoadEvent event) {
                     fireError(event);
                 }
@@ -280,10 +284,12 @@ public class ResourceLoader {
 
             Element element = getPreloadElement(url);
             addOnloadHandler(element, new ResourceLoadListener() {
+                @Override
                 public void onLoad(ResourceLoadEvent event) {
                     fireLoad(event);
                 }
 
+                @Override
                 public void onError(ResourceLoadEvent event) {
                     fireError(event);
                 }
@@ -358,10 +364,12 @@ public class ResourceLoader {
         if (preloadListeners.containsKey(url)) {
             // Preload going on, continue when preloaded
             preloadResource(url, new ResourceLoadListener() {
+                @Override
                 public void onLoad(ResourceLoadEvent event) {
                     loadStylesheet(url, resourceLoadListener);
                 }
 
+                @Override
                 public void onError(ResourceLoadEvent event) {
                     // Preload failed -> signal error to own listener
                     if (resourceLoadListener != null) {
@@ -384,6 +392,7 @@ public class ResourceLoader {
                 Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {
                     private final Duration duration = new Duration();
 
+                    @Override
                     public boolean execute() {
                         int styleSheetLength = getStyleSheetLength(url);
                         if (getStyleSheetLength(url) > 0) {
@@ -403,6 +412,7 @@ public class ResourceLoader {
                 }, 10);
             } else {
                 addOnloadHandler(linkElement, new ResourceLoadListener() {
+                    @Override
                     public void onLoad(ResourceLoadEvent event) {
                         // Chrome && IE fires load for errors, must check
                         // stylesheet data
@@ -418,6 +428,7 @@ public class ResourceLoader {
                         fireLoad(event);
                     }
 
+                    @Override
                     public void onError(ResourceLoadEvent event) {
                         fireError(event);
                     }

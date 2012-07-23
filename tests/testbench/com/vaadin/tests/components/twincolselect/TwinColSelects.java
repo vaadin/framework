@@ -51,12 +51,14 @@ public class TwinColSelects extends AbstractSelectTestCase<TwinColSelect> {
 
     private Command<TwinColSelect, Integer> columnsAction = new Command<TwinColSelect, Integer>() {
 
+        @Override
         public void execute(TwinColSelect c, Integer value, Object data) {
             c.setColumns(value);
         }
     };
     private Command<TwinColSelect, Integer> rowsAction = new Command<TwinColSelect, Integer>() {
 
+        @Override
         public void execute(TwinColSelect c, Integer value, Object data) {
             c.setRows(value);
         }

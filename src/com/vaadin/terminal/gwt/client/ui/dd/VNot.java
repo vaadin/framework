@@ -33,6 +33,7 @@ final public class VNot extends VAcceptCriterion {
         b1 = false;
 
         VAcceptCallback accept1cb = new VAcceptCallback() {
+            @Override
             public void accepted(VDragEvent event) {
                 b1 = true;
             }

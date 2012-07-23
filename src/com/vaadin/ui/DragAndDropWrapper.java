@@ -214,10 +214,12 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute(VDragAndDropWrapper.DRAG_START_MODE,
                 dragStartMode.ordinal());
@@ -249,6 +251,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     private DropHandler dropHandler;
 
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -258,11 +261,13 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
         requestRepaint();
     }
 
+    @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new WrapperTargetDetails(clientVariables);
     }
 
+    @Override
     public Transferable getTransferable(final Map<String, Object> rawVariables) {
         return new WrapperTransferable(this, rawVariables);
     }
@@ -286,6 +291,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
         private boolean listenProgressOfUploadedFile;
 
+        @Override
         public OutputStream getOutputStream() {
             if (file.getStreamVariable() == null) {
                 return null;
@@ -293,15 +299,18 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             return file.getStreamVariable().getOutputStream();
         }
 
+        @Override
         public boolean listenProgress() {
             return file.getStreamVariable().listenProgress();
         }
 
+        @Override
         public void onProgress(StreamingProgressEvent event) {
             file.getStreamVariable().onProgress(
                     new ReceivingEventWrapper(event));
         }
 
+        @Override
         public void streamingStarted(StreamingStartEvent event) {
             listenProgressOfUploadedFile = file.getStreamVariable() != null;
             if (listenProgressOfUploadedFile) {
@@ -315,6 +324,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             event.disposeStreamVariable();
         }
 
+        @Override
         public void streamingFinished(StreamingEndEvent event) {
             if (listenProgressOfUploadedFile) {
                 file.getStreamVariable().streamingFinished(
@@ -322,6 +332,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
         }
 
+        @Override
         public void streamingFailed(final StreamingErrorEvent event) {
             if (listenProgressOfUploadedFile) {
                 file.getStreamVariable().streamingFailed(
@@ -329,6 +340,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
         }
 
+        @Override
         public boolean isInterrupted() {
             return file.getStreamVariable().isInterrupted();
         }
@@ -348,14 +360,17 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 wrappedEvent = e;
             }
 
+            @Override
             public String getMimeType() {
                 return file.getType();
             }
 
+            @Override
             public String getFileName() {
                 return file.getFileName();
             }
 
+            @Override
             public long getContentLength() {
                 return file.getFileSize();
             }
@@ -364,6 +379,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 return ProxyReceiver.this;
             }
 
+            @Override
             public Exception getException() {
                 if (wrappedEvent instanceof StreamingErrorEvent) {
                     return ((StreamingErrorEvent) wrappedEvent).getException();
@@ -371,6 +387,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 return null;
             }
 
+            @Override
             public long getBytesReceived() {
                 return wrappedEvent.getBytesReceived();
             }
@@ -379,6 +396,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
              * Calling this method has no effect. DD files are receive only once
              * anyway.
              */
+            @Override
             public void disposeStreamVariable() {
 
             }

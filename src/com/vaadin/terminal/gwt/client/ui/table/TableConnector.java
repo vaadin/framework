@@ -44,6 +44,7 @@ public class TableConnector extends AbstractComponentContainerConnector
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().rendering = true;
 
@@ -180,6 +181,7 @@ public class TableConnector extends AbstractComponentContainerConnector
                         // *shouldn't* have changed (unless the number of rows
                         // or the height of the widget has also changed)
                         Scheduler.get().scheduleDeferred(new Command() {
+                            @Override
                             public void execute() {
                                 Util.runWebkitOverflowAutoFix(getWidget().scrollBodyPanel
                                         .getElement());
@@ -267,23 +269,28 @@ public class TableConnector extends AbstractComponentContainerConnector
         return (VScrollTable) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, not rendered
     }
 
+    @Override
     public void layoutVertically() {
         getWidget().updateHeight();
     }
 
+    @Override
     public void layoutHorizontally() {
         getWidget().updateWidth();
     }
 
+    @Override
     public void postLayout() {
         VScrollTable table = getWidget();
         if (table.sizeNeedsInit) {
             table.sizeInit();
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
                 public void execute() {
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();

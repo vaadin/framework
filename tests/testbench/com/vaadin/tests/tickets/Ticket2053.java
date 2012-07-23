@@ -25,6 +25,7 @@ public class Ticket2053 extends Application.LegacyApplication {
                 + "draw changes not originating from this window. Such changes include changes "
                 + "made by other browser-windows.");
         Button add = new Button("Add a window", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 final String name = "Child " + (++childs);
                 LegacyWindow c = new LegacyWindow(name);
@@ -35,6 +36,7 @@ public class Ticket2053 extends Application.LegacyApplication {
                 final TextField tf = new TextField("Non immediate textfield");
                 c.addComponent(tf);
                 tf.addListener(new Property.ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         main.addComponent(new Label(name + " send text:"
                                 + tf.getValue()));
@@ -44,6 +46,7 @@ public class Ticket2053 extends Application.LegacyApplication {
                     final String caption = "Slow button " + i;
                     c.addComponent(new Button(caption,
                             new Button.ClickListener() {
+                                @Override
                                 public synchronized void buttonClick(
                                         ClickEvent event) {
                                     try {

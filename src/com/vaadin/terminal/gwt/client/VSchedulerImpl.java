@@ -19,6 +19,7 @@ public class VSchedulerImpl extends SchedulerImpl {
         super.scheduleDeferred(cmd);
         super.scheduleDeferred(new ScheduledCommand() {
 
+            @Override
             public void execute() {
                 deferredCommandTrackers--;
             }

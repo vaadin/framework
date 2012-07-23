@@ -17,6 +17,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 public class DragAndDropWrapperConnector extends CustomComponentConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {

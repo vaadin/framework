@@ -48,6 +48,7 @@ public class VLazyInitItemIdentifiers extends VAcceptCriterion {
 
             VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
 
+                @Override
                 public void handleResponse(boolean accepted, UIDL response) {
                     hashSet = new HashSet<String>();
                     String[] stringArrayAttribute = response

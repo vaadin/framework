@@ -176,11 +176,13 @@ public class TestHierarchicalContainer extends
         // Dummy filter that does not remove any items
         c.addContainerFilter(new Filter() {
 
+            @Override
             public boolean passesFilter(Object itemId, Item item)
                     throws UnsupportedOperationException {
                 return true;
             }
 
+            @Override
             public boolean appliesToProperty(Object propertyId) {
                 return true;
             }

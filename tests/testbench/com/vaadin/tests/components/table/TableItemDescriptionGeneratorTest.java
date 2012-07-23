@@ -23,6 +23,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
         addComponent(table);
 
         table.setItemDescriptionGenerator(new ItemDescriptionGenerator() {
+            @Override
             public String generateDescription(Component source, Object itemId,
                     Object propertyId) {
                 if (propertyId == null) {
@@ -37,6 +38,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
         table.addGeneratedColumn(COLUMN3_PROPERTY_ID,
                 new Table.ColumnGenerator() {
 
+                    @Override
                     public Component generateCell(Table source, Object itemId,
                             Object columnId) {
                         TextField lbl = new TextField();

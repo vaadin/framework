@@ -677,10 +677,12 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         super.requestRepaint();
     }
 
+    @Override
     public void setFilteringMode(int filteringMode) {
         this.filteringMode = filteringMode;
     }
 
+    @Override
     public int getFilteringMode() {
         return filteringMode;
     }
@@ -719,20 +721,24 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
         return columns;
     }
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
 

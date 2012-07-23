@@ -51,28 +51,33 @@ public class Ticket677 extends Application.LegacyApplication {
 
         l.addComponent(new Button("Toggle root panel",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(root);
                     }
                 }));
         l.addComponent(new Button("Toggle panel one",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(one);
                     }
                 }));
         l.addComponent(new Button("Toggle panel two",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(two);
                     }
                 }));
         l.addComponent(new Button("Toggle form", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 toggle(form);
             }
         }));
         l.addComponent(new Button("Toggle table", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 toggle(table);
             }

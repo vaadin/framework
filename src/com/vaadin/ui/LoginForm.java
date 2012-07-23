@@ -48,33 +48,40 @@ public class LoginForm extends CustomComponent {
 
     private ApplicationResource loginPage = new ApplicationResource() {
 
+        @Override
         public Application getApplication() {
             return LoginForm.this.getApplication();
         }
 
+        @Override
         public int getBufferSize() {
             return getLoginHTML().length;
         }
 
+        @Override
         public long getCacheTime() {
             return -1;
         }
 
+        @Override
         public String getFilename() {
             return "login";
         }
 
+        @Override
         public DownloadStream getStream() {
             return new DownloadStream(new ByteArrayInputStream(getLoginHTML()),
                     getMIMEType(), getFilename());
         }
 
+        @Override
         public String getMIMEType() {
             return "text/html; charset=utf-8";
         }
     };
 
     private final RequestHandler requestHandler = new RequestHandler() {
+        @Override
         public boolean handleRequest(Application application,
                 WrappedRequest request, WrappedResponse response)
                 throws IOException {

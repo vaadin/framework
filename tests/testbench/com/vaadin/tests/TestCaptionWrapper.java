@@ -195,6 +195,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         layout.addComponent(c);
     }
 
+    @Override
     public void componentEvent(Event event) {
         final String feedback = eventListenerString + " source="
                 + event.getSource() + ", toString()=" + event.toString();

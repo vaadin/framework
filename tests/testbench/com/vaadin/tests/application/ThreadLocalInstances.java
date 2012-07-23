@@ -61,6 +61,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
         mainWindow.addComponent(log);
         mainWindow.addComponent(new Embedded("Icon", resource));
         mainWindow.addComponent(new Button("Sync", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 reportCurrentStatus("button listener");
             }

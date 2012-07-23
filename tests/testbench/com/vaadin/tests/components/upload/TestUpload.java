@@ -32,6 +32,7 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
         addTestComponent(u);
 
         u.addListener(new Upload.FinishedListener() {
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 getMainWindow().showNotification("Done");
             }
@@ -51,6 +52,7 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
         return actions;
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         getMainWindow().showNotification("Receiving upload");
         return new ByteArrayOutputStream();

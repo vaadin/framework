@@ -45,12 +45,14 @@ public abstract class AbstractWebApplicationContext implements
 
     private long lastRequestTime = -1;
 
+    @Override
     public void addTransactionListener(TransactionListener listener) {
         if (listener != null) {
             listeners.add(listener);
         }
     }
 
+    @Override
     public void removeTransactionListener(TransactionListener listener) {
         listeners.remove(listener);
     }
@@ -119,6 +121,7 @@ public abstract class AbstractWebApplicationContext implements
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
      */
+    @Override
     public void valueBound(HttpSessionBindingEvent arg0) {
         // We are not interested in bindings
     }
@@ -126,6 +129,7 @@ public abstract class AbstractWebApplicationContext implements
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
      */
+    @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
@@ -160,6 +164,7 @@ public abstract class AbstractWebApplicationContext implements
         return browser;
     }
 
+    @Override
     public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
     }
@@ -169,6 +174,7 @@ public abstract class AbstractWebApplicationContext implements
         applicationToAjaxAppMgrMap.remove(application);
     }
 
+    @Override
     public String generateApplicationResourceURL(ApplicationResource resource,
             String mapKey) {
 
@@ -197,6 +203,7 @@ public abstract class AbstractWebApplicationContext implements
         }
     }
 
+    @Override
     public boolean isApplicationResourceURL(URL context, String relativeUri) {
         // If the relative uri is null, we are ready
         if (relativeUri == null) {
@@ -214,6 +221,7 @@ public abstract class AbstractWebApplicationContext implements
         return (prefix.equals("APP"));
     }
 
+    @Override
     public String getURLKey(URL context, String relativeUri) {
         final int index = relativeUri.indexOf('/');
         final int next = relativeUri.indexOf('/', index + 1);

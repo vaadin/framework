@@ -40,6 +40,7 @@ public class Ticket1995 extends Application.LegacyApplication {
         mainWin.addComponent(new Button("Add item",
                 new com.vaadin.ui.Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         addItem();
                     }

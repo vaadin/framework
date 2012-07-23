@@ -20,6 +20,7 @@ public class FocusFromShortcutAction extends TestBase {
         addComponent(select);
         addComponent(text);
         Button focusText = new Button("Focus text", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 text.focus();
             }
@@ -29,6 +30,7 @@ public class FocusFromShortcutAction extends TestBase {
         addComponent(focusText);
         Button focusSelect = new Button("Focus select",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         select.focus();
                     }

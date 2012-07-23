@@ -91,6 +91,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
         main.addComponent(checkValidity);
         checkValidity.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
@@ -136,6 +137,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
             this.msg = msg;
         }
 
+        @Override
         public void validate(Object value) throws InvalidValueException {
             if (value == null || value.toString().length() == 0) {
                 throw new InvalidValueException(msg);

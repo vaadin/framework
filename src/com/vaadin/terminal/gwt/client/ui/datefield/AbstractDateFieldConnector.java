@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 public class AbstractDateFieldConnector extends AbstractFieldConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;

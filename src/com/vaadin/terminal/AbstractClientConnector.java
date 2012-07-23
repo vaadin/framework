@@ -69,6 +69,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     private ClientConnector parent;
 
     /* Documentation copied from interface */
+    @Override
     public void requestRepaint() {
         Root root = getRoot();
         if (root != null) {
@@ -125,6 +126,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         registerRpc(implementation, type);
     }
 
+    @Override
     public SharedState getState() {
         if (null == sharedState) {
             sharedState = createState();
@@ -164,6 +166,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * 
      * @see com.vaadin.terminal.gwt.server.ClientConnector#getStateType()
      */
+    @Override
     public Class<? extends SharedState> getStateType() {
         try {
             Method m = getClass().getMethod("getState", (Class[]) null);
@@ -214,6 +217,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             this.connector = connector;
         }
 
+        @Override
         public Iterator<ClientConnector> iterator() {
             CombinedIterator<ClientConnector> iterator = new CombinedIterator<ClientConnector>();
             iterator.addIterator(connector.getExtensions().iterator());
@@ -236,6 +240,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             rpcInterfaceName = rpcInterface.getName().replaceAll("\\$", ".");
         }
 
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
             addMethodInvocationToQueue(rpcInterfaceName, method, args);
@@ -274,10 +279,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * 
      * @since 7.0
      */
+    @Override
     public RpcManager getRpcManager(Class<?> rpcInterface) {
         return rpcManagerMap.get(rpcInterface);
     }
 
+    @Override
     public List<ClientMethodInvocation> retrievePendingRpcCalls() {
         if (pendingInvocations.isEmpty()) {
             return Collections.emptyList();
@@ -288,6 +295,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
+    @Override
     public String getConnectorId() {
         if (connectorId == null) {
             if (getApplication() == null) {
@@ -322,6 +330,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * @return the Root ancestor of this connector, or <code>null</code> if none
      *         is found.
      */
+    @Override
     public Root getRoot() {
         ClientConnector connector = this;
         while (connector != null) {
@@ -337,6 +346,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         return Logger.getLogger(AbstractClientConnector.class.getName());
     }
 
+    @Override
     public void requestRepaintAll() {
         requestRepaint();
 
@@ -354,6 +364,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             iterators.add(iterator);
         }
 
+        @Override
         public boolean hasNext() {
             for (Iterator<? extends T> i : iterators) {
                 if (i.hasNext()) {
@@ -363,6 +374,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             return false;
         }
 
+        @Override
         public T next() {
             for (Iterator<? extends T> i : iterators) {
                 if (i.hasNext()) {
@@ -372,6 +384,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             throw new NoSuchElementException();
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -390,6 +403,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         return new AllChildrenIterable(connector);
     }
 
+    @Override
     public Collection<Extension> getExtensions() {
         return Collections.unmodifiableCollection(extensions);
     }
@@ -416,12 +430,14 @@ public abstract class AbstractClientConnector implements ClientConnector {
         requestRepaint();
     }
 
+    @Override
     public void removeExtension(Extension extension) {
         extension.setParent(null);
         extensions.remove(extension);
         requestRepaint();
     }
 
+    @Override
     public void setParent(ClientConnector parent) {
 
         // If the parent is not changed, don't do anything
@@ -448,10 +464,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
+    @Override
     public ClientConnector getParent() {
         return parent;
     }
 
+    @Override
     public void attach() {
         requestRepaint();
 
@@ -471,6 +489,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * <code>null</code> after this method is called.
      * </p>
      */
+    @Override
     public void detach() {
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.detach();
@@ -479,6 +498,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         getRoot().getConnectorTracker().unregisterConnector(this);
     }
 
+    @Override
     public boolean isConnectorEnabled() {
         if (getParent() == null) {
             // No parent -> the component cannot receive updates from the client

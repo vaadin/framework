@@ -68,6 +68,7 @@ public class AbsoluteLayoutConnector extends
                 element);
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
         AbsoluteWrapper componentWrapper = getWrapper(component);
@@ -147,6 +148,7 @@ public class AbsoluteLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutVertically() {
         VAbsoluteLayout layout = getWidget();
         for (ComponentConnector paintable : getChildComponents()) {
@@ -179,6 +181,7 @@ public class AbsoluteLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         VAbsoluteLayout layout = getWidget();
         for (ComponentConnector paintable : getChildComponents()) {

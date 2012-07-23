@@ -227,6 +227,7 @@ public abstract class Compare implements Filter {
         this.operation = operation;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item) {
         final Property<?> p = item.getItemProperty(getPropertyId());
         if (null == p) {
@@ -264,6 +265,7 @@ public abstract class Compare implements Filter {
                 + value1 + ", " + getValue());
     }
 
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return getPropertyId().equals(propertyId);
     }

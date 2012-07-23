@@ -26,6 +26,7 @@ public class Ticket2042 extends Application.LegacyApplication {
         layout.addComponent(new Label("abc"));
         layout.addComponent(new Button("B", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Notification n = new Notification("Test");
                 getMainWindow().showNotification(n);

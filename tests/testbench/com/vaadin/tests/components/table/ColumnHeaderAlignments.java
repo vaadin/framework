@@ -30,6 +30,7 @@ public class ColumnHeaderAlignments extends TestBase {
         theme.setNullSelectionAllowed(false);
         theme.setImmediate(true);
         theme.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setTheme(String.valueOf(event.getProperty().getValue()));
             }
@@ -38,6 +39,7 @@ public class ColumnHeaderAlignments extends TestBase {
         CheckBox footers = new CheckBox("Show footers");
         footers.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean visible = (Boolean) event.getProperty().getValue();
                 fooTable.setFooterVisible(visible);

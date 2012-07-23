@@ -53,6 +53,7 @@ public class SuperDevMode {
                 + getRecompileParameters(GWT.getModuleName()),
                 new AsyncCallback<RecompileResult>() {
 
+                    @Override
                     public void onSuccess(RecompileResult result) {
                         VConsole.log("JSONP compile call successful");
 
@@ -72,6 +73,7 @@ public class SuperDevMode {
                         Location.reload();
                     }
 
+                    @Override
                     public void onFailure(Throwable caught) {
                         VConsole.error("JSONP compile call failed");
                         // Don't log exception as they are shown as
@@ -86,6 +88,7 @@ public class SuperDevMode {
                         VNotification n = new VNotification();
                         n.addEventListener(new EventListener() {
 
+                            @Override
                             public void notificationHidden(HideEvent event) {
                                 recompileWidgetsetAndStartInDevMode(serverUrl);
                             }

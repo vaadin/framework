@@ -32,10 +32,12 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         super.init();
 
         registerRpc(MediaControl.class, new MediaControl() {
+            @Override
             public void play() {
                 getWidget().play();
             }
 
+            @Override
             public void pause() {
                 getWidget().pause();
             }

@@ -45,6 +45,7 @@ public class TableChangingDatasource extends CustomComponent implements
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         int i = mode % 4;
         t.setContainerDataSource(ta[i].getContainerDataSource());

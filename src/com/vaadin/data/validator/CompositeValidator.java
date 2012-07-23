@@ -101,6 +101,7 @@ public class CompositeValidator implements Validator {
      * @throws Validator.InvalidValueException
      *             if the value is not valid.
      */
+    @Override
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
         case AND:

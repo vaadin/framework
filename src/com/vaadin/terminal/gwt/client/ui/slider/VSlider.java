@@ -78,6 +78,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     updateValueToServer();
                     acceleration = 1;
@@ -159,6 +160,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     final Element p = DOM.getParent(getElement());
                     if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
@@ -416,6 +418,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
     }
 
+    @Override
     public void iLayout() {
         if (vertical) {
             setHeight();

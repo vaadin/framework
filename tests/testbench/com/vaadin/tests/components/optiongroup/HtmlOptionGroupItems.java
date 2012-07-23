@@ -54,6 +54,7 @@ public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
     private Component createInvertHtmlItemsAction() {
         return createButtonAction("Toggle html mode",
                 new Command<OptionGroup, Boolean>() {
+                    @Override
                     public void execute(OptionGroup og, Boolean value,
                             Object data) {
                         og.setHtmlContentAllowed(!og.isHtmlContentAllowed());
@@ -65,6 +66,7 @@ public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
         return createButtonAction("Toggle selection mode",
                 new Command<OptionGroup, Boolean>() {
 
+                    @Override
                     public void execute(OptionGroup og, Boolean value,
                             Object data) {
                         if (og.isMultiSelect()) {
@@ -82,6 +84,7 @@ public class HtmlOptionGroupItems extends ComponentTestCase<OptionGroup> {
         return createButtonAction("Invert disabled items",
                 new Command<OptionGroup, Boolean>() {
 
+                    @Override
                     public void execute(OptionGroup c, Boolean value,
                             Object data) {
                         for (Object itemId : c.getItemIds()) {

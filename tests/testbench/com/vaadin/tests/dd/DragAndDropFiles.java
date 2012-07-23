@@ -35,10 +35,12 @@ public class DragAndDropFiles extends TestBase {
         dragAndDropWrapper.setSizeUndefined();
         dragAndDropWrapper.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 WrapperTransferable transferable = (WrapperTransferable) event
                         .getTransferable();
@@ -59,19 +61,23 @@ public class DragAndDropFiles extends TestBase {
 
                         StreamVariable streamVariable = new StreamVariable() {
 
+                            @Override
                             public OutputStream getOutputStream() {
                                 return new NullOutputStream();
                             }
 
+                            @Override
                             public boolean listenProgress() {
                                 return true;
                             }
 
+                            @Override
                             public void onProgress(StreamingProgressEvent event) {
                                 System.err.println("Progress"
                                         + event.getBytesReceived());
                             }
 
+                            @Override
                             public void streamingStarted(
                                     StreamingStartEvent event) {
                                 getMainWindow().showNotification(
@@ -79,6 +85,7 @@ public class DragAndDropFiles extends TestBase {
                                                 + event.getFileName());
                             }
 
+                            @Override
                             public void streamingFinished(
                                     StreamingEndEvent event) {
                                 getMainWindow().showNotification(
@@ -86,6 +93,7 @@ public class DragAndDropFiles extends TestBase {
                                                 + event.getFileName());
                             }
 
+                            @Override
                             public void streamingFailed(
                                     StreamingErrorEvent event) {
                                 getMainWindow().showNotification(
@@ -93,6 +101,7 @@ public class DragAndDropFiles extends TestBase {
                                                 + event.getFileName());
                             }
 
+                            @Override
                             public boolean isInterrupted() {
                                 return false;
                             }

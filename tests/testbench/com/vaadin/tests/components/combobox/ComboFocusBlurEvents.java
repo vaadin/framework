@@ -34,6 +34,7 @@ public class ComboFocusBlurEvents extends TestBase {
         final ObjectProperty<String> log = new ObjectProperty<String>("");
 
         cb.addListener(new FieldEvents.FocusListener() {
+            @Override
             public void focus(FocusEvent event) {
                 log.setValue(log.getValue().toString() + "<br>" + counter
                         + ": Focus event!");
@@ -42,6 +43,7 @@ public class ComboFocusBlurEvents extends TestBase {
         });
 
         cb.addListener(new FieldEvents.BlurListener() {
+            @Override
             public void blur(BlurEvent event) {
                 log.setValue(log.getValue().toString() + "<br>" + counter
                         + ": Blur event!");

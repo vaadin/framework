@@ -28,6 +28,7 @@ public class HeaderClick extends TestBase {
 
         // Add a header click listener
         table.addListener(new Table.HeaderClickListener() {
+            @Override
             public void headerClick(HeaderClickEvent event) {
                 columnField.setValue(String.valueOf(event.getPropertyId()));
             }
@@ -38,6 +39,7 @@ public class HeaderClick extends TestBase {
         immediateCheckbox.setValue(table.isImmediate());
         immediateCheckbox.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setImmediate((Boolean) event.getProperty().getValue());
             }
@@ -48,6 +50,7 @@ public class HeaderClick extends TestBase {
         sortEnabledCheckbox.setValue(table.isSortEnabled());
         sortEnabledCheckbox.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setSortDisabled(!(Boolean) event.getProperty().getValue());
             }
@@ -60,6 +63,7 @@ public class HeaderClick extends TestBase {
         columnReorderingCheckbox
                 .addListener(new Property.ValueChangeListener() {
 
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         table.setColumnReorderingAllowed((Boolean) event
                                 .getProperty().getValue());

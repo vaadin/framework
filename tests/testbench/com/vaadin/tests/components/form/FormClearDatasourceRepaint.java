@@ -42,6 +42,7 @@ public class FormClearDatasourceRepaint extends TestBase {
         addComponent(form);
 
         addComponent(new Button("Clear datasource", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 form.setItemDataSource(null);
             }
@@ -49,6 +50,7 @@ public class FormClearDatasourceRepaint extends TestBase {
 
         addComponent(new Button("Change data source",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setItemDataSource(new BeanItem<MyBean>(
                                 new MyBean()));

@@ -38,6 +38,7 @@ public class LayoutResizeTest extends TestBase {
 
         Button resize = new Button("Resize to 700x400",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         JavaScript
                                 .getCurrent()
@@ -48,6 +49,7 @@ public class LayoutResizeTest extends TestBase {
         left.addComponent(resize);
 
         resize = new Button("Resize to 900x600", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 JavaScript
                         .getCurrent()

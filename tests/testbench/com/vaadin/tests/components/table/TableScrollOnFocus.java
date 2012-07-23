@@ -14,6 +14,7 @@ public class TableScrollOnFocus extends TestBase {
 
         chkSelectable.setImmediate(true);
         chkSelectable.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setSelectable((Boolean) chkSelectable.getValue());
             }

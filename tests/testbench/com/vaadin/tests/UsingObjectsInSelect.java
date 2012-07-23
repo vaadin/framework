@@ -60,6 +60,7 @@ public class UsingObjectsInSelect extends
         }
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         final Task task = (Task) select.getValue();
         selectedTask.setValue("<b>Type:</b> " + task.getType()

@@ -29,6 +29,7 @@ public class EmbeddedPdf extends TestBase {
         addComponent(player);
 
         addComponent(new Button("Remove pdf", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 removeComponent(player);
             }

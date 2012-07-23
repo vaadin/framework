@@ -20,6 +20,7 @@ public class TreeFocusGaining extends TestBase {
         addComponent(textField);
         textField.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("TF value now:" + event.getProperty().getValue());
             }
@@ -30,6 +31,7 @@ public class TreeFocusGaining extends TestBase {
         addComponent(tree);
         tree.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Tree value now:" + event.getProperty().getValue());
             }
@@ -39,6 +41,7 @@ public class TreeFocusGaining extends TestBase {
         tree = new Tree("Simple tree with itemm click listener");
         tree.addItem("Item1");
         tree.addListener(new ItemClickEvent.ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 log.log("Item click event");
             }

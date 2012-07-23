@@ -31,6 +31,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
      * This method is called when the page is loaded for the first time, and
      * every time UI changes in the component are received from the server.
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -107,6 +108,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                     // Construct a command that fires onMenuClick(int) with the
                     // item's id-number
                     cmd = new Command() {
+                        @Override
                         public void execute() {
                             getWidget().hostReference.onMenuClick(itemId);
                         }
@@ -160,6 +162,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         return (VMenuBar) super.getWidget();
     }
 
+    @Override
     public void layout() {
         getWidget().iLayout();
     }

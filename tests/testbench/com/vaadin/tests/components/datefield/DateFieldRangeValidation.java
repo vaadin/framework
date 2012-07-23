@@ -56,6 +56,7 @@ public class DateFieldRangeValidation extends TestBase {
     private Range range = new Range();
     private ValueChangeListener refreshField = new ValueChangeListener() {
 
+        @Override
         public void valueChange(ValueChangeEvent event) {
             actualDateField.requestRepaint();
         }

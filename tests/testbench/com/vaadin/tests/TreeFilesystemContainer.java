@@ -80,6 +80,7 @@ public class TreeFilesystemContainer extends
      * Listener for any component events. This class has been registered as an
      * listener for component fsTree.
      */
+    @Override
     public void componentEvent(Event event) {
         // Check if event occured at fsTree component
         if (event.getSource() == filesystem) {

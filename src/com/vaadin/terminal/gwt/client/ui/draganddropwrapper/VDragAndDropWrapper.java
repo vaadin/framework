@@ -68,6 +68,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         setStyleName(CLASSNAME);
         addDomHandler(new MouseDownHandler() {
 
+            @Override
             public void onMouseDown(MouseDownEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
@@ -77,6 +78,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         addDomHandler(new TouchStartHandler() {
 
+            @Override
             public void onTouchStart(TouchStartEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     /*
@@ -166,6 +168,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     private ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
 
+        @Override
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                 // visit server for possible
@@ -182,6 +185,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     void startNextUpload() {
         Scheduler.get().scheduleDeferred(new Command() {
 
+            @Override
             public void execute() {
                 if (!uploading) {
                     if (fileIds.size() > 0) {
@@ -413,6 +417,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         files.add(file);
     }
 
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -451,6 +456,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 currentlyValid = false;
                 validate(new VAcceptCallback() {
 
+                    @Override
                     public void accepted(VDragEvent event) {
                         dragAccepted(drag);
                     }
@@ -495,6 +501,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     VDragAndDropWrapper.this);
         }
 
+        @Override
         public ApplicationConnection getApplicationConnection() {
             return client;
         }

@@ -28,5 +28,6 @@ public abstract class ShortcutListener extends ShortcutAction implements
         super(shorthandCaption);
     }
 
+    @Override
     abstract public void handleAction(Object sender, Object target);
 }

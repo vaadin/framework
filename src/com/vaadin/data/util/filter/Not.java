@@ -36,6 +36,7 @@ public final class Not implements Filter {
         return filter;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedOperationException {
         return !filter.passesFilter(itemId, item);
@@ -48,6 +49,7 @@ public final class Not implements Filter {
      * 
      * @return boolean
      */
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return filter.appliesToProperty(propertyId);
     }

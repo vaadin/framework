@@ -21,6 +21,7 @@ public class SubwindowDraggability extends TestBase {
 
         Button b = new Button("Swap", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 boolean b = draggableSubWindow.isDraggable();
 

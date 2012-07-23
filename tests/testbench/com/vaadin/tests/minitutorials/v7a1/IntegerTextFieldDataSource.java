@@ -35,6 +35,7 @@ public class IntegerTextFieldDataSource extends AbstractTestRoot {
         final TextField textField = new TextField("Text field", integerProperty);
 
         Button submitButton = new Button("Submit value", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 String uiValue = textField.getValue();
                 Integer propertyValue = integerProperty.getValue();

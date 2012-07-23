@@ -73,6 +73,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         return (AbstractOrderedLayoutState) super.getState();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         VMeasuringOrderedLayout layout = getWidget();
         if (VCaption.isNeeded(component.getState())) {
@@ -263,6 +264,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         if (getWidget().isVertical) {
             layoutSecondaryDirection();
@@ -271,6 +273,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutVertically() {
         if (getWidget().isVertical) {
             layoutPrimaryDirection();

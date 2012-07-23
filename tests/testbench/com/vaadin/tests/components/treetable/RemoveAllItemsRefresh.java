@@ -39,6 +39,7 @@ public class RemoveAllItemsRefresh extends TestBase {
 
         Button cleanUp = new Button("clear");
         cleanUp.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 treeContainer.removeAllItems();
             }
@@ -47,6 +48,7 @@ public class RemoveAllItemsRefresh extends TestBase {
 
         Button refresh = new Button("fill");
         refresh.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 fill();
             }

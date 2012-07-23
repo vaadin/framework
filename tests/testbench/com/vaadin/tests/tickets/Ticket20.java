@@ -38,6 +38,7 @@ public class Ticket20 extends Application.LegacyApplication {
                 }
             }
 
+            @Override
             public void validate(Object value) throws InvalidValueException {
                 if (!isValid(value)) {
                     throw new InvalidValueException(value
@@ -49,6 +50,7 @@ public class Ticket20 extends Application.LegacyApplication {
         v2.addValidator(v);
         v2.addValidator(new Validator() {
 
+            @Override
             public void validate(Object value) throws InvalidValueException {
                 if (!"".equals("" + value)) {
                     throw new InvalidValueException("Value is not empty string");
@@ -69,6 +71,7 @@ public class Ticket20 extends Application.LegacyApplication {
 
         mainWin.addComponent(new Button("Validate integer",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
                         mainWin.showNotification("The field is "

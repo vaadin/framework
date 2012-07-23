@@ -31,6 +31,7 @@ public class AbsoluteLayoutAddRemove extends TestBase {
 
         final Button b = new Button("Add", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (l.getParent() == null) {
                     al.addComponent(l);

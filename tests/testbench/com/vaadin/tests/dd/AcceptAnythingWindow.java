@@ -28,10 +28,12 @@ public class AcceptAnythingWindow extends Window {
         final DragAndDropWrapper wrapper = new DragAndDropWrapper(layout);
         wrapper.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 WrapperTargetDetails ed = (WrapperTargetDetails) event
                         .getTargetDetails();

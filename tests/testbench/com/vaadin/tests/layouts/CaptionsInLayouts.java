@@ -61,6 +61,7 @@ public class CaptionsInLayouts extends TestBase {
         Button b = new Button("Add caption text");
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 prependCaptions("a");
             }
@@ -81,6 +82,7 @@ public class CaptionsInLayouts extends TestBase {
         requiredToggle.setCaption("Required");
         requiredToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setRequired((Boolean) event.getProperty().getValue());
             }
@@ -94,6 +96,7 @@ public class CaptionsInLayouts extends TestBase {
         iconToggle.setCaption("Icons");
         iconToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setIcon((Boolean) event.getProperty().getValue());
             }
@@ -125,6 +128,7 @@ public class CaptionsInLayouts extends TestBase {
         errorToggle.setCaption("Error");
         errorToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setError((Boolean) event.getProperty().getValue());
             }
@@ -250,6 +254,7 @@ public class CaptionsInLayouts extends TestBase {
         layoutSelect.setImmediate(true);
         layoutSelect.addListener(new ValueChangeListener() {
 
+            @Override
             @SuppressWarnings("unchecked")
             public void valueChange(ValueChangeEvent event) {
                 Item i = layoutSelect.getItem(event.getProperty().getValue());

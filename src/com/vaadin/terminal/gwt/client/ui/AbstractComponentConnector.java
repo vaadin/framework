@@ -73,6 +73,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * 
      * @return The widget associated with this paintable
      */
+    @Override
     public Widget getWidget() {
         if (widget == null) {
             widget = createWidget();
@@ -138,6 +139,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         updateComponentSize();
     }
 
+    @Override
     public void setWidgetEnabled(boolean widgetEnabled) {
         // add or remove v-disabled style name from the widget
         setWidgetStyleName(ApplicationConnection.DISABLED_CLASSNAME,
@@ -196,18 +198,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         widget.setWidth(newWidth);
     }
 
+    @Override
     public boolean isRelativeHeight() {
         return getState().getHeight().endsWith("%");
     }
 
+    @Override
     public boolean isRelativeWidth() {
         return getState().getWidth().endsWith("%");
     }
 
+    @Override
     public boolean isUndefinedHeight() {
         return getState().getHeight().length() == 0;
     }
 
+    @Override
     public boolean isUndefinedWidth() {
         return getState().getWidth().length() == 0;
     }
@@ -219,6 +225,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * com.vaadin.terminal.gwt.client.ComponentConnector#delegateCaptionHandling
      * ()
      */
+    @Override
     public boolean delegateCaptionHandling() {
         return true;
     }
@@ -337,11 +344,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * 
      * @see com.vaadin.terminal.gwt.client.ComponentConnector#isReadOnly()
      */
+    @Override
     @Deprecated
     public boolean isReadOnly() {
         return getState().isReadOnly();
     }
 
+    @Override
     public LayoutManager getLayoutManager() {
         return LayoutManager.get(getConnection());
     }
@@ -355,6 +364,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @return true if an event listener has been registered with the given
      *         event identifier on the server side, false otherwise
      */
+    @Override
     public boolean hasEventListener(String eventIdentifier) {
         Set<String> reg = getState().getRegisteredEventListeners();
         return (reg != null && reg.contains(eventIdentifier));
@@ -388,6 +398,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * com.vaadin.terminal.gwt.client.ComponentConnector#getTooltipInfo(com.
      * google.gwt.dom.client.Element)
      */
+    @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().getDescription(), getState()
                 .getErrorMessage());

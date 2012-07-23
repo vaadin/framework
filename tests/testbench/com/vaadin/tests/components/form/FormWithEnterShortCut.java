@@ -20,6 +20,7 @@ public class FormWithEnterShortCut extends TestBase {
 
         Button button = new Button("Go");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("search: " + tf.getValue());
             }

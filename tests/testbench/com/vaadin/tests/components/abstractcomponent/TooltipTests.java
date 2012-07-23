@@ -57,6 +57,7 @@ public class TooltipTests extends TestBase {
 
     private final Property.ValueChangeListener panelListener = new Property.ValueChangeListener() {
 
+        @Override
         public void valueChange(ValueChangeEvent event) {
             boolean value = (Boolean) (event.getProperty().getValue());
             if (value) {
@@ -70,6 +71,7 @@ public class TooltipTests extends TestBase {
 
     private final Property.ValueChangeListener layoutListener = new Property.ValueChangeListener() {
 
+        @Override
         public void valueChange(ValueChangeEvent event) {
             boolean value = (Boolean) (event.getProperty().getValue());
             if (value) {
@@ -83,6 +85,7 @@ public class TooltipTests extends TestBase {
 
     private final Property.ValueChangeListener labelListener = new Property.ValueChangeListener() {
 
+        @Override
         public void valueChange(ValueChangeEvent event) {
             boolean value = (Boolean) (event.getProperty().getValue());
             if (value) {

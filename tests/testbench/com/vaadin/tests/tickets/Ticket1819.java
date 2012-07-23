@@ -47,6 +47,7 @@ public class Ticket1819 extends com.vaadin.Application.LegacyApplication {
         main.addComponent(checkValidity);
         checkValidity.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i

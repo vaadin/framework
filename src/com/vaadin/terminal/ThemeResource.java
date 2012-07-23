@@ -89,6 +89,7 @@ public class ThemeResource implements Resource {
     /**
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
+    @Override
     public String getMIMEType() {
         return FileTypeResolver.getMIMEType(getResourceId());
     }

@@ -121,6 +121,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
          * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
          * .event.dom.client.ClickEvent)
          */
+        @Override
         public void onClick(ClickEvent event) {
             Day day = (Day) event.getSource();
             focusDay(day.getDate());
@@ -718,6 +719,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         handleKeyPress(event);
     }
@@ -729,6 +731,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
      */
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         handleKeyPress(event);
     }
@@ -1124,6 +1127,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.MouseOutHandler#onMouseOut(com.google
      * .gwt.event.dom.client.MouseOutEvent)
      */
+    @Override
     public void onMouseOut(MouseOutEvent event) {
         if (mouseTimer != null) {
             mouseTimer.cancel();
@@ -1137,6 +1141,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
      */
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         // Allow user to click-n-hold for fast-forward or fast-rewind.
         // Timer is first used for a 500ms delay after mousedown. After that has
@@ -1169,6 +1174,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.MouseUpHandler#onMouseUp(com.google.gwt
      * .event.dom.client.MouseUpEvent)
      */
+    @Override
     public void onMouseUp(MouseUpEvent event) {
         if (mouseTimer != null) {
             mouseTimer.cancel();
@@ -1354,6 +1360,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             ListBox lastDropDown = getLastDropDown();
             lastDropDown.addKeyDownHandler(new KeyDownHandler() {
+                @Override
                 public void onKeyDown(KeyDownEvent event) {
                     boolean shiftKey = event.getNativeEvent().getShiftKey();
                     if (shiftKey) {
@@ -1439,6 +1446,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
          * com.google.gwt.event.dom.client.ChangeHandler#onChange(com.google.gwt
          * .event.dom.client.ChangeEvent)
          */
+        @Override
         public void onChange(ChangeEvent event) {
             /*
              * Value from dropdowns gets always set for the value. Like year and
@@ -1589,6 +1597,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
      */
+    @Override
     public void onBlur(final BlurEvent event) {
         if (event.getSource() instanceof VCalendarPanel) {
             hasFocus = false;
@@ -1603,6 +1612,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
+    @Override
     public void onFocus(FocusEvent event) {
         if (event.getSource() instanceof VCalendarPanel) {
             hasFocus = true;
@@ -1627,6 +1637,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private static final String SUBPART_DAY = "day";
     private static final String SUBPART_MONTH_YEAR_HEADER = "header";
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (contains(nextMonth, subElement)) {
             return SUBPART_NEXT_MONTH;
@@ -1685,6 +1696,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         return w.getElement().isOrHasChild(subElement);
     }
 
+    @Override
     public Element getSubPartElement(String subPart) {
         if (SUBPART_NEXT_MONTH.equals(subPart)) {
             return nextMonth.getElement();

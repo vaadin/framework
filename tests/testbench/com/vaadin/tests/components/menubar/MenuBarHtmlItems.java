@@ -44,6 +44,7 @@ public class MenuBarHtmlItems extends ComponentTestCase<MenuBar> {
     private Component createSwitchHtmlAction() {
         return createBooleanAction("Html content allowed", false,
                 new Command<MenuBar, Boolean>() {
+                    @Override
                     public void execute(MenuBar c, Boolean value, Object data) {
                         c.setHtmlContentAllowed(value.booleanValue());
                     }

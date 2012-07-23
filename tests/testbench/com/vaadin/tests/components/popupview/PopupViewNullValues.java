@@ -20,6 +20,7 @@ public class PopupViewNullValues extends TestBase {
             addComponent(pv[0]);
             b[0] = new Button("Open popupview 1", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     pv[0].setPopupVisible(true);
                 }
@@ -38,6 +39,7 @@ public class PopupViewNullValues extends TestBase {
             addComponent(pv[1]);
             b[1] = new Button("Open popupview 2", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     pv[1].setPopupVisible(true);
                 }
@@ -55,6 +57,7 @@ public class PopupViewNullValues extends TestBase {
             addComponent(pv[2]);
             b[2] = new Button("Open popupview 3", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     pv[2].setPopupVisible(true);
                 }
@@ -72,6 +75,7 @@ public class PopupViewNullValues extends TestBase {
             addComponent(pv[3]);
             b[3] = new Button("Open popupview 4", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     pv[3].setPopupVisible(true);
                 }

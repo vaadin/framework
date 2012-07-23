@@ -18,6 +18,7 @@ public class JavaScriptComponentState extends ComponentState implements
     private Set<String> callbackNames = new HashSet<String>();
     private Map<String, Set<String>> rpcInterfaces = new HashMap<String, Set<String>>();
 
+    @Override
     public Set<String> getCallbackNames() {
         return callbackNames;
     }
@@ -26,6 +27,7 @@ public class JavaScriptComponentState extends ComponentState implements
         this.callbackNames = callbackNames;
     }
 
+    @Override
     public Map<String, Set<String>> getRpcInterfaces() {
         return rpcInterfaces;
     }

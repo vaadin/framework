@@ -10,6 +10,7 @@ public class MenuBarRootItemSelectWithKeyboard extends TestBase {
     @Override
     protected void setup() {
         Command c = new Command() {
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 getMainWindow().showNotification(selectedItem.getText());
 

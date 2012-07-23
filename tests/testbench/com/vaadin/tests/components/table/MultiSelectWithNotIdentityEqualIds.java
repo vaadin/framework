@@ -20,6 +20,7 @@ public class MultiSelectWithNotIdentityEqualIds extends TestBase {
         t.setSelectable(true);
         t.setImmediate(true);
         t.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Notification.show("Selected: " + event.getProperty());
 

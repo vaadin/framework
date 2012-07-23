@@ -126,6 +126,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     Util.notifyParentOfSizeChange(VTree.this, true);
                 }
@@ -145,6 +146,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
          */
         sinkEvents(Event.ONCONTEXTMENU);
         addDomHandler(new ContextMenuHandler() {
+            @Override
             public void onContextMenu(ContextMenuEvent event) {
                 handleBodyContextMenu(event);
             }
@@ -333,6 +335,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         }
                         if (newKey != null) {
                             validate(new VAcceptCallback() {
+                                @Override
                                 public void accepted(VDragEvent event) {
                                     VerticalDropLocation curDetail = (VerticalDropLocation) event
                                             .getDropDetails().get("detail");
@@ -376,6 +379,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     return ConnectorMap.get(client).getConnector(VTree.this);
                 }
 
+                @Override
                 public ApplicationConnection getApplicationConnection() {
                     return client;
                 }
@@ -419,6 +423,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      */
     private void sendSelectionToServer() {
         Command command = new Command() {
+            @Override
             public void execute() {
                 client.updateVariable(paintableId, "selected",
                         selectedIds.toArray(new String[selectedIds.size()]),
@@ -586,6 +591,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             }
 
             ScheduledCommand command = new ScheduledCommand() {
+                @Override
                 public void execute() {
 
                     if (multiSelectMode == MULTISELECT_MODE_SIMPLE
@@ -776,6 +782,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             final MouseEventDetails details = MouseEventDetailsBuilder
                     .buildMouseEventDetails(evt);
             ScheduledCommand command = new ScheduledCommand() {
+                @Override
                 public void execute() {
                     // Determine if we should send the event immediately to the
                     // server. We do not want to send the event if there is a
@@ -919,6 +926,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             return nodes;
         }
 
+        @Override
         public Action[] getActions() {
             if (actionKeys == null) {
                 return new Action[] {};
@@ -935,10 +943,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             return actions;
         }
 
+        @Override
         public ApplicationConnection getClient() {
             return client;
         }
 
+        @Override
         public String getPaintableId() {
             return paintableId;
         }
@@ -1076,6 +1086,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     }
 
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -1485,6 +1496,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 node.scrollIntoView();
             } else {
                 Scheduler.get().scheduleDeferred(new Command() {
+                    @Override
                     public void execute() {
                         focusedNode.scrollIntoView();
                     }
@@ -1510,6 +1522,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
+    @Override
     public void onFocus(FocusEvent event) {
         treeHasFocus = true;
         // If no node has focus, focus the first item in the tree
@@ -1529,6 +1542,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.google.gwt.event.dom.client.BlurHandler#onBlur(com.google.gwt.event
      * .dom.client.BlurEvent)
      */
+    @Override
     public void onBlur(BlurEvent event) {
         treeHasFocus = false;
         if (focusedNode != null) {
@@ -1543,6 +1557,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
      */
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         NativeEvent nativeEvent = event.getNativeEvent();
         int keyCode = nativeEvent.getKeyCode();
@@ -1566,6 +1581,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (handleKeyNavigation(event.getNativeEvent().getKeyCode(),
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1946,6 +1962,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.vaadin.terminal.gwt.client.ui.SubPartAware#getSubPartElement(java
      * .lang.String)
      */
+    @Override
     public Element getSubPartElement(String subPart) {
         if ("fe".equals(subPart)) {
             if (BrowserInfo.get().isOpera() && focusedNode != null) {
@@ -1999,6 +2016,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
      * com.vaadin.terminal.gwt.client.ui.SubPartAware#getSubPartName(com.google
      * .gwt.user.client.Element)
      */
+    @Override
     public String getSubPartName(Element subElement) {
         // Supported identifiers:
         //
@@ -2049,6 +2067,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         return locator;
     }
 
+    @Override
     public Action[] getActions() {
         if (bodyActionKeys == null) {
             return new Action[] {};
@@ -2064,10 +2083,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         return actions;
     }
 
+    @Override
     public ApplicationConnection getClient() {
         return client;
     }
 
+    @Override
     public String getPaintableId() {
         return paintableId;
     }

@@ -120,6 +120,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         MenuItem showEventLog = settingsMenu.addItem("Show event log",
                 new MenuBar.Command() {
 
+                    @Override
                     public void menuSelected(MenuItem selectedItem) {
                         boolean selected = !isSelected(selectedItem);
                         setLogVisible(selected);
@@ -131,6 +132,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
         settingsMenu.addItem("Clear log", new MenuBar.Command() {
 
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 log.clear();
             }
@@ -140,6 +142,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         MenuItem layoutHeight = layoutSize.addItem("Height", null);
         for (final String name : sizeOptions.keySet()) {
             layoutWidth.addItem(name, new MenuBar.Command() {
+                @Override
                 public void menuSelected(MenuItem selectedItem) {
                     getTestComponents().get(0).getParent()
                             .setWidth(sizeOptions.get(name));
@@ -147,6 +150,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
                 }
             });
             layoutHeight.addItem(name, new MenuBar.Command() {
+                @Override
                 public void menuSelected(MenuItem selectedItem) {
                     getTestComponents().get(0).getParent()
                             .setHeight(sizeOptions.get(name));
@@ -243,6 +247,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
     protected Command<T, Boolean> focusListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 ((FocusNotifier) c).addListener(AbstractComponentTest.this);
@@ -253,6 +258,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     };
     protected Command<T, Boolean> blurListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 ((BlurNotifier) c).addListener(AbstractComponentTest.this);
@@ -469,6 +475,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             final Object data) {
 
         return new MenuBar.Command() {
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 boolean selected = !isSelected(selectedItem);
                 doCommand(getText(selectedItem), booleanCommand, selected, data);
@@ -483,6 +490,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             final DATATYPE value, final Object data) {
 
         return new MenuBar.Command() {
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 doCommand(getText(selectedItem), command, value, data);
             }
@@ -506,6 +514,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
             final com.vaadin.tests.components.ComponentTestCase.Command<T, VALUETYPE> cmd,
             final VALUETYPE object, final Object data) {
         return new MenuBar.Command() {
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 doCommand(getText(selectedItem), cmd, object, data);
 
@@ -722,10 +731,12 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
     }
 
+    @Override
     public void focus(FocusEvent event) {
         log(event.getClass().getSimpleName());
     }
 
+    @Override
     public void blur(BlurEvent event) {
         log(event.getClass().getSimpleName());
     }

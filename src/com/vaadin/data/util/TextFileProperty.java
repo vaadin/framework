@@ -64,6 +64,7 @@ public class TextFileProperty extends AbstractProperty<String> {
      * 
      * @see com.vaadin.data.Property#getType()
      */
+    @Override
     public Class<String> getType() {
         return String.class;
     }
@@ -73,6 +74,7 @@ public class TextFileProperty extends AbstractProperty<String> {
      * 
      * @see com.vaadin.data.Property#getValue()
      */
+    @Override
     public String getValue() {
         if (file == null) {
             return null;
@@ -114,6 +116,7 @@ public class TextFileProperty extends AbstractProperty<String> {
      * 
      * @see com.vaadin.data.Property#setValue(java.lang.Object)
      */
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();

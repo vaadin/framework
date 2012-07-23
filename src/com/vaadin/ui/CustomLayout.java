@@ -185,6 +185,7 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
      * 
      * @return the Iterator of the components inside the container.
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return slots.values().iterator();
     }
@@ -195,6 +196,7 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
      * 
      * @return the number of contained components
      */
+    @Override
     public int getComponentCount() {
         return slots.values().size();
     }
@@ -212,6 +214,7 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
     }
 
     /* Documented in superclass */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         // Gets the locations
@@ -305,10 +308,12 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
                 "CustomLayout does not support margins.");
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Nothing to see here
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client

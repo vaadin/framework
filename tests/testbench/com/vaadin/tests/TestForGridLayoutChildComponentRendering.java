@@ -54,6 +54,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
         main.addComponent(se, 0, 1, 1, 1);
 
         Button b = new Button("refresh view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 createNewView();
             }
@@ -61,6 +62,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
         main.addComponent(b);
 
         b = new Button("reorder view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 randomReorder();
             }
@@ -69,6 +71,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
         b = new Button("remove randomly one component",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         removeRandomComponent();
                     }

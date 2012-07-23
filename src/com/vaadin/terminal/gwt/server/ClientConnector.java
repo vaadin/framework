@@ -48,6 +48,7 @@ public interface ClientConnector extends Connector, RpcTarget {
      */
     public Class<? extends SharedState> getStateType();
 
+    @Override
     public ClientConnector getParent();
 
     /**

@@ -81,6 +81,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
         initialized = true;
     }
 
+    @Override
     public synchronized Connection reserveConnection() throws SQLException {
         if (!initialized) {
             initializeConnections();
@@ -100,6 +101,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
         return c;
     }
 
+    @Override
     public synchronized void releaseConnection(Connection conn) {
         if (conn == null || !initialized) {
             return;
@@ -139,6 +141,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
         return c;
     }
 
+    @Override
     public void destroy() {
         for (Connection c : availableConnections) {
             try {

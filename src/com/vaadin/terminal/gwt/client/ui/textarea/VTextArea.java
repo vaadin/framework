@@ -57,6 +57,7 @@ public class VTextArea extends VTextField {
     public void onBrowserEvent(Event event) {
         if (getMaxLength() >= 0 && event.getTypeInt() == Event.ONKEYUP) {
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     if (getText().length() > getMaxLength()) {
                         setText(getText().substring(0, getMaxLength()));

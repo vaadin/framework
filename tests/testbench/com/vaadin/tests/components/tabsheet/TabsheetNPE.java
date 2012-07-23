@@ -49,6 +49,7 @@ public class TabsheetNPE extends AbstractTestCase implements ClickListener {
         return layout;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         for (int i = 0; i < TABS_COUNT; i++) {
             tab[i].setEnabled(true);

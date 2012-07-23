@@ -205,6 +205,7 @@ public class TestContainerSorting extends TestCase {
     public class MyObject implements Comparable<MyObject> {
         private String data;
 
+        @Override
         public int compareTo(MyObject o) {
             if (o == null) {
                 return 1;

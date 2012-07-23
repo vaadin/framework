@@ -39,6 +39,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
     private boolean htmlContentAllowed;
 
     /** Paint (serialise) the component for the client. */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER, openRootOnHover);
 
@@ -125,6 +126,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
     }
 
     /** Deserialize changes received from client. */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         Stack<MenuItem> items = new Stack<MenuItem>();
         boolean found = false;

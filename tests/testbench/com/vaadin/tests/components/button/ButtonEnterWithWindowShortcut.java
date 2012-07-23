@@ -17,10 +17,12 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
         getMainWindow().addActionHandler(new Handler() {
             private static final long serialVersionUID = -4976129418325394913L;
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 log.log(action.getCaption() + " pressed in window");
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 ShortcutAction enter = new ShortcutAction("enter",
                         ShortcutAction.KeyCode.ENTER, null);
@@ -32,6 +34,7 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
 
         Button button = new Button("Focus me and press enter",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         log.log("button click listener fired");
                     }

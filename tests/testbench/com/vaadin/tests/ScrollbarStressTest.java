@@ -73,6 +73,7 @@ public class ScrollbarStressTest extends Application.LegacyApplication {
         height.setValue("100%");
 
         final Button set = new Button("Set", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 getTable = testComponent.getValue().equals("Table");
 

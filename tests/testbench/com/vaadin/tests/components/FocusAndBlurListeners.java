@@ -23,6 +23,7 @@ public class FocusAndBlurListeners extends TestBase {
 
     private FocusListener focusListener = new FocusListener() {
 
+        @Override
         public void focus(FocusEvent event) {
             Label msg = new Label(new Date() + " Focused "
                     + event.getComponent().getCaption());
@@ -31,6 +32,7 @@ public class FocusAndBlurListeners extends TestBase {
     };
     private BlurListener blurListener = new BlurListener() {
 
+        @Override
         public void blur(BlurEvent event) {
             Label msg = new Label(new Date() + " Blurred "
                     + event.getComponent().getCaption());
@@ -74,6 +76,7 @@ public class FocusAndBlurListeners extends TestBase {
 
             private int i;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 ogm.addItem("newItem" + i++);
 

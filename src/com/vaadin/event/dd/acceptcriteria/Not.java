@@ -31,6 +31,7 @@ public class Not extends ClientSideCriterion {
         acceptCriterion.paint(target);
     }
 
+    @Override
     public boolean accept(DragAndDropEvent dragEvent) {
         return !acceptCriterion.accept(dragEvent);
     }

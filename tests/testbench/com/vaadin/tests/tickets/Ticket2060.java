@@ -31,6 +31,7 @@ public class Ticket2060 extends Application.LegacyApplication {
         button2 = new Button("Button without width");
         button3 = new Button("Click to repaint buttons", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 button1.requestRepaint();
                 button2.requestRepaint();

@@ -35,12 +35,14 @@ public class HiddenColumnsExpandRatios extends TestBase {
         }
 
         addComponent(new Button("All", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setVisibleColumns(table.getContainerPropertyIds()
                         .toArray());
             }
         }));
         addComponent(new Button("Some", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setWidth("100px");
                 table.setWidth("800px");

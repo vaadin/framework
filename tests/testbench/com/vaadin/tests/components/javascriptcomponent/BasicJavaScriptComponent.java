@@ -42,17 +42,20 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
     public class ExampleWidget extends AbstractJavaScriptComponent {
         public ExampleWidget() {
             registerRpc(new TestRpc() {
+                @Override
                 public void sendRpc(String message) {
                     log.log("Got RPC message: " + message);
                 }
             });
             registerCallback("messageToServer", new JavaScriptCallback() {
+                @Override
                 public void call(JSONArray arguments) throws JSONException {
                     log.log("Got callback message: " + arguments.getString(0));
                 }
             });
 
             registerCallback("reportParentIds", new JavaScriptCallback() {
+                @Override
                 public void call(JSONArray arguments) throws JSONException {
                     JSONArray parentIds = arguments.getJSONArray(0);
                     if (!parentIds.getString(0).equals(getConnectorId())) {

@@ -25,6 +25,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         return (AbstractTextFieldState) super.getState();
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
@@ -83,6 +84,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
              * Gecko defers setting the text so we need to defer the selection.
              */
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     getWidget().setSelectionRange(pos, length);
                 }
@@ -95,6 +97,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         return (VTextField) super.getWidget();
     }
 
+    @Override
     public void onBeforeShortcutAction(Event e) {
         getWidget().valueChange(false);
     }

@@ -39,6 +39,7 @@ public class TableUndefinedSize extends TestBase {
 
         controls.addComponent(new Button("Fixed size (200x200)",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("200px");
                         tbl.setHeight("200px");
@@ -48,6 +49,7 @@ public class TableUndefinedSize extends TestBase {
 
         controls.addComponent(new Button("Fixed size (600x200)",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setWidth("600px");
                         tbl.setHeight("200px");
@@ -57,6 +59,7 @@ public class TableUndefinedSize extends TestBase {
 
         controls.addComponent(new Button("Undefined size",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tbl.setSizeUndefined();
                         log.log("Size undefined");
@@ -68,6 +71,7 @@ public class TableUndefinedSize extends TestBase {
         pageLength.setImmediate(true);
         pageLength.setNullSelectionAllowed(false);
         pageLength.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 int pageLength = Integer.valueOf(event.getProperty().getValue()
                         .toString());
@@ -81,6 +85,7 @@ public class TableUndefinedSize extends TestBase {
         cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 tbl.setColumnCollapsed("Column 1", !value);
@@ -98,6 +103,7 @@ public class TableUndefinedSize extends TestBase {
         cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
                 tbl.setColumnCollapsed("Column 2", !value);
@@ -116,6 +122,7 @@ public class TableUndefinedSize extends TestBase {
         cb.setValue(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = (Boolean) event.getProperty().getValue();
 

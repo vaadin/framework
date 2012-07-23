@@ -26,6 +26,7 @@ public class GridLayoutRemoveFinalRow extends TestBase {
 
         Button removeRowBtn = new Button("Remove row",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         layout.removeRow(0);
                     }

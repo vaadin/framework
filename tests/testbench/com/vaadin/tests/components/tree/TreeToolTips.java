@@ -13,6 +13,7 @@ public class TreeToolTips extends TestBase {
     protected void setup() {
         final Tree tree = new Tree(null, createContainer());
         tree.setItemDescriptionGenerator(new AbstractSelect.ItemDescriptionGenerator() {
+            @Override
             public String generateDescription(Component source, Object itemId,
                     Object propertyId) {
                 return "This is a tooltip for item id '" + itemId + "'";

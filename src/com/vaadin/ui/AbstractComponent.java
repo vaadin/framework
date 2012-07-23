@@ -101,10 +101,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /* Get/Set component properties */
 
+    @Override
     public void setDebugId(String id) {
         getState().setDebugId(id);
     }
 
+    @Override
     public String getDebugId() {
         return getState().getDebugId();
     }
@@ -141,6 +143,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Gets the component's style. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
+    @Override
     public String getStyleName() {
         String s = "";
         if (getState().getStyles() != null) {
@@ -159,6 +162,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's style. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
+    @Override
     public void setStyleName(String style) {
         if (style == null || "".equals(style)) {
             getState().setStyles(null);
@@ -179,6 +183,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         requestRepaint();
     }
 
+    @Override
     public void addStyleName(String style) {
         if (style == null || "".equals(style)) {
             return;
@@ -201,6 +206,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
+    @Override
     public void removeStyleName(String style) {
         if (getState().getStyles() != null) {
             String[] styleParts = style.split(" +");
@@ -217,6 +223,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Get's the component's caption. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
      */
+    @Override
     public String getCaption() {
         return getState().getCaption();
     }
@@ -229,6 +236,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param caption
      *            the new caption <code>String</code> for the component.
      */
+    @Override
     public void setCaption(String caption) {
         getState().setCaption(caption);
         requestRepaint();
@@ -238,6 +246,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public Locale getLocale() {
         if (locale != null) {
             return locale;
@@ -283,6 +292,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Gets the component's icon resource. Don't add a JavaDoc comment here, we
      * use the default documentation from implemented interface.
      */
+    @Override
     public Resource getIcon() {
         ResourceReference ref = ((ResourceReference) getState().getIcon());
         if (ref == null) {
@@ -299,6 +309,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param icon
      *            the icon to be shown with the component's caption.
      */
+    @Override
     public void setIcon(Resource icon) {
         if (icon == null) {
             getState().setIcon(null);
@@ -313,6 +324,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.ui.Component#isEnabled()
      */
+    @Override
     public boolean isEnabled() {
         return getState().isEnabled();
     }
@@ -322,6 +334,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.ui.Component#setEnabled(boolean)
      */
+    @Override
     public void setEnabled(boolean enabled) {
         if (getState().isEnabled() != enabled) {
             getState().setEnabled(enabled);
@@ -377,6 +390,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.ui.Component#isVisible()
      */
+    @Override
     public boolean isVisible() {
         return getState().isVisible();
     }
@@ -386,6 +400,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.ui.Component#setVisible(boolean)
      */
+    @Override
     public void setVisible(boolean visible) {
         if (getState().isVisible() == visible) {
             return;
@@ -566,6 +581,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Tests if the component is in read-only mode. Don't add a JavaDoc comment
      * here, we use the default documentation from implemented interface.
      */
+    @Override
     public boolean isReadOnly() {
         return getState().isReadOnly();
     }
@@ -574,6 +590,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Sets the component's read-only mode. Don't add a JavaDoc comment here, we
      * use the default documentation from implemented interface.
      */
+    @Override
     public void setReadOnly(boolean readOnly) {
         getState().setReadOnly(readOnly);
         requestRepaint();
@@ -704,6 +721,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.ui.Component#updateState()
      */
+    @Override
     public void updateState() {
         // TODO This logic should be on the client side and the state should
         // simply be a data object with "width" and "height".
@@ -863,6 +881,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param method
      *            the activation method.
      */
+    @Override
     public void addListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
@@ -904,6 +923,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @param methodName
      *            the name of the activation method.
      */
+    @Override
     public void addListener(Class<?> eventType, Object target, String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
@@ -929,6 +949,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      */
+    @Override
     public void removeListener(Class<?> eventType, Object target) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target);
@@ -954,6 +975,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the method owned by <code>target</code> that's registered to
      *            listen to events of type <code>eventType</code>.
      */
+    @Override
     public void removeListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, method);
@@ -988,6 +1010,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
      */
+    @Override
     public void removeListener(Class<?> eventType, Object target,
             String methodName) {
         if (eventRouter != null) {
@@ -1032,6 +1055,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public void addListener(Component.Listener listener) {
         addListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
     }
@@ -1041,6 +1065,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * JavaDoc comment here, we use the default documentation from implemented
      * interface.
      */
+    @Override
     public void removeListener(Component.Listener listener) {
         removeListener(Component.Event.class, listener, COMPONENT_EVENT_METHOD);
     }
@@ -1090,6 +1115,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#getHeight()
      */
+    @Override
     public float getHeight() {
         return height;
     }
@@ -1099,6 +1125,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#getHeightUnits()
      */
+    @Override
     public Unit getHeightUnits() {
         return heightUnit;
     }
@@ -1108,6 +1135,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#getWidth()
      */
+    @Override
     public float getWidth() {
         return width;
     }
@@ -1117,6 +1145,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#getWidthUnits()
      */
+    @Override
     public Unit getWidthUnits() {
         return widthUnit;
     }
@@ -1126,6 +1155,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setHeight(float, Unit)
      */
+    @Override
     public void setHeight(float height, Unit unit) {
         if (unit == null) {
             throw new IllegalArgumentException("Unit can not be null");
@@ -1141,6 +1171,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setSizeFull()
      */
+    @Override
     public void setSizeFull() {
         setWidth(100, Unit.PERCENTAGE);
         setHeight(100, Unit.PERCENTAGE);
@@ -1151,6 +1182,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setSizeUndefined()
      */
+    @Override
     public void setSizeUndefined() {
         setWidth(-1, Unit.PIXELS);
         setHeight(-1, Unit.PIXELS);
@@ -1161,6 +1193,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setWidth(float, Unit)
      */
+    @Override
     public void setWidth(float width, Unit unit) {
         if (unit == null) {
             throw new IllegalArgumentException("Unit can not be null");
@@ -1176,6 +1209,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setWidth(java.lang.String)
      */
+    @Override
     public void setWidth(String width) {
         Size size = parseStringSize(width);
         if (size != null) {
@@ -1190,6 +1224,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * 
      * @see com.vaadin.terminal.Sizeable#setHeight(java.lang.String)
      */
+    @Override
     public void setHeight(String height) {
         Size size = parseStringSize(height);
         if (size != null) {

@@ -41,18 +41,22 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
         this.deploymentConfiguration = deploymentConfiguration;
     }
 
+    @Override
     public String getRequestPathInfo() {
         return getPathInfo();
     }
 
+    @Override
     public int getSessionMaxInactiveInterval() {
         return getSession().getMaxInactiveInterval();
     }
 
+    @Override
     public Object getSessionAttribute(String name) {
         return getSession().getAttribute(name);
     }
 
+    @Override
     public void setSessionAttribute(String name, Object attribute) {
         getSession().setAttribute(name, attribute);
     }
@@ -66,20 +70,25 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
         return this;
     }
 
+    @Override
     public DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }
 
+    @Override
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
+            @Override
             public String getUriFragment() {
                 return null;
             }
 
+            @Override
             public String getWindowName() {
                 return null;
             }
 
+            @Override
             public WebBrowser getWebBrowser() {
                 WebApplicationContext context = (WebApplicationContext) Application
                         .getCurrent().getContext();

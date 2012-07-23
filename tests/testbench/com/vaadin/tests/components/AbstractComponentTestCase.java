@@ -71,12 +71,14 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, String> widthCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T t, String value, Object data) {
             t.setWidth(value);
         }
     };
     protected Command<T, String> heightCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T t, String value, Object data) {
             t.setHeight(value);
         }
@@ -84,6 +86,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> enabledCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean enabled, Object data) {
             c.setEnabled(enabled);
         }
@@ -91,6 +94,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> immediateCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean immediate, Object data) {
             c.setImmediate(immediate);
         }
@@ -98,6 +102,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> errorIndicatorCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean enabled, Object data) {
             if (enabled) {
                 c.setComponentError(new UserError(errorMessage));
@@ -111,6 +116,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, String> errorMessageCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String value, Object data) {
             errorMessage = value;
             if (c.getComponentError() != null) {
@@ -124,6 +130,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     // TODO Move to AbstractFieldTestCase
     protected Command<T, Boolean> requiredCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean enabled, Object data) {
             if (c instanceof Field) {
                 ((Field<?>) c).setRequired(enabled);
@@ -135,6 +142,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     };
     protected Command<T, String> requiredErrorMessageCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String value, Object data) {
             ((Field<?>) c).setRequiredError(value);
         }
@@ -142,6 +150,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     };
 
     protected Command<T, String> descriptionCommand = new Command<T, String>() {
+        @Override
         public void execute(T c, String value, Object data) {
             c.setDescription(value);
         }
@@ -149,6 +158,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> readonlyCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean enabled, Object data) {
             c.setReadOnly(enabled);
         }
@@ -156,6 +166,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Boolean> visibleCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean enabled, Object data) {
             c.setVisible(enabled);
         }
@@ -163,6 +174,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Resource> iconCommand = new Command<T, Resource>() {
 
+        @Override
         public void execute(T c, Resource value, Object data) {
             c.setIcon(value);
         }
@@ -170,6 +182,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     };
     protected Command<T, String> captionCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String value, Object data) {
             c.setCaption(value);
         }
@@ -178,6 +191,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     protected Command<T, Locale> localeCommand = new Command<T, Locale>() {
 
+        @Override
         public void execute(T c, Locale value, Object data) {
             c.setLocale(value);
         }
@@ -206,6 +220,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
     }
 
     protected Command<T, String> styleNameCommand = new Command<T, String>() {
+        @Override
         public void execute(T c, String value, Object data) {
             c.setStyleName(value);
         }

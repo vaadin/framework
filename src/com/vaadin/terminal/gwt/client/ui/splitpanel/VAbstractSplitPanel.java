@@ -125,12 +125,14 @@ public class VAbstractSplitPanel extends ComplexPanel {
         makeScrollable();
 
         addDomHandler(new TouchCancelHandler() {
+            @Override
             public void onTouchCancel(TouchCancelEvent event) {
                 // TODO When does this actually happen??
                 VConsole.log("TOUCH CANCEL");
             }
         }, TouchCancelEvent.getType());
         addDomHandler(new TouchStartHandler() {
+            @Override
             public void onTouchStart(TouchStartEvent event) {
                 Node target = event.getTouches().get(0).getTarget().cast();
                 if (splitter.isOrHasChild(target)) {
@@ -139,6 +141,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchStartEvent.getType());
         addDomHandler(new TouchMoveHandler() {
+            @Override
             public void onTouchMove(TouchMoveEvent event) {
                 if (resizing) {
                     onMouseMove(Event.as(event.getNativeEvent()));
@@ -146,6 +149,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchMoveEvent.getType());
         addDomHandler(new TouchEndHandler() {
+            @Override
             public void onTouchEnd(TouchEndEvent event) {
                 if (resizing) {
                     onMouseUp(Event.as(event.getNativeEvent()));

@@ -26,6 +26,7 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
         this.dataSourceJndiName = dataSourceJndiName;
     }
 
+    @Override
     public Connection reserveConnection() throws SQLException {
         Connection conn = getDataSource().getConnection();
         conn.setAutoCommit(false);
@@ -51,6 +52,7 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
         }
     }
 
+    @Override
     public void releaseConnection(Connection conn) {
         if (conn != null) {
             try {
@@ -62,6 +64,7 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
         }
     }
 
+    @Override
     public void destroy() {
         dataSource = null;
     }

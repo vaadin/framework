@@ -41,6 +41,7 @@ public class Ticket1857 extends Application.LegacyApplication implements
         footer.addComponent(actionHandlerEnabler);
         actionHandlerEnabler.setImmediate(true);
         actionHandlerEnabler.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (actionHandlerEnabler.getValue().booleanValue()) {
                     t.addActionHandler(Ticket1857.this);
@@ -54,9 +55,11 @@ public class Ticket1857 extends Application.LegacyApplication implements
         footer.addComponent(cellStylesEnabler);
         cellStylesEnabler.setImmediate(true);
         cellStylesEnabler.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (cellStylesEnabler.getValue().booleanValue()) {
                     t.setCellStyleGenerator(new Table.CellStyleGenerator() {
+                        @Override
                         public String getStyle(Object itemId, Object propertyId) {
                             Object cell = t.getContainerProperty(itemId,
                                     propertyId).getValue();
@@ -99,10 +102,12 @@ public class Ticket1857 extends Application.LegacyApplication implements
 
     private final Action removeAction = new Action("Remove");
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         return new Action[] { removeAction };
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         getMainWindow().showNotification("Removing row number:" + target);
         ((Table) sender).removeItem(target);

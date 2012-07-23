@@ -25,6 +25,7 @@ public class TabSheetTabStyleNames extends TestBase {
                 new Button.ClickListener() {
                     int counter = 0;
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         if (tab1.getStyleName() == null) {
                             tab1.setStyleName(STYLE_NAME);

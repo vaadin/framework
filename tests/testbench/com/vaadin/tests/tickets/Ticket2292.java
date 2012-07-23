@@ -47,6 +47,7 @@ public class Ticket2292 extends com.vaadin.Application.LegacyApplication
         addRequestHandler(this);
     }
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

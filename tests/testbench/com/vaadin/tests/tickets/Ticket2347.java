@@ -25,6 +25,7 @@ public class Ticket2347 extends Application.LegacyApplication {
         b1 = new Button("200px button");
         b1.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (b1.getWidth() == 200.0) {
                     b1.setWidth("300px");

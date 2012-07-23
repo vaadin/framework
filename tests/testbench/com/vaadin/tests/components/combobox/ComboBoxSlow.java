@@ -45,6 +45,7 @@ public class ComboBoxSlow extends TestBase {
         }
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value changed to " + cb.getValue());
 

@@ -23,6 +23,7 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
         Button b = new Button("click to show notification",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Notification.show(
                                 "Try clicking the button in main window!",
@@ -35,6 +36,7 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
         b = new Button("click to warning notification",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Notification.show(
                                 "Try clicking the button in main window!",
@@ -46,6 +48,7 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
         b = new Button("click to Humanized notification",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Notification.show(
                                 "Try clicking the button in main window!",
@@ -56,6 +59,7 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
 
         b = new Button("click to test modality!", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 mainWin.addComponent(new Label("clicked"));
 
@@ -68,6 +72,7 @@ public class Ticket1465ModalNotification extends Application.LegacyApplication {
 
         b = new Button("click to test modality!", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 mainWin.addComponent(new Label("clicked"));
 

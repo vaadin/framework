@@ -29,6 +29,7 @@ public class TargetDetailsImpl implements TargetDetails {
         this.dropTarget = dropTarget;
     }
 
+    @Override
     public Object getData(String key) {
         return data.get(key);
     }
@@ -37,6 +38,7 @@ public class TargetDetailsImpl implements TargetDetails {
         return data.put(key, value);
     }
 
+    @Override
     public DropTarget getTarget() {
         return dropTarget;
     }

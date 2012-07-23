@@ -87,6 +87,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         contextTree = t;
 
         final Button b = new Button("refresh view", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 createNewView();
             }
@@ -131,6 +132,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         final Panel status = new Panel("Events");
         final Button clear = new Button("c");
         clear.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 status.removeAllComponents();
                 status.addComponent(clear);
@@ -144,6 +146,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         ol.addComponent(status);
 
         t.addListener(new Listener() {
+            @Override
             public void componentEvent(Event event) {
                 status.addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()
@@ -155,10 +158,12 @@ public class TestForTrees extends CustomComponent implements Handler {
         return ol;
     }
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         return actions;
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (action == actions[1]) {
             al.addComponent(new Label("Delete selected on " + target));

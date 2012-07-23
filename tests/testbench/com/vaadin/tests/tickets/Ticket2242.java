@@ -33,6 +33,7 @@ public class Ticket2242 extends Application.LegacyApplication implements
         Button b = new Button("Change container datasource",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         for (int i = 0; i < 5; i++) {
                             t.setContainerDataSource(createContainer());
@@ -71,6 +72,7 @@ public class Ticket2242 extends Application.LegacyApplication implements
         return ic;
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         System.out.println("Value change from " + tableValue + " to "
                 + t.getValue());

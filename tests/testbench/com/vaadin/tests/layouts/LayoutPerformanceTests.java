@@ -213,12 +213,14 @@ public class LayoutPerformanceTests extends TestBase {
         controls.addComponent(childAmount);
 
         controls.addComponent(new Button("Clear", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 setTestLayout(new Label(""));
             }
         }));
 
         controls.addComponent(new Button("Apply", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 SampleType leafType = (SampleType) leafSelector.getValue();
                 if (leafType == null) {

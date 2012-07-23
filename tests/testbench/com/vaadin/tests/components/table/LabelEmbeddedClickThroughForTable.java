@@ -56,6 +56,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
 
         table.addListener(new ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 System.out.println("Clickevent on item " + event.getItemId()
                         + ", column: " + event.getPropertyId());

@@ -18,6 +18,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
     protected static class PersonNameResolver implements
             BeanIdResolver<String, Person> {
 
+        @Override
         public String getIdForBean(Person bean) {
             return bean != null ? bean.getName() : null;
         }
@@ -27,6 +28,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
     protected static class NullResolver implements
             BeanIdResolver<String, Person> {
 
+        @Override
         public String getIdForBean(Person bean) {
             return null;
         }
@@ -332,6 +334,7 @@ public class BeanContainerTest extends AbstractBeanContainerTest {
         container
                 .setBeanIdResolver(new BeanIdResolver<String, AbstractBeanContainerTest.Person>() {
 
+                    @Override
                     public String getIdForBean(Person bean) {
                         return bean.getName();
                     }

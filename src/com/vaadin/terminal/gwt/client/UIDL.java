@@ -283,10 +283,12 @@ public final class UIDL extends JavaScriptObject {
 
             int index = -1;
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException();
             }
 
+            @Override
             public Object next() {
 
                 if (hasNext()) {
@@ -308,6 +310,7 @@ public final class UIDL extends JavaScriptObject {
                 return null;
             }
 
+            @Override
             public boolean hasNext() {
                 int count = getChildCount();
                 return count > index + 1;

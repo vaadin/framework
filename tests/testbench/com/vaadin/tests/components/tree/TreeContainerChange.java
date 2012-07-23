@@ -57,6 +57,7 @@ public class TreeContainerChange extends TestBase {
         Button b = new Button("Use ds1");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tree.setContainerDataSource(ds1);
                 currentDS.setValue("ds1");
@@ -72,6 +73,7 @@ public class TreeContainerChange extends TestBase {
         b = new Button("Use ds2");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tree.setContainerDataSource(ds2);
                 currentDS.setValue("ds2");
@@ -82,6 +84,7 @@ public class TreeContainerChange extends TestBase {
         addComponent(hl);
 
         tree.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 currentValue.setValue(event.getProperty().getValue());
             }

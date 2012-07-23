@@ -43,6 +43,7 @@ public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden extends
                 "Click to set bar visible. Button should stay visible.");
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 bar.setVisible(true);
                 foobar.setVisible(true);

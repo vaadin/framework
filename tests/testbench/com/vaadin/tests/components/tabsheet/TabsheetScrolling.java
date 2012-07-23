@@ -22,6 +22,7 @@ public class TabsheetScrolling extends TestBase {
             Button b = new Button("Hide this tab (" + i + ")",
                     new ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             fixedSizeTabSheet.getTab(event.getButton())
                                     .setVisible(false);
@@ -44,6 +45,7 @@ public class TabsheetScrolling extends TestBase {
             Button b = new Button("Hide this tab (" + i + ")",
                     new ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             autoWideTabSheet.getTab(event.getButton())
                                     .setVisible(false);

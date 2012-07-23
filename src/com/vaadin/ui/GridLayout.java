@@ -58,6 +58,7 @@ public class GridLayout extends AbstractLayout implements
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
+        @Override
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {
             fireEvent(LayoutClickEvent.createEvent(GridLayout.this,
@@ -417,6 +418,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @return the Iterator of the components inside the layout.
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return Collections.unmodifiableCollection(components).iterator();
     }
@@ -427,10 +429,12 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @return the number of contained components
      */
+    @Override
     public int getComponentCount() {
         return components.size();
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
     }
@@ -443,6 +447,7 @@ public class GridLayout extends AbstractLayout implements
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         // TODO refactor attribute names in future release.
         target.addAttribute("structuralChange", structuralChange);
@@ -668,6 +673,7 @@ public class GridLayout extends AbstractLayout implements
      * @see com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .vaadin.ui.Component)
      */
+    @Override
     public Alignment getComponentAlignment(Component childComponent) {
         Alignment alignment = componentToAlignment.get(childComponent);
         if (alignment == null) {
@@ -1094,6 +1100,7 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /* Documented in superclass */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         // Gets the locations
@@ -1143,6 +1150,7 @@ public class GridLayout extends AbstractLayout implements
      * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
      * .vaadin.ui.Component, int, int)
      */
+    @Override
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
         componentToAlignment.put(childComponent, new Alignment(
@@ -1150,6 +1158,7 @@ public class GridLayout extends AbstractLayout implements
         requestRepaint();
     }
 
+    @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
         componentToAlignment.put(childComponent, alignment);
@@ -1161,6 +1170,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
+    @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
         requestRepaint();
@@ -1171,6 +1181,7 @@ public class GridLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
+    @Override
     public boolean isSpacing() {
         return getState().isSpacing();
     }
@@ -1388,12 +1399,14 @@ public class GridLayout extends AbstractLayout implements
         return null;
     }
 
+    @Override
     public void addListener(LayoutClickListener listener) {
         addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    @Override
     public void removeListener(LayoutClickListener listener) {
         removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);

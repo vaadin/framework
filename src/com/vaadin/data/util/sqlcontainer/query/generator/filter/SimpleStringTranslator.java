@@ -10,10 +10,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class SimpleStringTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof SimpleStringFilter;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         SimpleStringFilter ssf = (SimpleStringFilter) filter;
         // Create a Like filter based on the SimpleStringFilter and execute the

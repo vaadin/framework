@@ -33,6 +33,7 @@ public class Ticket1506_TestContainer2 implements Container {
         }
     }
 
+    @Override
     public Item getItem(Object itemId) {
         if (items.isEmpty()) {
             loadItems();
@@ -40,6 +41,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return items.get(itemId);
     }
 
+    @Override
     public Collection<String> getContainerPropertyIds() {
         if (items.isEmpty()) {
             loadItems();
@@ -50,6 +52,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return a;
     }
 
+    @Override
     public Collection<String> getItemIds() {
         if (items.isEmpty()) {
             loadItems();
@@ -57,6 +60,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return items.keySet();
     }
 
+    @Override
     public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         if (items.isEmpty()) {
             loadItems();
@@ -68,6 +72,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return null;
     }
 
+    @Override
     public Class<String> getType(Object propertyId) {
         if (items.isEmpty()) {
             loadItems();
@@ -75,6 +80,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return String.class;
     }
 
+    @Override
     public int size() {
         if (items.isEmpty()) {
             loadItems();
@@ -82,6 +88,7 @@ public class Ticket1506_TestContainer2 implements Container {
         return items.size();
     }
 
+    @Override
     public boolean containsId(Object itemId) {
         if (items.isEmpty()) {
             loadItems();
@@ -89,29 +96,35 @@ public class Ticket1506_TestContainer2 implements Container {
         return items.containsKey(itemId);
     }
 
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }

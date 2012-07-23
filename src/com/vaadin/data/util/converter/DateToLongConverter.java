@@ -24,6 +24,7 @@ public class DateToLongConverter implements Converter<Date, Long> {
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.util.Locale)
      */
+    @Override
     public Long convertToModel(Date value, Locale locale) {
         if (value == null) {
             return null;
@@ -39,6 +40,7 @@ public class DateToLongConverter implements Converter<Date, Long> {
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.util.Locale)
      */
+    @Override
     public Date convertToPresentation(Long value, Locale locale) {
         if (value == null) {
             return null;
@@ -52,6 +54,7 @@ public class DateToLongConverter implements Converter<Date, Long> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
+    @Override
     public Class<Long> getModelType() {
         return Long.class;
     }
@@ -61,6 +64,7 @@ public class DateToLongConverter implements Converter<Date, Long> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
+    @Override
     public Class<Date> getPresentationType() {
         return Date.class;
     }

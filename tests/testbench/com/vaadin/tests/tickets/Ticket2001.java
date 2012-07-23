@@ -22,6 +22,7 @@ public class Ticket2001 extends Application.LegacyApplication {
 
         final CheckBox b = new CheckBox("fixed width: 30px", false);
         b.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if ((Boolean) b.getValue()) {
                     l.setWidth("30px");

@@ -31,6 +31,7 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
         };
         tf2.setTextChangeEventMode(TextChangeEventMode.EAGER);
         tf2.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 tf2.setStyleName(getNextStyle());
             }

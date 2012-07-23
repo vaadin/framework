@@ -71,10 +71,12 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
     private Action.Handler handler = new Action.Handler() {
 
+        @Override
         public void handleAction(Action action, Object sender, Object target) {
             // NOP
         }
 
+        @Override
         public Action[] getActions(Object target, Object sender) {
             return new Action[] {
                     new Action("Open"),
@@ -318,6 +320,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         closable.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Iterator<Component> it = ts.getComponentIterator();
                 for (; it.hasNext();) {
@@ -415,6 +418,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
                 ContentMode.XHTML));
 
         tabs.addListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
             public void selectedTabChange(SelectedTabChangeEvent event) {
                 if (event.getTabSheet().getSelectedTab() == l) {
                     getMainWindow().addWindow(w);
@@ -472,6 +476,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         lockCheckBox.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 sp.setLocked((Boolean) event.getProperty().getValue());
                 sp2.setLocked((Boolean) event.getProperty().getValue());
@@ -595,6 +600,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         l.addComponent(new Label("Humanized", ContentMode.XHTML));
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Notification notification = new Notification(
                                 title.getValue(), message.getValue());
@@ -606,6 +612,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label("Warning", ContentMode.XHTML));
         show = new Button("Warning Notification", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
                         Notification.TYPE_WARNING_MESSAGE, true).show(Page
@@ -617,6 +624,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label("Error", ContentMode.XHTML));
         show = new Button("Error Notification", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
                         Notification.TYPE_ERROR_MESSAGE, true).show(Page
@@ -628,6 +636,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label("Tray", ContentMode.XHTML));
         show = new Button("Tray Notification", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 new Notification(title.getValue(), message.getValue(),
                         Notification.TYPE_TRAY_NOTIFICATION, true).show(Page
@@ -694,6 +703,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         final MenuBar.MenuItem find = edit.addItem("Find/Replace", null);
 
         find.addItem("Google Search", new Command() {
+            @Override
             public void menuSelected(MenuItem selectedItem) {
                 getMainWindow().open(
                         new ExternalResource("http://www.google.com"));

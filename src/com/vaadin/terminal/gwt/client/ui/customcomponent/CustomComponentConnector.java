@@ -19,6 +19,7 @@ public class CustomComponentConnector extends
         return (VCustomComponent) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, custom component dont render composition roots caption
     }

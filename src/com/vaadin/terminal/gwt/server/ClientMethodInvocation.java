@@ -61,6 +61,7 @@ public class ClientMethodInvocation implements Serializable,
         return sequenceNumber;
     }
 
+    @Override
     public int compareTo(ClientMethodInvocation o) {
         if (null == o) {
             return 0;

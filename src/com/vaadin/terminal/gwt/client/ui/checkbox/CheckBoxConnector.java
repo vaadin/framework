@@ -114,18 +114,21 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         return (VCheckBox) super.getWidget();
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurRpc.focus();
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurRpc.blur();
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         if (!isEnabled()) {
             return;
