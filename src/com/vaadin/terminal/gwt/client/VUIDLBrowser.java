@@ -75,6 +75,14 @@ public class VUIDLBrowser extends SimpleTree {
                 }
             } else if (key.equals("meta")) {
 
+            } else if (key.equals("hierarchy")) {
+                ValueMap hierJSON = u.getValueMap(key);
+                SimpleTree hierarchy = new SimpleTree("Hierarchy");
+                for (String hierKey : hierJSON.getKeySet()) {
+                    hierarchy.addItem(hierKey + ": "
+                            + hierJSON.getAsString(hierKey));
+                }
+                add(hierarchy);
             } else {
                 // TODO consider pretty printing other request data
                 // addItem(key + " : " + u.getAsString(key));
