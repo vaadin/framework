@@ -33,6 +33,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Root;
 
 /**
@@ -302,9 +303,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 eventActionDestinationMap.put(actionKey, name);
                 eventActionValueMap.put(actionKey, value);
-                throw new RuntimeException(
-                        "Root.open has not yet been implemented");
-                // root.open(new ExternalResource(actionUrl.toString()));
+                root.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
@@ -350,9 +349,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 sharedParameterActionNameMap.put(actionKey, name);
                 sharedParameterActionValueMap.put(actionKey, value);
-                throw new RuntimeException(
-                        "Root.open has not yet been implemented");
-                // root.open(new ExternalResource(actionUrl.toString()));
+                root.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
