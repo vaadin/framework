@@ -35,7 +35,9 @@ import com.vaadin.terminal.gwt.client.ui.window.VWindow;
  * TODO Rename to something more Vaadin7-ish?
  */
 public class VUIDLBrowser extends SimpleTree {
-    private static final String HELP = "Shift click handle to open recursively. Click components to hightlight them on client side. Shift click components to highlight them also on the server side.";
+    private static final String HELP = "Shift click handle to open recursively. "
+            + " Click components to highlight them on client side."
+            + " Shift click components to highlight them also on the server side.";
     private ApplicationConfiguration conf;
     private String highlightedPid;
 
