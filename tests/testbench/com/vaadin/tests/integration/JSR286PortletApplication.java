@@ -18,17 +18,17 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
+import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Root;
+import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
@@ -36,8 +36,9 @@ import com.vaadin.ui.Upload.Receiver;
 /**
  * Adapted from old PortletDemo to support integration testing.
  */
-public class JSR286PortletRoot extends Root {
+public class JSR286PortletApplication extends Application.LegacyApplication {
 
+    LegacyWindow main = new LegacyWindow();
     TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
@@ -45,19 +46,16 @@ public class JSR286PortletRoot extends Root {
     Link someAction = null;
 
     @Override
-    protected void init(WrappedRequest request) {
-        ComponentContainer main = getContent();
-        tf.setDebugId("tf");
-        userInfo.setDebugId("userInfo");
-        portletEdit.setDebugId("portletEdit");
-        portletMax.setDebugId("portletMax");
+    public void init() {
+        setMainWindow(main);
+
         Embedded appResourceTest = new Embedded(
                 "Test of ApplicationResources with full path",
-                new FlagSeResource(getApplication()));
+                new FlagSeResource(this));
         main.addComponent(appResourceTest);
         Embedded specialNameResourceTest = new Embedded(
                 "Test ApplicationResources with special names",
-                new SpecialNameResource(getApplication()));
+                new SpecialNameResource(this));
         main.addComponent(specialNameResourceTest);
 
         userInfo.setCaption("User info");
@@ -75,19 +73,17 @@ public class JSR286PortletRoot extends Root {
 
         Upload upload = new Upload("Upload a file", new Receiver() {
 
-            @Override
             public OutputStream receiveUpload(String filename, String mimeType) {
                 return new ByteArrayOutputStream();
             }
         });
         main.addComponent(upload);
 
-        if (getApplication().getContext() instanceof PortletApplicationContext2) {
-            PortletApplicationContext2 ctx = (PortletApplicationContext2) getApplication()
-                    .getContext();
-            ctx.addPortletListener(getApplication(), new DemoPortletListener());
+        if (getContext() instanceof PortletApplicationContext2) {
+            PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();
+            ctx.addPortletListener(this, new DemoPortletListener());
         } else {
-            Notification.show("Not inited via Portal!",
+            getMainWindow().showNotification("Not inited via Portal!",
                     Notification.TYPE_ERROR_MESSAGE);
         }
 
@@ -95,13 +91,11 @@ public class JSR286PortletRoot extends Root {
 
     private class DemoPortletListener implements PortletListener {
 
-        @Override
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response, Root window) {
-            getContent().addComponent(new Label("Action received"));
+            main.addComponent(new Label("Action received"));
         }
 
-        @Override
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response, Root window) {
             // Portlet up-and-running, enable stuff
@@ -112,10 +106,11 @@ public class JSR286PortletRoot extends Root {
             tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
 
             // Show notification about current mode and state
-            new Notification("Portlet status", "Mode: "
-                    + request.getPortletMode() + " State: "
-                    + request.getWindowState(),
-                    Notification.TYPE_WARNING_MESSAGE).show(getPage());
+            getMainWindow().showNotification(
+                    "Portlet status",
+                    "Mode: " + request.getPortletMode() + " State: "
+                            + request.getWindowState(),
+                    Notification.TYPE_WARNING_MESSAGE);
 
             // Display current user info
             Map<?, ?> uinfo = (Map<?, ?>) request
@@ -165,9 +160,7 @@ public class JSR286PortletRoot extends Root {
                 try {
                     someAction = new Link("An action", new ExternalResource(
                             url.toString()));
-                    someAction.setDebugId("someAction");
-
-                    addComponent(someAction);
+                    main.addComponent(someAction);
                 } catch (Exception e) {
                     // Oops
                     System.err.println("Could not create someAction: " + e);
@@ -176,13 +169,11 @@ public class JSR286PortletRoot extends Root {
             }
         }
 
-        @Override
         public void handleEventRequest(EventRequest request,
                 EventResponse response, Root window) {
             // events not used by this test
         }
 
-        @Override
         public void handleResourceRequest(ResourceRequest request,
                 ResourceResponse response, Root window) {
             // nothing special to do here
