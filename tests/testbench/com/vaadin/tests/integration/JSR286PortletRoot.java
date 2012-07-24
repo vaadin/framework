@@ -23,6 +23,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -31,7 +32,6 @@ import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.VerticalLayout;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
@@ -46,7 +46,7 @@ public class JSR286PortletRoot extends Root {
 
     @Override
     protected void init(WrappedRequest request) {
-        VerticalLayout main = new VerticalLayout();
+        ComponentContainer main = getContent();
         tf.setDebugId("tf");
         userInfo.setDebugId("userInfo");
         portletEdit.setDebugId("portletEdit");
