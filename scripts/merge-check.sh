@@ -9,7 +9,7 @@ then
 fi
 
 testname="merge check for `pwd|sed "s/.*\///"`"
-echo "##teamcity[testStarted name='$testname' captureStandardOutput='<true/false>']"
+echo "##teamcity[testStarted name='$testname' captureStandardOutput='true']"
 
 command="git --no-pager log --no-color $SINCE..$UNTIL"
 # TODO Why do I get whitespace in the beginning of the wc output?
