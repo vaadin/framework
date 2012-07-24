@@ -23,7 +23,8 @@ public class AddNodesOnExpand extends TestBase {
                 Object openedItemId = event.getItemId();
                 if (!treetable.hasChildren(openedItemId)) {
                     for (int j = 0; j < 3; j++) {
-                        treetable.addItem(openedItemId + "-" + j);
+                        treetable.addItem(new String[] { "Subitem " + j },
+                                openedItemId + "-" + j);
                         treetable.setParent(openedItemId + "-" + j,
                                 openedItemId);
                     }
@@ -39,7 +40,7 @@ public class AddNodesOnExpand extends TestBase {
         });
 
         for (int i = 0; i < 3; i++) {
-            treetable.addItem(Integer.valueOf(i));
+            treetable.addItem(new String[] { "Item " + i }, Integer.valueOf(i));
         }
 
         addComponent(treetable);

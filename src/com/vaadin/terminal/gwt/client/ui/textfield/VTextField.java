@@ -301,7 +301,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             if (!prompting && newText != null
                     && !newText.equals(valueBeforeEdit)) {
                 sendValueChange = immediate;
-                client.updateVariable(paintableId, "text", getText(), false);
+                client.updateVariable(paintableId, "text", newText, false);
                 valueBeforeEdit = newText;
                 valueBeforeEditIsSynced = true;
             }
@@ -366,6 +366,11 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
 
     @Override
     public void onBlur(BlurEvent event) {
+        // this is called twice on Chrome when e.g. changing tab while prompting
+        // field focused - do not change settings on the second time
+        if (focusedTextField != this) {
+            return;
+        }
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
         String text = getText();
