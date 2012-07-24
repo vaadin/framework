@@ -4,33 +4,35 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 /**
  * Test for #8291 and #7666: NegativeArraySizeException when Table scrolled to
  * the end and its size reduced.
  */
-public class Ticket8291 extends Application {
+public class Ticket8291 extends Root {
 
     @Override
-    public void init() {
-        setMainWindow(new Window("", new TestView()));
+    public void init(WrappedRequest request) {
+        setContent(new TestView());
     }
 
     private static class DecimateFilter implements Filter {
+        @Override
         public boolean passesFilter(Object itemId, Item item)
                 throws UnsupportedOperationException {
             return ((((TestObject) itemId).property3 % 10) == 0);
         }
 
+        @Override
         public boolean appliesToProperty(Object propertyId) {
             return true;
         }
@@ -61,6 +63,7 @@ public class Ticket8291 extends Application {
             addComponent(table);
             Button button = new Button("Click");
             button.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     reduceData = !reduceData;
                     table.refreshRowCache();
@@ -69,6 +72,7 @@ public class Ticket8291 extends Application {
             addComponent(button);
             Button button2 = new Button("Filter");
             button2.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     if (filter != null) {
                         container.removeAllContainerFilters();
