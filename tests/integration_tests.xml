@@ -221,7 +221,7 @@
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
-			<param name="test_browsers" value="winxp-firefox36" />
+			<param name="test_browsers" value="winxp-googlechrome19" />
 			<param name="target-server" value="gatein3" />
 		</antcall>
 	</target>
@@ -231,7 +231,7 @@
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
-			<param name="test_browsers" value="winxp-firefox36" />
+			<param name="test_browsers" value="winxp-googlechrome19" />
 			<param name="target-server" value="exo3" />
 		</antcall>
 	</target>
