@@ -43,6 +43,7 @@ import com.vaadin.terminal.gwt.client.communication.SharedState;
  */
 public class SerializerMapGenerator extends Generator {
 
+    private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
     private String packageName;
     private String className;
 
@@ -54,7 +55,7 @@ public class SerializerMapGenerator extends Generator {
             TypeOracle typeOracle = context.getTypeOracle();
             Set<JClassType> typesNeedingSerializers = findTypesNeedingSerializers(
                     typeOracle, logger);
-            warnIfNotJavaSerializable(typesNeedingSerializers, typeOracle,
+            checkForUnserializableTypes(typesNeedingSerializers, typeOracle,
                     logger);
             Set<JClassType> typesWithExistingSerializers = findTypesWithExistingSerializers(
                     typeOracle, logger);
@@ -90,10 +91,11 @@ public class SerializerMapGenerator extends Generator {
      * @param typesNeedingSerializers
      * @param typeOracle
      * @param logger
+     * @throws UnableToCompleteException
      */
-    private void warnIfNotJavaSerializable(
+    private void checkForUnserializableTypes(
             Set<JClassType> typesNeedingSerializers, TypeOracle typeOracle,
-            TreeLogger logger) {
+            TreeLogger logger) throws UnableToCompleteException {
         JClassType javaSerializable = typeOracle.findType(Serializable.class
                 .getName());
         for (JClassType type : typesNeedingSerializers) {
@@ -103,12 +105,20 @@ public class SerializerMapGenerator extends Generator {
             }
             boolean serializable = type.isAssignableTo(javaSerializable);
             if (!serializable) {
+                boolean abortCompile = "true".equals(System
+                        .getProperty(FAIL_IF_NOT_SERIALIZABLE));
                 logger.log(
-                        Type.ERROR,
+                        abortCompile ? Type.ERROR : Type.WARN,
                         type
                                 + " is used in RPC or shared state but does not implement "
                                 + Serializable.class.getName()
-                                + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type.");
+                                + ". Communication will work but the Application on server side cannot be serialized if it refers to objects of this type. "
+                                + "If the system property "
+                                + FAIL_IF_NOT_SERIALIZABLE
+                                + " is set to \"true\", this causes the compilation to fail instead of just emitting a warning.");
+                if (abortCompile) {
+                    throw new UnableToCompleteException();
+                }
             }
         }
     }

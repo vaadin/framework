@@ -593,6 +593,8 @@
             <arg value="${widgetset-localWorkers}" />
             <arg line="${widgetset-extraParams}" />
             <arg value="${widgetset}" />
+        	
+        	<sysproperty key="vFailIfNotSerializable" value="true" />
 
             <jvmarg value="-Xss8M"/>
             <jvmarg value="-XX:MaxPermSize=256M"/>  
