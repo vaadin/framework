@@ -31,13 +31,13 @@ public class RpcProxyCreatorGenerator extends Generator {
         assert (typeOracle != null);
 
         JClassType requestedType = typeOracle.findType(requestedClassName);
-        String packageName = requestedType.getPackage().getName();
-        String className = requestedType.getSimpleSourceName() + "Impl";
         if (requestedType == null) {
             logger.log(TreeLogger.ERROR, "Unable to find metadata for type '"
                     + requestedClassName + "'", null);
             throw new UnableToCompleteException();
         }
+        String packageName = requestedType.getPackage().getName();
+        String className = requestedType.getSimpleSourceName() + "Impl";
 
         createType(logger, ctx, packageName, className);
         return packageName + "." + className;
