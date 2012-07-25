@@ -233,8 +233,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
         String variableName = parts[1];
         String paintableId = parts[0];
 
-        StreamVariable streamVariable = pidToNameToStreamVariable.get(
-                paintableId).get(variableName);
+        StreamVariable streamVariable = getStreamVariable(paintableId,
+                variableName);
         String secKey = streamVariableToSeckey.get(streamVariable);
         if (secKey.equals(parts[2])) {
 
@@ -260,6 +260,28 @@ public class CommunicationManager extends AbstractCommunicationManager {
                     "Security key in upload post did not match!");
         }
 
+    }
+
+    /**
+     * Gets a stream variable based on paintable id and variable name. Returns
+     * <code>null</code> if no matching variable has been registered.
+     * 
+     * @param paintableId
+     *            id of paintable to get variable for
+     * @param variableName
+     *            name of the stream variable
+     * @return the corresponding stream variable, or <code>null</code> if not
+     *         found
+     */
+    public StreamVariable getStreamVariable(String paintableId,
+            String variableName) {
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
+                .get(paintableId);
+        if (nameToStreamVariable == null) {
+            return null;
+        }
+        StreamVariable streamVariable = nameToStreamVariable.get(variableName);
+        return streamVariable;
     }
 
     /**
@@ -359,7 +381,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String getStreamVariableTargetUrl(VariableOwner owner, String name,
+    public String getStreamVariableTargetUrl(VariableOwner owner, String name,
             StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
@@ -402,10 +424,10 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void cleanStreamVariable(VariableOwner owner, String name) {
+    public void cleanStreamVariable(VariableOwner owner, String name) {
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
                 .get(getPaintableId((Paintable) owner));
-        nameToStreamVar.remove("name");
+        nameToStreamVar.remove(name);
         if (nameToStreamVar.isEmpty()) {
             pidToNameToStreamVariable.remove(getPaintableId((Paintable) owner));
         }
