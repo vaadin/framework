@@ -1286,8 +1286,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return RequestType.STATIC_FILE;
         } else if (isApplicationRequest(request)) {
             return RequestType.APPLICATION_RESOURCE;
-        } else if (request.getHeader("FileId") != null) {
-            return RequestType.FILE_UPLOAD;
         }
         return RequestType.OTHER;
 
