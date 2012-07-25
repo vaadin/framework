@@ -48,6 +48,7 @@ public class PopupViewClickShortcut extends TestBase {
         Button b = new Button("Submit " + caption, new Button.ClickListener() {
             private int i = 5;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Submitted from "
                         + event.getButton().getParent().getCaption());

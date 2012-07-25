@@ -73,6 +73,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         Upload upload = new Upload("Upload a file", new Receiver() {
 
+            @Override
             public OutputStream receiveUpload(String filename, String mimeType) {
                 return new ByteArrayOutputStream();
             }
@@ -91,11 +92,13 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
     private class DemoPortletListener implements PortletListener {
 
+        @Override
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response, Root window) {
             main.addComponent(new Label("Action received"));
         }
 
+        @Override
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response, Root window) {
             // Portlet up-and-running, enable stuff
@@ -169,11 +172,13 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
             }
         }
 
+        @Override
         public void handleEventRequest(EventRequest request,
                 EventResponse response, Root window) {
             // events not used by this test
         }
 
+        @Override
         public void handleResourceRequest(ResourceRequest request,
                 ResourceResponse response, Root window) {
             // nothing special to do here
