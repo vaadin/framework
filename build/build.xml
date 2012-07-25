@@ -60,9 +60,11 @@
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-        	<!-- GWT dependencies -->
+        	<!-- GWT dependencies - included in gwt-user.jar -->
+        	<!--
             <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
             <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+            -->
 
             <path refid="ivy.compile.classpath.server-side" />
         </path>
@@ -79,9 +81,11 @@
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-        	<!-- GWT dependencies -->
+        	<!-- GWT dependencies - included in gwt-user.jar -->
+        	<!--
             <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
             <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
+            -->
 
         	<path refid="ivy.compile.classpath.client-side" />
         </path>
@@ -666,7 +670,8 @@
     <!-- Libraries and Tests                                                -->
     <!-- ================================================================== -->
 
-    <target name="compile-gwt" depends="init">
+    <target name="compile-gwt" depends="init" unless="use.precompiled.gwt">
+    	<!-- skipped based on a parameter, use pre-compiled JARs from elsewhere -->
     	<!-- Compile GWT in a directory defined by properties -->
         <ant antfile="${gwt.root}/build.xml" target="user" dir="${gwt.root}" inheritall="false" inheritrefs="false">
             <property name="gwt.root" value="${gwt.root}"/>
@@ -750,14 +755,19 @@
             <!-- TODO GWT related license files etc. should be in subdirectories -->
         	
             <!-- GWT -->
-            <fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
-            <fileset dir="${gwt.user.dir}/super" excludes="**/package.html" />
         	<!-- Precompiled GWT modules (.gwtar file) not included to limit JAR size -->
+            <zipfileset src="${gwt.user.jar}" excludes="META-INF/**,javax/servlet/**,**/*.gwtar" />
+
+        	<!-- TODO depends on locally compiled gwt-user -->
+        	<!--
+        	<fileset dir="${gwt.user.dir}/src" excludes="**/package.html" />
+            <fileset dir="${gwt.user.dir}/super" excludes="**/package.html" />
             <fileset dir="${gwt.user.bin}" excludes="**/*.gwtar" />
 
             <zipfileset src="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
             <zipfileset src="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
         	<zipfileset src="${gwt.tools.lib}/streamhtmlparser/streamhtmlparser-jsilver-r10/streamhtmlparser-jsilver-r10-1.5-rebased.jar" />
+        	-->
 
         	<!-- GWT development JAR contents including many external dependencies -->
             <zipfileset src="${gwt.dev.jar}" excludes="javax/servlet/**,javax/xml/**" />
