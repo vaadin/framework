@@ -5,6 +5,7 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
@@ -40,6 +41,9 @@ import com.vaadin.terminal.gwt.client.ui.label.LabelState;
 public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Label> {
+
+    private static final Logger logger = Logger
+            .getLogger(Label.class.getName());
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
@@ -184,14 +188,20 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
+     * Returns the value displayed by this label.
+     * 
      * @see java.lang.Object#toString()
-     * @deprecated Use {@link #getValue()} instead
+     * @deprecated As of 7.0.0, use {@link #getValue()} to get the value of the
+     *             label or {@link #getPropertyDataSource()} .getValue() to get
+     *             the value of the data source.
      */
     @Deprecated
     @Override
     public String toString() {
-        throw new UnsupportedOperationException(
-                "Use getValue() instead of Label.toString()");
+        logger.warning("You are using Label.toString() to get the value for a "
+                + getClass().getSimpleName()
+                + ". This is not recommended and will not be supported in future versions.");
+        return getValue();
     }
 
     /**
