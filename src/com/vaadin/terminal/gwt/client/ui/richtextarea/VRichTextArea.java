@@ -34,6 +34,7 @@ import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
 
 /**
  * This class implements a basic client side rich text editor component.
@@ -89,6 +90,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
         initWidget(fp);
         setStyleName(CLASSNAME);
 
+        TouchScrollDelegate.enableTouchScrolling(html, html.getElement());
     }
 
     private void createRTAComponents() {
