@@ -23,6 +23,8 @@ import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
 
+    public static final String PORTLET_RESOUCE_URL_BASE = "portletAppURLBase";
+
     /**
      * Helper class for reading configuration options from the bootstap
      * javascript
@@ -205,8 +207,6 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
     private boolean useDebugIdInDom = true;
-    private boolean usePortletURLs = false;
-    private String portletUidlURLBase;
 
     private HashMap<Integer, String> unknownComponents;
 
@@ -226,11 +226,12 @@ public class ApplicationConfiguration implements EntryPoint {
     private Map<Integer, String> tagToServerSideClassName = new HashMap<Integer, String>();
 
     public boolean usePortletURLs() {
-        return usePortletURLs;
+        return getPortletResourceUrl() != null;
     }
 
-    public String getPortletUidlURLBase() {
-        return portletUidlURLBase;
+    public String getPortletResourceUrl() {
+        return getJsoConfiguration(id)
+                .getConfigString(PORTLET_RESOUCE_URL_BASE);
     }
 
     public String getRootPanelId() {
@@ -317,12 +318,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
         // null -> true
         useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;
-
-        // null -> false
-        usePortletURLs = jsoConfiguration.getConfigBoolean("usePortletURLs") == Boolean.TRUE;
-
-        portletUidlURLBase = jsoConfiguration
-                .getConfigString("portletUidlURLBase");
 
         // null -> false
         standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;

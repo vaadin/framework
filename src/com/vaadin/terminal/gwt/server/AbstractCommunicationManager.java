@@ -162,6 +162,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private Map<String, Class<?>> connectorResourceContexts = new HashMap<String, Class<?>>();
 
+    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
+
+    private Map<StreamVariable, String> streamVariableToSeckey;
+
     /**
      * TODO New constructor - document me!
      * 
@@ -634,6 +638,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Remove connectors that have been detached from the application during
         // handling of the request
         root.getConnectorTracker().cleanConnectorMap();
+
+        if (pidToNameToStreamVariable != null) {
+            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
+                    .iterator();
+            while (iterator.hasNext()) {
+                String connectorId = iterator.next();
+                if (root.getConnectorTracker().getConnector(connectorId) == null) {
+                    // Owner is no longer attached to the application
+                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
+                            .get(connectorId);
+                    for (String key : removed.keySet()) {
+                        streamVariableToSeckey.remove(removed.get(key));
+                    }
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     protected void highlightConnector(Connector highlightedConnector) {
@@ -2281,11 +2302,57 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     }
 
-    abstract String getStreamVariableTargetUrl(ClientConnector owner,
-            String name, StreamVariable value);
+    public String getStreamVariableTargetUrl(ClientConnector owner,
+            String name, StreamVariable value) {
+        /*
+         * We will use the same APP/* URI space as ApplicationResources but
+         * prefix url with UPLOAD
+         * 
+         * eg. APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY]
+         * 
+         * SECKEY is created on each paint to make URL's unpredictable (to
+         * prevent CSRF attacks).
+         * 
+         * NAME and PID from URI forms a key to fetch StreamVariable when
+         * handling post
+         */
+        String paintableId = owner.getConnectorId();
+        int rootId = owner.getRoot().getRootId();
+        String key = rootId + "/" + paintableId + "/" + name;
 
-    abstract protected void cleanStreamVariable(ClientConnector owner,
-            String name);
+        if (pidToNameToStreamVariable == null) {
+            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
+        }
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
+                .get(paintableId);
+        if (nameToStreamVariable == null) {
+            nameToStreamVariable = new HashMap<String, StreamVariable>();
+            pidToNameToStreamVariable.put(paintableId, nameToStreamVariable);
+        }
+        nameToStreamVariable.put(name, value);
+
+        if (streamVariableToSeckey == null) {
+            streamVariableToSeckey = new HashMap<StreamVariable, String>();
+        }
+        String seckey = streamVariableToSeckey.get(value);
+        if (seckey == null) {
+            seckey = UUID.randomUUID().toString();
+            streamVariableToSeckey.put(value, seckey);
+        }
+
+        return "app://" + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/"
+                + seckey;
+
+    }
+
+    public void cleanStreamVariable(ClientConnector owner, String name) {
+        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
+                .get(owner.getConnectorId());
+        nameToStreamVar.remove(name);
+        if (nameToStreamVar.isEmpty()) {
+            pidToNameToStreamVariable.remove(owner.getConnectorId());
+        }
+    }
 
     /**
      * Gets the bootstrap handler that should be used for generating the pages
@@ -2483,6 +2550,78 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * Handles file upload request submitted via Upload component.
+     * 
+     * @param root
+     *            The root for this request
+     * 
+     * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws InvalidUIDLSecurityKeyException
+     */
+    public void handleFileUpload(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException, InvalidUIDLSecurityKeyException {
+
+        /*
+         * URI pattern: APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY] See
+         * #createReceiverUrl
+         */
+
+        String pathInfo = request.getRequestPathInfo();
+        // strip away part until the data we are interested starts
+        int startOfData = pathInfo
+                .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)
+                + ServletPortletHelper.UPLOAD_URL_PREFIX.length();
+        String uppUri = pathInfo.substring(startOfData);
+        String[] parts = uppUri.split("/", 4); // 0= rootid, 1 = cid, 2= name, 3
+                                               // = sec key
+        String rootId = parts[0];
+        String connectorId = parts[1];
+        String variableName = parts[2];
+        Root root = application.getRootById(Integer.parseInt(rootId));
+        Root.setCurrent(root);
+
+        StreamVariable streamVariable = getStreamVariable(connectorId,
+                variableName);
+        String secKey = streamVariableToSeckey.get(streamVariable);
+        if (secKey.equals(parts[3])) {
+
+            ClientConnector source = getConnector(root, connectorId);
+            String contentType = request.getContentType();
+            if (contentType.contains("boundary")) {
+                // Multipart requests contain boundary string
+                doHandleSimpleMultipartFileUpload(request, response,
+                        streamVariable, variableName, source,
+                        contentType.split("boundary=")[1]);
+            } else {
+                // if boundary string does not exist, the posted file is from
+                // XHR2.post(File)
+                doHandleXhrFilePost(request, response, streamVariable,
+                        variableName, source, request.getContentLength());
+            }
+        } else {
+            throw new InvalidUIDLSecurityKeyException(
+                    "Security key in upload post did not match!");
+        }
+
+    }
+
+    public StreamVariable getStreamVariable(String connectorId,
+            String variableName) {
+        Map<String, StreamVariable> map = pidToNameToStreamVariable
+                .get(connectorId);
+        if (map == null) {
+            return null;
+        }
+        StreamVariable streamVariable = map.get(variableName);
+        return streamVariable;
     }
 
     /**

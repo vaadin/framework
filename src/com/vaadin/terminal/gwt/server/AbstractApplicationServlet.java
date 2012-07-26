@@ -141,8 +141,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     };
 
-    static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
-
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -556,8 +554,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      */
     private boolean ensureCookiesEnabled(RequestType requestType,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException {
         if (requestType == RequestType.UIDL && !isRepaintAll(request)) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
@@ -622,11 +620,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    protected void criticalNotification(HttpServletRequest request,
+    protected void criticalNotification(WrappedHttpServletRequest request,
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
-        if (isUIDLRequest(request)) {
+        if (ServletPortletHelper.isUIDLRequest(request)) {
 
             if (caption != null) {
                 caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
@@ -848,9 +846,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return newApplication;
     }
 
-    private void handleServiceException(HttpServletRequest request,
-            HttpServletResponse response, Application application, Throwable e)
-            throws IOException, ServletException {
+    private void handleServiceException(WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response, Application application,
+            Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             Application.SystemMessages ci = getSystemMessages();
@@ -903,8 +901,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return DEFAULT_THEME_NAME;
     }
 
-    void handleServiceSessionExpired(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, ServletException {
+    void handleServiceSessionExpired(WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException,
+            ServletException {
 
         if (isOnUnloadRequest(request)) {
             /*
@@ -944,8 +943,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     }
 
-    private void handleServiceSecurityException(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, ServletException {
+    private void handleServiceSecurityException(
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException,
+            ServletException {
         if (isOnUnloadRequest(request)) {
             /*
              * Request was an unload request (e.g. window close event) and the
@@ -1273,18 +1274,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE;
     }
 
-    protected RequestType getRequestType(HttpServletRequest request) {
-        if (isFileUploadRequest(request)) {
+    protected RequestType getRequestType(WrappedHttpServletRequest request) {
+        if (ServletPortletHelper.isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
-        } else if (isConnectorResourceRequest(request)) {
+        } else if (ServletPortletHelper.isConnectorResourceRequest(request)) {
             return RequestType.CONNECTOR_RESOURCE;
         } else if (isBrowserDetailsRequest(request)) {
             return RequestType.BROWSER_DETAILS;
-        } else if (isUIDLRequest(request)) {
+        } else if (ServletPortletHelper.isUIDLRequest(request)) {
             return RequestType.UIDL;
         } else if (isStaticResourceRequest(request)) {
             return RequestType.STATIC_FILE;
-        } else if (isApplicationRequest(request)) {
+        } else if (ServletPortletHelper.isApplicationResourceRequest(request)) {
             return RequestType.APPLICATION_RESOURCE;
         }
         return RequestType.OTHER;
@@ -1294,23 +1295,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
         return "POST".equals(request.getMethod())
                 && request.getParameter("browserDetails") != null;
-    }
-
-    private boolean isConnectorResourceRequest(HttpServletRequest request) {
-        String path = getRequestPathInfo(request);
-        if (path != null
-                && path.startsWith('/' + ApplicationConnection.CONNECTOR_RESOURCE_PREFIX + '/')) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isApplicationRequest(HttpServletRequest request) {
-        String path = getRequestPathInfo(request);
-        if (path != null && path.startsWith("/APP/")) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isStaticResourceRequest(HttpServletRequest request) {
@@ -1328,37 +1312,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         return false;
-    }
-
-    private boolean isUIDLRequest(HttpServletRequest request) {
-        String pathInfo = getRequestPathInfo(request);
-
-        if (pathInfo == null) {
-            return false;
-        }
-
-        String compare = AJAX_UIDL_URI;
-
-        if (pathInfo.startsWith(compare + "/") || pathInfo.endsWith(compare)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isFileUploadRequest(HttpServletRequest request) {
-        String pathInfo = getRequestPathInfo(request);
-
-        if (pathInfo == null) {
-            return false;
-        }
-
-        if (pathInfo.startsWith("/" + UPLOAD_URL_PREFIX)) {
-            return true;
-        }
-
-        return false;
-
     }
 
     private boolean isOnUnloadRequest(HttpServletRequest request) {

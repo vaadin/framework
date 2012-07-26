@@ -27,6 +27,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -76,6 +77,8 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * Entry point classes (widgetsets) define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
+    public static final String V_RESOURCE_PATH = "v-resourcePath";
+
     private static final String CONNECTOR_PROTOCOL_PREFIX = "connector://";
 
     public static final String CONNECTOR_RESOURCE_PREFIX = "APP/CONNECTOR";
@@ -511,12 +514,7 @@ public class ApplicationConnection {
         final String payload = uidlSecurityKey + VAR_BURST_SEPARATOR
                 + requestData;
         VConsole.log("Making UIDL Request with params: " + payload);
-        String uri;
-        if (configuration.usePortletURLs()) {
-            uri = configuration.getPortletUidlURLBase();
-        } else {
-            uri = getAppUri() + "UIDL";
-        }
+        String uri = translateVaadinUri("app://UIDL");
 
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
@@ -2298,7 +2296,28 @@ public class ApplicationConnection {
             uidlUri = themeUri + uidlUri.substring(7);
         }
         if (uidlUri.startsWith("app://")) {
-            uidlUri = getAppUri() + uidlUri.substring(6);
+            String relativeUrl = uidlUri.substring(6);
+            if (getConfiguration().usePortletURLs()) {
+                // Should put path in v-resourcePath parameter and append query
+                // params to base portlet url
+                String[] parts = relativeUrl.split("\\?", 2);
+                String path = parts[0];
+
+                String url = getConfiguration().getPortletResourceUrl();
+                if (parts.length > 1) {
+                    String appUrlParams = parts[1];
+                    url = addGetParameters(url, appUrlParams);
+                }
+                if (!path.startsWith("/")) {
+                    path = '/' + path;
+                }
+                String pathParam = V_RESOURCE_PATH + "="
+                        + URL.encodeQueryString(path);
+                url = addGetParameters(url, pathParam);
+                uidlUri = url;
+            } else {
+                uidlUri = getAppUri() + relativeUrl;
+            }
         } else if (uidlUri.startsWith(CONNECTOR_PROTOCOL_PREFIX)) {
             // getAppUri *should* always end with /
             // substring *should* always start with / (connector:///foo.bar

@@ -121,8 +121,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
     // appengine session expires-parameter
     private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
-    protected void sendDeadlineExceededNotification(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void sendDeadlineExceededNotification(
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -131,8 +132,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 "", null);
     }
 
-    protected void sendNotSerializableNotification(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void sendNotSerializableNotification(
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -142,8 +144,9 @@ public class GAEApplicationServlet extends ApplicationServlet {
                         + "?restartApplication");
     }
 
-    protected void sendCriticalErrorNotification(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+    protected void sendCriticalErrorNotification(
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -154,8 +157,13 @@ public class GAEApplicationServlet extends ApplicationServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest unwrappedRequest,
+            HttpServletResponse unwrappedResponse) throws ServletException,
+            IOException {
+        WrappedHttpServletRequest request = new WrappedHttpServletRequest(
+                unwrappedRequest, getDeploymentConfiguration());
+        WrappedHttpServletResponse response = new WrappedHttpServletResponse(
+                unwrappedResponse, getDeploymentConfiguration());
 
         if (isCleanupRequest(request)) {
             cleanDatastore();

@@ -4,22 +4,15 @@
 
 package com.vaadin.terminal.gwt.server;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Root;
 
 /**
@@ -56,170 +49,6 @@ public class CommunicationManager extends AbstractCommunicationManager {
      */
     public CommunicationManager(Application application) {
         super(application);
-    }
-
-    /**
-     * Handles file upload request submitted via Upload component.
-     * 
-     * @param root
-     *            The root for this request
-     * 
-     * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
-     * 
-     * @param request
-     * @param response
-     * @throws IOException
-     * @throws InvalidUIDLSecurityKeyException
-     */
-    public void handleFileUpload(Application application,
-            WrappedRequest request, WrappedResponse response)
-            throws IOException, InvalidUIDLSecurityKeyException {
-
-        /*
-         * URI pattern: APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY] See
-         * #createReceiverUrl
-         */
-
-        String pathInfo = request.getRequestPathInfo();
-        // strip away part until the data we are interested starts
-        int startOfData = pathInfo
-                .indexOf(AbstractApplicationServlet.UPLOAD_URL_PREFIX)
-                + AbstractApplicationServlet.UPLOAD_URL_PREFIX.length();
-        String uppUri = pathInfo.substring(startOfData);
-        String[] parts = uppUri.split("/", 4); // 0= rootid, 1 = cid, 2= name, 3
-                                               // = sec key
-        String rootId = parts[0];
-        String connectorId = parts[1];
-        String variableName = parts[2];
-        Root root = application.getRootById(Integer.parseInt(rootId));
-        Root.setCurrent(root);
-
-        StreamVariable streamVariable = getStreamVariable(connectorId,
-                variableName);
-        String secKey = streamVariableToSeckey.get(streamVariable);
-        if (secKey.equals(parts[3])) {
-
-            ClientConnector source = getConnector(root, connectorId);
-            String contentType = request.getContentType();
-            if (contentType.contains("boundary")) {
-                // Multipart requests contain boundary string
-                doHandleSimpleMultipartFileUpload(request, response,
-                        streamVariable, variableName, source,
-                        contentType.split("boundary=")[1]);
-            } else {
-                // if boundary string does not exist, the posted file is from
-                // XHR2.post(File)
-                doHandleXhrFilePost(request, response, streamVariable,
-                        variableName, source, request.getContentLength());
-            }
-        } else {
-            throw new InvalidUIDLSecurityKeyException(
-                    "Security key in upload post did not match!");
-        }
-
-    }
-
-    /**
-     * Gets a stream variable based on paintable id and variable name. Returns
-     * <code>null</code> if no matching variable has been registered.
-     * 
-     * @param paintableId
-     *            id of paintable to get variable for
-     * @param variableName
-     *            name of the stream variable
-     * @return the corresponding stream variable, or <code>null</code> if not
-     *         found
-     */
-    public StreamVariable getStreamVariable(String paintableId,
-            String variableName) {
-        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
-                .get(paintableId);
-        if (nameToStreamVariable == null) {
-            return null;
-        }
-        StreamVariable streamVariable = nameToStreamVariable.get(variableName);
-        return streamVariable;
-    }
-
-    @Override
-    protected void postPaint(Root root) {
-        super.postPaint(root);
-
-        if (pidToNameToStreamVariable != null) {
-            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
-                    .iterator();
-            while (iterator.hasNext()) {
-                String connectorId = iterator.next();
-                if (root.getConnectorTracker().getConnector(connectorId) == null) {
-                    // Owner is no longer attached to the application
-                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
-                            .get(connectorId);
-                    for (String key : removed.keySet()) {
-                        streamVariableToSeckey.remove(removed.get(key));
-                    }
-                    iterator.remove();
-                }
-            }
-        }
-
-    }
-
-    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
-
-    private Map<StreamVariable, String> streamVariableToSeckey;
-
-    @Override
-    public String getStreamVariableTargetUrl(ClientConnector owner,
-            String name, StreamVariable value) {
-        /*
-         * We will use the same APP/* URI space as ApplicationResources but
-         * prefix url with UPLOAD
-         * 
-         * eg. APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY]
-         * 
-         * SECKEY is created on each paint to make URL's unpredictable (to
-         * prevent CSRF attacks).
-         * 
-         * NAME and PID from URI forms a key to fetch StreamVariable when
-         * handling post
-         */
-        String paintableId = owner.getConnectorId();
-        int rootId = owner.getRoot().getRootId();
-        String key = rootId + "/" + paintableId + "/" + name;
-
-        if (pidToNameToStreamVariable == null) {
-            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
-        }
-        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
-                .get(paintableId);
-        if (nameToStreamVariable == null) {
-            nameToStreamVariable = new HashMap<String, StreamVariable>();
-            pidToNameToStreamVariable.put(paintableId, nameToStreamVariable);
-        }
-        nameToStreamVariable.put(name, value);
-
-        if (streamVariableToSeckey == null) {
-            streamVariableToSeckey = new HashMap<StreamVariable, String>();
-        }
-        String seckey = streamVariableToSeckey.get(value);
-        if (seckey == null) {
-            seckey = UUID.randomUUID().toString();
-            streamVariableToSeckey.put(value, seckey);
-        }
-
-        return "app://" + AbstractApplicationServlet.UPLOAD_URL_PREFIX + key
-                + "/" + seckey;
-
-    }
-
-    @Override
-    public void cleanStreamVariable(ClientConnector owner, String name) {
-        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
-                .get(owner.getConnectorId());
-        nameToStreamVar.remove(name);
-        if (nameToStreamVar.isEmpty()) {
-            pidToNameToStreamVariable.remove(owner.getConnectorId());
-        }
     }
 
     @Override

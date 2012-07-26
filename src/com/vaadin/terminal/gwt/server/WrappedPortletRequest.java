@@ -17,6 +17,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * Wrapper for {@link PortletRequest} and its subclasses.
@@ -89,7 +90,14 @@ public class WrappedPortletRequest implements WrappedRequest {
     @Override
     public String getRequestPathInfo() {
         if (request instanceof ResourceRequest) {
-            return ((ResourceRequest) request).getResourceID();
+            ResourceRequest resourceRequest = (ResourceRequest) request;
+            String resourceID = resourceRequest.getResourceID();
+            if (AbstractApplicationPortlet.RESOURCE_URL_ID.equals(resourceID)) {
+                String resourcePath = resourceRequest
+                        .getParameter(ApplicationConnection.V_RESOURCE_PATH);
+                return resourcePath;
+            }
+            return resourceID;
         } else {
             return null;
         }

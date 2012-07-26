@@ -28,13 +28,11 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.portlet.ResourceURL;
 import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.ui.Root;
 
 /**
@@ -252,27 +250,6 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      */
     void setResponse(PortletResponse response) {
         this.response = response;
-    }
-
-    @Override
-    public String generateApplicationResourceURL(ApplicationResource resource,
-            String mapKey) {
-        if (response instanceof MimeResponse) {
-            ResourceURL resourceURL = ((MimeResponse) response)
-                    .createResourceURL();
-            final String filename = resource.getFilename();
-            if (filename == null) {
-                resourceURL.setResourceID("APP/" + mapKey + "/");
-            } else {
-                resourceURL.setResourceID("APP/" + mapKey + "/"
-                        + urlEncode(filename));
-            }
-            return resourceURL.toString();
-        } else {
-            // in a background thread or otherwise outside a request
-            // TODO exception ??
-            return null;
-        }
     }
 
     /**
