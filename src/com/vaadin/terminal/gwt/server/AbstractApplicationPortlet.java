@@ -298,6 +298,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             // #8574)
             return null;
         }
+
+        @Override
+        public String getMimeType(String resourceName) {
+            return getPortletContext().getMimeType(resourceName);
+        }
     };
 
     @Override
@@ -434,7 +439,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE;
     }
 
     protected RequestType getRequestType(WrappedPortletRequest wrappedRequest) {
@@ -449,6 +454,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 return RequestType.BROWSER_DETAILS;
             } else if (ServletPortletHelper.isFileUploadRequest(wrappedRequest)) {
                 return RequestType.FILE_UPLOAD;
+            } else if (ServletPortletHelper
+                    .isConnectorResourceRequest(wrappedRequest)) {
+                return RequestType.CONNECTOR_RESOURCE;
             } else if (ServletPortletHelper
                     .isApplicationResourceRequest(wrappedRequest)) {
                 return RequestType.APPLICATION_RESOURCE;
@@ -545,6 +553,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
+
+                if (requestType == RequestType.CONNECTOR_RESOURCE) {
+                    applicationManager.serveConnectorResource(wrappedRequest,
+                            wrappedResponse);
+                    return;
+                }
 
                 /* Update browser information from request */
                 applicationContext.getBrowser().updateRequestDetails(

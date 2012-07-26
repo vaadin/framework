@@ -2471,15 +2471,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * including a {@link JavaScript} or {@link StyleSheet} annotation on a
      * Connector class.
      * 
-     * @param resourceName
      * @param request
      * @param response
-     * @param mimetype
+     * 
      * @throws IOException
      */
-    public void serveConnectorResource(String resourceName,
-            WrappedRequest request, WrappedResponse response, String mimetype)
-            throws IOException {
+    public void serveConnectorResource(WrappedRequest request,
+            WrappedResponse response) throws IOException {
+
+        String pathInfo = request.getRequestPathInfo();
+        // + 2 to also remove beginning and ending slashes
+        String resourceName = pathInfo
+                .substring(ApplicationConnection.CONNECTOR_RESOURCE_PREFIX
+                        .length() + 2);
+
+        final String mimetype = response.getDeploymentConfiguration()
+                .getMimeType(resourceName);
+
         // Security check: avoid accidentally serving from the root of the
         // classpath instead of relative to the context class
         if (resourceName.startsWith("/")) {

@@ -139,6 +139,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 throw new RuntimeException(e);
             }
         }
+
+        @Override
+        public String getMimeType(String resourceName) {
+            return getServletContext().getMimeType(resourceName);
+        }
     };
 
     /**
@@ -402,17 +407,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getApplicationManager(application, this);
 
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
-                String pathInfo = getRequestPathInfo(request);
-                // + 2 to also remove beginning and ending slashes
-                String resourceName = pathInfo
-                        .substring(ApplicationConnection.CONNECTOR_RESOURCE_PREFIX
-                                .length() + 2);
-
-                final String mimetype = getServletContext().getMimeType(
-                        resourceName);
-
-                applicationManager.serveConnectorResource(resourceName,
-                        request, response, mimetype);
+                applicationManager.serveConnectorResource(request, response);
                 return;
             }
 

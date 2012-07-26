@@ -2295,6 +2295,15 @@ public class ApplicationConnection {
             }
             uidlUri = themeUri + uidlUri.substring(7);
         }
+
+        if (uidlUri.startsWith(CONNECTOR_PROTOCOL_PREFIX)) {
+            // getAppUri *should* always end with /
+            // substring *should* always start with / (connector:///foo.bar
+            // without connector://)
+            uidlUri = "app://" + CONNECTOR_RESOURCE_PREFIX
+                    + uidlUri.substring(CONNECTOR_PROTOCOL_PREFIX.length());
+            // Let translation of app:// urls take care of the rest
+        }
         if (uidlUri.startsWith("app://")) {
             String relativeUrl = uidlUri.substring(6);
             if (getConfiguration().usePortletURLs()) {
@@ -2318,12 +2327,6 @@ public class ApplicationConnection {
             } else {
                 uidlUri = getAppUri() + relativeUrl;
             }
-        } else if (uidlUri.startsWith(CONNECTOR_PROTOCOL_PREFIX)) {
-            // getAppUri *should* always end with /
-            // substring *should* always start with / (connector:///foo.bar
-            // without connector://)
-            uidlUri = getAppUri() + CONNECTOR_RESOURCE_PREFIX
-                    + uidlUri.substring(CONNECTOR_PROTOCOL_PREFIX.length());
         }
         return uidlUri;
     }

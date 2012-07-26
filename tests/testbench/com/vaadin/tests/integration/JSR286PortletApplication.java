@@ -19,6 +19,7 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
 import com.vaadin.Application;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
@@ -38,7 +39,12 @@ import com.vaadin.ui.Upload.Receiver;
  */
 public class JSR286PortletApplication extends Application.LegacyApplication {
 
-    LegacyWindow main = new LegacyWindow();
+    @StyleSheet("PortletConnectorResource.css")
+    public final class LegacyWindowWithStylesheet extends LegacyWindow {
+
+    }
+
+    LegacyWindow main = new LegacyWindowWithStylesheet();
     TextField tf = new TextField("Some value");
     Label userInfo = new Label();
     Link portletEdit = new Link();
@@ -56,6 +62,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
         Embedded specialNameResourceTest = new Embedded(
                 "Test ApplicationResources with special names",
                 new SpecialNameResource(this));
+        specialNameResourceTest.addStyleName("hugeBorder");
         main.addComponent(specialNameResourceTest);
 
         userInfo.setCaption("User info");
