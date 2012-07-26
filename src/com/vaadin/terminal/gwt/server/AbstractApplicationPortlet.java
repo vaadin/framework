@@ -450,7 +450,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             ResourceRequest resourceRequest = (ResourceRequest) request;
             if (ServletPortletHelper.isUIDLRequest(wrappedRequest)) {
                 return RequestType.UIDL;
-            } else if (isBrowserDetailsRequeset(resourceRequest)) {
+            } else if (isBrowserDetailsRequest(resourceRequest)) {
                 return RequestType.BROWSER_DETAILS;
             } else if (ServletPortletHelper.isFileUploadRequest(wrappedRequest)) {
                 return RequestType.FILE_UPLOAD;
@@ -473,7 +473,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return RequestType.UNKNOWN;
     }
 
-    private boolean isBrowserDetailsRequeset(ResourceRequest request) {
+    private boolean isBrowserDetailsRequest(ResourceRequest request) {
         return request.getResourceID() != null
                 && request.getResourceID().equals("browserDetails");
     }
