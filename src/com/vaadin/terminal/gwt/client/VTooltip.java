@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
@@ -255,8 +256,8 @@ public class VTooltip extends VOverlay {
          */
         private boolean resolveConnector(Element element) {
 
-            ComponentConnector connector = Util.getConnectorForElement(ac, ac
-                    .getRootConnector().getWidget(), element);
+            ComponentConnector connector = Util.getConnectorForElement(ac,
+                    RootPanel.get(), element);
 
             // Try to find first connector with proper tooltip info
             TooltipInfo info = null;

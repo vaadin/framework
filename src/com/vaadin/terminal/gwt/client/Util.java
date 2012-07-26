@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class Util {
 
@@ -673,15 +672,6 @@ public class Util {
             }
 
             browseElement = (Element) browseElement.getParentElement();
-        }
-
-        if (browseElement == null) {
-            // Element is possibly inside a VOverlay
-            VOverlay overlay = findWidget(element, VOverlay.class);
-            if (overlay != null && overlay.getOwner() != null) {
-                return getConnectorForElement(client, RootPanel.get(), overlay
-                        .getOwner().getElement());
-            }
         }
 
         return null;
