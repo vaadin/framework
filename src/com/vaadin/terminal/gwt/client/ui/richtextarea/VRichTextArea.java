@@ -34,8 +34,6 @@ import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
-import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
-import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 /**
  * This class implements a basic client side rich text editor component.
@@ -83,8 +81,6 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
     private boolean readOnly = false;
 
-    private TouchScrollHandler touchScrollHandler = null;
-
     public VRichTextArea() {
         createRTAComponents();
         fp.add(formatter);
@@ -92,6 +88,7 @@ public class VRichTextArea extends Composite implements Paintable, Field,
 
         initWidget(fp);
         setStyleName(CLASSNAME);
+
     }
 
     private void createRTAComponents() {
@@ -123,18 +120,10 @@ public class VRichTextArea extends Composite implements Paintable, Field,
             }
             rta.setHTML(currentValue);
             fp.add(rta);
-            if (touchScrollHandler != null) {
-                touchScrollHandler.removeElement(fp.getElement());
-            }
         } else {
             html.setHTML(currentValue);
             fp.remove(rta);
             fp.add(html);
-            if (touchScrollHandler == null) {
-                touchScrollHandler = TouchScrollDelegate
-                        .enableTouchScrolling(this);
-            }
-            touchScrollHandler.addElement(fp.getElement());
         }
     }
 

@@ -1,17 +1,10 @@
 .v-richtextarea {
 	border: 1px solid #aaa;
+	overflow: hidden;
 }
 .v-richtextarea .gwt-RichTextArea {
 	background: #fff;
 	border: none;
-}
-
-/* IE6 needs a hack to render the editor with a correct height */ 
-.v-ie6 .v-richtextarea {
-	overflow: hidden;
-}
-.v-ie6 .v-scrollable {
-	overflow: auto;
 }
 
 .v-richtextarea .gwt-RichTextToolbar {
