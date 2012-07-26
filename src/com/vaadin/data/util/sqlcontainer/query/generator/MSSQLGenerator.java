@@ -50,7 +50,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
         offset = pagelength > 1 ? ++offset : offset;
         pagelength = pagelength > 1 ? --pagelength : pagelength;
         toSelect = toSelect == null ? "*" : toSelect;
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
 
         /* Row count request is handled here */

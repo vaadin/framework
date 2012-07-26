@@ -16,6 +16,10 @@ public class OracleGenerator extends DefaultSQLGenerator {
 
     }
 
+    public OracleGenerator(Class<? extends StatementHelper> statementHelperClazz) {
+        super(statementHelperClazz);
+    }
+
     /**
      * Construct an OracleSQLGenerator with the specified identifiers for start
      * and end of quoted strings. The identifiers may be different depending on
@@ -29,6 +33,11 @@ public class OracleGenerator extends DefaultSQLGenerator {
      */
     public OracleGenerator(String quoteStart, String quoteEnd) {
         super(quoteStart, quoteEnd);
+    }
+
+    public OracleGenerator(String quoteStart, String quoteEnd,
+            Class<? extends StatementHelper> statementHelperClazz) {
+        super(quoteStart, quoteEnd, statementHelperClazz);
     }
 
     /*
@@ -50,7 +59,7 @@ public class OracleGenerator extends DefaultSQLGenerator {
         offset = pagelength > 1 ? ++offset : offset;
         pagelength = pagelength > 1 ? --pagelength : pagelength;
         toSelect = toSelect == null ? "*" : toSelect;
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
 
         /* Row count request is handled here */
@@ -99,4 +108,5 @@ public class OracleGenerator extends DefaultSQLGenerator {
         sh.setQueryString(query.toString());
         return sh;
     }
+
 }

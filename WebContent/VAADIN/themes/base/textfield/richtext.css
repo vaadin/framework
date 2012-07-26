@@ -6,7 +6,9 @@
 	background: #fff;
 	border: none;
 }
-
+.v-richtextarea .gwt-HTML {
+	height: 100%;
+}
 .v-richtextarea .gwt-RichTextToolbar {
 	white-space: nowrap;
 	background: #959595 url(img/richtext-toolbar-bg.png) repeat-x 0 -42px;

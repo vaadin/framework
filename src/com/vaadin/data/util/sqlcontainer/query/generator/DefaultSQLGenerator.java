@@ -24,8 +24,22 @@ import com.vaadin.data.util.sqlcontainer.query.generator.filter.StringDecorator;
 @SuppressWarnings("serial")
 public class DefaultSQLGenerator implements SQLGenerator {
 
+    private Class<? extends StatementHelper> statementHelperClass = null;
+
     public DefaultSQLGenerator() {
 
+    }
+
+    /**
+     * Create a new DefaultSqlGenerator instance that uses the given
+     * implementation of {@link StatementHelper}
+     * 
+     * @param statementHelper
+     */
+    public DefaultSQLGenerator(
+            Class<? extends StatementHelper> statementHelperClazz) {
+        this();
+        statementHelperClass = statementHelperClazz;
     }
 
     /**
@@ -44,6 +58,20 @@ public class DefaultSQLGenerator implements SQLGenerator {
                 quoteEnd));
     }
 
+    /**
+     * Same as {@link #DefaultSQLGenerator(String, String)} but with support for
+     * custom {@link StatementHelper} implementation.
+     * 
+     * @param quoteStart
+     * @param quoteEnd
+     * @param statementHelperClazz
+     */
+    public DefaultSQLGenerator(String quoteStart, String quoteEnd,
+            Class<? extends StatementHelper> statementHelperClazz) {
+        this(quoteStart, quoteEnd);
+        statementHelperClass = statementHelperClazz;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -59,7 +87,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
             throw new IllegalArgumentException("Table name must be given.");
         }
         toSelect = toSelect == null ? "*" : toSelect;
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
         query.append("SELECT " + toSelect + " FROM ").append(
                 SQLUtil.escapeSQL(tableName));
@@ -93,7 +121,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
         if (item == null) {
             throw new IllegalArgumentException("Updated item must be given.");
         }
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
         query.append("UPDATE ").append(tableName).append(" SET");
 
@@ -147,7 +175,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
             throw new IllegalArgumentException(
                     "Cannot generate an insert query for item already in database.");
         }
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
         query.append("INSERT INTO ").append(tableName).append(" (");
 
@@ -201,7 +229,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
             throw new IllegalArgumentException(
                     "Valid keyColumnNames must be provided.");
         }
-        StatementHelper sh = new StatementHelper();
+        StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
         query.append("DELETE FROM ").append(tableName).append(" WHERE ");
         int count = 1;
@@ -312,4 +340,28 @@ public class DefaultSQLGenerator implements SQLGenerator {
         }
         return rowIdentifiers;
     }
+
+    /**
+     * Returns the statement helper for the generator. Override this to handle
+     * platform specific data types.
+     * 
+     * @see http://dev.vaadin.com/ticket/9148
+     * @return a new instance of the statement helper
+     */
+    protected StatementHelper getStatementHelper() {
+        if (statementHelperClass == null) {
+            return new StatementHelper();
+        }
+
+        try {
+            return statementHelperClass.newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(
+                    "Unable to instantiate custom StatementHelper", e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(
+                    "Unable to instantiate custom StatementHelper", e);
+        }
+    }
+
 }

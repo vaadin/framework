@@ -94,8 +94,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
         Root root = application.getRootById(Integer.parseInt(rootId));
         Root.setCurrent(root);
 
-        StreamVariable streamVariable = pidToNameToStreamVariable.get(
-                connectorId).get(variableName);
+        StreamVariable streamVariable = getStreamVariable(connectorId,
+                variableName);
         String secKey = streamVariableToSeckey.get(streamVariable);
         if (secKey.equals(parts[3])) {
 
@@ -117,6 +117,28 @@ public class CommunicationManager extends AbstractCommunicationManager {
                     "Security key in upload post did not match!");
         }
 
+    }
+
+    /**
+     * Gets a stream variable based on paintable id and variable name. Returns
+     * <code>null</code> if no matching variable has been registered.
+     * 
+     * @param paintableId
+     *            id of paintable to get variable for
+     * @param variableName
+     *            name of the stream variable
+     * @return the corresponding stream variable, or <code>null</code> if not
+     *         found
+     */
+    public StreamVariable getStreamVariable(String paintableId,
+            String variableName) {
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
+                .get(paintableId);
+        if (nameToStreamVariable == null) {
+            return null;
+        }
+        StreamVariable streamVariable = nameToStreamVariable.get(variableName);
+        return streamVariable;
     }
 
     @Override
@@ -147,8 +169,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     @Override
-    String getStreamVariableTargetUrl(ClientConnector owner, String name,
-            StreamVariable value) {
+    public String getStreamVariableTargetUrl(ClientConnector owner,
+            String name, StreamVariable value) {
         /*
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
@@ -191,10 +213,10 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected void cleanStreamVariable(ClientConnector owner, String name) {
+    public void cleanStreamVariable(ClientConnector owner, String name) {
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
                 .get(owner.getConnectorId());
-        nameToStreamVar.remove("name");
+        nameToStreamVar.remove(name);
         if (nameToStreamVar.isEmpty()) {
             pidToNameToStreamVariable.remove(owner.getConnectorId());
         }
