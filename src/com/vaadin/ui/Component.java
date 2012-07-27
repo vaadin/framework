@@ -11,11 +11,11 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**

@@ -4,10 +4,10 @@
 
 package com.vaadin.terminal.gwt.client.ui.twincolselect;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.ui.TwinColSelect;
 

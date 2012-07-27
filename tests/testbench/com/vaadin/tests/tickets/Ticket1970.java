@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;

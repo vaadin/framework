@@ -15,10 +15,10 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
+import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.textfield.AbstractTextFieldState;
 import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 public abstract class AbstractTextField extends AbstractField<String> implements

@@ -7,8 +7,8 @@ package com.vaadin.tests.util;
 import java.io.File;
 
 import com.vaadin.Application;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.SystemError;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root;

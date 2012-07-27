@@ -19,12 +19,12 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 

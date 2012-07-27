@@ -9,11 +9,11 @@ import java.util.Map;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.extension.javascriptmanager.ExecuteJavaScriptRpc;
+import com.vaadin.shared.extension.javascriptmanager.JavaScriptManagerState;
 import com.vaadin.terminal.AbstractExtension;
 import com.vaadin.terminal.Page;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.ExecuteJavaScriptRpc;
-import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerState;
 
 /**
  * Provides access to JavaScript functionality in the web browser. To get an

@@ -6,10 +6,10 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.ui.DateField;

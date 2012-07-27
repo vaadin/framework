@@ -27,8 +27,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class Util {

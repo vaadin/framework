@@ -3,7 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 public abstract class AbstractFieldConnector extends AbstractComponentConnector {

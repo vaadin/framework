@@ -19,9 +19,9 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.RpcManager;

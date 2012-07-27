@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
+import com.vaadin.shared.ui.csslayout.CssLayoutState;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutServerRpc;
-import com.vaadin.terminal.gwt.client.ui.csslayout.CssLayoutState;
 
 /**
  * CssLayout is a layout component that can be used in browser environment only.

@@ -3,29 +3,13 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.vaadin.shared.communication.URLReference;
+import com.vaadin.shared.ui.AbstractMediaState;
+import com.vaadin.shared.ui.MediaControl;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.communication.URLReference;
 
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
-
-    /**
-     * Server to client RPC interface for controlling playback of the media.
-     * 
-     * @since 7.0
-     */
-    public static interface MediaControl extends ClientRpc {
-        /**
-         * Start playing the media.
-         */
-        public void play();
-
-        /**
-         * Pause playback of the media.
-         */
-        public void pause();
-    }
 
     @Override
     protected void init() {

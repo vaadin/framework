@@ -4,7 +4,7 @@
 
 package com.vaadin.tests.minitutorials.v7a2;
 
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a2.MyComponentClientRpc;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a2.MyComponentServerRpc;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a2.MyComponentState;

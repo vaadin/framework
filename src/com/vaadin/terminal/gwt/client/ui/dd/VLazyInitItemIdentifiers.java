@@ -8,6 +8,7 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 
 import java.util.HashSet;
 
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;

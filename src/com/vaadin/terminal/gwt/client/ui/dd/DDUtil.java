@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
+import com.vaadin.shared.ui.dd.HorizontalDropLocation;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.Util;
 
 public class DDUtil {

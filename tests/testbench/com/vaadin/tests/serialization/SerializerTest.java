@@ -15,8 +15,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.shared.Connector;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;

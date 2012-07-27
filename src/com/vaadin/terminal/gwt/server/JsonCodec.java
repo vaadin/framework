@@ -29,9 +29,9 @@ import java.util.Set;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
-import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 

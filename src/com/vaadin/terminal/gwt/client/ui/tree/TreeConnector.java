@@ -8,7 +8,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -16,7 +17,6 @@ import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
 import com.vaadin.ui.Tree;
 

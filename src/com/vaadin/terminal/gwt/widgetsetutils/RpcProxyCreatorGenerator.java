@@ -16,10 +16,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.InitializableServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy.RpcProxyCreator;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public class RpcProxyCreatorGenerator extends Generator {
 

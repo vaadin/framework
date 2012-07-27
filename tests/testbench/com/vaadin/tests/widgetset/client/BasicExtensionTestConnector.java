@@ -6,10 +6,10 @@ package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.tests.extensions.BasicExtension;
 
 @Connect(BasicExtension.class)

@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.tests.util.Person;

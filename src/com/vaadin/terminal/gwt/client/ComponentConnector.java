@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ComponentState;
 
 /**
  * An interface used by client-side widgets or paintable parts to receive

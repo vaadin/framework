@@ -14,8 +14,8 @@ import java.util.Set;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
-import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper.JavaScriptConnectorState;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;

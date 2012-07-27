@@ -8,6 +8,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 

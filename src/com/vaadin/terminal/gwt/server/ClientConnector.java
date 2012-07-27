@@ -6,10 +6,10 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.Extension;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Root;

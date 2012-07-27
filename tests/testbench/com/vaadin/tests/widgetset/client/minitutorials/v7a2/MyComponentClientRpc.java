@@ -1,6 +1,6 @@
 package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.shared.communication.ClientRpc;
 
 public interface MyComponentClientRpc extends ClientRpc {
 

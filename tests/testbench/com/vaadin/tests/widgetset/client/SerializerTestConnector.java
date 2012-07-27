@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
 @Connect(SerializerTestExtension.class)

@@ -10,12 +10,12 @@ import java.util.Iterator;
 
 import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelRpc;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.tools.ReflectTools;
 
 /**

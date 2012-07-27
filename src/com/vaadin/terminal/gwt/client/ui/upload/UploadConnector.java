@@ -4,12 +4,12 @@
 
 package com.vaadin.terminal.gwt.client.ui.upload;
 
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.Upload;
 
 @Connect(value = Upload.class, loadStyle = LoadStyle.LAZY)

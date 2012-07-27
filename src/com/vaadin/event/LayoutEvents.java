@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

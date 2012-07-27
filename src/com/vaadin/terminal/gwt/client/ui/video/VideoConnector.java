@@ -3,9 +3,10 @@
  */
 package com.vaadin.terminal.gwt.client.ui.video;
 
+import com.vaadin.shared.communication.URLReference;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.video.VideoState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.communication.URLReference;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.MediaBaseConnector;
 import com.vaadin.ui.Video;
 

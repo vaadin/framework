@@ -3,7 +3,7 @@
  */
 package com.vaadin.tests.widgetset.client.helloworldfeature;
 
-import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.shared.communication.SharedState;
 
 public class HelloWorldState extends SharedState {
     private String greeting = "Hello world";

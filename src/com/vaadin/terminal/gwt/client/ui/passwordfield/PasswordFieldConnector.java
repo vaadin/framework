@@ -4,7 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.passwordfield;
 
-import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.textfield.TextFieldConnector;
 import com.vaadin.ui.PasswordField;
 

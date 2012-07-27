@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
 
 /**

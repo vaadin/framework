@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.communication;
 
+import com.vaadin.shared.communication.ClientRpc;
+
 public abstract class RpcMethod {
     private String interfaceName;
     private String methodName;

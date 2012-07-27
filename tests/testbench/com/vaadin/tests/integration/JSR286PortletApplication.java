@@ -20,8 +20,8 @@ import javax.portlet.WindowState;
 
 import com.vaadin.Application;
 import com.vaadin.annotations.StyleSheet;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2;
 import com.vaadin.terminal.gwt.server.PortletApplicationContext2.PortletListener;
 import com.vaadin.ui.Embedded;

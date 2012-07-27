@@ -15,17 +15,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.shared.JavaScriptConnectorState;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 public class JavaScriptConnectorHelper {
-
-    public interface JavaScriptConnectorState {
-        public Set<String> getCallbackNames();
-
-        public Map<String, Set<String>> getRpcInterfaces();
-    }
 
     private final ServerConnector connector;
     private final JavaScriptObject nativeState = JavaScriptObject

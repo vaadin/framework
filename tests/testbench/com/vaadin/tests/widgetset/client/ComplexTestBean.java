@@ -6,7 +6,7 @@ package com.vaadin.tests.widgetset.client;
 
 import java.util.List;
 
-import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.shared.communication.SharedState;
 
 @SuppressWarnings("javadoc")
 public class ComplexTestBean extends SharedState {

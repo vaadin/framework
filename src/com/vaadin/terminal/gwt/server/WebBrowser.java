@@ -7,9 +7,9 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.shared.VBrowserDetails;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.VBrowserDetails;
 
 /**
  * Class that provides information about the web browser the user is using.

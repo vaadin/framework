@@ -13,14 +13,14 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.panel.PanelServerRpc;
+import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelServerRpc;
-import com.vaadin.terminal.gwt.client.ui.panel.PanelState;
 import com.vaadin.ui.Component.Focusable;
 
 /**

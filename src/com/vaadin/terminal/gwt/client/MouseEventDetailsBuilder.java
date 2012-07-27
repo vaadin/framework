@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
+import com.vaadin.shared.MouseEventDetails;
 
 /**
  * Helper class for constructing a MouseEventDetails object from a

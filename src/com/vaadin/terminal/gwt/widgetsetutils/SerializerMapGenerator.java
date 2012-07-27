@@ -27,12 +27,12 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 
 /**
  * GWT generator that creates a {@link SerializerMap} implementation (mapper

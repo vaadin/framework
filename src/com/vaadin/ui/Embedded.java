@@ -10,14 +10,14 @@ import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
-import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedServerRpc;
 
 /**
  * Component for embedding external objects.

@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
-import com.vaadin.terminal.gwt.client.ui.label.LabelState;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.LabelState;
 
 /**
  * Label component for showing non-editable short texts.

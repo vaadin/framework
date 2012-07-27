@@ -7,8 +7,8 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import com.vaadin.terminal.gwt.client.EventId;
-import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.EventId;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;

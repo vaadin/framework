@@ -4,8 +4,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.video.VideoState;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.video.VideoState;
 import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**

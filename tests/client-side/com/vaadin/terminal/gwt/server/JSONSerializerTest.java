@@ -13,9 +13,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState;
 
 /**
  * Tests for {@link JsonCodec}, {@link JsonEncoder}, {@link JsonDecoder}

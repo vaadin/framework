@@ -15,6 +15,7 @@
 	<inherits name="com.vaadin.terminal.gwt.VaadinBrowserSpecificOverrides" />
 
 	<source path="terminal/gwt/client" />
+	<source path="shared" />
 
 	<!-- Use own Scheduler implementation to be able to track if commands are 
 		running -->
@@ -49,7 +50,7 @@
 	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyGenerator">
 		<when-type-assignable
-			class="com.vaadin.terminal.gwt.client.communication.ServerRpc" />
+			class="com.vaadin.shared.communication.ServerRpc" />
 	</generate-with>
 
 	<!-- Generate client side proxies for client to server RPC interfaces -->

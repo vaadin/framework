@@ -5,11 +5,11 @@ package com.vaadin.terminal.gwt.client.ui.slider;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.Slider;
 
 @Connect(Slider.class)

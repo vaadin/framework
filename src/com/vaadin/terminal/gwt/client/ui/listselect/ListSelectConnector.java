@@ -4,7 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.listselect;
 
-import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.ui.ListSelect;
 

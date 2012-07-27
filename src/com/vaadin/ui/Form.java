@@ -24,6 +24,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.shared.ui.form.FormState;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
@@ -31,7 +32,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.form.FormState;
 
 /**
  * Form component provides easy way of creating and managing sets fields.

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;

@@ -3,7 +3,7 @@
  */
 package com.vaadin.tests.widgetset.client.helloworldfeature;
 
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.shared.communication.ClientRpc;
 
 public interface GreetAgainRpc extends ClientRpc {
 

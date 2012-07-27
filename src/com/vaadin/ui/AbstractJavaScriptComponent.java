@@ -3,8 +3,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.JavaScriptCallbackHelper;
-import com.vaadin.terminal.gwt.client.ui.JavaScriptComponentState;
 import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
 
 /**

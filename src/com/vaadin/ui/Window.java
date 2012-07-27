@@ -19,13 +19,13 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.window.WindowServerRpc;
+import com.vaadin.shared.ui.window.WindowState;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
-import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
-import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
  * A component that represents a floating popup window that can be added to a

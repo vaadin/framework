@@ -5,11 +5,12 @@ package com.vaadin.terminal.gwt.client.ui.label;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.Label;
 
 @Connect(value = Label.class, loadStyle = LoadStyle.EAGER)

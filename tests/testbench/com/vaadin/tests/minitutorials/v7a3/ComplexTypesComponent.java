@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Root;
 

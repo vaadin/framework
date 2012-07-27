@@ -10,13 +10,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.button.ButtonServerRpc;
 
 public class VNativeButton extends Button implements ClickHandler {
 

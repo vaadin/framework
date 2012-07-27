@@ -4,7 +4,7 @@
 
 package com.vaadin.terminal;
 
-import com.vaadin.terminal.gwt.client.JavaScriptExtensionState;
+import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.ui.JavaScriptCallback;
 
 /**

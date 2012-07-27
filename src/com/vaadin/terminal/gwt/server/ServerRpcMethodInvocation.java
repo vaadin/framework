@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.communication.ServerRpc;
 
 public class ServerRpcMethodInvocation extends MethodInvocation {
 

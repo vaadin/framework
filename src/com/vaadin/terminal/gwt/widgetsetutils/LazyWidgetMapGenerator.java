@@ -3,8 +3,8 @@
  */
 package com.vaadin.terminal.gwt.widgetsetutils;
 
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
 /**
  * WidgetMap generator that builds a widgetset that optimizes the transferred

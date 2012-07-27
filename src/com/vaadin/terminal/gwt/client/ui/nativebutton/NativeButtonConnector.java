@@ -9,15 +9,15 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.button.ButtonServerRpc;
+import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.terminal.gwt.client.EventHelper;
-import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.button.ButtonServerRpc;
-import com.vaadin.terminal.gwt.client.ui.button.ButtonState;
 import com.vaadin.ui.NativeButton;
 
 @Connect(NativeButton.class)
