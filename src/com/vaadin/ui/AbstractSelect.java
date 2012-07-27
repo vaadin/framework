@@ -426,12 +426,15 @@ public abstract class AbstractSelect extends AbstractField implements
                 // (non-visible items can not be deselected)
                 final Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
+                    // Don't remove those that will be added to preserve order
+                    visible.removeAll(s);
+
                     @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
                     if (newsel == null) {
-                        newsel = new HashSet<Object>();
+                        newsel = new LinkedHashSet<Object>();
                     } else {
-                        newsel = new HashSet<Object>(newsel);
+                        newsel = new LinkedHashSet<Object>(newsel);
                     }
                     newsel.removeAll(visible);
                     newsel.addAll(s);
@@ -645,10 +648,10 @@ public abstract class AbstractSelect extends AbstractField implements
 
         if (isMultiSelect()) {
             if (newValue == null) {
-                super.setValue(new HashSet<Object>(), repaintIsNotNeeded);
+                super.setValue(new LinkedHashSet<Object>(), repaintIsNotNeeded);
             } else if (Collection.class.isAssignableFrom(newValue.getClass())) {
-                super.setValue(new HashSet<Object>((Collection<?>) newValue),
-                        repaintIsNotNeeded);
+                super.setValue(new LinkedHashSet<Object>(
+                        (Collection<?>) newValue), repaintIsNotNeeded);
             }
         } else if (newValue == null || items.containsId(newValue)) {
             super.setValue(newValue, repaintIsNotNeeded);

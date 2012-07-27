@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8888/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.table.Tables?restartApplication</td>
+	<td></td>
+</tr>
+<!--Default multi select-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item0</td>
+	<td>6,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item4</td>
+	<td>73,0</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[1]/VMenuBar[0]#item1</td>
+	<td>33,13</td>
+</tr>
+<!--ValueChangeListener-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item0</td>
+	<td>14,10</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item3</td>
+	<td>75,5</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[1]/VMenuBar[0]#item0</td>
+	<td>64,6</td>
+</tr>
+<!--Disable sorting value change logging-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item1</td>
+	<td>16,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item3</td>
+	<td>22,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[1]/VMenuBar[0]#item1</td>
+	<td>16,12</td>
+</tr>
+<!--Clear log to ensure numbers matches with the later case-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item1</td>
+	<td>29,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item1</td>
+	<td>40,7</td>
+</tr>
+<!--Start clicking-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[0]/domChild[0]</td>
+	<td>48,18</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>0. ValueChangeEvent, new value: '[Item 5]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[1]/domChild[0]</td>
+	<td>40,12:ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>1. ValueChangeEvent, new value: '[Item 5, Item 3]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[6]/domChild[1]/domChild[0]</td>
+	<td>54,15:ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>2. ValueChangeEvent, new value: '[Item 5, Item 3, Item 7]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[8]/domChild[1]/domChild[0]</td>
+	<td>54,9:shift+ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>3. ValueChangeEvent, new value: '[Item 5, Item 3, Item 7, Item 8, Item 9]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>67,8:ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>4. ValueChangeEvent, new value: '[Item 5, Item 3, Item 7, Item 8, Item 9, Item 1]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[3]/domChild[2]/domChild[0]</td>
+	<td>71,8:shift+ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>5. ValueChangeEvent, new value: '[Item 5, Item 3, Item 7, Item 8, Item 9, Item 1, Item 2, Item 4]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[2]/domChild[0]</td>
+	<td>56,6:ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>6. ValueChangeEvent, new value: '[Item 3, Item 7, Item 8, Item 9, Item 1, Item 2, Item 4]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[2]/domChild[0]</td>
+	<td>67,11:ctrl</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>7. ValueChangeEvent, new value: '[Item 3, Item 7, Item 8, Item 9, Item 1, Item 2, Item 4, Item 5]'</td>
+</tr>
+<!--Simple multi select-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item0</td>
+	<td>33,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item4</td>
+	<td>44,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[1]/VMenuBar[0]#item2</td>
+	<td>40,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[2]/VMenuBar[0]#item2</td>
+	<td>58,8</td>
+</tr>
+<!--Clear value-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item0</td>
+	<td>38,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item4</td>
+	<td>14,8</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[1]/VMenuBar[0]#item3</td>
+	<td>55,3</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[2]/VMenuBar[0]#item0</td>
+	<td>21,3</td>
+</tr>
+<!--Clear log-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_Smenu#item1</td>
+	<td>26,7</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::Root/VOverlay[0]/VMenuBar[0]#item1</td>
+	<td>30,6</td>
+</tr>
+<!--Start clicking-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[1]/domChild[0]</td>
+	<td>60,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>0. ValueChangeEvent, new value: '[Item 5]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[1]/domChild[0]</td>
+	<td>38,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>1. ValueChangeEvent, new value: '[Item 5, Item 3]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[3]/domChild[1]/domChild[0]</td>
+	<td>46,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>2. ValueChangeEvent, new value: '[Item 5, Item 3, Item 4]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[1]/domChild[0]</td>
+	<td>65,8</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>3. ValueChangeEvent, new value: '[Item 5, Item 4]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[2]/domChild[0]</td>
+	<td>45,7</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>4. ValueChangeEvent, new value: '[Item 4]'</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_StestComponent/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[4]/domChild[2]/domChild[0]</td>
+	<td>35,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableTables::PID_SLog_row_0</td>
+	<td>5. ValueChangeEvent, new value: '[Item 4, Item 5]'</td>
+</tr>
+</tbody></table>
+</body>
+</html>
