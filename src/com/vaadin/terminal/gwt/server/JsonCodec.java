@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -520,6 +521,11 @@ public class JsonCodec implements Serializable {
 
         if (valueType == null) {
             throw new IllegalArgumentException("type must be defined");
+        }
+
+        if (valueType instanceof WildcardType) {
+            throw new IllegalStateException(
+                    "Can not serialize type with wildcard: " + valueType);
         }
 
         if (null == value) {
