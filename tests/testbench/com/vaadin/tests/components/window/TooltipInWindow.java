@@ -2,9 +2,10 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.tests.components;
+package com.vaadin.tests.components.window;
 
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 

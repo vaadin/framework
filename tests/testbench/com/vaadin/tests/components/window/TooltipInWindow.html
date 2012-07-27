@@ -4,22 +4,22 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>integration-test-liferay-5.2.3-portlet2</title>
+<title>TooltipInWindow</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">integration-test-liferay-5.2.3-portlet2</td></tr>
+<tr><td rowspan="1" colspan="3">TooltipInWindow</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/run/com.vaadin.tests.components.TooltipInWindow?restartApplication</td>
+	<td>/run/com.vaadin.tests.components.window.TooltipInWindow?restartApplication</td>
 	<td></td>
 </tr>
 <!--Show tooltip in Root-->
 <tr>
 	<td>showTooltip</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::/VVerticalLayout[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::/VVerticalLayout[0]/VVerticalLayout[0]/VTextField[0]</td>
 	<td>5,5</td>
 </tr>
 <tr>
@@ -29,13 +29,13 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
 	<td>My tooltip</td>
 </tr>
 <!--Hide the tooltip-->
 <tr>
 	<td>showTooltip</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::/VVerticalLayout[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::/VVerticalLayout[0]</td>
 	<td>0,0</td>
 </tr>
 <tr>
@@ -45,13 +45,13 @@
 </tr>
 <tr>
 	<td>assertElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::Root/VTooltip[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::Root/VTooltip[0]</td>
 	<td></td>
 </tr>
 <!--Show tooltip in Window-->
 <tr>
 	<td>showTooltip</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/VTextField[0]</td>
 	<td>5,5</td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsTooltipInWindow::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>vaadin=runcomvaadintestscomponentswindowTooltipInWindow::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
 	<td>My tooltip</td>
 </tr>
 </tbody></table>
