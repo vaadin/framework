@@ -1,8 +1,6 @@
 package com.vaadin.tests.containers.sqlcontainer;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.vaadin.Application;
 import com.vaadin.data.Container.ItemSetChangeEvent;
@@ -10,11 +8,6 @@ import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.sqlcontainer.AllTests;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -114,77 +107,6 @@ public class CheckboxUpdateProblem extends Application implements
             }
         }
 
-    }
-
-    private class DatabaseHelper {
-
-        private JDBCConnectionPool connectionPool = null;
-        private SQLContainer testContainer = null;
-        private static final String TABLENAME = "testtable";
-
-        public DatabaseHelper() {
-            initConnectionPool();
-            initDatabase();
-            initContainers();
-        }
-
-        private void initDatabase() {
-            try {
-                Connection conn = connectionPool.reserveConnection();
-                Statement statement = conn.createStatement();
-                try {
-                    statement.execute("drop table " + TABLENAME);
-                } catch (SQLException e) {
-                    // Will fail if table doesn't exist, which is OK.
-                    conn.rollback();
-                }
-                switch (AllTests.db) {
-                case MYSQL:
-                    statement
-                            .execute("create table "
-                                    + TABLENAME
-                                    + " (id integer auto_increment not null, field1 varchar(100), field2 boolean, primary key(id))");
-                    break;
-                case POSTGRESQL:
-                    statement
-                            .execute("create table "
-                                    + TABLENAME
-                                    + " (\"id\" serial primary key, \"field1\" varchar(100), \"field2\" boolean)");
-                    break;
-                }
-                statement.executeUpdate("insert into " + TABLENAME
-                        + " values(default, 'Kalle', 'true')");
-                statement.close();
-                conn.commit();
-                connectionPool.releaseConnection(conn);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void initContainers() {
-            try {
-                TableQuery q1 = new TableQuery(TABLENAME, connectionPool);
-                q1.setVersionColumn("id");
-                testContainer = new SQLContainer(q1);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void initConnectionPool() {
-            try {
-                connectionPool = new SimpleJDBCConnectionPool(
-                        AllTests.dbDriver, AllTests.dbURL, AllTests.dbUser,
-                        AllTests.dbPwd, 2, 5);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public SQLContainer getTestContainer() {
-            return testContainer;
-        }
     }
 
 }
