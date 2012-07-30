@@ -2294,8 +2294,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The end key
      * @return
      */
-    private Set<Object> getItemIdsInRange(Object itemId, final int length) {
-        HashSet<Object> ids = new LinkedHashSet<Object>();
+    private LinkedHashSet<Object> getItemIdsInRange(Object itemId,
+            final int length) {
+        LinkedHashSet<Object> ids = new LinkedHashSet<Object>();
         for (int i = 0; i < length; i++) {
             assert itemId != null; // should not be null unless client-server
                                    // are out of sync
@@ -2315,7 +2316,7 @@ public class Table extends AbstractSelect implements Action.Container,
         final String[] ka = (String[]) variables.get("selected");
         final String[] ranges = (String[]) variables.get("selectedRanges");
 
-        Set<Object> renderedItemIds = getCurrentlyRenderedItemIds();
+        Set<Object> renderedButNotSelectedItemIds = getCurrentlyRenderedItemIds();
 
         @SuppressWarnings("unchecked")
         HashSet<Object> newValue = new LinkedHashSet<Object>(
@@ -2340,7 +2341,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 requestRepaint();
             } else if (id != null && containsId(id)) {
                 newValue.add(id);
-                renderedItemIds.remove(id);
+                renderedButNotSelectedItemIds.remove(id);
             }
         }
 
@@ -2350,17 +2351,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 String[] split = range.split("-");
                 Object startItemId = itemIdMapper.get(split[0]);
                 int length = Integer.valueOf(split[1]);
-                Set<Object> itemIdsInRange = getItemIdsInRange(startItemId,
-                        length);
+                LinkedHashSet<Object> itemIdsInRange = getItemIdsInRange(
+                        startItemId, length);
                 newValue.addAll(itemIdsInRange);
-                renderedItemIds.removeAll(itemIdsInRange);
+                renderedButNotSelectedItemIds.removeAll(itemIdsInRange);
             }
         }
         /*
          * finally clear all currently rendered rows (the ones that the client
          * side counterpart is aware of) that the client didn't send as selected
          */
-        newValue.removeAll(renderedItemIds);
+        newValue.removeAll(renderedButNotSelectedItemIds);
 
         if (!isNullSelectionAllowed() && newValue.isEmpty()) {
             // empty selection not allowed, keep old value

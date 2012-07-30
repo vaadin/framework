@@ -396,7 +396,8 @@ public abstract class AbstractSelect extends AbstractField implements
 
         // Selection change
         if (variables.containsKey("selected")) {
-            final String[] ka = (String[]) variables.get("selected");
+            final String[] clientSideSelectedKeys = (String[]) variables
+                    .get("selected");
 
             // Multiselect mode
             if (isMultiSelect()) {
@@ -404,19 +405,20 @@ public abstract class AbstractSelect extends AbstractField implements
                 // TODO Optimize by adding repaintNotNeeded when applicable
 
                 // Converts the key-array to id-set
-                final LinkedList<Object> s = new LinkedList<Object>();
-                for (int i = 0; i < ka.length; i++) {
-                    final Object id = itemIdMapper.get(ka[i]);
+                final LinkedList<Object> acceptedSelections = new LinkedList<Object>();
+                for (int i = 0; i < clientSideSelectedKeys.length; i++) {
+                    final Object id = itemIdMapper
+                            .get(clientSideSelectedKeys[i]);
                     if (!isNullSelectionAllowed()
                             && (id == null || id == getNullSelectionItemId())) {
                         // skip empty selection if nullselection is not allowed
                         requestRepaint();
                     } else if (id != null && containsId(id)) {
-                        s.add(id);
+                        acceptedSelections.add(id);
                     }
                 }
 
-                if (!isNullSelectionAllowed() && s.size() < 1) {
+                if (!isNullSelectionAllowed() && acceptedSelections.size() < 1) {
                     // empty selection not allowed, keep old value
                     requestRepaint();
                     return;
@@ -424,11 +426,11 @@ public abstract class AbstractSelect extends AbstractField implements
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                Collection<?> visible = getVisibleItemIds();
-                if (visible != null) {
-                    visible = new HashSet<Object>(visible);
+                Collection<?> visibleNotSelected = getVisibleItemIds();
+                if (visibleNotSelected != null) {
+                    visibleNotSelected = new HashSet<Object>(visibleNotSelected);
                     // Don't remove those that will be added to preserve order
-                    visible.removeAll(s);
+                    visibleNotSelected.removeAll(acceptedSelections);
 
                     @SuppressWarnings("unchecked")
                     Set<Object> newsel = (Set<Object>) getValue();
@@ -437,18 +439,19 @@ public abstract class AbstractSelect extends AbstractField implements
                     } else {
                         newsel = new LinkedHashSet<Object>(newsel);
                     }
-                    newsel.removeAll(visible);
-                    newsel.addAll(s);
+                    newsel.removeAll(visibleNotSelected);
+                    newsel.addAll(acceptedSelections);
                     setValue(newsel, true);
                 }
             } else {
                 // Single select mode
                 if (!isNullSelectionAllowed()
-                        && (ka.length == 0 || ka[0] == null || ka[0] == getNullSelectionItemId())) {
+                        && (clientSideSelectedKeys.length == 0
+                                || clientSideSelectedKeys[0] == null || clientSideSelectedKeys[0] == getNullSelectionItemId())) {
                     requestRepaint();
                     return;
                 }
-                if (ka.length == 0) {
+                if (clientSideSelectedKeys.length == 0) {
                     // Allows deselection only if the deselected item is
                     // visible
                     final Object current = getValue();
@@ -457,7 +460,8 @@ public abstract class AbstractSelect extends AbstractField implements
                         setValue(null, true);
                     }
                 } else {
-                    final Object id = itemIdMapper.get(ka[0]);
+                    final Object id = itemIdMapper
+                            .get(clientSideSelectedKeys[0]);
                     if (!isNullSelectionAllowed() && id == null) {
                         requestRepaint();
                     } else if (id != null
