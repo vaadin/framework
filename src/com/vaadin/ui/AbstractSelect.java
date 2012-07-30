@@ -424,8 +424,9 @@ public abstract class AbstractSelect extends AbstractField implements
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                final Collection<?> visible = getVisibleItemIds();
+                Collection<?> visible = getVisibleItemIds();
                 if (visible != null) {
+                    visible = new HashSet<Object>(visible);
                     // Don't remove those that will be added to preserve order
                     visible.removeAll(s);
 
