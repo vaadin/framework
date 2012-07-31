@@ -3,6 +3,7 @@ package com.vaadin.terminal.gwt.server;
 import java.io.Serializable;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
@@ -26,8 +27,15 @@ class ServletPortletHelper implements Serializable {
     }
 
     static Class<? extends Application> getApplicationClass(
-            String applicationParameter, String rootParameter,
-            ClassLoader classLoader) throws ApplicationClassException {
+            DeploymentConfiguration deploymentConfiguration)
+            throws ApplicationClassException {
+        String applicationParameter = deploymentConfiguration
+                .getInitParameters().getProperty("application");
+        String rootParameter = deploymentConfiguration
+                .getInitParameters().getProperty(
+                        Application.ROOT_PARAMETER);
+        ClassLoader classLoader = deploymentConfiguration.getClassLoader();
+
         if (applicationParameter == null) {
 
             // Validate the parameter value

@@ -5,6 +5,7 @@
 package com.vaadin.terminal;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
@@ -101,4 +102,12 @@ public interface DeploymentConfiguration extends Serializable {
      * @see PortletContext#getMimeType(String)
      */
     public String getMimeType(String resourceName);
+
+    /**
+     * Gets the properties configured for the deployment, e.g. as init
+     * parameters to the servlet or portlet.
+     * 
+     * @return properties for the application.
+     */
+    public Properties getInitParameters();
 }

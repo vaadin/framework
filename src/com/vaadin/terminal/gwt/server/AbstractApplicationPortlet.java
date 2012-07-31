@@ -205,12 +205,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private Properties applicationProperties;
-
     private boolean productionMode = false;
 
-    private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
-
+    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
+            getClass()) {
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
 
@@ -218,7 +216,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     PARAMETER_WIDGETSET, null);
 
             if (widgetset == null) {
-                // If no widgetset defined for the application, check the portal
+                // If no widgetset defined for the application, check the
+                // portal
                 // property
                 widgetset = WrappedPortletRequest.cast(request)
                         .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
@@ -245,13 +244,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             }
 
             return themeName;
-        }
-
-        @Override
-        public String getApplicationOrSystemProperty(String propertyName,
-                String defaultValue) {
-            return AbstractApplicationPortlet.this
-                    .getApplicationOrSystemProperty(propertyName, defaultValue);
         }
 
         @Override
@@ -293,13 +285,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
 
         @Override
-        public ClassLoader getClassLoader() {
-            // Custom class loaders not currently supported in portlets (see
-            // #8574)
-            return null;
-        }
-
-        @Override
         public String getMimeType(String resourceName) {
             return getPortletContext().getMimeType(resourceName);
         }
@@ -308,7 +293,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        applicationProperties = new Properties();
+        Properties applicationProperties = getDeploymentConfiguration()
+                .getInitParameters();
 
         // Read default parameters from the context
         final PortletContext context = config.getPortletContext();
@@ -332,7 +318,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private void checkCrossSiteProtection() {
-        if (getApplicationOrSystemProperty(
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
                 SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
                 "true")) {
             /*
@@ -347,8 +333,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // TODO Identical code in AbstractApplicationServlet -> refactor
         // Check if the application is in production mode.
         // We are in production mode if productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
-                "false").equals("true")) {
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
             productionMode = true;
         }
 
@@ -357,85 +343,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             // TODO Maybe we need a different message for portlets?
             getLogger().warning(NOT_PRODUCTION_MODE_INFO);
         }
-    }
-
-    /**
-     * Gets an application property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getApplicationProperty(String parameterName) {
-
-        String val = applicationProperties.getProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lower case application properties for backward compatibility with
-        // 3.0.2 and earlier
-        val = applicationProperties.getProperty(parameterName.toLowerCase());
-
-        return val;
-    }
-
-    /**
-     * Gets an system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getSystemProperty(String parameterName) {
-        String val = null;
-
-        String pkgName;
-        final Package pkg = getClass().getPackage();
-        if (pkg != null) {
-            pkgName = pkg.getName();
-        } else {
-            final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0,
-                    className.lastIndexOf('.'));
-        }
-        val = System.getProperty(pkgName + "." + parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lowercased system properties
-        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
-        return val;
-    }
-
-    /**
-     * Gets an application or system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @param defaultValue
-     *            the Default to be used.
-     * @return String value or default if not found
-     */
-    protected String getApplicationOrSystemProperty(String parameterName,
-            String defaultValue) {
-
-        String val = null;
-
-        // Try application properties
-        val = getApplicationProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try system properties
-        val = getSystemProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        return defaultValue;
     }
 
     protected enum RequestType {
@@ -736,7 +643,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     }
 
-    private DeploymentConfiguration getDeploymentConfiguration() {
+    protected DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }
 
@@ -880,7 +787,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    applicationProperties, context, isProductionMode()));
+                    getDeploymentConfiguration().getInitParameters(),
+                    context, isProductionMode()));
         }
     }
 
@@ -1002,11 +910,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         } catch (final ClassNotFoundException e) {
             throw new PortletException("getNewApplication failed", e);
         }
-    }
-
-    protected ClassLoader getClassLoader() throws PortletException {
-        // TODO Add support for custom class loader
-        return getClass().getClassLoader();
     }
 
     /**

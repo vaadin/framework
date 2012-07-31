@@ -61,7 +61,8 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             Collections.addAll(defaultPackages, initParameter.split(","));
         }
         String str = TestBase.class.getName().replace('.', '/') + ".class";
-        URL url = getClassLoader().getResource(str);
+        URL url = getDeploymentConfiguration().getClassLoader()
+                .getResource(str);
         if ("file".equals(url.getProtocol())) {
             File comVaadinTests = new File(url.getPath()).getParentFile()
                     .getParentFile();

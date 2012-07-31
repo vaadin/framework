@@ -23,10 +23,8 @@ public class ApplicationPortlet2 extends AbstractApplicationPortlet {
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
         try {
-            applicationClass = ServletPortletHelper.getApplicationClass(
-                    config.getInitParameter("application"),
-                    config.getInitParameter(Application.ROOT_PARAMETER),
-                    getClassLoader());
+            applicationClass = ServletPortletHelper
+                    .getApplicationClass(getDeploymentConfiguration());
         } catch (ApplicationClassException e) {
             throw new PortletException(e);
         }

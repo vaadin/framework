@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -88,15 +87,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
 
-    private Properties applicationProperties;
-
     private boolean productionMode = false;
 
     private final String resourcePath = null;
 
     private int resourceCacheTime = 3600;
 
-    private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
+            getClass()) {
 
         @Override
         public String getStaticFileLocation(WrappedRequest request) {
@@ -120,24 +118,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         @Override
-        public String getApplicationOrSystemProperty(String propertyName,
-                String defaultValue) {
-            return AbstractApplicationServlet.this
-                    .getApplicationOrSystemProperty(propertyName, defaultValue);
-        }
-
-        @Override
         public boolean isStandalone(WrappedRequest request) {
             return true;
-        }
-
-        @Override
-        public ClassLoader getClassLoader() {
-            try {
-                return AbstractApplicationServlet.this.getClassLoader();
-            } catch (ServletException e) {
-                throw new RuntimeException(e);
-            }
         }
 
         @Override
@@ -158,11 +140,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             servlet's normal operation.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
-        applicationProperties = new Properties();
+        Properties applicationProperties = getDeploymentConfiguration()
+                .getInitParameters();
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
@@ -187,7 +169,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private void checkCrossSiteProtection() {
-        if (getApplicationOrSystemProperty(
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
                 SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
                 "true")) {
             /*
@@ -201,8 +183,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void checkProductionMode() {
         // Check if the application is in production mode.
         // We are in production mode if productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
-                "false").equals("true")) {
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
             productionMode = true;
         }
 
@@ -216,93 +198,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void checkResourceCacheTime() {
         // Check if the browser caching time has been set in web.xml
         try {
-            String rct = getApplicationOrSystemProperty(
-                    SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
+            String rct = getDeploymentConfiguration()
+                    .getApplicationOrSystemProperty(
+                            SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
             resourceCacheTime = Integer.parseInt(rct);
         } catch (NumberFormatException nfe) {
             // Default is 1h
             resourceCacheTime = 3600;
             getLogger().warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
         }
-    }
-
-    /**
-     * Gets an application property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getApplicationProperty(String parameterName) {
-
-        String val = applicationProperties.getProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lower case application properties for backward compatibility with
-        // 3.0.2 and earlier
-        val = applicationProperties.getProperty(parameterName.toLowerCase());
-
-        return val;
-    }
-
-    /**
-     * Gets an system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getSystemProperty(String parameterName) {
-        String val = null;
-
-        String pkgName;
-        final Package pkg = getClass().getPackage();
-        if (pkg != null) {
-            pkgName = pkg.getName();
-        } else {
-            final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0,
-                    className.lastIndexOf('.'));
-        }
-        val = System.getProperty(pkgName + "." + parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lowercased system properties
-        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
-        return val;
-    }
-
-    /**
-     * Gets an application or system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @param defaultValue
-     *            the Default to be used.
-     * @return String value or default if not found
-     */
-    String getApplicationOrSystemProperty(String parameterName,
-            String defaultValue) {
-
-        String val = null;
-
-        // Try application properties
-        val = getApplicationProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try system properties
-        val = getSystemProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        return defaultValue;
     }
 
     /**
@@ -565,30 +469,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         }
         return true;
-    }
-
-    protected ClassLoader getClassLoader() throws ServletException {
-        // Gets custom class loader
-        final String classLoaderName = getApplicationOrSystemProperty(
-                "ClassLoader", null);
-        ClassLoader classLoader;
-        if (classLoaderName == null) {
-            classLoader = getClass().getClassLoader();
-        } else {
-            try {
-                final Class<?> classLoaderClass = getClass().getClassLoader()
-                        .loadClass(classLoaderName);
-                final Constructor<?> c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
-                classLoader = (ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() });
-            } catch (final Exception e) {
-                throw new ServletException(
-                        "Could not find specified class loader: "
-                                + classLoaderName, e);
-            }
-        }
-        return classLoader;
     }
 
     /**
@@ -1007,8 +887,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Locale locale = request.getLocale();
             application.setLocale(locale);
             application.start(new ApplicationStartEvent(applicationUrl,
-                    applicationProperties, webApplicationContext,
-                    isProductionMode()));
+                    getDeploymentConfiguration().getInitParameters(),
+                    webApplicationContext, isProductionMode()));
         }
     }
 
@@ -1070,7 +950,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             // strip leading "/" otherwise stream from JAR wont work
             filename = filename.substring(1);
-            resourceUrl = getClassLoader().getResource(filename);
+            resourceUrl = getDeploymentConfiguration().getClassLoader()
+                    .getResource(filename);
 
             if (resourceUrl == null) {
                 // cannot serve requested file
@@ -1387,8 +1268,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletRequest request) {
         String staticFileLocation;
         // if property is defined in configurations, use that
-        staticFileLocation = getApplicationOrSystemProperty(
-                PARAMETER_VAADIN_RESOURCES, null);
+        staticFileLocation = getDeploymentConfiguration()
+                .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
+                        null);
         if (staticFileLocation != null) {
             return staticFileLocation;
         }
