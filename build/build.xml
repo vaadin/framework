@@ -662,9 +662,9 @@
     <target name="widgetsets" depends="init-nonpackage, init, compile-widgetset-generator, compile-client-side"/>
 
     <!-- Build each widgetset locally, i.e., not for an installation package. -->
-    <target name="widgetset-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-default" description="Compile the DefaultWidgetSet"/>
-    <target name="widgetset-testing" depends="init-nonpackage, init, compile-tests, compile-widgetset-generator, compile-widgetset-testing"/>
-    <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-widgetset-generator, compile-widgetset-portal-default"/>
+    <target name="widgetset-default" depends="init-nonpackage, init, compile-gwt, compile-widgetset-generator, compile-widgetset-default" description="Compile the DefaultWidgetSet"/>
+    <target name="widgetset-testing" depends="init-nonpackage, init, compile-gwt, compile-tests, compile-widgetset-generator, compile-widgetset-testing"/>
+    <target name="widgetset-portal-default" depends="init-nonpackage, init, compile-gwt, compile-widgetset-generator, compile-widgetset-portal-default"/>
 
     <!-- ================================================================== -->
     <!-- Libraries and Tests                                                -->
