@@ -1609,8 +1609,8 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private Object convertMap(String strValue) {
-        String[] parts = strValue
-                .split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
+        String[] parts = strValue.split(
+                String.valueOf(VAR_ARRAYITEM_SEPARATOR), -1);
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i < parts.length; i += 2) {
             String key = parts[i];
@@ -1650,7 +1650,8 @@ public abstract class AbstractCommunicationManager implements
     }
 
     private Object convertArray(String strValue) {
-        String[] val = strValue.split(String.valueOf(VAR_ARRAYITEM_SEPARATOR));
+        String[] val = strValue.split(String.valueOf(VAR_ARRAYITEM_SEPARATOR),
+                -1);
         if (val.length == 0 || (val.length == 1 && val[0].length() == 0)) {
             return new Object[0];
         }
