@@ -150,11 +150,11 @@
     <target name="check-java-version">
       <condition property="java.version.matches">
         <or>
-          <equals arg1="${ant.java.version}" arg2="1.5"/>
+          <equals arg1="${ant.java.version}" arg2="${required.java.version}"/>
           <isset property="ignoreversion"/>
         </or>
       </condition>
-      <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java 1.5 compiler. Use -Dignoreversion=1 for ant to ignore the version check."/>
+      <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java ${required.java.version} compiler. Use -Dignoreversion=1 for ant to ignore the version check."/>
       <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 
@@ -162,7 +162,7 @@
     <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- ================================================================== -->
 
-     <target name="init" depends="init-deps, build.properties">
+     <target name="init" depends="init-deps, build.properties, check-java-version">
         <!-- Current timestamp in different formats. -->
         <tstamp>
             <format property="build.date" pattern="yyyy-MM-dd"/>
@@ -490,7 +490,7 @@
         <echo>Compiling src (server-side)</echo>
     	<!-- Compile core sources first as the other sources depend on these -->
         <mkdir dir="${result-classes-core}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
             <src path="${result-src-core}"/>
         </javac>
     </target>
@@ -499,7 +499,7 @@
         <echo>Compiling src (Server and client side JUnit tests)</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-junit}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-junit}"/>
         </javac>
@@ -507,7 +507,7 @@
         <echo>Compiling src (TestBench tests)</echo>
     	<!-- Compile TestBench tests -->
         <mkdir dir="${result-classes-testbench}" />
-        <javac source="1.5" target="1.5" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-junit}"></classpath>
         	<classpath path="${result-classes-core}"></classpath>
             <src path="${result-src-testbench}"/>
@@ -518,7 +518,7 @@
     <target name="compile-helpers" depends="init">
     	<mkdir dir="${buildhelpers-classes}" />
         <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
-        <javac source="1.5" target="1.5" includeantruntime="false" srcdir="${buildhelpers-src}" 
+        <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" srcdir="${buildhelpers-src}" 
                 	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
     </target>
     
@@ -878,7 +878,7 @@
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
             <bottom>${javadoc.bottom}</bottom>
-            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
+            <link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
             <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
         </javadoc>
 
