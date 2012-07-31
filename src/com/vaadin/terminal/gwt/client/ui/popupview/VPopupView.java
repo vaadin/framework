@@ -10,6 +10,8 @@ import java.util.Set;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
@@ -26,6 +28,8 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
 
@@ -183,8 +187,23 @@ public class VPopupView extends HTML {
         private final Set<Element> activeChildren = new HashSet<Element>();
         private boolean hiding = false;
 
+        private ShortcutActionHandler shortcutActionHandler;
+
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
+
+            // Delegate popup keyboard events to the relevant handler. The
+            // events do not propagate automatically because the popup is
+            // directly attached to the RootPanel.
+            addDomHandler(new KeyDownHandler() {
+                @Override
+                public void onKeyDown(KeyDownEvent event) {
+                    if (shortcutActionHandler != null) {
+                        shortcutActionHandler.handleKeyboardEvent(Event
+                                .as(event.getNativeEvent()));
+                    }
+                }
+            }, KeyDownEvent.getType());
         }
 
         // For some reason ONMOUSEOUT events are not always received, so we have
@@ -233,12 +252,26 @@ public class VPopupView extends HTML {
                 remove(popupComponentWidget);
             }
             hasHadMouseOver = false;
+            shortcutActionHandler = null;
             super.hide(autoClosed);
         }
 
         @Override
         public void show() {
             hiding = false;
+
+            // Find the shortcut action handler that should handle keyboard
+            // events from the popup. The events do not propagate automatically
+            // because the popup is directly attached to the RootPanel.
+            Widget widget = VPopupView.this;
+            while (shortcutActionHandler == null && widget != null) {
+                if (widget instanceof ShortcutActionHandlerOwner) {
+                    shortcutActionHandler = ((ShortcutActionHandlerOwner) widget)
+                            .getShortcutActionHandler();
+                }
+                widget = widget.getParent();
+            }
+
             super.show();
         }
 

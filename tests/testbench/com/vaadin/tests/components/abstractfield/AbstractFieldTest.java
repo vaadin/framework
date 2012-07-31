@@ -24,6 +24,8 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
         AbstractComponentTest<T> implements ValueChangeListener,
         ReadOnlyStatusChangeListener {
 
+    private boolean sortValueChanges = true;
+
     @Override
     protected void createActions() {
         super.createActions();
@@ -73,6 +75,17 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
                     }
                 }
             });
+
+            MenuItem sortValueChangesItem = abstractField.addItem(
+                    "Show sorted value changes", new MenuBar.Command() {
+                        public void menuSelected(MenuItem selectedItem) {
+                            sortValueChanges = selectedItem.isChecked();
+                            log("Show sorted value changes: "
+                                    + sortValueChanges);
+                        }
+                    });
+            sortValueChangesItem.setCheckable(true);
+            sortValueChangesItem.setChecked(true);
         }
     }
 
@@ -140,7 +153,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private String getValue(Property property) {
         Object o = property.getValue();
-        if (o instanceof Collection) {
+        if (o instanceof Collection && sortValueChanges) {
             // Sort collections to avoid problems with values printed in
             // different order
             try {

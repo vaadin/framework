@@ -255,23 +255,22 @@ public class VAbstractSplitPanel extends ComplexPanel {
      * @return
      */
     private float convertToPercentage(String pos) {
-        float posAsFloat = 0;
-
-        if (pos.indexOf("px") > 0) {
-            int posAsInt = Integer.parseInt(pos.substring(0, pos.length() - 2));
+        if (pos.endsWith("px")) {
+            float pixelPosition = Float.parseFloat(pos.substring(0,
+                    pos.length() - 2));
             int offsetLength = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
                     : getOffsetHeight();
 
-            // 100% needs special handling
-            if (posAsInt + getSplitterSize() >= offsetLength) {
-                posAsInt = offsetLength;
+            // Take splitter size into account at the edge
+            if (pixelPosition + getSplitterSize() >= offsetLength) {
+                return 100;
             }
-            posAsFloat = ((float) posAsInt / (float) offsetLength * 100);
 
+            return pixelPosition / offsetLength * 100;
         } else {
-            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 1));
+            assert pos.endsWith("%");
+            return Float.parseFloat(pos.substring(0, pos.length() - 1));
         }
-        return posAsFloat;
     }
 
     /**

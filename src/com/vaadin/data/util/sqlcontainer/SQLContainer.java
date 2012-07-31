@@ -534,6 +534,7 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public void removeContainerFilter(Filter filter) {
         filters.remove(filter);
+        refresh();
     }
 
     /**
