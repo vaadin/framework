@@ -1076,16 +1076,12 @@ public class Util {
         Paintable paintable = c.getPaintable(id);
         if (paintable != null) {
             VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
-            for (String[] var : vars) {
-                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
-                        + var[0]);
-            }
         } else {
             VConsole.log("\t" + id + ": Warning: no corresponding paintable!");
-            for (String[] var : vars) {
-                VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : "
-                        + var[0]);
-            }
+        }
+
+        for (String[] var : vars) {
+            VConsole.log("\t\t" + var[1] + " (" + var[2] + ")" + " : " + var[0]);
         }
     }
 
