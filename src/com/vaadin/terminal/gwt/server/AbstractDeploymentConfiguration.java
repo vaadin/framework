@@ -8,7 +8,6 @@ import java.lang.reflect.Constructor;
 import java.util.Properties;
 
 import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.WrappedRequest;
 
 public abstract class AbstractDeploymentConfiguration implements
         DeploymentConfiguration {
@@ -18,12 +17,6 @@ public abstract class AbstractDeploymentConfiguration implements
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass) {
         this.systemPropertyBaseClass = systemPropertyBaseClass;
-    }
-
-    @Override
-    public boolean isStandalone(WrappedRequest request) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override
@@ -125,4 +118,4 @@ public abstract class AbstractDeploymentConfiguration implements
     public Properties getInitParameters() {
         return applicationProperties;
     }
- }
+}
