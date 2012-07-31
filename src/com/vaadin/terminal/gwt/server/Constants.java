@@ -54,8 +54,6 @@ public interface Constants {
 
     static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-    static final String AJAX_UIDL_URI = "/UIDL";
-
     final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
 
     static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;

@@ -103,11 +103,11 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isUIDLRequest(WrappedRequest request) {
-        return hasPathPrefix(request, Constants.AJAX_UIDL_URI);
+        return hasPathPrefix(request, ApplicationConnection.UIDL_REQUEST_PATH);
     }
 
     public static boolean isApplicationResourceRequest(WrappedRequest request) {
-        return hasPathPrefix(request, "APP/");
+        return hasPathPrefix(request, ApplicationConnection.APP_REQUEST_PATH);
     }
 
 }

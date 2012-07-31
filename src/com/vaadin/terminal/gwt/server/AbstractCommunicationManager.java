@@ -1284,7 +1284,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
 
-        return "connector:///" + name;
+        return ApplicationConnection.CONNECTOR_PROTOCOL_PREFIX + "/" + name;
     }
 
     /**
@@ -2340,8 +2340,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             streamVariableToSeckey.put(value, seckey);
         }
 
-        return "app://" + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/"
-                + seckey;
+        return ApplicationConnection.APP_PROTOCOL_PREFIX
+                + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/" + seckey;
 
     }
 
