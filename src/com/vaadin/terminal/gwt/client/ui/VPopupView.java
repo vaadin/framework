@@ -475,7 +475,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        popup.updateShadowSizeAndPosition();
+        popup.sizeUpdated();
         return true;
     }
 
