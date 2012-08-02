@@ -109,6 +109,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";
     public static final String ATTRIBUTE_PAGEBUFFER_LAST = "pb-l";
 
+    /**
+     * Tell the client that old keys are no longer valid because the server has
+     * cleared its key map.
+     */
+    public static final String ATTRIBUTE_KEY_MAPPER_RESET = "clearKeyMap";
+
     private static final String ROW_HEADER_COLUMN_KEY = "0";
 
     public static final String CLASSNAME = "v-table";
@@ -1049,6 +1055,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // focused row has been orphaned, can't focus
                 focusRowFromBody();
             }
+        }
+
+        /*
+         * If the server has (re)initialized the rows, our selectionRangeStart
+         * row will point to an index that the server knows nothing about,
+         * causing problems if doing multi selection with shift. The field will
+         * be cleared a little later when the row focus has been restored.
+         * (#8584)
+         */
+        if (uidl.hasAttribute(ATTRIBUTE_KEY_MAPPER_RESET)
+                && uidl.getBooleanAttribute(ATTRIBUTE_KEY_MAPPER_RESET)
+                && selectionRangeStart != null) {
+            assert !selectionRangeStart.isAttached();
+            selectionRangeStart = focusedRow;
         }
 
         tabIndex = uidl.hasAttribute("tabindex") ? uidl

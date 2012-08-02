@@ -413,6 +413,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean painted = false;
 
+    /**
+     * Set to true if the client-side should be informed that the key mapper has
+     * been reset so it can avoid sending back references to keys that are no
+     * longer present.
+     */
+    private boolean keyMapperReset;
+
     /* Table constructors */
 
     /**
@@ -2772,6 +2779,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
         paintVisibleColumns(target);
 
+        if (keyMapperReset) {
+            keyMapperReset = false;
+            target.addAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET, true);
+        }
+
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
         }
@@ -3922,6 +3934,10 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
+
+        // super method clears the key map, must inform client about this to
+        // avoid getting invalid keys back (#8584)
+        keyMapperReset = true;
 
         // ensure that page still has first item in page, ignore buffer refresh
         // (forced in this method)
