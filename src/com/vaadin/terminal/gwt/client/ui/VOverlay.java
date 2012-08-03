@@ -442,7 +442,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         // Opera needs some shaking to get parts of the shadow showing
         // properly
         // (ticket #2704)
-        if (BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // Clear the height of all middle elements
             DOM.getChild(shadow, 3).getStyle().setProperty("height", "auto");
             DOM.getChild(shadow, 4).getStyle().setProperty("height", "auto");
@@ -460,7 +460,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                 positionAndSize);
 
         // Opera fix, part 2 (ticket #2704)
-        if (BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // We'll fix the height of all the middle elements
             DOM.getChild(shadow, 3)
                     .getStyle()
