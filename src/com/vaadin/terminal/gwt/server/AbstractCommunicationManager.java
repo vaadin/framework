@@ -1275,10 +1275,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // Add to map of names accepted by serveConnectorResource
             if (connectorResourceContexts.containsKey(name)) {
                 Class<?> oldContext = connectorResourceContexts.get(name);
-                getLogger().warning(
-                        "Resource " + name + " defined by both " + context
-                                + " and " + oldContext + ". Resource from "
-                                + oldContext + " will be used.");
+                if (oldContext != context) {
+                    getLogger().warning(
+                            "Resource " + name + " defined by both " + context
+                                    + " and " + oldContext + ". Resource from "
+                                    + oldContext + " will be used.");
+                }
             } else {
                 connectorResourceContexts.put(name, context);
             }
