@@ -5,6 +5,7 @@ package com.vaadin.ui;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.JavaScriptCallbackHelper;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
 
 /**
@@ -66,6 +67,9 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * exception when called. The scheme for conversion between Java types in the
  * RPC interface and the JavaScript values that should be passed to the
  * functions is described bellow.</li>
+ * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
+ * that can be used in the browser. This is just way of accessing
+ * {@link ApplicationConnection#translateVaadinUri(String)}</li>
  * </ul>
  * The connector wrapper also supports these special functions:
  * <ul>

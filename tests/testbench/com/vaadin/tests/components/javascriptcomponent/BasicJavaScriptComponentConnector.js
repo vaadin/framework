@@ -23,6 +23,9 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 		for(var i = 0; i < messages.length; i++) {
 			log("State message: " + messages[i]);
 		}
+		
+		var url = this.getState().url;
+		log("Url: " + this.translateVaadinUri(url.uRL)); //Strange format, see #9210
 	}
 	
 	this.registerRpc({

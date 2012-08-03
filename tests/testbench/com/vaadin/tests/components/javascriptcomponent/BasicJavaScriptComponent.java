@@ -12,8 +12,11 @@ import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.JavaScriptComponentState;
+import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.terminal.gwt.server.ResourceReference;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
@@ -28,6 +31,7 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
 
     public static class TestState extends JavaScriptComponentState {
         private List<String> messages = new ArrayList<String>();
+        private URLReference url;
 
         public List<String> getMessages() {
             return messages;
@@ -35,6 +39,14 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
 
         public void setMessages(List<String> messages) {
             this.messages = messages;
+        }
+
+        public URLReference getUrl() {
+            return url;
+        }
+
+        public void setUrl(URLReference url) {
+            this.url = url;
         }
     }
 
@@ -83,6 +95,9 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
                     .setMessages(
                             Arrays.asList("First state message",
                                     "Second state message"));
+            ClassResource resource = new ClassResource("test",
+                    BasicJavaScriptComponent.this.getApplication());
+            getState().setUrl(new ResourceReference(resource));
         }
 
         @Override

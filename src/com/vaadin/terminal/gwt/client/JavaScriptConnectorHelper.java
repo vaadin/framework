@@ -145,8 +145,9 @@ public class JavaScriptConnectorHelper {
 
     private JavaScriptObject getConnectorWrapper() {
         if (connectorWrapper == null) {
-            connectorWrapper = createConnectorWrapper(this, nativeState,
-                    rpcMap, connector.getConnectorId(), rpcObjects);
+            connectorWrapper = createConnectorWrapper(this,
+                    connector.getConnection(), nativeState, rpcMap,
+                    connector.getConnectorId(), rpcObjects);
         }
 
         return connectorWrapper;
@@ -161,9 +162,9 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static native JavaScriptObject createConnectorWrapper(
-            JavaScriptConnectorHelper h, JavaScriptObject nativeState,
-            JavaScriptObject registeredRpc, String connectorId,
-            Map<String, JavaScriptObject> rpcObjects)
+            JavaScriptConnectorHelper h, ApplicationConnection c,
+            JavaScriptObject nativeState, JavaScriptObject registeredRpc,
+            String connectorId, Map<String, JavaScriptObject> rpcObjects)
     /*-{
         return {
             'getConnectorId': function() {
@@ -195,6 +196,9 @@ public class JavaScriptConnectorHelper {
                 }
                 registeredRpc[iface].push(rpcHandler);
             },
+            'translateVaadinUri': $entry(function(uri) {
+                return c.@com.vaadin.terminal.gwt.client.ApplicationConnection::translateVaadinUri(Ljava/lang/String;)(uri);
+            }),
         };
     }-*/;
 
