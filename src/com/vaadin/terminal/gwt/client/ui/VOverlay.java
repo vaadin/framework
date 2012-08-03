@@ -224,7 +224,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        sizeUpdated(isAnimationEnabled() ? 0 : 1);
+        sizeOrPositionUpdated(isAnimationEnabled() ? 0 : 1);
     }
 
     private IFrameElement getShimElement() {
@@ -315,7 +315,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
-            sizeUpdated(1.0);
+            sizeOrPositionUpdated(1.0);
         }
         Util.runIE7ZeroSizedBodyFix();
     }
@@ -347,13 +347,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        sizeUpdated(1.0);
+        sizeOrPositionUpdated(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        sizeUpdated(1.0);
+        sizeOrPositionUpdated(1.0);
     }
 
     /**
@@ -377,15 +377,15 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
      * 
-     * @deprecated Call {@link #sizeUpdated()} instead.
+     * @deprecated Call {@link #sizeOrPositionUpdated()} instead.
      */
     @Deprecated
     protected void updateShadowSizeAndPosition() {
-        sizeUpdated();
+        sizeOrPositionUpdated();
     }
 
-    protected void sizeUpdated() {
-        sizeUpdated(1.0);
+    protected void sizeOrPositionUpdated() {
+        sizeOrPositionUpdated(1.0);
     }
 
     /**
@@ -398,7 +398,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
      */
-    private void sizeUpdated(final double progress) {
+    private void sizeOrPositionUpdated(final double progress) {
         // Don't do anything if overlay element is not attached
         if (!isAttached()) {
             return;
@@ -499,7 +499,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     protected class ResizeAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            sizeUpdated(progress);
+            sizeOrPositionUpdated(progress);
         }
     }
 

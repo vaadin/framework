@@ -34,6 +34,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
@@ -300,6 +301,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
 
         @Override
         public void hide(boolean autoClosed) {
+            VConsole.log("Hiding popupview");
             hiding = true;
             syncChildren();
             unregisterPaintables();
@@ -475,7 +477,7 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
     }
 
     public boolean requestLayout(Set<Paintable> child) {
-        popup.sizeUpdated();
+        popup.sizeOrPositionUpdated();
         return true;
     }
 
