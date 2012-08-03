@@ -20,11 +20,6 @@ public class ResourceInStateComponent extends AbstractComponent {
     }
 
     public Resource getMyIcon() {
-        ResourceReference ref = ((ResourceReference) getState().getMyIcon());
-        if (ref != null) {
-            return ref.getResource();
-        } else {
-            return null;
-        }
+        return ResourceReference.getResource(getState().getMyIcon());
     }
 }

@@ -294,12 +294,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public Resource getIcon() {
-        ResourceReference ref = ((ResourceReference) getState().getIcon());
-        if (ref == null) {
-            return null;
-        } else {
-            return ref.getResource();
-        }
+        return ResourceReference.getResource(getState().getIcon());
     }
 
     /**
@@ -311,11 +306,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setIcon(Resource icon) {
-        if (icon == null) {
-            getState().setIcon(null);
-        } else {
-            getState().setIcon(new ResourceReference(icon));
-        }
+        getState().setIcon(ResourceReference.create(icon));
         requestRepaint();
     }
 

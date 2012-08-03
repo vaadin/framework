@@ -48,4 +48,20 @@ public class ResourceReference extends URLReference {
         }
 
     }
+
+    public static ResourceReference create(Resource resource) {
+        if (resource == null) {
+            return null;
+        } else {
+            return new ResourceReference(resource);
+        }
+    }
+
+    public static Resource getResource(URLReference reference) {
+        if (reference == null) {
+            return null;
+        }
+        assert reference instanceof ResourceReference;
+        return ((ResourceReference) reference).getResource();
+    }
 }
