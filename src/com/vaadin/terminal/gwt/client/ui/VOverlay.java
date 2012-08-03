@@ -236,6 +236,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             // shim behind the shadow due to its transparency.
             shimElement.getStyle().setPosition(Position.ABSOLUTE);
             shimElement.getStyle().setBorderStyle(BorderStyle.NONE);
+            shimElement.setTabIndex(-1);
             shimElement.setFrameBorder(0);
             shimElement.setMarginHeight(0);
         }
