@@ -94,8 +94,8 @@ public class LoginForm extends CustomComponent {
     };
 
     private URIHandler uriHandler = new URIHandler() {
-        private final String responce = "<html><body>Login form handeled."
-                + "<script type='text/javascript'>top.vaadin.forceSync();"
+        private final String response = "<html><body>Login form handeled."
+                + "<script type='text/javascript'>parent.parent.vaadin.forceSync();"
                 + "</script></body></html>";
 
         public DownloadStream handleURI(URL context, String relativeUri) {
@@ -104,7 +104,7 @@ public class LoginForm extends CustomComponent {
                     window.removeURIHandler(this);
                 }
                 DownloadStream downloadStream = new DownloadStream(
-                        new ByteArrayInputStream(responce.getBytes()),
+                        new ByteArrayInputStream(response.getBytes()),
                         "text/html", "loginSuccesfull");
                 downloadStream.setCacheTime(-1);
                 return downloadStream;
