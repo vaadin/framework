@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -75,5 +76,12 @@ public class VTextArea extends VTextField {
         // position for old Internet Explorer versions where it has to be
         // detected in a different way.
         return getImpl().getTextAreaCursorPos(getElement());
+    }
+
+    @Override
+    public void onKeyDown(KeyDownEvent event) {
+        // Overridden to avoid submitting TextArea value on enter in IE. This is
+        // another reason why widgets should inherit a common abstract
+        // class instead of directly each other.
     }
 }
