@@ -287,7 +287,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         if (window.centered) {
             window.center();
         }
-        window.updateShadowSizeAndPosition();
+        window.sizeOrPositionUpdated();
     }
 
     @Override

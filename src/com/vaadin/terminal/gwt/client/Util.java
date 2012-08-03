@@ -834,30 +834,29 @@ public class Util {
         ServerConnector connector = ConnectorMap.get(c).getConnector(id);
         if (connector != null) {
             VConsole.log("\t" + id + " (" + connector.getClass() + ") :");
-            for (MethodInvocation invocation : invocations) {
-                Object[] parameters = invocation.getParameters();
-                String formattedParams = null;
-                if (ApplicationConnection.UPDATE_VARIABLE_METHOD
-                        .equals(invocation.getMethodName())
-                        && parameters.length == 2) {
-                    // name, value
-                    Object value = parameters[1];
-                    // TODO paintables inside lists/maps get rendered as
-                    // components in the debug console
-                    String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
-                            .getConnectorId() : String.valueOf(value);
-                    formattedParams = parameters[0] + " : " + formattedValue;
-                }
-                if (null == formattedParams) {
-                    formattedParams = (null != parameters) ? Arrays
-                            .toString(parameters) : null;
-                }
-                VConsole.log("\t\t" + invocation.getInterfaceName() + "."
-                        + invocation.getMethodName() + "(" + formattedParams
-                        + ")");
-            }
         } else {
-            VConsole.log("\t" + id + ": Warning: no corresponding connector!");
+            VConsole.log("\t" + id
+                    + ": Warning: no corresponding connector for id " + id);
+        }
+        for (MethodInvocation invocation : invocations) {
+            Object[] parameters = invocation.getParameters();
+            String formattedParams = null;
+            if (ApplicationConnection.UPDATE_VARIABLE_METHOD.equals(invocation
+                    .getMethodName()) && parameters.length == 2) {
+                // name, value
+                Object value = parameters[1];
+                // TODO paintables inside lists/maps get rendered as
+                // components in the debug console
+                String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
+                        .getConnectorId() : String.valueOf(value);
+                formattedParams = parameters[0] + " : " + formattedValue;
+            }
+            if (null == formattedParams) {
+                formattedParams = (null != parameters) ? Arrays
+                        .toString(parameters) : null;
+            }
+            VConsole.log("\t\t" + invocation.getInterfaceName() + "."
+                    + invocation.getMethodName() + "(" + formattedParams + ")");
         }
     }
 

@@ -91,7 +91,7 @@ public class LoginForm extends CustomComponent {
                 response.setContentType("text/html; charset=utf-8");
                 response.getWriter()
                         .write("<html><body>Login form handled."
-                                + "<script type='text/javascript'>top.vaadin.forceSync();"
+                                + "<script type='text/javascript'>parent.parent.vaadin.forceSync();"
                                 + "</script></body></html>");
 
                 Map<String, String[]> parameters = request.getParameterMap();

@@ -1066,6 +1066,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
      */
 
+    @Override
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
@@ -1810,6 +1811,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }

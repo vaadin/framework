@@ -28,6 +28,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VCaptionWrapper;
+import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
@@ -246,6 +247,7 @@ public class VPopupView extends HTML {
 
         @Override
         public void hide(boolean autoClosed) {
+            VConsole.log("Hiding popupview");
             hiding = true;
             syncChildren();
             if (popupComponentWidget != null && popupComponentWidget != loading) {

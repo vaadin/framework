@@ -54,6 +54,7 @@ public class RootConnector extends AbstractComponentContainerConnector
     private HandlerRegistration childStateChangeHandlerRegistration;
 
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
+        @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
             // TODO Should use a more specific handler that only reacts to
             // size changes
@@ -65,12 +66,14 @@ public class RootConnector extends AbstractComponentContainerConnector
     protected void init() {
         super.init();
         registerRpc(PageClientRpc.class, new PageClientRpc() {
+            @Override
             public void setTitle(String title) {
                 com.google.gwt.user.client.Window.setTitle(title);
             }
         });
     }
 
+    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         getWidget().rendering = true;
@@ -121,6 +124,7 @@ public class RootConnector extends AbstractComponentContainerConnector
                 // to finish rendering this window in case this is a download
                 // (and window stays open).
                 Scheduler.get().scheduleDeferred(new Command() {
+                    @Override
                     public void execute() {
                         VRoot.goTo(url);
                     }
@@ -185,6 +189,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
@@ -296,6 +301,7 @@ public class RootConnector extends AbstractComponentContainerConnector
 
     };
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP The main view never draws caption for its layout
     }
@@ -415,6 +421,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
 
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 componentConnector.getWidget().getElement().scrollIntoView();
             }

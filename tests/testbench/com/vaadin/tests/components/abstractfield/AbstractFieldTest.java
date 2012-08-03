@@ -78,6 +78,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
             MenuItem sortValueChangesItem = abstractField.addItem(
                     "Show sorted value changes", new MenuBar.Command() {
+                        @Override
                         public void menuSelected(MenuItem selectedItem) {
                             sortValueChanges = selectedItem.isChecked();
                             log("Show sorted value changes: "

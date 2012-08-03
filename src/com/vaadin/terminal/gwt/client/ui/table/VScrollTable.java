@@ -131,6 +131,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
+    /**
+     * Tell the client that old keys are no longer valid because the server has
+     * cleared its key map.
+     */
+    public static final String ATTRIBUTE_KEY_MAPPER_RESET = "clearKeyMap";
+
     private static final String ROW_HEADER_COLUMN_KEY = "0";
 
     public static final String CLASSNAME = "v-table";
@@ -216,7 +222,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /*
      * Helper to store selection range start in when using the keyboard
      */
-    private VScrollTableRow selectionRangeStart;
+    VScrollTableRow selectionRangeStart;
 
     /*
      * Flag for notifying when the selection has changed and should be sent to
@@ -240,6 +246,19 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             && !BrowserInfo.get().requiresTouchScrollDelegate();
 
     private Set<String> noncollapsibleColumns;
+
+    /**
+     * The last known row height used to preserve the height of a table with
+     * custom row heights and a fixed page length after removing the last row
+     * from the table.
+     * 
+     * A new VScrollTableBody instance is created every time the number of rows
+     * changes causing {@link VScrollTableBody#rowHeight} to be discarded and
+     * the height recalculated by {@link VScrollTableBody#getRowHeight(boolean)}
+     * to avoid some rounding problems, e.g. round(2 * 19.8) / 2 = 20 but
+     * round(3 * 19.8) / 3 = 19.66.
+     */
+    private double lastKnownRowHeight = Double.NaN;
 
     /**
      * Represents a select range of rows
@@ -4244,13 +4263,27 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (tBodyMeasurementsDone && !forceUpdate) {
                 return rowHeight;
             } else {
-
                 if (tBodyElement.getRows().getLength() > 0) {
                     int tableHeight = getTableHeight();
                     int rowCount = tBodyElement.getRows().getLength();
                     rowHeight = tableHeight / (double) rowCount;
                 } else {
-                    if (isAttached()) {
+                    // Special cases if we can't just measure the current rows
+                    if (!Double.isNaN(lastKnownRowHeight)) {
+                        // Use previous value if available
+                        if (BrowserInfo.get().isIE()) {
+                            /*
+                             * IE needs to reflow the table element at this
+                             * point to work correctly (e.g.
+                             * com.vaadin.tests.components.table.
+                             * ContainerSizeChange) - the other code paths
+                             * already trigger reflows, but here it must be done
+                             * explicitly.
+                             */
+                            getTableHeight();
+                        }
+                        rowHeight = lastKnownRowHeight;
+                    } else if (isAttached()) {
                         // measure row height by adding a dummy row
                         VScrollTableRow scrollTableRow = new VScrollTableRow();
                         tBodyElement.appendChild(scrollTableRow.getElement());
@@ -4261,6 +4294,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         return DEFAULT_ROW_HEIGHT;
                     }
                 }
+                lastKnownRowHeight = rowHeight;
                 tBodyMeasurementsDone = true;
                 return rowHeight;
             }

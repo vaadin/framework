@@ -248,6 +248,20 @@ public class TableConnector extends AbstractComponentContainerConnector
             }
         }
 
+        /*
+         * If the server has (re)initialized the rows, our selectionRangeStart
+         * row will point to an index that the server knows nothing about,
+         * causing problems if doing multi selection with shift. The field will
+         * be cleared a little later when the row focus has been restored.
+         * (#8584)
+         */
+        if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
+                && uidl.getBooleanAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
+                && getWidget().selectionRangeStart != null) {
+            assert !getWidget().selectionRangeStart.isAttached();
+            getWidget().selectionRangeStart = getWidget().focusedRow;
+        }
+
         getWidget().tabIndex = uidl.hasAttribute("tabindex") ? uidl
                 .getIntAttribute("tabindex") : 0;
         getWidget().setProperTabIndex();
