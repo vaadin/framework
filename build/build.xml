@@ -140,6 +140,7 @@
 				<include name="*.png" />
 			</fileset>
 		</delete>
+		<delete failonerror="false" dir="WebContent/VAADIN/gwt-unitCache" />
     </target>
 
     <!-- ================================================================== -->
