@@ -753,6 +753,10 @@ public class VTree extends FocusElementPanel implements Paintable,
             if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
                 /*
                  * Safari may need to wait for focus. See FocusImplSafari.
+                 * 
+                 * Note that this if/else must exactly match the one in
+                 * fireClick() to ensure that the above click/selection event
+                 * logic works correctly (#9136)
                  */
                 // VConsole.log("Deferring click handling to let webkit gain focus...");
                 Scheduler.get().scheduleDeferred(command);
@@ -930,13 +934,17 @@ public class VTree extends FocusElementPanel implements Paintable,
                             details.toString(), sendClickEventNow);
                 }
             };
-            if (treeHasFocus) {
-                command.execute();
-            } else {
+            if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
                 /*
                  * Webkits need a deferring due to FocusImplSafari uses timeout
+                 * 
+                 * Note that this if/else must exactly match the one in
+                 * handleClickSelection() to ensure that the above
+                 * click/selection event logic works correctly (#9136)
                  */
                 Scheduler.get().scheduleDeferred(command);
+            } else {
+                command.execute();
             }
         }
 
