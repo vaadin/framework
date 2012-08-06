@@ -6091,14 +6091,37 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Hey IE, are you really sure about this?
             availW = scrollBody.getAvailableWidth();
             int visibleCellCount = tHead.getVisibleCellCount();
-            availW -= scrollBody.getCellExtraWidth() * visibleCellCount;
+            int totalExtraWidth = scrollBody.getCellExtraWidth()
+                    * visibleCellCount;
             if (willHaveScrollbars()) {
-                availW -= Util.getNativeScrollbarSize();
+                totalExtraWidth += Util.getNativeScrollbarSize();
             }
-
+            availW -= totalExtraWidth;
+            int forceScrollBodyWidth = -1;
+            
             int extraSpace = availW - usedMinimumWidth;
             if (extraSpace < 0) {
+                if (getTotalRows() == 0) {
+                    /*
+                     * Too wide header combined with no rows in the table.
+                     * 
+                     * No horizontal scrollbars would be displayed because
+                     * there's no rows that grows too wide causing the
+                     * scrollBody container div to overflow. Must explicitely
+                     * force a width to a scrollbar. (see #9187)
+                     */
+                    forceScrollBodyWidth = usedMinimumWidth + totalExtraWidth;
+                }
                 extraSpace = 0;
+            }
+
+            if (forceScrollBodyWidth > 0) {
+                scrollBody.container.getStyle().setWidth(forceScrollBodyWidth,
+                        Unit.PX);
+            } else {
+                // Clear width that might have been set to force horizontal
+                // scrolling if there are no rows
+                scrollBody.container.getStyle().clearWidth();
             }
 
             int totalUndefinedNaturalWidths = usedMinimumWidth
