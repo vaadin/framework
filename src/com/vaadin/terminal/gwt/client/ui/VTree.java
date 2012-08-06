@@ -714,7 +714,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                 focus();
             }
 
-            ScheduledCommand command = new ScheduledCommand() {
+            executeEventCommand(new ScheduledCommand() {
                 public void execute() {
 
                     if (multiSelectMode == MULTISELECT_MODE_SIMPLE
@@ -748,21 +748,7 @@ public class VTree extends FocusElementPanel implements Paintable,
                         }
                     }
                 }
-            };
-
-            if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
-                /*
-                 * Safari may need to wait for focus. See FocusImplSafari.
-                 * 
-                 * Note that this if/else must exactly match the one in
-                 * fireClick() to ensure that the above click/selection event
-                 * logic works correctly (#9136)
-                 */
-                // VConsole.log("Deferring click handling to let webkit gain focus...");
-                Scheduler.get().scheduleDeferred(command);
-            } else {
-                command.execute();
-            }
+            });
 
             return true;
         }
@@ -906,7 +892,8 @@ public class VTree extends FocusElementPanel implements Paintable,
                 }
             }
             final MouseEventDetails details = new MouseEventDetails(evt);
-            ScheduledCommand command = new ScheduledCommand() {
+
+            executeEventCommand(new ScheduledCommand() {
                 public void execute() {
                     // Determine if we should send the event immediately to the
                     // server. We do not want to send the event if there is a
@@ -933,15 +920,15 @@ public class VTree extends FocusElementPanel implements Paintable,
                     client.updateVariable(paintableId, "clickEvent",
                             details.toString(), sendClickEventNow);
                 }
-            };
+            });
+        }
+
+        /*
+         * Must wait for Safari to focus before sending click and value change
+         * events (see #6373, #6374)
+         */
+        private void executeEventCommand(ScheduledCommand command) {
             if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
-                /*
-                 * Webkits need a deferring due to FocusImplSafari uses timeout
-                 * 
-                 * Note that this if/else must exactly match the one in
-                 * handleClickSelection() to ensure that the above
-                 * click/selection event logic works correctly (#9136)
-                 */
                 Scheduler.get().scheduleDeferred(command);
             } else {
                 command.execute();
