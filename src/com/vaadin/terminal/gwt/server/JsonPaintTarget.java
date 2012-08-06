@@ -15,14 +15,10 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
@@ -339,33 +335,12 @@ public class JsonPaintTarget implements PaintTarget {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void addAttribute(String name, Resource value) throws PaintException {
-
-        if (value instanceof ExternalResource) {
-            addAttribute(name, ((ExternalResource) value).getURL());
-
-        } else if (value instanceof ApplicationResource) {
-            final ApplicationResource r = (ApplicationResource) value;
-            final Application a = r.getApplication();
-            if (a == null) {
-                throw new PaintException(
-                        "Application not specified for resorce "
-                                + value.getClass().getName());
-            }
-            final String uri = a.getRelativeLocation(r);
-            addAttribute(name, uri);
-
-        } else if (value instanceof ThemeResource) {
-            final String uri = "theme://"
-                    + ((ThemeResource) value).getResourceId();
-            addAttribute(name, uri);
-        } else {
-            throw new PaintException("Ajax adapter does not "
-                    + "support resources of type: "
-                    + value.getClass().getName());
+        if (value == null) {
+            throw new NullPointerException();
         }
-
+        ResourceReference reference = ResourceReference.create(value);
+        addAttribute(name, reference.getURL());
     }
 
     @Override
