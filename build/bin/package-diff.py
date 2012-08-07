@@ -7,7 +7,7 @@ from sets import Set
 # Configuration
 ################################################################################
 downloadsite = "http://vaadin.com/download"
-latestfile   = "/release/6.7/LATEST"
+latestfile   = "/release/6.8/LATEST"
 
 JAPIZE     = "japize"
 JAPICOMPAT = "japicompat"
