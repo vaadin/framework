@@ -47,6 +47,10 @@ public class StatementHelper implements Serializable {
         if (parameter != null) {
             parameters.add(parameter);
             dataTypes.put(parameters.size() - 1, parameter.getClass());
+        } else {
+            throw new IllegalArgumentException(
+                    "You cannot add null parameters using addParamaters(Object). "
+                            + "Use addParameters(Object,Class) instead");
         }
     }
 
