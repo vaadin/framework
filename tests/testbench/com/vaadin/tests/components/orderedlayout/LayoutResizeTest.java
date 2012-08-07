@@ -40,7 +40,9 @@ public class LayoutResizeTest extends TestBase {
                     public void buttonClick(ClickEvent event) {
                         event.getButton()
                                 .getRoot()
-                                .executeJavaScript(
+                                .getPage()
+                                .getJavaScript()
+                                .execute(
                                         "setTimeout(function() {window.resizeTo(700,400)}, 500)");
                     }
                 });
@@ -50,7 +52,9 @@ public class LayoutResizeTest extends TestBase {
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getRoot()
-                        .executeJavaScript(
+                        .getPage()
+                        .getJavaScript()
+                        .execute(
                                 "setTimeout(function() {window.resizeTo(900,600)}, 500)");
             }
         });
