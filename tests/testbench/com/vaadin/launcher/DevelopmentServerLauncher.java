@@ -13,13 +13,13 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.launcher.util.BrowserLauncher;
-
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
+
+import com.vaadin.launcher.util.BrowserLauncher;
 
 /**
  * Class for running Jetty servlet container within Eclipse project.
@@ -40,6 +40,7 @@ public class DevelopmentServerLauncher {
      * @throws Exception
      */
     public static void main(String[] args) {
+        System.setProperty("java.awt.headless", "true");
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);

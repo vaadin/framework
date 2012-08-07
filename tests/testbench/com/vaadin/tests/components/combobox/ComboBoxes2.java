@@ -10,12 +10,14 @@ import com.vaadin.ui.Select;
 public class ComboBoxes2 extends SelectTest<ComboBox> {
 
     private Command<ComboBox, String> inputPromptCommand = new Command<ComboBox, String>() {
+        @Override
         public void execute(ComboBox c, String value, Object data) {
             c.setInputPrompt(value);
         }
     };
     private Command<ComboBox, Integer> filteringModeCommand = new Command<ComboBox, Integer>() {
 
+        @Override
         public void execute(ComboBox c, Integer value, Object data) {
             c.setFilteringMode(value);
         }
@@ -39,6 +41,7 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
     private void createTextInputAlowedAction(String category) {
         createBooleanAction("Text input allowed", category, true,
                 new Command<ComboBox, Boolean>() {
+                    @Override
                     public void execute(ComboBox c, Boolean value, Object data) {
                         c.setTextInputAllowed(value.booleanValue());
                     }
@@ -48,6 +51,7 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
     private void createNewItemsAllowedAction(String category) {
         createBooleanAction("New items allowed", category, false,
                 new Command<ComboBox, Boolean>() {
+                    @Override
                     public void execute(ComboBox c, Boolean value, Object data) {
                         c.setNewItemsAllowed(value.booleanValue());
                     }
@@ -80,6 +84,7 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
         createSelectAction("Icon", category, createIconOptions(false), "-",
                 new Command<ComboBox, Resource>() {
 
+                    @Override
                     public void execute(ComboBox c, Resource value, Object data) {
                         for (Object id : c.getItemIds()) {
                             if (value == null) {

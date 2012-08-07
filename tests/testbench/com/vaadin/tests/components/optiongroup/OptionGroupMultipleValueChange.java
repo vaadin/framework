@@ -2,7 +2,7 @@ package com.vaadin.tests.components.optiongroup;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
@@ -33,6 +33,7 @@ public class OptionGroupMultipleValueChange extends TestBase {
 
         og.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 String s = "ValueChange: " + event.getProperty().getValue();
                 events.setValue(events.getValue() + "\n" + s);

@@ -35,6 +35,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
         nextButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -1577298910202253538L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 nextLaytout();
             }
@@ -106,6 +107,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
             layoutSelector.addListener(new Property.ValueChangeListener() {
                 private static final long serialVersionUID = -605319614765838359L;
 
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     layoutIndex = -1;
                     nextLaytout();

@@ -11,11 +11,11 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -305,6 +305,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @return the parent component
      */
+    @Override
     public HasComponents getParent();
 
     /**
@@ -507,6 +508,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return the Root of the component or <code>null</code> if it is not
      *         attached to a Root
      */
+    @Override
     public Root getRoot();
 
     /**
@@ -520,8 +522,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Getting a null value is often a problem in constructors of regular
      * components and in the initializers of custom composite components. A
-     * standard workaround is to use {@link Application#getCurrent()}
-     * to retrieve the application instance that the current request relates to.
+     * standard workaround is to use {@link Application#getCurrent()} to
+     * retrieve the application instance that the current request relates to.
      * Another way is to move the problematic initialization to
      * {@link #attach()}, as described in the documentation of the method.
      * </p>
@@ -585,6 +587,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * }
      * </pre>
      */
+    @Override
     public void attach();
 
     /**
@@ -620,6 +623,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @since 7.0
      */
+    @Override
     public ComponentState getState();
 
     /**

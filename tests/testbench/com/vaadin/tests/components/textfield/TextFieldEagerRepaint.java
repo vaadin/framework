@@ -14,6 +14,7 @@ public class TextFieldEagerRepaint extends TestBase {
         final TextField tf1 = new TextField("Updates value");
         tf1.setTextChangeEventMode(TextChangeEventMode.EAGER);
         tf1.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 String text = event.getText();
                 if (!text.matches("[a-z]*")) {
@@ -26,6 +27,7 @@ public class TextFieldEagerRepaint extends TestBase {
         final TextField tf2 = new TextField("Updates width");
         tf2.setTextChangeEventMode(TextChangeEventMode.EAGER);
         tf2.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 String text = event.getText();
                 if (!text.matches("[a-z]*")) {

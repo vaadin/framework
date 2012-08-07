@@ -17,11 +17,11 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.InitializableServerRpc;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 /**
  * GWT generator that creates client side proxy classes for making RPC calls

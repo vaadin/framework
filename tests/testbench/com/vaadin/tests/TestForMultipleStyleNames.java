@@ -65,6 +65,7 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
 
         final String currentStyle = l.getStyleName();

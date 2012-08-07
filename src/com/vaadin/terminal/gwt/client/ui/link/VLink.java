@@ -13,7 +13,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 
 public class VLink extends HTML implements ClickHandler {
@@ -51,10 +50,10 @@ public class VLink extends HTML implements ClickHandler {
         getElement().appendChild(anchor);
         anchor.appendChild(captionElement);
         addClickHandler(this);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
         setStyleName(CLASSNAME);
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         if (enabled) {
             if (target == null) {
@@ -100,9 +99,6 @@ public class VLink extends HTML implements ClickHandler {
         final Element target = DOM.eventGetTarget(event);
         if (event.getTypeInt() == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
-        }
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
         }
         if (target == captionElement || target == anchor
                 || (icon != null && target == icon.getElement())) {

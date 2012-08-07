@@ -50,9 +50,11 @@ public class Notifications extends TestBase implements ClickListener {
         return null;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         Notification n = new Notification(tf.getValue(),
                 (Integer) type.getValue());
+        n.setHtmlContentAllowed(true);
         n.show(Page.getCurrent());
     }
 }

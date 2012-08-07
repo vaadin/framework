@@ -60,15 +60,18 @@ public class RemoveListenersOnDetach {
     };
 
     Property property = new AbstractProperty() {
+        @Override
         public Object getValue() {
             return null;
         }
 
+        @Override
         public void setValue(Object newValue) throws ReadOnlyException,
                 ConversionException {
             fireValueChange();
         }
 
+        @Override
         public Class<?> getType() {
             return String.class;
         }

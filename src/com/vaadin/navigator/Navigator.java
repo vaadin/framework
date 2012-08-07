@@ -14,6 +14,7 @@ import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Page.FragmentChangedEvent;
 import com.vaadin.terminal.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 
@@ -53,6 +54,7 @@ public class Navigator implements Serializable {
             setHeight("0px");
         }
 
+        @Override
         public void navigateTo(String fragmentParameters) {
             // nothing to do
         }
@@ -87,14 +89,17 @@ public class Navigator implements Serializable {
             page.addListener(this);
         }
 
+        @Override
         public String getFragment() {
             return page.getFragment();
         }
 
+        @Override
         public void setFragment(String fragment) {
             page.setFragment(fragment, false);
         }
 
+        @Override
         public void fragmentChanged(FragmentChangedEvent event) {
             UriFragmentManager.this.navigator.navigateTo(getFragment());
         }
@@ -121,9 +126,45 @@ public class Navigator implements Serializable {
             setSizeFull();
         }
 
+        @Override
         public void showView(View view) {
             if (view instanceof Component) {
                 setCompositionRoot((Component) view);
+            } else {
+                throw new IllegalArgumentException("View is not a component: "
+                        + view);
+            }
+        }
+    }
+
+    /**
+     * View display that replaces the contents of a {@link ComponentContainer}
+     * with the active {@link View}.
+     * 
+     * All components of the container are removed before adding the new view to
+     * it.
+     * 
+     * This display only supports views that are {@link Component}s themselves.
+     * Attempting to display a view that is not a component causes an exception
+     * to be thrown.
+     */
+    public static class ComponentContainerViewDisplay implements ViewDisplay {
+
+        private final ComponentContainer container;
+
+        /**
+         * Create new {@link ViewDisplay} that updates a
+         * {@link ComponentContainer} to show the view.
+         */
+        public ComponentContainerViewDisplay(ComponentContainer container) {
+            this.container = container;
+        }
+
+        @Override
+        public void showView(View view) {
+            if (view instanceof Component) {
+                container.removeAllComponents();
+                container.addComponent((Component) view);
             } else {
                 throw new IllegalArgumentException("View is not a component: "
                         + view);
@@ -155,6 +196,7 @@ public class Navigator implements Serializable {
             this.view = view;
         }
 
+        @Override
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
@@ -165,6 +207,7 @@ public class Navigator implements Serializable {
             return null;
         }
 
+        @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
                 return view;
@@ -215,6 +258,7 @@ public class Navigator implements Serializable {
             this.viewClass = viewClass;
         }
 
+        @Override
         public String getViewName(String viewAndParameters) {
             if (null == viewAndParameters) {
                 return null;
@@ -226,6 +270,7 @@ public class Navigator implements Serializable {
             return null;
         }
 
+        @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
                 try {
@@ -268,7 +313,47 @@ public class Navigator implements Serializable {
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
 
     /**
+     * Create a navigator that is tracking the active view using URI fragments
+     * of the current {@link Page} and replacing the contents of a
+     * {@link ComponentContainer} with the active view.
+     * 
+     * In case the container is not on the current page, use another
+     * {@link Navigator#Navigator(Page, ViewDisplay)} with an explicitly created
+     * {@link ComponentContainerViewDisplay}.
+     * 
+     * All components of the container are removed each time before adding the
+     * active {@link View}. Views must implement {@link Component} when using
+     * this constructor.
+     * 
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
+     * 
+     * @param container
+     *            ComponentContainer whose contents should be replaced with the
+     *            active view on view change
+     */
+    public Navigator(ComponentContainer container) {
+        display = new ComponentContainerViewDisplay(container);
+        fragmentManager = new UriFragmentManager(Page.getCurrent(), this);
+    }
+
+    /**
      * Create a navigator that is tracking the active view using URI fragments.
+     * 
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * e.g.
+     * 
+     * <pre>
+     * navigator.navigateTo(Page.getCurrent().getFragment());
+     * </pre>
      * 
      * @param page
      *            whose URI fragments are used
@@ -278,21 +363,6 @@ public class Navigator implements Serializable {
     public Navigator(Page page, ViewDisplay display) {
         this.display = display;
         fragmentManager = new UriFragmentManager(page, this);
-        navigateTo(page.getFragment());
-    }
-
-    /**
-     * Create a navigator that is tracking the active view using URI fragments.
-     * By default, a {@link SimpleViewDisplay} is used and can be obtained using
-     * {@link #getDisplay()}.
-     * 
-     * @param page
-     *            whose URI fragments are used
-     */
-    public Navigator(Page page) {
-        display = new SimpleViewDisplay();
-        fragmentManager = new UriFragmentManager(page, this);
-        navigateTo(page.getFragment());
     }
 
     /**

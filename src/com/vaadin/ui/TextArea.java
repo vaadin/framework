@@ -5,7 +5,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.gwt.client.ui.textarea.TextAreaState;
+import com.vaadin.shared.ui.textarea.TextAreaState;
 
 /**
  * A text field that supports multi line editing.

@@ -100,6 +100,7 @@ public class ExternalResource implements Resource, Serializable {
      * 
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
+    @Override
     public String getMIMEType() {
         if (mimeType == null) {
             mimeType = FileTypeResolver.getMIMEType(getURL().toString());

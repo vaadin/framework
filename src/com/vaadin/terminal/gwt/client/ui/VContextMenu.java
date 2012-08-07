@@ -46,6 +46,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
+                @Override
                 public void execute() {
                     imagesLoaded();
                 }
@@ -103,6 +104,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         Util.sinkOnloadForImages(menu.getElement());
 
         setPopupPositionAndShow(new PositionCallback() {
+            @Override
             public void setPosition(int offsetWidth, int offsetHeight) {
                 // mac FF gets bad width due GWT popups overflow hacks,
                 // re-determine width
@@ -129,6 +131,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                  * the positioning has been done.
                  */
                 Scheduler.get().scheduleDeferred(new Command() {
+                    @Override
                     public void execute() {
                         // Focus the menu.
                         menu.setFocus(true);
@@ -186,18 +189,22 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             return super.getItems().get(index);
         }
 
+        @Override
         public HandlerRegistration addFocusHandler(FocusHandler handler) {
             return addDomHandler(handler, FocusEvent.getType());
         }
 
+        @Override
         public HandlerRegistration addBlurHandler(BlurHandler handler) {
             return addDomHandler(handler, BlurEvent.getType());
         }
 
+        @Override
         public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
             return addDomHandler(handler, KeyDownEvent.getType());
         }
 
+        @Override
         public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
             return addDomHandler(handler, KeyPressEvent.getType());
         }
@@ -215,6 +222,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             setFocus(true);
         }
 
+        @Override
         public void onLoad(LoadEvent event) {
             // Handle icon onload events to ensure shadow is resized correctly
             delayedImageLoadExecutioner.trigger();
@@ -222,6 +230,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
     }
 
+    @Override
     public Element getSubPartElement(String subPart) {
         int index = Integer.parseInt(subPart.substring(6));
         // ApplicationConnection.getConsole().log(
@@ -232,6 +241,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         return item.getElement().getFirstChildElement().cast();
     }
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;

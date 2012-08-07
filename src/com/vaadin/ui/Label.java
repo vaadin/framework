@@ -5,12 +5,13 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
-import com.vaadin.terminal.gwt.client.ui.label.LabelState;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.LabelState;
 
 /**
  * Label component for showing non-editable short texts.
@@ -40,6 +41,9 @@ import com.vaadin.terminal.gwt.client.ui.label.LabelState;
 public class Label extends AbstractComponent implements Property<String>,
         Property.Viewer, Property.ValueChangeListener,
         Property.ValueChangeNotifier, Comparable<Label> {
+
+    private static final Logger logger = Logger
+            .getLogger(Label.class.getName());
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
@@ -142,11 +146,15 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * Gets the value of the label. Value of the label is the XML contents of
-     * the label.
+     * Gets the value of the label.
+     * <p>
+     * The value of the label is the text that is shown to the end user.
+     * Depending on the {@link ContentMode} it is plain text or markup.
+     * </p>
      * 
-     * @return the Value of the label.
+     * @return the value of the label.
      */
+    @Override
     public String getValue() {
         if (getPropertyDataSource() == null) {
             // Use internal value if we are running without a data source
@@ -163,6 +171,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @param newStringValue
      *            the New value of the label.
      */
+    @Override
     public void setValue(Object newStringValue) {
         if (newStringValue != null && newStringValue.getClass() != String.class) {
             throw new Converter.ConversionException("Value of type "
@@ -179,15 +188,20 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
+     * Returns the value displayed by this label.
+     * 
      * @see java.lang.Object#toString()
-     * @deprecated use the data source value or {@link #getStringValue()}
-     *             instead
+     * @deprecated As of 7.0.0, use {@link #getValue()} to get the value of the
+     *             label or {@link #getPropertyDataSource()} .getValue() to get
+     *             the value of the data source.
      */
     @Deprecated
     @Override
     public String toString() {
-        throw new UnsupportedOperationException(
-                "Use getValue() instead of Label.toString()");
+        logger.warning("You are using Label.toString() to get the value for a "
+                + getClass().getSimpleName()
+                + ". This is not recommended and will not be supported in future versions.");
+        return getValue();
     }
 
     /**
@@ -195,6 +209,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @see com.vaadin.data.Property#getType()
      */
+    @Override
     public Class<String> getType() {
         return String.class;
     }
@@ -205,6 +220,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @return the data source property.
      * @see com.vaadin.data.Property.Viewer#getPropertyDataSource()
      */
+    @Override
     public Property getPropertyDataSource() {
         return dataSource;
     }
@@ -216,6 +232,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the new data source Property
      * @see com.vaadin.data.Property.Viewer#setPropertyDataSource(com.vaadin.data.Property)
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
         // Stops listening the old data source changes
         if (dataSource != null
@@ -312,6 +329,7 @@ public class Label extends AbstractComponent implements Property<String>,
          * 
          * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
@@ -324,6 +342,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the Listener to be added.
      * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void addListener(Property.ValueChangeListener listener) {
         addListener(Label.ValueChangeEvent.class, listener, VALUE_CHANGE_METHOD);
     }
@@ -335,6 +354,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the Listener to be removed.
      * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com.vaadin.data.Property.ValueChangeListener)
      */
+    @Override
     public void removeListener(Property.ValueChangeListener listener) {
         removeListener(Label.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
@@ -353,6 +373,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         // Update the internal value from the data source
         getState().setText(getValue());
@@ -397,6 +418,7 @@ public class Label extends AbstractComponent implements Property<String>,
      *         less than, equal to, or greater than the specified object.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Label other) {
 
         String thisValue = getComparableValue();

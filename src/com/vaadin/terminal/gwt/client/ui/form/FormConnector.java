@@ -6,13 +6,14 @@ package com.vaadin.terminal.gwt.client.ui.form;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.form.FormState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
@@ -25,6 +26,7 @@ public class FormConnector extends AbstractComponentContainerConnector
         implements Paintable, MayScrollChildren {
 
     private final ElementResizeListener footerResizeListener = new ElementResizeListener() {
+        @Override
         public void onElementResize(ElementResizeEvent e) {
             VForm form = getWidget();
 
@@ -57,6 +59,7 @@ public class FormConnector extends AbstractComponentContainerConnector
         return false;
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         getWidget().id = uidl.getId();
@@ -180,6 +183,7 @@ public class FormConnector extends AbstractComponentContainerConnector
         }
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP form don't render caption for neither field layout nor footer
         // layout

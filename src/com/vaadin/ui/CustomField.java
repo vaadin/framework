@@ -123,28 +123,34 @@ public abstract class CustomField<T> extends AbstractField<T> implements
             Serializable {
         boolean first = (root != null);
 
+        @Override
         public boolean hasNext() {
             return first;
         }
 
+        @Override
         public Component next() {
             first = false;
             return getContent();
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
 
+    @Override
     public int getComponentCount() {
         return (null != getContent()) ? 1 : 0;
     }
@@ -163,22 +169,27 @@ public abstract class CustomField<T> extends AbstractField<T> implements
 
     // TODO remove these methods when ComponentContainer interface is cleaned up
 
+    @Override
     public void addComponent(Component c) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeComponent(Component c) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void removeAllComponents() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void moveComponentsFrom(ComponentContainer source) {
         throw new UnsupportedOperationException();
     }
@@ -197,24 +208,29 @@ public abstract class CustomField<T> extends AbstractField<T> implements
         }
     }
 
+    @Override
     public void addListener(ComponentAttachListener listener) {
         addListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
+    @Override
     public void removeListener(ComponentAttachListener listener) {
         removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
+    @Override
     public void addListener(ComponentDetachListener listener) {
         // content never detached
     }
 
+    @Override
     public void removeListener(ComponentDetachListener listener) {
         // content never detached
     }
 
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     }

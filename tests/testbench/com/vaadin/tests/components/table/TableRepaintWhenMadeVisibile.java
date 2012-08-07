@@ -17,6 +17,7 @@ public class TableRepaintWhenMadeVisibile extends TestBase {
 
         Button show = new Button("show", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setVisible(true);
             }
@@ -24,6 +25,7 @@ public class TableRepaintWhenMadeVisibile extends TestBase {
         addComponent(show);
         Button hide = new Button("hide", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setVisible(false);
             }

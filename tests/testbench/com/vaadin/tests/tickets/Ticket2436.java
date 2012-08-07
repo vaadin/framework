@@ -15,16 +15,19 @@ public class Ticket2436 extends Application.LegacyApplication {
 
         final Button remover = new Button("Remove PopupView");
         final PopupView pv = new PopupView(new PopupView.Content() {
+            @Override
             public String getMinimizedValueAsHTML() {
                 return "PopupView";
             }
 
+            @Override
             public Component getPopupComponent() {
                 return remover;
             }
         });
 
         remover.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 main.removeComponent(pv);
             }

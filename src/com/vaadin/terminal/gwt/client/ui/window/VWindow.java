@@ -26,12 +26,12 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.EventId;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Console;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
@@ -146,6 +146,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     updateContentsSize();
                 }
@@ -266,6 +267,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             orderingDefered = true;
             Scheduler.get().scheduleFinally(new Command() {
 
+                @Override
                 public void execute() {
                     doServerSideOrdering();
                     VNotification.bringNotificationsToFront();
@@ -279,6 +281,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
         Arrays.sort(array, new Comparator<VWindow>() {
 
+            @Override
             public int compare(VWindow o1, VWindow o2) {
                 /*
                  * Order by modality, then by bringtofront sequence.
@@ -551,11 +554,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         final int type = event.getTypeInt();
 
         final Element target = DOM.eventGetTarget(event);
-
-        if (client != null && header.isOrHasChild(target)) {
-            // Handle window caption tooltips
-            client.handleTooltipEvent(event, this);
-        }
 
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
@@ -856,10 +854,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 true);
     }
 
+    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return shortcutHandler;
     }
 
+    @Override
     public void onScroll(ScrollEvent event) {
         client.updateVariable(id, "scrollTop",
                 contentPanel.getScrollPosition(), false);
@@ -868,6 +868,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (shortcutHandler != null) {
             shortcutHandler
@@ -876,18 +877,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
     }
 
+    @Override
     public void focus() {
         contentPanel.focus();
     }

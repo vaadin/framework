@@ -36,6 +36,7 @@ public class Ticket3146 extends Application.LegacyApplication {
 
         Button clearButton = new Button("Clear selection",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         clearSelection();
                     }
@@ -43,6 +44,7 @@ public class Ticket3146 extends Application.LegacyApplication {
         mainWindow.addComponent(clearButton);
         Button clearButton2 = new Button("Clear selection 2",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         clearSelection2();
                     }
@@ -50,6 +52,7 @@ public class Ticket3146 extends Application.LegacyApplication {
         mainWindow.addComponent(clearButton2);
         Button clearButton3 = new Button("Clear selection 3",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         clearSelection3();
                     }
@@ -57,6 +60,7 @@ public class Ticket3146 extends Application.LegacyApplication {
         mainWindow.addComponent(clearButton3);
         Button printButton = new Button("Print selection",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         printSelection();
                     }

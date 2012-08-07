@@ -28,6 +28,7 @@ public class ShowSelectedDateAfterInvalid extends TestBase {
         Button button = new Button("Validate");
 
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 form.setValidationVisible(true);
                 if (form.isValid()) {

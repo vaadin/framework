@@ -20,6 +20,7 @@ public class MultipleTextChangeEvents extends TestBase {
         tf.setTextChangeEventMode(TextChangeEventMode.TIMEOUT);
         tf.setTextChangeTimeout(500);
         tf.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 log.log("TextChangeEvent: " + event.getText());
             }
@@ -35,10 +36,12 @@ public class MultipleTextChangeEvents extends TestBase {
         Action actionenter = new ShortcutAction("Enter",
                 ShortcutAction.KeyCode.ENTER, null);
 
+        @Override
         public Action[] getActions(Object theTarget, Object theSender) {
             return new Action[] { actionenter };
         }
 
+        @Override
         public void handleAction(Action theAction, Object theSender,
                 Object theTarget) {
             log.log("Enter");

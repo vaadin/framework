@@ -19,6 +19,7 @@ public class StylingPopupOpener extends TestBase {
         addComponent(select);
 
         addComponent(new Button("Update style", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 select.setStyleName("mystyle");
             }

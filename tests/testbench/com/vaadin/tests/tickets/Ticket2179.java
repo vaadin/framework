@@ -25,6 +25,7 @@ public class Ticket2179 extends Application.LegacyApplication {
 
         f.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 main.showNotification("Test field is "
                         + (f.isValid() ? "valid" : "invalid"));
@@ -40,6 +41,7 @@ public class Ticket2179 extends Application.LegacyApplication {
             this.c = c;
         }
 
+        @Override
         public void validate(Object value) throws InvalidValueException {
             if (value == null || !value.toString().contains(c)) {
                 throw new InvalidValueException("Value does not contain " + c);

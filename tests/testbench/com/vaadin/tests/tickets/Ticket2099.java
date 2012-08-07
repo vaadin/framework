@@ -30,6 +30,7 @@ public class Ticket2099 extends Application.LegacyApplication {
     private void createUI(GridLayout layout) {
         Button b = new Button("Show popup", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().addWindow(popup);
                 // popup.setVisible(true);
@@ -42,6 +43,7 @@ public class Ticket2099 extends Application.LegacyApplication {
         layout.addComponent(b);
         layout.addComponent(new Button("Hide label '222'", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 l2.setVisible(!l2.isVisible());
             }

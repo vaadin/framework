@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.SimpleFocusablePanel;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
@@ -79,6 +78,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     updateValueToServer();
                     acceleration = 1;
@@ -114,8 +114,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
         feedbackPopup.addStyleName(CLASSNAME + "-feedback");
         feedbackPopup.setWidget(feedback);
-
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     void setFeedbackValue(double value) {
@@ -162,6 +160,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     final Element p = DOM.getParent(getElement());
                     if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
@@ -291,9 +290,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
         }
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
     }
 
     private void processMouseWheelEvent(final Event event) {
@@ -422,6 +418,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
     }
 
+    @Override
     public void iLayout() {
         if (vertical) {
             setHeight();

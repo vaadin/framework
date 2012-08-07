@@ -34,12 +34,14 @@ public class Ticket2125 extends Application.LegacyApplication {
             table.addContainerProperty("String", String.class, "a string");
             table.addContainerProperty("Boolean", Boolean.class, Boolean.TRUE);
             table.addGeneratedColumn("Generated", new ColumnGenerator() {
+                @Override
                 public Component generateCell(Table source, Object itemId,
                         Object columnId) {
                     return new Label("Item " + itemId);
                 }
             });
             table.setCellStyleGenerator(new CellStyleGenerator() {
+                @Override
                 public String getStyle(Object itemId, Object propertyId) {
                     if (new Integer(4).equals(itemId)) {
                         if (propertyId == null) {

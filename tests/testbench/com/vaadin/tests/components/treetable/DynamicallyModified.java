@@ -87,6 +87,7 @@ public class DynamicallyModified extends TestBase implements
 
     private int newChild = 1;
 
+    @Override
     public void nodeExpand(ExpandEvent event) {
         Object expandedItemId = event.getItemId();
         // 7 == "Customer Project 1"
@@ -100,6 +101,7 @@ public class DynamicallyModified extends TestBase implements
         treetable.setChildrenAllowed(newChildId, false);
     }
 
+    @Override
     public void nodeCollapse(CollapseEvent event) {
 
         Object collapsedItemId = event.getItemId();

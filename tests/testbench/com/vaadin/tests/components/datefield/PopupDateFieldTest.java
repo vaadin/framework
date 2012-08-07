@@ -27,6 +27,7 @@ public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
         createSelectAction("Input prompt", category, options, "<none>",
                 new Command<PopupDateField, String>() {
 
+                    @Override
                     public void execute(PopupDateField c, String value,
                             Object data) {
                         c.setInputPrompt(value);

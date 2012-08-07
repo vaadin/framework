@@ -146,6 +146,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Boolean> nullSelectionAllowedCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             (c).setNullSelectionAllowed(value);
         }
@@ -153,6 +154,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Boolean> multiselectCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setMultiSelect(value);
         }
@@ -160,6 +162,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Object> nullSelectItemIdCommand = new Command<T, Object>() {
 
+        @Override
         public void execute(T c, Object value, Object data) {
             c.setNullSelectionItemId(value);
         }
@@ -167,6 +170,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Integer> itemsInContainerCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T t, Integer value, Object data) {
             items = value;
             updateContainer();
@@ -175,6 +179,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Integer> propertiesInContainerCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T t, Integer value, Object data) {
             properties = value;
             updateContainer();
@@ -183,6 +188,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     protected Command<T, Boolean> itemClickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 ((ItemClickNotifier) c)
@@ -206,6 +212,7 @@ public abstract class AbstractSelectTestCase<T extends AbstractSelect> extends
 
     /* COMMANDS END */
 
+    @Override
     public void itemClick(ItemClickEvent event) {
         String type = event.getButtonName();
         if (event.isDoubleClick()) {

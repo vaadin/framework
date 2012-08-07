@@ -75,6 +75,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * @return the current data source as a Property, or <code>null</code> if
      *         none defined.
      */
+    @Override
     public Property<T> getPropertyDataSource() {
         return dataSource;
     }
@@ -91,6 +92,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * @param newDataSource
      *            the new data source Property.
      */
+    @Override
     public void setPropertyDataSource(Property newDataSource) {
 
         boolean readOnly = false;
@@ -132,6 +134,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
     }
 
     /* Documented in the interface */
+    @Override
     public Class<String> getType() {
         return String.class;
     }
@@ -142,6 +145,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * @return If the datasource returns null, this is null. Otherwise this is
      *         String given by format().
      */
+    @Override
     public String getValue() {
         T value = dataSource == null ? null : dataSource.getValue();
         if (value == null) {
@@ -195,6 +199,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
         }
     }
 
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException {
         if (dataSource == null) {
             return;
@@ -221,6 +226,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * 
      * This should not be called directly.
      */
+    @Override
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         fireValueChange();
     }
@@ -230,6 +236,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * 
      * This should not be called directly.
      */
+    @Override
     public void readOnlyStatusChange(
             com.vaadin.data.Property.ReadOnlyStatusChangeEvent event) {
         fireReadOnlyStatusChange();

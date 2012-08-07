@@ -22,7 +22,7 @@ public class UriFragmentManagerTest extends TestCase {
 
         // prepare mock
         EasyMock.expect(page.getFragment()).andReturn("");
-        page.setFragment("test");
+        page.setFragment("test", false);
         EasyMock.expect(page.getFragment()).andReturn("test");
         EasyMock.replay(page);
 

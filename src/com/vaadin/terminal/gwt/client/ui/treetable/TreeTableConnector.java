@@ -3,9 +3,9 @@
  */
 package com.vaadin.terminal.gwt.client.ui.treetable;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.FocusableScrollPanel;
 import com.vaadin.terminal.gwt.client.ui.table.TableConnector;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;

@@ -5,6 +5,10 @@
 package com.vaadin.terminal;
 
 import java.io.Serializable;
+import java.util.Properties;
+
+import javax.portlet.PortletContext;
+import javax.servlet.ServletContext;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -83,4 +87,27 @@ public interface DeploymentConfiguration extends Serializable {
      * @return the class loader to use, or <code>null</code>
      */
     public ClassLoader getClassLoader();
+
+    /**
+     * Returns the MIME type of the specified file, or null if the MIME type is
+     * not known. The MIME type is determined by the configuration of the
+     * container, and may be specified in a deployment descriptor. Common MIME
+     * types are "text/html" and "image/gif".
+     * 
+     * @param resourceName
+     *            a String specifying the name of a file
+     * @return a String specifying the file's MIME type
+     * 
+     * @see ServletContext#getMimeType(String)
+     * @see PortletContext#getMimeType(String)
+     */
+    public String getMimeType(String resourceName);
+
+    /**
+     * Gets the properties configured for the deployment, e.g. as init
+     * parameters to the servlet or portlet.
+     * 
+     * @return properties for the application.
+     */
+    public Properties getInitParameters();
 }

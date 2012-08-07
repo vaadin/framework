@@ -19,6 +19,7 @@ public class Ticket2415 extends Application.LegacyApplication {
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 main.showNotification("New value = " + tf);
             }
@@ -30,6 +31,7 @@ public class Ticket2415 extends Application.LegacyApplication {
         tf2.setImmediate(true);
         tf2.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 main.showNotification("New value = " + tf2);
             }

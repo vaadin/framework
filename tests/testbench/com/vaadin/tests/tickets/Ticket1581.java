@@ -52,6 +52,7 @@ public class Ticket1581 extends com.vaadin.Application.LegacyApplication {
         final Button stop = new Button("Stop updating", new ClickListener() {
             boolean active = true;
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 if (active) {

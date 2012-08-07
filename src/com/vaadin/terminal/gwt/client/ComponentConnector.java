@@ -4,7 +4,9 @@
 
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ComponentState;
 
 /**
  * An interface used by client-side widgets or paintable parts to receive
@@ -21,6 +23,7 @@ public interface ComponentConnector extends ServerConnector {
      * 
      * @see com.vaadin.terminal.gwt.client.VPaintable#getState()
      */
+    @Override
     public ComponentState getState();
 
     /**
@@ -103,5 +106,15 @@ public interface ComponentConnector extends ServerConnector {
      *            true if the widget should be enabled, false otherwise
      */
     public void setWidgetEnabled(boolean widgetEnabled);
+
+    /**
+     * Gets the tooltip info for the given element.
+     * 
+     * @param element
+     *            The element to lookup a tooltip for
+     * @return The tooltip for the element or null if no tooltip is defined for
+     *         this element.
+     */
+    public TooltipInfo getTooltipInfo(Element element);
 
 }

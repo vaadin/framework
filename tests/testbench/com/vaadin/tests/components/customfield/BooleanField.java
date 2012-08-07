@@ -23,6 +23,7 @@ public class BooleanField extends CustomField {
 
         final Button button = new Button("Click me");
         button.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Object value = getValue();
                 boolean newValue = true;

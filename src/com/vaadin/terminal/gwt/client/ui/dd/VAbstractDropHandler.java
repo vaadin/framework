@@ -47,6 +47,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     /**
      * Default implementation does nothing.
      */
+    @Override
     public void dragOver(VDragEvent drag) {
 
     }
@@ -55,6 +56,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * Default implementation does nothing. Implementors should clean possible
      * emphasis or drag icons here.
      */
+    @Override
     public void dragLeave(VDragEvent drag) {
 
     }
@@ -73,8 +75,10 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * implementation.
      * 
      */
+    @Override
     public void dragEnter(final VDragEvent drag) {
         validate(new VAcceptCallback() {
+            @Override
             public void accepted(VDragEvent event) {
                 dragAccepted(drag);
             }
@@ -94,6 +98,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
 
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
         Command checkCriteria = new Command() {
+            @Override
             public void execute() {
                 acceptCriteria.accept(event, criterioUIDL, cb);
             }
@@ -109,12 +114,14 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * can't be verified on client or if {@link AcceptCriterion} are met on
      * client.
      */
+    @Override
     public boolean drop(VDragEvent drag) {
         if (acceptCriteria.needsServerSideCheck(drag, criterioUIDL)) {
             return true;
         } else {
             validated = false;
             acceptCriteria.accept(drag, criterioUIDL, new VAcceptCallback() {
+                @Override
                 public void accepted(VDragEvent event) {
                     validated = true;
                 }
@@ -129,6 +136,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * side counterpart of the Paintable is expected to implement
      * {@link DropTarget} interface.
      */
+    @Override
     public abstract ComponentConnector getConnector();
 
 }

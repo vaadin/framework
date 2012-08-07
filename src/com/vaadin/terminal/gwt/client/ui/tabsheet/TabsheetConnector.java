@@ -3,13 +3,14 @@
  */
 package com.vaadin.terminal.gwt.client.ui.tabsheet;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.ui.TabSheet;
@@ -67,10 +68,12 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
         return (VTabsheet) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         /* Tabsheet does not render its children's captions */
     }
 
+    @Override
     public void layout() {
         VTabsheet tabsheet = getWidget();
 
@@ -95,6 +98,31 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         tabsheet.iLayout();
 
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+
+        TooltipInfo info = null;
+
+        // Find a tooltip for the tab, if the element is a tab
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VTabsheet.TabCaption.class);
+
+            if (node != null) {
+                VTabsheet.TabCaption caption = (VTabsheet.TabCaption) node;
+                info = caption.getTooltipInfo();
+            }
+        }
+
+        // If not tab tooltip was found, use the default
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 
 }

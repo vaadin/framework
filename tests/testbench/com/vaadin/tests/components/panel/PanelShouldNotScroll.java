@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.panel;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -23,6 +23,7 @@ public class PanelShouldNotScroll extends TestBase {
         p.addComponent(foo());
         addMore = new Button("Add");
         addMore.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 p.removeComponent(addMore);
                 p.addComponent(foo());

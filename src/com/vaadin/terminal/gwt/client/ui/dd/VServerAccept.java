@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 @AcceptCriterion(ServerSideCriterion.class)
@@ -16,6 +17,7 @@ final public class VServerAccept extends VAcceptCriterion {
             final VAcceptCallback callback) {
 
         VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
+            @Override
             public void handleResponse(boolean accepted, UIDL response) {
                 if (accepted) {
                     callback.accepted(drag);

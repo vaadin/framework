@@ -24,10 +24,12 @@ public class NotPaintedAcceptSourceInTabSheet extends TestBase {
         source2.setDragMode(TableDragMode.ROW);
 
         target.setDropHandler(new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return new SourceIs(source1, source2);
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 TableTransferable transferable = (TableTransferable) event
                         .getTransferable();

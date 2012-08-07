@@ -40,6 +40,7 @@ public class DoublesInTable extends TestBase {
         editMode.setImmediate(true);
         editMode.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setEditable(editMode.getValue());
 
@@ -50,6 +51,7 @@ public class DoublesInTable extends TestBase {
         useCustomConverters.setImmediate(true);
         useCustomConverters.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 recreateTable();
             }
@@ -75,6 +77,7 @@ public class DoublesInTable extends TestBase {
         cb.setValue(Locale.US);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 recreateTable();
             }
@@ -134,6 +137,7 @@ public class DoublesInTable extends TestBase {
         t.setImmediate(true);
         t.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value is now: " + event.getProperty().getValue());
 
@@ -145,12 +149,14 @@ public class DoublesInTable extends TestBase {
     private void addConverters(Table t) {
         t.setConverter("sex", new Converter<String, Sex>() {
 
+            @Override
             public Sex convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
 
+            @Override
             public String convertToPresentation(Sex value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
@@ -159,22 +165,26 @@ public class DoublesInTable extends TestBase {
                 return value.getStringRepresentation();
             }
 
+            @Override
             public Class<Sex> getModelType() {
                 return Sex.class;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("deceased", new Converter<String, Boolean>() {
 
+            @Override
             public Boolean convertToModel(String value, Locale locale) {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
+            @Override
             public String convertToPresentation(Boolean value, Locale locale) {
                 if (value == null || value) {
                     return "YES, DEAD!";
@@ -183,16 +193,19 @@ public class DoublesInTable extends TestBase {
                 }
             }
 
+            @Override
             public Class<Boolean> getModelType() {
                 return Boolean.class;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("age", new Converter<String, Integer>() {
 
+            @Override
             public Integer convertToModel(String value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts from source to
@@ -200,6 +213,7 @@ public class DoublesInTable extends TestBase {
                 return null;
             }
 
+            @Override
             public String convertToPresentation(Integer value, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
@@ -216,32 +230,38 @@ public class DoublesInTable extends TestBase {
                 }
             }
 
+            @Override
             public Class<Integer> getModelType() {
                 return Integer.class;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 return String.class;
             }
         });
         t.setConverter("address", new Converter<String, Address>() {
 
+            @Override
             public Address convertToModel(String value, Locale locale)
                     throws ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
 
+            @Override
             public String convertToPresentation(Address value, Locale locale)
                     throws ConversionException {
                 return value.getStreetAddress() + ", " + value.getCity() + " ("
                         + value.getCountry() + ")";
             }
 
+            @Override
             public Class<Address> getModelType() {
                 return Address.class;
             }
 
+            @Override
             public Class<String> getPresentationType() {
                 return String.class;
             }

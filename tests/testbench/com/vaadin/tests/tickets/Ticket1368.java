@@ -26,6 +26,7 @@ public class Ticket1368 extends Application.LegacyApplication {
         addColumn.setImmediate(true);
         addColumn.setNewItemsAllowed(true);
         addColumn.setNewItemHandler(new ComboBox.NewItemHandler() {
+            @Override
             public void addNewItem(String newItemCaption) {
                 t.addContainerProperty(newItemCaption, String.class, "-");
             }

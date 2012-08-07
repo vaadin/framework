@@ -96,6 +96,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         if (resource != null) {
@@ -234,6 +235,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
         requestRepaint();
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
     }

@@ -31,6 +31,7 @@ public class Wordwrap extends TestBase {
         CheckBox onoff = new CheckBox("Wrap state for the right field");
         onoff.setValue(false);
         onoff.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean wrap = (Boolean) event.getProperty().getValue();
                 area2.setWordwrap(wrap);

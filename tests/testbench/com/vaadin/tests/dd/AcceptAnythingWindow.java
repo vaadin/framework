@@ -7,7 +7,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
@@ -28,10 +28,12 @@ public class AcceptAnythingWindow extends Window {
         final DragAndDropWrapper wrapper = new DragAndDropWrapper(layout);
         wrapper.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 WrapperTargetDetails ed = (WrapperTargetDetails) event
                         .getTargetDetails();

@@ -59,6 +59,7 @@ public class BeanItemContainer<BEANTYPE> extends
     private static class IdentityBeanIdResolver<BT> implements
             BeanIdResolver<BT, BT> {
 
+        @Override
         public BT getIdForBean(BT bean) {
             return bean;
         }

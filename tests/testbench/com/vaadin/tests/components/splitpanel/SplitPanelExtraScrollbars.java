@@ -53,6 +53,7 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         return 3458;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (b.getHeight() == 200) {
             b.setHeight("1200px");

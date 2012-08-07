@@ -34,6 +34,7 @@ public class Ticket2329 extends Application.LegacyApplication {
     }
 
     class TestColumnGenerator implements ColumnGenerator {
+        @Override
         public Component generateCell(Table source, Object rowId,
                 Object columnId) {
             return new Button("1");

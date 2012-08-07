@@ -70,6 +70,7 @@ public class Ticket2181 extends Application.LegacyApplication implements
         return options;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (event.getButton() == setButton) {
             set();

@@ -18,6 +18,8 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.text.CharacterIterator;
 import java.text.DateFormat;
@@ -42,13 +44,21 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.Version;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.LegacyPaint;
@@ -65,10 +75,6 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
-import com.vaadin.terminal.gwt.client.communication.UidlValue;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.terminal.gwt.server.RpcManager.RpcInvocationException;
@@ -154,6 +160,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private Connector highlightedConnector;
 
+    private Map<String, Class<?>> connectorResourceContexts = new HashMap<String, Class<?>>();
+
+    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
+
+    private Map<StreamVariable, String> streamVariableToSeckey;
+
     /**
      * TODO New constructor - document me!
      * 
@@ -204,7 +216,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, Connector owner, String boundary)
+            String variableName, ClientConnector owner, String boundary)
             throws IOException {
         // multipart parsing, supports only one file for request, but that is
         // fine for our current terminal
@@ -267,14 +279,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
         final String mimeType = rawMimeType;
 
         try {
-            /*
-             * safe cast as in GWT terminal all variable owners are expected to
-             * be components.
-             */
-            Component component = (Component) owner;
-            if (component.isReadOnly()) {
+            // TODO Shouldn't this check connectorEnabled?
+            if (owner == null) {
                 throw new UploadException(
-                        "Warning: file upload ignored because the componente was read-only");
+                        "File upload ignored because the connector for the stream variable was not found");
+            }
+            if (owner instanceof Component) {
+                if (((Component) owner).isReadOnly()) {
+                    throw new UploadException(
+                            "Warning: file upload ignored because the componente was read-only");
+                }
             }
             boolean forgetVariable = streamToReceiver(simpleMultiPartReader,
                     streamVariable, filename, mimeType, contentLength);
@@ -303,7 +317,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     protected void doHandleXhrFilePost(WrappedRequest request,
             WrappedResponse response, StreamVariable streamVariable,
-            String variableName, Connector owner, int contentLength)
+            String variableName, ClientConnector owner, int contentLength)
             throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
@@ -497,10 +511,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
      *            found
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
+     * @throws JSONException
      */
     public void handleUidlRequest(WrappedRequest request,
             WrappedResponse response, Callback callback, Root root)
-            throws IOException, InvalidUIDLSecurityKeyException {
+            throws IOException, InvalidUIDLSecurityKeyException, JSONException {
 
         checkWidgetsetVersion(request);
         requestThemeName = request.getParameter("theme");
@@ -623,6 +638,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Remove connectors that have been detached from the application during
         // handling of the request
         root.getConnectorTracker().cleanConnectorMap();
+
+        if (pidToNameToStreamVariable != null) {
+            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
+                    .iterator();
+            while (iterator.hasNext()) {
+                String connectorId = iterator.next();
+                if (root.getConnectorTracker().getConnector(connectorId) == null) {
+                    // Owner is no longer attached to the application
+                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
+                            .get(connectorId);
+                    for (String key : removed.keySet()) {
+                        streamVariableToSeckey.remove(removed.get(key));
+                    }
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     protected void highlightConnector(Connector highlightedConnector) {
@@ -696,11 +728,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param analyzeLayouts
      * @throws PaintException
      * @throws IOException
+     * @throws JSONException
      */
     private void paintAfterVariableChanges(WrappedRequest request,
             WrappedResponse response, Callback callback, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
-            throws PaintException, IOException {
+            throws PaintException, IOException, JSONException {
 
         // Removes application if it has stopped during variable changes
         if (!application.isRunning()) {
@@ -764,7 +797,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     @SuppressWarnings("unchecked")
     public void writeUidlResponse(WrappedRequest request, boolean repaintAll,
             final PrintWriter outWriter, Root root, boolean analyzeLayouts)
-            throws PaintException {
+            throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
         Application application = root.getApplication();
         // Paints components
@@ -1095,10 +1128,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
         boolean typeMappingsOpen = false;
         ClientCache clientCache = getClientCache(root);
 
+        List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
+
         for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
             if (clientCache.cache(class1)) {
                 // client does not know the mapping key for this type, send
                 // mapping to client
+                newConnectorTypes.add(class1);
+
                 if (!typeMappingsOpen) {
                     typeMappingsOpen = true;
                     outWriter.print(", \"typeMappings\" : { ");
@@ -1142,6 +1179,58 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
 
+        /*
+         * Ensure super classes come before sub classes to get script dependency
+         * order right. Sub class @JavaScript might assume that @JavaScript
+         * defined by super class is already loaded.
+         */
+        Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
+            @Override
+            public int compare(Class<?> o1, Class<?> o2) {
+                // TODO optimize using Class.isAssignableFrom?
+                return hierarchyDepth(o1) - hierarchyDepth(o2);
+            }
+
+            private int hierarchyDepth(Class<?> type) {
+                if (type == Object.class) {
+                    return 0;
+                } else {
+                    return hierarchyDepth(type.getSuperclass()) + 1;
+                }
+            }
+        });
+
+        List<String> scriptDependencies = new ArrayList<String>();
+        List<String> styleDependencies = new ArrayList<String>();
+
+        for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
+            JavaScript jsAnnotation = class1.getAnnotation(JavaScript.class);
+            if (jsAnnotation != null) {
+                for (String resource : jsAnnotation.value()) {
+                    scriptDependencies.add(registerResource(resource, class1));
+                }
+            }
+
+            StyleSheet styleAnnotation = class1.getAnnotation(StyleSheet.class);
+            if (styleAnnotation != null) {
+                for (String resource : styleAnnotation.value()) {
+                    styleDependencies.add(registerResource(resource, class1));
+                }
+            }
+        }
+
+        // Include script dependencies in output if there are any
+        if (!scriptDependencies.isEmpty()) {
+            outWriter.print(", \"scriptDependencies\": "
+                    + new JSONArray(scriptDependencies).toString());
+        }
+
+        // Include style dependencies in output if there are any
+        if (!styleDependencies.isEmpty()) {
+            outWriter.print(", \"styleDependencies\": "
+                    + new JSONArray(styleDependencies).toString());
+        }
+
         // add any pending locale definitions requested by the client
         printLocaleDeclarations(outWriter);
 
@@ -1150,6 +1239,54 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         writePerformanceData(outWriter);
+    }
+
+    /**
+     * Resolves a resource URI, registering the URI with this
+     * {@code AbstractCommunicationManager} if needed and returns a fully
+     * qualified URI.
+     */
+    private String registerResource(String resourceUri, Class<?> context) {
+        try {
+            URI uri = new URI(resourceUri);
+            String protocol = uri.getScheme();
+
+            if ("connector".equals(protocol)) {
+                // Strip initial slash
+                String resourceName = uri.getPath().substring(1);
+                return registerConnectorResource(resourceName, context);
+            }
+
+            if (protocol != null || uri.getHost() != null) {
+                return resourceUri;
+            }
+
+            // Bare path interpreted as connector resource
+            return registerConnectorResource(resourceUri, context);
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.WARNING,
+                    "Could not parse resource url " + resourceUri, e);
+            return resourceUri;
+        }
+    }
+
+    private String registerConnectorResource(String name, Class<?> context) {
+        synchronized (connectorResourceContexts) {
+            // Add to map of names accepted by serveConnectorResource
+            if (connectorResourceContexts.containsKey(name)) {
+                Class<?> oldContext = connectorResourceContexts.get(name);
+                if (oldContext != context) {
+                    getLogger().warning(
+                            "Resource " + name + " defined by both " + context
+                                    + " and " + oldContext + ". Resource from "
+                                    + oldContext + " will be used.");
+                }
+            } else {
+                connectorResourceContexts.put(name, context);
+            }
+        }
+
+        return ApplicationConnection.CONNECTOR_PROTOCOL_PREFIX + "/" + name;
     }
 
     /**
@@ -1194,6 +1331,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // before children start calling e.g. updateCaption
         Collections.sort(paintables, new Comparator<Component>() {
 
+            @Override
             public int compare(Component c1, Component c2) {
                 int depth1 = 0;
                 while (c1.getParent() != null) {
@@ -1280,14 +1418,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static class NullIterator<E> implements Iterator<E> {
 
+        @Override
         public boolean hasNext() {
             return false;
         }
 
+        @Override
         public E next() {
             return null;
         }
 
+        @Override
         public void remove() {
         }
 
@@ -1380,7 +1521,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private boolean handleVariables(WrappedRequest request,
             WrappedResponse response, Callback callback,
             Application application2, Root root) throws IOException,
-            InvalidUIDLSecurityKeyException {
+            InvalidUIDLSecurityKeyException, JSONException {
         boolean success = true;
 
         String changes = getRequestPayload(request);
@@ -1761,6 +1902,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
@@ -2162,10 +2304,57 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     }
 
-    abstract String getStreamVariableTargetUrl(Connector owner, String name,
-            StreamVariable value);
+    public String getStreamVariableTargetUrl(ClientConnector owner,
+            String name, StreamVariable value) {
+        /*
+         * We will use the same APP/* URI space as ApplicationResources but
+         * prefix url with UPLOAD
+         * 
+         * eg. APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY]
+         * 
+         * SECKEY is created on each paint to make URL's unpredictable (to
+         * prevent CSRF attacks).
+         * 
+         * NAME and PID from URI forms a key to fetch StreamVariable when
+         * handling post
+         */
+        String paintableId = owner.getConnectorId();
+        int rootId = owner.getRoot().getRootId();
+        String key = rootId + "/" + paintableId + "/" + name;
 
-    abstract protected void cleanStreamVariable(Connector owner, String name);
+        if (pidToNameToStreamVariable == null) {
+            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
+        }
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
+                .get(paintableId);
+        if (nameToStreamVariable == null) {
+            nameToStreamVariable = new HashMap<String, StreamVariable>();
+            pidToNameToStreamVariable.put(paintableId, nameToStreamVariable);
+        }
+        nameToStreamVariable.put(name, value);
+
+        if (streamVariableToSeckey == null) {
+            streamVariableToSeckey = new HashMap<StreamVariable, String>();
+        }
+        String seckey = streamVariableToSeckey.get(value);
+        if (seckey == null) {
+            seckey = UUID.randomUUID().toString();
+            streamVariableToSeckey.put(value, seckey);
+        }
+
+        return ApplicationConnection.APP_PROTOCOL_PREFIX
+                + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/" + seckey;
+
+    }
+
+    public void cleanStreamVariable(ClientConnector owner, String name) {
+        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
+                .get(owner.getConnectorId());
+        nameToStreamVar.remove(name);
+        if (nameToStreamVar.isEmpty()) {
+            pidToNameToStreamVariable.remove(owner.getConnectorId());
+        }
+    }
 
     /**
      * Gets the bootstrap handler that should be used for generating the pages
@@ -2256,9 +2445,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return a string with the initial UIDL message
      * @throws PaintException
      *             if an exception occurs while painting
+     * @throws JSONException
+     *             if an exception occurs while encoding output
      */
     protected String getInitialUIDL(WrappedRequest request, Root root)
-            throws PaintException {
+            throws PaintException, JSONException {
         // TODO maybe unify writeUidlResponse()?
         StringWriter sWriter = new StringWriter();
         PrintWriter pWriter = new PrintWriter(sWriter);
@@ -2271,6 +2462,176 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String initialUIDL = sWriter.toString();
         getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
         return initialUIDL;
+    }
+
+    /**
+     * Serve a connector resource from the classpath if the resource has
+     * previously been registered by calling
+     * {@link #registerResource(String, Class)}. Sending arbitrary files from
+     * the classpath is prevented by only accepting resource names that have
+     * explicitly been registered. Resources can currently only be registered by
+     * including a {@link JavaScript} or {@link StyleSheet} annotation on a
+     * Connector class.
+     * 
+     * @param request
+     * @param response
+     * 
+     * @throws IOException
+     */
+    public void serveConnectorResource(WrappedRequest request,
+            WrappedResponse response) throws IOException {
+
+        String pathInfo = request.getRequestPathInfo();
+        // + 2 to also remove beginning and ending slashes
+        String resourceName = pathInfo
+                .substring(ApplicationConnection.CONNECTOR_RESOURCE_PREFIX
+                        .length() + 2);
+
+        final String mimetype = response.getDeploymentConfiguration()
+                .getMimeType(resourceName);
+
+        // Security check: avoid accidentally serving from the root of the
+        // classpath instead of relative to the context class
+        if (resourceName.startsWith("/")) {
+            getLogger().warning(
+                    "Connector resource request starting with / rejected: "
+                            + resourceName);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        // Check that the resource name has been registered
+        Class<?> context;
+        synchronized (connectorResourceContexts) {
+            context = connectorResourceContexts.get(resourceName);
+        }
+
+        // Security check: don't serve resource if the name hasn't been
+        // registered in the map
+        if (context == null) {
+            getLogger().warning(
+                    "Connector resource request for unknown resource rejected: "
+                            + resourceName);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        // Resolve file relative to the location of the context class
+        InputStream in = context.getResourceAsStream(resourceName);
+        if (in == null) {
+            getLogger().warning(
+                    resourceName + " defined by " + context.getName()
+                            + " not found. Verify that the file "
+                            + context.getPackage().getName().replace('.', '/')
+                            + '/' + resourceName
+                            + " is available on the classpath.");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            return;
+        }
+
+        // TODO Check and set cache headers
+
+        OutputStream out = null;
+        try {
+            if (mimetype != null) {
+                response.setContentType(mimetype);
+            }
+
+            out = response.getOutputStream();
+
+            final byte[] buffer = new byte[Constants.DEFAULT_BUFFER_SIZE];
+
+            int bytesRead = 0;
+            while ((bytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.flush();
+        } finally {
+            try {
+                in.close();
+            } catch (Exception e) {
+                // Do nothing
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception e) {
+                    // Do nothing
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles file upload request submitted via Upload component.
+     * 
+     * @param root
+     *            The root for this request
+     * 
+     * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws InvalidUIDLSecurityKeyException
+     */
+    public void handleFileUpload(Application application,
+            WrappedRequest request, WrappedResponse response)
+            throws IOException, InvalidUIDLSecurityKeyException {
+
+        /*
+         * URI pattern: APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY] See
+         * #createReceiverUrl
+         */
+
+        String pathInfo = request.getRequestPathInfo();
+        // strip away part until the data we are interested starts
+        int startOfData = pathInfo
+                .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)
+                + ServletPortletHelper.UPLOAD_URL_PREFIX.length();
+        String uppUri = pathInfo.substring(startOfData);
+        String[] parts = uppUri.split("/", 4); // 0= rootid, 1 = cid, 2= name, 3
+                                               // = sec key
+        String rootId = parts[0];
+        String connectorId = parts[1];
+        String variableName = parts[2];
+        Root root = application.getRootById(Integer.parseInt(rootId));
+        Root.setCurrent(root);
+
+        StreamVariable streamVariable = getStreamVariable(connectorId,
+                variableName);
+        String secKey = streamVariableToSeckey.get(streamVariable);
+        if (secKey.equals(parts[3])) {
+
+            ClientConnector source = getConnector(root, connectorId);
+            String contentType = request.getContentType();
+            if (contentType.contains("boundary")) {
+                // Multipart requests contain boundary string
+                doHandleSimpleMultipartFileUpload(request, response,
+                        streamVariable, variableName, source,
+                        contentType.split("boundary=")[1]);
+            } else {
+                // if boundary string does not exist, the posted file is from
+                // XHR2.post(File)
+                doHandleXhrFilePost(request, response, streamVariable,
+                        variableName, source, request.getContentLength());
+            }
+        } else {
+            throw new InvalidUIDLSecurityKeyException(
+                    "Security key in upload post did not match!");
+        }
+
+    }
+
+    public StreamVariable getStreamVariable(String connectorId,
+            String variableName) {
+        Map<String, StreamVariable> map = pidToNameToStreamVariable
+                .get(connectorId);
+        if (map == null) {
+            return null;
+        }
+        StreamVariable streamVariable = map.get(variableName);
+        return streamVariable;
     }
 
     /**

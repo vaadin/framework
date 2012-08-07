@@ -21,6 +21,7 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
         createDisabledItemsMultiToggle("Disabled items");
         createBooleanAction("HTML content allowed", CATEGORY_STATE, false,
                 new Command<OptionGroup, Boolean>() {
+                    @Override
                     public void execute(OptionGroup og, Boolean value,
                             Object data) {
                         og.setHtmlContentAllowed(value.booleanValue());
@@ -39,6 +40,7 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
         createSelectAction(string, CATEGORY_DECORATIONS, options, options
                 .keySet().iterator().next(),
                 new Command<OptionGroup, ThemeResource>() {
+                    @Override
                     public void execute(OptionGroup c, ThemeResource icon,
                             Object data) {
                         Collection<?> itemIds = c.getItemIds();
@@ -58,6 +60,7 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
 
     private Command<OptionGroup, Boolean> enabledItemCommand = new Command<OptionGroup, Boolean>() {
 
+        @Override
         public void execute(OptionGroup c, Boolean value, Object data) {
             c.setItemEnabled(data, value);
 

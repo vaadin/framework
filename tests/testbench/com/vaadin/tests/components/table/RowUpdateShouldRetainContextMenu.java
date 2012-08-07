@@ -18,6 +18,7 @@ public class RowUpdateShouldRetainContextMenu extends TestBase {
     protected void setup() {
         indicator.setWidth("200px");
         indicator.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 // Do some changes to the table
                 table.setColumnHeader("Column", "Column " + ctr);
@@ -49,9 +50,11 @@ public class RowUpdateShouldRetainContextMenu extends TestBase {
         table.setHeight("200px");
 
         table.addActionHandler(new Action.Handler() {
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { new Action("Action 1"),
                         new Action("Action 2"), };

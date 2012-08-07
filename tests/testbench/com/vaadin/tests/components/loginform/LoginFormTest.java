@@ -31,6 +31,7 @@ public class LoginFormTest extends TestBase {
              */
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void onLogin(LoginEvent event) {
                 login((LoginForm) event.getSource(),
                         event.getLoginParameter("username"),
@@ -43,6 +44,7 @@ public class LoginFormTest extends TestBase {
 
         Button changeWidth = new Button("Change width", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (loginForm.getWidth() < 0) {
                     loginForm.setWidth("300px");
@@ -55,6 +57,7 @@ public class LoginFormTest extends TestBase {
 
         Button changeHeight = new Button("Change height", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (loginForm.getHeight() < 0) {
                     loginForm.setHeight("200px");
@@ -88,6 +91,7 @@ public class LoginFormTest extends TestBase {
                 + "' logged in");
         Button logoutButton = new Button("Log out", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Button b = event.getButton();
                 loginFormLayout.replaceComponent(b.getParent(),

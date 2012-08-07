@@ -1,7 +1,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -27,6 +27,7 @@ public class ApplicationCloseTest extends TestBase {
         Label thisApp = new Label("This applications: " + this);
         Button close = new Button("Close this", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton().getApplication().close();
             }

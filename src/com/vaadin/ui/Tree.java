@@ -37,12 +37,12 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.tree.TreeConnector;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.tools.ReflectTools;
@@ -721,6 +721,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#areChildrenAllowed(Object)
      */
+    @Override
     public boolean areChildrenAllowed(Object itemId) {
         return ((Container.Hierarchical) items).areChildrenAllowed(itemId);
     }
@@ -730,6 +731,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#getChildren(Object)
      */
+    @Override
     public Collection<?> getChildren(Object itemId) {
         return ((Container.Hierarchical) items).getChildren(itemId);
     }
@@ -739,6 +741,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#getParent(Object)
      */
+    @Override
     public Object getParent(Object itemId) {
         return ((Container.Hierarchical) items).getParent(itemId);
     }
@@ -748,6 +751,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#hasChildren(Object)
      */
+    @Override
     public boolean hasChildren(Object itemId) {
         return ((Container.Hierarchical) items).hasChildren(itemId);
     }
@@ -757,6 +761,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#isRoot(Object)
      */
+    @Override
     public boolean isRoot(Object itemId) {
         return ((Container.Hierarchical) items).isRoot(itemId);
     }
@@ -766,6 +771,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.data.Container.Hierarchical#rootItemIds()
      */
+    @Override
     public Collection<?> rootItemIds() {
         return ((Container.Hierarchical) items).rootItemIds();
     }
@@ -776,6 +782,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see com.vaadin.data.Container.Hierarchical#setChildrenAllowed(Object,
      *      boolean)
      */
+    @Override
     public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) {
         final boolean success = ((Container.Hierarchical) items)
                 .setChildrenAllowed(itemId, areChildrenAllowed);
@@ -791,6 +798,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see com.vaadin.data.Container.Hierarchical#setParent(java.lang.Object ,
      * java.lang.Object)
      */
+    @Override
     public boolean setParent(Object itemId, Object newParentId) {
         final boolean success = ((Container.Hierarchical) items).setParent(
                 itemId, newParentId);
@@ -1015,6 +1023,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
+    @Override
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -1036,6 +1045,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
+    @Override
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -1150,11 +1160,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     private DropHandler dropHandler;
 
+    @Override
     public void addListener(ItemClickListener listener) {
         addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
                 ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    @Override
     public void removeListener(ItemClickListener listener) {
         removeListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
@@ -1206,6 +1218,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return super.removeItem(itemId);
     }
 
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -1304,6 +1317,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
+    @Override
     public TreeTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new TreeTargetDetails(clientVariables);
@@ -1371,6 +1385,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * 
      * @see com.vaadin.event.dd.DragSource#getTransferable(java.util.Map)
      */
+    @Override
     public Transferable getTransferable(Map<String, Object> payload) {
         TreeTransferable transferable = new TreeTransferable(this, payload);
         // updating drag source variables
@@ -1418,6 +1433,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
+        @Override
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
                     .getTargetDetails();
@@ -1541,6 +1557,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             this.depthToCheck = depthToCheck;
         }
 
+        @Override
         public boolean accept(DragAndDropEvent dragEvent) {
             try {
                 TreeTargetDetails eventDetails = (TreeTargetDetails) dragEvent

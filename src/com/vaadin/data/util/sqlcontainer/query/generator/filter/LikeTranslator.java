@@ -9,10 +9,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class LikeTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof Like;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         Like like = (Like) filter;
         if (like.isCaseSensitive()) {

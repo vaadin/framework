@@ -55,6 +55,7 @@ public class DisableEnableCascadeStyles extends TestBase {
         enableDisablePanelButton = new Button("Disable panel",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(outerPanel, enableDisablePanelButton);
 
@@ -64,6 +65,7 @@ public class DisableEnableCascadeStyles extends TestBase {
         enableDisableTabSheetButton = new Button("Disable TabSheet",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(innerTabsheet,
                                 enableDisableTabSheetButton);
@@ -74,6 +76,7 @@ public class DisableEnableCascadeStyles extends TestBase {
         enableDisableLayoutButton = new Button("Disable Tab content (Layout)",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         enableDisable(layout, enableDisableLayoutButton);
 
@@ -82,6 +85,7 @@ public class DisableEnableCascadeStyles extends TestBase {
         enableDisableComponentsButton = new Button("Disable Layout Components",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         for (Iterator<Component> i = layout
                                 .getComponentIterator(); i.hasNext();) {

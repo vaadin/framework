@@ -54,6 +54,7 @@ public class TextFieldRelativeWidth extends TestBase {
             addListener(new Property.ValueChangeListener() {
                 private static final long serialVersionUID = 448896474865195605L;
 
+                @Override
                 public void valueChange(
                         com.vaadin.data.Property.ValueChangeEvent event) {
                     // IndexedContainer idc = (IndexedContainer)
@@ -98,6 +99,7 @@ public class TextFieldRelativeWidth extends TestBase {
             addButton.setCaption(caption);
         }
 
+        @Override
         public void buttonClick(ClickEvent event) {
             Button b = event.getButton();
             if (b == addButton) {

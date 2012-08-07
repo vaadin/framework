@@ -5,10 +5,10 @@ package com.vaadin.terminal.gwt.client.ui.accordion;
 
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.accordion.VAccordion.StackItem;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
@@ -57,10 +57,12 @@ public class AccordionConnector extends TabsheetBaseConnector implements
         return (VAccordion) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         /* Accordion does not render its children's captions */
     }
 
+    @Override
     public void layout() {
         VAccordion accordion = getWidget();
 

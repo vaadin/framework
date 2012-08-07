@@ -27,6 +27,7 @@ public class Ticket932 extends Application.LegacyApplication {
         Button b = new Button("Check value");
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 l.setValue("Length: " + tx.getValue().toString().length()
                         + " Content: " + tx.getValue());
@@ -46,6 +47,7 @@ public class Ticket932 extends Application.LegacyApplication {
         Button b2 = new Button("Check value");
         b2.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 l.setValue("Length: " + tx2.getValue().toString().length()
                         + " Content: " + tx2.getValue());

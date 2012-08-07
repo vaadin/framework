@@ -17,6 +17,7 @@ public class ResourceDownload extends TestBase {
     public void setup() {
 
         Button b = new Button("Download (_new)", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 download("_new");
             }
@@ -24,6 +25,7 @@ public class ResourceDownload extends TestBase {
         addComponent(b);
 
         b = new Button("Download (_blank)", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 download("_blank");
             }
@@ -31,6 +33,7 @@ public class ResourceDownload extends TestBase {
         addComponent(b);
 
         b = new Button("Download ()", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 download("");
             }
@@ -38,6 +41,7 @@ public class ResourceDownload extends TestBase {
         addComponent(b);
 
         b = new Button("Download (_top)", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 download("_top");
             }
@@ -45,6 +49,7 @@ public class ResourceDownload extends TestBase {
         addComponent(b);
 
         b = new Button("Test", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 ResourceDownload.this.getMainWindow().showNotification(
                         "Still working");
@@ -59,6 +64,7 @@ public class ResourceDownload extends TestBase {
         String filename = "filename";
         StreamResource streamResource = new StreamResource(new StreamSource() {
 
+            @Override
             public InputStream getStream() {
                 try {
                     return new FileInputStream("FIXME C:/temp/file.xls");

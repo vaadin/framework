@@ -409,6 +409,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         remove.setTabIndex(tabIndex);
     }
 
+    @Override
     public void focus() {
         options.setFocus(true);
     }
@@ -430,6 +431,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeKeyCode();
 
@@ -493,6 +495,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
      * com.google.gwt.event.dom.client.MouseDownHandler#onMouseDown(com.google
      * .gwt.event.dom.client.MouseDownEvent)
      */
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         // Ensure that items are deselected when selecting
         // from a different source. See #3699 for details.
@@ -515,6 +518,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
      * com.google.gwt.event.dom.client.DoubleClickHandler#onDoubleClick(com.
      * google.gwt.event.dom.client.DoubleClickEvent)
      */
+    @Override
     public void onDoubleClick(DoubleClickEvent event) {
         if (event.getSource() == options) {
             addItem();
@@ -539,6 +543,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private static final String SUBPART_ADD_BUTTON = "add";
     private static final String SUBPART_REMOVE_BUTTON = "remove";
 
+    @Override
     public Element getSubPartElement(String subPart) {
         if (SUBPART_OPTION_SELECT.equals(subPart)) {
             return options.getElement();
@@ -568,6 +573,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         return null;
     }
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (optionsCaption != null
                 && optionsCaption.getElement().isOrHasChild(subElement)) {

@@ -3,6 +3,7 @@ package com.vaadin.tests.components.richtextarea;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
+import com.vaadin.terminal.Page;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
@@ -19,6 +20,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         ShortcutAction save = new ShortcutAction("^Save");
         private Action[] actions = new Action[] { save };
 
+        @Override
         public void handleAction(Action action, Object sender, Object target) {
             String msg = "Action: " + action.getCaption();
             msg += " From : " + sender.getClass().getSimpleName() + " '"
@@ -31,10 +33,13 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             String string = f.getValue().toString();
 
             msg += " Value: " + string;
-            Notification.show(msg);
+            Notification notification = new Notification(msg);
+            notification.setHtmlContentAllowed(true);
+            notification.show(Page.getCurrent());
 
         }
 
+        @Override
         public Action[] getActions(Object target, Object sender) {
             return actions;
         }

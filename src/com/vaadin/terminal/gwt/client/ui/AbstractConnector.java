@@ -13,12 +13,12 @@ import java.util.Map;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
@@ -57,6 +57,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * 
      * @see com.vaadin.terminal.gwt.client.VPaintable#getConnection()
      */
+    @Override
     public final ApplicationConnection getConnection() {
         return connection;
     }
@@ -66,6 +67,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * 
      * @see com.vaadin.terminal.gwt.client.Connector#getId()
      */
+    @Override
     public String getConnectorId() {
         return id;
     }
@@ -78,6 +80,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * <p>
      * Connector classes should override {@link #init()} instead of this method.
      */
+    @Override
     public final void doInit(String connectorId,
             ApplicationConnection connection) {
         this.connection = connection;
@@ -140,6 +143,7 @@ public abstract class AbstractConnector implements ServerConnector,
         }
     }
 
+    @Override
     public <T extends ClientRpc> Collection<T> getRpcImplementations(
             String rpcInterfaceId) {
         if (null == rpcImplementations) {
@@ -148,6 +152,7 @@ public abstract class AbstractConnector implements ServerConnector,
         return (Collection<T>) rpcImplementations.get(rpcInterfaceId);
     }
 
+    @Override
     public void fireEvent(GwtEvent<?> event) {
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
@@ -162,11 +167,13 @@ public abstract class AbstractConnector implements ServerConnector,
         return handlerManager;
     }
 
+    @Override
     public HandlerRegistration addStateChangeHandler(StateChangeHandler handler) {
         return ensureHandlerManager()
                 .addHandler(StateChangeEvent.TYPE, handler);
     }
 
+    @Override
     public void removeStateChangeHandler(StateChangeHandler handler) {
         ensureHandlerManager().removeHandler(StateChangeEvent.TYPE, handler);
     }
@@ -186,6 +193,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * 
      * @see com.vaadin.terminal.gwt.client.ServerConnector#onUnregister()
      */
+    @Override
     public void onUnregister() {
         if (debugLogging) {
             VConsole.log("Unregistered connector "
@@ -201,6 +209,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * 
      * @return the current shared state (never null)
      */
+    @Override
     public SharedState getState() {
         if (state == null) {
             state = createState();
@@ -221,14 +230,17 @@ public abstract class AbstractConnector implements ServerConnector,
         return ConnectorStateFactory.createState(getClass());
     }
 
+    @Override
     public ServerConnector getParent() {
         return parent;
     }
 
+    @Override
     public void setParent(ServerConnector parent) {
         this.parent = parent;
     }
 
+    @Override
     public List<ServerConnector> getChildren() {
         if (children == null) {
             return Collections.emptyList();
@@ -236,10 +248,12 @@ public abstract class AbstractConnector implements ServerConnector,
         return children;
     }
 
+    @Override
     public void setChildren(List<ServerConnector> children) {
         this.children = children;
     }
 
+    @Override
     public boolean isEnabled() {
         if (!getState().isEnabled()) {
             return false;
@@ -252,6 +266,7 @@ public abstract class AbstractConnector implements ServerConnector,
         }
     }
 
+    @Override
     public void updateEnabledState(boolean enabledState) {
         if (lastEnabledState == enabledState) {
             return;

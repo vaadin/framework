@@ -35,6 +35,7 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         themeToggle = new CheckBox("Runo theme");
         themeToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (getTheme() == "reindeer") {
                     setTheme("runo");
@@ -49,6 +50,7 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         styleToggle = new CheckBox("Black style");
         styleToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (!main.getContent().getStyleName().contains("black")) {
                     main.getContent().setStyleName("black");
@@ -63,6 +65,7 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         iconToggle = new CheckBox("64x icons");
         iconToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 largeIcons = !largeIcons;
                 recreateAll();
@@ -74,6 +77,7 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         nativeToggle = new CheckBox("Native buttons");
         nativeToggle.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 nativeButtons = !nativeButtons;
                 recreateAll();
@@ -120,6 +124,7 @@ public class ButtonsTest extends com.vaadin.Application.LegacyApplication {
         main.addComponent(b);
 
         Button c = new Button("toggle enabled", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 b.setEnabled(!b.isEnabled());
             }

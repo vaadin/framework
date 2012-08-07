@@ -5,17 +5,18 @@
 package com.vaadin.terminal.gwt.client.ui.progressindicator;
 
 import com.google.gwt.user.client.DOM;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.ProgressIndicator;
 
 @Connect(ProgressIndicator.class)
 public class ProgressIndicatorConnector extends AbstractFieldConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         if (!isRealUpdate(uidl)) {

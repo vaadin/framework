@@ -16,6 +16,7 @@ public class DisabledTableShouldNotSendPageLengthUpdates extends TestBase {
         HorizontalSplitPanel split = new HorizontalSplitPanel();
         table.addContainerProperty("name", Integer.class, 0);
         Button button = new Button("Add items", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 for (int i = 0; i < 5; i++) {
                     Object id = table.addItem();

@@ -6,10 +6,10 @@ package com.vaadin.terminal.gwt.client.ui.draganddropwrapper;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.ui.DragAndDropWrapper;
 
@@ -17,6 +17,7 @@ import com.vaadin.ui.DragAndDropWrapper;
 public class DragAndDropWrapperConnector extends CustomComponentConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {

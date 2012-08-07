@@ -7,6 +7,12 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.AlignmentInfo;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.LayoutClickRpc;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
+import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
@@ -18,11 +24,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout.Cell;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 import com.vaadin.ui.GridLayout;
@@ -51,6 +53,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(GridLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
@@ -82,6 +85,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         VGridLayout layout = getWidget();
         layout.client = client;
@@ -185,6 +189,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     }
 
+    @Override
     public void updateCaption(ComponentConnector childConnector) {
         if (!childConnector.delegateCaptionHandling()) {
             // Check not required by interface but by workarounds in this class
@@ -223,10 +228,12 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         return (VGridLayout) super.getWidget();
     }
 
+    @Override
     public void layoutVertically() {
         getWidget().updateHeight();
     }
 
+    @Override
     public void layoutHorizontally() {
         getWidget().updateWidth();
     }

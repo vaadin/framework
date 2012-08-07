@@ -30,10 +30,12 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
             final Action H = new Action("Toggle Col2");
             final Action[] actions = new Action[] { H };
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return actions;
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 table.setColumnCollapsed("Col2",
                         !table.isColumnCollapsed("Col2"));
@@ -55,6 +57,7 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
         final TextField tf = new TextField("Column name (ColX)");
         Button hide = new Button("Collapse", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnCollapsed(tf.getValue(), true);
             }
@@ -63,6 +66,7 @@ public class ColumnCollapsingAndColumnExpansion extends TestBase {
 
         Button show = new Button("Show", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnCollapsed(tf.getValue(), false);
             }

@@ -28,6 +28,7 @@ public class LabelWrapping extends TestBase {
 
         Button changeLength = new Button("Change length");
         changeLength.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (longLabel.getValue().equals(longString)) {
                     longLabel.setValue("");

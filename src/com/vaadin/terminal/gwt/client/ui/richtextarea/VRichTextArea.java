@@ -31,6 +31,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Field;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
 
 /**
  * This class implements a basic client side rich text editor component.
@@ -85,6 +86,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         initWidget(fp);
         setStyleName(CLASSNAME);
 
+        TouchScrollDelegate.enableTouchScrolling(html, html.getElement());
     }
 
     private void createRTAComponents() {
@@ -160,6 +162,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
     }
 
     // TODO is this really used, or does everything go via onBlur() only?
+    @Override
     public void onChange(ChangeEvent event) {
         synchronizeContentToServer();
     }
@@ -177,6 +180,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         synchronizeContentToServer();
         // TODO notify possible server side blur/focus listeners
@@ -242,6 +246,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
              * delay the height setting so the DOM has had time to stabilize.
              */
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     int editorHeight = getOffsetHeight()
                             - getExtraVerticalPixels()
@@ -281,9 +286,11 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         if (maxLength >= 0) {
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     if (rta.getHTML().length() > maxLength) {
                         rta.setHTML(rta.getHTML().substring(0, maxLength));
@@ -293,6 +300,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         // delegate to closest shortcut action handler
         // throw event from the iframe forward to the shortcuthandler
@@ -320,14 +328,17 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         return hasShortcutActionHandler;
     }
 
+    @Override
     public int getTabIndex() {
         return rta.getTabIndex();
     }
 
+    @Override
     public void setAccessKey(char key) {
         rta.setAccessKey(key);
     }
 
+    @Override
     public void setFocus(boolean focused) {
         /*
          * Similar issue as with selectAll. Focusing must happen before possible
@@ -342,6 +353,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         }.schedule(300);
     }
 
+    @Override
     public void setTabIndex(int index) {
         rta.setTabIndex(index);
     }

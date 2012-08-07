@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -27,6 +27,7 @@ public class Ticket124 extends Application.LegacyApplication {
         tf = new TextField("Row nr");
         Button insert = new Button("Insert row", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 insertRow();
 
@@ -34,6 +35,7 @@ public class Ticket124 extends Application.LegacyApplication {
         });
         Button delete = new Button("Delete row", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 deleteRow();
 

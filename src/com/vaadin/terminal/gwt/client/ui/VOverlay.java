@@ -6,7 +6,10 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -14,6 +17,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 
 /**
@@ -22,6 +26,49 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
  * stacking order correctly with VWindow objects.
  */
 public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
+
+    public static class PositionAndSize {
+        private int left, top, width, height;
+
+        public int getLeft() {
+            return left;
+        }
+
+        public void setLeft(int left) {
+            this.left = left;
+        }
+
+        public int getTop() {
+            return top;
+        }
+
+        public void setTop(int top) {
+            this.top = top;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
+
+        public void setAnimationFromCenterProgress(double progress) {
+            left += (int) (width * (1.0 - progress) / 2.0);
+            top += (int) (height * (1.0 - progress) / 2.0);
+            width = (int) (width * progress);
+            height = (int) (height * progress);
+        }
+    }
 
     /*
      * The z-index value from where all overlays live. This can be overridden in
@@ -45,6 +92,18 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     private Element shadow;
 
+    /*
+     * Creator of VOverlow (widget that made the instance, not the layout
+     * parent)
+     */
+    private Widget owner;
+
+    /**
+     * The shim iframe behind the overlay, allowing PDFs and applets to be
+     * covered by overlays.
+     */
+    private IFrameElement shimElement;
+
     /**
      * The HTML snippet that is used to render the actual shadow. In consists of
      * nine different DIV-elements with the following class names:
@@ -65,6 +124,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * See default theme 'shadow.css' for implementation example.
      */
     private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
+
+    /**
+     * Matches {@link PopupPanel}.ANIMATION_DURATION
+     */
+    private static final int POPUP_PANEL_ANIMATION_DURATION = 200;
 
     private boolean sinkShadowEvents = false;
 
@@ -116,9 +180,15 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return shadow != null;
     }
 
+    private void removeShim() {
+        if (shimElement != null) {
+            shimElement.removeFromParent();
+        }
+    }
+
     private void removeShadowIfPresent() {
         if (isShadowAttached()) {
-            shadow.getParentElement().removeChild(shadow);
+            shadow.removeFromParent();
 
             // Remove event listener from the shadow
             unsinkShadowEvents();
@@ -127,6 +197,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private boolean isShadowAttached() {
         return isShadowEnabled() && shadow.getParentElement() != null;
+    }
+
+    private boolean isShimAttached() {
+        return shimElement != null && shimElement.hasParentElement();
     }
 
     private void adjustZIndex() {
@@ -156,7 +230,46 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
+        sizeOrPositionUpdated(isAnimationEnabled() ? 0 : 1);
+    }
+
+    private IFrameElement getShimElement() {
+        if (shimElement == null) {
+            shimElement = Document.get().createIFrameElement();
+
+            // Insert shim iframe before the main overlay element. It does not
+            // matter if it is in front or behind the shadow as we cannot put a
+            // shim behind the shadow due to its transparency.
+            shimElement.getStyle().setPosition(Position.ABSOLUTE);
+            shimElement.getStyle().setBorderStyle(BorderStyle.NONE);
+            shimElement.setFrameBorder(0);
+            shimElement.setMarginHeight(0);
+        }
+        return shimElement;
+    }
+
+    private int getActualTop() {
+        int y = getAbsoluteTop();
+
+        /* This is needed for IE7 at least */
+        // Account for the difference between absolute position and the
+        // body's positioning context.
+        y -= Document.get().getBodyOffsetTop();
+        y -= adjustByRelativeTopBodyMargin();
+
+        return y;
+    }
+
+    private int getActualLeft() {
+        int x = getAbsoluteLeft();
+
+        /* This is needed for IE7 at least */
+        // Account for the difference between absolute position and the
+        // body's positioning context.
+        x -= Document.get().getBodyOffsetLeft();
+        x -= adjustByRelativeLeftBodyMargin();
+
+        return x;
     }
 
     private static int adjustByRelativeTopBodyMargin() {
@@ -189,13 +302,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void show() {
         super.show();
-        if (isShadowEnabled()) {
-            if (isAnimationEnabled()) {
-                ShadowAnimation sa = new ShadowAnimation();
-                sa.run(200);
-            } else {
-                updateShadowSizeAndPosition(1.0);
-            }
+        if (isAnimationEnabled()) {
+            new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
+        } else {
+            sizeOrPositionUpdated(1.0);
         }
     }
 
@@ -205,6 +315,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
         // Always ensure shadow is removed when the overlay is removed.
         removeShadowIfPresent();
+        removeShim();
     }
 
     @Override
@@ -219,13 +330,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        updateShadowSizeAndPosition(1.0);
+        sizeOrPositionUpdated(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        updateShadowSizeAndPosition(1.0);
+        sizeOrPositionUpdated(1.0);
     }
 
     /**
@@ -244,28 +355,29 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
     }
 
-    /*
+    /**
      * Extending classes should always call this method after they change the
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
+     * 
      */
-    public void updateShadowSizeAndPosition() {
-        updateShadowSizeAndPosition(1.0);
+    public void sizeOrPositionUpdated() {
+        sizeOrPositionUpdated(1.0);
     }
 
     /**
-     * Recalculates proper position and dimensions for the shadow element. Can
-     * be used to animate the shadow, using the 'progress' parameter (used to
-     * animate the shadow in sync with GWT PopupPanel's default animation
-     * 'PopupPanel.AnimationType.CENTER').
+     * Recalculates proper position and dimensions for the shadow and shim
+     * elements. Can be used to animate the related elements, using the
+     * 'progress' parameter (used to animate the shadow in sync with GWT
+     * PopupPanel's default animation 'PopupPanel.AnimationType.CENTER').
      * 
      * @param progress
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
      */
-    private void updateShadowSizeAndPosition(final double progress) {
+    private void sizeOrPositionUpdated(final double progress) {
         // Don't do anything if overlay element is not attached
-        if (!isAttached() || shadow == null) {
+        if (!isAttached()) {
             return;
         }
         // Calculate proper z-index
@@ -288,37 +400,26 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             getOffsetWidth();
         }
 
-        int x = getAbsoluteLeft();
-        int y = getAbsoluteTop();
+        PositionAndSize positionAndSize = new PositionAndSize();
+        positionAndSize.left = getActualLeft();
+        positionAndSize.top = getActualTop();
+        positionAndSize.width = getOffsetWidth();
+        positionAndSize.height = getOffsetHeight();
 
-        /* This is needed for IE7 at least */
-        // Account for the difference between absolute position and the
-        // body's positioning context.
-        x -= Document.get().getBodyOffsetLeft();
-        y -= Document.get().getBodyOffsetTop();
-        x -= adjustByRelativeLeftBodyMargin();
-        y -= adjustByRelativeTopBodyMargin();
-
-        int width = getOffsetWidth();
-        int height = getOffsetHeight();
-
-        if (width < 0) {
-            width = 0;
+        if (positionAndSize.width < 0) {
+            positionAndSize.width = 0;
         }
-        if (height < 0) {
-            height = 0;
+        if (positionAndSize.height < 0) {
+            positionAndSize.height = 0;
         }
 
-        // Animate the shadow size
-        x += (int) (width * (1.0 - progress) / 2.0);
-        y += (int) (height * (1.0 - progress) / 2.0);
-        width = (int) (width * progress);
-        height = (int) (height * progress);
+        // Animate the size
+        positionAndSize.setAnimationFromCenterProgress(progress);
 
         // Opera needs some shaking to get parts of the shadow showing
         // properly
         // (ticket #2704)
-        if (BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // Clear the height of all middle elements
             DOM.getChild(shadow, 3).getStyle().setProperty("height", "auto");
             DOM.getChild(shadow, 4).getStyle().setProperty("height", "auto");
@@ -326,15 +427,17 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         // Update correct values
-        DOM.setStyleAttribute(shadow, "zIndex", zIndex);
-        DOM.setStyleAttribute(shadow, "width", width + "px");
-        DOM.setStyleAttribute(shadow, "height", height + "px");
-        DOM.setStyleAttribute(shadow, "top", y + "px");
-        DOM.setStyleAttribute(shadow, "left", x + "px");
-        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
+        if (isShadowEnabled()) {
+            updateSizeAndPosition(shadow, positionAndSize);
+            DOM.setStyleAttribute(shadow, "zIndex", zIndex);
+            DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
+                    : "");
+        }
+        updateSizeAndPosition((Element) Element.as(getShimElement()),
+                positionAndSize);
 
         // Opera fix, part 2 (ticket #2704)
-        if (BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // We'll fix the height of all the middle elements
             DOM.getChild(shadow, 3)
                     .getStyle()
@@ -351,20 +454,33 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         // Attach to dom if not there already
-        if (!isShadowAttached()) {
+        if (isShadowEnabled() && !isShadowAttached()) {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
             sinkShadowEvents();
         }
+        if (!isShimAttached()) {
+            RootPanel.get().getElement()
+                    .insertBefore(shimElement, getElement());
+        }
 
     }
 
-    protected class ShadowAnimation extends Animation {
+    private void updateSizeAndPosition(Element e,
+            PositionAndSize positionAndSize) {
+        e.getStyle().setLeft(positionAndSize.left, Unit.PX);
+        e.getStyle().setTop(positionAndSize.top, Unit.PX);
+        e.getStyle().setWidth(positionAndSize.width, Unit.PX);
+        e.getStyle().setHeight(positionAndSize.height, Unit.PX);
+    }
+
+    protected class ResizeAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            updateShadowSizeAndPosition(progress);
+            sizeOrPositionUpdated(progress);
         }
     }
 
+    @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         removeShadowIfPresent();
     }
@@ -413,5 +529,26 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     protected boolean isSinkShadowEvents() {
         return sinkShadowEvents;
+    }
+
+    /**
+     * Get owner (Widget that made this VOverlay, not the layout parent) of
+     * VOverlay
+     * 
+     * @return Owner (creator) or null if not defined
+     */
+    public Widget getOwner() {
+        return owner;
+    }
+
+    /**
+     * Set owner (Widget that made this VOverlay, not the layout parent) of
+     * VOverlay
+     * 
+     * @param owner
+     *            Owner (creator) of VOverlay
+     */
+    public void setOwner(Widget owner) {
+        this.owner = owner;
     }
 }

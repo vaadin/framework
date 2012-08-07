@@ -27,14 +27,20 @@ public class FindCurrentRootAndApplication extends Root {
     protected void init(WrappedRequest request) {
         Button helloButton = new Button("Say Hello");
         helloButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 String msg = "Running in ";
                 msg += Application.getCurrent().isProductionMode() ? "production"
                         : "debug";
-                msg += " mode in a Root with the caption "
-                        + Root.getCurrent().getCaption();
-
                 Notification.show(msg);
+            }
+        });
+
+        helloButton.addListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Notification.show("This Root is "
+                        + Root.getCurrent().getClass().getSimpleName());
             }
         });
 

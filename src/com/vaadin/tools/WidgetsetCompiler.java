@@ -31,7 +31,8 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
  * included in the classpath, as well as the gwt-dev-[platform].jar and other
  * relevant JARs.
  * 
- * @deprecated with Java 6, can use com.google.gwt.dev.Compiler directly (also in Eclipse plug-in etc.)
+ * @deprecated with Java 6, can use com.google.gwt.dev.Compiler directly (also
+ *             in Eclipse plug-in etc.)
  */
 @Deprecated
 public class WidgetsetCompiler {
@@ -50,6 +51,7 @@ public class WidgetsetCompiler {
             // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6316197)
 
             Runnable runCompiler = new Runnable() {
+                @Override
                 public void run() {
                     try {
                         // GWTCompiler.main(args);

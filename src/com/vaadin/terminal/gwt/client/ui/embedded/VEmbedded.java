@@ -26,6 +26,7 @@ public class VEmbedded extends HTML {
     protected Element browserElement;
 
     protected String type;
+    protected String mimetype;
 
     protected ApplicationConnection client;
 
@@ -232,8 +233,6 @@ public class VEmbedded extends HTML {
             VConsole.log("Embeddable onload");
             Util.notifyParentOfSizeChange(this, true);
         }
-
-        client.handleTooltipEvent(event, this);
     }
 
 }

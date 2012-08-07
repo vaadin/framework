@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;

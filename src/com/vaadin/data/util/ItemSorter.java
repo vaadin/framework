@@ -51,6 +51,7 @@ public interface ItemSorter extends Comparator<Object>, Cloneable, Serializable 
      * 
      * @see Comparator#compare(Object, Object)
      */
+    @Override
     int compare(Object itemId1, Object itemId2);
 
 }

@@ -12,6 +12,7 @@ public class TreeTableSetCollapsed extends TestBase {
         createTreeTableAndPopulate();
         addComponent(new Button("Create another TreeTable",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         createTreeTableAndPopulate();
                     }

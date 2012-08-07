@@ -6,7 +6,7 @@ package com.vaadin.tests;
 
 import java.util.Date;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -39,6 +39,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         addInfo();
 
         Button b = new Button("start test", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 startTest();
             }
@@ -46,6 +47,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         b.setDescription("Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
         b = new Button("end test", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 endTest();
             }

@@ -57,6 +57,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      *            the identifier of the Property to get.
      * @return the Property with the given ID or <code>null</code>
      */
+    @Override
     public Property<?> getItemProperty(Object id) {
         return map.get(id);
     }
@@ -67,6 +68,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return unmodifiable collection containing IDs of the Properties stored
      *         the Item
      */
+    @Override
     public Collection<?> getItemPropertyIds() {
         return Collections.unmodifiableCollection(list);
     }
@@ -83,6 +85,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return <code>true</code> if the operation succeeded <code>false</code>
      *         if not
      */
+    @Override
     public boolean removeItemProperty(Object id) {
 
         // Cant remove missing properties
@@ -107,6 +110,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return <code>true</code> if the operation succeeded, <code>false</code>
      *         if not
      */
+    @Override
     public boolean addItemProperty(Object id, Property property) {
 
         // Null ids are not accepted
@@ -175,6 +179,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
          * 
          * @return source object of the event as an <code>Item</code>
          */
+        @Override
         public Item getItem() {
             return (Item) getSource();
         }
@@ -186,6 +191,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @param listener
      *            the new Listener to be registered.
      */
+    @Override
     public void addListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
             propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
@@ -199,6 +205,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @param listener
      *            the Listener to be removed.
      */
+    @Override
     public void removeListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null) {
             propertySetChangeListeners.remove(listener);

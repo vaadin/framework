@@ -34,6 +34,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         Button add = new Button("Add an action handler",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         add();
                     }
@@ -42,6 +43,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         Button addAnother = new Button("Add another action handler",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         addAnother();
                     }
@@ -50,6 +52,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         Button remove = new Button("Remove an action handler",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         remove();
                     }
@@ -73,12 +76,14 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         panel.setCaption(panel.getCaption() + " - Added handler");
         Handler actionHandler = new Handler() {
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { new ShortcutAction("Ctrl+Left",
                         ShortcutAction.KeyCode.ARROW_LEFT,
                         new int[] { ModifierKey.CTRL }) };
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 getMainWindow().showNotification(
                         "Handling action " + action.getCaption());
@@ -92,12 +97,14 @@ public class PanelShouldRemoveActionHandler extends TestBase {
     public void addAnother() {
         Handler actionHandler = new Handler() {
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { new ShortcutAction("Ctrl+Right",
                         ShortcutAction.KeyCode.ARROW_RIGHT,
                         new int[] { ModifierKey.CTRL }) };
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 getMainWindow().showNotification(
                         "Handling action " + action.getCaption());

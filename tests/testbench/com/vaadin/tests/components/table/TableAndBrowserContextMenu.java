@@ -25,6 +25,7 @@ public class TableAndBrowserContextMenu extends TestBase implements
         cb.setImmediate(true);
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (((Boolean) event.getProperty().getValue())) {
                     table.addListener(TableAndBrowserContextMenu.this);
@@ -40,6 +41,7 @@ public class TableAndBrowserContextMenu extends TestBase implements
         cbActionHandler.setImmediate(true);
         cbActionHandler.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (((Boolean) event.getProperty().getValue())) {
                     table.addActionHandler(TableAndBrowserContextMenu.this);
@@ -55,6 +57,7 @@ public class TableAndBrowserContextMenu extends TestBase implements
         cbActionHasActions.setImmediate(true);
         cbActionHasActions.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 actionHandlerHasActions = ((Boolean) event.getProperty()
                         .getValue());
@@ -80,6 +83,7 @@ public class TableAndBrowserContextMenu extends TestBase implements
 
         // Add a generated column with a link to Google
         table.addGeneratedColumn("Search", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
@@ -131,11 +135,13 @@ public class TableAndBrowserContextMenu extends TestBase implements
         return 5924;
     }
 
+    @Override
     public void itemClick(ItemClickEvent event) {
         getMainWindow()
                 .showNotification("Click using " + event.getButtonName());
     }
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         if (!actionHandlerHasActions) {
             return null;
@@ -144,6 +150,7 @@ public class TableAndBrowserContextMenu extends TestBase implements
         return new Action[] { new Action("test") };
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         getMainWindow().showNotification("Action: " + action.getCaption());
     }

@@ -6,7 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.Connector;
 
 public abstract class ConnectorClassBasedFactory<T> {
     public interface Creator<T> {

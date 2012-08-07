@@ -15,16 +15,11 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
@@ -104,6 +99,7 @@ public class JsonPaintTarget implements PaintTarget {
         cacheEnabled = cachingRequired;
     }
 
+    @Override
     public void startTag(String tagName) throws PaintException {
         startTag(tagName, false);
     }
@@ -160,6 +156,7 @@ public class JsonPaintTarget implements PaintTarget {
      *             if the paint operation failed.
      */
 
+    @Override
     public void endTag(String tagName) throws PaintException {
         // In case of null data output nothing:
         if (tagName == null) {
@@ -327,59 +324,46 @@ public class JsonPaintTarget implements PaintTarget {
      * 
      */
 
+    @Override
     public void addText(String str) throws PaintException {
         tag.addData("\"" + escapeJSON(str) + "\"");
     }
 
+    @Override
     public void addAttribute(String name, boolean value) throws PaintException {
         tag.addAttribute("\"" + name + "\":" + (value ? "true" : "false"));
     }
 
-    @SuppressWarnings("deprecation")
+    @Override
     public void addAttribute(String name, Resource value) throws PaintException {
-
-        if (value instanceof ExternalResource) {
-            addAttribute(name, ((ExternalResource) value).getURL());
-
-        } else if (value instanceof ApplicationResource) {
-            final ApplicationResource r = (ApplicationResource) value;
-            final Application a = r.getApplication();
-            if (a == null) {
-                throw new PaintException(
-                        "Application not specified for resorce "
-                                + value.getClass().getName());
-            }
-            final String uri = a.getRelativeLocation(r);
-            addAttribute(name, uri);
-
-        } else if (value instanceof ThemeResource) {
-            final String uri = "theme://"
-                    + ((ThemeResource) value).getResourceId();
-            addAttribute(name, uri);
-        } else {
-            throw new PaintException("Ajax adapter does not "
-                    + "support resources of type: "
-                    + value.getClass().getName());
+        if (value == null) {
+            throw new NullPointerException();
         }
-
+        ResourceReference reference = ResourceReference.create(value);
+        addAttribute(name, reference.getURL());
     }
 
+    @Override
     public void addAttribute(String name, int value) throws PaintException {
         tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
     }
 
+    @Override
     public void addAttribute(String name, long value) throws PaintException {
         tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
     }
 
+    @Override
     public void addAttribute(String name, float value) throws PaintException {
         tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
     }
 
+    @Override
     public void addAttribute(String name, double value) throws PaintException {
         tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
     }
 
+    @Override
     public void addAttribute(String name, String value) throws PaintException {
         // In case of null data output nothing:
         if ((value == null) || (name == null)) {
@@ -399,12 +383,14 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
+    @Override
     public void addAttribute(String name, Component value)
             throws PaintException {
         final String id = value.getConnectorId();
         addAttribute(name, id);
     }
 
+    @Override
     public void addAttribute(String name, Map<?, ?> value)
             throws PaintException {
 
@@ -442,6 +428,7 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addAttribute(sb.toString());
     }
 
+    @Override
     public void addAttribute(String name, Object[] values) {
         // In case of null data output nothing:
         if ((values == null) || (name == null)) {
@@ -462,41 +449,49 @@ public class JsonPaintTarget implements PaintTarget {
         tag.addAttribute(buf.toString());
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, String value)
             throws PaintException {
         tag.addVariable(new StringVariable(owner, name, escapeJSON(value)));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, Component value)
             throws PaintException {
         tag.addVariable(new StringVariable(owner, name, value.getConnectorId()));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, int value)
             throws PaintException {
         tag.addVariable(new IntVariable(owner, name, value));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, long value)
             throws PaintException {
         tag.addVariable(new LongVariable(owner, name, value));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, float value)
             throws PaintException {
         tag.addVariable(new FloatVariable(owner, name, value));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, double value)
             throws PaintException {
         tag.addVariable(new DoubleVariable(owner, name, value));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, boolean value)
             throws PaintException {
         tag.addVariable(new BooleanVariable(owner, name, value));
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name, String[] value)
             throws PaintException {
         tag.addVariable(new ArrayVariable(owner, name, value));
@@ -516,6 +511,7 @@ public class JsonPaintTarget implements PaintTarget {
      *             if the paint operation failed.
      */
 
+    @Override
     public void addUploadStreamVariable(VariableOwner owner, String name)
             throws PaintException {
         startTag("uploadstream");
@@ -536,6 +532,7 @@ public class JsonPaintTarget implements PaintTarget {
      *             if the paint operation failed.
      */
 
+    @Override
     public void addSection(String sectionTagName, String sectionData)
             throws PaintException {
         tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData)
@@ -551,6 +548,7 @@ public class JsonPaintTarget implements PaintTarget {
      *             if the paint operation failed.
      */
 
+    @Override
     public void addUIDL(String xml) throws PaintException {
 
         // Ensure that the target is open
@@ -585,6 +583,7 @@ public class JsonPaintTarget implements PaintTarget {
      *      String)
      */
 
+    @Override
     public void addXMLSection(String sectionTagName, String sectionData,
             String namespace) throws PaintException {
 
@@ -650,6 +649,7 @@ public class JsonPaintTarget implements PaintTarget {
      * .Paintable, java.lang.String)
      */
 
+    @Override
     public PaintStatus startPaintable(Component connector, String tagName)
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
@@ -676,6 +676,7 @@ public class JsonPaintTarget implements PaintTarget {
         return PaintStatus.PAINTING;
     }
 
+    @Override
     public void endPaintable(Component paintable) throws PaintException {
         getLogger().fine(
                 "endPaintable for " + paintable.getClass().getName() + "@"
@@ -699,6 +700,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#addCharacterData(java.lang.String )
      */
 
+    @Override
     public void addCharacterData(String text) throws PaintException {
         if (text != null) {
             tag.addData(text);
@@ -968,6 +970,7 @@ public class JsonPaintTarget implements PaintTarget {
         return usedResources;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public String getTag(ClientConnector clientConnector) {
         Class<? extends ClientConnector> clientConnectorClass = clientConnector
@@ -990,10 +993,11 @@ public class JsonPaintTarget implements PaintTarget {
         return usedClientConnectors;
     }
 
+    @Override
     public void addVariable(VariableOwner owner, String name,
             StreamVariable value) throws PaintException {
-        String url = manager.getStreamVariableTargetUrl((Connector) owner,
-                name, value);
+        String url = manager.getStreamVariableTargetUrl(
+                (ClientConnector) owner, name, value);
         if (url != null) {
             addVariable(owner, name, url);
         } // else { //NOP this was just a cleanup by component }
@@ -1006,6 +1010,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @see com.vaadin.terminal.PaintTarget#isFullRepaint()
      */
 
+    @Override
     public boolean isFullRepaint() {
         return !cacheEnabled;
     }

@@ -27,6 +27,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
         if (discardButton == null) {
             discardButton = new Button("Discard", new Button.ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     getFieldBinder().discard();
                     log.log("Discarded changes");
@@ -42,6 +43,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
             showBeanButton = new Button("Show bean values",
                     new Button.ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             log.log(getFieldBinder().getItemDataSource()
                                     .getBean().toString());
@@ -57,6 +59,7 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
             commitButton = new Button("Commit");
             commitButton.addListener(new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     String msg = "Commit succesful";
                     try {

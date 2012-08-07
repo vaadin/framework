@@ -110,6 +110,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         }
     }
 
+    @Override
     public HandlerRegistration addScrollHandler(ScrollHandler handler) {
         return addDomHandler(handler, ScrollEvent.getType());
     }
@@ -168,8 +169,10 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         }
     }
 
+    @Override
     public void onScroll(ScrollEvent event) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
             public void execute() {
                 focusElement.getStyle().setTop(getScrollPosition(), Unit.PX);
                 focusElement.getStyle().setLeft(getHorizontalScrollPosition(),

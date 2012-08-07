@@ -8,6 +8,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 
@@ -34,6 +36,8 @@ public class VCaption extends HTML {
     private enum InsertPosition {
         ICON, CAPTION, REQUIRED, ERROR
     }
+
+    private TooltipInfo tooltipInfo = null;
 
     /**
      * Creates a caption that is not linked to a {@link ComponentConnector}.
@@ -74,8 +78,6 @@ public class VCaption extends HTML {
         }
 
         setStyleName(CLASSNAME);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
-
     }
 
     /**
@@ -345,9 +347,6 @@ public class VCaption extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         final Element target = DOM.eventGetTarget(event);
-        if (client != null && owner != null && target != getElement()) {
-            client.handleTooltipEvent(event, owner);
-        }
 
         if (DOM.eventGetType(event) == Event.ONLOAD
                 && icon.getElement() == target) {
@@ -553,6 +552,26 @@ public class VCaption extends HTML {
             }
 
         }
+    }
+
+    /**
+     * Sets the tooltip that should be shown for the caption
+     * 
+     * @param tooltipInfo
+     *            The tooltip that should be shown or null if no tooltip should
+     *            be shown
+     */
+    public void setTooltipInfo(TooltipInfo tooltipInfo) {
+        this.tooltipInfo = tooltipInfo;
+    }
+
+    /**
+     * Returns the tooltip that should be shown for the caption
+     * 
+     * @return The tooltip to show or null if no tooltip should be shown
+     */
+    public TooltipInfo getTooltipInfo() {
+        return tooltipInfo;
     }
 
     protected Element getTextElement() {

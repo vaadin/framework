@@ -22,6 +22,7 @@ public class WindowStyleNames extends TestBase {
         setWindowStyle("old");
         addComponent(new Button("Set style to 'new'", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 setWindowStyle("new");
             }
@@ -30,6 +31,7 @@ public class WindowStyleNames extends TestBase {
 
         addComponent(new Button("Set style to 'custom'", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 setWindowStyle("custom");
             }
@@ -38,6 +40,7 @@ public class WindowStyleNames extends TestBase {
 
         addComponent(new Button("Add 'foo' style", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().addStyleName("foo");
             }

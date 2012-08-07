@@ -96,6 +96,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
             this.propertyId = propertyId;
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public IDTYPE getIdForBean(BEANTYPE bean)
                 throws IllegalArgumentException {
@@ -163,6 +164,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container#getType(java.lang.Object)
      */
+    @Override
     public Class<?> getType(Object propertyId) {
         return model.get(propertyId).getPropertyType();
     }
@@ -195,6 +197,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container#getContainerPropertyIds()
      */
+    @Override
     public Collection<String> getContainerPropertyIds() {
         return model.keySet();
     }
@@ -258,6 +261,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
      * java.lang.Object)
      */
+    @Override
     public Property<?> getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
@@ -300,6 +304,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
     /**
      * Re-filter the container when one of the monitored properties changes.
      */
+    @Override
     public void valueChange(ValueChangeEvent event) {
         // if a property that is used in a filter is changed, refresh filtering
         filterAll();
@@ -312,6 +317,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
      * java.lang.String, boolean, boolean)
      */
+    @Override
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         try {
@@ -328,6 +334,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container.Filterable#removeAllContainerFilters()
      */
+    @Override
     public void removeAllContainerFilters() {
         if (!getFilters().isEmpty()) {
             for (Item item : itemIdToItem.values()) {
@@ -344,6 +351,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * com.vaadin.data.Container.Filterable#removeContainerFilters(java.lang
      * .Object)
      */
+    @Override
     public void removeContainerFilters(Object propertyId) {
         Collection<Filter> removedFilters = super.removeFilters(propertyId);
         if (!removedFilters.isEmpty()) {
@@ -354,11 +362,13 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         }
     }
 
+    @Override
     public void addContainerFilter(Filter filter)
             throws UnsupportedFilterException {
         addFilter(filter);
     }
 
+    @Override
     public void removeContainerFilter(Filter filter) {
         removeFilter(filter);
     }
@@ -416,6 +426,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         return getSortablePropertyIds();
     }
@@ -426,6 +437,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
      * boolean[])
      */
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sortContainer(propertyId, ascending);
     }

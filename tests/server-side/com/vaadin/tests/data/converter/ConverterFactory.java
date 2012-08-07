@@ -16,20 +16,24 @@ public class ConverterFactory extends TestCase {
 
     public static class ConvertTo42 implements Converter<String, Integer> {
 
+        @Override
         public Integer convertToModel(String value, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             return 42;
         }
 
+        @Override
         public String convertToPresentation(Integer value, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             return "42";
         }
 
+        @Override
         public Class<Integer> getModelType() {
             return Integer.class;
         }
 
+        @Override
         public Class<String> getPresentationType() {
             return String.class;
         }

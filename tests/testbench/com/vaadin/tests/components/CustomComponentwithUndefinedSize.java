@@ -57,6 +57,7 @@ public class CustomComponentwithUndefinedSize extends TestBase {
             Button button = new Button("Change panel size",
                     new ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             switch (step++ % 4) {
                             case 0:

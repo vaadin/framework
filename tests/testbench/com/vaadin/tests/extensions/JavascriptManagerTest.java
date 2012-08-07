@@ -22,6 +22,7 @@ public class JavascriptManagerTest extends AbstractTestRoot {
         addComponent(log);
         final JavaScript js = JavaScript.getCurrent();
         js.addCallback("testing.doTest", new JavaScriptCallback() {
+            @Override
             public void call(JSONArray arguments) throws JSONException {
                 log.log("Got " + arguments.length() + " arguments");
                 log.log("Argument 1 as a number: " + arguments.getInt(0));

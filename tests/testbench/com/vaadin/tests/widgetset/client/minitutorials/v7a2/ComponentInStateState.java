@@ -4,8 +4,8 @@
 
 package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 
-import com.vaadin.terminal.gwt.client.ComponentState;
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.Connector;
 
 public class ComponentInStateState extends ComponentState {
     private Connector otherComponent;

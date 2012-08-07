@@ -6,7 +6,7 @@ package com.vaadin.tests;
 
 import java.util.Date;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -39,6 +39,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
         main.addComponent(new Button("click when rendered",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         endTest();
                     }
@@ -47,6 +48,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
         main.addComponent(new Button(
                 "Click for layout repaint (cached components)",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         testContainer.requestRepaint();
                     }

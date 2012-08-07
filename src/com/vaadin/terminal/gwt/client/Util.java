@@ -27,8 +27,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class Util {
 
@@ -446,6 +448,7 @@ public class Util {
             elem.getStyle().setProperty("overflow", "hidden");
 
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     // Dough, Safari scroll auto means actually just a moped
                     elem.getStyle().setProperty("overflow", originalOverflow);
@@ -642,34 +645,47 @@ public class Util {
      */
     public static ComponentConnector getConnectorForElement(
             ApplicationConnection client, Widget parent, Element element) {
+
+        Element browseElement = element;
         Element rootElement = parent.getElement();
-        while (element != null && element != rootElement) {
-            ComponentConnector paintable = ConnectorMap.get(client)
-                    .getConnector(element);
-            if (paintable == null) {
-                String ownerPid = VCaption.getCaptionOwnerPid(element);
+
+        while (browseElement != null && browseElement != rootElement) {
+
+            ComponentConnector connector = ConnectorMap.get(client)
+                    .getConnector(browseElement);
+
+            if (connector == null) {
+                String ownerPid = VCaption.getCaptionOwnerPid(browseElement);
                 if (ownerPid != null) {
-                    paintable = (ComponentConnector) ConnectorMap.get(client)
+                    connector = (ComponentConnector) ConnectorMap.get(client)
                             .getConnector(ownerPid);
                 }
             }
 
-            if (paintable != null) {
+            if (connector != null) {
                 // check that inside the rootElement
-                while (element != null && element != rootElement) {
-                    element = (Element) element.getParentElement();
+                while (browseElement != null && browseElement != rootElement) {
+                    browseElement = (Element) browseElement.getParentElement();
                 }
-                if (element != rootElement) {
+                if (browseElement != rootElement) {
                     return null;
                 } else {
-                    return paintable;
+                    return connector;
                 }
             }
 
-            element = (Element) element.getParentElement();
+            browseElement = (Element) browseElement.getParentElement();
         }
 
-        return null;
+        // No connector found, element is possibly inside a VOverlay
+        // If the overlay has an owner, try to find the owner's connector
+        VOverlay overlay = findWidget(element, VOverlay.class);
+        if (overlay != null && overlay.getOwner() != null) {
+            return getConnectorForElement(client, RootPanel.get(), overlay
+                    .getOwner().getElement());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -818,30 +834,29 @@ public class Util {
         ServerConnector connector = ConnectorMap.get(c).getConnector(id);
         if (connector != null) {
             VConsole.log("\t" + id + " (" + connector.getClass() + ") :");
-            for (MethodInvocation invocation : invocations) {
-                Object[] parameters = invocation.getParameters();
-                String formattedParams = null;
-                if (ApplicationConnection.UPDATE_VARIABLE_METHOD
-                        .equals(invocation.getMethodName())
-                        && parameters.length == 2) {
-                    // name, value
-                    Object value = parameters[1];
-                    // TODO paintables inside lists/maps get rendered as
-                    // components in the debug console
-                    String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
-                            .getConnectorId() : String.valueOf(value);
-                    formattedParams = parameters[0] + " : " + formattedValue;
-                }
-                if (null == formattedParams) {
-                    formattedParams = (null != parameters) ? Arrays
-                            .toString(parameters) : null;
-                }
-                VConsole.log("\t\t" + invocation.getInterfaceName() + "."
-                        + invocation.getMethodName() + "(" + formattedParams
-                        + ")");
-            }
         } else {
-            VConsole.log("\t" + id + ": Warning: no corresponding connector!");
+            VConsole.log("\t" + id
+                    + ": Warning: no corresponding connector for id " + id);
+        }
+        for (MethodInvocation invocation : invocations) {
+            Object[] parameters = invocation.getParameters();
+            String formattedParams = null;
+            if (ApplicationConnection.UPDATE_VARIABLE_METHOD.equals(invocation
+                    .getMethodName()) && parameters.length == 2) {
+                // name, value
+                Object value = parameters[1];
+                // TODO paintables inside lists/maps get rendered as
+                // components in the debug console
+                String formattedValue = value instanceof ServerConnector ? ((ServerConnector) value)
+                        .getConnectorId() : String.valueOf(value);
+                formattedParams = parameters[0] + " : " + formattedValue;
+            }
+            if (null == formattedParams) {
+                formattedParams = (null != parameters) ? Arrays
+                        .toString(parameters) : null;
+            }
+            VConsole.log("\t\t" + invocation.getInterfaceName() + "."
+                    + invocation.getMethodName() + "(" + formattedParams + ")");
         }
     }
 
@@ -1007,6 +1022,7 @@ public class Util {
         }
 
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+            @Override
             public void execute() {
                 try {
                     target.dispatchEvent(createMouseDownEvent);

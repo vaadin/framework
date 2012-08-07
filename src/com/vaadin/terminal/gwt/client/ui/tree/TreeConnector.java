@@ -3,16 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client.ui.tree;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.google.gwt.dom.client.Element;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
 import com.vaadin.ui.Tree;
 
@@ -27,6 +31,9 @@ public class TreeConnector extends AbstractComponentConnector implements
     public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
     public static final String ATTRIBUTE_ACTION_ICON = ATTRIBUTE_NODE_ICON;
 
+    protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -62,6 +69,8 @@ public class TreeConnector extends AbstractComponentConnector implements
         getWidget().body.clear();
         // clear out any references to nodes that no longer are attached
         getWidget().clearNodeToKeyMap();
+        tooltipMap.clear();
+
         TreeNode childTree = null;
         UIDL childUidl = null;
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -74,6 +83,7 @@ public class TreeConnector extends AbstractComponentConnector implements
                 continue;
             }
             childTree = getWidget().new TreeNode();
+            getConnection().getVTooltip().connectHandlersToWidget(childTree);
             updateNodeFromUIDL(childTree, childUidl);
             getWidget().body.add(childTree);
             childTree.addStyleDependentName("root");
@@ -193,13 +203,8 @@ public class TreeConnector extends AbstractComponentConnector implements
         }
 
         String description = uidl.getStringAttribute("descr");
-        if (description != null && getConnection() != null) {
-            // Set tooltip
-            TooltipInfo info = new TooltipInfo(description);
-            getConnection().registerTooltip(this, nodeKey, info);
-        } else {
-            // Remove possible previous tooltip
-            getConnection().registerTooltip(this, nodeKey, null);
+        if (description != null) {
+            tooltipMap.put(treeNode, new TooltipInfo(description));
         }
 
         if (uidl.getBooleanAttribute("expanded") && !treeNode.getState()) {
@@ -228,6 +233,7 @@ public class TreeConnector extends AbstractComponentConnector implements
                 continue;
             }
             final TreeNode childTree = getWidget().new TreeNode();
+            getConnection().getVTooltip().connectHandlersToWidget(childTree);
             updateNodeFromUIDL(childTree, childUidl);
             containerNode.childNodeContainer.add(childTree);
             if (!i.hasNext()) {
@@ -248,6 +254,34 @@ public class TreeConnector extends AbstractComponentConnector implements
     @Override
     public AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+
+        TooltipInfo info = null;
+
+        // Try to find a tooltip for a node
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    TreeNode.class);
+
+            if (node != null) {
+                TreeNode tnode = (TreeNode) node;
+                if (tnode.isCaptionElement(element)) {
+                    info = tooltipMap.get(tnode);
+                }
+            }
+        }
+
+        // If no tooltip found for the node or if the target was not a node, use
+        // the default tooltip
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 
 }

@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 @AcceptCriterion(AcceptAll.class)

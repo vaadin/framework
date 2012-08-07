@@ -697,6 +697,7 @@ public interface Container extends Serializable {
          * @return <code>true</code> if the operation succeeded,
          *         <code>false</code> if not
          */
+        @Override
         public boolean removeItem(Object itemId)
                 throws UnsupportedOperationException;
     }

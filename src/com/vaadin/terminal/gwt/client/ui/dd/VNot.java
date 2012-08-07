@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.event.dd.acceptcriteria.Not;
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
@@ -33,6 +34,7 @@ final public class VNot extends VAcceptCriterion {
         b1 = false;
 
         VAcceptCallback accept1cb = new VAcceptCallback() {
+            @Override
             public void accepted(VDragEvent event) {
                 b1 = true;
             }

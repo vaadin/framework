@@ -10,8 +10,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.VCaption;
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 
 public abstract class VLayoutSlot {
 

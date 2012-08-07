@@ -64,6 +64,7 @@ public class SubWindowOrder extends TestBase {
             toggleModality.addListener(this);
         }
 
+        @Override
         public void buttonClick(ClickEvent event) {
             if (event.getButton() == bf) {
                 getCurWindow().bringToFront();

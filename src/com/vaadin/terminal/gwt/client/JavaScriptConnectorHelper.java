@@ -15,17 +15,12 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.shared.JavaScriptConnectorState;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 public class JavaScriptConnectorHelper {
-
-    public interface JavaScriptConnectorState {
-        public Set<String> getCallbackNames();
-
-        public Map<String, Set<String>> getRpcInterfaces();
-    }
 
     private final ServerConnector connector;
     private final JavaScriptObject nativeState = JavaScriptObject
@@ -49,6 +44,7 @@ public class JavaScriptConnectorHelper {
 
     public void init() {
         connector.addStateChangeHandler(new StateChangeHandler() {
+            @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 JavaScriptObject wrapper = getConnectorWrapper();
                 JavaScriptConnectorState state = getConnectorState();
@@ -149,8 +145,9 @@ public class JavaScriptConnectorHelper {
 
     private JavaScriptObject getConnectorWrapper() {
         if (connectorWrapper == null) {
-            connectorWrapper = createConnectorWrapper(this, nativeState,
-                    rpcMap, connector.getConnectorId(), rpcObjects);
+            connectorWrapper = createConnectorWrapper(this,
+                    connector.getConnection(), nativeState, rpcMap,
+                    connector.getConnectorId(), rpcObjects);
         }
 
         return connectorWrapper;
@@ -165,9 +162,9 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static native JavaScriptObject createConnectorWrapper(
-            JavaScriptConnectorHelper h, JavaScriptObject nativeState,
-            JavaScriptObject registeredRpc, String connectorId,
-            Map<String, JavaScriptObject> rpcObjects)
+            JavaScriptConnectorHelper h, ApplicationConnection c,
+            JavaScriptObject nativeState, JavaScriptObject registeredRpc,
+            String connectorId, Map<String, JavaScriptObject> rpcObjects)
     /*-{
         return {
             'getConnectorId': function() {
@@ -185,7 +182,7 @@ public class JavaScriptConnectorHelper {
                 }
                 return rpcObjects.@java.util.Map::get(Ljava/lang/Object;)(iface);
             }),
-            'getWidgetElement': $entry(function(connectorId) {
+            'getElement': $entry(function(connectorId) {
                 return h.@com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper::getWidgetElement(Ljava/lang/String;)(connectorId);
             }),
             'registerRpc': function(iface, rpcHandler) {
@@ -199,6 +196,9 @@ public class JavaScriptConnectorHelper {
                 }
                 registeredRpc[iface].push(rpcHandler);
             },
+            'translateVaadinUri': $entry(function(uri) {
+                return c.@com.vaadin.terminal.gwt.client.ApplicationConnection::translateVaadinUri(Ljava/lang/String;)(uri);
+            }),
         };
     }-*/;
 
@@ -238,8 +238,8 @@ public class JavaScriptConnectorHelper {
             return connector;
         }
 
-        return ConnectorMap.get(connector.getConnection())
-                .getConnector(connectorId);
+        return ConnectorMap.get(connector.getConnection()).getConnector(
+                connectorId);
     }
 
     private void fireRpc(String iface, String method,
@@ -331,9 +331,9 @@ public class JavaScriptConnectorHelper {
             invokeCallback(getConnectorWrapper(), callbackName, arguments);
         } else {
             JavaScriptObject arguments = parametersJson.getJavaScriptObject();
-            invokeJsRpc(rpcMap, iface, method, arguments);
+            invokeJsRpc(rpcMap, iface, method, arguments, getConnectorWrapper());
             // Also invoke wildcard interface
-            invokeJsRpc(rpcMap, "", method, arguments);
+            invokeJsRpc(rpcMap, "", method, arguments, getConnectorWrapper());
         }
     }
 
@@ -344,7 +344,8 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static native void invokeJsRpc(JavaScriptObject rpcMap,
-            String interfaceName, String methodName, JavaScriptObject parameters)
+            String interfaceName, String methodName,
+            JavaScriptObject parameters, JavaScriptObject connector)
     /*-{
         var targets = rpcMap[interfaceName];
         if (!targets) {
@@ -352,7 +353,7 @@ public class JavaScriptConnectorHelper {
         }
         for(var i = 0; i < targets.length; i++) {
             var target = targets[i];
-            target[methodName].apply(target, parameters);
+            target[methodName].apply(connector, parameters);
         }
     }-*/;
 

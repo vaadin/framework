@@ -3,8 +3,8 @@ package com.vaadin.tests.components.table;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
@@ -56,6 +56,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
 
         table.addListener(new ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 System.out.println("Clickevent on item " + event.getItemId()
                         + ", column: " + event.getPropertyId());

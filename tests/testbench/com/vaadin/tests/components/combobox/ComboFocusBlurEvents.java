@@ -7,7 +7,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
@@ -34,6 +34,7 @@ public class ComboFocusBlurEvents extends TestBase {
         final ObjectProperty<String> log = new ObjectProperty<String>("");
 
         cb.addListener(new FieldEvents.FocusListener() {
+            @Override
             public void focus(FocusEvent event) {
                 log.setValue(log.getValue().toString() + "<br>" + counter
                         + ": Focus event!");
@@ -42,6 +43,7 @@ public class ComboFocusBlurEvents extends TestBase {
         });
 
         cb.addListener(new FieldEvents.BlurListener() {
+            @Override
             public void blur(BlurEvent event) {
                 log.setValue(log.getValue().toString() + "<br>" + counter
                         + ": Blur event!");

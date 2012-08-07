@@ -123,6 +123,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      */
     private final ValueChangeHandler<String> historyChangeHandler = new ValueChangeHandler<String>() {
 
+        @Override
         public void onValueChange(ValueChangeEvent<String> event) {
             String newFragment = event.getValue();
 
@@ -138,6 +139,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     performSizeCheck();
                 }
@@ -361,6 +363,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      * .gwt.event.logical.shared.ResizeEvent)
      */
 
+    @Override
     public void onResize(ResizeEvent event) {
         triggerSizeChangeCheck();
     }
@@ -395,7 +398,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     /**
      * Send new dimensions to the server.
      */
-    private void sendClientResized() {
+    void sendClientResized() {
         Element parentElement = getElement().getParentElement();
         int viewHeight = parentElement.getClientHeight();
         int viewWidth = parentElement.getClientWidth();
@@ -416,6 +419,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
        $wnd.location = url;
      }-*/;
 
+    @Override
     public void onWindowClosing(Window.ClosingEvent event) {
         // Change focus on this window in order to ensure that all state is
         // collected from textfields
@@ -435,10 +439,12 @@ public class VRoot extends SimplePanel implements ResizeHandler,
          }
      }-*/;
 
+    @Override
     public ShortcutActionHandler getShortcutActionHandler() {
         return actionHandler;
     }
 
+    @Override
     public void focus() {
         getElement().focus();
     }

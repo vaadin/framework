@@ -7,7 +7,7 @@ package com.vaadin.tests;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
@@ -53,6 +53,7 @@ public class TestForRichTextEditor extends CustomComponent implements
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 rte.setEnabled(!rte.isEnabled());
             }
@@ -61,6 +62,7 @@ public class TestForRichTextEditor extends CustomComponent implements
 
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         l.setValue(rte.getValue());
     }

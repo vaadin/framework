@@ -34,12 +34,12 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.EventId;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -212,14 +212,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
         }
 
+        @Override
         public HandlerRegistration addFocusHandler(FocusHandler handler) {
             return addDomHandler(handler, FocusEvent.getType());
         }
 
+        @Override
         public HandlerRegistration addBlurHandler(BlurHandler handler) {
             return addDomHandler(handler, BlurEvent.getType());
         }
 
+        @Override
         public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
             return addDomHandler(handler, KeyDownEvent.getType());
         }
@@ -233,7 +236,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    private static class TabCaption extends VCaption {
+    public static class TabCaption extends VCaption {
 
         private boolean closable = false;
         private Element closeButton;
@@ -248,16 +251,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         public boolean updateCaption(UIDL uidl) {
             if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)) {
-                TooltipInfo tooltipInfo = new TooltipInfo();
-                tooltipInfo
-                        .setTitle(uidl
-                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION));
-                tooltipInfo
-                        .setErrorMessage(uidl
-                                .getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE));
-                client.registerTooltip(getTabsheet(), getElement(), tooltipInfo);
+                setTooltipInfo(new TooltipInfo(
+                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
+                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE)));
             } else {
-                client.registerTooltip(getTabsheet(), getElement(), null);
+                setTooltipInfo(null);
             }
 
             // TODO need to call this instead of super because the caption does
@@ -292,7 +290,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             if (event.getTypeInt() == Event.ONLOAD) {
                 getTabsheet().tabSizeMightHaveChanged(getTab());
             }
-            client.handleTooltipEvent(event, getTabsheet(), getElement());
         }
 
         public Tab getTab() {
@@ -362,6 +359,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             setElement(el);
         }
 
+        @Override
         public void onClose(VCloseEvent event) {
             Tab tab = event.getTab();
             if (!tab.isEnabledOnServer()) {
@@ -397,6 +395,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             return t;
         }
 
+        @Override
         public void onClick(ClickEvent event) {
             TabCaption caption = (TabCaption) event.getSource();
             Element targetElement = event.getNativeEvent().getEventTarget()
@@ -691,24 +690,27 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public void onBrowserEvent(Event event) {
+        if (event.getTypeInt() == Event.ONCLICK) {
+            // Tab scrolling
+            if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
+                int newFirstIndex = tb.scrollLeft(scrollerIndex);
+                if (newFirstIndex != -1) {
+                    scrollerIndex = newFirstIndex;
+                    updateTabScroller();
+                }
+                return;
+            } else if (isClippedTabs()
+                    && DOM.eventGetTarget(event) == scrollerNext) {
+                int newFirstIndex = tb.scrollRight(scrollerIndex);
 
-        // Tab scrolling
-        if (isScrolledTabs() && DOM.eventGetTarget(event) == scrollerPrev) {
-            int newFirstIndex = tb.scrollLeft(scrollerIndex);
-            if (newFirstIndex != -1) {
-                scrollerIndex = newFirstIndex;
-                updateTabScroller();
+                if (newFirstIndex != -1) {
+                    scrollerIndex = newFirstIndex;
+                    updateTabScroller();
+                }
+                return;
             }
-        } else if (isClippedTabs() && DOM.eventGetTarget(event) == scrollerNext) {
-            int newFirstIndex = tb.scrollRight(scrollerIndex);
-
-            if (newFirstIndex != -1) {
-                scrollerIndex = newFirstIndex;
-                updateTabScroller();
-            }
-        } else {
-            super.onBrowserEvent(event);
         }
+        super.onBrowserEvent(event);
     }
 
     /**
@@ -1034,6 +1036,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             style.setProperty("whiteSpace", "normal");
             Scheduler.get().scheduleDeferred(new Command() {
 
+                @Override
                 public void execute() {
                     style.setProperty("whiteSpace", "");
                 }
@@ -1118,6 +1121,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         if (focusedTab != null && event.getSource() instanceof Tab) {
             focusedTab = null;
@@ -1127,6 +1131,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         if (focusedTab == null && event.getSource() instanceof Tab) {
             focusedTab = (Tab) event.getSource();
@@ -1136,6 +1141,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
+    @Override
     public void focus() {
         tb.getTab(activeTabIndex).focus();
     }
@@ -1144,6 +1150,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         tb.getTab(activeTabIndex).blur();
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (event.getSource() instanceof Tab) {
             int keycode = event.getNativeEvent().getKeyCode();

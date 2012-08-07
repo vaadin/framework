@@ -9,8 +9,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.StyleConstants;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 
 public class VCssLayout extends SimplePanel {
     public static final String TAGNAME = "csslayout";

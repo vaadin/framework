@@ -6,10 +6,10 @@ package com.vaadin.terminal.gwt.widgetsetutils;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
 /**
  * An abstract helper class that can be used to easily build a widgetset with

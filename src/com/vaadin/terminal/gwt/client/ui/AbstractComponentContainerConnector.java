@@ -35,6 +35,7 @@ public abstract class AbstractComponentContainerConnector extends
      * @see
      * com.vaadin.terminal.gwt.client.ComponentContainerConnector#getChildren()
      */
+    @Override
     public List<ComponentConnector> getChildComponents() {
         if (childComponents == null) {
             return Collections.emptyList();
@@ -50,6 +51,7 @@ public abstract class AbstractComponentContainerConnector extends
      * com.vaadin.terminal.gwt.client.ComponentContainerConnector#setChildren
      * (java.util.Collection)
      */
+    @Override
     public void setChildComponents(List<ComponentConnector> childComponents) {
         this.childComponents = childComponents;
     }
@@ -61,6 +63,7 @@ public abstract class AbstractComponentContainerConnector extends
      * connectorHierarchyChanged
      * (com.vaadin.terminal.gwt.client.ConnectorHierarchyChangedEvent)
      */
+    @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         if (debugLogging) {
             VConsole.log("Hierarchy changed for "
@@ -79,6 +82,7 @@ public abstract class AbstractComponentContainerConnector extends
         }
     }
 
+    @Override
     public HandlerRegistration addConnectorHierarchyChangeHandler(
             ConnectorHierarchyChangeHandler handler) {
         return ensureHandlerManager().addHandler(

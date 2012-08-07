@@ -148,6 +148,7 @@ public class Ticket2061b extends Application.LegacyApplication implements
             return columns;
         }
 
+        @Override
         public void valueChange(ValueChangeEvent event) {
 
         }
@@ -192,6 +193,7 @@ public class Ticket2061b extends Application.LegacyApplication implements
         }
     }
 
+    @Override
     public void selectedTabChange(SelectedTabChangeEvent event) {
         p.setScrollTop(10);
 

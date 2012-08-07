@@ -13,12 +13,14 @@ public class ExtraWindowShown extends TestBase {
     protected void setup() {
         Button b = new Button("Open window", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 final Window w = new Window("Sub window");
                 w.center();
                 w.addComponent(new Button("Close", new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         w.close();
                     }

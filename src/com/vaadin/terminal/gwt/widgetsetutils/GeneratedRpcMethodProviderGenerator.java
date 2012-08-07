@@ -21,7 +21,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
+import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.terminal.gwt.client.communication.GeneratedRpcMethodProvider;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.RpcMethod;

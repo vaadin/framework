@@ -15,9 +15,9 @@ import com.vaadin.data.util.DefaultItemSorter;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -137,6 +137,7 @@ public class Components extends Application.LegacyApplication {
         naviTree = new Tree();
         naviTree.setItemStyleGenerator(new ItemStyleGenerator() {
 
+            @Override
             public String getStyle(Object itemId) {
                 Class<?> cls = (Class<?>) itemId;
                 if (!isAbstract(cls)) {
@@ -182,6 +183,7 @@ public class Components extends Application.LegacyApplication {
 
         naviTree.addListener(new ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 Class<?> cls = (Class<?>) event.getItemId();
                 if (!isAbstract(cls)) {

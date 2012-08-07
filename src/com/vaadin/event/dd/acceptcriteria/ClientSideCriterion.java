@@ -33,10 +33,12 @@ public abstract class ClientSideCriterion implements Serializable,
      * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#isClientSideVerifiable
      * ()
      */
+    @Override
     public final boolean isClientSideVerifiable() {
         return true;
     }
 
+    @Override
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
         target.addAttribute("name", getIdentifier());
@@ -51,6 +53,7 @@ public abstract class ClientSideCriterion implements Serializable,
         return getClass().getCanonicalName();
     }
 
+    @Override
     public final void paintResponse(PaintTarget target) throws PaintException {
         // NOP, nothing to do as this is client side verified criterion
     }

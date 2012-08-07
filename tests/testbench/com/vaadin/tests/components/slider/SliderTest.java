@@ -8,23 +8,27 @@ import com.vaadin.ui.Slider;
 public class SliderTest extends AbstractFieldTest<Slider> {
 
     private Command<Slider, Double> minCommand = new Command<Slider, Double>() {
+        @Override
         public void execute(Slider c, Double value, Object data) {
             c.setMin(value);
         }
     };
 
     private Command<Slider, Double> maxCommand = new Command<Slider, Double>() {
+        @Override
         public void execute(Slider c, Double value, Object data) {
             c.setMax(value);
         }
     };
 
     private Command<Slider, Integer> orientationCommand = new Command<Slider, Integer>() {
+        @Override
         public void execute(Slider c, Integer value, Object data) {
             c.setOrientation(value);
         }
     };
     private Command<Slider, Integer> resolutionCommand = new Command<Slider, Integer>() {
+        @Override
         public void execute(Slider c, Integer value, Object data) {
             c.setResolution(value);
         }

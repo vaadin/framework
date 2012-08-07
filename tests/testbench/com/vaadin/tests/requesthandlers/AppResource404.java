@@ -22,6 +22,7 @@ public class AppResource404 extends TestBase {
 
         addComponent(new Button("Remove existing resrouce",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         removeResource(resource);
                     }

@@ -53,6 +53,7 @@ public class WrappedPortletResponse implements WrappedResponse {
         this.deploymentConfiguration = deploymentConfiguration;
     }
 
+    @Override
     public OutputStream getOutputStream() throws IOException {
         return ((MimeResponse) response).getPortletOutputStream();
     }
@@ -66,36 +67,44 @@ public class WrappedPortletResponse implements WrappedResponse {
         return response;
     }
 
+    @Override
     public void setContentType(String type) {
         ((MimeResponse) response).setContentType(type);
     }
 
+    @Override
     public PrintWriter getWriter() throws IOException {
         return ((MimeResponse) response).getWriter();
     }
 
+    @Override
     public void setStatus(int responseStatus) {
         response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                 Integer.toString(responseStatus));
     }
 
+    @Override
     public void setHeader(String name, String value) {
         response.setProperty(name, value);
     }
 
+    @Override
     public void setDateHeader(String name, long timestamp) {
         response.setProperty(name, HTTP_DATE_FORMAT.format(new Date(timestamp)));
     }
 
+    @Override
     public void setCacheTime(long milliseconds) {
         WrappedHttpServletResponse.doSetCacheTime(this, milliseconds);
     }
 
+    @Override
     public void sendError(int errorCode, String message) throws IOException {
         setStatus(errorCode);
         getWriter().write(message);
     }
 
+    @Override
     public DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }

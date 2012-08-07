@@ -80,10 +80,12 @@ public class DragAndDropWrapperTooltips extends TestBase {
 
     private DropHandler dh = new DropHandler() {
 
+        @Override
         public AcceptCriterion getAcceptCriterion() {
             return AcceptAll.get();
         }
 
+        @Override
         public void drop(DragAndDropEvent dropEvent) {
             Transferable transferable = dropEvent.getTransferable();
             if (transferable instanceof TransferableImpl) {

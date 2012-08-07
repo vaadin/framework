@@ -6,8 +6,8 @@ package com.vaadin.terminal.gwt.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 
 public class LegacyChangeVariablesInvocation extends MethodInvocation {
     private Map<String, Object> variableChanges = new HashMap<String, Object>();

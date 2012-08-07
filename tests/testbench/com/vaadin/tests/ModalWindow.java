@@ -54,6 +54,7 @@ public class ModalWindow extends com.vaadin.Application.LegacyApplication
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (event.getButton() == reopen) {
             openSubWindow();

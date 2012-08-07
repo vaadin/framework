@@ -31,6 +31,7 @@ public class GridLayoutNPE extends TestBase {
 
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 gl.removeComponent(toRemove);
 
@@ -50,6 +51,7 @@ public class GridLayoutNPE extends TestBase {
 
         b2.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 toEdit.setValue("Second (edited)");
             }

@@ -46,6 +46,7 @@ public class Ticket1969 extends com.vaadin.Application.LegacyApplication {
         b = new Button(
                 "change introduction caption (should add * to tab name)",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         testContent.setCaption(testContent.getCaption() + "*");
                     }
@@ -54,6 +55,7 @@ public class Ticket1969 extends com.vaadin.Application.LegacyApplication {
 
         b = new Button("change tab caption (should add * to tab name)",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         actions.setCaption(actions.getCaption() + "*");
                     }
@@ -64,6 +66,7 @@ public class Ticket1969 extends com.vaadin.Application.LegacyApplication {
         final UserError e = new UserError("Test error");
 
         b = new Button("Toggle error", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (testContent.getComponentError() == null) {
                     testContent.setComponentError(e);
@@ -75,6 +78,7 @@ public class Ticket1969 extends com.vaadin.Application.LegacyApplication {
         actions.addComponent(b);
 
         b = new Button("Change table caption", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 t.setCaption(t.getCaption() + "*");
             }
@@ -82,6 +86,7 @@ public class Ticket1969 extends com.vaadin.Application.LegacyApplication {
         actions.addComponent(b);
 
         b = new Button("Toggle Table error", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (t.getComponentError() == null) {
                     t.setComponentError(e);

@@ -10,10 +10,12 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
-import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
+import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.extension.javascriptmanager.ExecuteJavaScriptRpc;
+import com.vaadin.shared.extension.javascriptmanager.JavaScriptManagerState;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.JavaScript;
 
 @Connect(JavaScript.class)
@@ -23,6 +25,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     @Override
     protected void init() {
         registerRpc(ExecuteJavaScriptRpc.class, new ExecuteJavaScriptRpc() {
+            @Override
             public void executeJavaScript(String Script) {
                 eval(Script);
             }

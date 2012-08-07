@@ -5,12 +5,12 @@ package com.vaadin.terminal.gwt.client.ui.combobox;
 
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.terminal.gwt.client.ui.combobox.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.terminal.gwt.client.ui.menubar.MenuItem;
@@ -27,6 +27,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Save details
         getWidget().client = client;
@@ -230,6 +231,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         return (VFilterSelect) super.getWidget();
     }
 
+    @Override
     public void layout() {
         VFilterSelect widget = getWidget();
         if (widget.initDone) {

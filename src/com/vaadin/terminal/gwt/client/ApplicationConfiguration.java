@@ -23,6 +23,8 @@ import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
 
+    public static final String PORTLET_RESOUCE_URL_BASE = "portletAppURLBase";
+
     /**
      * Helper class for reading configuration options from the bootstap
      * javascript
@@ -205,8 +207,6 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
     private boolean useDebugIdInDom = true;
-    private boolean usePortletURLs = false;
-    private String portletUidlURLBase;
 
     private HashMap<Integer, String> unknownComponents;
 
@@ -218,7 +218,7 @@ public class ApplicationConfiguration implements EntryPoint {
     static// TODO consider to make this hashmap per application
     LinkedList<Command> callbacks = new LinkedList<Command>();
 
-    private static int widgetsLoading;
+    private static int dependenciesLoading;
 
     private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<ApplicationConnection>();
 
@@ -226,11 +226,12 @@ public class ApplicationConfiguration implements EntryPoint {
     private Map<Integer, String> tagToServerSideClassName = new HashMap<Integer, String>();
 
     public boolean usePortletURLs() {
-        return usePortletURLs;
+        return getPortletResourceUrl() != null;
     }
 
-    public String getPortletUidlURLBase() {
-        return portletUidlURLBase;
+    public String getPortletResourceUrl() {
+        return getJsoConfiguration(id)
+                .getConfigString(PORTLET_RESOUCE_URL_BASE);
     }
 
     public String getRootPanelId() {
@@ -319,12 +320,6 @@ public class ApplicationConfiguration implements EntryPoint {
         useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;
 
         // null -> false
-        usePortletURLs = jsoConfiguration.getConfigBoolean("usePortletURLs") == Boolean.TRUE;
-
-        portletUidlURLBase = jsoConfiguration
-                .getConfigString("portletUidlURLBase");
-
-        // null -> false
         standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;
 
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
@@ -348,6 +343,7 @@ public class ApplicationConfiguration implements EntryPoint {
     public static void startApplication(final String applicationId) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+            @Override
             public void execute() {
                 ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
                 ApplicationConnection a = GWT
@@ -454,26 +450,26 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @param c
      */
-    static void runWhenWidgetsLoaded(Command c) {
-        if (widgetsLoading == 0) {
+    static void runWhenDependenciesLoaded(Command c) {
+        if (dependenciesLoading == 0) {
             c.execute();
         } else {
             callbacks.add(c);
         }
     }
 
-    static void startWidgetLoading() {
-        widgetsLoading++;
+    static void startDependencyLoading() {
+        dependenciesLoading++;
     }
 
-    static void endWidgetLoading() {
-        widgetsLoading--;
-        if (widgetsLoading == 0 && !callbacks.isEmpty()) {
+    static void endDependencyLoading() {
+        dependenciesLoading--;
+        if (dependenciesLoading == 0 && !callbacks.isEmpty()) {
             for (Command cmd : callbacks) {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (widgetsLoading == 0 && deferredWidgetLoader != null) {
+        } else if (dependenciesLoading == 0 && deferredWidgetLoader != null) {
             deferredWidgetLoader.trigger();
         }
 
@@ -534,7 +530,7 @@ public class ApplicationConfiguration implements EntryPoint {
         }
 
         private boolean isBusy() {
-            if (widgetsLoading > 0) {
+            if (dependenciesLoading > 0) {
                 communicationFree = 0;
                 return true;
             }
@@ -553,6 +549,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private static DeferredWidgetLoader deferredWidgetLoader;
 
+    @Override
     public void onModuleLoad() {
 
         // Prepare VConsole for debugging
@@ -571,6 +568,7 @@ public class ApplicationConfiguration implements EntryPoint {
          */
         GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
+            @Override
             public void onUncaughtException(Throwable e) {
                 /*
                  * Note in case of null console (without ?debug) we eat
@@ -581,6 +579,11 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         });
 
+        if (SuperDevMode.enableBasedOnParameter()) {
+            // Do not start any application as super dev mode will refresh the
+            // page once done compiling
+            return;
+        }
         registerCallback(GWT.getModuleName());
         deferredWidgetLoader = new DeferredWidgetLoader();
     }

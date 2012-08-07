@@ -6,6 +6,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.AbstractSelect;

@@ -122,6 +122,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey("pollForStart")) {
             int id = (Integer) variables.get("pollForStart");
@@ -141,6 +142,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @throws PaintException
      *             if the paint operation failed.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (notStarted) {
             target.addAttribute("notStarted", true);
@@ -782,6 +784,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * 
      * @see com.vaadin.ui.Component.Focusable#getTabIndex()
      */
+    @Override
     public int getTabIndex() {
         return tabIndex;
     }
@@ -791,6 +794,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * 
      * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
      */
+    @Override
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
     }
@@ -974,20 +978,24 @@ public class Upload extends AbstractComponent implements Component.Focusable,
             streamVariable = new com.vaadin.terminal.StreamVariable() {
                 private StreamingStartEvent lastStartedEvent;
 
+                @Override
                 public boolean listenProgress() {
                     return (progressListeners != null && !progressListeners
                             .isEmpty());
                 }
 
+                @Override
                 public void onProgress(StreamingProgressEvent event) {
                     fireUpdateProgress(event.getBytesReceived(),
                             event.getContentLength());
                 }
 
+                @Override
                 public boolean isInterrupted() {
                     return interrupted;
                 }
 
+                @Override
                 public OutputStream getOutputStream() {
                     OutputStream receiveUpload = receiver.receiveUpload(
                             lastStartedEvent.getFileName(),
@@ -996,6 +1004,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     return receiveUpload;
                 }
 
+                @Override
                 public void streamingStarted(StreamingStartEvent event) {
                     startUpload();
                     contentLength = event.getContentLength();
@@ -1003,6 +1012,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     lastStartedEvent = event;
                 }
 
+                @Override
                 public void streamingFinished(StreamingEndEvent event) {
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
@@ -1010,6 +1020,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     requestRepaint();
                 }
 
+                @Override
                 public void streamingFailed(StreamingErrorEvent event) {
                     Exception exception = event.getException();
                     if (exception instanceof NoInputStreamException) {

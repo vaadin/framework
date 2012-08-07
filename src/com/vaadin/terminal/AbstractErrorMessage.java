@@ -68,6 +68,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
     }
 
     /* Documented in interface */
+    @Override
     public ErrorLevel getErrorLevel() {
         return level;
     }
@@ -92,6 +93,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         causes.add(cause);
     }
 
+    @Override
     public String getFormattedHtmlMessage() {
         String result = null;
         switch (getMode()) {

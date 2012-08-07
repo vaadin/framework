@@ -13,13 +13,11 @@ import org.easymock.IMocksControl;
 
 import com.vaadin.navigator.FragmentManager;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.Navigator.SimpleViewDisplay;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
-import com.vaadin.terminal.Page;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 
@@ -29,16 +27,19 @@ public class NavigatorTest extends TestCase {
     // TODO test listeners blocking navigation, multiple listeners
 
     public static class NullDisplay implements ViewDisplay {
+        @Override
         public void showView(View view) {
             // do nothing
         }
     }
 
     public static class NullFragmentManager implements FragmentManager {
+        @Override
         public String getFragment() {
             return null;
         }
 
+        @Override
         public void setFragment(String fragment) {
             // do nothing
         }
@@ -47,6 +48,7 @@ public class NavigatorTest extends TestCase {
     public static class TestDisplay implements ViewDisplay {
         private View currentView;
 
+        @Override
         public void showView(View view) {
             currentView = view;
         }
@@ -120,6 +122,7 @@ public class NavigatorTest extends TestCase {
             }
         }
 
+        @Override
         public boolean isViewChangeAllowed(ViewChangeEvent event) {
             if (referenceEvents.isEmpty()) {
                 fail("Unexpected call to isViewChangeAllowed()");
@@ -138,6 +141,7 @@ public class NavigatorTest extends TestCase {
             return returnValue;
         }
 
+        @Override
         public void navigatorViewChanged(ViewChangeEvent event) {
             if (referenceEvents.isEmpty()) {
                 fail("Unexpected call to navigatorViewChanged()");
@@ -362,16 +366,6 @@ public class NavigatorTest extends TestCase {
         if (!listener2.isReady()) {
             fail("Missing listener calls for listener2");
         }
-    }
-
-    public void testDefaultDisplayType() {
-        IMocksControl control = EasyMock.createControl();
-        Page page = control.createMock(Page.class);
-
-        Navigator navigator = new Navigator(page);
-
-        assertEquals("Default display should be a SimpleViewDisplay",
-                SimpleViewDisplay.class, navigator.getDisplay().getClass());
     }
 
     public void testAddViewInstance() throws Exception {

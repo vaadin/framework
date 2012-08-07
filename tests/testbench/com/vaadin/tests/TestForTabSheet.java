@@ -32,6 +32,7 @@ public class TestForTabSheet extends CustomComponent implements
         tabsheet.addTab(tab3_root, "Third tab", null);
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         System.out.println("tab2=" + tab2_root.isEnabled() + " tab3="
                 + tab3_root.isEnabled());
@@ -39,6 +40,7 @@ public class TestForTabSheet extends CustomComponent implements
         tab3_root.setEnabled(true);
     }
 
+    @Override
     public void selectedTabChange(SelectedTabChangeEvent event) {
         /*
          * Cast to a TabSheet. This isn't really necessary in this example, as

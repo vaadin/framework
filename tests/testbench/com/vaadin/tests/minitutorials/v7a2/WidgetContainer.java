@@ -25,6 +25,7 @@ public class WidgetContainer extends AbstractComponentContainer {
         requestRepaint();
     }
 
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         int index = children.indexOf(oldComponent);
         if (index != -1) {
@@ -36,10 +37,12 @@ public class WidgetContainer extends AbstractComponentContainer {
         }
     }
 
+    @Override
     public int getComponentCount() {
         return children.size();
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         return children.iterator();
     }

@@ -32,6 +32,7 @@ public class TableSorting extends TestBase {
 
         // Handle selection change.
         testTable.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 System.out.println("ValueChanged: "
                         + testTable.getValue().toString());

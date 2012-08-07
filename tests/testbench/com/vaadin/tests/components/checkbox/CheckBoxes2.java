@@ -19,6 +19,7 @@ public class CheckBoxes2 extends AbstractFieldTest<CheckBox> implements
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         log(event.getClass().getSimpleName());
     }

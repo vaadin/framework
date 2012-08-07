@@ -21,6 +21,7 @@ public class TestForWindowOpen extends CustomComponent {
         main.addComponent(new Button("Open in this window",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
@@ -33,6 +34,7 @@ public class TestForWindowOpen extends CustomComponent {
         main.addComponent(new Button("Open in target \"mytarget\"",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
@@ -45,6 +47,7 @@ public class TestForWindowOpen extends CustomComponent {
         main.addComponent(new Button("Open in target \"secondtarget\"",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");

@@ -19,6 +19,7 @@ public abstract class VAcceptCriterion {
             final VAcceptCallback callback) {
         if (needsServerSideCheck(drag, configuration)) {
             VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
+                @Override
                 public void handleResponse(boolean accepted, UIDL response) {
                     if (accepted) {
                         callback.accepted(drag);

@@ -24,6 +24,7 @@ public class ComboBoxSlowInFF extends TestBase {
 
         Button fill = new Button("fill it");
         fill.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 t.removeAllItems();
                 for (int i = 0; i < 200; i++) {

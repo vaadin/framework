@@ -29,6 +29,7 @@ public class GridLayoutMoveComponent extends TestBase {
 
         addComponent(new Button("Shift label right",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         // Moving component from 0,0 -> 1,0
                         grid.removeComponent(l);
@@ -38,6 +39,7 @@ public class GridLayoutMoveComponent extends TestBase {
 
         addComponent(new Button("Shift button right",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeComponent(b);
                         grid.addComponent(b, 1, 1);
@@ -46,6 +48,7 @@ public class GridLayoutMoveComponent extends TestBase {
 
         addComponent(new Button("Shift text field right",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         grid.removeComponent(tf);
                         grid.addComponent(tf, 1, 2);

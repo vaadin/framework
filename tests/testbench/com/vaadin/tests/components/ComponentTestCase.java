@@ -114,6 +114,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         CheckBox checkBox = new CheckBox(caption);
         checkBox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 boolean enabled = (Boolean) event.getProperty().getValue();
                 doCommand(command, enabled);
@@ -136,6 +137,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         Button button = new Button(caption);
         button.setData(Boolean.FALSE);
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Button b = event.getButton();
                 boolean state = (Boolean) b.getData();
@@ -163,6 +165,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         select.setNullSelectionAllowed(false);
         select.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Object itemId = event.getProperty().getValue();
                 Item item = select.getItem(itemId);

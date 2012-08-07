@@ -25,6 +25,7 @@ public class Ticket2289 extends Application.LegacyApplication {
         w.setContent(ol);
         Button b = new Button("close current tab");
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeCurrentTab();
 
@@ -34,6 +35,7 @@ public class Ticket2289 extends Application.LegacyApplication {
 
         b = new Button("close first tab");
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeFirstTab();
 

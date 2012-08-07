@@ -56,6 +56,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
 
         prev = new Button("<<-|");
         prev.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Object cur = select.getValue();
                 Testable prev = (Testable) cont.prevItemId(cur);
@@ -71,6 +72,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
         });
         next = new Button("|->>");
         next.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Object cur = select.getValue();
                 Testable next = (Testable) cont.nextItemId(cur);
@@ -93,6 +95,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
 
         select.setContainerDataSource(cont);
         select.addListener(new ComboBox.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Testable t = (Testable) select.getValue();
                 if (t != null) {

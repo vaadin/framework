@@ -93,6 +93,7 @@ public class Parameters extends com.vaadin.Application.LegacyApplication
         main.setContent(layout);
     }
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

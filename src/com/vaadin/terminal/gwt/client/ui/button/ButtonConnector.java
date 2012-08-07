@@ -12,15 +12,17 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.button.ButtonServerRpc;
+import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.terminal.gwt.client.EventHelper;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
-import com.vaadin.terminal.gwt.client.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.ui.Button;
 
@@ -103,18 +105,21 @@ public class ButtonConnector extends AbstractComponentConnector implements
         return (ButtonState) super.getState();
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurProxy.focus();
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
         focusBlurProxy.blur();
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         if (getState().isDisableOnClick()) {
             getWidget().setEnabled(false);

@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -44,6 +44,7 @@ public class ValueThroughProperty extends TestBase {
         cal.set(Calendar.DAY_OF_MONTH, 14);
         Button setDateButton1 = new Button(
                 "Set value to 12/14/10 using property", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         dateProperty.setValue(cal.getTime());
                     }
@@ -53,6 +54,7 @@ public class ValueThroughProperty extends TestBase {
 
         Button setDateButton2 = new Button(
                 "Set value to 12/14/10 using setValue", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         df.setValue(cal.getTime());
                     }

@@ -43,6 +43,7 @@ public class DateFieldReadOnly extends TestBase {
         Button b = new Button("Switch read-only");
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 timeField.setReadOnly(!timeField.isReadOnly());
             }

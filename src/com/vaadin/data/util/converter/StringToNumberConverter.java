@@ -45,6 +45,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.util.Locale)
      */
+    @Override
     public Number convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -77,6 +78,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.util.Locale)
      */
+    @Override
     public String convertToPresentation(Number value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -91,6 +93,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
+    @Override
     public Class<Number> getModelType() {
         return Number.class;
     }
@@ -100,6 +103,7 @@ public class StringToNumberConverter implements Converter<String, Number> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
+    @Override
     public Class<String> getPresentationType() {
         return String.class;
     }

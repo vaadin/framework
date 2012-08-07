@@ -27,6 +27,7 @@ public class HundredPercentWideLabelResize extends TestBase {
 
         getLayout().addComponent(
                 new Button("toggle width", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         if (getLayout().getWidth() == 500) {
                             getLayout().setWidth("100px");

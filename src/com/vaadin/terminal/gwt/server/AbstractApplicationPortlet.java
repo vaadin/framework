@@ -25,7 +25,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.GenericPortlet;
-import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
@@ -63,6 +62,8 @@ import com.vaadin.ui.Root;
  */
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
+
+    public static final String RESOURCE_URL_ID = "APP";
 
     public static class WrappedHttpAndPortletRequest extends
             WrappedPortletRequest {
@@ -175,15 +176,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             this.portlet = portlet;
         }
 
+        @Override
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            PortletRequest portletRequest = WrappedPortletRequest.cast(request)
-                    .getPortletRequest();
-            PortletResponse portletResponse = ((WrappedPortletResponse) response)
-                    .getPortletResponse();
-            portlet.criticalNotification(portletRequest,
-                    (MimeResponse) portletResponse, cap, msg, details,
+            portlet.criticalNotification(WrappedPortletRequest.cast(request),
+                    (WrappedPortletResponse) response, cap, msg, details,
                     outOfSyncURL);
         }
     }
@@ -207,19 +205,19 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private Properties applicationProperties;
-
     private boolean productionMode = false;
 
-    private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
-
+    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
+            getClass()) {
+        @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
 
             String widgetset = getApplicationOrSystemProperty(
                     PARAMETER_WIDGETSET, null);
 
             if (widgetset == null) {
-                // If no widgetset defined for the application, check the portal
+                // If no widgetset defined for the application, check the
+                // portal
                 // property
                 widgetset = WrappedPortletRequest.cast(request)
                         .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
@@ -233,6 +231,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return widgetset;
         }
 
+        @Override
         public String getConfiguredTheme(WrappedRequest request) {
 
             // is the default theme defined by the portal?
@@ -247,12 +246,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             return themeName;
         }
 
-        public String getApplicationOrSystemProperty(String propertyName,
-                String defaultValue) {
-            return AbstractApplicationPortlet.this
-                    .getApplicationOrSystemProperty(propertyName, defaultValue);
-        }
-
+        @Override
         public boolean isStandalone(WrappedRequest request) {
             return false;
         }
@@ -272,6 +266,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
          * be a VAADIN directory). Does not end with a slash (/).
          */
 
+        @Override
         public String getStaticFileLocation(WrappedRequest request) {
             String staticFileLocation = WrappedPortletRequest.cast(request)
                     .getPortalProperty(
@@ -289,17 +284,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             }
         }
 
-        public ClassLoader getClassLoader() {
-            // Custom class loaders not currently supported in portlets (see
-            // #8574)
-            return null;
+        @Override
+        public String getMimeType(String resourceName) {
+            return getPortletContext().getMimeType(resourceName);
         }
     };
 
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        applicationProperties = new Properties();
+        Properties applicationProperties = getDeploymentConfiguration()
+                .getInitParameters();
 
         // Read default parameters from the context
         final PortletContext context = config.getPortletContext();
@@ -323,7 +318,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private void checkCrossSiteProtection() {
-        if (getApplicationOrSystemProperty(
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
                 SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
                 "true")) {
             /*
@@ -338,8 +333,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         // TODO Identical code in AbstractApplicationServlet -> refactor
         // Check if the application is in production mode.
         // We are in production mode if productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
-                "false").equals("true")) {
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
             productionMode = true;
         }
 
@@ -350,101 +345,27 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    /**
-     * Gets an application property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getApplicationProperty(String parameterName) {
-
-        String val = applicationProperties.getProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lower case application properties for backward compatibility with
-        // 3.0.2 and earlier
-        val = applicationProperties.getProperty(parameterName.toLowerCase());
-
-        return val;
-    }
-
-    /**
-     * Gets an system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getSystemProperty(String parameterName) {
-        String val = null;
-
-        String pkgName;
-        final Package pkg = getClass().getPackage();
-        if (pkg != null) {
-            pkgName = pkg.getName();
-        } else {
-            final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0,
-                    className.lastIndexOf('.'));
-        }
-        val = System.getProperty(pkgName + "." + parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lowercased system properties
-        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
-        return val;
-    }
-
-    /**
-     * Gets an application or system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @param defaultValue
-     *            the Default to be used.
-     * @return String value or default if not found
-     */
-    protected String getApplicationOrSystemProperty(String parameterName,
-            String defaultValue) {
-
-        String val = null;
-
-        // Try application properties
-        val = getApplicationProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try system properties
-        val = getSystemProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        return defaultValue;
-    }
-
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE;
     }
 
-    protected RequestType getRequestType(PortletRequest request) {
+    protected RequestType getRequestType(WrappedPortletRequest wrappedRequest) {
+        PortletRequest request = wrappedRequest.getPortletRequest();
         if (request instanceof RenderRequest) {
             return RequestType.RENDER;
         } else if (request instanceof ResourceRequest) {
             ResourceRequest resourceRequest = (ResourceRequest) request;
-            if (isUIDLRequest(resourceRequest)) {
+            if (ServletPortletHelper.isUIDLRequest(wrappedRequest)) {
                 return RequestType.UIDL;
-            } else if (isBrowserDetailsRequeset(resourceRequest)) {
+            } else if (isBrowserDetailsRequest(resourceRequest)) {
                 return RequestType.BROWSER_DETAILS;
-            } else if (isFileUploadRequest(resourceRequest)) {
+            } else if (ServletPortletHelper.isFileUploadRequest(wrappedRequest)) {
                 return RequestType.FILE_UPLOAD;
-            } else if (isApplicationResourceRequest(resourceRequest)) {
+            } else if (ServletPortletHelper
+                    .isConnectorResourceRequest(wrappedRequest)) {
+                return RequestType.CONNECTOR_RESOURCE;
+            } else if (ServletPortletHelper
+                    .isApplicationResourceRequest(wrappedRequest)) {
                 return RequestType.APPLICATION_RESOURCE;
             } else if (isDummyRequest(resourceRequest)) {
                 return RequestType.DUMMY;
@@ -459,28 +380,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return RequestType.UNKNOWN;
     }
 
-    private boolean isBrowserDetailsRequeset(ResourceRequest request) {
+    private boolean isBrowserDetailsRequest(ResourceRequest request) {
         return request.getResourceID() != null
                 && request.getResourceID().equals("browserDetails");
-    }
-
-    private boolean isApplicationResourceRequest(ResourceRequest request) {
-        return request.getResourceID() != null
-                && request.getResourceID().startsWith("APP");
-    }
-
-    private boolean isUIDLRequest(ResourceRequest request) {
-        return request.getResourceID() != null
-                && request.getResourceID().equals("UIDL");
     }
 
     private boolean isDummyRequest(ResourceRequest request) {
         return request.getResourceID() != null
                 && request.getResourceID().equals("DUMMY");
-    }
-
-    private boolean isFileUploadRequest(ResourceRequest request) {
-        return "UPLOAD".equals(request.getResourceID());
     }
 
     /**
@@ -506,7 +413,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
 
-        RequestType requestType = getRequestType(request);
+        RequestType requestType = getRequestType(wrappedRequest);
 
         if (requestType == RequestType.UNKNOWN) {
             handleUnknownRequest(request, response);
@@ -553,6 +460,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
+
+                if (requestType == RequestType.CONNECTOR_RESOURCE) {
+                    applicationManager.serveConnectorResource(wrappedRequest,
+                            wrappedResponse);
+                    return;
+                }
 
                 /* Update browser information from request */
                 applicationContext.getBrowser().updateRequestDetails(
@@ -638,8 +551,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    applicationManager.handleFileUpload(root, wrappedRequest,
-                            wrappedResponse);
+                    // Root is resolved in handleFileUpload by
+                    // PortletCommunicationManager
+                    applicationManager.handleFileUpload(application,
+                            wrappedRequest, wrappedResponse);
                     return;
                 } else if (requestType == RequestType.BROWSER_DETAILS) {
                     applicationManager.handleBrowserDetailsRequest(
@@ -673,7 +588,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 getLogger()
                         .fine("General security exception, the security key was probably incorrect.");
             } catch (final Throwable e) {
-                handleServiceException(request, response, application, e);
+                handleServiceException(wrappedRequest, wrappedResponse,
+                        application, e);
             } finally {
                 // Notifies transaction end
                 try {
@@ -727,7 +643,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     }
 
-    private DeploymentConfiguration getDeploymentConfiguration() {
+    protected DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }
 
@@ -871,7 +787,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    applicationProperties, context, isProductionMode()));
+                    getDeploymentConfiguration().getInitParameters(),
+                    context, isProductionMode()));
         }
     }
 
@@ -995,11 +912,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    protected ClassLoader getClassLoader() throws PortletException {
-        // TODO Add support for custom class loader
-        return getClass().getClassLoader();
-    }
-
     /**
      * Get system messages from the current application class
      * 
@@ -1031,16 +943,16 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return Application.getSystemMessages();
     }
 
-    private void handleServiceException(PortletRequest request,
-            PortletResponse response, Application application, Throwable e)
-            throws IOException, PortletException {
+    private void handleServiceException(WrappedPortletRequest request,
+            WrappedPortletResponse response, Application application,
+            Throwable e) throws IOException, PortletException {
         // TODO Check that this error handler is working when running inside a
         // portlet
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             Application.SystemMessages ci = getSystemMessages();
-            criticalNotification(request, (ResourceResponse) response,
+            criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
             if (application != null) {
@@ -1065,6 +977,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
@@ -1093,9 +1006,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    void criticalNotification(PortletRequest request, MimeResponse response,
-            String caption, String message, String details, String url)
-            throws IOException {
+    void criticalNotification(WrappedPortletRequest request,
+            WrappedPortletResponse response, String caption, String message,
+            String details, String url) throws IOException {
 
         // clients JS app is still running, but server application either
         // no longer exists or it might fail to perform reasonably.
@@ -1121,7 +1034,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         // Set the response type
         response.setContentType("application/json; charset=UTF-8");
-        final OutputStream out = response.getPortletOutputStream();
+        final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"

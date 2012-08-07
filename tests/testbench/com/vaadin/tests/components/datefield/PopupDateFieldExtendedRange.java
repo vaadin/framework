@@ -41,6 +41,7 @@ public class PopupDateFieldExtendedRange extends TestBase {
         }
 
         addComponent(new Button("Change date", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 date.set(2010, 1, 16);
                 for (PopupDateField f : fields) {

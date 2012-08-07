@@ -19,13 +19,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.root.PageClientRpc;
+import com.vaadin.shared.ui.root.RootServerRpc;
+import com.vaadin.shared.ui.root.RootState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.Focusable;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -34,8 +39,6 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
@@ -51,6 +54,7 @@ public class RootConnector extends AbstractComponentContainerConnector
     private HandlerRegistration childStateChangeHandlerRegistration;
 
     private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
+        @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
             // TODO Should use a more specific handler that only reacts to
             // size changes
@@ -62,12 +66,14 @@ public class RootConnector extends AbstractComponentContainerConnector
     protected void init() {
         super.init();
         registerRpc(PageClientRpc.class, new PageClientRpc() {
+            @Override
             public void setTitle(String title) {
                 com.google.gwt.user.client.Window.setTitle(title);
             }
         });
     }
 
+    @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
         getWidget().rendering = true;
@@ -118,6 +124,7 @@ public class RootConnector extends AbstractComponentContainerConnector
                 // to finish rendering this window in case this is a download
                 // (and window stays open).
                 Scheduler.get().scheduleDeferred(new Command() {
+                    @Override
                     public void execute() {
                         VRoot.goTo(url);
                     }
@@ -182,6 +189,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(new Command() {
+                @Override
                 public void execute() {
                     ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
@@ -246,6 +254,11 @@ public class RootConnector extends AbstractComponentContainerConnector
                     getWidget().currentFragment, false);
         }
 
+        if (firstPaint) {
+            // Queue the initial window size to be sent with the following
+            // request.
+            getWidget().sendClientResized();
+        }
         getWidget().rendering = false;
     }
 
@@ -288,6 +301,7 @@ public class RootConnector extends AbstractComponentContainerConnector
 
     };
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP The main view never draws caption for its layout
     }
@@ -407,6 +421,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
 
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 componentConnector.getWidget().getElement().scrollIntoView();
             }

@@ -79,6 +79,7 @@ public class StreamResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.Resource#getMIMEType()
      */
+    @Override
     public String getMIMEType() {
         if (MIMEType != null) {
             return MIMEType;
@@ -123,6 +124,7 @@ public class StreamResource implements ApplicationResource {
      * 
      * @return the filename.
      */
+    @Override
     public String getFilename() {
         return filename;
     }
@@ -140,6 +142,7 @@ public class StreamResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.ApplicationResource#getApplication()
      */
+    @Override
     public Application getApplication() {
         return application;
     }
@@ -147,6 +150,7 @@ public class StreamResource implements ApplicationResource {
     /**
      * @see com.vaadin.terminal.ApplicationResource#getStream()
      */
+    @Override
     public DownloadStream getStream() {
         final StreamSource ss = getStreamSource();
         if (ss == null) {
@@ -176,6 +180,7 @@ public class StreamResource implements ApplicationResource {
     }
 
     /* documented in superclass */
+    @Override
     public int getBufferSize() {
         return bufferSize;
     }
@@ -191,6 +196,7 @@ public class StreamResource implements ApplicationResource {
     }
 
     /* documented in superclass */
+    @Override
     public long getCacheTime() {
         return cacheTime;
     }

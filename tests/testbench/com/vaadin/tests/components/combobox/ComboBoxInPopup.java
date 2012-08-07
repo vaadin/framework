@@ -17,6 +17,7 @@ public class ComboBoxInPopup extends TestBase {
         w.addComponent(createComboBox());
         Button close = new Button("Close window", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 w.close();
             }

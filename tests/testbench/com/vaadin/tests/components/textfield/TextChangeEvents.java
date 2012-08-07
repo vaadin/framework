@@ -19,6 +19,7 @@ public class TextChangeEvents extends TestBase {
 
         TextChangeListener inputEventListener = new TextChangeListener() {
 
+            @Override
             public void textChange(TextChangeEvent event) {
                 l.log("Text change event for  "
                         + event.getComponent().getCaption()
@@ -91,6 +92,7 @@ public class TextChangeEvents extends TestBase {
                     + ".nomatch {background:red;}");
         }
 
+        @Override
         public void textChange(TextChangeEvent event) {
             boolean atTheEndOfText = event.getText().length() == getCursorPosition();
             String match = findMatch(event.getText());

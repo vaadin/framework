@@ -42,12 +42,14 @@ public class Ticket736 extends Application.LegacyApplication {
         f.setBuffered(true);
         Button commit = new Button("Commit", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 f.commit();
             }
         });
         Button discard = new Button("Discard", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 f.discard();
             }
@@ -90,6 +92,7 @@ public class Ticket736 extends Application.LegacyApplication {
         mainWin.addComponent(new Button("Show state of the address object",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         mainWin.showNotification(address.toString());
                     }
@@ -164,6 +167,7 @@ public class Ticket736 extends Application.LegacyApplication {
     /** Simple state validator */
     static class IsValidState implements Validator {
 
+        @Override
         public void validate(Object value) throws InvalidValueException {
             // Empty and null are accepted values
             if (value == null || "".equals("" + value)) {

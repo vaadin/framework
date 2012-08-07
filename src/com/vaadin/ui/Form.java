@@ -24,6 +24,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.shared.ui.form.FormState;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.CompositeErrorMessage;
 import com.vaadin.terminal.ErrorMessage;
@@ -31,7 +32,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.form.FormState;
 
 /**
  * Form component provides easy way of creating and managing sets fields.
@@ -126,6 +126,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * See e.g. DateField#notifyFormOfValidityChange().
      */
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
+        @Override
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
             requestRepaint();
         }
@@ -194,12 +195,14 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /* Documented in interface */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (ownActionManager != null) {
             ownActionManager.paintActions(null, target);
         }
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Actions
         if (ownActionManager != null) {
@@ -467,6 +470,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item#addItemProperty(Object, Property)
      */
+    @Override
     public boolean addItemProperty(Object id, Property property) {
 
         // Checks inputs
@@ -598,6 +602,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
+    @Override
     public Property<?> getItemProperty(Object id) {
         final Field<?> field = fields.get(id);
         if (field == null) {
@@ -624,6 +629,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /* Documented in interface */
+    @Override
     public Collection<?> getItemPropertyIds() {
         return Collections.unmodifiableCollection(propertyIds);
     }
@@ -633,6 +639,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item#removeItemProperty(Object)
      */
+    @Override
     public boolean removeItemProperty(Object id) {
         ownProperties.remove(id);
 
@@ -687,6 +694,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /* Documented in the interface */
+    @Override
     public Item getItemDataSource() {
         return itemDatasource;
     }
@@ -701,6 +709,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * 
      * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
      */
+    @Override
     public void setItemDataSource(Item newDataSource) {
         setItemDataSource(newDataSource,
                 newDataSource != null ? newDataSource.getItemPropertyIds()
@@ -1301,10 +1310,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return ownActionManager;
     }
 
+    @Override
     public void addActionHandler(Handler actionHandler) {
         getOwnActionManager().addActionHandler(actionHandler);
     }
 
+    @Override
     public void removeActionHandler(Handler actionHandler) {
         if (ownActionManager != null) {
             ownActionManager.removeActionHandler(actionHandler);
@@ -1320,11 +1331,13 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
             T action) {
         getOwnActionManager().addAction(action);
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
         if (ownActionManager != null) {
@@ -1332,6 +1345,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
@@ -1345,6 +1359,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         int i = 0;
 
+        @Override
         public boolean hasNext() {
             if (i < getComponentCount()) {
                 return true;
@@ -1352,6 +1367,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             return false;
         }
 
+        @Override
         public Component next() {
             if (!hasNext()) {
                 return null;
@@ -1365,6 +1381,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             return null;
         }
 
+        @Override
         public void remove() {
             if (i == 1) {
                 if (getLayout() != null) {
@@ -1379,6 +1396,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
@@ -1395,6 +1413,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         return count;
     }
 
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     };

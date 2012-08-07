@@ -12,9 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.shared.ui.root.PageClientRpc;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
-import com.vaadin.terminal.gwt.client.ui.root.PageClientRpc;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;

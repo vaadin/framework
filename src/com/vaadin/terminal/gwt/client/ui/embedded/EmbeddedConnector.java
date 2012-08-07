@@ -15,8 +15,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
@@ -24,7 +26,6 @@ import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.ui.Embedded;
 
 @Connect(Embedded.class)
@@ -41,6 +42,7 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
         rpc = RpcProxy.create(EmbeddedServerRpc.class, this);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -54,6 +56,16 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
         clickEventHandler.handleEventHandlerRegistration();
 
         if (uidl.hasAttribute("type")) {
+            // remove old style name related to type
+            if (getWidget().type != null) {
+                getWidget().removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + getWidget().type);
+            }
+            // remove old style name related to mime type
+            if (getWidget().mimetype != null) {
+                getWidget().removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
+            }
             getWidget().type = uidl.getStringAttribute("type");
             if (getWidget().type.equals("image")) {
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
@@ -118,13 +130,25 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 VConsole.log("Unknown Embedded type '" + getWidget().type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
+            // remove old style name related to type
+            if (getWidget().type != null) {
+                getWidget().removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + getWidget().type);
+            }
+            // remove old style name related to mime type
+            if (getWidget().mimetype != null) {
+                getWidget().removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
+            }
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
+                getWidget().mimetype = "flash";
                 // Handle embedding of Flash
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-flash");
                 getWidget().setHTML(getWidget().createFlashEmbed(uidl));
 
             } else if (mime.equals("image/svg+xml")) {
+                getWidget().mimetype = "svg";
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = VEmbedded.getParameters(uidl);

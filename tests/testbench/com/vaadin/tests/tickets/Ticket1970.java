@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -38,6 +38,7 @@ public class Ticket1970 extends Application.LegacyApplication {
         w.addComponent(new Button("Show open windows",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         String openWindows = "";
                         for (Iterator<LegacyWindow> i = getWindows().iterator(); i
@@ -57,6 +58,7 @@ public class Ticket1970 extends Application.LegacyApplication {
         final LegacyWindow w = new LegacyWindow();
         w.addComponent(new Button("Show the name of the application",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         w.showNotification("Name of this window = "
                                 + w.getName());

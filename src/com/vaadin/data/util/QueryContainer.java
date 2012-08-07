@@ -188,6 +188,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return Item Id.
      */
 
+    @Override
     public Item getItem(Object id) {
         return new Row(id);
     }
@@ -198,6 +199,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return Collection of Property ID.
      */
 
+    @Override
     public Collection<String> getContainerPropertyIds() {
         return propertyIds;
     }
@@ -207,6 +209,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @return collection of Item IDs
      */
+    @Override
     public Collection<?> getItemIds() {
         final Collection<Integer> c = new ArrayList<Integer>(size);
         for (int i = 1; i <= size; i++) {
@@ -229,6 +232,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *         otherwise.
      */
 
+    @Override
     public synchronized Property<?> getContainerProperty(Object itemId,
             Object propertyId) {
         if (!(itemId instanceof Integer && propertyId instanceof String)) {
@@ -256,6 +260,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return data type of the Properties
      */
 
+    @Override
     public Class<?> getType(Object id) {
         return propertyTypes.get(id);
     }
@@ -265,6 +270,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @return the number of items in the container.
      */
+    @Override
     public int size() {
         return size;
     }
@@ -277,6 +283,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return <code>true</code> if given id is in the container;
      *         <code>false</code> otherwise.
      */
+    @Override
     public boolean containsId(Object id) {
         if (!(id instanceof Integer)) {
             return false;
@@ -302,6 +309,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addItem method is not supported.
      */
+    @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -313,6 +321,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addItem method is not supported.
      */
+    @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -327,6 +336,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the removeItem method is not supported.
      */
+    @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -346,6 +356,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addContainerProperty method is not supported.
      */
+    @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -361,6 +372,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the removeContainerProperty method is not supported.
      */
+    @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -374,6 +386,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the removeAllItems method is not supported.
      */
+    @Override
     public boolean removeAllItems() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -389,6 +402,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addItemAfter method is not supported.
      */
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -404,6 +418,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addItemAfter method is not supported.
      */
+    @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -414,6 +429,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @return ID of the first Item in the list.
      */
+    @Override
     public Object firstItemId() {
         if (size < 1) {
             return null;
@@ -427,6 +443,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @param id
      *            ID of an Item in the Container.
      */
+    @Override
     public boolean isFirstId(Object id) {
         return size > 0 && (id instanceof Integer)
                 && ((Integer) id).intValue() == 1;
@@ -439,6 +456,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *            ID of an Item in the Container
      * 
      */
+    @Override
     public boolean isLastId(Object id) {
         return size > 0 && (id instanceof Integer)
                 && ((Integer) id).intValue() == size;
@@ -449,6 +467,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * 
      * @return ID of the last Item.
      */
+    @Override
     public Object lastItemId() {
         if (size < 1) {
             return null;
@@ -463,6 +482,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *            ID of an Item in the Container.
      * @return ID of the next Item or null.
      */
+    @Override
     public Object nextItemId(Object id) {
         if (size < 1 || !(id instanceof Integer)) {
             return null;
@@ -481,6 +501,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *            ID of an Item in the Container.
      * @return ID of the previous Item or null.
      */
+    @Override
     public Object prevItemId(Object id) {
         if (size < 1 || !(id instanceof Integer)) {
             return null;
@@ -519,6 +540,7 @@ public class QueryContainer implements Container, Container.Ordered,
          * @throws UnsupportedOperationException
          *             if the addItemProperty method is not supported.
          */
+        @Override
         public boolean addItemProperty(Object id, Property property)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
@@ -532,6 +554,7 @@ public class QueryContainer implements Container, Container.Ordered,
          *            identifier of the Property to get
          * @return the Property with the given ID or <code>null</code>
          */
+        @Override
         public Property<?> getItemProperty(Object propertyId) {
             return getContainerProperty(id, propertyId);
         }
@@ -542,6 +565,7 @@ public class QueryContainer implements Container, Container.Ordered,
          * @return unmodifiable collection containing IDs of the Properties
          *         stored the Item.
          */
+        @Override
         public Collection<String> getItemPropertyIds() {
             return propertyIds;
         }
@@ -556,6 +580,7 @@ public class QueryContainer implements Container, Container.Ordered,
          * @throws UnsupportedOperationException
          *             if the removeItemProperty is not supported.
          */
+        @Override
         public boolean removeItemProperty(Object id)
                 throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
@@ -588,6 +613,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @throws UnsupportedOperationException
      *             if the addItemAt is not supported.
      */
+    @Override
     public Item addItemAt(int index, Object newItemId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
@@ -605,6 +631,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *             if the addItemAt is not supported.
      */
 
+    @Override
     public Object addItemAt(int index) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
@@ -616,6 +643,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *            Index Id.
      * @return ID in the given index.
      */
+    @Override
     public Object getIdByIndex(int index) {
         if (size < 1 || index < 0 || index >= size) {
             return null;
@@ -632,6 +660,7 @@ public class QueryContainer implements Container, Container.Ordered,
      *         Item
      */
 
+    @Override
     public int indexOfId(Object id) {
         if (size < 1 || !(id instanceof Integer)) {
             return -1;

@@ -5,7 +5,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -51,28 +51,33 @@ public class Ticket677 extends Application.LegacyApplication {
 
         l.addComponent(new Button("Toggle root panel",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(root);
                     }
                 }));
         l.addComponent(new Button("Toggle panel one",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(one);
                     }
                 }));
         l.addComponent(new Button("Toggle panel two",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         toggle(two);
                     }
                 }));
         l.addComponent(new Button("Toggle form", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 toggle(form);
             }
         }));
         l.addComponent(new Button("Toggle table", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 toggle(table);
             }

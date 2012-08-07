@@ -27,6 +27,7 @@ public class PopupViewWithRTE extends TestBase {
 
             VerticalLayout vl = new VerticalLayout();
 
+            @Override
             public String getMinimizedValueAsHTML() {
                 String value = rte.getValue();
                 if (value == null || "".equals(value)) {
@@ -40,6 +41,7 @@ public class PopupViewWithRTE extends TestBase {
                 return value.toString();
             }
 
+            @Override
             public Component getPopupComponent() {
                 return vl;
             }

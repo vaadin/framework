@@ -19,6 +19,7 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
 
         final TextField textField = new TextField();
         Button button = new Button("Show Text", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Field value: " + textField.getValue());
             }
@@ -28,6 +29,7 @@ public class TextFieldInputPromptAndClickShortcut extends TestBase {
         final CheckBox inputPromptSelection = new CheckBox("Input prompt");
         inputPromptSelection.setImmediate(true);
         inputPromptSelection.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (event.getProperty().getValue() == Boolean.TRUE) {
                     textField.setInputPrompt("Input prompt");

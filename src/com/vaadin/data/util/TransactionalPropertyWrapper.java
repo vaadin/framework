@@ -44,6 +44,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
             ((ValueChangeNotifier) wrappedProperty)
                     .addListener(new ValueChangeListener() {
 
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             fireValueChange();
                         }
@@ -51,29 +52,35 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
         }
     }
 
+    @Override
     public Class getType() {
         return wrappedProperty.getType();
     }
 
+    @Override
     public T getValue() {
         return wrappedProperty.getValue();
     }
 
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException {
         // Causes a value change to be sent to this listener which in turn fires
         // a new value change event for this property
         wrappedProperty.setValue(newValue);
     }
 
+    @Override
     public void startTransaction() {
         inTransaction = true;
         valueBeforeTransaction = getValue();
     }
 
+    @Override
     public void commit() {
         endTransaction();
     }
 
+    @Override
     public void rollback() {
         try {
             wrappedProperty.setValue(valueBeforeTransaction);

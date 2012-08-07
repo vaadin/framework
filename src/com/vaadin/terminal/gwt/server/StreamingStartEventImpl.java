@@ -16,6 +16,7 @@ final class StreamingStartEventImpl extends AbstractStreamingEvent implements
         super(filename, type, contentLength, 0);
     }
 
+    @Override
     public void disposeStreamVariable() {
         disposed = true;
     }

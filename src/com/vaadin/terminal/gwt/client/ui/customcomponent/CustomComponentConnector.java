@@ -3,11 +3,11 @@
  */
 package com.vaadin.terminal.gwt.client.ui.customcomponent;
 
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 import com.vaadin.ui.CustomComponent;
 
 @Connect(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
@@ -19,6 +19,7 @@ public class CustomComponentConnector extends
         return (VCustomComponent) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, custom component dont render composition roots caption
     }

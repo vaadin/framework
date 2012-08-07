@@ -4,7 +4,8 @@
 
 package com.vaadin.terminal;
 
-import com.vaadin.terminal.gwt.client.JavaScriptExtensionState;
+import com.vaadin.shared.JavaScriptExtensionState;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.JavaScriptCallback;
 
 /**
@@ -34,9 +35,9 @@ import com.vaadin.ui.JavaScriptCallback;
  * the connector's parent. If <code>connectorId</code> is provided, the id of
  * the parent of the corresponding connector with the passed id is returned
  * instead.</li>
- * <li><code>getWidgetElement([connectorId])</code> - returns the DOM Element
- * that is the root of a connector's widget. <code>null</code> is returned if
- * the connector can not be found or if the connector doesn't have a widget. If
+ * <li><code>getElement([connectorId])</code> - returns the DOM Element that is
+ * the root of a connector's widget. <code>null</code> is returned if the
+ * connector can not be found or if the connector doesn't have a widget. If
  * <code>connectorId</code> is not provided, the connector id of the current
  * connector will be used.</li>
  * <li><code>getState()</code> - returns an object corresponding to the shared
@@ -63,6 +64,9 @@ import com.vaadin.ui.JavaScriptCallback;
  * exception when called. The scheme for conversion between Java types in the
  * RPC interface and the JavaScript values that should be passed to the
  * functions is described bellow.</li>
+ * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
+ * that can be used in the browser. This is just way of accessing
+ * {@link ApplicationConnection#translateVaadinUri(String)}</li>
  * </ul>
  * The connector wrapper also supports these special functions:
  * <ul>
@@ -139,8 +143,9 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     /**
      * Invoke a named function that the connector JavaScript has added to the
      * JavaScript connector wrapper object. The arguments should only contain
-     * data types that can be represented in JavaScript, including primitive
-     * boxing types, arrays, String, List, Set, Map, Connector and JavaBeans.
+     * data types that can be represented in JavaScript including primitives,
+     * their boxed types, arrays, String, List, Set, Map, Connector and
+     * JavaBeans.
      * 
      * @param name
      *            the name of the function

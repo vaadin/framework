@@ -27,6 +27,7 @@ public class TooltipForDisabledButton extends TestBase {
 
         buttonDisabled.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().showNotification("Clicked Disabled");
             }
@@ -35,6 +36,7 @@ public class TooltipForDisabledButton extends TestBase {
 
         buttonEnabled.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().showNotification("Clicked Enabled");
             }

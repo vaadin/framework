@@ -17,6 +17,7 @@ public class Ticket2337 extends Application.LegacyApplication {
         setMainWindow(w);
         Button b = new Button("add", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 gl.addComponent(new Label("asd"), 0, gl.getCursorY(), 2,
                         gl.getCursorY());
@@ -28,6 +29,7 @@ public class Ticket2337 extends Application.LegacyApplication {
 
         b = new Button("empty", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 gl.removeAllComponents();
                 ;

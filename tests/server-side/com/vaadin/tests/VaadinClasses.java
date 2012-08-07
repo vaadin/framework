@@ -164,6 +164,7 @@ public class VaadinClasses {
 
         Collections.sort(classes, new Comparator<Class<? extends T>>() {
 
+            @Override
             public int compare(Class<? extends T> o1, Class<? extends T> o2) {
                 return o1.getName().compareTo(o2.getName());
             }

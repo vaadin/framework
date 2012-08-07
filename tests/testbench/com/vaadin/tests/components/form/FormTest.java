@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
+import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.tests.util.Person;
@@ -30,6 +30,7 @@ public class FormTest extends AbstractFieldTest<Form> {
 
     private Command<Form, String> footerWidthCommand = new Command<Form, String>() {
 
+        @Override
         public void execute(Form c, String value, Object data) {
             Layout footer = c.getFooter();
             if (footer != null) {
@@ -40,6 +41,7 @@ public class FormTest extends AbstractFieldTest<Form> {
     };
     private Command<Form, String> footerHeightCommand = new Command<Form, String>() {
 
+        @Override
         public void execute(Form c, String value, Object data) {
             Layout footer = c.getFooter();
             if (footer != null) {
@@ -51,6 +53,7 @@ public class FormTest extends AbstractFieldTest<Form> {
 
     private Command<Form, Class<? extends Layout>> formLayoutCommand = new Command<Form, Class<? extends Layout>>() {
 
+        @Override
         public void execute(Form c, Class<? extends Layout> value, Object data) {
             if (value == null) {
                 c.setLayout(null);
@@ -73,6 +76,7 @@ public class FormTest extends AbstractFieldTest<Form> {
     };
     private Command<Form, Class<? extends Layout>> formFooterCommand = new Command<Form, Class<? extends Layout>>() {
 
+        @Override
         public void execute(Form c, Class<? extends Layout> value, Object data) {
             if (value == null) {
                 c.setFooter(null);
@@ -92,6 +96,7 @@ public class FormTest extends AbstractFieldTest<Form> {
     };
     private Command<Form, Item> formItemDataSourceCommand = new Command<Form, Item>() {
 
+        @Override
         public void execute(Form c, Item value, Object data) {
             c.setItemDataSource(value);
         }
@@ -148,6 +153,7 @@ public class FormTest extends AbstractFieldTest<Form> {
         options.put("Default", DefaultFieldFactory.get());
         options.put("Custom FieldFactory", new FormFieldFactory() {
 
+            @Override
             public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
                 Class<?> type = item.getItemProperty(propertyId).getType();
@@ -186,6 +192,7 @@ public class FormTest extends AbstractFieldTest<Form> {
 
         Command<Form, FormFieldFactory> formFactoryCommand = new Command<Form, FormFieldFactory>() {
 
+            @Override
             public void execute(Form c, FormFieldFactory value, Object data) {
                 c.setFormFieldFactory(value);
                 c.setItemDataSource(c.getItemDataSource());
@@ -227,6 +234,7 @@ public class FormTest extends AbstractFieldTest<Form> {
         }
         Command<Form, Alignment> footerComponentAlignmentCommand = new Command<Form, Alignment>() {
 
+            @Override
             public void execute(Form c, Alignment value, Object data) {
                 Layout l = c.getFooter();
                 if (l instanceof AlignmentHandler) {

@@ -48,6 +48,7 @@ public class PanelChangeContents extends AbstractTestRoot implements
         setContent(content);
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         if (event.getButton() == statsButton) {
             panel.setContent(stats);

@@ -37,6 +37,7 @@ public class Like implements Filter {
         return caseSensitive;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedOperationException {
         if (!item.getItemProperty(getPropertyId()).getType()
@@ -54,6 +55,7 @@ public class Like implements Filter {
         return colValue.toUpperCase().matches(pattern.toUpperCase());
     }
 
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return getPropertyId() != null && getPropertyId().equals(propertyId);
     }

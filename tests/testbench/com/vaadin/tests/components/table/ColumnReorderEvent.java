@@ -83,6 +83,7 @@ public class ColumnReorderEvent extends TestBase {
         table.setColumnHeader("lastname", "LastName");
 
         table.addListener(new Table.ColumnReorderListener() {
+            @Override
             public void columnReorder(
                     com.vaadin.ui.Table.ColumnReorderEvent event) {
                 order.setValue(aToString(table.getVisibleColumns()));

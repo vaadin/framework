@@ -23,6 +23,7 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
             super(MyEntity.class);
             setBeanIdResolver(new BeanIdResolver<Long, TableWithContainerRequiringEqualsForItemId.MyEntity>() {
 
+                @Override
                 public Long getIdForBean(MyEntity bean) {
                     // Return a new instance every time to ensure Table can
                     // handle it
@@ -46,10 +47,12 @@ public class TableWithContainerRequiringEqualsForItemId extends TestBase {
     protected void setup() {
         Table t = new Table("Table with 1000 item");
         t.addGeneratedColumn("Actions", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(final Table source,
                     final Object itemId, final Object columnId) {
                 Button tripFolderLink = new Button("Button" + itemId);
                 tripFolderLink.addListener(new Button.ClickListener() {
+                    @Override
                     public void buttonClick(final ClickEvent event) {
                         log.log("Button " + event.getButton().getCaption()
                                 + " clicked");

@@ -47,14 +47,17 @@ public class AttachDetachWindow {
             windowDetachCalled = true;
         }
 
+        @Override
         public boolean attachCalled() {
             return windowAttachCalled;
         }
 
+        @Override
         public boolean detachCalled() {
             return windowDetachCalled;
         }
 
+        @Override
         public TestContent getTestContent() {
             return testContent;
         }
@@ -111,14 +114,17 @@ public class AttachDetachWindow {
             // Do nothing
         }
 
+        @Override
         public boolean attachCalled() {
             return rootAttachCalled;
         }
 
+        @Override
         public boolean detachCalled() {
             return rootDetachCalled;
         }
 
+        @Override
         public TestContent getTestContent() {
             return testContent;
         }

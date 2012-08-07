@@ -45,6 +45,7 @@ public abstract class AbstractJunctionFilter implements Filter {
      * If there are no sub-filters, false is returned - override in subclasses
      * to change this behavior.
      */
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         for (Filter filter : getFilters()) {
             if (filter.appliesToProperty(propertyId)) {

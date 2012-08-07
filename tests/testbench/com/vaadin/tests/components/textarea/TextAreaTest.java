@@ -8,12 +8,14 @@ import com.vaadin.ui.TextArea;
 public class TextAreaTest extends AbstractTextFieldTest<TextArea> {
 
     private Command<TextArea, Boolean> wordwrapCommand = new Command<TextArea, Boolean>() {
+        @Override
         public void execute(TextArea c, Boolean value, Object data) {
             c.setWordwrap(value);
         }
     };
 
     private Command<TextArea, Integer> rowsCommand = new Command<TextArea, Integer>() {
+        @Override
         public void execute(TextArea c, Integer value, Object data) {
             c.setRows(value);
         }

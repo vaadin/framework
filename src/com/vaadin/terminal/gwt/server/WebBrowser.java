@@ -7,9 +7,9 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.shared.VBrowserDetails;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.VBrowserDetails;
 
 /**
  * Class that provides information about the web browser the user is using.
@@ -42,6 +42,7 @@ public class WebBrowser implements Terminal {
      * @return Always returns null.
      */
 
+    @Override
     public String getDefaultTheme() {
         return null;
     }
@@ -52,6 +53,7 @@ public class WebBrowser implements Terminal {
      * @see com.vaadin.terminal.Terminal#getScreenHeight()
      */
 
+    @Override
     public int getScreenHeight() {
         return screenHeight;
     }
@@ -62,6 +64,7 @@ public class WebBrowser implements Terminal {
      * @see com.vaadin.terminal.Terminal#getScreenWidth()
      */
 
+    @Override
     public int getScreenWidth() {
         return screenWidth;
     }

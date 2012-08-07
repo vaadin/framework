@@ -3,6 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.ui.AbstractJavaScriptComponent;
@@ -31,6 +33,7 @@ public final class JavaScriptComponentConnector extends
         helper.init();
     }
 
+    @Override
     public JavaScriptConnectorHelper getJavascriptConnectorHelper() {
         return helper;
     }

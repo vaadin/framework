@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 
 public class VButton extends FocusWidget implements ClickHandler {
@@ -90,7 +89,6 @@ public class VButton extends FocusWidget implements ClickHandler {
         setTabIndex(0);
         sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.FOCUSEVENTS
                 | Event.KEYEVENTS);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
         setStyleName(CLASSNAME);
 
@@ -128,9 +126,6 @@ public class VButton extends FocusWidget implements ClickHandler {
      * -onload event handler added (for icon handling)
      */
     public void onBrowserEvent(Event event) {
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
         if (DOM.eventGetType(event) == Event.ONLOAD) {
             Util.notifyParentOfSizeChange(this, true);
         }
@@ -286,6 +281,7 @@ public class VButton extends FocusWidget implements ClickHandler {
      * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
      * .dom.client.ClickEvent)
      */
+    @Override
     public void onClick(ClickEvent event) {
         if (BrowserInfo.get().isSafari()) {
             VButton.this.setFocus(true);

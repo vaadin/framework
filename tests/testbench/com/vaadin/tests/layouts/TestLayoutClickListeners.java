@@ -60,6 +60,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         al.addComponent(new Button("A button with its own click listener",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
                         log.log("Button " + event.getButton().getCaption()
@@ -69,6 +70,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
                 }));
         al.addListener(new LayoutClickListener() {
 
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 logLayoutClick("AbsoluteLayout", event);
             }
@@ -92,6 +94,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
         cl.addComponent(new Button("A button with its own click listener",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(
                             com.vaadin.ui.Button.ClickEvent event) {
                         log.log("Button " + event.getButton().getCaption()
@@ -101,6 +104,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
                 }));
         cl.addListener(new LayoutClickListener() {
 
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 logLayoutClick("CSSLayout", event);
             }
@@ -125,6 +129,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
 
         gl.addListener(new LayoutClickListener() {
 
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 logLayoutClick("GridLayout", event);
             }
@@ -166,6 +171,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
 
         gl.addListener(new LayoutClickListener() {
 
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 logLayoutClick("VerticalLayout", event);
 

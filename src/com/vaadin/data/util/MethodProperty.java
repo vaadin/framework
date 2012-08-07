@@ -568,6 +568,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * 
      * @return type of the Property
      */
+    @Override
     public final Class<? extends T> getType() {
         return type;
     }
@@ -591,6 +592,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * 
      * @return the value of the Property
      */
+    @Override
     public T getValue() {
         try {
             return (T) getMethod.invoke(instance, getArgs);
@@ -638,6 +640,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *         read-only mode.
      * @see #invokeSetMethod(Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void setValue(Object newValue) throws Property.ReadOnlyException {
 

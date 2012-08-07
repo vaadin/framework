@@ -21,6 +21,7 @@ public class DateFieldLocale extends TestBase {
 
         addComponent(new Button("Change locale", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (dateField.getLocale().getCountry().equalsIgnoreCase("fi")) {
                     dateField.setLocale(new Locale("zh", "CN"));

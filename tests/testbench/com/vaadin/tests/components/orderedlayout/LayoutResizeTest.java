@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.orderedlayout;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -37,6 +37,7 @@ public class LayoutResizeTest extends TestBase {
 
         Button resize = new Button("Resize to 700x400",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         event.getButton()
                                 .getRoot()
@@ -49,6 +50,7 @@ public class LayoutResizeTest extends TestBase {
         left.addComponent(resize);
 
         resize = new Button("Resize to 900x600", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton()
                         .getRoot()

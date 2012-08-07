@@ -26,6 +26,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private ItemStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Tree.ItemStyleGenerator() {
 
+        @Override
         public String getStyle(Object itemId) {
             Hierarchical c = (Container.Hierarchical) getComponent()
                     .getContainerDataSource();
@@ -50,6 +51,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private ItemStyleGenerator evenItemsBold = new com.vaadin.ui.Tree.ItemStyleGenerator() {
 
+        @Override
         public String getStyle(Object itemId) {
             Hierarchical c = (Container.Hierarchical) getComponent()
                     .getContainerDataSource();
@@ -80,17 +82,20 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private Command<Tree, ContextMenu> contextMenuCommand = new Command<Tree, ContextMenu>() {
 
+        @Override
         public void execute(Tree c, final ContextMenu value, Object data) {
             c.removeAllActionHandlers();
             if (value != null) {
                 c.addActionHandler(new Handler() {
 
+                    @Override
                     public void handleAction(Action action, Object sender,
                             Object target) {
                         log("Action " + action.getCaption() + " performed on "
                                 + target);
                     }
 
+                    @Override
                     public Action[] getActions(Object target, Object sender) {
                         return value.getActions(target, sender);
                     }
@@ -176,6 +181,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
         createSelectAction("Selection Mode", category, options,
                 "Multi - ctrl/shift", new Command<Tree, SelectMode>() {
 
+                    @Override
                     public void execute(Tree t, SelectMode value, Object data) {
                         switch (value) {
                         case NONE:
@@ -318,6 +324,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
      */
     private Command<Tree, Integer> rootItemIdsCommand = new Command<Tree, Integer>() {
 
+        @Override
         public void execute(Tree c, Integer value, Object data) {
             rootItemIds = value;
             updateContainer();
@@ -326,12 +333,14 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private Command<Tree, Object> expandItemCommand = new Command<Tree, Object>() {
 
+        @Override
         public void execute(Tree c, Object itemId, Object data) {
             c.expandItem(itemId);
         }
     };
     private Command<Tree, Object> expandItemRecursivelyCommand = new Command<Tree, Object>() {
 
+        @Override
         public void execute(Tree c, Object itemId, Object data) {
             c.expandItemsRecursively(itemId);
         }
@@ -339,6 +348,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private Command<Tree, Object> collapseItemCommand = new Command<Tree, Object>() {
 
+        @Override
         public void execute(Tree c, Object itemId, Object data) {
             c.collapseItem(itemId);
         }
@@ -346,12 +356,14 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private Command<Tree, Boolean> setChildrenAllowedCommand = new Command<Tree, Boolean>() {
 
+        @Override
         public void execute(Tree c, Boolean areChildrenAllowed, Object itemId) {
             c.setChildrenAllowed(itemId, areChildrenAllowed);
         }
     };
 
     private Command<Tree, Boolean> expandListenerCommand = new Command<Tree, Boolean>() {
+        @Override
         public void execute(Tree c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ExpandListener) Trees.this);
@@ -362,6 +374,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
     };
 
     private Command<Tree, Boolean> collapseListenerCommand = new Command<Tree, Boolean>() {
+        @Override
         public void execute(Tree c, Boolean value, Object data) {
             if (value) {
                 c.addListener((CollapseListener) Trees.this);
@@ -373,6 +386,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
 
     private Command<Tree, com.vaadin.ui.Tree.ItemStyleGenerator> itemStyleGeneratorCommand = new Command<Tree, com.vaadin.ui.Tree.ItemStyleGenerator>() {
 
+        @Override
         public void execute(Tree c,
                 com.vaadin.ui.Tree.ItemStyleGenerator value, Object data) {
             c.setItemStyleGenerator(value);
@@ -380,10 +394,12 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
         }
     };
 
+    @Override
     public void nodeCollapse(CollapseEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getItemId());
     }
 
+    @Override
     public void nodeExpand(ExpandEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getItemId());
     }

@@ -33,6 +33,7 @@ public class RowAdditionTest extends TestBase {
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.addComponent(new Button("Add first", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Item item = container.addItemAt(0, new Object());
                 item.getItemProperty("column1").setValue("0");
@@ -40,6 +41,7 @@ public class RowAdditionTest extends TestBase {
         }));
         hl.addComponent(new Button("Add at position 50",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItemAt(50, new Object());
                         item.getItemProperty("column1").setValue("50");
@@ -47,6 +49,7 @@ public class RowAdditionTest extends TestBase {
                 }));
         hl.addComponent(new Button("Add at position 100",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItemAt(100, new Object());
                         item.getItemProperty("column1").setValue("100");

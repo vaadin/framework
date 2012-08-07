@@ -75,6 +75,7 @@ public class DemoLauncher {
              * dispatch thread.
              */
             java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     try {
                         openServerControlDialog(url);
@@ -125,6 +126,7 @@ public class DemoLauncher {
 
         // List for close verify buttons
         final ActionListener buttonListener = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == okButton) {
                     System.exit(0);

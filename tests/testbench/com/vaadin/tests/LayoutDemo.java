@@ -4,8 +4,8 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ClassResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;

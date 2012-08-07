@@ -58,6 +58,7 @@ public class ComboBoxReapperingOldValue extends Application.LegacyApplication
         return container;
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         cbox2.removeAllItems();
         if ("1".equals(event.getProperty().getValue().toString())) {

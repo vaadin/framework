@@ -59,6 +59,7 @@ public class GAESyncTest extends Application.LegacyApplication {
             tf = new TextField("Echo thingie");
             tf.setImmediate(true);
             tf.addListener(new Property.ValueChangeListener() {
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     IntrWindow.this.showNotification((String) event
                             .getProperty().getValue());
@@ -73,6 +74,7 @@ public class GAESyncTest extends Application.LegacyApplication {
 
             {
                 Button b = new Button("Slow", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         try {
                             Thread.sleep(15000);
@@ -89,6 +91,7 @@ public class GAESyncTest extends Application.LegacyApplication {
             {
                 Button b = new Button("Add", new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         if (getRoot() == getMainWindow()) {
                             getRoot().getPage().showNotification(

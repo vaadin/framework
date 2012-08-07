@@ -15,6 +15,7 @@ public class TableColumnResizeContentsWidth extends TestBase {
     protected void setup() {
         final Table table = new Table();
         table.addGeneratedColumn(COL1, new ColumnGenerator() {
+            @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
                 TextField textField = new TextField();
@@ -30,12 +31,14 @@ public class TableColumnResizeContentsWidth extends TestBase {
 
         addComponent(table);
         addComponent(new Button("Increase width", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnWidth(COL1, table.getColumnWidth(COL1) + 20);
                 table.requestRepaint();
             }
         }));
         addComponent(new Button("Decrease width", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnWidth(COL1, table.getColumnWidth(COL1) - 40);
                 table.requestRepaint();

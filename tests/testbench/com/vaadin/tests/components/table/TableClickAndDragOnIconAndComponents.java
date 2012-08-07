@@ -43,6 +43,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
 
             private static final long serialVersionUID = -5042109683675242407L;
 
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
@@ -53,6 +54,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
 
             private static final long serialVersionUID = -5042109683675242407L;
 
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
@@ -66,6 +68,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
 
             private static final long serialVersionUID = -5042109683675242407L;
 
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Item item = source.getItem(itemId);
@@ -80,6 +83,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
 
             private static final long serialVersionUID = -5042109683675242407L;
 
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 Embedded embedded = new Embedded(null, new ThemeResource(
@@ -91,10 +95,12 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
         table.setDragMode(TableDragMode.ROW);
         table.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 DataBoundTransferable t = (DataBoundTransferable) event
                         .getTransferable();

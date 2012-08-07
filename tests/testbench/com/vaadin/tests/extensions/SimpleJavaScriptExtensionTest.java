@@ -4,21 +4,21 @@
 
 package com.vaadin.tests.extensions;
 
-import com.vaadin.annotations.LoadScripts;
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.shared.JavaScriptExtensionState;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.AbstractJavaScriptExtension;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.JavaScriptExtensionState;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptCallback;
 import com.vaadin.ui.Notification;
 
-@LoadScripts({ "/statictestfiles/jsextension.js" })
 public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
     public static class SimpleJavaScriptExtensionState extends
@@ -44,16 +44,20 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         public void greet(String message);
     }
 
+    @JavaScript("/statictestfiles/jsextension.js")
+    @StyleSheet("/VAADIN/external1.css")
     public static class SimpleJavascriptExtension extends
             AbstractJavaScriptExtension {
 
         public SimpleJavascriptExtension() {
             registerRpc(new SimpleJavaScriptExtensionServerRpc() {
+                @Override
                 public void greet(String message) {
                     Notification.show(getState().getPrefix() + message);
                 }
             });
             registerCallback("greetToServer", new JavaScriptCallback() {
+                @Override
                 public void call(JSONArray arguments) throws JSONException {
                     Notification.show(getState().getPrefix()
                             + arguments.getString(0));
@@ -88,12 +92,14 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         addExtension(simpleJavascriptExtension);
         addComponent(new Button("Send rpc greeting",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         simpleJavascriptExtension.greetRpc("Rpc greeting");
                     }
                 }));
         addComponent(new Button("Send callback greeting",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         simpleJavascriptExtension
                                 .greetCallback("Callback greeting");

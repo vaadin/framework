@@ -20,6 +20,7 @@ public class Ticket695 extends Application.LegacyApplication {
         w.addComponent(b);
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 try {

@@ -103,6 +103,7 @@ public class RichTextArea extends AbstractField<String> implements
         setCaption(caption);
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (selectAll) {
             target.addAttribute("selectAll", true);
@@ -185,6 +186,7 @@ public class RichTextArea extends AbstractField<String> implements
         }
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {

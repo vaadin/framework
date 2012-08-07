@@ -7,7 +7,7 @@ package com.vaadin.tests;
 import java.io.File;
 
 import com.vaadin.data.Item;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -60,6 +60,7 @@ public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
      * Handle tree expand event, populate expanded node's childs with new files
      * and directories.
      */
+    @Override
     public void nodeExpand(ExpandEvent event) {
         final Item i = tree.getItem(event.getItemId());
         if (!tree.hasChildren(i)) {

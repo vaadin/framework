@@ -5,10 +5,10 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.terminal.gwt.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.ui.InlineDateField;
@@ -40,6 +40,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
         if (getWidget().currentResolution > VDateField.RESOLUTION_DAY) {
             getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
+                        @Override
                         public void changed(int hour, int min, int sec, int msec) {
                             Date d = getWidget().getDate();
                             if (d == null) {
@@ -64,6 +65,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
         if (getWidget().currentResolution <= VDateField.RESOLUTION_MONTH) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
+                        @Override
                         public void focusChanged(Date date) {
                             Date date2 = new Date();
                             if (getWidget().calendarPanel.getDate() != null) {

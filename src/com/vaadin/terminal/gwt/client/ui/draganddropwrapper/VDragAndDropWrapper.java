@@ -22,6 +22,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xhr.client.ReadyStateChangeHandler;
 import com.google.gwt.xhr.client.XMLHttpRequest;
+import com.vaadin.shared.ui.dd.HorizontalDropLocation;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
@@ -29,11 +31,9 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ValueMap;
 import com.vaadin.terminal.gwt.client.ui.customcomponent.VCustomComponent;
 import com.vaadin.terminal.gwt.client.ui.dd.DDUtil;
-import com.vaadin.terminal.gwt.client.ui.dd.HorizontalDropLocation;
 import com.vaadin.terminal.gwt.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCallback;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -43,7 +43,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
 import com.vaadin.terminal.gwt.client.ui.dd.VHtml5DragEvent;
 import com.vaadin.terminal.gwt.client.ui.dd.VHtml5File;
 import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 
 /**
  * 
@@ -64,12 +63,12 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     public VDragAndDropWrapper() {
         super();
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
         addDomHandler(new MouseDownHandler() {
 
+            @Override
             public void onMouseDown(MouseDownEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
@@ -79,6 +78,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         addDomHandler(new TouchStartHandler() {
 
+            @Override
             public void onTouchStart(TouchStartEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     /*
@@ -90,16 +90,6 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }, TouchStartEvent.getType());
 
         sinkEvents(Event.TOUCHEVENTS);
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-
-        if (hasTooltip && client != null) {
-            // Override child tooltips if the wrapper has a tooltip defined
-            client.handleTooltipEvent(event, this);
-        }
     }
 
     /**
@@ -178,6 +168,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     private ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
 
+        @Override
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                 // visit server for possible
@@ -194,6 +185,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     void startNextUpload() {
         Scheduler.get().scheduleDeferred(new Command() {
 
+            @Override
             public void execute() {
                 if (!uploading) {
                     if (fileIds.size() > 0) {
@@ -425,6 +417,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         files.add(file);
     }
 
+    @Override
     public VDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -463,6 +456,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                 currentlyValid = false;
                 validate(new VAcceptCallback() {
 
+                    @Override
                     public void accepted(VDragEvent event) {
                         dragAccepted(drag);
                     }
@@ -507,6 +501,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
                     VDragAndDropWrapper.this);
         }
 
+        @Override
         public ApplicationConnection getApplicationConnection() {
             return client;
         }

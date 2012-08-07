@@ -17,6 +17,7 @@ final class StreamingErrorEventImpl extends AbstractStreamingEvent implements
         this.exception = exception;
     }
 
+    @Override
     public final Exception getException() {
         return exception;
     }

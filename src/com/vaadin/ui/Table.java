@@ -40,12 +40,12 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
 
 /**
@@ -537,6 +537,13 @@ public class Table extends AbstractSelect implements Action.Container,
     private boolean painted = false;
 
     private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
+
+    /**
+     * Set to true if the client-side should be informed that the key mapper has
+     * been reset so it can avoid sending back references to keys that are no
+     * longer present.
+     */
+    private boolean keyMapperReset;
 
     /* Table constructors */
 
@@ -1587,9 +1594,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Collects the basic facts about the table page
         final int pagelen = getPageLength();
-        int firstIndex = getCurrentPageFirstItemIndex();
         int rows, totalRows;
         rows = totalRows = size();
+        int firstIndex = Math
+                .min(getCurrentPageFirstItemIndex(), totalRows - 1);
         if (rows > 0 && firstIndex >= 0) {
             rows -= firstIndex;
         }
@@ -2409,8 +2417,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The end key
      * @return
      */
-    private Set<Object> getItemIdsInRange(Object itemId, final int length) {
-        HashSet<Object> ids = new HashSet<Object>();
+    private LinkedHashSet<Object> getItemIdsInRange(Object itemId,
+            final int length) {
+        LinkedHashSet<Object> ids = new LinkedHashSet<Object>();
         for (int i = 0; i < length; i++) {
             assert itemId != null; // should not be null unless client-server
                                    // are out of sync
@@ -2430,21 +2439,15 @@ public class Table extends AbstractSelect implements Action.Container,
         final String[] ka = (String[]) variables.get("selected");
         final String[] ranges = (String[]) variables.get("selectedRanges");
 
-        Set<Object> renderedItemIds = getCurrentlyRenderedItemIds();
+        Set<Object> renderedButNotSelectedItemIds = getCurrentlyRenderedItemIds();
 
         @SuppressWarnings("unchecked")
-        HashSet<Object> newValue = new HashSet<Object>(
+        HashSet<Object> newValue = new LinkedHashSet<Object>(
                 (Collection<Object>) getValue());
 
         if (variables.containsKey("clearSelections")) {
             // the client side has instructed to swipe all previous selections
             newValue.clear();
-        } else {
-            /*
-             * first clear all selections that are currently rendered rows (the
-             * ones that the client side counterpart is aware of)
-             */
-            newValue.removeAll(renderedItemIds);
         }
 
         /*
@@ -2461,6 +2464,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 requestRepaint();
             } else if (id != null && containsId(id)) {
                 newValue.add(id);
+                renderedButNotSelectedItemIds.remove(id);
             }
         }
 
@@ -2470,9 +2474,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 String[] split = range.split("-");
                 Object startItemId = itemIdMapper.get(split[0]);
                 int length = Integer.valueOf(split[1]);
-                newValue.addAll(getItemIdsInRange(startItemId, length));
+                LinkedHashSet<Object> itemIdsInRange = getItemIdsInRange(
+                        startItemId, length);
+                newValue.addAll(itemIdsInRange);
+                renderedButNotSelectedItemIds.removeAll(itemIdsInRange);
             }
         }
+        /*
+         * finally clear all currently rendered rows (the ones that the client
+         * side counterpart is aware of) that the client didn't send as selected
+         */
+        newValue.removeAll(renderedButNotSelectedItemIds);
 
         if (!isNullSelectionAllowed() && newValue.isEmpty()) {
             // empty selection not allowed, keep old value
@@ -2884,6 +2896,11 @@ public class Table extends AbstractSelect implements Action.Container,
         paintAvailableColumns(target);
 
         paintVisibleColumns(target);
+
+        if (keyMapperReset) {
+            keyMapperReset = false;
+            target.addAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET, true);
+        }
 
         if (dropHandler != null) {
             dropHandler.getAcceptCriterion().paint(target);
@@ -3681,6 +3698,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
 
+    @Override
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -3708,6 +3726,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
 
+    @Override
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -4046,6 +4065,10 @@ public class Table extends AbstractSelect implements Action.Container,
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
 
+        // super method clears the key map, must inform client about this to
+        // avoid getting invalid keys back (#8584)
+        keyMapperReset = true;
+
         // ensure that page still has first item in page, ignore buffer refresh
         // (forced in this method)
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex(), false);
@@ -4117,6 +4140,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
 
+    @Override
     public Object nextItemId(Object itemId) {
         return ((Container.Ordered) items).nextItemId(itemId);
     }
@@ -4128,6 +4152,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
 
+    @Override
     public Object prevItemId(Object itemId) {
         return ((Container.Ordered) items).prevItemId(itemId);
     }
@@ -4138,6 +4163,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
 
+    @Override
     public Object firstItemId() {
         return ((Container.Ordered) items).firstItemId();
     }
@@ -4148,6 +4174,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
 
+    @Override
     public Object lastItemId() {
         return ((Container.Ordered) items).lastItemId();
     }
@@ -4159,6 +4186,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
 
+    @Override
     public boolean isFirstId(Object itemId) {
         return ((Container.Ordered) items).isFirstId(itemId);
     }
@@ -4170,6 +4198,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
 
+    @Override
     public boolean isLastId(Object itemId) {
         return ((Container.Ordered) items).isLastId(itemId);
     }
@@ -4180,6 +4209,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
 
+    @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         Object itemId = ((Container.Ordered) items)
@@ -4197,6 +4227,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      java.lang.Object)
      */
 
+    @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
@@ -4290,6 +4321,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      */
 
+    @Override
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
         final Container c = getContainerDataSource();
@@ -4331,6 +4363,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
 
+    @Override
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && isSortEnabled()) {
@@ -4544,11 +4577,13 @@ public class Table extends AbstractSelect implements Action.Container,
         public abstract String getStyle(Object itemId, Object propertyId);
     }
 
+    @Override
     public void addListener(ItemClickListener listener) {
         addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    @Override
     public void removeListener(ItemClickListener listener) {
         removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
@@ -4625,11 +4660,13 @@ public class Table extends AbstractSelect implements Action.Container,
 
     }
 
+    @Override
     public TableTransferable getTransferable(Map<String, Object> rawVariables) {
         TableTransferable transferable = new TableTransferable(rawVariables);
         return transferable;
     }
 
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -4638,6 +4675,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.dropHandler = dropHandler;
     }
 
+    @Override
     public AbstractSelectTargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         return new AbstractSelectTargetDetails(clientVariables);
@@ -4706,6 +4744,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#accepts(com.vaadin
          * .event.dd.DragAndDropEvent)
          */
+        @Override
         @SuppressWarnings("unchecked")
         public boolean accept(DragAndDropEvent dragEvent) {
             AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dragEvent
@@ -5381,10 +5420,12 @@ public class Table extends AbstractSelect implements Action.Container,
         super.setVisible(visible);
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
 
+    @Override
     public Iterator<Component> getComponentIterator() {
         if (visibleComponents == null) {
             Collection<Component> empty = Collections.emptyList();
@@ -5394,6 +5435,7 @@ public class Table extends AbstractSelect implements Action.Container,
         return visibleComponents.iterator();
     }
 
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     }

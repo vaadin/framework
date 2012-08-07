@@ -1,5 +1,7 @@
 package com.vaadin.terminal.gwt.client;
 
+import com.vaadin.shared.VBrowserDetails;
+
 import junit.framework.TestCase;
 
 public class TestVBrowserDetailsUserAgentParser extends TestCase {

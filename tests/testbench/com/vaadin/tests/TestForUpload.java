@@ -17,8 +17,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -95,6 +95,7 @@ public class TestForUpload extends CustomComponent implements
         up.addListener(new Listener() {
             private static final long serialVersionUID = -8319074730512324303L;
 
+            @Override
             public void componentEvent(Event event) {
                 // print out all events fired by upload for debug purposes
                 System.out.println("Upload fired event | " + event);
@@ -104,6 +105,7 @@ public class TestForUpload extends CustomComponent implements
         up.addListener(new StartedListener() {
             private static final long serialVersionUID = 5508883803861085154L;
 
+            @Override
             public void uploadStarted(StartedEvent event) {
                 pi.setVisible(true);
                 pi2.setVisible(true);
@@ -117,6 +119,7 @@ public class TestForUpload extends CustomComponent implements
         up.addListener(new Upload.FinishedListener() {
             private static final long serialVersionUID = -3773034195991947371L;
 
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 pi.setVisible(false);
                 pi2.setVisible(false);
@@ -156,6 +159,7 @@ public class TestForUpload extends CustomComponent implements
 
         up.addListener(new Upload.ProgressListener() {
 
+            @Override
             public void updateProgress(long readBytes, long contentLenght) {
                 pi2.setValue(new Float(readBytes / (float) contentLenght));
 
@@ -166,12 +170,14 @@ public class TestForUpload extends CustomComponent implements
 
         final Button b = new Button("Reed state from upload",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         readState();
                     }
                 });
 
         final Button c = new Button("Force GC", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 gc();
             }
@@ -183,6 +189,7 @@ public class TestForUpload extends CustomComponent implements
         main.addComponent(throwExecption);
         main.addComponent(interrupt);
         interrupt.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 up.interruptUpload();
             }
@@ -195,6 +202,7 @@ public class TestForUpload extends CustomComponent implements
         uploadBufferSelector.addItem("tempfile");
         uploadBufferSelector
                 .addListener(new AbstractField.ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         setBuffer();
                     }
@@ -222,6 +230,7 @@ public class TestForUpload extends CustomComponent implements
         final Button restart = new Button("R");
         restart.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getApplication().close();
             }
@@ -280,6 +289,7 @@ public class TestForUpload extends CustomComponent implements
 
         }
 
+        @Override
         public InputStream getStream() {
             if (outputBuffer == null) {
                 return null;
@@ -290,6 +300,7 @@ public class TestForUpload extends CustomComponent implements
         /**
          * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
+        @Override
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;
             mimeType = MIMEType;
@@ -310,6 +321,7 @@ public class TestForUpload extends CustomComponent implements
          * 
          * @return String
          */
+        @Override
         public String getFileName() {
             return fileName;
         }
@@ -344,6 +356,7 @@ public class TestForUpload extends CustomComponent implements
 
         }
 
+        @Override
         public InputStream getStream() {
             if (file == null) {
                 return null;
@@ -360,6 +373,7 @@ public class TestForUpload extends CustomComponent implements
         /**
          * @see com.vaadin.ui.Upload.Receiver#receiveUpload(String, String)
          */
+        @Override
         public OutputStream receiveUpload(String filename, String MIMEType) {
             fileName = filename;
             mimeType = MIMEType;
@@ -387,6 +401,7 @@ public class TestForUpload extends CustomComponent implements
          * 
          * @return String
          */
+        @Override
         public String getFileName() {
             return fileName;
         }
@@ -402,6 +417,7 @@ public class TestForUpload extends CustomComponent implements
 
     }
 
+    @Override
     public void updateProgress(long readBytes, long contentLenght) {
         pi.setValue(new Float(readBytes / (float) contentLenght));
 

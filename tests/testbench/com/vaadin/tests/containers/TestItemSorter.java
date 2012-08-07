@@ -27,6 +27,7 @@ public class TestItemSorter extends TestBase {
         populateContainer(container);
         container.setItemSorter(new DefaultItemSorter(new Comparator<Object>() {
 
+            @Override
             public int compare(Object o1, Object o2) {
                 if (o1 instanceof CheckBox && o2 instanceof CheckBox) {
                     Boolean b1 = (Boolean) ((CheckBox) o1).getValue();

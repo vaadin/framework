@@ -39,6 +39,7 @@ public class StringToIntegerConverter implements Converter<String, Integer> {
         return NumberFormat.getIntegerInstance(locale);
     }
 
+    @Override
     public Integer convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -64,6 +65,7 @@ public class StringToIntegerConverter implements Converter<String, Integer> {
         return parsedValue.intValue();
     }
 
+    @Override
     public String convertToPresentation(Integer value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -73,10 +75,12 @@ public class StringToIntegerConverter implements Converter<String, Integer> {
         return getFormat(locale).format(value);
     }
 
+    @Override
     public Class<Integer> getModelType() {
         return Integer.class;
     }
 
+    @Override
     public Class<String> getPresentationType() {
         return String.class;
     }

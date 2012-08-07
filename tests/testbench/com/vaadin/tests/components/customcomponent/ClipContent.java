@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
@@ -24,6 +24,7 @@ public class ClipContent extends TestBase {
         final TextField w = new TextField("Width");
         w.setValue("20px");
         w.addListener(new TextField.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 cc.setWidth(w.getValue());
             }
@@ -32,6 +33,7 @@ public class ClipContent extends TestBase {
         final TextField h = new TextField("Height");
         h.setValue("20px");
         h.addListener(new TextField.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 cc.setHeight(h.getValue());
             }

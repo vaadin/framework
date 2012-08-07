@@ -68,6 +68,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
     }
 
     public class Col3ColumnGenerator implements ColumnGenerator {
+        @Override
         public Component generateCell(final com.vaadin.ui.Table source,
                 final Object itemId, Object columnId) {
             TestBean tb = (TestBean) itemId;
@@ -78,6 +79,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             System.out.println("Generating new Button for " + identifier);
             Button btnCol3 = new NativeButton(identifier);
             btnCol3.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     log.log("Button " + event.getButton().getCaption()
                             + " clicked. Row index: "
@@ -117,6 +119,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         addComponent(b);
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("First visible item id is: "
                         + treeTable.getCurrentPageFirstItemId());
@@ -131,6 +134,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         cacheRateSelect.setValue(2);
         cacheRateSelect.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 treeTable
                         .setCacheRate((Integer) event.getProperty().getValue());
@@ -154,6 +158,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         treeTable.addGeneratedColumn("col3", new Col3ColumnGenerator());
         treeTable.addListener(new ExpandListener() {
 
+            @Override
             public void nodeExpand(ExpandEvent event) {
                 logExpandCollapse(event.getItemId(), "expanded");
 
@@ -161,6 +166,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         });
         treeTable.addListener(new CollapseListener() {
 
+            @Override
             public void nodeCollapse(CollapseEvent event) {
                 logExpandCollapse(event.getItemId(), "collapsed");
 

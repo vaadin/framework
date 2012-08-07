@@ -24,6 +24,8 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
         AbstractComponentTest<T> implements ValueChangeListener,
         ReadOnlyStatusChangeListener {
 
+    private boolean sortValueChanges = true;
+
     @Override
     protected void createActions() {
         super.createActions();
@@ -65,6 +67,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
                     .addItem("AbstractField", null);
             abstractField.addItem("Show value", new MenuBar.Command() {
 
+                @Override
                 public void menuSelected(MenuItem selectedItem) {
                     for (T a : getTestComponents()) {
                         log(a.getClass().getSimpleName() + " value: "
@@ -72,6 +75,18 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
                     }
                 }
             });
+
+            MenuItem sortValueChangesItem = abstractField.addItem(
+                    "Show sorted value changes", new MenuBar.Command() {
+                        @Override
+                        public void menuSelected(MenuItem selectedItem) {
+                            sortValueChanges = selectedItem.isChecked();
+                            log("Show sorted value changes: "
+                                    + sortValueChanges);
+                        }
+                    });
+            sortValueChangesItem.setCheckable(true);
+            sortValueChangesItem.setChecked(true);
         }
     }
 
@@ -101,6 +116,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     protected Command<T, Boolean> valueChangeListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ValueChangeListener) AbstractFieldTest.this);
@@ -111,6 +127,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
     };
     protected Command<T, Boolean> readonlyStatusChangeListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ReadOnlyStatusChangeListener) AbstractFieldTest.this);
@@ -122,11 +139,13 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     protected Command<T, Object> setValueCommand = new Command<T, Object>() {
 
+        @Override
         public void execute(T c, Object value, Object data) {
             c.setValue(value);
         }
     };
 
+    @Override
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         log(event.getClass().getSimpleName() + ", new value: "
                 + getValue(event.getProperty()));
@@ -135,7 +154,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private String getValue(Property property) {
         Object o = property.getValue();
-        if (o instanceof Collection) {
+        if (o instanceof Collection && sortValueChanges) {
             // Sort collections to avoid problems with values printed in
             // different order
             try {
@@ -168,6 +187,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<?>> extends
 
     }
 
+    @Override
     public void readOnlyStatusChange(ReadOnlyStatusChangeEvent event) {
         log(event.getClass().getSimpleName());
     }

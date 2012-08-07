@@ -38,6 +38,7 @@ public class Ticket2282 extends Application.LegacyApplication {
 
         Button b = new Button("Swap", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (layout1.getWidth() < 0.0) {
                     layout1.setWidth("500px");

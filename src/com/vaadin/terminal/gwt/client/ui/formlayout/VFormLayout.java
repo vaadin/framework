@@ -12,21 +12,20 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ComponentState;
 import com.vaadin.terminal.gwt.client.Focusable;
 import com.vaadin.terminal.gwt.client.StyleConstants;
 import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 
 /**
  * Two col Layout that places caption on left col and field on right col
@@ -88,6 +87,7 @@ public class VFormLayout extends SimplePanel {
          * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
          * .event.dom.client.ClickEvent)
          */
+        @Override
         public void onClick(ClickEvent event) {
             Caption caption = (Caption) event.getSource();
             if (caption.getOwner() != null) {
@@ -215,8 +215,6 @@ public class VFormLayout extends SimplePanel {
         public Caption(ComponentConnector component) {
             super();
             owner = component;
-
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         private void setStyles(String[] styles) {
@@ -324,12 +322,6 @@ public class VFormLayout extends SimplePanel {
         public ComponentConnector getOwner() {
             return owner;
         }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            owner.getConnection().handleTooltipEvent(event, owner);
-        }
     }
 
     class ErrorFlag extends HTML {
@@ -343,6 +335,10 @@ public class VFormLayout extends SimplePanel {
             setStyleName(CLASSNAME);
             sinkEvents(VTooltip.TOOLTIP_EVENTS);
             this.owner = owner;
+        }
+
+        public ComponentConnector getOwner() {
+            return owner;
         }
 
         public void updateError(String errorMessage, boolean hideErrors) {
@@ -363,14 +359,6 @@ public class VFormLayout extends SimplePanel {
             } else if (errorIndicatorElement != null) {
                 DOM.removeChild(getElement(), errorIndicatorElement);
                 errorIndicatorElement = null;
-            }
-        }
-
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            if (owner != null) {
-                owner.getConnection().handleTooltipEvent(event, owner);
             }
         }
 

@@ -33,6 +33,7 @@ public class Ticket2014 extends Application.LegacyApplication {
         layout.addComponent(new Button("Change class name",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         b1.setStyleName(UUID.randomUUID().toString());
                     }
@@ -51,6 +52,7 @@ public class Ticket2014 extends Application.LegacyApplication {
 
         b1 = new Button("Button inside orderedLayout", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 System.out.println("Clicked " + event.getButton().getCaption());
             }

@@ -125,12 +125,14 @@ public class VAbstractSplitPanel extends ComplexPanel {
         makeScrollable();
 
         addDomHandler(new TouchCancelHandler() {
+            @Override
             public void onTouchCancel(TouchCancelEvent event) {
                 // TODO When does this actually happen??
                 VConsole.log("TOUCH CANCEL");
             }
         }, TouchCancelEvent.getType());
         addDomHandler(new TouchStartHandler() {
+            @Override
             public void onTouchStart(TouchStartEvent event) {
                 Node target = event.getTouches().get(0).getTarget().cast();
                 if (splitter.isOrHasChild(target)) {
@@ -139,6 +141,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchStartEvent.getType());
         addDomHandler(new TouchMoveHandler() {
+            @Override
             public void onTouchMove(TouchMoveEvent event) {
                 if (resizing) {
                     onMouseMove(Event.as(event.getNativeEvent()));
@@ -146,6 +149,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
         }, TouchMoveEvent.getType());
         addDomHandler(new TouchEndHandler() {
+            @Override
             public void onTouchEnd(TouchEndEvent event) {
                 if (resizing) {
                     onMouseUp(Event.as(event.getNativeEvent()));
@@ -251,23 +255,22 @@ public class VAbstractSplitPanel extends ComplexPanel {
      * @return
      */
     private float convertToPercentage(String pos) {
-        float posAsFloat = 0;
-
-        if (pos.indexOf("px") > 0) {
-            int posAsInt = Integer.parseInt(pos.substring(0, pos.length() - 2));
+        if (pos.endsWith("px")) {
+            float pixelPosition = Float.parseFloat(pos.substring(0,
+                    pos.length() - 2));
             int offsetLength = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
                     : getOffsetHeight();
 
-            // 100% needs special handling
-            if (posAsInt + getSplitterSize() >= offsetLength) {
-                posAsInt = offsetLength;
+            // Take splitter size into account at the edge
+            if (pixelPosition + getSplitterSize() >= offsetLength) {
+                return 100;
             }
-            posAsFloat = ((float) posAsInt / (float) offsetLength * 100);
 
+            return pixelPosition / offsetLength * 100;
         } else {
-            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 1));
+            assert pos.endsWith("%");
+            return Float.parseFloat(pos.substring(0, pos.length() - 1));
         }
-        return posAsFloat;
     }
 
     /**

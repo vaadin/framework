@@ -13,13 +13,8 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/portal/public/default/</td>
+	<td>/portal/public/intranet/</td>
 	<td></td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>link=Visit the Acme Social Intranet</td>
-	<td>121,7</td>
 </tr>
 <tr>
 	<td>setTimeout</td>
@@ -47,13 +42,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>mouseClickAndWait</td>
-	<td>link=Applications Registry</td>
+	<td>open</td>
+	<td>/portal/private/intranet/administration/registry</td>
 	<td>138,17</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIApplicationOrganizer']/div[1]/div[2]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>expectDialog</td>
-	<td>//div[@onclick=&quot;javascript:if(confirm('This action will automatically create categories and import all the gadgets and portlets on it.'))ajaxGet('/portal/private/intranet/administration/registry?portal:componentId=09e0ea8b-7d6e-410d-9ed0-871e3e7bc17f&amp;portal:type=action&amp;uicomponent=UIApplicationOrganizer&amp;op=ImportAllApplications&amp;ajaxRequest=true')&quot;]</td>
+	<td>//div[@id='UIApplicationOrganizer']/div[1]/div[2]</td>
 	<td>36,15</td>
 </tr>
 <tr>
@@ -153,7 +153,7 @@
 </tr>
 <tr>
 	<td>mouseClickAndWait</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[5]/div/div/a</td>
+	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div[5]/div/a</td>
 	<td>10,10</td>
 </tr>
 <tr>
@@ -173,7 +173,7 @@
 </tr>
 <tr>
 	<td>mouseClickAndWait</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div/div[5]/div/div/a</td>
+	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div[5]/div/a</td>
 	<td>15,8</td>
 </tr>
 <tr>
@@ -191,7 +191,6 @@
 	<td></td>
 	<td>done</td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

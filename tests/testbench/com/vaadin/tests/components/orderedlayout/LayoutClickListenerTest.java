@@ -59,6 +59,7 @@ public class LayoutClickListenerTest extends TestBase {
 
         // Listen for layout click events
         layout.addListener(new LayoutClickListener() {
+            @Override
             public void layoutClick(LayoutClickEvent event) {
 
                 // Get the deepest nested component which was clicked

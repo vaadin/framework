@@ -94,6 +94,7 @@ public class HierarchicalWrapperOrdering extends TestBase {
                 new ClickListener() {
                     private static final long serialVersionUID = 1L;
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         // Get first item
                         Object itemId = indexedContainer.getIdByIndex(0);

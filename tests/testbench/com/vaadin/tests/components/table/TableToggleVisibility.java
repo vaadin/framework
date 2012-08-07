@@ -140,6 +140,7 @@ public class TableToggleVisibility extends AbstractTestCase {
 
             addListener(new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
 
                     boolean wasVisible = ToggleButton.this.table.isVisible();

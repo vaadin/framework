@@ -42,10 +42,12 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * Override for additional restrictions on what is considered a read-only
      * property.
      */
+    @Override
     public boolean isReadOnly() {
         return readOnly;
     }
 
+    @Override
     public void setReadOnly(boolean newStatus) {
         boolean oldStatus = isReadOnly();
         readOnly = newStatus;
@@ -93,6 +95,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
          * 
          * @return source Property of the event.
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
@@ -105,6 +108,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @param listener
      *            the new Listener to be registered.
      */
+    @Override
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
             readOnlyStatusChangeListeners = new LinkedList<ReadOnlyStatusChangeListener>();
@@ -118,6 +122,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @param listener
      *            the listener to be removed.
      */
+    @Override
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners != null) {
             readOnlyStatusChangeListeners.remove(listener);
@@ -161,12 +166,14 @@ public abstract class AbstractProperty<T> implements Property<T>,
          * 
          * @return source Property of the event.
          */
+        @Override
         public Property getProperty() {
             return (Property) getSource();
         }
 
     }
 
+    @Override
     public void addListener(ValueChangeListener listener) {
         if (valueChangeListeners == null) {
             valueChangeListeners = new LinkedList<ValueChangeListener>();
@@ -175,6 +182,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
     }
 
+    @Override
     public void removeListener(ValueChangeListener listener) {
         if (valueChangeListeners != null) {
             valueChangeListeners.remove(listener);

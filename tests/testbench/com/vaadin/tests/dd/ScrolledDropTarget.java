@@ -3,7 +3,7 @@ package com.vaadin.tests.dd;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
@@ -28,10 +28,12 @@ public class ScrolledDropTarget extends TestBase {
 
         table.setDragMode(TableDragMode.ROW);
         table.setDropHandler(new DropHandler() {
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return VerticalLocationIs.MIDDLE;
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 AbstractSelectTargetDetails targetDetails = (AbstractSelectTargetDetails) event
                         .getTargetDetails();
@@ -44,6 +46,7 @@ public class ScrolledDropTarget extends TestBase {
 
         addComponent(table);
         addComponent(new Button("Scroll body", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().executeJavaScript(
                         "document.body.style.overflow = 'auto';"

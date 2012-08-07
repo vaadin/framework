@@ -10,7 +10,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Or;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Tree;
@@ -113,6 +113,7 @@ public class DDTest8 extends TestBase {
 
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 TreeTargetDetails details = (TreeTargetDetails) event
                         .getTargetDetails();
@@ -149,6 +150,7 @@ public class DDTest8 extends TestBase {
                 return;
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return new Or(new AbstractSelect.TargetItemIs(t, "Foo", "Bar"),
                         new AbstractSelect.AcceptItem(t, "Foo"),

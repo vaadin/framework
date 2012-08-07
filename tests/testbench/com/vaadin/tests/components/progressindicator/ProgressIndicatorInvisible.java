@@ -22,6 +22,7 @@ public class ProgressIndicatorInvisible extends TestBase {
         addComponent(b);
 
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 // If we skip hiding the layout, hiding the ProgressIndicator
                 // will stop the polling

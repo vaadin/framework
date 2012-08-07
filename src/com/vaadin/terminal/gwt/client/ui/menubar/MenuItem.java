@@ -121,6 +121,7 @@ public class MenuItem extends UIObject implements HasHTML {
         return command;
     }
 
+    @Override
     public String getHTML() {
         return DOM.getInnerHTML(getElement());
     }
@@ -143,6 +144,7 @@ public class MenuItem extends UIObject implements HasHTML {
         return subMenu;
     }
 
+    @Override
     public String getText() {
         return DOM.getInnerText(getElement());
     }
@@ -157,6 +159,7 @@ public class MenuItem extends UIObject implements HasHTML {
         command = cmd;
     }
 
+    @Override
     public void setHTML(String html) {
         DOM.setInnerHTML(getElement(), html);
     }
@@ -171,6 +174,7 @@ public class MenuItem extends UIObject implements HasHTML {
         this.subMenu = subMenu;
     }
 
+    @Override
     public void setText(String text) {
         DOM.setInnerText(getElement(), text);
     }

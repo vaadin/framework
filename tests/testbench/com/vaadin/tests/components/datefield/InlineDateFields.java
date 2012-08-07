@@ -81,6 +81,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
         return createSelectAction("Resolution", options, "Year",
                 new Command<InlineDateField, Resolution>() {
 
+                    @Override
                     public void execute(InlineDateField c, Resolution value,
                             Object data) {
                         c.setResolution(value);
@@ -97,6 +98,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
         return createSelectAction("Locale", options, LOCALES[0].toString(),
                 new Command<InlineDateField, Locale>() {
 
+                    @Override
                     public void execute(InlineDateField c, Locale value,
                             Object data) {
                         c.setCaption(c.getCaption().replaceAll(

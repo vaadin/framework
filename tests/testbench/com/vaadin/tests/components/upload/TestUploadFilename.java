@@ -23,6 +23,7 @@ public class TestUploadFilename extends TestBase {
         addComponent(result);
 
         upload.addListener(new Upload.FinishedListener() {
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 result.setValue("Got file (should not contain path): "
                         + receiver.getFilename());
@@ -35,6 +36,7 @@ public class TestUploadFilename extends TestBase {
 
         private String filename;
 
+        @Override
         public OutputStream receiveUpload(String filename, String MIMEType) {
             this.filename = filename;
             return new ByteArrayOutputStream();

@@ -33,6 +33,7 @@ public class Ticket2406 extends Application.LegacyApplication {
         b.setSizeFull();
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 w.setHeight("200px");
             }

@@ -43,6 +43,7 @@ public class MissingScrollbar extends TestBase {
 
         Button b = new Button("Set items to 2", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setContainerDataSource(container2);
             }
@@ -51,6 +52,7 @@ public class MissingScrollbar extends TestBase {
 
         b = new Button("Set items to 50", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setContainerDataSource(container50);
             }

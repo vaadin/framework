@@ -10,14 +10,14 @@ import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
-import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedServerRpc;
 
 /**
  * Component for embedding external objects.
@@ -81,6 +81,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
     private String altText;
 
     private EmbeddedServerRpc rpc = new EmbeddedServerRpc() {
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Embedded.this, mouseDetails));
         }
@@ -120,6 +121,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
     /**
      * Invoked when the component state should be painted.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
 
         switch (type) {
@@ -521,6 +523,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
                 ClickEvent.class, listener);
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
     }

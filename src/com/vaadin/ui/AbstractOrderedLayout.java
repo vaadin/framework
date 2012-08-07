@@ -10,13 +10,13 @@ import java.util.LinkedList;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -24,6 +24,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
 
     private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
 
+        @Override
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {
             fireEvent(LayoutClickEvent.createEvent(AbstractOrderedLayout.this,
@@ -157,6 +158,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @return the Iterator of the components inside the container.
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return components.iterator();
     }
@@ -167,11 +169,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @return the number of contained components
      */
+    @Override
     public int getComponentCount() {
         return components.size();
     }
 
     /* Documented in superclass */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         // Gets the locations
@@ -220,12 +224,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
      * .vaadin.ui.Component, int, int)
      */
+    @Override
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
         Alignment a = new Alignment(horizontalAlignment + verticalAlignment);
         setComponentAlignment(childComponent, a);
     }
 
+    @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
         ChildComponentData childData = getState().getChildData().get(
@@ -247,6 +253,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @see com.vaadin.ui.Layout.AlignmentHandler#getComponentAlignment(com
      * .vaadin.ui.Component)
      */
+    @Override
     public Alignment getComponentAlignment(Component childComponent) {
         ChildComponentData childData = getState().getChildData().get(
                 childComponent);
@@ -263,6 +270,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
+    @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
         requestRepaint();
@@ -273,6 +281,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.SpacingHandler#isSpacing()
      */
+    @Override
     public boolean isSpacing() {
         return getState().isSpacing();
     }
@@ -334,12 +343,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return childData.getExpandRatio();
     }
 
+    @Override
     public void addListener(LayoutClickListener listener) {
         addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    @Override
     public void removeListener(LayoutClickListener listener) {
         removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);

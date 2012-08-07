@@ -28,6 +28,7 @@ public class SelectionAndCursorPosition extends TestBase {
         CheckBox ml = new CheckBox("Multiline");
         ml.setImmediate(true);
         ml.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (textField.getApplication() == null) {
                     replaceComponent(textArea, textField);
@@ -42,6 +43,7 @@ public class SelectionAndCursorPosition extends TestBase {
 
         Button b = new Button("Select all ( selectAll() )");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 activeComponent.selectAll();
             }
@@ -55,6 +57,7 @@ public class SelectionAndCursorPosition extends TestBase {
         final TextField length = new TextField("Selection length:");
         b = new Button("select");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 int startPos = Integer.parseInt(start.getValue());
                 int lenght = Integer.parseInt(length.getValue());
@@ -72,6 +75,7 @@ public class SelectionAndCursorPosition extends TestBase {
         final TextField pos = new TextField("Position:");
         b = new Button("set");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 int startPos = Integer.parseInt(pos.getValue());
                 activeComponent.setCursorPosition(startPos);

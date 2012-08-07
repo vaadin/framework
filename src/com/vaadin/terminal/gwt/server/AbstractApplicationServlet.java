@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -74,6 +73,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.servlet = servlet;
         }
 
+        @Override
         public void criticalNotification(WrappedRequest request,
                 WrappedResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
@@ -87,16 +87,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
 
-    private Properties applicationProperties;
-
     private boolean productionMode = false;
 
     private final String resourcePath = null;
 
     private int resourceCacheTime = 3600;
 
-    private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
+            getClass()) {
 
+        @Override
         public String getStaticFileLocation(WrappedRequest request) {
             HttpServletRequest servletRequest = WrappedHttpServletRequest
                     .cast(request);
@@ -104,37 +104,29 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     .getStaticFilesLocation(servletRequest);
         }
 
+        @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
             return getApplicationOrSystemProperty(
                     AbstractApplicationServlet.PARAMETER_WIDGETSET,
                     AbstractApplicationServlet.DEFAULT_WIDGETSET);
         }
 
+        @Override
         public String getConfiguredTheme(WrappedRequest request) {
             // Use the default
             return AbstractApplicationServlet.getDefaultTheme();
         }
 
-        public String getApplicationOrSystemProperty(String propertyName,
-                String defaultValue) {
-            return AbstractApplicationServlet.this
-                    .getApplicationOrSystemProperty(propertyName, defaultValue);
-        }
-
+        @Override
         public boolean isStandalone(WrappedRequest request) {
             return true;
         }
 
-        public ClassLoader getClassLoader() {
-            try {
-                return AbstractApplicationServlet.this.getClassLoader();
-            } catch (ServletException e) {
-                throw new RuntimeException(e);
-            }
+        @Override
+        public String getMimeType(String resourceName) {
+            return getServletContext().getMimeType(resourceName);
         }
     };
-
-    static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -148,11 +140,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *             servlet's normal operation.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
-        applicationProperties = new Properties();
+        Properties applicationProperties = getDeploymentConfiguration()
+                .getInitParameters();
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
@@ -177,7 +169,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private void checkCrossSiteProtection() {
-        if (getApplicationOrSystemProperty(
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
                 SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
                 "true")) {
             /*
@@ -191,8 +183,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void checkProductionMode() {
         // Check if the application is in production mode.
         // We are in production mode if productionMode=true
-        if (getApplicationOrSystemProperty(SERVLET_PARAMETER_PRODUCTION_MODE,
-                "false").equals("true")) {
+        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
+                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
             productionMode = true;
         }
 
@@ -206,93 +198,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private void checkResourceCacheTime() {
         // Check if the browser caching time has been set in web.xml
         try {
-            String rct = getApplicationOrSystemProperty(
-                    SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
+            String rct = getDeploymentConfiguration()
+                    .getApplicationOrSystemProperty(
+                            SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
             resourceCacheTime = Integer.parseInt(rct);
         } catch (NumberFormatException nfe) {
             // Default is 1h
             resourceCacheTime = 3600;
             getLogger().warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
         }
-    }
-
-    /**
-     * Gets an application property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getApplicationProperty(String parameterName) {
-
-        String val = applicationProperties.getProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lower case application properties for backward compatibility with
-        // 3.0.2 and earlier
-        val = applicationProperties.getProperty(parameterName.toLowerCase());
-
-        return val;
-    }
-
-    /**
-     * Gets an system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @return String value or null if not found
-     */
-    protected String getSystemProperty(String parameterName) {
-        String val = null;
-
-        String pkgName;
-        final Package pkg = getClass().getPackage();
-        if (pkg != null) {
-            pkgName = pkg.getName();
-        } else {
-            final String className = getClass().getName();
-            pkgName = new String(className.toCharArray(), 0,
-                    className.lastIndexOf('.'));
-        }
-        val = System.getProperty(pkgName + "." + parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try lowercased system properties
-        val = System.getProperty(pkgName + "." + parameterName.toLowerCase());
-        return val;
-    }
-
-    /**
-     * Gets an application or system property value.
-     * 
-     * @param parameterName
-     *            the Name or the parameter.
-     * @param defaultValue
-     *            the Default to be used.
-     * @return String value or default if not found
-     */
-    String getApplicationOrSystemProperty(String parameterName,
-            String defaultValue) {
-
-        String val = null;
-
-        // Try application properties
-        val = getApplicationProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        // Try system properties
-        val = getSystemProperty(parameterName);
-        if (val != null) {
-            return val;
-        }
-
-        return defaultValue;
     }
 
     /**
@@ -396,6 +310,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             CommunicationManager applicationManager = webApplicationContext
                     .getApplicationManager(application, this);
 
+            if (requestType == RequestType.CONNECTOR_RESOURCE) {
+                applicationManager.serveConnectorResource(request, response);
+                return;
+            }
+
             /* Update browser information from the request */
             webApplicationContext.getBrowser().updateRequestDetails(request);
 
@@ -421,11 +340,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                Root root = application.getRootForRequest(request);
-                if (root == null) {
-                    throw new ServletException(ERROR_NO_ROOT_FOUND);
-                }
-                applicationManager.handleFileUpload(root, request, response);
+                // Root is resolved in communication manager
+                applicationManager.handleFileUpload(application, request,
+                        response);
                 return;
             } else if (requestType == RequestType.UIDL) {
                 Root root = application.getRootForRequest(request);
@@ -536,8 +453,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      */
     private boolean ensureCookiesEnabled(RequestType requestType,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException {
         if (requestType == RequestType.UIDL && !isRepaintAll(request)) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
@@ -552,30 +469,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             }
         }
         return true;
-    }
-
-    protected ClassLoader getClassLoader() throws ServletException {
-        // Gets custom class loader
-        final String classLoaderName = getApplicationOrSystemProperty(
-                "ClassLoader", null);
-        ClassLoader classLoader;
-        if (classLoaderName == null) {
-            classLoader = getClass().getClassLoader();
-        } else {
-            try {
-                final Class<?> classLoaderClass = getClass().getClassLoader()
-                        .loadClass(classLoaderName);
-                final Constructor<?> c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
-                classLoader = (ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() });
-            } catch (final Exception e) {
-                throw new ServletException(
-                        "Could not find specified class loader: "
-                                + classLoaderName, e);
-            }
-        }
-        return classLoader;
     }
 
     /**
@@ -602,11 +495,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws IOException
      *             if the writing failed due to input/output error.
      */
-    protected void criticalNotification(HttpServletRequest request,
+    protected void criticalNotification(WrappedHttpServletRequest request,
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
-        if (isUIDLRequest(request)) {
+        if (ServletPortletHelper.isUIDLRequest(request)) {
 
             if (caption != null) {
                 caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
@@ -828,9 +721,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return newApplication;
     }
 
-    private void handleServiceException(HttpServletRequest request,
-            HttpServletResponse response, Application application, Throwable e)
-            throws IOException, ServletException {
+    private void handleServiceException(WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response, Application application,
+            Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             Application.SystemMessages ci = getSystemMessages();
@@ -883,8 +776,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         return DEFAULT_THEME_NAME;
     }
 
-    void handleServiceSessionExpired(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, ServletException {
+    void handleServiceSessionExpired(WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException,
+            ServletException {
 
         if (isOnUnloadRequest(request)) {
             /*
@@ -924,8 +818,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     }
 
-    private void handleServiceSecurityException(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, ServletException {
+    private void handleServiceSecurityException(
+            WrappedHttpServletRequest request,
+            WrappedHttpServletResponse response) throws IOException,
+            ServletException {
         if (isOnUnloadRequest(request)) {
             /*
              * Request was an unload request (e.g. window close event) and the
@@ -991,8 +887,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Locale locale = request.getLocale();
             application.setLocale(locale);
             application.start(new ApplicationStartEvent(applicationUrl,
-                    applicationProperties, webApplicationContext,
-                    isProductionMode()));
+                    getDeploymentConfiguration().getInitParameters(),
+                    webApplicationContext, isProductionMode()));
         }
     }
 
@@ -1054,7 +950,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             // strip leading "/" otherwise stream from JAR wont work
             filename = filename.substring(1);
-            resourceUrl = getClassLoader().getResource(filename);
+            resourceUrl = getDeploymentConfiguration().getClassLoader()
+                    .getResource(filename);
 
             if (resourceUrl == null) {
                 // cannot serve requested file
@@ -1250,22 +1147,22 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE;
     }
 
-    protected RequestType getRequestType(HttpServletRequest request) {
-        if (isFileUploadRequest(request)) {
+    protected RequestType getRequestType(WrappedHttpServletRequest request) {
+        if (ServletPortletHelper.isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
+        } else if (ServletPortletHelper.isConnectorResourceRequest(request)) {
+            return RequestType.CONNECTOR_RESOURCE;
         } else if (isBrowserDetailsRequest(request)) {
             return RequestType.BROWSER_DETAILS;
-        } else if (isUIDLRequest(request)) {
+        } else if (ServletPortletHelper.isUIDLRequest(request)) {
             return RequestType.UIDL;
         } else if (isStaticResourceRequest(request)) {
             return RequestType.STATIC_FILE;
-        } else if (isApplicationRequest(request)) {
+        } else if (ServletPortletHelper.isApplicationResourceRequest(request)) {
             return RequestType.APPLICATION_RESOURCE;
-        } else if (request.getHeader("FileId") != null) {
-            return RequestType.FILE_UPLOAD;
         }
         return RequestType.OTHER;
 
@@ -1274,14 +1171,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
         return "POST".equals(request.getMethod())
                 && request.getParameter("browserDetails") != null;
-    }
-
-    private boolean isApplicationRequest(HttpServletRequest request) {
-        String path = getRequestPathInfo(request);
-        if (path != null && path.startsWith("/APP/")) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isStaticResourceRequest(HttpServletRequest request) {
@@ -1299,37 +1188,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         return false;
-    }
-
-    private boolean isUIDLRequest(HttpServletRequest request) {
-        String pathInfo = getRequestPathInfo(request);
-
-        if (pathInfo == null) {
-            return false;
-        }
-
-        String compare = AJAX_UIDL_URI;
-
-        if (pathInfo.startsWith(compare + "/") || pathInfo.endsWith(compare)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isFileUploadRequest(HttpServletRequest request) {
-        String pathInfo = getRequestPathInfo(request);
-
-        if (pathInfo == null) {
-            return false;
-        }
-
-        if (pathInfo.startsWith("/" + UPLOAD_URL_PREFIX)) {
-            return true;
-        }
-
-        return false;
-
     }
 
     private boolean isOnUnloadRequest(HttpServletRequest request) {
@@ -1410,8 +1268,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             HttpServletRequest request) {
         String staticFileLocation;
         // if property is defined in configurations, use that
-        staticFileLocation = getApplicationOrSystemProperty(
-                PARAMETER_VAADIN_RESOURCES, null);
+        staticFileLocation = getDeploymentConfiguration()
+                .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
+                        null);
         if (staticFileLocation != null) {
             return staticFileLocation;
         }
@@ -1682,6 +1541,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }

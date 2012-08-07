@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.SystemError;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -91,6 +91,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
         main.addComponent(checkValidity);
         checkValidity.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 StringBuffer msg = new StringBuffer();
                 for (Iterator<Select> i = listOfAllFields.iterator(); i
@@ -136,6 +137,7 @@ public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
             this.msg = msg;
         }
 
+        @Override
         public void validate(Object value) throws InvalidValueException {
             if (value == null || value.toString().length() == 0) {
                 throw new InvalidValueException(msg);

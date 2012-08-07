@@ -50,6 +50,7 @@ class MyDynamicResource implements RequestHandler {
      * Returns null if the URI does not match. Otherwise returns a download
      * stream that contains the response from the server.
      */
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

@@ -35,6 +35,7 @@ public class Ticket1572 extends com.vaadin.Application.LegacyApplication {
 
         Button b = new Button("next margin state");
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 nextMarginState();
             }
@@ -48,6 +49,7 @@ public class Ticket1572 extends com.vaadin.Application.LegacyApplication {
 
         Button b2 = new Button("next spacing state");
         b2.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 nextSpacingState();
             }

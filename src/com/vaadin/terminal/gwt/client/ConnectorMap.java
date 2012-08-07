@@ -200,46 +200,8 @@ public class ConnectorMap {
         return idToConnector.size();
     }
 
-    /**
-     * FIXME: Should be moved to VAbstractPaintableWidget
-     * 
-     * @param paintable
-     * @return
-     */
-    @Deprecated
-    public TooltipInfo getTooltipInfo(ComponentConnector paintable, Object key) {
-        ComponentDetail componentDetail = getComponentDetail(paintable);
-        if (componentDetail == null) {
-            return null;
-        }
-        return componentDetail.getTooltipInfo(key);
-    }
-
-    @Deprecated
-    public TooltipInfo getWidgetTooltipInfo(Widget widget, Object key) {
-        ComponentConnector connector = getConnector(widget);
-        if (connector == null) {
-            return null;
-        }
-        return getTooltipInfo(connector, key);
-    }
-
     public Collection<? extends ServerConnector> getConnectors() {
         return Collections.unmodifiableCollection(idToConnector.values());
-    }
-
-    /**
-     * FIXME: Should not be here
-     * 
-     * @param componentConnector
-     * @return
-     */
-    @Deprecated
-    public void registerTooltip(ComponentConnector componentConnector,
-            Object key, TooltipInfo tooltip) {
-        getComponentDetail(componentConnector).putAdditionalTooltip(key,
-                tooltip);
-
     }
 
     /**

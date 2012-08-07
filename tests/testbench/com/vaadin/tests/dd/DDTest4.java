@@ -9,7 +9,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
@@ -64,10 +64,12 @@ public class DDTest4 extends TestBase {
             // accept only drags from this table
             AcceptCriterion crit = new SourceIs(table);
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
                         .getTargetDetails();

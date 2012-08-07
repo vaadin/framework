@@ -41,6 +41,7 @@ public class SubWindowFocus extends TestBase {
         addComponent(tf);
 
         Button b = new Button("new", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 final Window win = new Window("Subwin");
                 win.getContent().setWidth(null);
@@ -56,10 +57,12 @@ public class SubWindowFocus extends TestBase {
                     ShortcutAction spc = new ShortcutAction("Space",
                             ShortcutAction.KeyCode.SPACEBAR, null);
 
+                    @Override
                     public Action[] getActions(Object target, Object sender) {
                         return new Action[] { esc, spc };
                     }
 
+                    @Override
                     public void handleAction(Action action, Object sender,
                             Object target) {
                         if (action == esc) {

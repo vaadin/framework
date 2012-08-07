@@ -22,16 +22,29 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.window.VWindow;
 
+/**
+ * TODO Rename to something more Vaadin7-ish?
+ */
 public class VUIDLBrowser extends SimpleTree {
-    private static final String HELP = "Shift click handle to open recursively. Click components to hightlight them on client side. Shift click components to highlight them also on the server side.";
+    private static final String HELP = "Shift click handle to open recursively. "
+            + " Click components to highlight them on client side."
+            + " Shift click components to highlight them also on the server side.";
     private ApplicationConfiguration conf;
     private String highlightedPid;
 
+    /**
+     * TODO Should probably take ApplicationConnection instead of
+     * ApplicationConfiguration
+     */
     public VUIDLBrowser(final UIDL uidl, ApplicationConfiguration conf) {
         this.conf = conf;
         final UIDLItem root = new UIDLItem(uidl, conf);
@@ -47,9 +60,18 @@ public class VUIDLBrowser extends SimpleTree {
         Set<String> keySet = u.getKeySet();
         for (String key : keySet) {
             if (key.equals("state")) {
-                // TODO print updated shared states
+
+                ValueMap stateJson = u.getValueMap(key);
+                SimpleTree stateChanges = new SimpleTree("Shared state");
+
+                for (String stateKey : stateJson.getKeySet()) {
+                    stateChanges.add(new SharedStateItem(stateKey, stateJson
+                            .getValueMap(stateKey)));
+                }
+                add(stateChanges);
+
             } else if (key.equals("changes")) {
-                JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray("changes")
+                JsArray<UIDL> jsValueMapArray = u.getJSValueMapArray(key)
                         .cast();
                 for (int i = 0; i < jsValueMapArray.length(); i++) {
                     UIDL uidl = jsValueMapArray.get(i);
@@ -68,12 +90,107 @@ public class VUIDLBrowser extends SimpleTree {
         setTitle(HELP);
     }
 
-    class UIDLItem extends SimpleTree {
+    /**
+     * A debug view of a server-originated component state change.
+     */
+    abstract class StateChangeItem extends SimpleTree {
+
+        protected StateChangeItem() {
+            setTitle(HELP);
+
+            addDomHandler(new MouseOutHandler() {
+                @Override
+                public void onMouseOut(MouseOutEvent event) {
+                    deHiglight();
+                }
+            }, MouseOutEvent.getType());
+        }
+
+        @Override
+        protected void select(ClickEvent event) {
+            ComponentConnector connector = getConnector();
+            highlight(connector);
+            if (event != null && event.getNativeEvent().getShiftKey()) {
+                connector.getConnection().highlightComponent(connector);
+            }
+            super.select(event);
+        }
+
+        /**
+         * Returns the Connector associated with this state change.
+         */
+        protected ComponentConnector getConnector() {
+            List<ApplicationConnection> runningApplications = ApplicationConfiguration
+                    .getRunningApplications();
+
+            // TODO this does not work properly with multiple application on
+            // same host page
+            for (ApplicationConnection applicationConnection : runningApplications) {
+                ServerConnector connector = ConnectorMap.get(
+                        applicationConnection).getConnector(getConnectorId());
+                if (connector instanceof ComponentConnector) {
+                    return (ComponentConnector) connector;
+                }
+            }
+            return new UnknownComponentConnector();
+        }
+
+        protected abstract String getConnectorId();
+    }
+
+    /**
+     * A debug view of a Vaadin 7 style shared state change.
+     */
+    class SharedStateItem extends StateChangeItem {
+
+        private String connectorId;
+
+        SharedStateItem(String connectorId, ValueMap stateChanges) {
+            this.connectorId = connectorId;
+            setText(connectorId);
+            dir(new JSONObject(stateChanges), this);
+        }
+
+        @Override
+        protected String getConnectorId() {
+            return connectorId;
+        }
+
+        private void dir(String key, JSONValue value, SimpleTree tree) {
+            if (value.isObject() != null) {
+                SimpleTree subtree = new SimpleTree(key + "=object");
+                tree.add(subtree);
+                dir(value.isObject(), subtree);
+            } else if (value.isArray() != null) {
+                SimpleTree subtree = new SimpleTree(key + "=array");
+                dir(value.isArray(), subtree);
+                tree.add(subtree);
+            } else {
+                tree.add(new HTML(key + "=" + value));
+            }
+        }
+
+        private void dir(JSONObject state, SimpleTree tree) {
+            for (String key : state.keySet()) {
+                dir(key, state.get(key), tree);
+            }
+        }
+
+        private void dir(JSONArray array, SimpleTree tree) {
+            for (int i = 0; i < array.size(); ++i) {
+                dir("" + i, array.get(i), tree);
+            }
+        }
+    }
+
+    /**
+     * A debug view of a Vaadin 6 style hierarchical component state change.
+     */
+    class UIDLItem extends StateChangeItem {
 
         private UIDL uidl;
 
         UIDLItem(UIDL uidl, ApplicationConfiguration conf) {
-            setTitle(HELP);
             this.uidl = uidl;
             try {
                 String name = uidl.getTag();
@@ -87,13 +204,11 @@ public class VUIDLBrowser extends SimpleTree {
             } catch (Exception e) {
                 setText(uidl.toString());
             }
+        }
 
-            addDomHandler(new MouseOutHandler() {
-                public void onMouseOut(MouseOutEvent event) {
-                    deHiglight();
-                }
-            }, MouseOutEvent.getType());
-
+        @Override
+        protected String getConnectorId() {
+            return uidl.getId();
         }
 
         private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
@@ -116,26 +231,6 @@ public class VUIDLBrowser extends SimpleTree {
                 dir();
             }
             super.open(recursive);
-        }
-
-        @Override
-        protected void select(ClickEvent event) {
-            List<ApplicationConnection> runningApplications = ApplicationConfiguration
-                    .getRunningApplications();
-
-            // TODO this does not work properly with multiple application on
-            // same
-            // host page
-            for (ApplicationConnection applicationConnection : runningApplications) {
-                ComponentConnector paintable = (ComponentConnector) ConnectorMap
-                        .get(applicationConnection).getConnector(uidl.getId());
-                highlight(paintable);
-                if (event != null && event.getNativeEvent().getShiftKey()) {
-                    applicationConnection.highlightComponent(paintable);
-                }
-            }
-
-            super.select(event);
         }
 
         public void dir() {
@@ -218,6 +313,7 @@ public class VUIDLBrowser extends SimpleTree {
             if (highlightedPid != null && highlightedPid.equals(uidl.getId())) {
                 getElement().getStyle().setBackgroundColor("#fdd");
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
                     public void execute() {
                         getElement().scrollIntoView();
                     }

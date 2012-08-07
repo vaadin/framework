@@ -25,18 +25,21 @@ public class Ticket1806 extends com.vaadin.Application.LegacyApplication {
                 "This button does nothing (but flushes queued variable changes)"));
         main.addComponent(new Button("Commit the field to property",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tf1.commit();
                     }
                 }));
         main.addComponent(new Button("Show property value",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         main.showNotification("'" + prop.getValue() + "'");
                     }
                 }));
         main.addComponent(new Button("Show field value",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         main.showNotification("'" + tf1.getValue() + "'");
                     }

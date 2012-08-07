@@ -84,6 +84,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
         };
         okButton.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Button clicked");
 
@@ -114,6 +115,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
         return 8170;
     }
 
+    @Override
     public void onRequestStart(HttpServletRequest request,
             HttpServletResponse response) {
         if (request.getParameter("attachMainFirst") != null) {
@@ -122,6 +124,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
 
     }
 
+    @Override
     public void onRequestEnd(HttpServletRequest request,
             HttpServletResponse response) {
         // TODO Auto-generated method stub

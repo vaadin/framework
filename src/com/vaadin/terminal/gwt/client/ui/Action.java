@@ -25,6 +25,7 @@ public abstract class Action implements Command {
     /**
      * Executed when action fired
      */
+    @Override
     public abstract void execute();
 
     public String getHTML() {

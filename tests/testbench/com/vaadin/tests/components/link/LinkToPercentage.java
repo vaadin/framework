@@ -15,6 +15,7 @@ public class LinkToPercentage extends TestBase {
     protected void setup() {
         String filename = "110% Vaadin";
         ApplicationResource resource = new StreamResource(new StreamSource() {
+            @Override
             public InputStream getStream() {
                 return new InputStream() {
                     boolean first = true;

@@ -95,10 +95,12 @@ public class DDTest7 extends TestBase {
                 }
             };
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return crit;
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
                 AbstractSelectTargetDetails dropTargetData = (AbstractSelectTargetDetails) dropEvent
                         .getTargetDetails();

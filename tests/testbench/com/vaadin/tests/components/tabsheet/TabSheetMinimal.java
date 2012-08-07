@@ -16,6 +16,7 @@ public class TabSheetMinimal extends TestBase {
         ts.setStyleName("minimal");
         Button b = new Button("Add a tab", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 ts.addTab(new Label("" + index), "Tab " + index, null);
                 index++;

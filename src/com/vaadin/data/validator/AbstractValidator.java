@@ -84,6 +84,7 @@ public abstract class AbstractValidator<T> implements Validator {
      */
     protected abstract boolean isValidValue(T value);
 
+    @Override
     public void validate(Object value) throws InvalidValueException {
         // isValidType ensures that value can safely be cast to TYPE
         if (!isValidType(value) || !isValidValue((T) value)) {

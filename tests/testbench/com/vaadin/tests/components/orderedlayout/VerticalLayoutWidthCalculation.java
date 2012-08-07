@@ -43,6 +43,7 @@ public class VerticalLayoutWidthCalculation extends AbstractTestCase {
         Button btn = new Button("Show/hide");
         btn.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tf2.setVisible(!tf2.isVisible());
             }

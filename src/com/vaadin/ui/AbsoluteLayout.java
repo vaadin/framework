@@ -12,12 +12,12 @@ import java.util.Map;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;
+import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutServerRpc;
-import com.vaadin.terminal.gwt.client.ui.absolutelayout.AbsoluteLayoutState;
 
 /**
  * AbsoluteLayout is a layout implementation that mimics html absolute
@@ -30,6 +30,7 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     private AbsoluteLayoutServerRpc rpc = new AbsoluteLayoutServerRpc() {
 
+        @Override
         public void layoutClick(MouseEventDetails mouseDetails,
                 Connector clickedConnector) {
             fireEvent(LayoutClickEvent.createEvent(AbsoluteLayout.this,
@@ -56,6 +57,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * Gets an iterator for going through all components enclosed in the
      * absolute layout.
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         return componentToCoordinates.keySet().iterator();
     }
@@ -66,6 +68,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * 
      * @return the number of contained components
      */
+    @Override
     public int getComponentCount() {
         return componentToCoordinates.size();
     }
@@ -74,6 +77,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * Replaces one component with another one. The new component inherits the
      * old components position.
      */
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         ComponentPosition position = getPosition(oldComponent);
         removeComponent(oldComponent);
@@ -612,12 +616,14 @@ public class AbsoluteLayout extends AbstractLayout implements
 
     }
 
+    @Override
     public void addListener(LayoutClickListener listener) {
         addListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    @Override
     public void removeListener(LayoutClickListener listener) {
         removeListener(LayoutClickEventHandler.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);

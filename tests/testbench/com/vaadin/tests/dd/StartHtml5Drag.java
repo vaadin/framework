@@ -27,10 +27,12 @@ public class StartHtml5Drag extends TestBase {
                 "over here"));
         dropTarget.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 getWindows()
                         .iterator()

@@ -6,11 +6,9 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DateTimeService;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 
 public class VDateField extends FlowPanel implements Field {
@@ -66,15 +64,6 @@ public class VDateField extends FlowPanel implements Field {
     public VDateField() {
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
     }
 
     /*

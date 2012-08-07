@@ -30,6 +30,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         click = new Button("Set height -1", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tab.setHeight(null);
             }
@@ -38,6 +39,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         click2 = new Button("Set height 100%", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tab.setHeight(100, TabSheet.UNITS_PERCENTAGE);
             }

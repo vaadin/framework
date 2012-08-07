@@ -27,6 +27,7 @@ public class Ticket161 extends Application.LegacyApplication {
 
         Button b = new Button("Truncate to 20 rows");
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 Container containerDataSource = t.getContainerDataSource();

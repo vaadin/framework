@@ -17,6 +17,7 @@ public class Ticket2007 extends Application.LegacyApplication {
         setMainWindow(main);
         main.addComponent(new Button("Open another (non-main) window",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         LegacyWindow c = new LegacyWindow(
                                 "Non-main browser window " + (++childs));

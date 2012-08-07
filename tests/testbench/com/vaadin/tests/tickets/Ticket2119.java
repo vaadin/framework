@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -74,6 +74,7 @@ public class Ticket2119 extends Application.LegacyApplication {
         layout.addComponent(select);
 
         globalValue.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 valueProperty.setValue((null != value) ? value.toString()
@@ -83,6 +84,7 @@ public class Ticket2119 extends Application.LegacyApplication {
 
         final Button changeValueButton = new Button("Change Value to 2");
         changeValueButton.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 globalValue.setValue("2");
             }

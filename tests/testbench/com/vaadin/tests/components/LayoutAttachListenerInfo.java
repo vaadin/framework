@@ -27,6 +27,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         layouts.select("AbsoluteLayout");
         layouts.setImmediate(true);
         layouts.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (event.getProperty().getValue().equals("AbsoluteLayout")) {
                     testAbsoluteLayout();
@@ -64,6 +65,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         a.setWidth("300px");
         a.setHeight("300px");
         a.addListener(new ComponentContainer.ComponentAttachListener() {
+            @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 AbsoluteLayout layout = (AbsoluteLayout) event.getContainer();
                 AbsoluteLayout.ComponentPosition position = layout
@@ -78,6 +80,7 @@ public class LayoutAttachListenerInfo extends TestBase {
 
         content.addComponent(new Button("Attach label to layout",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         a.addComponent(new Label("X"), "top:50px;left:50px");
                     }
@@ -91,6 +94,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         v.setWidth("300px");
         v.setHeight("300px");
         v.addListener(new ComponentContainer.ComponentAttachListener() {
+            @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 VerticalLayout layout = (VerticalLayout) event.getContainer();
                 getMainWindow().showNotification(
@@ -104,6 +108,7 @@ public class LayoutAttachListenerInfo extends TestBase {
 
         content.addComponent(new Button("Attach label to layout",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         v.addComponent(new Label("X"));
 
@@ -118,6 +123,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         g.setWidth("300px");
         g.setHeight("300px");
         g.addListener(new ComponentContainer.ComponentAttachListener() {
+            @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 GridLayout layout = (GridLayout) event.getContainer();
                 GridLayout.Area area = layout.getComponentArea(event
@@ -133,6 +139,7 @@ public class LayoutAttachListenerInfo extends TestBase {
 
         content.addComponent(new Button("Attach label to layout",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         g.addComponent(new Label("X"), 2, 3);
                     }

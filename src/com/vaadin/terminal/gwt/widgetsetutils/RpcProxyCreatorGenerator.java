@@ -16,10 +16,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.InitializableServerRpc;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy.RpcProxyCreator;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
 
 public class RpcProxyCreatorGenerator extends Generator {
 
@@ -31,13 +31,13 @@ public class RpcProxyCreatorGenerator extends Generator {
         assert (typeOracle != null);
 
         JClassType requestedType = typeOracle.findType(requestedClassName);
-        String packageName = requestedType.getPackage().getName();
-        String className = requestedType.getSimpleSourceName() + "Impl";
         if (requestedType == null) {
             logger.log(TreeLogger.ERROR, "Unable to find metadata for type '"
                     + requestedClassName + "'", null);
             throw new UnableToCompleteException();
         }
+        String packageName = requestedType.getPackage().getName();
+        String className = requestedType.getSimpleSourceName() + "Impl";
 
         createType(logger, ctx, packageName, className);
         return packageName + "." + className;

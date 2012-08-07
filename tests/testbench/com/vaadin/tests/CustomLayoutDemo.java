@@ -4,7 +4,7 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
@@ -45,6 +45,7 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
     private final Button loginButton = new Button("Login",
             new Button.ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     loginClicked();
                 }
@@ -131,6 +132,7 @@ public class CustomLayoutDemo extends com.vaadin.Application.LegacyApplication
      * Handle all menu events. Updates body panel contents if menu item is
      * clicked.
      */
+    @Override
     public void componentEvent(Event event) {
         // Check if event occured at fsTree component
         if (event.getSource() == menu) {

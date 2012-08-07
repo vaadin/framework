@@ -14,6 +14,7 @@ public class Ticket1673 extends com.vaadin.Application.LegacyApplication {
         setMainWindow(main);
 
         main.addComponent(new Button("close", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 close();
             }

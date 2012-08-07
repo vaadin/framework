@@ -32,6 +32,7 @@ public class ContainerSizeChange extends TestBase {
 
         Button b = new Button("Decrease size", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 ds.decreaseSize();
             }
@@ -42,6 +43,7 @@ public class ContainerSizeChange extends TestBase {
 
         b = new Button("Increase size", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 ds.increaseSize();
             }

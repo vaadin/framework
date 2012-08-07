@@ -3,18 +3,21 @@
  */
 package com.vaadin.terminal.gwt.client.ui.formlayout;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
+import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.Caption;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.ErrorFlag;
 import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.VFormLayoutTable;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.ui.FormLayout;
 
 @Connect(FormLayout.class)
@@ -76,6 +79,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         getWidget().table.updateCaption(component.getWidget(),
                 component.getState(), component.isEnabled());
@@ -94,6 +98,38 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
     @Override
     public VFormLayout getWidget() {
         return (VFormLayout) super.getWidget();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        TooltipInfo info = null;
+
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VFormLayout.Caption.class);
+
+            if (node != null) {
+                VFormLayout.Caption caption = (VFormLayout.Caption) node;
+                info = caption.getOwner().getTooltipInfo(element);
+            } else {
+
+                node = Util.findWidget(
+                        (com.google.gwt.user.client.Element) element,
+                        VFormLayout.ErrorFlag.class);
+
+                if (node != null) {
+                    VFormLayout.ErrorFlag flag = (VFormLayout.ErrorFlag) node;
+                    info = flag.getOwner().getTooltipInfo(element);
+                }
+            }
+        }
+
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 
 }

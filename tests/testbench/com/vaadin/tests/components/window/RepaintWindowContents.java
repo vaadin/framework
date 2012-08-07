@@ -30,6 +30,7 @@ public class RepaintWindowContents extends AbstractTestRoot {
 
         button1.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 window.setContent(layout2);
             }
@@ -37,6 +38,7 @@ public class RepaintWindowContents extends AbstractTestRoot {
 
         button2.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 window.setContent(layout1);
             }

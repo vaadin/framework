@@ -34,6 +34,7 @@ public class Ticket34 extends Application.LegacyApplication {
 
         mainWin.getPage().addListener(new Page.FragmentChangedListener() {
 
+            @Override
             public void fragmentChanged(FragmentChangedEvent event) {
                 getMainWindow().showNotification(
                         "Fragment now: " + event.getFragment());
@@ -90,6 +91,7 @@ public class Ticket34 extends Application.LegacyApplication {
             p.addComponent(b);
             b.addListener(new Button.ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     String viewName = tf.getValue().toString();
                     // fragmentChangedListener will change the view if possible

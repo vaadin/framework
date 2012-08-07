@@ -46,29 +46,35 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
     public class DummyServletConfig implements ServletConfig {
 
         // public DummyServletConfig(Map<String,String> initParameters, )
+        @Override
         public String getInitParameter(String name) {
             // TODO Auto-generated method stub
             return null;
         }
 
+        @Override
         public Enumeration<Object> getInitParameterNames() {
             return new Enumeration<Object>() {
 
+                @Override
                 public boolean hasMoreElements() {
                     return false;
                 }
 
+                @Override
                 public Object nextElement() {
                     return null;
                 }
             };
         }
 
+        @Override
         public ServletContext getServletContext() {
             // TODO Auto-generated method stub
             return null;
         }
 
+        @Override
         public String getServletName() {
             // TODO Auto-generated method stub
             return null;

@@ -8,8 +8,8 @@ import java.util.List;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.AbstractSelect.MultiSelectMode;
 import com.vaadin.ui.Button;
@@ -47,6 +47,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     /* COMMANDS */
     private Command<T, Align> columnAlignmentCommand = new Command<T, Align>() {
 
+        @Override
         public void execute(T c, Align alignment, Object propertyId) {
             c.setColumnAlignment(propertyId, alignment);
         }
@@ -54,6 +55,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
 
     private Command<T, Boolean> columnVisibleCommand = new Command<T, Boolean>() {
+        @Override
         public void execute(Table c, Boolean visible, Object propertyId) {
             List<Object> visibleColumns = new ArrayList<Object>(Arrays.asList(c
                     .getVisibleColumns()));
@@ -72,6 +74,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, Boolean> columnCollapsed = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean collapsed, Object propertyId) {
             c.setColumnCollapsed(propertyId, collapsed);
 
@@ -80,6 +83,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, Boolean> columnCollapsibleCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean collapsible, Object propertyId) {
             c.setColumnCollapsible(propertyId, collapsible);
 
@@ -88,6 +92,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, Boolean> columnResizeListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ColumnResizeListener) Tables.this);
@@ -99,6 +104,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, Boolean> headerClickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((HeaderClickListener) Tables.this);
@@ -110,6 +116,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, Boolean> footerClickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(Table c, Boolean value, Object data) {
             if (value) {
                 c.addListener((FooterClickListener) Tables.this);
@@ -121,6 +128,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, RowHeaderMode> rowHeaderModeCommand = new Command<T, RowHeaderMode>() {
 
+        @Override
         public void execute(Table c, RowHeaderMode value, Object data) {
             if (value == RowHeaderMode.PROPERTY) {
                 c.setItemCaptionPropertyId("Property 3");
@@ -131,6 +139,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, String> footerTextCommand = new Command<T, String>() {
 
+        @Override
         public void execute(Table c, String value, Object data) {
             for (Object propertyId : c.getContainerPropertyIds()) {
                 if (value != null) {
@@ -145,6 +154,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     protected Command<T, Object> alignColumnLeftCommand = new Command<T, Object>() {
 
+        @Override
         public void execute(T c, Object propertyId, Object data) {
             c.setColumnAlignment(propertyId, (Align) data);
         }
@@ -152,17 +162,20 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, ContextMenu> contextMenuCommand = new Command<T, ContextMenu>() {
 
+        @Override
         public void execute(T c, final ContextMenu value, Object data) {
             c.removeAllActionHandlers();
             if (value != null) {
                 c.addActionHandler(new Handler() {
 
+                    @Override
                     public void handleAction(Action action, Object sender,
                             Object target) {
                         log("Action " + action.getCaption() + " performed on "
                                 + target);
                     }
 
+                    @Override
                     public Action[] getActions(Object target, Object sender) {
                         return value.getActions(target, sender);
                     }
@@ -172,6 +185,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
     private Command<T, Integer> columnWidthCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer width, Object propertyId) {
             c.setColumnWidth(propertyId, width);
 
@@ -180,6 +194,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, Resource> columnIconCommand = new Command<T, Resource>() {
 
+        @Override
         public void execute(T c, Resource icon, Object propertyId) {
             c.setColumnIcon(propertyId, icon);
 
@@ -187,6 +202,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
     private Command<T, ColumnHeaderMode> columnHeaderModeCommand = new Command<T, ColumnHeaderMode>() {
 
+        @Override
         public void execute(T c, ColumnHeaderMode columnHeaderMode, Object data) {
             c.setColumnHeaderMode(columnHeaderMode);
 
@@ -194,6 +210,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
     private Command<T, String> columnHeaderCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String header, Object propertyId) {
             c.setColumnHeader(propertyId, header);
 
@@ -201,6 +218,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
     private Command<T, Float> columnExpandRatioCommand = new Command<T, Float>() {
 
+        @Override
         public void execute(T c, Float expandRatio, Object propertyId) {
             c.setColumnExpandRatio(propertyId, expandRatio);
         }
@@ -224,6 +242,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, GeneratedColumn> addGeneratedColumnCommand = new Command<T, GeneratedColumn>() {
 
+        @Override
         public void execute(T c, final GeneratedColumn col, Object data) {
             while (c.getColumnGenerator(generatedColumnId
                     + generatedColumnNextNr) != null) {
@@ -233,6 +252,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
             c.addGeneratedColumn(generatedColumnId + generatedColumnNextNr,
                     new ColumnGenerator() {
 
+                        @Override
                         public Object generateCell(Table source, Object itemId,
                                 Object columnId) {
                             String value = "";
@@ -273,6 +293,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     };
     private Command<T, Object> removeGeneratedColumnsCommand = new Command<T, Object>() {
 
+        @Override
         public void execute(T c, Object value, Object data) {
             for (int i = 0; i < generatedColumnNextNr; i++) {
                 String columnId = generatedColumnId + i;
@@ -306,12 +327,14 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, CellStyleInfo> cellStyleCommand = new Command<T, CellStyleInfo>() {
 
+        @Override
         public void execute(T c, final CellStyleInfo cellStyleInfo, Object data) {
             if (cellStyleInfo == null) {
                 c.setCellStyleGenerator(null);
             } else {
                 c.setCellStyleGenerator(new CellStyleGenerator() {
 
+                    @Override
                     public String getStyle(Object itemId, Object propertyId) {
                         if (cellStyleInfo.appliesTo(itemId, propertyId)) {
                             return cellStyleInfo.styleName;
@@ -349,6 +372,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, GeneratedRowInfo> rowGeneratorCommand = new Command<T, GeneratedRowInfo>() {
 
+        @Override
         public void execute(T c, final GeneratedRowInfo generatedRowInfo,
                 Object data) {
             if (generatedRowInfo == null) {
@@ -356,6 +380,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
             } else {
                 c.setRowGenerator(new RowGenerator() {
 
+                    @Override
                     public GeneratedRow generateRow(Table table, Object itemId) {
                         if (generatedRowInfo.appliesTo(itemId)) {
                             GeneratedRow generatedRow = new GeneratedRow(
@@ -373,6 +398,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
     private Command<T, Boolean> setSortEnabledCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setSortDisabled(!value);
 
@@ -546,6 +572,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private void createColumnReorderingAllowedCheckbox(String category) {
         createBooleanAction("Column reordering allowed", category, true,
                 new Command<T, Boolean>() {
+                    @Override
                     public void execute(Table c, Boolean value, Object data) {
                         c.setColumnReorderingAllowed(value);
                     }
@@ -555,6 +582,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
     private void createColumnCollapsingAllowedCheckbox(String category) {
         createBooleanAction("Column collapsing allowed", category, true,
                 new Command<T, Boolean>() {
+                    @Override
                     public void execute(T c, Boolean value, Object data) {
                         c.setColumnCollapsingAllowed(value);
                     }
@@ -697,6 +725,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
 
         createSelectAction("Texts in header", category, options, "None",
                 new Command<T, String>() {
+                    @Override
                     public void execute(T c, String value, Object data) {
                         int nr = 0;
                         for (Object propertyId : c.getContainerPropertyIds()) {
@@ -746,6 +775,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createBooleanAction("Footer visible", category, true,
                 new Command<T, Boolean>() {
 
+                    @Override
                     public void execute(T c, Boolean value, Object data) {
                         c.setFooterVisible(value);
                     }
@@ -763,6 +793,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("Header mode", category, options,
                 "Explicit defaults id", new Command<T, ColumnHeaderMode>() {
 
+                    @Override
                     public void execute(T c, ColumnHeaderMode value, Object data) {
                         c.setColumnHeaderMode(value);
 
@@ -781,6 +812,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("PageLength", category, options, "10",
                 new Command<T, Integer>() {
 
+                    @Override
                     public void execute(Table t, Integer value, Object data) {
                         t.setPageLength(value);
                     }
@@ -801,6 +833,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
         createSelectAction("Selection Mode", category, options,
                 "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
+                    @Override
                     public void execute(Table t, SelectMode value, Object data) {
                         switch (value) {
                         case NONE:
@@ -825,16 +858,19 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 });
     }
 
+    @Override
     public void columnResize(ColumnResizeEvent event) {
         log("ColumnResize on " + event.getPropertyId() + " from "
                 + event.getPreviousWidth() + " to " + event.getCurrentWidth());
     }
 
+    @Override
     public void footerClick(FooterClickEvent event) {
         log("FooterClick on " + event.getPropertyId() + " using "
                 + event.getButtonName());
     }
 
+    @Override
     public void headerClick(HeaderClickEvent event) {
         log("HeaderClick on " + event.getPropertyId() + " using "
                 + event.getButtonName());

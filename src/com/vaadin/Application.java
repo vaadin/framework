@@ -1066,6 +1066,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
      */
 
+    @Override
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
@@ -1810,6 +1811,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.throwable = throwable;
         }
 
+        @Override
         public Throwable getThrowable() {
             return throwable;
         }
@@ -2372,5 +2374,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     private static final Logger getLogger() {
         return Logger.getLogger(Application.class.getName());
+    }
+
+    /**
+     * Returns a Root with the given id.
+     * <p>
+     * This is meant for framework internal use.
+     * </p>
+     * 
+     * @param rootId
+     *            The root id
+     * @return The root with the given id or null if not found
+     */
+    public Root getRootById(int rootId) {
+        return roots.get(rootId);
     }
 }

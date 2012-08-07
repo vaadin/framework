@@ -22,9 +22,10 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -48,6 +49,7 @@ public class VDragAndDropManager {
     private final class DefaultDragAndDropEventHandler implements
             NativePreviewHandler {
 
+        @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             NativeEvent nativeEvent = event.getNativeEvent();
 
@@ -223,10 +225,6 @@ public class VDragAndDropManager {
 
     }
 
-    public enum DragEventType {
-        ENTER, LEAVE, OVER, DROP
-    }
-
     public static final String DD_SERVICE = "DD";
 
     private static VDragAndDropManager instance;
@@ -307,6 +305,7 @@ public class VDragAndDropManager {
 
         final Command startDrag = new Command() {
 
+            @Override
             public void execute() {
                 isStarted = true;
                 addActiveDragSourceStyleName();
@@ -352,6 +351,7 @@ public class VDragAndDropManager {
             deferredStartRegistration = Event
                     .addNativePreviewHandler(new NativePreviewHandler() {
 
+                        @Override
                         public void onPreviewNativeEvent(
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
@@ -509,6 +509,7 @@ public class VDragAndDropManager {
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
                     Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+                        @Override
                         public boolean execute() {
                             if (!client.hasActiveRequest()) {
                                 removeActiveDragSourceStyleName(dragSource);

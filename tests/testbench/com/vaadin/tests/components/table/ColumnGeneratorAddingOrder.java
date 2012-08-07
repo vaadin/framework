@@ -23,6 +23,7 @@ public class ColumnGeneratorAddingOrder extends TestBase {
         Table t = new Table();
 
         t.addGeneratedColumn("col2", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Button("generated b c2");
@@ -39,6 +40,7 @@ public class ColumnGeneratorAddingOrder extends TestBase {
         t.setContainerDataSource(c);
 
         t.addGeneratedColumn("col1", new Table.ColumnGenerator() {
+            @Override
             public Component generateCell(Table source, Object itemId,
                     Object columnId) {
                 return new Button("generated b c1");

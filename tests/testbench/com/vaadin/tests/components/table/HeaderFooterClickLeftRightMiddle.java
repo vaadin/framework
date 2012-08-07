@@ -33,6 +33,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         immediateCheckbox.setValue(table.isImmediate());
         immediateCheckbox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setImmediate((Boolean) event.getProperty().getValue());
             }
@@ -45,6 +46,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
 
             private HeaderClickListener headerClickListener = new HeaderClickListener() {
 
+                @Override
                 public void headerClick(HeaderClickEvent event) {
                     String type = event.isDoubleClick() ? "Double click"
                             : "Click";
@@ -55,6 +57,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
 
             };
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (table.getListeners(HeaderClickEvent.class).isEmpty()) {
                     table.addListener(headerClickListener);
@@ -72,6 +75,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
 
             private FooterClickListener footerClickListener = new FooterClickListener() {
 
+                @Override
                 public void footerClick(FooterClickEvent event) {
                     String type = event.isDoubleClick() ? "Double click"
                             : "Click";
@@ -81,6 +85,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
                 }
             };
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (table.getListeners(FooterClickEvent.class).isEmpty()) {
                     table.addListener(footerClickListener);
@@ -95,6 +100,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         sortEnabledCheckbox.setImmediate(true);
         sortEnabledCheckbox.setValue(table.isSortEnabled());
         sortEnabledCheckbox.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setSortEnabled((Boolean) event.getProperty().getValue());
             }
@@ -106,6 +112,7 @@ public class HeaderFooterClickLeftRightMiddle extends TestBase {
         columnReorderingCheckbox.setValue(table.isColumnReorderingAllowed());
         columnReorderingCheckbox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 table.setColumnReorderingAllowed((Boolean) event.getProperty()
                         .getValue());

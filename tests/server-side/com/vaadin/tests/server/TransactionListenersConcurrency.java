@@ -46,6 +46,7 @@ public class TransactionListenersConcurrency extends TestCase {
         for (int i = 0; i < 5; i++) {
             Thread t = new Thread(new Runnable() {
 
+                @Override
                 public void run() {
                     Application app = new Application() {
 
@@ -98,6 +99,7 @@ public class TransactionListenersConcurrency extends TestCase {
             threads.add(t);
             t.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
+                @Override
                 public void uncaughtException(Thread t, Throwable e) {
                     e = e.getCause();
                     exceptions.add(e);
@@ -163,6 +165,7 @@ public class TransactionListenersConcurrency extends TestCase {
             this.delay = delay;
         }
 
+        @Override
         public void transactionStart(Application application,
                 Object transactionData) {
             try {
@@ -173,6 +176,7 @@ public class TransactionListenersConcurrency extends TestCase {
 
         }
 
+        @Override
         public void transactionEnd(Application application,
                 Object transactionData) {
             try {

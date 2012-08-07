@@ -43,6 +43,7 @@ public class NullValidator implements Validator {
      * @throws Validator.InvalidValueException
      *             if the value was invalid.
      */
+    @Override
     public void validate(Object value) throws Validator.InvalidValueException {
         if ((onlyNullAllowed && value != null)
                 || (!onlyNullAllowed && value == null)) {

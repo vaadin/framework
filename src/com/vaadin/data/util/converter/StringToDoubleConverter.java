@@ -49,6 +49,7 @@ public class StringToDoubleConverter implements Converter<String, Double> {
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.util.Locale)
      */
+    @Override
     public Double convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -74,6 +75,7 @@ public class StringToDoubleConverter implements Converter<String, Double> {
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.util.Locale)
      */
+    @Override
     public String convertToPresentation(Double value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -88,6 +90,7 @@ public class StringToDoubleConverter implements Converter<String, Double> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
+    @Override
     public Class<Double> getModelType() {
         return Double.class;
     }
@@ -97,6 +100,7 @@ public class StringToDoubleConverter implements Converter<String, Double> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
+    @Override
     public Class<String> getPresentationType() {
         return String.class;
     }

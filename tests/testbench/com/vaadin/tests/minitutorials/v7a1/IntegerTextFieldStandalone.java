@@ -19,6 +19,7 @@ public class IntegerTextFieldStandalone extends AbstractTestRoot {
         textField.setConverter(new StringToIntegerConverter());
 
         Button submitButton = new Button("Submit value", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 String uiValue = textField.getValue();
                 try {

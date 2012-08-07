@@ -44,6 +44,7 @@ public class PropertyValueChange extends TestBase {
             return i * 3;
         }
 
+        @Override
         public Component generateCell(Table source, Object itemId,
                 Object columnId) {
             final Label l = new Label();
@@ -57,6 +58,7 @@ public class PropertyValueChange extends TestBase {
             if (integer instanceof Property.ValueChangeNotifier) {
                 Property.ValueChangeNotifier notifier = (Property.ValueChangeNotifier) integer;
                 notifier.addListener(new ValueChangeListener() {
+                    @Override
                     public void valueChange(ValueChangeEvent event) {
                         l.setValue(String.valueOf(getMultipliedValue(integer)));
                     }
@@ -144,6 +146,7 @@ class MyFieldFactory extends DefaultFieldFactory {
             cb.setContainerDataSource(texts);
             cb.setNewItemsAllowed(true);
             cb.setNewItemHandler(new NewItemHandler() {
+                @Override
                 public void addNewItem(String newItemCaption) {
                     texts.addItem(newItemCaption);
                     cb.setValue(newItemCaption);

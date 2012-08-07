@@ -9,10 +9,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.Writer;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.Version;
-import com.vaadin.annotations.LoadScripts;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.DeploymentConfiguration;
@@ -118,6 +113,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     }
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
@@ -490,50 +486,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         page.write("<title>"
                 + AbstractApplicationServlet.safeEscapeForHtml(title)
                 + "</title>\n");
-
-        if (root != null) {
-            List<LoadScripts> loadScriptsAnnotations = getAnnotationsFor(
-                    root.getClass(), LoadScripts.class);
-            Collections.reverse(loadScriptsAnnotations);
-            // Begin from the end as a class might requests scripts that depend
-            // on script loaded by a super class
-            for (int i = loadScriptsAnnotations.size() - 1; i >= 0; i--) {
-                LoadScripts loadScripts = loadScriptsAnnotations.get(i);
-                String[] value = loadScripts.value();
-                if (value != null) {
-                    for (String script : value) {
-                        page.write("<script type='text/javascript' src='");
-                        page.write(script);
-                        page.write("'></script>\n");
-                    }
-                }
-            }
-
-        }
-    }
-
-    private static <T extends Annotation> List<T> getAnnotationsFor(
-            Class<?> type, Class<T> annotationType) {
-        List<T> list = new ArrayList<T>();
-        // Find from the class hierarchy
-        Class<?> currentType = type;
-        while (currentType != Object.class) {
-            T annotation = currentType.getAnnotation(annotationType);
-            if (annotation != null) {
-                list.add(annotation);
-            }
-            currentType = currentType.getSuperclass();
-        }
-
-        // Find from an implemented interface
-        for (Class<?> iface : type.getInterfaces()) {
-            T annotation = iface.getAnnotation(annotationType);
-            if (annotation != null) {
-                list.add(annotation);
-            }
-        }
-
-        return list;
     }
 
     /**
@@ -645,8 +597,10 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return a string with the initial UIDL message
      * @throws PaintException
      *             if an exception occurs while painting the components
+     * @throws JSONException
+     *             if an exception occurs while formatting the output
      */
     protected abstract String getInitialUIDL(WrappedRequest request, Root root)
-            throws PaintException;
+            throws PaintException, JSONException;
 
 }

@@ -10,8 +10,8 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.Component;
@@ -62,6 +62,7 @@ public class DDTest1 extends TestBase {
              */
             private static final long serialVersionUID = 1L;
 
+            @Override
             public boolean accept(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
                 // System.out.println("Simulating 500ms processing...");
@@ -188,6 +189,7 @@ public class DDTest1 extends TestBase {
 
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
                 TreeTargetDetails details = (TreeTargetDetails) event
                         .getTargetDetails();
@@ -224,6 +226,7 @@ public class DDTest1 extends TestBase {
                 return;
             }
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 // TODO should actually check that source is same as target
                 return AcceptItem.ALL;

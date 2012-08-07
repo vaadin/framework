@@ -47,6 +47,7 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
         return this;
     }
 
+    @Override
     public void setCacheTime(long milliseconds) {
         doSetCacheTime(this, milliseconds);
     }
@@ -67,6 +68,7 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
         }
     }
 
+    @Override
     public DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }

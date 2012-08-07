@@ -7,6 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TreeTable;
+import com.vaadin.ui.VerticalLayout;
 
 public class ComponentsInTreeTable extends TestBase {
 
@@ -14,28 +15,28 @@ public class ComponentsInTreeTable extends TestBase {
     protected void setup() {
         TreeTable tt = new TreeTable();
         tt.setWidth("300px");
+        tt.setHeight("300px");
         addComponent(tt);
 
-        Object id, id2;
+        tt.addContainerProperty("component", Component.class, "");
+        tt.addContainerProperty("type", String.class, "bar");
 
-        tt.addContainerProperty("foo", Component.class, "");
-        tt.addContainerProperty("bar", String.class, "bar");
-        tt.addContainerProperty("baz", String.class, "baz");
-
-        id = tt.addItem();
         Layout l = new HorizontalLayout();
         l.addComponent(new Label("bar"));
         l.addComponent(new Label("bar"));
-        tt.getContainerProperty(id, "foo").setValue(l);
+        tt.addItem(new Object[] { l, "HorizontalLayout" }, 1);
 
-        id = tt.addItem();
+        l = new VerticalLayout();
+        l.addComponent(new Label("baz"));
+        l.addComponent(new Label("baz"));
+        tt.addItem(new Object[] { l, "VerticalLayout" }, 2);
+
         Label lbl = new Label("<b>foo</b><br/><i>bar</i>");
         lbl.setContentMode(Label.CONTENT_XHTML);
-        tt.getContainerProperty(id, "foo").setValue(lbl);
+        tt.addItem(new Object[] { lbl, "Label" }, 3);
 
-        id2 = tt.addItem();
-        tt.setParent(id2, id);
-        tt.getContainerProperty(id2, "foo").setValue(new Button("Test"));
+        tt.addItem(new Object[] { new Button("Test"), "Button" }, 4);
+        tt.setParent(4, 3);
     }
 
     @Override

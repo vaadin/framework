@@ -5,8 +5,9 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Element;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
 public abstract class LayoutClickEventHandler extends AbstractClickEventHandler {

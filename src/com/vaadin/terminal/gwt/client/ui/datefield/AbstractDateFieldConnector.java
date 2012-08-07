@@ -15,6 +15,7 @@ import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
 public class AbstractDateFieldConnector extends AbstractFieldConnector
         implements Paintable {
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
@@ -63,15 +64,23 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
             newResolution = VDateField.RESOLUTION_YEAR;
         }
 
+        // Remove old stylename that indicates current resolution
+        setWidgetStyleName(
+                VDateField.CLASSNAME
+                        + "-"
+                        + VDateField
+                                .resolutionToString(getWidget().currentResolution),
+                false);
+
         getWidget().currentResolution = newResolution;
 
         // Add stylename that indicates current resolution
-        getWidget()
-                .addStyleName(
-                        VDateField.CLASSNAME
-                                + "-"
-                                + VDateField
-                                        .resolutionToString(getWidget().currentResolution));
+        setWidgetStyleName(
+                VDateField.CLASSNAME
+                        + "-"
+                        + VDateField
+                                .resolutionToString(getWidget().currentResolution),
+                true);
 
         final int year = uidl.getIntVariable("year");
         final int month = (getWidget().currentResolution >= VDateField.RESOLUTION_MONTH) ? uidl

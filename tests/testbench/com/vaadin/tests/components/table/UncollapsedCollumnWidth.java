@@ -23,6 +23,7 @@ public class UncollapsedCollumnWidth extends TestBase {
 
         addComponent(table);
         addComponent(new Button("Uncollapse col2", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnCollapsed("Col2", false);
             }

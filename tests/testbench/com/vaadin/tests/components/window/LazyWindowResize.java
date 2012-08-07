@@ -2,9 +2,9 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
 import com.vaadin.terminal.Page.BrowserWindowResizeListener;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
@@ -25,12 +25,14 @@ public class LazyWindowResize extends AbstractTestCase {
 
     protected ResizeListener resizeListener = new ResizeListener() {
 
+        @Override
         public void windowResized(ResizeEvent e) {
             log.log("Sub window resized");
         }
     };
 
     protected BrowserWindowResizeListener browserWindowResizeListener = new BrowserWindowResizeListener() {
+        @Override
         public void browserWindowResized(BrowserWindowResizeEvent event) {
             log.log("Main window resized");
         }
@@ -63,6 +65,7 @@ public class LazyWindowResize extends AbstractTestCase {
         lazyMode.setImmediate(true);
         lazyMode.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 setLazy(lazyMode.getValue());
             }
@@ -72,6 +75,7 @@ public class LazyWindowResize extends AbstractTestCase {
         resizeListenerCheckBox.setImmediate(true);
         resizeListenerCheckBox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (resizeListenerCheckBox.getValue()) {
                     subWindow.addListener(resizeListener);
@@ -88,6 +92,7 @@ public class LazyWindowResize extends AbstractTestCase {
         immediateCheckBox.setImmediate(true);
         immediateCheckBox.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 mainWindow.setImmediate(immediateCheckBox.getValue());
                 subWindow.setImmediate(immediateCheckBox.getValue());

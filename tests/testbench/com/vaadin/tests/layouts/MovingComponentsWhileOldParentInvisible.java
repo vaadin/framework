@@ -53,6 +53,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         }
         componentContainerSelect.addListener(new ValueChangeListener() {
 
+            @Override
             @SuppressWarnings("unchecked")
             public void valueChange(ValueChangeEvent event) {
                 ComponentContainer oldCC = cc;
@@ -69,6 +70,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         Button but1 = new Button("Move in and out of component container",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         cc.setVisible(!cc.isVisible());
                         if (!cc.isVisible()) {

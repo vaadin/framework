@@ -41,6 +41,7 @@ public class KeyControl extends TestBase {
         layout1.addComponent(table1);
 
         table1.addListener(new Table.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table1.getValue();
@@ -63,6 +64,7 @@ public class KeyControl extends TestBase {
         layout2.addComponent(table2);
 
         table2.addListener(new Table.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 String value = table2.getValue() == null ? "No selected items"
                         : table2.getValue().toString();
@@ -86,6 +88,7 @@ public class KeyControl extends TestBase {
         layout3.addComponent(table3);
 
         table3.addListener(new Table.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table3.getValue();

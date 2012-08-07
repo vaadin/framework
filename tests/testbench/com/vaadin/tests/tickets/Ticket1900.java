@@ -24,6 +24,7 @@ public class Ticket1900 extends Application.LegacyApplication {
             f[i].setRequired(true);
             main.addComponent(f[i]);
             f[i].addListener(new Property.ValueChangeListener() {
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     main.showNotification("Validity test", "Testcase " + j
                             + " is " + (f[j].isValid() ? "valid" : "invalid"));
@@ -60,6 +61,7 @@ public class Ticket1900 extends Application.LegacyApplication {
             this.c = c;
         }
 
+        @Override
         public void validate(Object value) throws InvalidValueException {
             if (value == null || !value.toString().contains(c)) {
                 throw new InvalidValueException("Value does not contain " + c);

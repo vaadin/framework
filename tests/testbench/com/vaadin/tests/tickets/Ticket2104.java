@@ -6,8 +6,8 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -52,6 +52,7 @@ public class Ticket2104 extends Application.LegacyApplication {
         cb = new CheckBox("icon");
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (tree.getItemIconPropertyId() == null) {
                     tree.setItemIconPropertyId("icon");
@@ -82,6 +83,7 @@ public class Ticket2104 extends Application.LegacyApplication {
                         "http://www.itmill.com/res/images/itmill_logo.gif"));
 
         tree.addListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 getMainWindow().addComponent(
                         new Label(event.toString() + " // " + event.getItemId()
@@ -117,6 +119,7 @@ public class Ticket2104 extends Application.LegacyApplication {
             table.addItem("Item " + i);
         }
         table.addListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 getMainWindow().addComponent(
                         new Label(event.toString() + " // " + event.getItemId()

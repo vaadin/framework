@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.VConsole;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.button.VButton;
 
 /**
@@ -116,6 +115,7 @@ public class VUpload extends SimplePanel {
         panel.add(fu);
         submitButton = new VButton();
         submitButton.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 if (immediate) {
                     // fire click on upload (eg. focused button and hit space)
@@ -128,16 +128,6 @@ public class VUpload extends SimplePanel {
         panel.add(submitButton);
 
         setStyleName(CLASSNAME);
-
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        if ((event.getTypeInt() & VTooltip.TOOLTIP_EVENTS) > 0) {
-            client.handleTooltipEvent(event, this);
-        }
-        super.onBrowserEvent(event);
     }
 
     private static native void setEncoding(Element form, String encoding)
@@ -214,6 +204,7 @@ public class VUpload extends SimplePanel {
     private void onSubmitComplete() {
         /* Needs to be run dereferred to avoid various browser issues. */
         Scheduler.get().scheduleDeferred(new Command() {
+            @Override
             public void execute() {
                 if (submitted) {
                     if (client != null) {

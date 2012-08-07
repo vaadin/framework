@@ -63,6 +63,7 @@ public class CombinedRequest implements WrappedRequest {
 
     }
 
+    @Override
     public String getParameter(String parameter) {
         String[] strings = getParameterMap().get(parameter);
         if (strings == null || strings.length == 0) {
@@ -72,48 +73,60 @@ public class CombinedRequest implements WrappedRequest {
         }
     }
 
+    @Override
     public Map<String, String[]> getParameterMap() {
         return parameterMap;
     }
 
+    @Override
     public int getContentLength() {
         return secondRequest.getContentLength();
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
         return secondRequest.getInputStream();
     }
 
+    @Override
     public Object getAttribute(String name) {
         return secondRequest.getAttribute(name);
     }
 
+    @Override
     public void setAttribute(String name, Object value) {
         secondRequest.setAttribute(name, value);
     }
 
+    @Override
     public String getRequestPathInfo() {
         return secondRequest.getParameter("initialPath");
     }
 
+    @Override
     public int getSessionMaxInactiveInterval() {
         return secondRequest.getSessionMaxInactiveInterval();
     }
 
+    @Override
     public Object getSessionAttribute(String name) {
         return secondRequest.getSessionAttribute(name);
     }
 
+    @Override
     public void setSessionAttribute(String name, Object attribute) {
         secondRequest.setSessionAttribute(name, attribute);
     }
 
+    @Override
     public String getContentType() {
         return secondRequest.getContentType();
     }
 
+    @Override
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
+            @Override
             public String getUriFragment() {
                 String fragment = secondRequest.getParameter("fr");
                 if (fragment == null) {
@@ -123,10 +136,12 @@ public class CombinedRequest implements WrappedRequest {
                 }
             }
 
+            @Override
             public String getWindowName() {
                 return secondRequest.getParameter("wn");
             }
 
+            @Override
             public WebBrowser getWebBrowser() {
                 WebApplicationContext context = (WebApplicationContext) Application
                         .getCurrent().getContext();
@@ -145,22 +160,27 @@ public class CombinedRequest implements WrappedRequest {
         return secondRequest;
     }
 
+    @Override
     public Locale getLocale() {
         return secondRequest.getLocale();
     }
 
+    @Override
     public String getRemoteAddr() {
         return secondRequest.getRemoteAddr();
     }
 
+    @Override
     public boolean isSecure() {
         return secondRequest.isSecure();
     }
 
+    @Override
     public String getHeader(String name) {
         return secondRequest.getHeader(name);
     }
 
+    @Override
     public DeploymentConfiguration getDeploymentConfiguration() {
         return secondRequest.getDeploymentConfiguration();
     }

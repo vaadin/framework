@@ -39,6 +39,7 @@ public class Or extends ClientSideCriterion {
         }
     }
 
+    @Override
     public boolean accept(DragAndDropEvent dragEvent) {
         for (AcceptCriterion crit : criteria) {
             if (crit.accept(dragEvent)) {

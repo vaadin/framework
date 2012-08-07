@@ -19,13 +19,13 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.window.WindowServerRpc;
+import com.vaadin.shared.ui.window.WindowState;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
-import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
-import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -44,6 +44,10 @@ import com.vaadin.terminal.gwt.client.ui.window.WindowState;
  * <p>
  * The caption is displayed in the window header.
  * </p>
+ * <p>
+ * In Vaadin versions prior to 7.0.0, Window was also used as application level
+ * windows. This function is now covered by the {@link Root} class.
+ * </p>
  * 
  * @author Vaadin Ltd.
  * @version
@@ -56,6 +60,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
@@ -793,11 +798,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
 
+    @Override
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
+    @Override
     public void removeListener(FocusListener listener) {
         removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
     }
@@ -810,11 +817,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
 
+    @Override
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    @Override
     public void removeListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
     }

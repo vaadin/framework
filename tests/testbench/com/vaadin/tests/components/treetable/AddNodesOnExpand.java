@@ -18,11 +18,13 @@ public class AddNodesOnExpand extends TestBase {
         treetable.setPageLength(0);
         treetable.addContainerProperty("foo", String.class, "");
         treetable.addListener(new Tree.ExpandListener() {
+            @Override
             public void nodeExpand(ExpandEvent event) {
                 Object openedItemId = event.getItemId();
                 if (!treetable.hasChildren(openedItemId)) {
                     for (int j = 0; j < 3; j++) {
-                        treetable.addItem(openedItemId + "-" + j);
+                        treetable.addItem(new String[] { "Subitem " + j },
+                                openedItemId + "-" + j);
                         treetable.setParent(openedItemId + "-" + j,
                                 openedItemId);
                     }
@@ -30,6 +32,7 @@ public class AddNodesOnExpand extends TestBase {
             }
         });
         treetable.addListener(new Tree.CollapseListener() {
+            @Override
             public void nodeCollapse(CollapseEvent event) {
                 /* Uncomment this to "fix" the TreeTable */
                 // orgTree.refreshRowCache();
@@ -37,7 +40,7 @@ public class AddNodesOnExpand extends TestBase {
         });
 
         for (int i = 0; i < 3; i++) {
-            treetable.addItem(Integer.valueOf(i));
+            treetable.addItem(new String[] { "Item " + i }, Integer.valueOf(i));
         }
 
         addComponent(treetable);

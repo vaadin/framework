@@ -25,6 +25,7 @@ public class Ticket2037 extends com.vaadin.Application.LegacyApplication {
         main.addComponent(lo);
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 repopupate(lo);

@@ -21,6 +21,7 @@ public class Ticket2038 extends Application.LegacyApplication {
         tf.setImmediate(true);
         tf.addListener(new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 w.showNotification("TextField is " + (tf.isValid() ? "" : "in")
                         + "valid, with error: " + tf.getErrorMessage(),
@@ -35,6 +36,7 @@ public class Ticket2038 extends Application.LegacyApplication {
         w.addComponent(b);
         b.setImmediate(true);
         b.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 tf.setRequiredError((Boolean) b.getValue() ? "Field must not be empty"
                         : null);

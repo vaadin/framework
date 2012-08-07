@@ -21,6 +21,7 @@ public class ApplicationResourceHandler implements RequestHandler {
     private static final Pattern APP_RESOURCE_PATTERN = Pattern
             .compile("^/?APP/(\\d+)/.*");
 
+    @Override
     public boolean handleRequest(Application application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {

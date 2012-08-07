@@ -15,6 +15,7 @@ public abstract class ConnectorWidgetFactory extends
     // TODO Move to generator
     {
         addCreator(TextFieldConnector.class, new Creator<Widget>() {
+            @Override
             public Widget create() {
                 return GWT.create(VTextField.class);
             }

@@ -11,6 +11,8 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ServerConnector;

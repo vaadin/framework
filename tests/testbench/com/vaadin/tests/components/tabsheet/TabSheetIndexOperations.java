@@ -24,6 +24,7 @@ public class TabSheetIndexOperations extends TestBase {
 
         Button addTab = new Button("Add tab at index 2",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tabs.addTab(new Label("Content " + tabCounter),
                                 "Added Tab " + tabCounter, null, 2);
@@ -34,6 +35,7 @@ public class TabSheetIndexOperations extends TestBase {
 
         Button setCaption = new Button("Invert tab caption at index 2",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Tab tab = tabs.getTab(2);
                         tab.setCaption(new StringBuffer(tab.getCaption())
@@ -44,6 +46,7 @@ public class TabSheetIndexOperations extends TestBase {
 
         Button move = new Button("Move selected tab to index 2",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tabs.setTabPosition(tabs.getTab(tabs.getSelectedTab()),
                                 2);
@@ -53,6 +56,7 @@ public class TabSheetIndexOperations extends TestBase {
 
         Button getIndex = new Button("Get selected tab index",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().showNotification(
                                 "Index: "

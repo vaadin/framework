@@ -49,6 +49,7 @@ public class RemoveTabs extends TestBase {
 
         closeCurrent = new Button("Close current tab");
         closeCurrent.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeCurrentTab();
 
@@ -57,6 +58,7 @@ public class RemoveTabs extends TestBase {
 
         closeCurrentWithTab = new Button("Close current tab with Tab");
         closeCurrentWithTab.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeCurrentTabWithTab();
 
@@ -65,6 +67,7 @@ public class RemoveTabs extends TestBase {
 
         closeFirst = new Button("close first tab");
         closeFirst.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeFirstTab();
 
@@ -73,6 +76,7 @@ public class RemoveTabs extends TestBase {
 
         closeLast = new Button("close last tab");
         closeLast.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 closeLastTab();
 
@@ -81,6 +85,7 @@ public class RemoveTabs extends TestBase {
 
         reorderTabs = new Button("reorder");
         reorderTabs.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 reorder();
 

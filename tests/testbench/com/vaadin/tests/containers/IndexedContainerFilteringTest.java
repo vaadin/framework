@@ -56,6 +56,7 @@ public class IndexedContainerFilteringTest extends TestBase {
         final CheckBox cb = new CheckBox("Filter");
         cb.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 container.removeAllContainerFilters();
                 if (((CheckBox) event.getProperty()).getValue()) {
@@ -75,6 +76,7 @@ public class IndexedContainerFilteringTest extends TestBase {
 
         final Button addItemButton = new Button("addItem()",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Item item = container.addItem("addItem() " + nextToAdd);
                         if (item != null) {
@@ -90,6 +92,7 @@ public class IndexedContainerFilteringTest extends TestBase {
 
         final Button addItemAfterButton = new Button("addItemAfter()",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Object selection = table.getValue();
                         if (selection == null) {
@@ -117,6 +120,7 @@ public class IndexedContainerFilteringTest extends TestBase {
 
         final Button addItemAtButton = new Button("addItemAt()",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         int index = Integer.parseInt(position.getValue()
                                 .toString());

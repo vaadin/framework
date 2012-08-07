@@ -45,6 +45,7 @@ public class GridLayoutInForm extends TestBase {
 
         addComponent(new Button("Use 15 first fields",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setVisibleItemProperties(propertyIds
                                 .subList(0, 15));
@@ -52,6 +53,7 @@ public class GridLayoutInForm extends TestBase {
                 }));
         addComponent(new Button("Use 15 last fields",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setVisibleItemProperties(propertyIds.subList(35,
                                 50));
@@ -59,6 +61,7 @@ public class GridLayoutInForm extends TestBase {
                 }));
 
         addComponent(new Button("Use all fields", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 form.setVisibleItemProperties(propertyIds);
             }

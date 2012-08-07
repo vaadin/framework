@@ -38,6 +38,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * Removes all components from the container. This should probably be
      * re-implemented in extending classes for a more powerful implementation.
      */
+    @Override
     public void removeAllComponents() {
         final LinkedList<Component> l = new LinkedList<Component>();
 
@@ -57,6 +58,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
+    @Override
     public void moveComponentsFrom(ComponentContainer source) {
         final LinkedList<Component> components = new LinkedList<Component>();
         for (final Iterator<Component> i = source.getComponentIterator(); i
@@ -93,24 +95,28 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     /* documented in interface */
+    @Override
     public void addListener(ComponentAttachListener listener) {
         addListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
     /* documented in interface */
+    @Override
     public void addListener(ComponentDetachListener listener) {
         addListener(ComponentContainer.ComponentDetachEvent.class, listener,
                 COMPONENT_DETACHED_METHOD);
     }
 
     /* documented in interface */
+    @Override
     public void removeListener(ComponentAttachListener listener) {
         removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
     /* documented in interface */
+    @Override
     public void removeListener(ComponentDetachListener listener) {
         removeListener(ComponentContainer.ComponentDetachEvent.class, listener,
                 COMPONENT_DETACHED_METHOD);
@@ -147,6 +153,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * 
      * @see com.vaadin.ui.ComponentContainer#addComponent(Component)
      */
+    @Override
     public void addComponent(Component c) {
         if (c instanceof ComponentContainer) {
             // Make sure we're not adding the component inside it's own content
@@ -177,6 +184,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * 
      * @see com.vaadin.ui.ComponentContainer#removeComponent(Component)
      */
+    @Override
     public void removeComponent(Component c) {
         if (c.getParent() == this) {
             c.setParent(null);
@@ -325,6 +333,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 true);
     }
 
+    @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }
@@ -335,6 +344,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @see
      * com.vaadin.ui.HasComponents#isComponentVisible(com.vaadin.ui.Component)
      */
+    @Override
     public boolean isComponentVisible(Component childComponent) {
         return true;
     }

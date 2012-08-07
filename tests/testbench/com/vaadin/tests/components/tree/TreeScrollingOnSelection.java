@@ -29,6 +29,7 @@ public class TreeScrollingOnSelection extends TestBase {
 
             private static final long serialVersionUID = 5955518276555388126L;
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 charLabel.setValue(event.getItemId().toString());
             }

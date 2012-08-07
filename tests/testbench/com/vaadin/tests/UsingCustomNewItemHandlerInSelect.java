@@ -51,6 +51,7 @@ public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
     }
 
     public class MyNewItemHandler implements AbstractSelect.NewItemHandler {
+        @Override
         public void addNewItem(String newItemCaption) {
             // here could be db insert or other backend operation
             Integer id = new Integer(sequence++);

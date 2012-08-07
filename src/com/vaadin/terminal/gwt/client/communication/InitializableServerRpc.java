@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.communication;
 
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**

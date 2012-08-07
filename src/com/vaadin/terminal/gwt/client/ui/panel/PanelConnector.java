@@ -7,17 +7,19 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.panel.PanelServerRpc;
+import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
@@ -46,6 +48,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(PanelServerRpc.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
@@ -70,6 +73,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return false;
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (isRealUpdate(uidl)) {
 
@@ -164,6 +168,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         getWidget().contentNode.setTabIndex(getState().getTabIndex());
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP: layouts caption, errors etc not rendered in Panel
     }
@@ -173,6 +178,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         return (VPanel) super.getWidget();
     }
 
+    @Override
     public void layout() {
         updateSizes();
     }
@@ -199,6 +205,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         panel.scrollLeft = panel.contentNode.getScrollLeft();
     }
 
+    @Override
     public void postLayout() {
         VPanel panel = getWidget();
         if (uidlScrollTop != null) {

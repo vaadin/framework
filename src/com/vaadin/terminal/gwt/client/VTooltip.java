@@ -3,12 +3,20 @@
  */
 package com.vaadin.terminal.gwt.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 /**
@@ -27,15 +35,12 @@ public class VTooltip extends VOverlay {
     private static final int QUICK_OPEN_DELAY = 100;
     VErrorMessage em = new VErrorMessage();
     Element description = DOM.createDiv();
-    private ComponentConnector tooltipOwner;
 
     private boolean closing = false;
     private boolean opening = false;
     private ApplicationConnection ac;
     // Open next tooltip faster. Disabled after 2 sec of showTooltip-silence.
     private boolean justClosed = false;
-    // If this is "additional" tooltip, this field contains the key for it
-    private Object tooltipKey;
 
     public VTooltip(ApplicationConnection client) {
         super(false, false, true);
@@ -78,6 +83,7 @@ public class VTooltip extends VOverlay {
             // first to 0,0 position so that the calculation goes correctly.
             setPopupPosition(0, 0);
             setPopupPositionAndShow(new PositionCallback() {
+                @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {
 
                     if (offsetWidth > MAX_WIDTH) {
@@ -115,51 +121,30 @@ public class VTooltip extends VOverlay {
         }
     }
 
-    public void showTooltip(ComponentConnector owner, Event event, Object key) {
-        if (closing && tooltipOwner == owner && tooltipKey == key) {
-            // return to same tooltip, cancel closing
-            closeTimer.cancel();
-            closing = false;
-            justClosedTimer.cancel();
-            justClosed = false;
-            return;
-        }
+    private void showTooltip() {
 
-        if (closing) {
+        // Close current tooltip
+        if (isShowing()) {
             closeNow();
         }
 
-        updatePosition(event);
-
-        if (opening) {
-            showTimer.cancel();
-        }
-        tooltipOwner = owner;
-        tooltipKey = key;
-
         // Schedule timer for showing the tooltip according to if it was
         // recently closed or not.
-        if (justClosed) {
-            showTimer.schedule(QUICK_OPEN_DELAY);
-        } else {
-            showTimer.schedule(OPEN_DELAY);
-        }
+        int timeout = justClosed ? QUICK_OPEN_DELAY : OPEN_DELAY;
+        showTimer.schedule(timeout);
         opening = true;
     }
 
     private void closeNow() {
-        if (closing) {
-            hide();
-            tooltipOwner = null;
-            setWidth("");
-            closing = false;
-        }
+        hide();
+        setWidth("");
+        closing = false;
     }
 
     private Timer showTimer = new Timer() {
         @Override
         public void run() {
-            TooltipInfo info = ac.getTooltipTitleInfo(tooltipOwner, tooltipKey);
+            TooltipInfo info = tooltipEventHandler.getTooltipInfo();
             if (null != info) {
                 show(info);
             }
@@ -187,7 +172,6 @@ public class VTooltip extends VOverlay {
         if (opening) {
             showTimer.cancel();
             opening = false;
-            tooltipOwner = null;
         }
         if (!isAttached()) {
             return;
@@ -209,24 +193,6 @@ public class VTooltip extends VOverlay {
     public void updatePosition(Event event) {
         tooltipEventMouseX = DOM.eventGetClientX(event);
         tooltipEventMouseY = DOM.eventGetClientY(event);
-
-    }
-
-    public void handleTooltipEvent(Event event, ComponentConnector owner,
-            Object key) {
-        final int type = DOM.eventGetType(event);
-        if ((VTooltip.TOOLTIP_EVENTS & type) == type) {
-            if (type == Event.ONMOUSEOVER) {
-                showTooltip(owner, event, key);
-            } else if (type == Event.ONMOUSEMOVE) {
-                updatePosition(event);
-            } else {
-                hideTooltip();
-            }
-        } else {
-            // non-tooltip event, hide tooltip
-            hideTooltip();
-        }
     }
 
     @Override
@@ -235,17 +201,152 @@ public class VTooltip extends VOverlay {
         // cancel closing event if tooltip is mouseovered; the user might want
         // to scroll of cut&paste
 
-        switch (type) {
-        case Event.ONMOUSEOVER:
+        if (type == Event.ONMOUSEOVER) {
+            // Cancel closing so tooltip stays open and user can copy paste the
+            // tooltip
             closeTimer.cancel();
             closing = false;
-            break;
-        case Event.ONMOUSEOUT:
-            hideTooltip();
-            break;
-        default:
-            // NOP
         }
     }
 
+    /**
+     * Replace current open tooltip with new content
+     */
+    public void replaceCurrentTooltip() {
+        if (closing) {
+            closeTimer.cancel();
+            closeNow();
+        }
+
+        TooltipInfo info = tooltipEventHandler.getTooltipInfo();
+        if (null != info) {
+            show(info);
+        }
+        opening = false;
+    }
+
+    private class TooltipEventHandler implements MouseMoveHandler,
+            ClickHandler, KeyDownHandler {
+
+        /**
+         * Current element hovered
+         */
+        private com.google.gwt.dom.client.Element currentElement = null;
+
+        /**
+         * Current tooltip active
+         */
+        private TooltipInfo currentTooltipInfo = null;
+
+        /**
+         * Get current active tooltip information
+         * 
+         * @return Current active tooltip information or null
+         */
+        public TooltipInfo getTooltipInfo() {
+            return currentTooltipInfo;
+        }
+
+        /**
+         * Locate connector and it's tooltip for given element
+         * 
+         * @param element
+         *            Element used in search
+         * @return true if connector and tooltip found
+         */
+        private boolean resolveConnector(Element element) {
+
+            ComponentConnector connector = Util.getConnectorForElement(ac,
+                    RootPanel.get(), element);
+
+            // Try to find first connector with proper tooltip info
+            TooltipInfo info = null;
+            while (connector != null) {
+
+                info = connector.getTooltipInfo(element);
+
+                if (info != null && info.hasMessage()) {
+                    break;
+                }
+
+                if (!(connector.getParent() instanceof ComponentConnector)) {
+                    connector = null;
+                    info = null;
+                    break;
+                }
+                connector = (ComponentConnector) connector.getParent();
+            }
+
+            if (connector != null && info != null) {
+                currentTooltipInfo = info;
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Handle hide event
+         * 
+         * @param event
+         *            Event causing hide
+         */
+        private void handleHideEvent() {
+            hideTooltip();
+            currentTooltipInfo = null;
+        }
+
+        @Override
+        public void onMouseMove(MouseMoveEvent mme) {
+            Event event = Event.as(mme.getNativeEvent());
+            com.google.gwt.dom.client.Element element = Element.as(event
+                    .getEventTarget());
+
+            // We can ignore move event if it's handled by move or over already
+            if (currentElement == element) {
+                return;
+            }
+            currentElement = element;
+
+            boolean connectorAndTooltipFound = resolveConnector((com.google.gwt.user.client.Element) element);
+            if (!connectorAndTooltipFound) {
+                if (isShowing()) {
+                    handleHideEvent();
+                } else {
+                    currentTooltipInfo = null;
+                }
+            } else {
+                updatePosition(event);
+                if (isShowing()) {
+                    replaceCurrentTooltip();
+                } else {
+                    showTooltip();
+                }
+            }
+        }
+
+        @Override
+        public void onClick(ClickEvent event) {
+            handleHideEvent();
+        }
+
+        @Override
+        public void onKeyDown(KeyDownEvent event) {
+            handleHideEvent();
+        }
+    }
+
+    private final TooltipEventHandler tooltipEventHandler = new TooltipEventHandler();
+
+    /**
+     * Connects DOM handlers to widget that are needed for tooltip presentation.
+     * 
+     * @param widget
+     *            Widget which DOM handlers are connected
+     */
+    public void connectHandlersToWidget(Widget widget) {
+        widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, ClickEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
+    }
 }

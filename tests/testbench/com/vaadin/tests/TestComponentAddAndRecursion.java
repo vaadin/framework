@@ -43,6 +43,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
 
         Button b = new Button("use gridlayout", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 p.setContent(new GridLayout());
                 p2.setContent(new GridLayout());
@@ -53,6 +54,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("use orderedlayout", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 p.setContent(new VerticalLayout());
                 p2.setContent(new VerticalLayout());
@@ -63,6 +65,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("move B", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 p2.addComponent(l2);
             }
@@ -71,6 +74,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("move p", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 p3.addComponent(p);
             }
@@ -79,6 +83,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("add to both", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Label l = new Label("both");
                 p.addComponent(l);
@@ -89,6 +94,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("recurse", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
@@ -106,6 +112,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         main.addComponent(b);
         b = new Button("recurse2", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Panel p = new Panel("dynamic");
                 p.addComponent(p2);

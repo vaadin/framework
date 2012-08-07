@@ -75,6 +75,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         requestRepaint(); // this goes to the new viewer
     }
 
+    @Override
     public <T extends Action & Action.Listener> void addAction(T action) {
         if (ownActions == null) {
             ownActions = new HashSet<Action>();
@@ -84,6 +85,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
+    @Override
     public <T extends Action & Action.Listener> void removeAction(T action) {
         if (ownActions != null) {
             if (ownActions.remove(action)) {
@@ -92,6 +94,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
+    @Override
     public void addActionHandler(Handler actionHandler) {
         if (actionHandler == this) {
             // don't add the actionHandler to itself
@@ -109,6 +112,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
+    @Override
     public void removeActionHandler(Action.Handler actionHandler) {
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
 
@@ -206,6 +210,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
+    @Override
     public Action[] getActions(Object target, Object sender) {
         HashSet<Action> actions = new HashSet<Action>();
         if (ownActions != null) {
@@ -226,6 +231,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         return actions.toArray(new Action[actions.size()]);
     }
 
+    @Override
     public void handleAction(Action action, Object sender, Object target) {
         if (actionHandlers != null) {
             Handler[] array = actionHandlers.toArray(new Handler[actionHandlers

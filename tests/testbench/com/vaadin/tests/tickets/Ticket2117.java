@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -39,6 +39,7 @@ public class Ticket2117 extends Application.LegacyApplication {
         w.addComponent(new Label("It has also been redirected to " + w.getURL()
                 + " to support reloading"));
         w.addComponent(new Button("button", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 w.showNotification("Button clicked");
                 w.addComponent(new Label("clicked"));

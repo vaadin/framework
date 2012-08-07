@@ -29,6 +29,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     private String CATEGORY_COMPONENT_CONTAINER_FEATURES = "Component container features";
     private Command<T, ComponentSize> addButtonCommand = new Command<T, ComponentSize>() {
 
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             Button b = new Button("A button");
             c.addComponent(b);
@@ -38,6 +39,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     private Command<T, ComponentSize> addNativeButtonCommand = new Command<T, ComponentSize>() {
 
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             NativeButton b = new NativeButton("Native button");
             c.addComponent(b);
@@ -46,6 +48,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addTextAreaCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             TextArea ta = new TextArea();
             c.addComponent(ta);
@@ -54,6 +57,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addRichTextAreaCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             RichTextArea ta = new RichTextArea();
             c.addComponent(ta);
@@ -62,6 +66,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addTextFieldCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             TextField tf = new TextField();
             c.addComponent(tf);
@@ -70,6 +75,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addInlineDateFieldCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             InlineDateField tf = new InlineDateField();
             c.addComponent(tf);
@@ -77,6 +83,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         }
     };
     private Command<T, ComponentSize> addPopupDateFieldCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             PopupDateField tf = new PopupDateField();
             c.addComponent(tf);
@@ -85,6 +92,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addVerticalSplitPanelCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             VerticalSplitPanel vsp = new VerticalSplitPanel();
             c.addComponent(vsp);
@@ -93,6 +101,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addHorizontalSplitPanelCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             HorizontalSplitPanel vsp = new HorizontalSplitPanel();
             c.addComponent(vsp);
@@ -101,6 +110,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
 
     private Command<T, ComponentSize> addTabSheetCommand = new Command<T, ComponentSize>() {
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             TabSheet ts = createTabSheet();
             c.addComponent(ts);
@@ -110,6 +120,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     private Command<T, ComponentSize> addTableCommand = new Command<T, ComponentSize>() {
 
+        @Override
         public void execute(T c, ComponentSize size, Object data) {
             Table t = createTable();
             c.addComponent(t);
@@ -117,12 +128,14 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         }
     };
     private Command<T, Object> removeAllComponentsCommand = new Command<T, Object>() {
+        @Override
         public void execute(T c, Object value, Object data) {
             c.removeAllComponents();
         }
     };
     private Command<T, Integer> removeComponentByIndexCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             Component child = getComponentAtIndex(c, value);
             c.removeComponent(child);
@@ -131,6 +144,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
     };
     private Command<T, Boolean> componentAttachListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ComponentAttachListener) AbstractComponentContainerTest.this);
@@ -142,6 +156,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     private Command<T, Boolean> componentDetachListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((ComponentDetachListener) AbstractComponentContainerTest.this);
@@ -153,6 +168,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     private Command<T, Integer> setComponentHeight = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             Component child = getComponentAtIndex(c, value);
             child.setHeight((String) data);
@@ -162,6 +178,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     private Command<T, Integer> setComponentWidth = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             Component child = getComponentAtIndex(c, value);
             child.setWidth((String) data);
@@ -348,6 +365,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
 
     }
 
+    @Override
     public void componentDetachedFromContainer(ComponentDetachEvent event) {
         log(event.getClass().getSimpleName() + ": "
                 + event.getDetachedComponent().getClass().getSimpleName()
@@ -355,6 +373,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
                 + event.getContainer().getClass().getSimpleName());
     }
 
+    @Override
     public void componentAttachedToContainer(ComponentAttachEvent event) {
         log(event.getClass().getSimpleName() + ": "
                 + event.getAttachedComponent().getClass().getSimpleName()

@@ -12,6 +12,7 @@ public class PanelClickListenerRelativeCoordinates extends TestBase {
         Panel panel = new Panel("Panel's caption");
         panel.addListener(new ClickListener() {
 
+            @Override
             public void click(ClickEvent event) {
                 getMainWindow()
                         .showNotification(

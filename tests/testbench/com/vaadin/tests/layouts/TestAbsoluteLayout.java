@@ -130,6 +130,7 @@ public class TestAbsoluteLayout extends TestBase {
 
             Button componentChooser = new Button("choose component to edit");
             componentChooser.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     final Window chooser = new Window("Choose component");
                     chooser.getContent().setSizeUndefined();
@@ -166,6 +167,7 @@ public class TestAbsoluteLayout extends TestBase {
                     select.setImmediate(true);
 
                     select.addListener(new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             editcomponent((Component) event.getProperty()
                                     .getValue());
@@ -185,6 +187,7 @@ public class TestAbsoluteLayout extends TestBase {
 
             Button addComp = new Button("add component");
             addComp.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     final Window chooser = new Window(
                             "Choose component type to add");
@@ -235,6 +238,7 @@ public class TestAbsoluteLayout extends TestBase {
                     select.setImmediate(true);
 
                     select.addListener(new ValueChangeListener() {
+                        @Override
                         public void valueChange(ValueChangeEvent event) {
                             Class<?> c = (Class<?>) event.getProperty()
                                     .getValue();
@@ -279,6 +283,7 @@ public class TestAbsoluteLayout extends TestBase {
             addComponent(positionEditor);
 
             Button b = new Button("Commit changes", new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     positionEditor.commit();
                     componentEditor.commit();

@@ -14,12 +14,14 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
 
     private Command<T, Integer> maxlengthCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.setMaxLength(value);
         }
     };
     private Command<T, Boolean> nullSelectionAllowedCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setNullSettingAllowed(value);
 
@@ -27,18 +29,21 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     };
     private Command<T, String> nullRepresentationCommand = new Command<T, String>() {
 
+        @Override
         public void execute(T c, String value, Object data) {
             c.setNullRepresentation(value);
         }
     };
 
     private Command<T, String> inputPromptCommand = new Command<T, String>() {
+        @Override
         public void execute(T c, String value, Object data) {
             c.setInputPrompt(value);
         }
     };
 
     private Command<T, Boolean> textChangeListenerCommand = new Command<T, Boolean>() {
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((TextChangeListener) AbstractTextFieldTest.this);
@@ -49,24 +54,28 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
     };
 
     private Command<T, Integer> colsCommand = new Command<T, Integer>() {
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.setColumns(value);
         }
     };
 
     private Command<T, TextChangeEventMode> textChangeEventModeCommand = new Command<T, TextChangeEventMode>() {
+        @Override
         public void execute(T c, TextChangeEventMode value, Object data) {
             c.setTextChangeEventMode(value);
         }
     };
 
     private Command<T, Integer> textChangeTimeoutCommand = new Command<T, Integer>() {
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.setTextChangeTimeout(value);
         }
     };
 
     private Command<T, Range> selectionRangeCommand = new Command<T, Range>() {
+        @Override
         public void execute(T c, Range value, Object data) {
             c.setSelectionRange(value.getStart(),
                     value.getEnd() - value.getStart());
@@ -74,6 +83,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
         }
     };
     private Command<T, Object> selectAllCommand = new Command<T, Object>() {
+        @Override
         public void execute(T c, Object value, Object data) {
             c.selectAll();
         }
@@ -81,6 +91,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
 
     private Command<T, Integer> setCursorPositionCommand = new Command<T, Integer>() {
 
+        @Override
         public void execute(T c, Integer value, Object data) {
             c.setCursorPosition(value);
         }
@@ -230,6 +241,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
 
     }
 
+    @Override
     public void textChange(TextChangeEvent event) {
         AbstractTextField tf = (AbstractTextField) event.getComponent();
         log("TextChangeEvent: text='" + event.getText() + "', cursor position="

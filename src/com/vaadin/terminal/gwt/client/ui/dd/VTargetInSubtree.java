@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;

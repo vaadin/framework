@@ -5,11 +5,11 @@
 package com.vaadin.terminal.gwt.client.ui.link;
 
 import com.google.gwt.user.client.DOM;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.ui.Link;
 
@@ -22,6 +22,7 @@ public class LinkConnector extends AbstractComponentConnector implements
         return false;
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         if (!isRealUpdate(uidl)) {

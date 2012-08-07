@@ -40,6 +40,7 @@ public class Ticket2009 extends com.vaadin.Application.LegacyApplication {
         final VerticalLayout events = new VerticalLayout();
 
         t.addListener(new ItemClickEvent.ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 events.addComponent(new Label(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
@@ -62,6 +63,7 @@ public class Ticket2009 extends com.vaadin.Application.LegacyApplication {
                 .getTestTable(5, 100);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         table.addListener(new ItemClickEvent.ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 events2.addComponent(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
@@ -115,6 +117,7 @@ public class Ticket2009 extends com.vaadin.Application.LegacyApplication {
             getMainWindow().addWindow(this);
 
             done.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     getMainWindow().removeWindow(PropertyEditor.this);
                 }

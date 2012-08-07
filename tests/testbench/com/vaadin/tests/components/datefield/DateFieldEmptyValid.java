@@ -7,7 +7,7 @@ import java.util.Locale;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -48,6 +48,7 @@ public class DateFieldEmptyValid extends TestBase {
         df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_DAY);
         df.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value changeEvent");
                 checkEmpty();
@@ -59,6 +60,7 @@ public class DateFieldEmptyValid extends TestBase {
         b.setDebugId("clear");
         b.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Clearing date aka setValue(null)");
                 df.setValue(null);
@@ -70,6 +72,7 @@ public class DateFieldEmptyValid extends TestBase {
         b.setDebugId("set4.5.1990");
         b.addListener(new ClickListener() {
 
+            @Override
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 log.log("Setting new value to datefield (4.5.1990)");
@@ -81,6 +84,7 @@ public class DateFieldEmptyValid extends TestBase {
         b = new Button("Set date to 5.6.2000 using a property data source");
         b.addListener(new ClickListener() {
 
+            @Override
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 log.log("Setting new object property (5.6.2000) to datefield");
@@ -97,6 +101,7 @@ public class DateFieldEmptyValid extends TestBase {
         b.setDebugId("set-via-ds");
         b.addListener(new ClickListener() {
 
+            @Override
             @SuppressWarnings("deprecation")
             public void buttonClick(ClickEvent event) {
                 log.log("Setting object property (with value null) to datefield and set value of property to 27.8.2005");
@@ -111,6 +116,7 @@ public class DateFieldEmptyValid extends TestBase {
         b = new Button("Check value");
         b.setDebugId("check-value");
         b.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 log.log("Checking state");
                 checkEmpty();

@@ -33,6 +33,7 @@ public class Ticket2244 extends Application.LegacyApplication {
 
         w.addComponent(new Button("new item", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 form.setItemDataSource(new BeanItem<MyBean>(new MyBean()));
 
@@ -42,6 +43,7 @@ public class Ticket2244 extends Application.LegacyApplication {
         w.addComponent(new Button("new bigger item",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setItemDataSource(new BeanItem<MyBean>(
                                 new MyBiggerBean()));
@@ -52,6 +54,7 @@ public class Ticket2244 extends Application.LegacyApplication {
         w.addComponent(new Button("new grid layout",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setLayout(new GridLayout());
 
@@ -61,6 +64,7 @@ public class Ticket2244 extends Application.LegacyApplication {
         w.addComponent(new Button("new form layout",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         form.setLayout(new FormLayout());
 

@@ -5,17 +5,21 @@ package com.vaadin.terminal.gwt.client.ui.customlayout;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.customlayout.CustomLayoutState;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
 import com.vaadin.ui.CustomLayout;
 
 @Connect(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractLayoutConnector implements
-        SimpleManagedLayout {
+        SimpleManagedLayout, Paintable {
 
     @Override
     public CustomLayoutState getState() {
@@ -102,11 +106,19 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
         return (VCustomLayout) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector paintable) {
         getWidget().updateCaption(paintable);
     }
 
+    @Override
     public void layout() {
         getWidget().iLayoutJS(DOM.getFirstChild(getWidget().getElement()));
+    }
+
+    @Override
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Not interested in anything from the UIDL - just implementing the
+        // interface to avoid some warning (#8688)
     }
 }

@@ -33,6 +33,7 @@ public class TextAreaCursorPosition extends TestBase {
         newTextField.setTextChangeEventMode(TextChangeEventMode.EAGER);
 
         newTextField.addListener(new TextChangeListener() {
+            @Override
             public void textChange(TextChangeEvent event) {
                 AbstractTextField component = (AbstractTextField) event
                         .getComponent();

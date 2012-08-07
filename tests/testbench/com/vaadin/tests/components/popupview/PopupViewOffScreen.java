@@ -3,7 +3,7 @@ package com.vaadin.tests.components.popupview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
@@ -42,6 +42,7 @@ public class PopupViewOffScreen extends TestBase {
 
         Button showall = new Button("Popup all", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 for (PopupView pv : popupViews) {
                     pv.setPopupVisible(true);

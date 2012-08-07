@@ -19,13 +19,14 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Root;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
@@ -43,6 +44,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         this.manager = manager;
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         Object owner = variables.get("dhowner");
 
@@ -181,10 +183,12 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return transferable;
     }
 
+    @Override
     public boolean isEnabled() {
         return isConnectorEnabled();
     }
 
+    @Override
     public boolean isImmediate() {
         return true;
     }
@@ -218,73 +222,92 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return false;
     }
 
+    @Override
     public SharedState getState() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public String getConnectorId() {
         return VDragAndDropManager.DD_SERVICE;
     }
 
+    @Override
     public boolean isConnectorEnabled() {
         // Drag'n'drop can't be disabled
         return true;
     }
 
+    @Override
     public List<ClientMethodInvocation> retrievePendingRpcCalls() {
         return null;
     }
 
+    @Override
     public RpcManager getRpcManager(Class<?> rpcInterface) {
         // TODO Use rpc for drag'n'drop
         return null;
     }
 
+    @Override
     public Class<? extends SharedState> getStateType() {
         return SharedState.class;
     }
 
+    @Override
     public void requestRepaint() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public ClientConnector getParent() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void requestRepaintAll() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void setParent(ClientConnector parent) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void attach() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void detach() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public Collection<Extension> getExtensions() {
         // TODO Auto-generated method stub
         return Collections.emptySet();
     }
 
+    @Override
     public void removeExtension(Extension extension) {
         // TODO Auto-generated method stub
     }
 
     private Logger getLogger() {
         return Logger.getLogger(DragAndDropService.class.getName());
+    }
+
+    @Override
+    public Root getRoot() {
+        return null;
     }
 }

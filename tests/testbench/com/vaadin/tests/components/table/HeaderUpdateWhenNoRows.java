@@ -20,6 +20,7 @@ public class HeaderUpdateWhenNoRows extends TestBase {
         final CheckBox showHeaders = new CheckBox("Show headers");
         showHeaders.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (showHeaders.getValue()) {
                     table.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);

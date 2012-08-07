@@ -24,6 +24,7 @@ public class WidgetcontainerRoot extends Root {
                 "Click the button to add components to the WidgetContainer."));
         Button button = new Button("Add more components", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Random randomGenerator = new Random();
                 int random = randomGenerator.nextInt(3);

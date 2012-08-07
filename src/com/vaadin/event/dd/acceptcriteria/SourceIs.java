@@ -49,6 +49,7 @@ public class SourceIs extends ClientSideCriterion {
         target.addAttribute("c", paintedComponents);
     }
 
+    @Override
     public boolean accept(DragAndDropEvent dragEvent) {
         if (dragEvent.getTransferable() instanceof TransferableImpl) {
             Component sourceComponent = ((TransferableImpl) dragEvent

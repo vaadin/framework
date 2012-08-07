@@ -40,12 +40,14 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
         tf2.setWidth("300px");
         tf2.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 TextFieldFocusAndBlurListeners.this.valueChange(event);
             }
         });
         tf2.addListener(new FocusListener() {
 
+            @Override
             public void focus(FocusEvent event) {
                 TextFieldFocusAndBlurListeners.this.focus(event);
             }
@@ -53,6 +55,7 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
         });
         tf2.addListener(new BlurListener() {
 
+            @Override
             public void blur(BlurEvent event) {
                 TextFieldFocusAndBlurListeners.this.blur(event);
             }
@@ -76,11 +79,13 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
         addComponent(tf4);
     }
 
+    @Override
     public void focus(FocusEvent event) {
         log.log(event.getComponent().getCaption() + ": Focus");
 
     }
 
+    @Override
     public void blur(BlurEvent event) {
         TextField tf = (TextField) event.getComponent();
         log.log(tf.getCaption() + ": Blur. Value is: "
@@ -88,6 +93,7 @@ public class TextFieldFocusAndBlurListeners extends TestBase implements
 
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         TextField tf = (TextField) event.getProperty();
         log.log(tf.getCaption() + ": ValueChange: " + tf.getValue().toString());

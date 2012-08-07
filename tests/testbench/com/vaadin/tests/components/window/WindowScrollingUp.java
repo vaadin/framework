@@ -26,6 +26,7 @@ public class WindowScrollingUp extends AbstractTestCase {
         final Button up = new Button("up");
         up.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 up.getRoot().setScrollTop(0);
             }

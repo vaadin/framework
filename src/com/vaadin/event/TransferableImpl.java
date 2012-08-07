@@ -24,18 +24,22 @@ public class TransferableImpl implements Transferable {
         this.rawVariables = rawVariables;
     }
 
+    @Override
     public Component getSourceComponent() {
         return sourceComponent;
     }
 
+    @Override
     public Object getData(String dataFlavor) {
         return rawVariables.get(dataFlavor);
     }
 
+    @Override
     public void setData(String dataFlavor, Object value) {
         rawVariables.put(dataFlavor, value);
     }
 
+    @Override
     public Collection<String> getDataFlavors() {
         return rawVariables.keySet();
     }

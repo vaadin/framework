@@ -4,10 +4,10 @@
 
 package com.vaadin.terminal.gwt.client.ui.twincolselect;
 
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.UIDL;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.ui.TwinColSelect;
 
@@ -29,6 +29,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
 
     @Override
     protected void init() {
+        super.init();
         getLayoutManager().registerDependency(this,
                 getWidget().captionWrapper.getElement());
     }
@@ -44,6 +45,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         return (VTwinColSelect) super.getWidget();
     }
 
+    @Override
     public void layoutVertically() {
         if (isUndefinedHeight()) {
             getWidget().clearInternalHeights();
@@ -52,6 +54,7 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         if (isUndefinedWidth()) {
             getWidget().clearInternalWidths();

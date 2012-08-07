@@ -64,6 +64,7 @@ public class TicketTests {
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
             public Object answer() throws Throwable {
                 List<Filter> orders = (List<Filter>) EasyMock
                         .getCurrentArguments()[0];
@@ -75,6 +76,7 @@ public class TicketTests {
         EasyMock.expect(
                 delegate.getQueryStatement(EasyMock.anyInt(), EasyMock.anyInt()))
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     public StatementHelper answer() throws Throwable {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
@@ -85,6 +87,7 @@ public class TicketTests {
                 }).anyTimes();
         EasyMock.expect(delegate.getCountStatement())
                 .andAnswer(new IAnswer<StatementHelper>() {
+                    @Override
                     @SuppressWarnings("deprecation")
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();

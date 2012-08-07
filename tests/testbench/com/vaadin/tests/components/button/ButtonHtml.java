@@ -19,6 +19,7 @@ public class ButtonHtml extends TestBase {
         final Button swapButton = new Button("<i>Swap button<i>");
         swapButton.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 swapButton.setHtmlContentAllowed(!swapButton
                         .isHtmlContentAllowed());

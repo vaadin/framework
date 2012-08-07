@@ -38,6 +38,7 @@ public class ButtonClick {
     private Button getButton() {
         Button b = new Button();
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent ev) {
                 clicked = true;
             }

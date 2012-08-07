@@ -45,6 +45,7 @@ public class Ticket1632 extends Application.LegacyApplication {
         b.addListener(new Button.ClickListener() {
             boolean visible = false;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 visible = !visible;
                 if (visible) {

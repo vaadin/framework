@@ -31,6 +31,7 @@ public class Ticket2023 extends com.vaadin.Application.LegacyApplication
 
         gl.addComponent(new Button("null", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 c.setWidth(null);
                 c.setHeight(null);
@@ -43,6 +44,7 @@ public class Ticket2023 extends com.vaadin.Application.LegacyApplication
 
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         c.setWidth(event.getButton().getCaption());
         c.setHeight(event.getButton().getCaption());

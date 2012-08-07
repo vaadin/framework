@@ -2,8 +2,8 @@ package com.vaadin.tests.components.caption;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
@@ -47,6 +47,7 @@ public class IconsInCaption extends TestBase {
         iconTypeSelect.setImmediate(true);
         iconTypeSelect.setNullSelectionAllowed(false);
         iconTypeSelect.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateContainer();
             }
@@ -60,6 +61,7 @@ public class IconsInCaption extends TestBase {
         containerSelect.setImmediate(true);
         containerSelect.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateContainer();
 

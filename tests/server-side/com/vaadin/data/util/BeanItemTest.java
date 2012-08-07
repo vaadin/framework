@@ -127,6 +127,7 @@ public class BeanItemTest extends TestCase {
 
         public void setSub(int i);
 
+        @Override
         public int getOverride();
 
         public void setOverride(int i);

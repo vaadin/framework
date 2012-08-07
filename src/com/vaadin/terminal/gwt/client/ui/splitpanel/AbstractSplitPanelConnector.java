@@ -14,16 +14,18 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
@@ -41,6 +43,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         getWidget().addHandler(new SplitterMoveHandler() {
 
+            @Override
             public void splitterMoved(SplitterMoveEvent event) {
                 String position = getWidget().getSplitterPosition();
                 float pos = 0;
@@ -61,6 +64,7 @@ public abstract class AbstractSplitPanelConnector extends
         }, SplitterMoveEvent.TYPE);
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // TODO Implement caption handling
     }
@@ -145,6 +149,7 @@ public abstract class AbstractSplitPanelConnector extends
         getWidget().makeScrollable();
     }
 
+    @Override
     public void layout() {
         VAbstractSplitPanel splitPanel = getWidget();
         splitPanel.setSplitPosition(splitPanel.position);

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * Base class for web application contexts (including portlet contexts) that
@@ -45,12 +46,14 @@ public abstract class AbstractWebApplicationContext implements
 
     private long lastRequestTime = -1;
 
+    @Override
     public void addTransactionListener(TransactionListener listener) {
         if (listener != null) {
             listeners.add(listener);
         }
     }
 
+    @Override
     public void removeTransactionListener(TransactionListener listener) {
         listeners.remove(listener);
     }
@@ -119,6 +122,7 @@ public abstract class AbstractWebApplicationContext implements
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
      */
+    @Override
     public void valueBound(HttpSessionBindingEvent arg0) {
         // We are not interested in bindings
     }
@@ -126,6 +130,7 @@ public abstract class AbstractWebApplicationContext implements
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
      */
+    @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
@@ -160,6 +165,7 @@ public abstract class AbstractWebApplicationContext implements
         return browser;
     }
 
+    @Override
     public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
     }
@@ -169,12 +175,14 @@ public abstract class AbstractWebApplicationContext implements
         applicationToAjaxAppMgrMap.remove(application);
     }
 
+    @Override
     public String generateApplicationResourceURL(ApplicationResource resource,
             String mapKey) {
 
         final String filename = resource.getFilename();
         if (filename == null) {
-            return "app://APP/" + mapKey + "/";
+            return ApplicationConnection.APP_PROTOCOL_PREFIX
+                    + ApplicationConnection.APP_REQUEST_PATH + mapKey + "/";
         } else {
             // #7738 At least Tomcat and JBoss refuses requests containing
             // encoded slashes or backslashes in URLs. Application resource URLs
@@ -182,7 +190,9 @@ public abstract class AbstractWebApplicationContext implements
             // in the future.
             String encodedFileName = urlEncode(filename).replace("%2F", "/")
                     .replace("%5C", "\\");
-            return "app://APP/" + mapKey + "/" + encodedFileName;
+            return ApplicationConnection.APP_PROTOCOL_PREFIX
+                    + ApplicationConnection.APP_REQUEST_PATH + mapKey + "/"
+                    + encodedFileName;
         }
 
     }
@@ -197,6 +207,7 @@ public abstract class AbstractWebApplicationContext implements
         }
     }
 
+    @Override
     public boolean isApplicationResourceURL(URL context, String relativeUri) {
         // If the relative uri is null, we are ready
         if (relativeUri == null) {
@@ -214,6 +225,7 @@ public abstract class AbstractWebApplicationContext implements
         return (prefix.equals("APP"));
     }
 
+    @Override
     public String getURLKey(URL context, String relativeUri) {
         final int index = relativeUri.indexOf('/');
         final int next = relativeUri.indexOf('/', index + 1);

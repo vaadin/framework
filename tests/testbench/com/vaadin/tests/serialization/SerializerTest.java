@@ -15,8 +15,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.shared.Connector;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
@@ -63,13 +63,12 @@ public class SerializerTest extends AbstractTestRoot {
         rpc.sendList(Arrays.asList(5, 8, -234), Arrays.<Connector> asList(this,
                 testExtension), Arrays.asList(new SimpleTestBean(234),
                 new SimpleTestBean(-568)));
-        // Disabled because of #8861
-        // rpc.sendArrayList(
-        // Arrays.asList(new int[] { 1, 2 }, new int[] { 3, 4 }),
-        // Arrays.asList(new Integer[] { 5, 6 }, new Integer[] { 7, 8 }),
-        // Collections
-        // .singletonList(new SimpleTestBean[] { new SimpleTestBean(
-        // 7) }));
+        rpc.sendArrayList(
+                Arrays.asList(new int[] { 1, 2 }, new int[] { 3, 4 }),
+                Arrays.asList(new Integer[] { 5, 6 }, new Integer[] { 7, 8 }),
+                Collections
+                        .singletonList(new SimpleTestBean[] { new SimpleTestBean(
+                                7) }));
         // Disabled because of #8861
         // rpc.sendListArray(
         // new List[] { Arrays.asList(1, 2), Arrays.asList(3, 4) },
@@ -112,61 +111,73 @@ public class SerializerTest extends AbstractTestRoot {
         });
 
         testExtension.registerRpc(new SerializerTestRpc() {
+            @Override
             public void sendBoolean(boolean value, Boolean boxedValue,
                     boolean[] array) {
                 log.log("sendBoolean: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendByte(byte value, Byte boxedValue, byte[] array) {
                 log.log("sendByte: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendChar(char value, Character boxedValue, char[] array) {
                 log.log("sendChar: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendInt(int value, Integer boxedValue, int[] array) {
                 log.log("sendInt: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendLong(long value, Long boxedValue, long[] array) {
                 log.log("sendLong: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendFloat(float value, Float boxedValue, float[] array) {
                 log.log("sendFloat: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendDouble(double value, Double boxedValue,
                     double[] array) {
                 log.log("sendDouble: " + value + ", " + boxedValue + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendString(String value) {
                 log.log("sendString: " + value);
             }
 
+            @Override
             public void sendConnector(Connector connector) {
                 log.log("sendConnector: " + connector.getClass().getName());
             }
 
+            @Override
             public void sendBean(ComplexTestBean complexBean,
                     SimpleTestBean simpleBean, SimpleTestBean[] array) {
                 log.log("sendBean: " + complexBean + ", " + simpleBean + ", "
                         + Arrays.toString(array));
             }
 
+            @Override
             public void sendNull(String value1, String value2) {
                 log.log("sendNull: " + value1 + ", " + value2);
             }
 
+            @Override
             public void sendNestedArray(int[][] nestedIntArray,
                     SimpleTestBean[][] nestedBeanArray) {
                 log.log("sendNestedArray: "
@@ -174,6 +185,7 @@ public class SerializerTest extends AbstractTestRoot {
                         + Arrays.deepToString(nestedBeanArray));
             }
 
+            @Override
             public void sendList(List<Integer> intList,
                     List<Connector> connectorList, List<SimpleTestBean> beanList) {
                 log.log("sendList: " + intList + ", "
@@ -196,19 +208,24 @@ public class SerializerTest extends AbstractTestRoot {
                 return string;
             }
 
+            @Override
             public void sendArrayList(List<int[]> primitiveArrayList,
                     List<Integer[]> objectArrayList,
                     List<SimpleTestBean[]> beanArrayList) {
-                log.log("sendArrayList: " + primitiveArrayList + ", "
-                        + objectArrayList + ", " + beanArrayList);
+                log.log("sendArrayList: "
+                        + Arrays.deepToString(primitiveArrayList.toArray())
+                        + ", " + Arrays.deepToString(objectArrayList.toArray())
+                        + ", " + Arrays.deepToString(beanArrayList.toArray()));
             }
 
+            @Override
             public void sendListArray(List<Integer>[] objectListArray,
                     List<SimpleTestBean>[] beanListArray) {
                 log.log("sendArrayList: " + Arrays.toString(objectListArray)
                         + ", " + Arrays.toString(beanListArray));
             }
 
+            @Override
             public void sendSet(Set<Integer> intSet,
                     Set<Connector> connectorSet, Set<SimpleTestBean> beanSet) {
                 log.log("sendSet: " + intSet + ", "
@@ -216,6 +233,7 @@ public class SerializerTest extends AbstractTestRoot {
                         + beanSet);
             }
 
+            @Override
             public void sendMap(Map<String, SimpleTestBean> stringMap,
                     Map<Connector, Boolean> connectorMap,
                     Map<Integer, Connector> intMap,
@@ -252,6 +270,7 @@ public class SerializerTest extends AbstractTestRoot {
                         + ", " + intMapString + ", " + beanMap);
             }
 
+            @Override
             public void sendWrappedGenerics(
                     Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics) {
                 log.log("sendWrappedGenerics: " + generics.toString());

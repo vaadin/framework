@@ -8,32 +8,34 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.Field;
-import com.vaadin.terminal.gwt.client.ui.listselect.TooltipListBox;
 import com.vaadin.terminal.gwt.client.ui.optiongroup.VOptionGroupBase;
 
 public class VNativeSelect extends VOptionGroupBase implements Field {
 
     public static final String CLASSNAME = "v-select";
 
-    protected TooltipListBox select;
+    protected ListBox select;
 
     private boolean firstValueIsTemporaryNullItem = false;
 
     public VNativeSelect() {
-        super(new TooltipListBox(false), CLASSNAME);
-        select = (TooltipListBox) optionsContainer;
-        select.setSelect(this);
+        super(new ListBox(false), CLASSNAME);
+        select = getOptionsContainer();
         select.setVisibleItemCount(1);
         select.addChangeHandler(this);
         select.setStyleName(CLASSNAME + "-select");
 
     }
 
+    protected ListBox getOptionsContainer() {
+        return (ListBox) optionsContainer;
+    }
+
     @Override
     protected void buildOptions(UIDL uidl) {
-        select.setClient(client);
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
         firstValueIsTemporaryNullItem = false;
@@ -103,9 +105,10 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     @Override
     protected void setTabIndex(int tabIndex) {
-        ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
+        getOptionsContainer().setTabIndex(tabIndex);
     }
 
+    @Override
     public void focus() {
         select.setFocus(true);
     }

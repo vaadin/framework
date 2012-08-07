@@ -59,6 +59,7 @@ public class ListenerOrder extends com.vaadin.Application.LegacyApplication
         b1.removeListener(b1Listener);
         // remove non-existing listener
         b1.removeListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
             }
         });
@@ -107,6 +108,7 @@ public class ListenerOrder extends com.vaadin.Application.LegacyApplication
         return listener;
     }
 
+    @Override
     public void buttonClick(ClickEvent event) {
         System.out.println("ClickEvent from Test1");
         s1.addItem("new item " + System.currentTimeMillis());
@@ -133,6 +135,7 @@ public class ListenerOrder extends com.vaadin.Application.LegacyApplication
             System.out.println("Created listener " + name + ", id=" + count);
         }
 
+        @Override
         public void buttonClick(ClickEvent event) {
             String msg = "ClickEvent from MyClickListener " + name + ", id="
                     + count;
@@ -142,18 +145,21 @@ public class ListenerOrder extends com.vaadin.Application.LegacyApplication
 
     }
 
+    @Override
     public void containerPropertySetChange(PropertySetChangeEvent event) {
         String msg = "containerPropertySetChange from " + this;
         System.out.println(msg);
         getMainWindow().showNotification(msg);
     }
 
+    @Override
     public void containerItemSetChange(ItemSetChangeEvent event) {
         String msg = "containerItemSetChange from " + this;
         System.out.println(msg);
         getMainWindow().showNotification(msg);
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         String msg = "valueChange from " + this;
         System.out.println(msg);

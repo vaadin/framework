@@ -27,6 +27,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
      * java.util.Locale)
      */
+    @Override
     public Boolean convertToModel(String value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -71,6 +72,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
      * .Object, java.util.Locale)
      */
+    @Override
     public String convertToPresentation(Boolean value, Locale locale)
             throws ConversionException {
         if (value == null) {
@@ -88,6 +90,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
+    @Override
     public Class<Boolean> getModelType() {
         return Boolean.class;
     }
@@ -97,6 +100,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * 
      * @see com.vaadin.data.util.converter.Converter#getPresentationType()
      */
+    @Override
     public Class<String> getPresentationType() {
         return String.class;
     }

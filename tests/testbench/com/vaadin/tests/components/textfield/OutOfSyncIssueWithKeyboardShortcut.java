@@ -82,6 +82,7 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
             saveButton.setClickShortcut(KeyCode.ENTER);
 
             table.addListener(new ValueChangeListener() {
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     Object value = event.getProperty().getValue();
                     if (value != null) {
@@ -96,6 +97,7 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
             });
 
             saveButton.addListener(new ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     form.commit();
                     Topping entity = getEntityForItem(form.getItemDataSource());

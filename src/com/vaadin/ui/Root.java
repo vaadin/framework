@@ -20,6 +20,9 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.root.RootServerRpc;
+import com.vaadin.shared.ui.root.RootState;
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
 import com.vaadin.terminal.Page.BrowserWindowResizeListener;
@@ -29,9 +32,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.root.RootServerRpc;
-import com.vaadin.terminal.gwt.client.ui.root.RootState;
 import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.ui.Window.CloseListener;
 
@@ -419,6 +419,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private Page page = new Page(this);
 
     private RootServerRpc rpc = new RootServerRpc() {
+        @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Root.this, mouseDetails));
         }
@@ -502,6 +503,7 @@ public abstract class Root extends AbstractComponentContainer implements
         return this;
     }
 
+    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         throw new UnsupportedOperationException();
     }
@@ -511,6 +513,7 @@ public abstract class Root extends AbstractComponentContainer implements
         return application;
     }
 
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         page.paintContent(target);
 
@@ -550,6 +553,7 @@ public abstract class Root extends AbstractComponentContainer implements
         fireEvent(new ClickEvent(this, mouseDetails));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
         if (variables.containsKey(CLICK_EVENT_ID)) {
@@ -578,6 +582,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
+    @Override
     public Iterator<Component> getComponentIterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
@@ -597,6 +602,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentCount()
      */
+    @Override
     public int getComponentCount() {
         return windows.size() + (getContent() == null ? 0 : 1);
     }
@@ -956,11 +962,13 @@ public abstract class Root extends AbstractComponentContainer implements
         return actionManager;
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void addAction(
             T action) {
         getActionManager().addAction(action);
     }
 
+    @Override
     public <T extends Action & com.vaadin.event.Action.Listener> void removeAction(
             T action) {
         if (actionManager != null) {
@@ -968,10 +976,12 @@ public abstract class Root extends AbstractComponentContainer implements
         }
     }
 
+    @Override
     public void addActionHandler(Handler actionHandler) {
         getActionManager().addActionHandler(actionHandler);
     }
 
+    @Override
     public void removeActionHandler(Handler actionHandler) {
         if (actionManager != null) {
             actionManager.removeActionHandler(actionHandler);
@@ -1071,11 +1081,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param caption
      *            The message
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use Notification.show instead but be aware that
+     *             Notification.show does not allow HTML.
      */
     @Deprecated
     public void showNotification(String caption) {
-        getPage().showNotification(new Notification(caption));
+        Notification notification = new Notification(caption);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1094,11 +1107,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param type
      *            The message type
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use Notification.show instead but be aware that
+     *             Notification.show does not allow HTML.
      */
     @Deprecated
     public void showNotification(String caption, int type) {
-        getPage().showNotification(new Notification(caption, type));
+        Notification notification = new Notification(caption, type);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1117,11 +1133,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param description
      *            The message description
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page) instead but
+     *             be aware that HTML by default not allowed.
      */
     @Deprecated
     public void showNotification(String caption, String description) {
-        getPage().showNotification(new Notification(caption, description));
+        Notification notification = new Notification(caption, description);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1143,12 +1162,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * @param type
      *            The message type
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page) instead but
+     *             be aware that HTML by default not allowed.
      */
     @Deprecated
     public void showNotification(String caption, String description, int type) {
-        getPage()
-                .showNotification(new Notification(caption, description, type));
+        Notification notification = new Notification(caption, description, type);
+        notification.setHtmlContentAllowed(true);// Backwards compatibility
+        getPage().showNotification(notification);
     }
 
     /**
@@ -1173,7 +1194,7 @@ public abstract class Root extends AbstractComponentContainer implements
      *            Whether html in the caption and description should be
      *            displayed as html or as plain text
      * 
-     * @deprecated As of 7.0, use Notification.show instead
+     * @deprecated As of 7.0, use new Notification(...).show(Page).
      */
     @Deprecated
     public void showNotification(String caption, String description, int type,

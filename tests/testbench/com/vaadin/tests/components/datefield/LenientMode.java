@@ -73,6 +73,7 @@ public class LenientMode extends TestBase implements ValueChangeListener {
 
     }
 
+    @Override
     public void valueChange(ValueChangeEvent event) {
         getMainWindow().showNotification(
                 "New value" + event.getProperty().getValue());

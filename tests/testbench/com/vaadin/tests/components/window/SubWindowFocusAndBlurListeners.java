@@ -36,12 +36,14 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         window.addComponent(new TextField());
         window.addListener(new FocusListener() {
+            @Override
             public void focus(FocusEvent event) {
                 Notification.show("Focused window");
             }
         });
 
         window.addListener(new BlurListener() {
+            @Override
             public void blur(BlurEvent event) {
                 Notification.show("Blurred window");
             }
@@ -51,10 +53,12 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
             private Action[] s = new Action[] { new ShortcutAction("^Save") };
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 return s;
             }
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 Notification.show("Action!");
             }
@@ -68,6 +72,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         Button button = new Button("Bring to front (should focus too)",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         window.bringToFront();
                     }

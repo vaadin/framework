@@ -6,8 +6,8 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo.Bits;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.AlignmentInfo.Bits;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the

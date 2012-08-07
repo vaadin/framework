@@ -28,6 +28,7 @@ public class TableMultiSelectSimple extends TestBase {
         t.setImmediate(true);
         t.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 TreeSet<?> sorted = new TreeSet<Object>((Set<?>) event
                         .getProperty().getValue());

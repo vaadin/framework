@@ -24,22 +24,27 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
 
     protected static class NullProperty implements Property<String> {
 
+        @Override
         public String getValue() {
             return null;
         }
 
+        @Override
         public void setValue(Object newValue) throws ReadOnlyException {
             throw new ReadOnlyException();
         }
 
+        @Override
         public Class<String> getType() {
             return String.class;
         }
 
+        @Override
         public boolean isReadOnly() {
             return true;
         }
 
+        @Override
         public void setReadOnly(boolean newStatus) {
             // do nothing
         }
@@ -60,11 +65,13 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
             this.propertyId = propertyId;
         }
 
+        @Override
         public boolean passesFilter(Object itemId, Item item)
                 throws UnsupportedOperationException {
             return this.item == item;
         }
 
+        @Override
         public boolean appliesToProperty(Object propertyId) {
             return this.propertyId != null ? this.propertyId.equals(propertyId)
                     : true;

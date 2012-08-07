@@ -111,6 +111,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
      * @throws PaintException
      *             if the Paint Operation fails.
      */
+    @Override
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("indeterminate", indeterminate);
         target.addAttribute("pollinginterval", pollingInterval);
@@ -247,6 +248,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
         return pollingInterval;
     }
 
+    @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // TODO Remove once Vaadin6Component is no longer implemented
 

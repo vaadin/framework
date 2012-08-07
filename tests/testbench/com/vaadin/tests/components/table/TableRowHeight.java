@@ -89,6 +89,7 @@ public class TableRowHeight extends TestBase {
 
     public class LabelColumnGenerator implements ColumnGenerator {
 
+        @Override
         public Component generateCell(Table source, Object itemId,
                 Object columnId) {
             Item item = source.getItem(itemId);
@@ -104,6 +105,7 @@ public class TableRowHeight extends TestBase {
 
     public class LayoutColumnGenerator implements ColumnGenerator {
 
+        @Override
         public Component generateCell(Table source, Object itemId,
                 Object columnId) {
             Item item = source.getItem(itemId);

@@ -50,6 +50,7 @@ public class TestSetVisibleAndCaching extends
         selectPanel(selectedPanel);
 
         buttonNextPanel.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 selectedPanel++;
                 if (selectedPanel > 2) {

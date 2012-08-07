@@ -45,6 +45,7 @@ public class EmbeddedImageRefresh extends TestBase {
         // The button requests repainting the embedded.
         Button button = new Button("refr");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 embedded.requestRepaint();
             }
@@ -52,6 +53,7 @@ public class EmbeddedImageRefresh extends TestBase {
         addComponent(button);
         button = new Button("refr name");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 ((StreamResource) embedded.getSource()).setFilename(new Date()
                         .getTime() + ".png");
@@ -61,6 +63,7 @@ public class EmbeddedImageRefresh extends TestBase {
         addComponent(button);
         button = new Button("200x200");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 embedded.setWidth("200px");
                 embedded.setHeight("200px");
@@ -69,6 +72,7 @@ public class EmbeddedImageRefresh extends TestBase {
         addComponent(button);
         button = new Button("undef");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 embedded.setSizeUndefined();
             }
@@ -85,6 +89,7 @@ public class EmbeddedImageRefresh extends TestBase {
             return (int) Math.round(pos * resolution / (cells * 1.0));
         }
 
+        @Override
         public InputStream getStream() {
             // Create an image and draw some background on it.
             BufferedImage image = new BufferedImage(640, 480,

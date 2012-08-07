@@ -32,6 +32,7 @@ public class Ticket1230 extends Application.LegacyApplication {
             layout.addComponent(selectWithoutNullItem);
             Button b = new Button("Select NULL_PROPERTY", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select(NULL_ITEM_ID);
                     printState();
@@ -41,6 +42,7 @@ public class Ticket1230 extends Application.LegacyApplication {
             layout.addComponent(b);
             b = new Button("Select 1", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select("1");
                     printState();
@@ -50,6 +52,7 @@ public class Ticket1230 extends Application.LegacyApplication {
             layout.addComponent(b);
             b = new Button("Select 2", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select("2");
                     printState();
@@ -60,6 +63,7 @@ public class Ticket1230 extends Application.LegacyApplication {
 
             b = new Button("Select null", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select(null);
                     printState();
@@ -79,6 +83,7 @@ public class Ticket1230 extends Application.LegacyApplication {
             selectWithNullItem.setCaption("Select with null item id");
             Button b = new Button("Select NULL_PROPERTY", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select(NULL_ITEM_ID);
                     printState();
@@ -89,6 +94,7 @@ public class Ticket1230 extends Application.LegacyApplication {
 
             b = new Button("Select 1", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select("1");
                     printState();
@@ -98,6 +104,7 @@ public class Ticket1230 extends Application.LegacyApplication {
             layout.addComponent(b);
             b = new Button("Select 2", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select("2");
                     printState();
@@ -107,6 +114,7 @@ public class Ticket1230 extends Application.LegacyApplication {
 
             b = new Button("Select null", new ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select(null);
                     printState();
@@ -118,6 +126,7 @@ public class Ticket1230 extends Application.LegacyApplication {
 
         w.addComponent(new Button("print select values",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         printState();
                     }

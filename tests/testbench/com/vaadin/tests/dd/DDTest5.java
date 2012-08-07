@@ -86,10 +86,12 @@ public class DDTest5 extends TestBase {
 
         dh = new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
+            @Override
             public void drop(DragAndDropEvent dropEvent) {
 
                 /*

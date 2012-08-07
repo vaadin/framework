@@ -7,20 +7,22 @@ import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.ContextMenuDetails;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;
@@ -42,6 +44,7 @@ public class TableConnector extends AbstractComponentContainerConnector
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().rendering = true;
 
@@ -178,6 +181,7 @@ public class TableConnector extends AbstractComponentContainerConnector
                         // *shouldn't* have changed (unless the number of rows
                         // or the height of the widget has also changed)
                         Scheduler.get().scheduleDeferred(new Command() {
+                            @Override
                             public void execute() {
                                 Util.runWebkitOverflowAutoFix(getWidget().scrollBodyPanel
                                         .getElement());
@@ -244,6 +248,20 @@ public class TableConnector extends AbstractComponentContainerConnector
             }
         }
 
+        /*
+         * If the server has (re)initialized the rows, our selectionRangeStart
+         * row will point to an index that the server knows nothing about,
+         * causing problems if doing multi selection with shift. The field will
+         * be cleared a little later when the row focus has been restored.
+         * (#8584)
+         */
+        if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
+                && uidl.getBooleanAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
+                && getWidget().selectionRangeStart != null) {
+            assert !getWidget().selectionRangeStart.isAttached();
+            getWidget().selectionRangeStart = getWidget().focusedRow;
+        }
+
         getWidget().tabIndex = uidl.hasAttribute("tabindex") ? uidl
                 .getIntAttribute("tabindex") : 0;
         getWidget().setProperTabIndex();
@@ -265,23 +283,28 @@ public class TableConnector extends AbstractComponentContainerConnector
         return (VScrollTable) super.getWidget();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, not rendered
     }
 
+    @Override
     public void layoutVertically() {
         getWidget().updateHeight();
     }
 
+    @Override
     public void layoutHorizontally() {
         getWidget().updateWidth();
     }
 
+    @Override
     public void postLayout() {
         VScrollTable table = getWidget();
         if (table.sizeNeedsInit) {
             table.sizeInit();
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
                 public void execute() {
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
@@ -326,6 +349,29 @@ public class TableConnector extends AbstractComponentContainerConnector
                 }
             }
         }
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+
+        TooltipInfo info = null;
+
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VScrollTableRow.class);
+
+            if (node != null) {
+                VScrollTableRow row = (VScrollTableRow) node;
+                info = row.getTooltip(element);
+            }
+        }
+
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 
 }

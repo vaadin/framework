@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.RootPanel;
+import com.vaadin.shared.VBrowserDetails;
 
 /**
  * Class used to query information about web browser.

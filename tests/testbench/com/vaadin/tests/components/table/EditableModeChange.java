@@ -44,6 +44,7 @@ public class EditableModeChange extends TestBase {
 
         items.addListener(new ItemClickEvent.ItemClickListener() {
 
+            @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
                     selectionEvent = event;

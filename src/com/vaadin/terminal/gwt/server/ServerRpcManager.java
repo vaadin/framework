@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.gwt.client.Connector;
+import com.vaadin.shared.Connector;
 
 /**
  * Server side RPC manager that handles RPC calls coming from the client.
@@ -111,6 +111,7 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
+    @Override
     public void applyInvocation(ServerRpcMethodInvocation invocation)
             throws RpcInvocationException {
         Method method = invocation.getMethod();

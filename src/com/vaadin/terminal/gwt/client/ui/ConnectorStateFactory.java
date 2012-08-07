@@ -4,8 +4,8 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.SharedState;
 
 public abstract class ConnectorStateFactory extends
         ConnectorClassBasedFactory<SharedState> {

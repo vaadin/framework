@@ -38,6 +38,7 @@ public class Ticket1975 extends Application.LegacyApplication {
             layout.addComponent(new Button("Disable/Enable",
                     new ClickListener() {
 
+                        @Override
                         public void buttonClick(ClickEvent event) {
                             boolean e = cl1.isEnabled();
 

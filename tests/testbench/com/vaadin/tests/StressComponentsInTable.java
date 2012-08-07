@@ -37,6 +37,7 @@ public class StressComponentsInTable extends CustomComponent {
             }
             content.add(new Button("b" + i, new Button.ClickListener() {
 
+                @Override
                 public void buttonClick(ClickEvent event) {
                     Button b = event.getButton();
                     System.out.println(b.getCaption() + " click: "

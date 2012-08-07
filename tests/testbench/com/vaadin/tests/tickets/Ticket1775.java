@@ -27,6 +27,7 @@ public class Ticket1775 extends com.vaadin.Application.LegacyApplication {
 
         button2.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Label mainComponent = new Label("Main");
                 Label header = new Label("Header");
@@ -34,6 +35,7 @@ public class Ticket1775 extends com.vaadin.Application.LegacyApplication {
                 layout.addComponent(mainComponent, "body");
                 layout.addComponent(header, "loginUser");
                 button.addListener(new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         layout.addComponent(anotherComponent, "body");
                         layout.removeComponent("loginUser");

@@ -143,6 +143,7 @@ public class SelectDisplaysOldValue extends TestBase {
 
         private class ControllerUpdatedListener implements
                 Property.ValueChangeListener {
+            @Override
             public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
                 refreshSlaveDropdown((Integer) valueChangeEvent.getProperty()
                         .getValue());

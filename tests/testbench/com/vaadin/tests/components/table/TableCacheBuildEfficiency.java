@@ -45,6 +45,7 @@ public class TableCacheBuildEfficiency extends TestBase {
 
         Button b = new Button("Click to add row", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.addItem();
 

@@ -111,6 +111,7 @@ public class Ticket2021 extends Application.LegacyApplication {
         Button b = new Button("Enable/disable caption and watch button move",
                 new ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         System.out.println("Enable/disable caption");
                         for (AbstractComponent l : new AbstractComponent[] {

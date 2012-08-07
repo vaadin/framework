@@ -61,6 +61,7 @@ public class DefaultItemSorter implements ItemSorter {
      * @see com.vaadin.data.util.ItemSorter#compare(java.lang.Object,
      * java.lang.Object)
      */
+    @Override
     public int compare(Object o1, Object o2) {
         Item item1 = container.getItem(o1);
         Item item2 = container.getItem(o2);
@@ -147,6 +148,7 @@ public class DefaultItemSorter implements ItemSorter {
      * com.vaadin.data.util.ItemSorter#setSortProperties(com.vaadin.data.Container
      * .Sortable, java.lang.Object[], boolean[])
      */
+    @Override
     public void setSortProperties(Container.Sortable container,
             Object[] propertyId, boolean[] ascending) {
         this.container = container;
@@ -181,6 +183,7 @@ public class DefaultItemSorter implements ItemSorter {
     public static class DefaultPropertyValueComparator implements
             Comparator<Object>, Serializable {
 
+        @Override
         @SuppressWarnings("unchecked")
         public int compare(Object o1, Object o2) {
             int r = 0;

@@ -57,6 +57,7 @@ public class TextFieldWithPropertyFormatter extends TestCase {
 
         listener = new Property.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 listenerCalled++;
                 assertEquals(1, listenerCalled);

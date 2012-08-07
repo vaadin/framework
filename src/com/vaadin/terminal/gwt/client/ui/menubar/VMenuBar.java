@@ -36,7 +36,6 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.SimpleFocusablePanel;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
@@ -89,11 +88,10 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     boolean enabled = true;
 
-    private String width = "notinited";
-
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
 
+                @Override
                 public void execute() {
                     iLayout(true);
                 }
@@ -140,8 +138,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
                 | Event.ONLOAD);
-
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     @Override
@@ -340,15 +336,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
             }
         }
 
-        // Handle tooltips
-        if (targetItem == null && client != null) {
-            // Handle root menubar tooltips
-            client.handleTooltipEvent(e, this);
-        } else if (targetItem != null) {
-            // Handle item tooltips
-            targetItem.onBrowserEvent(e);
-        }
-
         if (targetItem != null) {
             switch (DOM.eventGetType(e)) {
 
@@ -537,6 +524,22 @@ public class VMenuBar extends SimpleFocusablePanel implements
         final int shadowSpace = 10;
 
         popup = new VOverlay(true, false, true);
+
+        // Setting owner and handlers to support tooltips. Needed for tooltip
+        // handling of overlay widgets (will direct queries to parent menu)
+        if (parentMenu == null) {
+            popup.setOwner(this);
+        } else {
+            VMenuBar parent = parentMenu;
+            while (parent.getParentMenu() != null) {
+                parent = parent.getParentMenu();
+            }
+            popup.setOwner(parent);
+        }
+        if (client != null) {
+            client.getVTooltip().connectHandlersToWidget(popup);
+        }
+
         popup.setStyleName(CLASSNAME + "-popup");
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
@@ -600,7 +603,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 // popup
                 style.setWidth(contentWidth + Util.getNativeScrollbarSize(),
                         Unit.PX);
-                popup.updateShadowSizeAndPosition();
+                popup.sizeOrPositionUpdated();
             }
         }
         return top;
@@ -633,6 +636,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
     /**
      * Listener method, fired when this menu is closed
      */
+    @Override
     public void onClose(CloseEvent<PopupPanel> event) {
         hideChildren();
         if (event.isAutoClosed()) {
@@ -720,9 +724,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * A class to hold information on menu items
      * 
      */
-    protected static class CustomMenuItem extends Widget implements HasHTML {
-
-        private ApplicationConnection client;
+    public static class CustomMenuItem extends Widget implements HasHTML {
 
         protected String html = null;
         protected Command command = null;
@@ -732,6 +734,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         protected boolean isSeparator = false;
         protected boolean checkable = false;
         protected boolean checked = false;
+        protected String description = null;
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
@@ -761,7 +764,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
             setSelected(false);
             setStyleName(CLASSNAME + "-menuitem");
 
-            sinkEvents(VTooltip.TOOLTIP_EVENTS);
         }
 
         public void setSelected(boolean selected) {
@@ -849,10 +851,12 @@ public class VMenuBar extends SimpleFocusablePanel implements
             return command;
         }
 
+        @Override
         public String getHTML() {
             return html;
         }
 
+        @Override
         public void setHTML(String html) {
             this.html = html;
             DOM.setInnerHTML(getElement(), html);
@@ -862,10 +866,12 @@ public class VMenuBar extends SimpleFocusablePanel implements
             Util.sinkOnloadForImages(getElement());
         }
 
+        @Override
         public String getText() {
             return html;
         }
 
+        @Override
         public void setText(String text) {
             setHTML(Util.escapeHTML(text));
         }
@@ -898,7 +904,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-            this.client = client;
             setSeparator(uidl.hasAttribute("separator"));
             setEnabled(!uidl.hasAttribute(ATTRIBUTE_ITEM_DISABLED));
 
@@ -918,32 +923,17 @@ public class VMenuBar extends SimpleFocusablePanel implements
             }
 
             if (uidl.hasAttribute(ATTRIBUTE_ITEM_DESCRIPTION)) {
-                String description = uidl
+                description = uidl
                         .getStringAttribute(ATTRIBUTE_ITEM_DESCRIPTION);
-                TooltipInfo info = new TooltipInfo(description);
-
-                VMenuBar root = findRootMenu();
-                client.registerTooltip(root, this, info);
             }
         }
 
-        @Override
-        public void onBrowserEvent(Event event) {
-            super.onBrowserEvent(event);
-            if (client != null) {
-                client.handleTooltipEvent(event, findRootMenu(), this);
-            }
-        }
-
-        private VMenuBar findRootMenu() {
-            VMenuBar menubar = getParentMenu();
-
-            // Traverse up until root menu is found
-            while (menubar.getParentMenu() != null) {
-                menubar = menubar.getParentMenu();
+        public TooltipInfo getTooltip() {
+            if (description == null) {
+                return null;
             }
 
-            return menubar;
+            return new TooltipInfo(description);
         }
 
         /**
@@ -1064,6 +1054,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.KeyPressHandler#onKeyPress(com.google
      * .gwt.event.dom.client.KeyPressEvent)
      */
+    @Override
     public void onKeyPress(KeyPressEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(),
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1079,6 +1070,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.KeyDownHandler#onKeyDown(com.google.gwt
      * .event.dom.client.KeyDownEvent)
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (handleNavigation(event.getNativeEvent().getKeyCode(),
                 event.isControlKeyDown() || event.isMetaKeyDown(),
@@ -1399,12 +1391,14 @@ public class VMenuBar extends SimpleFocusablePanel implements
      * com.google.gwt.event.dom.client.FocusHandler#onFocus(com.google.gwt.event
      * .dom.client.FocusEvent)
      */
+    @Override
     public void onFocus(FocusEvent event) {
 
     }
 
     private final String SUBPART_PREFIX = "item";
 
+    @Override
     public Element getSubPartElement(String subPart) {
         int index = Integer
                 .parseInt(subPart.substring(SUBPART_PREFIX.length()));
@@ -1413,6 +1407,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         return item.getElement();
     }
 
+    @Override
     public String getSubPartName(Element subElement) {
         if (!getElement().isOrHasChild(subElement)) {
             return null;
@@ -1435,4 +1430,28 @@ public class VMenuBar extends SimpleFocusablePanel implements
         return null;
     }
 
+    /**
+     * Get menu item with given DOM element
+     * 
+     * @param element
+     *            Element used in search
+     * @return Menu item or null if not found
+     */
+    public CustomMenuItem getMenuItemWithElement(Element element) {
+        for (int i = 0; i < items.size(); i++) {
+            CustomMenuItem item = items.get(i);
+            if (DOM.isOrHasChild(item.getElement(), element)) {
+                return item;
+            }
+
+            if (item.getSubMenu() != null) {
+                item = item.getSubMenu().getMenuItemWithElement(element);
+                if (item != null) {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
 }

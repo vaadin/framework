@@ -3,12 +3,12 @@ package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.tests.minitutorials.v7a2.MyComponent;
 
 @Connect(MyComponent.class)
@@ -19,6 +19,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
 
     public MyComponentConnector() {
         getWidget().addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
 
                 final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
@@ -29,6 +30,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
             }
         });
         registerRpc(MyComponentClientRpc.class, new MyComponentClientRpc() {
+            @Override
             public void alert(String message) {
                 Window.alert(message);
             }

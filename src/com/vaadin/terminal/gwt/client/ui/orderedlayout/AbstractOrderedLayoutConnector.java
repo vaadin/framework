@@ -9,6 +9,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.AlignmentInfo;
+import com.vaadin.shared.ui.LayoutClickRpc;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
@@ -18,10 +23,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
-import com.vaadin.terminal.gwt.client.ui.AlignmentInfo;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
-import com.vaadin.terminal.gwt.client.ui.VMarginInfo;
 import com.vaadin.terminal.gwt.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
@@ -48,6 +50,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
@@ -72,6 +75,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         return (AbstractOrderedLayoutState) super.getState();
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         VMeasuringOrderedLayout layout = getWidget();
         if (VCaption.isNeeded(component.getState())) {
@@ -262,6 +266,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         if (getWidget().isVertical) {
             layoutSecondaryDirection();
@@ -270,6 +275,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutVertically() {
         if (getWidget().isVertical) {
             layoutPrimaryDirection();

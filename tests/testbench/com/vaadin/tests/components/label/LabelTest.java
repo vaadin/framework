@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Label;
 
@@ -14,12 +14,14 @@ public class LabelTest extends AbstractComponentTest<Label> implements
 
     private Command<Label, Object> setValueCommand = new Command<Label, Object>() {
 
+        @Override
         public void execute(Label c, Object value, Object data) {
             c.setValue(value);
         }
     };
 
     private Command<Label, Boolean> valueChangeListenerCommand = new Command<Label, Boolean>() {
+        @Override
         public void execute(Label c, Boolean value, Object data) {
             if (value) {
                 c.addListener(LabelTest.this);
@@ -31,6 +33,7 @@ public class LabelTest extends AbstractComponentTest<Label> implements
     };
 
     private Command<Label, ContentMode> contentModeCommand = new Command<Label, ContentMode>() {
+        @Override
         public void execute(Label c, ContentMode value, Object data) {
             c.setContentMode(value);
         }
@@ -87,6 +90,7 @@ public class LabelTest extends AbstractComponentTest<Label> implements
                 valueChangeListenerCommand);
     }
 
+    @Override
     public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
         Object o = event.getProperty().getValue();
 

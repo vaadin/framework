@@ -3,8 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
-import com.vaadin.terminal.gwt.client.ui.Connect;
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.HorizontalSplitPanel;
 
 @Connect(value = HorizontalSplitPanel.class, loadStyle = LoadStyle.EAGER)

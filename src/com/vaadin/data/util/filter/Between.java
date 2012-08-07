@@ -30,6 +30,7 @@ public class Between implements Filter {
         return endValue;
     }
 
+    @Override
     public boolean passesFilter(Object itemId, Item item)
             throws UnsupportedOperationException {
         Object value = item.getItemProperty(getPropertyId()).getValue();
@@ -41,6 +42,7 @@ public class Between implements Filter {
         return false;
     }
 
+    @Override
     public boolean appliesToProperty(Object propertyId) {
         return getPropertyId() != null && getPropertyId().equals(propertyId);
     }

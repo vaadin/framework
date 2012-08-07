@@ -24,6 +24,7 @@ public class ComboBoxInvalidNullSelection extends TestBase {
 
         Button b = new Button("Swap data source");
         b.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 if (combo.getContainerDataSource() == ds1) {
                     combo.setContainerDataSource(ds2);
@@ -39,6 +40,7 @@ public class ComboBoxInvalidNullSelection extends TestBase {
         combo.setContainerDataSource(ds1);
         combo.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value is now: " + combo.getValue());
             }

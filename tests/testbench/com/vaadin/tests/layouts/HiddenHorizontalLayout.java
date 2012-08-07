@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -47,6 +47,7 @@ public class HiddenHorizontalLayout extends TestBase {
         Button b = new Button("toggle layout visibility",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         hl.setVisible(!hl.isVisible());
                     }

@@ -22,6 +22,7 @@ public abstract class TabsheetBaseConnector extends
     public static final String ATTRIBUTE_TAB_CAPTION = "caption";
     public static final String ATTRIBUTE_TAB_ICON = "icon";
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().client = client;
 

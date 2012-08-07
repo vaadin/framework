@@ -9,11 +9,11 @@ import java.util.Map;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
+import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.extension.javascriptmanager.ExecuteJavaScriptRpc;
+import com.vaadin.shared.extension.javascriptmanager.JavaScriptManagerState;
 import com.vaadin.terminal.AbstractExtension;
 import com.vaadin.terminal.Page;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
-import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.ExecuteJavaScriptRpc;
-import com.vaadin.terminal.gwt.client.extensions.javascriptmanager.JavaScriptManagerState;
 
 /**
  * Provides access to JavaScript functionality in the web browser. To get an
@@ -41,6 +41,7 @@ public class JavaScript extends AbstractExtension {
      */
     public JavaScript() {
         registerRpc(new JavaScriptCallbackRpc() {
+            @Override
             public void call(String name, JSONArray arguments) {
                 JavaScriptCallback callback = callbacks.get(name);
                 // TODO handle situation if name is not registered
@@ -112,6 +113,16 @@ public class JavaScript extends AbstractExtension {
      */
     public void execute(String script) {
         getRpcProxy(ExecuteJavaScriptRpc.class).executeJavaScript(script);
+    }
+
+    /**
+     * Executes the given JavaScript code in the browser.
+     * 
+     * @param script
+     *            The JavaScript code to run.
+     */
+    public static void eval(String script) {
+        getCurrent().execute(script);
     }
 
     /**

@@ -111,6 +111,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      * 
      * @see com.vaadin.service.ApplicationContext#getBaseDirectory()
      */
+    @Override
     public File getBaseDirectory() {
         final String realPath = ApplicationServlet.getResourcePath(
                 session.getServletContext(), "/");

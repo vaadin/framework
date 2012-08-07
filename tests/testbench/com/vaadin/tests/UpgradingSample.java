@@ -94,6 +94,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
     }
 
     // Handle menu selection and update visible page
+    @Override
     public void valueChange(Property.ValueChangeEvent event) {
         layout.removeComponent(1, 0);
         final String title = (String) menu.getValue();
@@ -116,6 +117,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
 
         private final Button loginButton = new Button("Enter",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         login();
                     }
@@ -127,6 +129,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
 
         private final Button logoutButton = new Button("Logout",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         close();
                     }
@@ -163,6 +166,7 @@ public class UpgradingSample extends Application.LegacyApplication implements
         }
 
         // Update login status on application user change events
+        @Override
         public void applicationUserChanged(Application.UserChangeEvent event) {
             updateStatus();
         }

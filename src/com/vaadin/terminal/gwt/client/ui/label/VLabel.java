@@ -28,7 +28,6 @@ public class VLabel extends HTML {
     public VLabel(String text) {
         super(text);
         setStyleName(CLASSNAME);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     @Override
@@ -38,9 +37,6 @@ public class VLabel extends HTML {
             Util.notifyParentOfSizeChange(this, true);
             event.stopPropagation();
             return;
-        }
-        if (connection != null) {
-            connection.handleTooltipEvent(event, this);
         }
     }
 

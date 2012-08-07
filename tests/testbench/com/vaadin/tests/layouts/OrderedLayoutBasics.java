@@ -1005,6 +1005,7 @@ public class OrderedLayoutBasics extends TestBase {
     private Button createAddButton(AbstractOrderedLayout ol) {
         Button b = new Button("Add before", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 addBefore((AbstractOrderedLayout) event.getButton().getData(),
                         event.getButton().getParent(), "");
@@ -1019,6 +1020,7 @@ public class OrderedLayoutBasics extends TestBase {
     private Button createWideAddButton(AbstractOrderedLayout ol) {
         Button b = new Button("Add 100% before", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 addBefore((AbstractOrderedLayout) event.getButton().getData(),
                         event.getButton().getParent(), "100%");
@@ -1033,6 +1035,7 @@ public class OrderedLayoutBasics extends TestBase {
     private Button createRemoveButton(AbstractOrderedLayout ol, String suffix) {
         Button b = new Button("Remove this " + suffix, new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 remove((AbstractOrderedLayout) event.getButton().getData(),
                         event.getButton().getParent());

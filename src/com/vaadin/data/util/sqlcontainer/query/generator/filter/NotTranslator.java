@@ -10,10 +10,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 public class NotTranslator implements FilterTranslator {
 
+    @Override
     public boolean translatesFilter(Filter filter) {
         return filter instanceof Not;
     }
 
+    @Override
     public String getWhereStringForFilter(Filter filter, StatementHelper sh) {
         Not not = (Not) filter;
         if (not.getFilter() instanceof IsNull) {

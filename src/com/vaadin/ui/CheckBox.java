@@ -10,14 +10,15 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcImpl;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxServerRpc;
-import com.vaadin.terminal.gwt.client.ui.checkbox.CheckBoxState;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.shared.ui.checkbox.CheckBoxState;
 
 public class CheckBox extends AbstractField<Boolean> {
 
     private CheckBoxServerRpc rpc = new CheckBoxServerRpc() {
 
+        @Override
         public void setChecked(boolean checked,
                 MouseEventDetails mouseEventDetails) {
             if (isReadOnly()) {

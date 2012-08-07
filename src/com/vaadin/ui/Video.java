@@ -4,8 +4,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.video.VideoState;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.video.VideoState;
 import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
@@ -67,7 +67,7 @@ public class Video extends AbstractMedia {
      * @param poster
      */
     public void setPoster(Resource poster) {
-        getState().setPoster(new ResourceReference(poster));
+        getState().setPoster(ResourceReference.create(poster));
         requestRepaint();
     }
 
@@ -75,7 +75,7 @@ public class Video extends AbstractMedia {
      * @return The poster image.
      */
     public Resource getPoster() {
-        return ((ResourceReference) getState().getPoster()).getResource();
+        return ResourceReference.getResource(getState().getPoster());
     }
 
 }

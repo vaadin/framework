@@ -276,6 +276,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
 
         Button disableMinimum = new Button("Disable min limit",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         togglableSplitPanel.setMinSplitPosition(0,
                                 Sizeable.UNITS_PERCENTAGE);
@@ -284,6 +285,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 });
         Button enableMinimum = new Button("Enable min limit",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         togglableSplitPanel.setMinSplitPosition(10,
                                 Sizeable.UNITS_PERCENTAGE);
@@ -292,6 +294,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 });
         Button disableMaximum = new Button("Disable max limit",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         togglableSplitPanel.setMaxSplitPosition(100,
                                 Sizeable.UNITS_PERCENTAGE);
@@ -300,6 +303,7 @@ public class SplitPanelWithMinimumAndMaximum extends TestBase {
                 });
         Button enableMaximum = new Button("Enable max limit",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         togglableSplitPanel.setMaxSplitPosition(80,
                                 Sizeable.UNITS_PERCENTAGE);

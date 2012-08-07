@@ -7,12 +7,14 @@ import com.vaadin.ui.TwinColSelect;
 public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
 
     private Command<TwinColSelect, Integer> rowsCommand = new Command<TwinColSelect, Integer>() {
+        @Override
         public void execute(TwinColSelect c, Integer value, Object data) {
             c.setRows(value);
         }
     };
 
     private Command<TwinColSelect, Integer> colsCommand = new Command<TwinColSelect, Integer>() {
+        @Override
         public void execute(TwinColSelect c, Integer value, Object data) {
             c.setColumns(value);
         }
@@ -20,6 +22,7 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
 
     private Command<TwinColSelect, String> leftColumnCaptionCommand = new Command<TwinColSelect, String>() {
 
+        @Override
         public void execute(TwinColSelect c, String value, Object data) {
             c.setLeftColumnCaption(value);
         }
@@ -27,6 +30,7 @@ public class TwinColSelectTest extends AbstractSelectTestCase<TwinColSelect> {
 
     private Command<TwinColSelect, String> rightColumnCaptionCommand = new Command<TwinColSelect, String>() {
 
+        @Override
         public void execute(TwinColSelect c, String value, Object data) {
             c.setRightColumnCaption(value);
         }

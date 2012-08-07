@@ -61,6 +61,7 @@ final public class ColumnProperty implements Property {
         this.readOnly = readOnly;
     }
 
+    @Override
     public Object getValue() {
         if (isModified()) {
             return changedValue;
@@ -68,6 +69,7 @@ final public class ColumnProperty implements Property {
         return value;
     }
 
+    @Override
     public void setValue(Object newValue) throws ReadOnlyException {
         if (newValue == null && !nullable) {
             throw new NotNullableException(
@@ -134,10 +136,12 @@ final public class ColumnProperty implements Property {
                 || newValue.equals(referenceValue);
     }
 
+    @Override
     public Class<?> getType() {
         return type;
     }
 
+    @Override
     public boolean isReadOnly() {
         return readOnly;
     }
@@ -146,6 +150,7 @@ final public class ColumnProperty implements Property {
         return allowReadOnlyChange;
     }
 
+    @Override
     public void setReadOnly(boolean newStatus) {
         if (allowReadOnlyChange) {
             readOnly = newStatus;

@@ -38,6 +38,7 @@ public class SubWindowWithUndefinedHeight extends TestBase {
         tabsheet.addComponent(tabButton);
         tabsheet.addComponent(table);
         tabsheet.addListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
                 if (tabsheet.getSelectedTab() == tabButton) {
                     tabsheet.setSizeUndefined();
@@ -54,6 +55,7 @@ public class SubWindowWithUndefinedHeight extends TestBase {
         subwindow.addComponent(tabsheet);
 
         Button button = new Button("click me", new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 getMainWindow().addWindow(subwindow);
             }

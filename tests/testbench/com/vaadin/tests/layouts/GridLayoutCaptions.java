@@ -29,6 +29,7 @@ public class GridLayoutCaptions extends TestBase {
 
         private FormFieldFactory fff = new FormFieldFactory() {
 
+            @Override
             public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
 
@@ -195,6 +196,7 @@ public class GridLayoutCaptions extends TestBase {
 
         Button b = new Button("Give me an error!", new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 aFormWithGl.createErrors();
 
@@ -205,6 +207,7 @@ public class GridLayoutCaptions extends TestBase {
         Button b2 = new Button("Get rid of an error!",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         aFormWithGl.clearErrors();
 

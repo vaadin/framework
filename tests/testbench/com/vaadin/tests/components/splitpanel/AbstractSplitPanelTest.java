@@ -13,6 +13,7 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
 
     private Command<T, Boolean> splitterClickListenerCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
                 c.addListener((SplitterClickListener) AbstractSplitPanelTest.this);
@@ -23,12 +24,14 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
         }
     };
     private Command<T, SplitPosition> setSplitPositionCommand = new Command<T, AbstractSplitPanelTest.SplitPosition>() {
+        @Override
         public void execute(T c, SplitPosition value, Object data) {
             value.apply(c);
         }
     };
     private Command<T, Boolean> splitterLockCommand = new Command<T, Boolean>() {
 
+        @Override
         public void execute(T c, Boolean value, Object data) {
             c.setLocked(value);
         }
@@ -122,6 +125,7 @@ public abstract class AbstractSplitPanelTest<T extends AbstractSplitPanel>
 
     }
 
+    @Override
     public void splitterClick(SplitterClickEvent event) {
         log(event.getClass().getSimpleName() + ": " + event.getButtonName()
                 + " at " + event.getRelativeX() + "," + event.getRelativeY());

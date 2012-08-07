@@ -31,6 +31,7 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
 
         dataType.addListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 tf.setPropertyDataSource(new ObjectProperty<Object>(o,
                         (Class<Object>) dataType.getValue()));
@@ -42,6 +43,7 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
         addComponent(tf);
         tf.setErrorHandler(new ComponentErrorHandler() {
 
+            @Override
             public boolean handleComponentError(ComponentErrorEvent event) {
                 tf.setComponentError(new UserError("Invalid value"));
                 return true;

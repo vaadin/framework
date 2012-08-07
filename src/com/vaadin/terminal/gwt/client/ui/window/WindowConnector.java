@@ -12,18 +12,20 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.window.WindowServerRpc;
+import com.vaadin.shared.ui.window.WindowState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.LayoutManager;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.PostLayoutListener;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
@@ -72,6 +74,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         lm.unregisterDependency(this, window.footer);
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().id = getConnectorId();
         getWidget().client = client;
@@ -180,10 +183,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         // NOP, window has own caption, layout caption not rendered
     }
 
+    @Override
     public void onBeforeShortcutAction(Event e) {
         // NOP, nothing to update just avoid workaround ( causes excess
         // blur/focus )
@@ -210,6 +215,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getWidget().contentPanel.setWidget(newChildWidget);
     }
 
+    @Override
     public void layout() {
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
@@ -274,13 +280,14 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
     }
 
+    @Override
     public void postLayout() {
         minWidthChecked = false;
         VWindow window = getWidget();
         if (window.centered) {
             window.center();
         }
-        window.updateShadowSizeAndPosition();
+        window.sizeOrPositionUpdated();
     }
 
     @Override

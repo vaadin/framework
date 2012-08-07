@@ -71,6 +71,7 @@ public class Ticket2204 extends Application.LegacyApplication {
 
         Button b = new Button("Show area", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 showHide();
             }
@@ -80,6 +81,7 @@ public class Ticket2204 extends Application.LegacyApplication {
 
         b = new Button("Show tab", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 showTab();
             }
@@ -128,6 +130,7 @@ public class Ticket2204 extends Application.LegacyApplication {
             Form f = (Form) cc;
             f.setFormFieldFactory(new FormFieldFactory() {
 
+                @Override
                 public Field<?> createField(Item item, Object propertyId,
                         Component uiContext) {
                     formTextArea = new RichTextArea();

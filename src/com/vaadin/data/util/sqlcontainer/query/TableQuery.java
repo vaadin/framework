@@ -111,6 +111,7 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getCount()
      */
+    @Override
     public int getCount() throws SQLException {
         getLogger().log(Level.FINE, "Fetching count...");
         StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
@@ -137,6 +138,7 @@ public class TableQuery implements QueryDelegate,
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#getResults(int,
      * int)
      */
+    @Override
     public ResultSet getResults(int offset, int pagelength) throws SQLException {
         StatementHelper sh;
         /*
@@ -161,6 +163,7 @@ public class TableQuery implements QueryDelegate,
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#
      * implementationRespectsPagingLimits()
      */
+    @Override
     public boolean implementationRespectsPagingLimits() {
         return true;
     }
@@ -172,6 +175,7 @@ public class TableQuery implements QueryDelegate,
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#storeRow(com.vaadin
      * .addon.sqlcontainer.RowItem)
      */
+    @Override
     public int storeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
         if (row == null) {
@@ -254,6 +258,7 @@ public class TableQuery implements QueryDelegate,
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setFilters(java.util
      * .List)
      */
+    @Override
     public void setFilters(List<Filter> filters)
             throws UnsupportedOperationException {
         if (filters == null) {
@@ -270,6 +275,7 @@ public class TableQuery implements QueryDelegate,
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#setOrderBy(java.util
      * .List)
      */
+    @Override
     public void setOrderBy(List<OrderBy> orderBys)
             throws UnsupportedOperationException {
         if (orderBys == null) {
@@ -284,6 +290,7 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#beginTransaction()
      */
+    @Override
     public void beginTransaction() throws UnsupportedOperationException,
             SQLException {
         if (transactionOpen && activeConnection != null) {
@@ -301,6 +308,7 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#commit()
      */
+    @Override
     public void commit() throws UnsupportedOperationException, SQLException {
         if (transactionOpen && activeConnection != null) {
             getLogger().log(Level.FINE, "DB -> commit");
@@ -329,6 +337,7 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#rollback()
      */
+    @Override
     public void rollback() throws UnsupportedOperationException, SQLException {
         if (transactionOpen && activeConnection != null) {
             getLogger().log(Level.FINE, "DB -> rollback");
@@ -346,6 +355,7 @@ public class TableQuery implements QueryDelegate,
      * @see
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#getPrimaryKeyColumns()
      */
+    @Override
     public List<String> getPrimaryKeyColumns() {
         return Collections.unmodifiableList(primaryKeyColumns);
     }
@@ -581,6 +591,7 @@ public class TableQuery implements QueryDelegate,
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#removeRow(com.vaadin
      * .addon.sqlcontainer.RowItem)
      */
+    @Override
     public boolean removeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
         getLogger().log(Level.FINE,
@@ -604,6 +615,7 @@ public class TableQuery implements QueryDelegate,
      * com.vaadin.addon.sqlcontainer.query.QueryDelegate#containsRowWithKey(
      * java.lang.Object[])
      */
+    @Override
     public boolean containsRowWithKey(Object... keys) throws SQLException {
         ArrayList<Filter> filtersAndKeys = new ArrayList<Filter>();
         if (filters != null) {
@@ -665,10 +677,12 @@ public class TableQuery implements QueryDelegate,
             this.newId = newId;
         }
 
+        @Override
         public RowId getNewRowId() {
             return newId;
         }
 
+        @Override
         public RowId getOldRowId() {
             return oldId;
         }
@@ -677,6 +691,7 @@ public class TableQuery implements QueryDelegate,
     /**
      * Adds RowIdChangeListener to this query
      */
+    @Override
     public void addListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners == null) {
             rowIdChangeListeners = new LinkedList<QueryDelegate.RowIdChangeListener>();
@@ -687,6 +702,7 @@ public class TableQuery implements QueryDelegate,
     /**
      * Removes the given RowIdChangeListener from this query
      */
+    @Override
     public void removeListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners != null) {
             rowIdChangeListeners.remove(listener);

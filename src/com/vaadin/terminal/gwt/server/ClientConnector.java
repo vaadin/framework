@@ -6,12 +6,13 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.Extension;
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Root;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -47,6 +48,7 @@ public interface ClientConnector extends Connector, RpcTarget {
      */
     public Class<? extends SharedState> getStateType();
 
+    @Override
     public ClientConnector getParent();
 
     /**
@@ -136,4 +138,12 @@ public interface ClientConnector extends Connector, RpcTarget {
      *            the extension to remove.
      */
     public void removeExtension(Extension extension);
+
+    /**
+     * Returns the root this connector is attached to
+     * 
+     * @return The Root this connector is attached to or null if it is not
+     *         attached to any Root
+     */
+    public Root getRoot();
 }

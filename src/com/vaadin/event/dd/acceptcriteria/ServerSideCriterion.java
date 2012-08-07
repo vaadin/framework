@@ -31,10 +31,12 @@ public abstract class ServerSideCriterion implements Serializable,
 
     private static final long serialVersionUID = 2128510128911628902L;
 
+    @Override
     public final boolean isClientSideVerifiable() {
         return false;
     }
 
+    @Override
     public void paint(PaintTarget target) throws PaintException {
         target.startTag("-ac");
         target.addAttribute("name", getIdentifier());
@@ -45,6 +47,7 @@ public abstract class ServerSideCriterion implements Serializable,
     public void paintContent(PaintTarget target) {
     }
 
+    @Override
     public void paintResponse(PaintTarget target) throws PaintException {
     }
 

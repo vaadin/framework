@@ -42,14 +42,17 @@ public class NestedPropertyDescriptor<BT> implements
         this.propertyType = property.getType();
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Class<?> getPropertyType() {
         return propertyType;
     }
 
+    @Override
     public Property<?> createProperty(BT bean) {
         return new NestedMethodProperty<Object>(bean, name);
     }

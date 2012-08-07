@@ -137,6 +137,7 @@ public class TestValidators extends TestBase {
 
         Button b = new Button("Commit", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     form.commit();

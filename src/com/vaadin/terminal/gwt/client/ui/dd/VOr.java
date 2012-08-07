@@ -7,6 +7,7 @@
 package com.vaadin.terminal.gwt.client.ui.dd;
 
 import com.vaadin.event.dd.acceptcriteria.Or;
+import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.UIDL;
 
 /**
@@ -41,6 +42,7 @@ final public class VOr extends VAcceptCriterion implements VAcceptCallback {
         return false; // not used here
     }
 
+    @Override
     public void accepted(VDragEvent event) {
         accepted = true;
     }

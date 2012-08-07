@@ -18,11 +18,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
+import com.vaadin.shared.EventId;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.client.EventId;
 import com.vaadin.terminal.gwt.client.Util;
-import com.vaadin.terminal.gwt.client.VTooltip;
 import com.vaadin.terminal.gwt.client.ui.Field;
 
 /**
@@ -88,7 +87,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
         addFocusHandler(this);
         addBlurHandler(this);
-        sinkEvents(VTooltip.TOOLTIP_EVENTS);
     }
 
     /*
@@ -107,9 +105,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        if (client != null) {
-            client.handleTooltipEvent(event, this);
-        }
 
         if (listenTextChangeEvents
                 && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event
@@ -279,6 +274,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         return maxLength;
     }
 
+    @Override
     public void onChange(ChangeEvent event) {
         valueChange(false);
     }
@@ -305,7 +301,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             if (!prompting && newText != null
                     && !newText.equals(valueBeforeEdit)) {
                 sendValueChange = immediate;
-                client.updateVariable(paintableId, "text", getText(), false);
+                client.updateVariable(paintableId, "text", newText, false);
                 valueBeforeEdit = newText;
                 valueBeforeEditIsSynced = true;
             }
@@ -354,6 +350,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onFocus(FocusEvent event) {
         addStyleDependentName(CLASSNAME_FOCUS);
         if (prompting) {
@@ -367,7 +364,13 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
     }
 
+    @Override
     public void onBlur(BlurEvent event) {
+        // this is called twice on Chrome when e.g. changing tab while prompting
+        // field focused - do not change settings on the second time
+        if (focusedTextField != this) {
+            return;
+        }
         removeStyleDependentName(CLASSNAME_FOCUS);
         focusedTextField = null;
         String text = getText();
@@ -392,6 +395,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         setWidth(columns + "em");
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             valueChange(false);

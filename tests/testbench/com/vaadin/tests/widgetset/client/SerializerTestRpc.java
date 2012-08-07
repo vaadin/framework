@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.terminal.gwt.client.Connector;
-import com.vaadin.terminal.gwt.client.communication.ClientRpc;
-import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.ServerRpc;
 
 @SuppressWarnings("javadoc")
 public interface SerializerTestRpc extends ServerRpc, ClientRpc {

@@ -60,6 +60,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
 
         window.addComponent(new Button("Scroll mainwin to X9",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().scrollIntoView(x9);
 
@@ -67,6 +68,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
                 }));
         window.addComponent(new Button("Scroll mainwin to Y9",
                 new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         getMainWindow().scrollIntoView(y9);
 
@@ -100,6 +102,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
 
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
                 new Button("Scroll win to X9", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         throw new RuntimeException("Currently not implemented");
                         // window.scrollIntoView(x29);
@@ -107,6 +110,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
                 }), 0);
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
                 new Button("Scroll win to Y9", new ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         throw new RuntimeException("Currently not implemented");
                         // window.scrollIntoView(y29);

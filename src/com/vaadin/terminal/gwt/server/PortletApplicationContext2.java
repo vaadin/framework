@@ -28,13 +28,12 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.portlet.ResourceURL;
 import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Root;
 
 /**
@@ -63,6 +62,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
 
+    @Override
     public File getBaseDirectory() {
         String resultPath = session.getPortletContext().getRealPath("/");
         if (resultPath != null) {
@@ -253,27 +253,6 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         this.response = response;
     }
 
-    @Override
-    public String generateApplicationResourceURL(ApplicationResource resource,
-            String mapKey) {
-        if (response instanceof MimeResponse) {
-            ResourceURL resourceURL = ((MimeResponse) response)
-                    .createResourceURL();
-            final String filename = resource.getFilename();
-            if (filename == null) {
-                resourceURL.setResourceID("APP/" + mapKey + "/");
-            } else {
-                resourceURL.setResourceID("APP/" + mapKey + "/"
-                        + urlEncode(filename));
-            }
-            return resourceURL.toString();
-        } else {
-            // in a background thread or otherwise outside a request
-            // TODO exception ??
-            return null;
-        }
-    }
-
     /**
      * Creates a new action URL.
      * 
@@ -324,9 +303,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 eventActionDestinationMap.put(actionKey, name);
                 eventActionValueMap.put(actionKey, value);
-                throw new RuntimeException(
-                        "Root.open has not yet been implemented");
-                // root.open(new ExternalResource(actionUrl.toString()));
+                root.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
@@ -372,9 +349,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 sharedParameterActionNameMap.put(actionKey, name);
                 sharedParameterActionValueMap.put(actionKey, value);
-                throw new RuntimeException(
-                        "Root.open has not yet been implemented");
-                // root.open(new ExternalResource(actionUrl.toString()));
+                root.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse

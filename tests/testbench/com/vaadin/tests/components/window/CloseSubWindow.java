@@ -18,6 +18,7 @@ public class CloseSubWindow extends TestBase {
         Button openWindowButton = new Button("Open sub-window");
         openWindowButton.setDebugId("opensub");
         openWindowButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Window sub = createClosableSubWindow("Sub-window");
                 getMainWindow().addWindow(sub);
@@ -36,6 +37,7 @@ public class CloseSubWindow extends TestBase {
 
         Button closeButton = new Button("Close");
         closeButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton().findAncestor(Window.class).close();
             }
@@ -44,6 +46,7 @@ public class CloseSubWindow extends TestBase {
 
         Button removeButton = new Button("Remove from parent");
         removeButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 window.close();
             }
@@ -51,6 +54,7 @@ public class CloseSubWindow extends TestBase {
         window.addComponent(closeButton);
 
         window.addListener(new CloseListener() {
+            @Override
             public void windowClose(CloseEvent e) {
                 log.log("Window '" + title + "' closed");
             }

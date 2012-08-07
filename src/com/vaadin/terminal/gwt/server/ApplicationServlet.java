@@ -41,14 +41,12 @@ public class ApplicationServlet extends AbstractApplicationServlet {
             throws javax.servlet.ServletException {
         super.init(servletConfig);
 
-        // Loads the application class using the same class loader
-        // as the servlet itself
+        // Loads the application class using the classloader defined in the
+        // deployment configuration
 
         try {
-            applicationClass = ServletPortletHelper.getApplicationClass(
-                    servletConfig.getInitParameter("application"),
-                    servletConfig.getInitParameter(Application.ROOT_PARAMETER),
-                    getClassLoader());
+            applicationClass = ServletPortletHelper
+                    .getApplicationClass(getDeploymentConfiguration());
         } catch (ApplicationClassException e) {
             throw new ServletException(e);
         }

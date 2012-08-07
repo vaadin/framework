@@ -57,35 +57,49 @@ public class VConsole {
     }
 
     public static void log(String msg) {
-        impl.log(msg);
+        if (impl != null) {
+            impl.log(msg);
+        }
     }
 
     public static void log(Throwable e) {
-        impl.log(e);
+        if (impl != null) {
+            impl.log(e);
+        }
     }
 
     public static void error(Throwable e) {
-        impl.error(e);
+        if (impl != null) {
+            impl.error(e);
+        }
     }
 
     public static void error(String msg) {
-        impl.error(msg);
+        if (impl != null) {
+            impl.error(msg);
+        }
     }
 
     public static void printObject(Object msg) {
-        impl.printObject(msg);
+        if (impl != null) {
+            impl.printObject(msg);
+        }
     }
 
     public static void dirUIDL(ValueMap u, ApplicationConfiguration cnf) {
-        impl.dirUIDL(u, cnf);
+        if (impl != null) {
+            impl.dirUIDL(u, cnf);
+        }
     }
 
     public static void printLayoutProblems(ValueMap meta,
             ApplicationConnection applicationConnection,
             Set<ComponentConnector> zeroHeightComponents,
             Set<ComponentConnector> zeroWidthComponents) {
-        impl.printLayoutProblems(meta, applicationConnection,
-                zeroHeightComponents, zeroWidthComponents);
+        if (impl != null) {
+            impl.printLayoutProblems(meta, applicationConnection,
+                    zeroHeightComponents, zeroWidthComponents);
+        }
     }
 
 }

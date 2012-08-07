@@ -22,6 +22,7 @@ public class ChangeSessionId extends AbstractTestCase {
         mainWindow.addComponent(new Button("Show session id",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         logSessionId();
                     }
@@ -29,6 +30,7 @@ public class ChangeSessionId extends AbstractTestCase {
         setMainWindow(mainWindow);
 
         loginButton.addListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 WebApplicationContext context = ((WebApplicationContext) getContext());
 

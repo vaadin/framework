@@ -12,8 +12,9 @@ public class TableSerialization extends TestCase {
         Table t = new Table();
         byte[] ser = SerializationUtils.serialize(t);
         Table t2 = (Table) SerializationUtils.deserialize(ser);
-        
+
     }
+
     public void testSerializationWithRowHeaders() {
         Table t = new Table();
         t.setRowHeaderMode(Table.ROW_HEADER_MODE_EXPLICIT);

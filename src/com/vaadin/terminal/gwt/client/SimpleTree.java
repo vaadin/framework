@@ -49,6 +49,7 @@ public class SimpleTree extends ComplexPanel {
 
         getElement().appendChild(children);
         addDomHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 if (event.getNativeEvent().getEventTarget().cast() == handle) {
                     if (children.getStyle().getDisplay().intern() == Display.NONE

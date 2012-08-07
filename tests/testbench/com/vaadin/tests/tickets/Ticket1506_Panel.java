@@ -26,6 +26,7 @@ public class Ticket1506_Panel extends Panel {
     private Component initButton(final ObjectProperty<?> property) {
         Button button = new Button("Clear select");
         button.addListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 property.setValue(null);
             }

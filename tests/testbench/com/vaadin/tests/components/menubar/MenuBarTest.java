@@ -141,6 +141,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     /* COMMANDS */
     Command<MenuBar, Integer> createRootMenuItems = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             rootItems = value;
             createRootItems(c);
@@ -149,6 +150,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     Command<MenuBar, Integer> createSubMenuItems = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             subItems = value;
             createSubItems(c);
@@ -157,6 +159,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     Command<MenuBar, Integer> setSubMenuLevels = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             subLevels = value;
             createSubItems(c);
@@ -164,6 +167,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
     };
     private Command<MenuBar, Integer> setMenuIcons = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             iconInterval = value;
             updateIcons(c);
@@ -172,6 +176,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> setSubMenuDensity = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             subMenuDensity = value;
             createSubItems(c);
@@ -180,6 +185,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> setMenuItemDisabledDensity = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             disabledDensity = value;
             createRootItems(c);
@@ -188,6 +194,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> setMenuItemInvisibleDensity = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             invisibleDensity = value;
             createRootItems(c);
@@ -196,6 +203,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> setMenuItemCheckableDensity = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             checkableDensity = value;
             createRootItems(c);
@@ -204,6 +212,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> setSubMenuSeparatorDensity = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             subMenuSeparatorDensity = value;
             createSubItems(c);
@@ -212,6 +221,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Boolean> setOpenRootOnHover = new Command<MenuBar, Boolean>() {
 
+        @Override
         public void execute(MenuBar c, Boolean value, Object data) {
             openRootMenuOnHover = value;
             c.setAutoOpen(value);
@@ -221,6 +231,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private Command<MenuBar, Integer> selectIcon = new Command<MenuBar, Integer>() {
 
+        @Override
         public void execute(MenuBar c, Integer value, Object data) {
             iconSize = value;
             updateIcons(c);
@@ -231,6 +242,7 @@ public class MenuBarTest extends AbstractComponentTest<MenuBar> {
 
     private MenuBar.Command menuCommand = new MenuBar.Command() {
 
+        @Override
         public void menuSelected(MenuItem selectedItem) {
             log("Menu item '" + selectedItem.getText() + "' selected");
 

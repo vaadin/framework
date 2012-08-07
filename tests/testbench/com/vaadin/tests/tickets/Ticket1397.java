@@ -30,10 +30,12 @@ public class Ticket1397 extends Application.LegacyApplication {
                 "fooTextField");
 
         PopupView.Content content = new PopupView.Content() {
+            @Override
             public String getMinimizedValueAsHTML() {
                 return String.valueOf(prop.getValue());
             }
 
+            @Override
             public Component getPopupComponent() {
                 return new TextField("Edit foo", prop);
             }
@@ -56,6 +58,7 @@ public class Ticket1397 extends Application.LegacyApplication {
             public myButton() {
                 super("Reverse the property");
                 this.addListener(new Button.ClickListener() {
+                    @Override
                     public void buttonClick(Button.ClickEvent event) {
                         StringBuffer getContents = prop2.getValue();
                         getContents.reverse();
@@ -68,10 +71,12 @@ public class Ticket1397 extends Application.LegacyApplication {
         final Panel panel2 = new Panel("Editor with a button");
         panel2.addComponent(new myButton());
         PopupView.Content content2 = new PopupView.Content() {
+            @Override
             public String getMinimizedValueAsHTML() {
                 return String.valueOf(prop2.getValue());
             }
 
+            @Override
             public Component getPopupComponent() {
                 return panel2;
             }
@@ -89,10 +94,12 @@ public class Ticket1397 extends Application.LegacyApplication {
         panel3.addComponent(tf2);
         PopupView.Content content3 = new PopupView.Content() {
 
+            @Override
             public String getMinimizedValueAsHTML() {
                 return String.valueOf(op.getValue());
             }
 
+            @Override
             public Component getPopupComponent() {
                 return panel3;
             }
@@ -113,10 +120,12 @@ public class Ticket1397 extends Application.LegacyApplication {
 
             final InlineDateField df = new InlineDateField("", new Date());
             PopupView pp = new PopupView(new PopupView.Content() {
+                @Override
                 public String getMinimizedValueAsHTML() {
                     return String.valueOf(df.getValue());
                 }
 
+                @Override
                 public Component getPopupComponent() {
                     return df;
                 }
@@ -130,11 +139,13 @@ public class Ticket1397 extends Application.LegacyApplication {
                         + lineNum
                         + " and see how the overview-version changes.");
 
+                @Override
                 public String getMinimizedValueAsHTML() {
                     return "" + String.valueOf(tf.getValue()).length()
                             + " characters of info";
                 }
 
+                @Override
                 public Component getPopupComponent() {
                     return tf;
                 }

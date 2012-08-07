@@ -10,6 +10,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.LayoutClickRpc;
+import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;
+import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
@@ -18,9 +22,7 @@ import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
-import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.LayoutClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.LayoutClickRpc;
 import com.vaadin.terminal.gwt.client.ui.absolutelayout.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.ui.AbsoluteLayout;
 
@@ -68,6 +70,7 @@ public class AbsoluteLayoutConnector extends
                 element);
     }
 
+    @Override
     public void updateCaption(ComponentConnector component) {
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
         AbsoluteWrapper componentWrapper = getWrapper(component);
@@ -147,6 +150,7 @@ public class AbsoluteLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutVertically() {
         VAbsoluteLayout layout = getWidget();
         for (ComponentConnector paintable : getChildComponents()) {
@@ -179,6 +183,7 @@ public class AbsoluteLayoutConnector extends
         }
     }
 
+    @Override
     public void layoutHorizontally() {
         VAbsoluteLayout layout = getWidget();
         for (ComponentConnector paintable : getChildComponents()) {

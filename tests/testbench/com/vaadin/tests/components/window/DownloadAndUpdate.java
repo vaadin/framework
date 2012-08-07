@@ -12,6 +12,7 @@ public class DownloadAndUpdate extends TestBase {
     protected void setup() {
         addComponent(new Button("Download and update",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         downloadAndUpdate();
                     }

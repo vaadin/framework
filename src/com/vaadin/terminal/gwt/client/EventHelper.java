@@ -3,8 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client;
 
-import static com.vaadin.terminal.gwt.client.EventId.BLUR;
-import static com.vaadin.terminal.gwt.client.EventId.FOCUS;
+import static com.vaadin.shared.EventId.BLUR;
+import static com.vaadin.shared.EventId.FOCUS;
 
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;

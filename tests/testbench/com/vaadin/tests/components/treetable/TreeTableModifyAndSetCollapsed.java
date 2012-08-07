@@ -26,6 +26,7 @@ public class TreeTableModifyAndSetCollapsed extends TestBase {
         addComponent(tt);
         Button repopulate = new Button("Repopulate", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 // repopulate the container and expand root item
                 container.removeAllItems();

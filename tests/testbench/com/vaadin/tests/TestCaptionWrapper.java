@@ -4,11 +4,11 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.UserError;
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -195,6 +195,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         layout.addComponent(c);
     }
 
+    @Override
     public void componentEvent(Event event) {
         final String feedback = eventListenerString + " source="
                 + event.getSource() + ", toString()=" + event.toString();

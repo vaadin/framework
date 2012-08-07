@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.terminal.gwt.client.ui.label.ContentMode;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -65,6 +65,7 @@ public class TestLayoutPerformance extends TestBase {
 
         b.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 int components = Integer.parseInt(n.getValue());
                 Layout layout = getCurrentLayout();

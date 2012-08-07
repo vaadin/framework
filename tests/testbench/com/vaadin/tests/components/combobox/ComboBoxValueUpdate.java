@@ -29,6 +29,7 @@ public class ComboBoxValueUpdate extends TestBase {
 
         select.addListener(new ComboBox.ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 System.err
                         .println("Selected " + event.getProperty().getValue());

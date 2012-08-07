@@ -7,7 +7,7 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
-import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Component;
@@ -37,6 +37,7 @@ public class AcceptFromComponent extends Window {
 
         final ServerSideCriterion serverSideCriterion = new ServerSideCriterion() {
 
+            @Override
             public boolean accept(DragAndDropEvent dragEvent) {
                 Transferable transferable = dragEvent.getTransferable();
                 if (transferable instanceof TransferableImpl) {
@@ -51,10 +52,12 @@ public class AcceptFromComponent extends Window {
 
         wrapper.setDropHandler(new DropHandler() {
 
+            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return serverSideCriterion;
             }
 
+            @Override
             public void drop(DragAndDropEvent event) {
 
                 WrapperTargetDetails ed = (WrapperTargetDetails) event
