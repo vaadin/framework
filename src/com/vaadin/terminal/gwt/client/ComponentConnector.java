@@ -71,29 +71,6 @@ public interface ComponentConnector extends ServerConnector {
     public boolean isRelativeHeight();
 
     /**
-     * Returns the parent of this connector. Can be null for only the root
-     * connector.
-     * 
-     * @return The parent of this connector, as set by
-     *         {@link #setParent(ComponentContainerConnector)}.
-     */
-    public ComponentContainerConnector getParent();
-
-    /**
-     * Sets the parent for this connector. This method should only be called by
-     * the framework to ensure that the connector hierarchy on the client side
-     * and the server side are in sync.
-     * <p>
-     * Note that calling this method does not fire a
-     * {@link ConnectorHierarchyChangeEvent}. The event is fired only when the
-     * whole hierarchy has been updated.
-     * 
-     * @param parent
-     *            The new parent of the connector
-     */
-    public void setParent(ComponentContainerConnector parent);
-
-    /**
      * Checks if the connector is read only.
      * 
      * @deprecated This belongs in AbstractFieldConnector, see #8514

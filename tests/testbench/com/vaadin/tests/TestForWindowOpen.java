@@ -24,7 +24,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        Root.getCurrentRoot().open(r);
+                        Root.getCurrent().getPage().open(r);
 
                     }
 
@@ -36,7 +36,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        Root.getCurrentRoot().open(r, "mytarget");
+                        Root.getCurrent().getPage().open(r, "mytarget");
 
                     }
 
@@ -48,7 +48,7 @@ public class TestForWindowOpen extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        Root.getCurrentRoot().open(r, "secondtarget");
+                        Root.getCurrent().getPage().open(r, "secondtarget");
 
                     }
 

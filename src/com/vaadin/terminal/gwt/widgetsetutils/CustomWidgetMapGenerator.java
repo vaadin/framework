@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect;
 import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
@@ -25,8 +26,7 @@ public abstract class CustomWidgetMapGenerator extends WidgetMapGenerator {
     private Collection<Class<? extends ComponentConnector>> deferredPaintables = new HashSet<Class<? extends ComponentConnector>>();
 
     @Override
-    protected LoadStyle getLoadStyle(
-            Class<? extends ComponentConnector> connector) {
+    protected LoadStyle getLoadStyle(Class<? extends ServerConnector> connector) {
         if (eagerPaintables == null) {
             init();
         }

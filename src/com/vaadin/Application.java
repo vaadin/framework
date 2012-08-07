@@ -18,7 +18,6 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
@@ -48,14 +47,12 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Window;
@@ -194,6 +191,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @see #getWindow(String)
          * @see Application#getRoot(WrappedRequest)
          */
+
         @Override
         public Root.LegacyWindow getRoot(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
@@ -246,6 +244,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * <p>
          * {@inheritDoc}
          */
+
         @Override
         public String getThemeForRoot(Root root) {
             return theme;
@@ -1066,12 +1065,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
      *            the change event.
      * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
      */
+
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            logger.info("SocketException in CommunicationManager."
-                    + " Most likely client (browser) closed socket.");
+            getLogger().info(
+                    "SocketException in CommunicationManager."
+                            + " Most likely client (browser) closed socket.");
             return;
         }
 
@@ -1090,7 +1091,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         // also print the error on console
-        logger.log(Level.SEVERE, "Terminal error:", t);
+        getLogger().log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**
@@ -2118,11 +2119,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return the current application instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentApplication(Application)
+     * @see #setCurrent(Application)
      * 
      * @since 7.0
      */
-    public static Application getCurrentApplication() {
+    public static Application getCurrent() {
         return currentApplication.get();
     }
 
@@ -2138,12 +2139,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @param application
      * 
-     * @see #getCurrentApplication()
+     * @see #getCurrent()
      * @see ThreadLocal
      * 
      * @since 7.0
      */
-    public static void setCurrentApplication(Application application) {
+    public static void setCurrent(Application application) {
         currentApplication.set(application);
     }
 
@@ -2187,7 +2188,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Root getRootForRequest(WrappedRequest request)
             throws RootRequiresMoreInformationException {
-        Root root = Root.getCurrentRoot();
+        Root root = Root.getCurrent();
         if (root != null) {
             return root;
         }
@@ -2239,7 +2240,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             // Set thread local here so it is available in init
-            Root.setCurrentRoot(root);
+            Root.setCurrent(root);
 
             if (!initedRoots.contains(rootId)) {
                 boolean initRequiresBrowserDetails = isRootPreserved()
@@ -2355,8 +2356,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return Collections.unmodifiableCollection(roots.values());
     }
 
-    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
-
     private int connectorIdSequence = 0;
 
     /**
@@ -2368,52 +2367,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return A new id for the connector
      */
     public String createConnectorId(ClientConnector connector) {
-        String connectorId = String.valueOf(connectorIdSequence++);
-        Connector oldReference = connectorIdToConnector.put(connectorId,
-                connector);
-        if (oldReference != null) {
-            throw new RuntimeException(
-                    "An error occured while generating connector ids. A connector with id "
-                            + connectorId + " was already found!");
-        }
-        return connectorId;
+        return String.valueOf(connectorIdSequence++);
     }
 
-    /**
-     * Gets a connector by its id.
-     * 
-     * @param connectorId
-     *            The connector id to look for
-     * @return The connector with the given id or null if no connector has the
-     *         given id
-     */
-    public ClientConnector getConnector(String connectorId) {
-        return connectorIdToConnector.get(connectorId);
-    }
-
-    /**
-     * Cleans the connector map from all connectors that are no longer attached
-     * to the application. This should only be called by the framework.
-     */
-    public void cleanConnectorMap() {
-        // remove detached components from paintableIdMap so they
-        // can be GC'ed
-        Iterator<String> iterator = connectorIdToConnector.keySet().iterator();
-
-        while (iterator.hasNext()) {
-            String connectorId = iterator.next();
-            Connector connector = connectorIdToConnector.get(connectorId);
-            if (connector instanceof Component) {
-                Component component = (Component) connector;
-                if (component.getApplication() != this) {
-                    // If component is no longer part of this application,
-                    // remove it from the map. If it is re-attached to the
-                    // application at some point it will be re-added to this
-                    // collection when sent to the client.
-                    iterator.remove();
-                }
-            }
-        }
-
+    private static final Logger getLogger() {
+        return Logger.getLogger(Application.class.getName());
     }
 }

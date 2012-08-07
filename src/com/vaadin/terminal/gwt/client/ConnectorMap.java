@@ -159,17 +159,16 @@ public class ConnectorMap {
         idToConnector.remove(connectorId);
         connector.onUnregister();
 
-        if (connector instanceof ComponentContainerConnector) {
-            for (ComponentConnector child : ((ComponentContainerConnector) connector)
-                    .getChildren()) {
-                if (child.getParent() == connector) {
-                    // Only unregister children that are actually connected to
-                    // this parent. For instance when moving connectors from one
-                    // layout to another and removing the first layout it will
-                    // still contain references to its old children, which are
-                    // now attached to another connector.
-                    unregisterConnector(child);
-                }
+        for (ServerConnector child : connector.getChildren()) {
+            if (child.getParent() == connector) {
+                /*
+                 * Only unregister children that are actually connected to this
+                 * parent. For instance when moving connectors from one layout
+                 * to another and removing the first layout it will still
+                 * contain references to its old children, which are now
+                 * attached to another connector.
+                 */
+                unregisterConnector(child);
             }
         }
     }
@@ -209,12 +208,20 @@ public class ConnectorMap {
      */
     @Deprecated
     public TooltipInfo getTooltipInfo(ComponentConnector paintable, Object key) {
-        return getComponentDetail(paintable).getTooltipInfo(key);
+        ComponentDetail componentDetail = getComponentDetail(paintable);
+        if (componentDetail == null) {
+            return null;
+        }
+        return componentDetail.getTooltipInfo(key);
     }
 
     @Deprecated
     public TooltipInfo getWidgetTooltipInfo(Widget widget, Object key) {
-        return getTooltipInfo(getConnector(widget), key);
+        ComponentConnector connector = getConnector(widget);
+        if (connector == null) {
+            return null;
+        }
+        return getTooltipInfo(connector, key);
     }
 
     public Collection<? extends ServerConnector> getConnectors() {

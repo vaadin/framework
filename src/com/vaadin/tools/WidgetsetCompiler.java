@@ -30,11 +30,11 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
  * The source directory containing widgetset and related classes must be
  * included in the classpath, as well as the gwt-dev-[platform].jar and other
  * relevant JARs.
+ * 
+ * @deprecated with Java 6, can use com.google.gwt.dev.Compiler directly (also in Eclipse plug-in etc.)
  */
+@Deprecated
 public class WidgetsetCompiler {
-
-    private static final Logger logger = Logger
-            .getLogger(WidgetsetCompiler.class.getName());
 
     /**
      * @param args
@@ -72,7 +72,7 @@ public class WidgetsetCompiler {
                                 String[].class);
                         method.invoke(null, new Object[] { args });
                     } catch (Throwable thr) {
-                        logger.log(Level.SEVERE,
+                        getLogger().log(Level.SEVERE,
                                 "Widgetset compilation failed", thr);
                     }
                 }
@@ -82,7 +82,11 @@ public class WidgetsetCompiler {
             runThread.join();
             System.out.println("Widgetset compilation finished");
         } catch (Throwable thr) {
-            logger.log(Level.SEVERE, "Widgetset compilation failed", thr);
+            getLogger().log(Level.SEVERE, "Widgetset compilation failed", thr);
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(WidgetsetCompiler.class.getName());
     }
 }

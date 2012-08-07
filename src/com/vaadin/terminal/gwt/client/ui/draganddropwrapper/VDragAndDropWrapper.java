@@ -60,6 +60,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private static final String CLASSNAME = "v-ddwrapper";
     protected static final String DRAGGABLE = "draggable";
 
+    boolean hasTooltip = false;
+
     public VDragAndDropWrapper() {
         super();
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -67,6 +69,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
         addDomHandler(new MouseDownHandler() {
+
             public void onMouseDown(MouseDownEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
@@ -75,6 +78,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         }, MouseDownEvent.getType());
 
         addDomHandler(new TouchStartHandler() {
+
             public void onTouchStart(TouchStartEvent event) {
                 if (startDrag(event.getNativeEvent())) {
                     /*
@@ -92,7 +96,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
-        if (client != null) {
+        if (hasTooltip && client != null) {
+            // Override child tooltips if the wrapper has a tooltip defined
             client.handleTooltipEvent(event, this);
         }
     }
@@ -172,6 +177,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private boolean uploading;
 
     private ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
+
         public void onReadyStateChange(XMLHttpRequest xhr) {
             if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                 // visit server for possible
@@ -269,6 +275,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         try {
             dragleavetimer = new Timer() {
+
                 @Override
                 public void run() {
                     // Yes, dragleave happens before drop. Makes no sense to me.
@@ -455,6 +462,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             if (detailsChanged) {
                 currentlyValid = false;
                 validate(new VAcceptCallback() {
+
                     public void accepted(VDragEvent event) {
                         dragAccepted(drag);
                     }

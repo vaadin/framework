@@ -22,7 +22,7 @@ import com.vaadin.tools.ReflectTools;
  * AbstractSplitPanel.
  * 
  * <code>AbstractSplitPanel</code> is base class for a component container that
- * can contain two components. The comopnents are split by a divider element.
+ * can contain two components. The components are split by a divider element.
  * 
  * @author Vaadin Ltd.
  * @version
@@ -31,7 +31,10 @@ import com.vaadin.tools.ReflectTools;
  */
 public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
+    // TODO use Unit in AbstractSplitPanelState and remove these
     private Unit posUnit;
+    private Unit posMinUnit;
+    private Unit posMaxUnit;
 
     private AbstractSplitPanelRpc rpc = new AbstractSplitPanelRpc() {
 
@@ -41,13 +44,14 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         }
 
         public void setSplitterPosition(float position) {
-            getState().getSplitterState().setPosition(position);
+            getSplitterState().setPosition(position);
         }
     };
 
     public AbstractSplitPanel() {
         registerRpc(rpc);
         setSplitPosition(50, Unit.PERCENTAGE, false);
+        setSplitPositionLimits(0, Unit.PERCENTAGE, 100, Unit.PERCENTAGE);
     }
 
     /**
@@ -101,6 +105,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param c
      *            the component to be added.
      */
+
     @Override
     public void addComponent(Component c) {
         if (getFirstComponent() == null) {
@@ -188,6 +193,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @param c
      *            the component to be removed.
      */
+
     @Override
     public void removeComponent(Component c) {
         super.removeComponent(c);
@@ -204,6 +210,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
+
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
     }
@@ -214,6 +221,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * 
      * @return the number of contained components (zero, one or two)
      */
+
     public int getComponentCount() {
         int count = 0;
         if (getFirstComponent() != null) {
@@ -226,6 +234,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /* Documented in superclass */
+
     public void replaceComponent(Component oldComponent, Component newComponent) {
         if (oldComponent == getFirstComponent()) {
             setFirstComponent(newComponent);
@@ -297,7 +306,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (unit != Unit.PERCENTAGE) {
             pos = Math.round(pos);
         }
-        SplitterState splitterState = getState().getSplitterState();
+        SplitterState splitterState = getSplitterState();
         splitterState.setPosition(pos);
         splitterState.setPositionUnit(unit.getSymbol());
         splitterState.setPositionReversed(reverse);
@@ -313,7 +322,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @return position of the splitter
      */
     public float getSplitPosition() {
-        return getState().getSplitterState().getPosition();
+        return getSplitterState().getPosition();
     }
 
     /**
@@ -326,6 +335,110 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
+     * Sets the minimum split position to the given position and unit. If the
+     * split position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param pos
+     *            the minimum position of the split
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
+     */
+    public void setMinSplitPosition(int pos, Unit unit) {
+        setSplitPositionLimits(pos, unit, getSplitterState().getMaxPosition(),
+                posMaxUnit);
+    }
+
+    /**
+     * Returns the current minimum position of the splitter, in
+     * {@link #getMinSplitPositionUnit()} units.
+     * 
+     * @return the minimum position of the splitter
+     */
+    public float getMinSplitPosition() {
+        return getSplitterState().getMinPosition();
+    }
+
+    /**
+     * Returns the unit of the minimum position of the splitter.
+     * 
+     * @return the unit of the minimum position of the splitter
+     */
+    public Unit getMinSplitPositionUnit() {
+        return posMinUnit;
+    }
+
+    /**
+     * Sets the maximum split position to the given position and unit. If the
+     * split position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param pos
+     *            the maximum position of the split
+     * @param unit
+     *            the unit (from {@link Sizeable}) in which the size is given.
+     *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
+     */
+    public void setMaxSplitPosition(float pos, Unit unit) {
+        setSplitPositionLimits(getSplitterState().getMinPosition(), posMinUnit,
+                pos, unit);
+    }
+
+    /**
+     * Returns the current maximum position of the splitter, in
+     * {@link #getMaxSplitPositionUnit()} units.
+     * 
+     * @return the maximum position of the splitter
+     */
+    public float getMaxSplitPosition() {
+        return getSplitterState().getMaxPosition();
+    }
+
+    /**
+     * Returns the unit of the maximum position of the splitter
+     * 
+     * @return the unit of the maximum position of the splitter
+     */
+    public Unit getMaxSplitPositionUnit() {
+        return posMaxUnit;
+    }
+
+    /**
+     * Sets the maximum and minimum position of the splitter. If the split
+     * position is reversed, maximum and minimum are also reversed.
+     * 
+     * @param minPos
+     *            the new minimum position
+     * @param minPosUnit
+     *            the unit (from {@link Sizeable}) in which the minimum position
+     *            is given.
+     * @param maxPos
+     *            the new maximum position
+     * @param maxPosUnit
+     *            the unit (from {@link Sizeable}) in which the maximum position
+     *            is given.
+     */
+    private void setSplitPositionLimits(float minPos, Unit minPosUnit,
+            float maxPos, Unit maxPosUnit) {
+        if ((minPosUnit != Unit.PERCENTAGE && minPosUnit != Unit.PIXELS)
+                || (maxPosUnit != Unit.PERCENTAGE && maxPosUnit != Unit.PIXELS)) {
+            throw new IllegalArgumentException(
+                    "Only percentage and pixel units are allowed");
+        }
+
+        SplitterState state = getSplitterState();
+
+        state.setMinPosition(minPos);
+        state.setMinPositionUnit(minPosUnit.getSymbol());
+        posMinUnit = minPosUnit;
+
+        state.setMaxPosition(maxPos);
+        state.setMaxPositionUnit(maxPosUnit.getSymbol());
+        posMaxUnit = maxPosUnit;
+
+        requestRepaint();
+    }
+
+    /**
      * Lock the SplitPanels position, disabling the user from dragging the split
      * handle.
      * 
@@ -333,7 +446,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *            Set <code>true</code> if locked, <code>false</code> otherwise.
      */
     public void setLocked(boolean locked) {
-        getState().getSplitterState().setLocked(locked);
+        getSplitterState().setLocked(locked);
         requestRepaint();
     }
 
@@ -344,7 +457,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @return <code>true</code> if locked, <code>false</code> otherwise.
      */
     public boolean isLocked() {
-        return getState().getSplitterState().isLocked();
+        return getSplitterState().isLocked();
     }
 
     /**
@@ -394,4 +507,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         return (AbstractSplitPanelState) super.getState();
     }
 
+    private SplitterState getSplitterState() {
+        return getState().getSplitterState();
+    }
 }

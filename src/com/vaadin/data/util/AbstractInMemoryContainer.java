@@ -165,8 +165,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    public Collection<?> getItemIds() {
-        return Collections.unmodifiableCollection(getVisibleItemIds());
+    public List<?> getItemIds() {
+        return Collections.unmodifiableList(getVisibleItemIds());
     }
 
     // Container.Ordered

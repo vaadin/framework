@@ -14,7 +14,7 @@ import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent.ConnectorHie
  * An interface used by client-side connectors whose widget is a component
  * container (implements {@link HasWidgets}).
  */
-public interface ComponentContainerConnector extends ComponentConnector {
+public interface ComponentContainerConnector extends ServerConnector {
 
     /**
      * Update child components caption, description and error message.
@@ -42,7 +42,7 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * @return A collection of children for this connector. An empty collection
      *         if there are no children. Never returns null.
      */
-    public List<ComponentConnector> getChildren();
+    public List<ComponentConnector> getChildComponents();
 
     /**
      * Sets the children for this connector. This method should only be called
@@ -50,14 +50,14 @@ public interface ComponentContainerConnector extends ComponentConnector {
      * side and the server side are in sync.
      * <p>
      * Note that calling this method does not call
-     * {@link #connectorHierarchyChanged(ConnectorHierarchyChangeEvent)}. The
-     * event method is called only when the hierarchy has been updated for all
-     * connectors.
+     * {@link ConnectorHierarchyChangeHandler#onConnectorHierarchyChange(ConnectorHierarchyChangeEvent)}
+     * . The event method is called only when the hierarchy has been updated for
+     * all connectors.
      * 
      * @param children
      *            The new child connectors
      */
-    public void setChildren(List<ComponentConnector> children);
+    public void setChildComponents(List<ComponentConnector> children);
 
     /**
      * Adds a handler that is called whenever the child hierarchy of this

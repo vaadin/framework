@@ -4,6 +4,7 @@
 
 package com.vaadin.terminal.gwt.client.ui.splitpanel;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.dom.client.Node;
@@ -31,6 +32,7 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
+import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
@@ -76,7 +78,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean positionReversed = false;
 
-    List<String> componentStyleNames;
+    List<String> componentStyleNames = Collections.emptyList();
 
     private Element draggingCurtain;
 
@@ -87,11 +89,15 @@ public class VAbstractSplitPanel extends ComplexPanel {
     /* The current position of the split handle in either percentages or pixels */
     String position;
 
+    String maximumPosition;
+
+    String minimumPosition;
+
+    private TouchScrollHandler touchScrollHandler;
+
     protected Element scrolledContainer;
 
     protected int origScrollTop;
-
-    private TouchScrollDelegate touchScrollDelegate;
 
     public VAbstractSplitPanel() {
         this(ORIENTATION_HORIZONTAL);
@@ -116,6 +122,8 @@ public class VAbstractSplitPanel extends ComplexPanel {
         setOrientation(orientation);
         sinkEvents(Event.MOUSEEVENTS);
 
+        makeScrollable();
+
         addDomHandler(new TouchCancelHandler() {
             public void onTouchCancel(TouchCancelEvent event) {
                 // TODO When does this actually happen??
@@ -127,11 +135,8 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 Node target = event.getTouches().get(0).getTarget().cast();
                 if (splitter.isOrHasChild(target)) {
                     onMouseDown(Event.as(event.getNativeEvent()));
-                } else {
-                    getTouchScrollDelegate().onTouchStart(event);
                 }
             }
-
         }, TouchStartEvent.getType());
         addDomHandler(new TouchMoveHandler() {
             public void onTouchMove(TouchMoveEvent event) {
@@ -150,14 +155,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     }
 
-    private TouchScrollDelegate getTouchScrollDelegate() {
-        if (touchScrollDelegate == null) {
-            touchScrollDelegate = new TouchScrollDelegate(firstContainer,
-                    secondContainer);
-        }
-        return touchScrollDelegate;
-    }
-
     protected void constructDom() {
         DOM.appendChild(splitter, DOM.createDiv()); // for styling
         DOM.appendChild(getElement(), wrapper);
@@ -172,9 +169,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
-        DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-        DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-
+        setStylenames();
     }
 
     private void setOrientation(int orientation) {
@@ -190,11 +185,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(firstContainer, "width", "100%");
             DOM.setStyleAttribute(secondContainer, "width", "100%");
         }
-
-        DOM.setElementProperty(firstContainer, "className", CLASSNAME
-                + "-first-container");
-        DOM.setElementProperty(secondContainer, "className", CLASSNAME
-                + "-second-container");
     }
 
     @Override
@@ -232,9 +222,107 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
+    /**
+     * Converts given split position string (in pixels or percentage) to a
+     * floating point pixel value.
+     * 
+     * @param pos
+     * @return
+     */
+    private float convertToPixels(String pos) {
+        float posAsFloat;
+        if (pos.indexOf("%") > 0) {
+            posAsFloat = Math.round(Float.parseFloat(pos.substring(0,
+                    pos.length() - 1))
+                    / 100
+                    * (orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                            : getOffsetHeight()));
+        } else {
+            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
+        }
+        return posAsFloat;
+    }
+
+    /**
+     * Converts given split position string (in pixels or percentage) to a float
+     * percentage value.
+     * 
+     * @param pos
+     * @return
+     */
+    private float convertToPercentage(String pos) {
+        float posAsFloat = 0;
+
+        if (pos.indexOf("px") > 0) {
+            int posAsInt = Integer.parseInt(pos.substring(0, pos.length() - 2));
+            int offsetLength = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                    : getOffsetHeight();
+
+            // 100% needs special handling
+            if (posAsInt + getSplitterSize() >= offsetLength) {
+                posAsInt = offsetLength;
+            }
+            posAsFloat = ((float) posAsInt / (float) offsetLength * 100);
+
+        } else {
+            posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 1));
+        }
+        return posAsFloat;
+    }
+
+    /**
+     * Returns the given position clamped to the range between current minimum
+     * and maximum positions.
+     * 
+     * TODO Should this be in the connector?
+     * 
+     * @param pos
+     *            Position of the splitter as a CSS string, either pixels or a
+     *            percentage.
+     * @return minimumPosition if pos is less than minimumPosition;
+     *         maximumPosition if pos is greater than maximumPosition; pos
+     *         otherwise.
+     */
+    private String checkSplitPositionLimits(String pos) {
+        float positionAsFloat = convertToPixels(pos);
+
+        if (maximumPosition != null
+                && convertToPixels(maximumPosition) < positionAsFloat) {
+            pos = maximumPosition;
+        } else if (minimumPosition != null
+                && convertToPixels(minimumPosition) > positionAsFloat) {
+            pos = minimumPosition;
+        }
+        return pos;
+    }
+
+    /**
+     * Converts given string to the same units as the split position is.
+     * 
+     * @param pos
+     *            position to be converted
+     * @return converted position string
+     */
+    private String convertToPositionUnits(String pos) {
+        if (position.indexOf("%") != -1 && pos.indexOf("%") == -1) {
+            // position is in percentage, pos in pixels
+            pos = convertToPercentage(pos) + "%";
+        } else if (position.indexOf("px") > 0 && pos.indexOf("px") == -1) {
+            // position is in pixels and pos in percentage
+            pos = convertToPixels(pos) + "px";
+        }
+
+        return pos;
+    }
+
     void setSplitPosition(String pos) {
         if (pos == null) {
             return;
+        }
+
+        pos = checkSplitPositionLimits(pos);
+        if (!pos.equals(position)) {
+            position = convertToPositionUnits(pos);
         }
 
         // Convert percentage values to pixels
@@ -375,7 +463,6 @@ public class VAbstractSplitPanel extends ComplexPanel {
             }
             break;
         }
-
     }
 
     void setFirstWidget(Widget w) {
@@ -481,16 +568,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         if (position.indexOf("%") > 0) {
-            float pos = newX;
-            // 100% needs special handling
-            if (newX + getSplitterSize() >= getOffsetWidth()) {
-                pos = getOffsetWidth();
-            }
-            // Reversed position
-            if (positionReversed) {
-                pos = getOffsetWidth() - pos - getSplitterSize();
-            }
-            position = (pos / getOffsetWidth() * 100) + "%";
+            position = convertToPositionUnits(newX + "px");
         } else {
             // Reversed position
             if (positionReversed) {
@@ -523,16 +601,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         if (position.indexOf("%") > 0) {
-            float pos = newY;
-            // 100% needs special handling
-            if (newY + getSplitterSize() >= getOffsetHeight()) {
-                pos = getOffsetHeight();
-            }
-            // Reversed position
-            if (positionReversed) {
-                pos = getOffsetHeight() - pos - getSplitterSize();
-            }
-            position = pos / getOffsetHeight() * 100 + "%";
+            position = convertToPositionUnits(newY + "px");
         } else {
             // Reversed position
             if (positionReversed) {
@@ -659,30 +728,24 @@ public class VAbstractSplitPanel extends ComplexPanel {
     }
 
     void setStylenames() {
-        final String splitterSuffix = (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
-                : "-vsplitter");
-        final String firstContainerSuffix = "-first-container";
-        final String secondContainerSuffix = "-second-container";
-        String lockedSuffix = "";
+        final String splitterClass = CLASSNAME
+                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                        : "-vsplitter");
+        final String firstContainerClass = CLASSNAME + "-first-container";
+        final String secondContainerClass = CLASSNAME + "-second-container";
+        final String lockedSuffix = locked ? "-locked" : "";
 
-        String splitterStyle = CLASSNAME + splitterSuffix;
-        String firstStyle = CLASSNAME + firstContainerSuffix;
-        String secondStyle = CLASSNAME + secondContainerSuffix;
+        splitter.setClassName(splitterClass + lockedSuffix);
+        firstContainer.setClassName(firstContainerClass);
+        secondContainer.setClassName(secondContainerClass);
 
-        if (locked) {
-            splitterStyle = CLASSNAME + splitterSuffix + "-locked";
-            lockedSuffix = "-locked";
+        for (String styleName : componentStyleNames) {
+            splitter.addClassName(splitterClass + "-" + styleName
+                    + lockedSuffix);
+            firstContainer.addClassName(firstContainerClass + "-" + styleName);
+            secondContainer
+                    .addClassName(secondContainerClass + "-" + styleName);
         }
-        for (String style : componentStyleNames) {
-            splitterStyle += " " + CLASSNAME + splitterSuffix + "-" + style
-                    + lockedSuffix;
-            firstStyle += " " + CLASSNAME + firstContainerSuffix + "-" + style;
-            secondStyle += " " + CLASSNAME + secondContainerSuffix + "-"
-                    + style;
-        }
-        DOM.setElementProperty(splitter, "className", splitterStyle);
-        DOM.setElementProperty(firstContainer, "className", firstStyle);
-        DOM.setElementProperty(secondContainer, "className", secondStyle);
     }
 
     public void setEnabled(boolean enabled) {
@@ -693,4 +756,14 @@ public class VAbstractSplitPanel extends ComplexPanel {
         return enabled;
     }
 
+    /**
+     * Ensures the panels are scrollable eg. after style name changes
+     */
+    void makeScrollable() {
+        if (touchScrollHandler == null) {
+            touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
+        }
+        touchScrollHandler.addElement(firstContainer);
+        touchScrollHandler.addElement(secondContainer);
+    }
 }

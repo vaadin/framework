@@ -13,6 +13,7 @@ import java.util.Set;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.ui.ManagedLayout;
@@ -154,9 +155,9 @@ public class LayoutDependencyTree {
                 needsSize.add(connector);
             }
             if (!isRelativeInDirection(connector, direction)) {
-                ComponentConnector parent = connector.getParent();
-                if (parent != null) {
-                    needsSize.add(parent);
+                ServerConnector parent = connector.getParent();
+                if (parent instanceof ComponentConnector) {
+                    needsSize.add((ComponentConnector) parent);
                 }
             }
 
@@ -193,7 +194,7 @@ public class LayoutDependencyTree {
 
             if (connector instanceof ComponentContainerConnector) {
                 ComponentContainerConnector container = (ComponentContainerConnector) connector;
-                for (ComponentConnector child : container.getChildren()) {
+                for (ComponentConnector child : container.getChildComponents()) {
                     if (isRelativeInDirection(child, direction)) {
                         resized.add(child);
                     }
@@ -246,16 +247,15 @@ public class LayoutDependencyTree {
         private LayoutDependency findPotentiallyChangedScrollbar() {
             ComponentConnector currentConnector = connector;
             while (true) {
-                ComponentContainerConnector parent = currentConnector
-                        .getParent();
-                if (parent == null) {
+                ServerConnector parent = currentConnector.getParent();
+                if (!(parent instanceof ComponentConnector)) {
                     return null;
                 }
                 if (parent instanceof MayScrollChildren) {
                     return getDependency(currentConnector,
                             getOppositeDirection());
                 }
-                currentConnector = parent;
+                currentConnector = (ComponentConnector) parent;
             }
         }
 
@@ -504,12 +504,11 @@ public class LayoutDependencyTree {
     public ComponentConnector getScrollingBoundary(ComponentConnector connector) {
         LayoutDependency dependency = getDependency(connector, HORIZONTAL);
         if (!dependency.scrollingParentCached) {
-            ComponentContainerConnector parent = dependency.connector
-                    .getParent();
+            ServerConnector parent = dependency.connector.getParent();
             if (parent instanceof MayScrollChildren) {
                 dependency.scrollingBoundary = connector;
-            } else if (parent != null) {
-                dependency.scrollingBoundary = getScrollingBoundary(parent);
+            } else if (parent instanceof ComponentConnector) {
+                dependency.scrollingBoundary = getScrollingBoundary((ComponentConnector) parent);
             } else {
                 // No scrolling parent
             }

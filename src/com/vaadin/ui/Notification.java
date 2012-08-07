@@ -6,6 +6,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Resource;
 
 /**
@@ -317,5 +318,54 @@ public class Notification implements Serializable {
      */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
+    }
+
+    /**
+     * Shows this notification on a Page.
+     * 
+     * @param page
+     *            The page on which the notification should be shown
+     */
+    public void show(Page page) {
+        // TODO Can avoid deprecated API when Notification extends Extension
+        page.showNotification(this);
+    }
+
+    /**
+     * Shows a notification message on the middle of the current page. The
+     * message automatically disappears ("humanized message").
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
+     * 
+     * @see #Notification(String)
+     * @see #show(Page)
+     * 
+     * @param caption
+     *            The message
+     */
+    public static void show(String caption) {
+        new Notification(caption).show(Page.getCurrent());
+    }
+
+    /**
+     * Shows a notification message the current page. The position and behavior
+     * of the message depends on the type, which is one of the basic types
+     * defined in {@link Notification}, for instance
+     * Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * Care should be taken to to avoid XSS vulnerabilities as the caption is
+     * rendered as html.
+     * 
+     * @see #Notification(String, int)
+     * @see #show(Page)
+     * 
+     * @param caption
+     *            The message
+     * @param type
+     *            The message type
+     */
+    public static void show(String caption, int type) {
+        new Notification(caption, type).show(Page.getCurrent());
     }
 }

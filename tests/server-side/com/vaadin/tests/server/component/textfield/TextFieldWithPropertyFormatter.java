@@ -9,8 +9,6 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.ui.Component.RepaintRequestEvent;
-import com.vaadin.ui.Component.RepaintRequestListener;
 import com.vaadin.ui.TextField;
 
 public class TextFieldWithPropertyFormatter extends TestCase {
@@ -30,7 +28,13 @@ public class TextFieldWithPropertyFormatter extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        field = new TextField();
+        field = new TextField() {
+            @Override
+            public void requestRepaint() {
+                repainted++;
+                super.requestRepaint();
+            }
+        };
 
         formatter = new PropertyFormatter<String>() {
 
@@ -61,11 +65,6 @@ public class TextFieldWithPropertyFormatter extends TestCase {
         };
 
         field.addListener(listener);
-        field.addListener(new RepaintRequestListener() {
-            public void repaintRequested(RepaintRequestEvent event) {
-                repainted++;
-            }
-        });
         listenerCalled = 0;
         repainted = 0;
     }

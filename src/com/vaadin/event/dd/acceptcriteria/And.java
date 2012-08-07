@@ -19,7 +19,6 @@ import com.vaadin.terminal.PaintTarget;
  * @since 6.3
  * 
  */
-@ClientCriterion(com.vaadin.terminal.gwt.client.ui.dd.VAnd.class)
 public class And extends ClientSideCriterion {
 
     private static final long serialVersionUID = -5242574480825471748L;

@@ -16,6 +16,7 @@ import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.DirectionalManagedLayout;
 import com.vaadin.terminal.gwt.client.Paintable;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
@@ -283,8 +284,11 @@ public class TableConnector extends AbstractComponentContainerConnector
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 public void execute() {
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
-                    getLayoutManager().setNeedsMeasure(
-                            TableConnector.this.getParent());
+                    ServerConnector parent = getParent();
+                    if (parent instanceof ComponentConnector) {
+                        getLayoutManager().setNeedsMeasure(
+                                (ComponentConnector) parent);
+                    }
                     getLayoutManager().setNeedsVerticalLayout(
                             TableConnector.this);
                     getLayoutManager().layoutNow();

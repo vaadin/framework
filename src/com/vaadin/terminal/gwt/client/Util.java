@@ -812,13 +812,12 @@ public class Util {
         return idx;
     }
 
-    private static void printPaintablesInvocations(
+    private static void printConnectorInvocations(
             ArrayList<MethodInvocation> invocations, String id,
             ApplicationConnection c) {
-        ComponentConnector paintable = (ComponentConnector) ConnectorMap.get(c)
-                .getConnector(id);
-        if (paintable != null) {
-            VConsole.log("\t" + id + " (" + paintable.getClass() + ") :");
+        ServerConnector connector = ConnectorMap.get(c).getConnector(id);
+        if (connector != null) {
+            VConsole.log("\t" + id + " (" + connector.getClass() + ") :");
             for (MethodInvocation invocation : invocations) {
                 Object[] parameters = invocation.getParameters();
                 String formattedParams = null;
@@ -842,7 +841,7 @@ public class Util {
                         + ")");
             }
         } else {
-            VConsole.log("\t" + id + ": Warning: no corresponding paintable!");
+            VConsole.log("\t" + id + ": Warning: no corresponding connector!");
         }
     }
 
@@ -858,14 +857,14 @@ public class Util {
                 if (curId == null) {
                     curId = id;
                 } else if (!curId.equals(id)) {
-                    printPaintablesInvocations(invocations, curId, c);
+                    printConnectorInvocations(invocations, curId, c);
                     invocations.clear();
                     curId = id;
                 }
                 invocations.add(loggedBurst.get(i));
             }
             if (!invocations.isEmpty()) {
-                printPaintablesInvocations(invocations, curId, c);
+                printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
             VConsole.error(e);
@@ -909,6 +908,22 @@ public class Util {
         } else {
             return event.getClientX();
         }
+    }
+
+    /**
+     * Find the element corresponding to the coordinates in the passed mouse
+     * event. Please note that this is not always the same as the target of the
+     * event e.g. if event capture is used.
+     * 
+     * @param event
+     *            the mouse event to get coordinates from
+     * @return the element at the coordinates of the event
+     */
+    public static Element getElementUnderMouse(NativeEvent event) {
+        int pageX = getTouchOrMouseClientX(event);
+        int pageY = getTouchOrMouseClientY(event);
+
+        return getElementFromPoint(pageX, pageY);
     }
 
     /**

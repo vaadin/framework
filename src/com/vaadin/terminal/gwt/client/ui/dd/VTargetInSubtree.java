@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.terminal.gwt.client.ui.tree.VTree.TreeNode;
+import com.vaadin.ui.Tree;
 
+@AcceptCriterion(Tree.TargetInSubtree.class)
 final public class VTargetInSubtree extends VAcceptCriterion {
 
     @Override

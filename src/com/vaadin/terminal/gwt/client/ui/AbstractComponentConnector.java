@@ -14,8 +14,10 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ComponentContainerConnector;
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.Connector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -25,8 +27,6 @@ import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
-
-    private ComponentContainerConnector parent;
 
     private Widget widget;
 
@@ -77,8 +77,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
         if (getState().getDebugId() != null) {
@@ -90,7 +88,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         /*
          * Disabled state may affect (override) tabindex so the order must be
-         * first setting tabindex, then enabled state.
+         * first setting tabindex, then enabled state (through super
+         * implementation).
          */
         if (getState() instanceof TabIndexState
                 && getWidget() instanceof Focusable) {
@@ -98,7 +97,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     .getTabIndex());
         }
 
-        setWidgetEnabled(isEnabled());
+        super.onStateChanged(stateChangeEvent);
 
         // Style names
         // String styleName = getStyleNames(getWidget().getStylePrimaryName());
@@ -117,10 +116,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         // Set captions
         if (delegateCaptionHandling()) {
-            ComponentContainerConnector parent = getParent();
-            if (parent != null) {
-                parent.updateCaption(this);
-            } else if (!(this instanceof RootConnector)) {
+            ServerConnector parent = getParent();
+            if (parent instanceof ComponentContainerConnector) {
+                ((ComponentContainerConnector) parent).updateCaption(this);
+            } else if (parent == null && !(this instanceof RootConnector)) {
                 VConsole.error("Parent of connector "
                         + Util.getConnectorString(this)
                         + " is null. This is typically an indication of a broken component hierarchy");
@@ -137,7 +136,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     public void setWidgetEnabled(boolean widgetEnabled) {
         if (getWidget() instanceof HasEnabled) {
+            // set widget specific enabled state
             ((HasEnabled) getWidget()).setEnabled(widgetEnabled);
+            // add or remove v-disabled style name from the widget
+            getWidget().setStyleName(ApplicationConnection.DISABLED_CLASSNAME,
+                    !widgetEnabled);
+            // make sure the caption has or has not v-disabled style
+            if (delegateCaptionHandling()) {
+                ServerConnector parent = getParent();
+                if (parent instanceof ComponentContainerConnector) {
+                    ((ComponentContainerConnector) parent).updateCaption(this);
+                } else if (parent == null && !(this instanceof RootConnector)) {
+                    VConsole.error("Parent of connector "
+                            + Util.getConnectorString(this)
+                            + " is null. This is typically an indication of a broken component hierarchy");
+                }
+            }
         }
     }
 
@@ -148,7 +162,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Parent should be updated if either dimension changed between relative
         // and non-relative
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
-            ComponentContainerConnector parent = getParent();
+            Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setNeedsHorizontalLayout(
                         (ManagedLayout) parent);
@@ -156,7 +170,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
 
         if (newHeight.endsWith("%") != lastKnownHeight.endsWith("%")) {
-            ComponentContainerConnector parent = getParent();
+            Connector parent = getParent();
             if (parent instanceof ManagedLayout) {
                 getLayoutManager().setNeedsVerticalLayout(
                         (ManagedLayout) parent);
@@ -190,23 +204,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     public boolean isUndefinedWidth() {
         return getState().getWidth().length() == 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.Connector#isEnabled()
-     */
-    public boolean isEnabled() {
-        if (!getState().isEnabled()) {
-            return false;
-        }
-
-        if (getParent() == null) {
-            return true;
-        } else {
-            return getParent().isEnabled();
-        }
     }
 
     /*
@@ -337,26 +334,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return LayoutManager.get(getConnection());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.Connector#getParent()
-     */
-    public ComponentContainerConnector getParent() {
-        return parent;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.Connector#setParent(com.vaadin.terminal
-     * .gwt.client.ComponentContainerConnector)
-     */
-    public void setParent(ComponentContainerConnector parent) {
-        this.parent = parent;
-    }
-
     /**
      * Checks if there is a registered server side listener for the given event
      * identifier.
@@ -369,6 +346,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public boolean hasEventListener(String eventIdentifier) {
         Set<String> reg = getState().getRegisteredEventListeners();
         return (reg != null && reg.contains(eventIdentifier));
+    }
+
+    @Override
+    public void updateEnabledState(boolean enabledState) {
+        super.updateEnabledState(enabledState);
+
+        setWidgetEnabled(isEnabled());
     }
 
     @Override

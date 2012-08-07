@@ -15,7 +15,7 @@ public abstract class AbstractTestRoot extends Root {
 
     @Override
     public void init(WrappedRequest request) {
-        setCaption(getClass().getName());
+        getPage().setTitle(getClass().getName());
 
         Label label = new Label(getTestDescription(), ContentMode.XHTML);
         label.setWidth("100%");
@@ -57,7 +57,7 @@ public abstract class AbstractTestRoot extends Root {
     protected abstract Integer getTicketNumber();
 
     protected WebBrowser getBrowser() {
-        ApplicationContext context = Application.getCurrentApplication()
+        ApplicationContext context = Application.getCurrent()
                 .getContext();
         if (context instanceof AbstractWebApplicationContext) {
             AbstractWebApplicationContext webContext = (AbstractWebApplicationContext) context;

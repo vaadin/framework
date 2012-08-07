@@ -61,7 +61,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * @param application
+     * @param root
+     *            The root for this request
      * 
      * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
      * 
@@ -70,9 +71,9 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(Application application,
-            WrappedRequest request, WrappedResponse response)
-            throws IOException, InvalidUIDLSecurityKeyException {
+    public void handleFileUpload(Root root, WrappedRequest request,
+            WrappedResponse response) throws IOException,
+            InvalidUIDLSecurityKeyException {
 
         /*
          * URI pattern: APP/UPLOAD/[PID]/[NAME]/[SECKEY] See #createReceiverUrl
@@ -86,14 +87,14 @@ public class CommunicationManager extends AbstractCommunicationManager {
         String uppUri = pathInfo.substring(startOfData);
         String[] parts = uppUri.split("/", 3); // 0 = pid, 1= name, 2 = sec key
         String variableName = parts[1];
-        String paintableId = parts[0];
+        String connectorId = parts[0];
 
         StreamVariable streamVariable = pidToNameToStreamVariable.get(
-                paintableId).get(variableName);
+                connectorId).get(variableName);
         String secKey = streamVariableToSeckey.get(streamVariable);
         if (secKey.equals(parts[2])) {
 
-            Connector source = getConnector(application, paintableId);
+            Connector source = getConnector(root, connectorId);
             String contentType = request.getContentType();
             if (contentType.contains("boundary")) {
                 // Multipart requests contain boundary string
@@ -117,13 +118,12 @@ public class CommunicationManager extends AbstractCommunicationManager {
     protected void postPaint(Root root) {
         super.postPaint(root);
 
-        Application application = root.getApplication();
         if (pidToNameToStreamVariable != null) {
             Iterator<String> iterator = pidToNameToStreamVariable.keySet()
                     .iterator();
             while (iterator.hasNext()) {
                 String connectorId = iterator.next();
-                if (application.getConnector(connectorId) == null) {
+                if (root.getConnectorTracker().getConnector(connectorId) == null) {
                     // Owner is no longer attached to the application
                     Map<String, StreamVariable> removed = pidToNameToStreamVariable
                             .get(connectorId);

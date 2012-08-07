@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.AbstractFieldState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
@@ -55,11 +53,6 @@ public abstract class AbstractBoxLayoutConnector extends
     @Override
     public AbstractOrderedLayoutState getState() {
         return (AbstractOrderedLayoutState) super.getState();
-    }
-
-    @Override
-    protected Widget createWidget() {
-        return GWT.create(VBoxLayout.class);
     }
 
     @Override
@@ -119,7 +112,6 @@ public abstract class AbstractBoxLayoutConnector extends
             required = ((AbstractFieldConnector) child).isRequired();
         }
         boolean enabled = child.getState().isEnabled();
-        // TODO Description is handled from somewhere else?
 
         slot.setCaption(caption, iconUrl, styles, error, showError, required,
                 enabled);
@@ -157,7 +149,7 @@ public abstract class AbstractBoxLayoutConnector extends
         int currentIndex = 0;
         VBoxLayout layout = getWidget();
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Slot slot = layout.getSlot(child);
             if (slot.getParent() != layout) {
                 child.addStateChangeHandler(childStateChangeHandler);
@@ -218,7 +210,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
         boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             double expandRatio = getState().getChildData().get(child)
                     .getExpandRatio();
             if (expandRatio > 0) {
@@ -227,7 +219,7 @@ public abstract class AbstractBoxLayoutConnector extends
             }
         }
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Slot slot = getWidget().getSlot(child);
 
             AlignmentInfo alignment = new AlignmentInfo(getState()
@@ -313,7 +305,7 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     private void updateAllSlotListeners() {
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             updateSlotListeners(child);
         }
         // if (needsFixedHeight()) {
@@ -553,7 +545,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
         // dontListen(getWidget().getElement(), layoutResizeListener);
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Slot slot = getWidget().getSlot(child);
             if (slot.hasCaption()) {
                 dontListen(slot.getCaptionElement(), slotCaptionResizeListener);

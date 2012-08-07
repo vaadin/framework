@@ -968,34 +968,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /**
-     * Notifies the component that it is connected to an application
-     * 
-     * @see com.vaadin.ui.Component#attach()
-     */
-    @Override
-    public void attach() {
-        super.attach();
-        getLayout().attach();
-        if (getFooter() != null) {
-            getFooter().attach();
-        }
-    }
-
-    /**
-     * Notifies the component that it is detached from the application.
-     * 
-     * @see com.vaadin.ui.Component#detach()
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        getLayout().detach();
-        if (getFooter() != null) {
-            getFooter().detach();
-        }
-    }
-
-    /**
      * Checks the validity of the Form and all of its fields.
      * 
      * @see com.vaadin.data.Validatable#validate()
@@ -1409,10 +1381,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
     public Iterator<Component> getComponentIterator() {
         return new ComponentIterator();
-    }
-
-    public void requestRepaintAll() {
-        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     public int getComponentCount() {

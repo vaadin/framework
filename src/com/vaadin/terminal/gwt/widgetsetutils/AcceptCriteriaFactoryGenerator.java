@@ -4,7 +4,6 @@
 package com.vaadin.terminal.gwt.widgetsetutils;
 
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.Date;
 
 import com.google.gwt.core.ext.Generator;
@@ -16,14 +15,13 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
+import com.vaadin.terminal.gwt.client.ui.dd.AcceptCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
 import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory;
 
 /**
  * GWT generator to build {@link VAcceptCriterionFactory} implementation
- * dynamically based on {@link ClientCriterion} annotations available in
+ * dynamically based on {@link AcceptCriterion} annotations available in
  * classpath.
  * 
  */
@@ -102,26 +100,28 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
 
         sourceWriter.println("name = name.intern();");
 
-        Collection<Class<? extends AcceptCriterion>> clientSideVerifiableCriterion = ClassPathExplorer
-                .getCriterion();
-
-        for (Class<? extends AcceptCriterion> class1 : clientSideVerifiableCriterion) {
-            logger.log(Type.INFO,
-                    "creating mapping for " + class1.getCanonicalName());
-            String canonicalName = class1.getCanonicalName();
-            Class<? extends VAcceptCriterion> clientClass = class1
-                    .getAnnotation(ClientCriterion.class).value();
-            sourceWriter.print("if (\"");
-            sourceWriter.print(canonicalName);
-            sourceWriter.print("\" == name) return GWT.create(");
-            sourceWriter.print(clientClass.getCanonicalName());
-            sourceWriter.println(".class );");
-            sourceWriter.print("else ");
+        JClassType criteriaType = context.getTypeOracle().findType(
+                VAcceptCriterion.class.getName());
+        for (JClassType clientClass : criteriaType.getSubtypes()) {
+            AcceptCriterion annotation = clientClass
+                    .getAnnotation(AcceptCriterion.class);
+            if (annotation != null) {
+                String clientClassName = clientClass.getQualifiedSourceName();
+                Class<?> serverClass = clientClass.getAnnotation(
+                        AcceptCriterion.class).value();
+                String serverClassName = serverClass.getCanonicalName();
+                logger.log(Type.INFO, "creating mapping for " + serverClassName);
+                sourceWriter.print("if (\"");
+                sourceWriter.print(serverClassName);
+                sourceWriter.print("\" == name) return GWT.create(");
+                sourceWriter.print(clientClassName);
+                sourceWriter.println(".class );");
+                sourceWriter.print("else ");
+            }
         }
 
         sourceWriter.println("return null;");
         sourceWriter.outdent();
         sourceWriter.println("}");
     }
-
 }

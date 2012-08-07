@@ -10,7 +10,6 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VTargetDetailIs;
 
 /**
  * Criterion for checking if drop target details contains the specific property
@@ -21,7 +20,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTargetDetailIs;
  *        TODO add support for other basic data types that we support in UIDL.
  * 
  */
-@ClientCriterion(VTargetDetailIs.class)
 public class TargetDetailIs extends ClientSideCriterion {
 
     private static final long serialVersionUID = 763165450054331246L;

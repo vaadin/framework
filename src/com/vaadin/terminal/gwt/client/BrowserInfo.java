@@ -31,6 +31,9 @@ public class BrowserInfo {
     private static final String OS_ANDROID = "android";
     private static final String OS_IOS = "ios";
 
+    // Common CSS class for all touch devices
+    private static final String UI_TOUCH = "touch";
+
     private static BrowserInfo instance;
 
     private static String cssClass = null;
@@ -169,7 +172,9 @@ public class BrowserInfo {
             if (osClass != null) {
                 cssClass = cssClass + " " + prefix + osClass;
             }
-
+            if (isTouchDevice()) {
+                cssClass = cssClass + " " + prefix + UI_TOUCH;
+            }
         }
 
         return cssClass;
@@ -344,15 +349,14 @@ public class BrowserInfo {
         if (!isTouchDevice()) {
             return false;
         }
-
-        if (isAndroid() && isWebkit() && getWebkitVersion() < 534) {
-            return true;
+        if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
+            return false;
         }
-        // if (isIOS() && isWebkit() && getWebkitVersion() < ???) {
-        // return true;
+        // Cannot enable native touch scrolling on iOS 5 until #8792 is resolved
+        // if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
+        // return false;
         // }
-
-        return false;
+        return true;
     }
 
     /**

@@ -49,6 +49,10 @@ public class AbstractSplitPanelState extends ComponentState {
     public static class SplitterState implements Serializable {
         private float position;
         private String positionUnit;
+        private float minPosition;
+        private String minPositionUnit;
+        private float maxPosition;
+        private String maxPositionUnit;
         private boolean positionReversed = false;
         private boolean locked = false;
 
@@ -66,6 +70,38 @@ public class AbstractSplitPanelState extends ComponentState {
 
         public void setPositionUnit(String positionUnit) {
             this.positionUnit = positionUnit;
+        }
+
+        public float getMinPosition() {
+            return minPosition;
+        }
+
+        public void setMinPosition(float minPosition) {
+            this.minPosition = minPosition;
+        }
+
+        public String getMinPositionUnit() {
+            return minPositionUnit;
+        }
+
+        public void setMinPositionUnit(String minPositionUnit) {
+            this.minPositionUnit = minPositionUnit;
+        }
+
+        public float getMaxPosition() {
+            return maxPosition;
+        }
+
+        public void setMaxPosition(float maxPosition) {
+            this.maxPosition = maxPosition;
+        }
+
+        public String getMaxPositionUnit() {
+            return maxPositionUnit;
+        }
+
+        public void setMaxPositionUnit(String maxPositionUnit) {
+            this.maxPositionUnit = maxPositionUnit;
         }
 
         public boolean isPositionReversed() {

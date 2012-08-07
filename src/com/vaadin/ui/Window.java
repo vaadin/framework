@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.BlurNotifier;
@@ -24,47 +23,26 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.client.ui.window.WindowServerRpc;
 import com.vaadin.terminal.gwt.client.ui.window.WindowState;
 
 /**
- * A component that represents an application (browser native) window or a sub
- * window.
+ * A component that represents a floating popup window that can be added to a
+ * {@link Root}. A window is added to a {@code Root} using
+ * {@link Root#addWindow(Window)}. </p>
  * <p>
- * If the window is a application window or a sub window depends on how it is
- * added to the application. Adding a {@code Window} to a {@code Window} using
- * {@link Window#addWindow(Window)} makes it a sub window and adding a
- * {@code Window} to the {@code Application} using
- * {@link Application#addWindow(Window)} makes it an application window.
+ * The contents of a window is set using {@link #setContent(ComponentContainer)}
+ * or by using the {@link #Window(String, ComponentContainer)} constructor. The
+ * contents can in turn contain other components. By default, a
+ * {@link VerticalLayout} is used as content.
  * </p>
  * <p>
- * An application window is the base of any view in a Vaadin application. All
- * applications contain a main application window (set using
- * {@link Application#setMainWindow(Window)} which is what is initially shown to
- * the user. The contents of a window is set using
- * {@link #setContent(ComponentContainer)}. The contents can in turn contain
- * other components. For multi-tab applications there is one window instance per
- * opened tab.
+ * A window can be positioned on the screen using absolute coordinates (pixels)
+ * or set to be centered using {@link #center()}
  * </p>
  * <p>
- * A sub window is floating popup style window that can be added to an
- * application window. Like the application window its content is set using
- * {@link #setContent(ComponentContainer)}. A sub window can be positioned on
- * the screen using absolute coordinates (pixels). The default content of the
- * Window is set to be suitable for application windows. For sub windows it
- * might be necessary to set the size of the content to work as expected.
- * </p>
- * <p>
- * Window caption is displayed in the browser title bar for application level
- * windows and in the window header for sub windows.
- * </p>
- * <p>
- * Certain methods in this class are only meaningful for sub windows and other
- * parts only for application windows. These are marked using <b>Sub window
- * only</b> and <b>Application window only</b> respectively in the javadoc.
- * </p>
- * <p>
- * Sub window is to be split into a separate component in Vaadin 7.
+ * The caption is displayed in the window header.
  * </p>
  * 
  * @author Vaadin Ltd.
@@ -82,6 +60,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
     };
+
+    private int browserWindowWidth = -1;
+
+    private int browserWindowHeight = -1;
 
     /**
      * Creates a new unnamed window with a default layout.
@@ -119,6 +101,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#addComponent(com.vaadin.ui.Component)
      */
+
     @Override
     public void addComponent(Component c) {
         if (c instanceof Window) {
@@ -136,6 +119,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#paintContent(com.vaadin.terminal.PaintTarget)
      */
+
     @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
@@ -153,6 +137,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -161,13 +146,27 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         // size is handled in super class, but resize events only in windows ->
         // so detect if size change occurs before super.changeVariables()
         if (variables.containsKey("height")
-                && (getHeightUnits() != UNITS_PIXELS || (Integer) variables
+                && (getHeightUnits() != Unit.PIXELS || (Integer) variables
                         .get("height") != getHeight())) {
             sizeHasChanged = true;
         }
         if (variables.containsKey("width")
-                && (getWidthUnits() != UNITS_PIXELS || (Integer) variables
+                && (getWidthUnits() != Unit.PIXELS || (Integer) variables
                         .get("width") != getWidth())) {
+            sizeHasChanged = true;
+        }
+        Integer browserHeightVar = (Integer) variables
+                .get(VRoot.BROWSER_HEIGHT_VAR);
+        if (browserHeightVar != null
+                && browserHeightVar.intValue() != browserWindowHeight) {
+            browserWindowHeight = browserHeightVar.intValue();
+            sizeHasChanged = true;
+        }
+        Integer browserWidthVar = (Integer) variables
+                .get(VRoot.BROWSER_WIDTH_VAR);
+        if (browserWidthVar != null
+                && browserWidthVar.intValue() != browserWindowWidth) {
+            browserWindowWidth = browserWidthVar.intValue();
             sizeHasChanged = true;
         }
 
@@ -604,8 +603,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Request to center this window on the screen. <b>Note:</b> affects
-     * sub-windows only.
+     * Sets this window to be centered relative to its parent window. Affects
+     * sub-windows only. If the window is resized as a result of the size of its
+     * content changing, it will keep itself centered as long as its position is
+     * not explicitly changed programmatically or by the user.
+     * <p>
+     * <b>NOTE:</b> This method has several issues as currently implemented.
+     * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
         getState().setCentered(true);
@@ -788,6 +792,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
      */
+
     public void addListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
@@ -804,6 +809,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * 
      * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
      */
+
     public void addListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
@@ -819,6 +825,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * If the window is a sub-window focusing will cause the sub-window to be
      * brought on top of other sub-windows on gain keyboard focus.
      */
+
     @Override
     public void focus() {
         /*
@@ -834,5 +841,4 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public WindowState getState() {
         return (WindowState) super.getState();
     }
-
 }

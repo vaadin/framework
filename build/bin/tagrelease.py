@@ -42,7 +42,7 @@ def readProperties(filename):
 def helpAndExit():
     print "Usage: build/bin/tagrelease <command> [parameters...]"
     print "Commands:"
-    print "\ttag <version> <changeset> <manual-repository>"
+    print "\ttag <version> <changeset>"
     sys.exit(1)
 
 ###############################################################################
@@ -77,7 +77,7 @@ def tag(product, srcUrl, trgUrl, version, changeset, dryrun = 1):
 ###############################################################################
 # Tag command
 ###############################################################################
-def tagCommand(version, changeset, bookRepo):
+def tagCommand(version, changeset):
     # Check parameters
     m = re.match(r'^[0-9]+\.[0-9]+\.[0-9]+(\.\w+)?$', version)
     if not m:
@@ -94,19 +94,11 @@ def tagCommand(version, changeset, bookRepo):
     repoRoot = svnInfo["Repository Root"]
     tagUrl = repoRoot+"/releases/"+version
 
-    # Book tag parameters
-    if (not re.search(r'branches/[0-9\.]+$', bookRepo)) and (not re.search(r'doc/trunk$', bookRepo)):
-        print "Bad documentation branch '%s' for release." % (bookRepo)
-        sys.exit(1)
-    bookTagUrl = repoRoot+"/doc/tags/"+version
-
     # Check that neither tag exists
     checkNotTagged(tagUrl)
-    checkNotTagged(bookTagUrl)
 
     # Do the tagging
     tag("Vaadin", url, tagUrl, version, changeset)
-    tag("Book of Vaadin", bookRepo, bookTagUrl, version, changeset)
 
 ###############################################################################
 # Verify command
@@ -132,8 +124,8 @@ def verifyCommand(version, changeset):
 if len(sys.argv) < 2:
     helpAndExit()
 
-if sys.argv[1] == "tag" and len(sys.argv) == 5:
-    tagCommand(sys.argv[2], sys.argv[3], sys.argv[4])
+if sys.argv[1] == "tag" and len(sys.argv) == 4:
+    tagCommand(sys.argv[2], sys.argv[3])
 elif sys.argv[1] == "verify" and len(sys.argv) == 4:
     verifyCommand(sys.argv[2], sys.argv[3])
 else:

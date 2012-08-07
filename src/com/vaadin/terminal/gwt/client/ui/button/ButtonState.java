@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.client.ui.button;
 
 import com.vaadin.terminal.gwt.client.ComponentState;
+import com.vaadin.terminal.gwt.client.ui.TabIndexState;
 import com.vaadin.ui.Button;
 
 /**
@@ -14,9 +15,13 @@ import com.vaadin.ui.Button;
  * 
  * @since 7.0
  */
-public class ButtonState extends ComponentState {
+public class ButtonState extends ComponentState implements TabIndexState {
     private boolean disableOnClick = false;
     private int clickShortcutKeyCode = 0;
+    /**
+     * The tab order number of this field.
+     */
+    private int tabIndex = 0;
     /**
      * If caption should be rendered in HTML
      */
@@ -90,6 +95,24 @@ public class ButtonState extends ComponentState {
      */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#getTabIndex()
+     */
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#setTabIndex(int)
+     */
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 
 }

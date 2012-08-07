@@ -27,10 +27,8 @@ public class TableShouldNotEatValueChanges extends TestBase {
         ItemClickListener l = new ItemClickListener() {
 
             public void itemClick(ItemClickEvent event) {
-                tf.getRoot().showNotification(
-                        "TF Value on the server:" + tf.getValue(),
+                Notification.show("TF Value on the server:" + tf.getValue(),
                         Notification.TYPE_WARNING_MESSAGE);
-
             }
         };
         t.addListener(l);

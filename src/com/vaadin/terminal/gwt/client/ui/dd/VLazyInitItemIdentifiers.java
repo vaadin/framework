@@ -9,14 +9,28 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import java.util.HashSet;
 
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Tree;
 
 /**
  * 
  */
-final public class VLazyInitItemIdentifiers extends VAcceptCriterion {
+public class VLazyInitItemIdentifiers extends VAcceptCriterion {
     private boolean loaded = false;
     private HashSet<String> hashSet;
     private VDragEvent lastDragEvent;
+
+    @AcceptCriterion(Table.TableDropCriterion.class)
+    final public static class VTableLazyInitItemIdentifiers extends
+            VLazyInitItemIdentifiers {
+        // all logic in superclass
+    }
+
+    @AcceptCriterion(Tree.TreeDropCriterion.class)
+    final public static class VTreeLazyInitItemIdentifiers extends
+            VLazyInitItemIdentifiers {
+        // all logic in superclass
+    }
 
     @Override
     public void accept(final VDragEvent drag, UIDL configuration,

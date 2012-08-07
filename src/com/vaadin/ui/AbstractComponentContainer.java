@@ -71,36 +71,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
-    /**
-     * Notifies all contained components that the container is attached to a
-     * window.
-     * 
-     * @see com.vaadin.ui.Component#attach()
-     */
-    @Override
-    public void attach() {
-        super.attach();
-
-        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
-            (i.next()).attach();
-        }
-    }
-
-    /**
-     * Notifies all contained components that the container is detached from a
-     * window.
-     * 
-     * @see com.vaadin.ui.Component#detach()
-     */
-    @Override
-    public void detach() {
-        super.detach();
-
-        for (final Iterator<Component> i = getComponentIterator(); i.hasNext();) {
-            (i.next()).detach();
-        }
-    }
-
     /* Events */
 
     private static final Method COMPONENT_ATTACHED_METHOD;
@@ -355,46 +325,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 true);
     }
 
-    public void requestRepaintAll() {
-        requestRepaintAll(this);
-    }
-
-    /**
-     * Helper that implements the logic needed by requestRepaintAll. Calls
-     * requestRepaintAll/requestRepaint for the component container and all its
-     * children recursively.
-     * 
-     * @param container
-     */
-    public static void requestRepaintAll(HasComponents container) {
-        container.requestRepaint();
-        if (container instanceof Panel) {
-            Panel p = (Panel) container;
-            // #2924 Panel is invalid, really invalid.
-            // Panel.getComponentIterator returns the children of content, not
-            // of Panel...
-            if (p.getContent() != null) {
-                p.getContent().requestRepaint();
-            }
-        }
-        for (Iterator<Component> childIterator = container
-                .getComponentIterator(); childIterator.hasNext();) {
-            Component c = childIterator.next();
-            if (c instanceof HasComponents) {
-                requestRepaintAll((HasComponents) c);
-            } else {
-                c.requestRepaint();
-            }
-        }
-    }
-
-    /**
-     * Returns an iterator for the child components.
-     * 
-     * @return An iterator for the child components.
-     * @see #getComponentIterator()
-     * @since 7.0.0
-     */
     public Iterator<Component> iterator() {
         return getComponentIterator();
     }

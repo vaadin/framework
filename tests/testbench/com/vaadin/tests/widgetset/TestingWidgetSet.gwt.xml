@@ -1,0 +1,6 @@
+<module>
+	<!-- WS Compiler: manually edited  -->
+
+	<!-- Inherit the DefaultWidgetSet -->
+	<inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+</module>

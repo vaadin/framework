@@ -21,13 +21,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ContainerOrderedWrapper;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -39,7 +39,6 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.acceptcriteria.ClientCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.LegacyPaint;
@@ -47,7 +46,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.client.MouseEventDetails;
-import com.vaadin.terminal.gwt.client.ui.dd.VLazyInitItemIdentifiers;
 import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
 
 /**
@@ -78,8 +76,7 @@ public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable, ItemClickNotifier, DragSource,
         DropTarget, HasComponents {
 
-    private static final Logger logger = Logger
-            .getLogger(Table.class.getName());
+    private transient Logger logger = null;
 
     /**
      * Modes that Table support as drag sourse.
@@ -331,7 +328,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private static final double CACHE_RATE_DEFAULT = 2;
 
     private static final String ROW_HEADER_COLUMN_KEY = "0";
-    private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new Object();
+    private static final Object ROW_HEADER_FAKE_PROPERTY_ID = new UniqueSerializable() {
+    };
 
     /* Private table extensions to Select */
 
@@ -354,6 +352,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * Holds visible column propertyIds - in order.
      */
     private LinkedList<Object> visibleColumns = new LinkedList<Object>();
+
+    /**
+     * Holds noncollapsible columns.
+     */
+    private HashSet<Object> noncollapsibleColumns = new HashSet<Object>();
 
     /**
      * Holds propertyIds of currently collapsed columns.
@@ -473,10 +476,9 @@ public class Table extends AbstractSelect implements Action.Container,
     private Object sortContainerPropertyId = null;
 
     /**
-     * Is table sorting disabled alltogether; even if some of the properties
-     * would be sortable.
+     * Is table sorting by the user enabled.
      */
-    private boolean sortDisabled = false;
+    private boolean sortEnabled = true;
 
     /**
      * Number of rows explicitly requested by the client to be painted on next
@@ -1248,6 +1250,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!isColumnCollapsingAllowed()) {
             throw new IllegalStateException("Column collapsing not allowed!");
         }
+        if (collapsed && noncollapsibleColumns.contains(propertyId)) {
+            throw new IllegalStateException("The column is noncollapsible!");
+        }
 
         if (collapsed) {
             collapsedColumns.add(propertyId);
@@ -1284,6 +1289,41 @@ public class Table extends AbstractSelect implements Action.Container,
         // Assures the visual refresh. No need to reset the page buffer before
         // as the content has not changed, only the alignments.
         refreshRenderedCells();
+    }
+
+    /**
+     * Sets whether the given column is collapsible. Note that collapsible
+     * columns can only be actually collapsed (via UI or with
+     * {@link #setColumnCollapsed(Object, boolean) setColumnCollapsed()}) if
+     * {@link #isColumnCollapsingAllowed()} is true. By default all columns are
+     * collapsible.
+     * 
+     * @param propertyId
+     *            the propertyID identifying the column.
+     * @param collapsible
+     *            true if the column should be collapsible, false otherwise.
+     */
+    public void setColumnCollapsible(Object propertyId, boolean collapsible) {
+        if (collapsible) {
+            noncollapsibleColumns.remove(propertyId);
+        } else {
+            noncollapsibleColumns.add(propertyId);
+            collapsedColumns.remove(propertyId);
+        }
+        refreshRowCache();
+    }
+
+    /**
+     * Checks if the given column is collapsible. Note that even if this method
+     * returns <code>true</code>, the column can only be actually collapsed (via
+     * UI or with {@link #setColumnCollapsed(Object, boolean)
+     * setColumnCollapsed()}) if {@link #isColumnCollapsingAllowed()} is also
+     * true.
+     * 
+     * @return true if the column can be collapsed; false otherwise.
+     */
+    public boolean isColumnCollapsible(Object propertyId) {
+        return !noncollapsibleColumns.contains(propertyId);
     }
 
     /**
@@ -1569,6 +1609,13 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         } else {
             // initial load
+
+            // #8805 send one extra row in the beginning in case a partial
+            // row is shown on the UI
+            if (firstIndex > 0) {
+                firstIndex = firstIndex - 1;
+                rows = rows + 1;
+            }
             firstToBeRenderedInClient = firstIndex;
         }
         if (totalRows > 0) {
@@ -1597,10 +1644,19 @@ public class Table extends AbstractSelect implements Action.Container,
      * this method has been called. See {@link #refreshRowCache()} for forcing
      * an update of the contents.
      */
+
     @Override
     public void requestRepaint() {
         // Overridden only for javadoc
         super.requestRepaint();
+    }
+
+    @Override
+    public void requestRepaintAll() {
+        super.requestRepaintAll();
+
+        // Avoid sending a partial repaint (#8714)
+        refreshRowCache();
     }
 
     private void removeRowsFromCacheAndFillBottom(int firstIndex, int rows) {
@@ -1706,8 +1762,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        logger.finest("Insert " + rows + " rows at index " + firstIndex
-                + " to existing page buffer requested");
+        getLogger().finest(
+                "Insert " + rows + " rows at index " + firstIndex
+                        + " to existing page buffer requested");
 
         // Page buffer must not become larger than pageLength*cacheRate before
         // or after the current page
@@ -1810,11 +1867,14 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         pageBuffer = newPageBuffer;
-        logger.finest("Page Buffer now contains "
-                + pageBuffer[CELL_ITEMID].length + " rows ("
-                + pageBufferFirstIndex + "-"
-                + (pageBufferFirstIndex + pageBuffer[CELL_ITEMID].length - 1)
-                + ")");
+        getLogger().finest(
+                "Page Buffer now contains "
+                        + pageBuffer[CELL_ITEMID].length
+                        + " rows ("
+                        + pageBufferFirstIndex
+                        + "-"
+                        + (pageBufferFirstIndex
+                                + pageBuffer[CELL_ITEMID].length - 1) + ")");
         return cells;
     }
 
@@ -1831,8 +1891,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
-        logger.finest("Render visible cells for rows " + firstIndex + "-"
-                + (firstIndex + rows - 1));
+        getLogger().finest(
+                "Render visible cells for rows " + firstIndex + "-"
+                        + (firstIndex + rows - 1));
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -2014,8 +2075,9 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
-        logger.finest("Registered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Registered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -2046,8 +2108,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
-        logger.finest("Unregistering components in rows " + firstIx + "-"
-                + (firstIx + count - 1));
+        getLogger().finest(
+                "Unregistering components in rows " + firstIx + "-"
+                        + (firstIx + count - 1));
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -2127,8 +2190,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
-        logger.finest("Unregistered " + component.getClass().getSimpleName()
-                + ": " + component.getCaption());
+        getLogger().finest(
+                "Unregistered " + component.getClass().getSimpleName() + ": "
+                        + component.getCaption());
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2438,6 +2502,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.ui.Select#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -2497,7 +2562,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         .get("lastToBeRendered")).intValue();
             } catch (Exception e) {
                 // FIXME: Handle exception
-                logger.log(Level.FINER,
+                getLogger().log(Level.FINER,
                         "Could not parse the first and/or last rows.", e);
             }
 
@@ -2517,12 +2582,13 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
-            logger.finest("Client wants rows " + reqFirstRowToPaint + "-"
-                    + (reqFirstRowToPaint + reqRowsToPaint - 1));
+            getLogger().finest(
+                    "Client wants rows " + reqFirstRowToPaint + "-"
+                            + (reqFirstRowToPaint + reqRowsToPaint - 1));
             clientNeedsContentRefresh = true;
         }
 
-        if (!sortDisabled) {
+        if (isSortEnabled()) {
             // Sorting
             boolean doSort = false;
             if (variables.containsKey("sortcolumn")) {
@@ -2564,7 +2630,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column collapsing state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2586,7 +2652,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    logger.log(Level.FINER,
+                    getLogger().log(Level.FINER,
                             "Could not determine column reordering state", e);
                 }
                 clientNeedsContentRefresh = true;
@@ -2759,6 +2825,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.ui.AbstractSelect#paintContent(com.vaadin.
      * terminal.PaintTarget)
      */
+
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         /*
@@ -2876,8 +2943,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.startTag("prows");
 
         if (!shouldHideAddedRows()) {
-            logger.finest("Paint rows for add. Index: " + firstIx + ", count: "
-                    + count + ".");
+            getLogger().finest(
+                    "Paint rows for add. Index: " + firstIx + ", count: "
+                            + count + ".");
 
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
@@ -2900,8 +2968,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
-            logger.finest("Paint rows for remove. Index: " + firstIx
-                    + ", count: " + count + ".");
+            getLogger().finest(
+                    "Paint rows for remove. Index: " + firstIx + ", count: "
+                            + count + ".");
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }
@@ -3100,7 +3169,17 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
             target.addVariable(this, "collapsedcolumns", collapsedKeys);
+
+            final String[] noncollapsibleKeys = new String[noncollapsibleColumns
+                    .size()];
+            nextColumn = 0;
+            for (Object colId : noncollapsibleColumns) {
+                noncollapsibleKeys[nextColumn++] = columnIdMap.key(colId);
+            }
+            target.addVariable(this, "noncollapsiblecolumns",
+                    noncollapsibleKeys);
         }
+
     }
 
     private void paintActions(PaintTarget target, final Set<Action> actionSet)
@@ -3584,12 +3663,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (hasConverter(colId)) {
             converter = getConverter(colId);
         } else {
-            Application app = Application.getCurrentApplication();
-            if (app != null) {
-                converter = (Converter<String, Object>) app
-                        .getConverterFactory().createConverter(String.class,
-                                property.getType());
-            }
+            ConverterUtil.getConverter(String.class, property.getType(),
+                    getApplication());
         }
         Object value = property.getValue();
         if (converter != null) {
@@ -3605,6 +3680,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
+
     public void addActionHandler(Action.Handler actionHandler) {
 
         if (actionHandler != null) {
@@ -3631,6 +3707,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.event.Action.Container#removeActionHandler(Action.Handler)
      */
+
     public void removeActionHandler(Action.Handler actionHandler) {
 
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
@@ -3670,6 +3747,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
+
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         if (event.getProperty() == this
@@ -3700,18 +3778,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Component#attach()
      */
+
     @Override
     public void attach() {
         super.attach();
 
         refreshRenderedCells();
-
-        if (visibleComponents != null) {
-            for (final Iterator<Component> i = visibleComponents.iterator(); i
-                    .hasNext();) {
-                i.next().attach();
-            }
-        }
     }
 
     /**
@@ -3719,16 +3791,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Component#detach()
      */
+
     @Override
     public void detach() {
         super.detach();
-
-        if (visibleComponents != null) {
-            for (final Iterator<Component> i = visibleComponents.iterator(); i
-                    .hasNext();) {
-                i.next().detach();
-            }
-        }
     }
 
     /**
@@ -3736,6 +3802,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeAllItems()
      */
+
     @Override
     public boolean removeAllItems() {
         currentPageFirstItemId = null;
@@ -3748,6 +3815,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeItem(Object)
      */
+
     @Override
     public boolean removeItem(Object itemId) {
         final Object nextItemId = nextItemId(itemId);
@@ -3766,6 +3834,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container#removeContainerProperty(Object)
      */
+
     @Override
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
@@ -3792,6 +3861,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container#addContainerProperty(Object, Class,
      *      Object)
      */
+
     @Override
     public boolean addContainerProperty(Object propertyId, Class<?> type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -3947,6 +4017,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.ui.Select#getVisibleItemIds()
      */
+
     @Override
     public Collection<?> getVisibleItemIds() {
 
@@ -3970,6 +4041,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange(com.vaadin.data.Container.ItemSetChangeEvent)
      */
+
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
@@ -3986,6 +4058,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.PropertySetChangeListener#containerPropertySetChange(com.vaadin.data.Container.PropertySetChangeEvent)
      */
+
     @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
@@ -4029,6 +4102,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *             if set to true.
      * @see com.vaadin.ui.Select#setNewItemsAllowed(boolean)
      */
+
     @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
@@ -4042,6 +4116,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#nextItemId(java.lang.Object)
      */
+
     public Object nextItemId(Object itemId) {
         return ((Container.Ordered) items).nextItemId(itemId);
     }
@@ -4052,6 +4127,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#prevItemId(java.lang.Object)
      */
+
     public Object prevItemId(Object itemId) {
         return ((Container.Ordered) items).prevItemId(itemId);
     }
@@ -4061,6 +4137,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#firstItemId()
      */
+
     public Object firstItemId() {
         return ((Container.Ordered) items).firstItemId();
     }
@@ -4070,6 +4147,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#lastItemId()
      */
+
     public Object lastItemId() {
         return ((Container.Ordered) items).lastItemId();
     }
@@ -4080,6 +4158,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isFirstId(java.lang.Object)
      */
+
     public boolean isFirstId(Object itemId) {
         return ((Container.Ordered) items).isFirstId(itemId);
     }
@@ -4090,6 +4169,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#isLastId(java.lang.Object)
      */
+
     public boolean isLastId(Object itemId) {
         return ((Container.Ordered) items).isLastId(itemId);
     }
@@ -4099,6 +4179,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
+
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
         Object itemId = ((Container.Ordered) items)
@@ -4115,6 +4196,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
      *      java.lang.Object)
      */
+
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
         Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
@@ -4207,6 +4289,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *      boolean[])
      * 
      */
+
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
         final Container c = getContainerDataSource();
@@ -4239,15 +4322,21 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Gets the container property IDs, which can be used to sort the item.
+     * <p>
+     * Note that the {@link #isSortEnabled()} state affects what this method
+     * returns. Disabling sorting causes this method to always return an empty
+     * collection.
+     * </p>
      * 
      * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
      */
+
     public Collection<?> getSortableContainerPropertyIds() {
         final Container c = getContainerDataSource();
-        if (c instanceof Container.Sortable && !isSortDisabled()) {
+        if (c instanceof Container.Sortable && isSortEnabled()) {
             return ((Container.Sortable) c).getSortableContainerPropertyIds();
         } else {
-            return new LinkedList<Object>();
+            return Collections.EMPTY_LIST;
         }
     }
 
@@ -4338,37 +4427,48 @@ public class Table extends AbstractSelect implements Action.Container,
      * would support this.
      * 
      * @return True iff sorting is disabled.
+     * @deprecated Use {@link #isSortEnabled()} instead
      */
+    @Deprecated
     public boolean isSortDisabled() {
-        return sortDisabled;
+        return !isSortEnabled();
     }
 
     /**
-     * Disables the sorting altogether.
+     * Checks if sorting is enabled.
      * 
-     * To disable sorting altogether, set to true. In this case no sortable
-     * columns are given even in the case where datasource would support this.
+     * @return true if sorting by the user is allowed, false otherwise
+     */
+    public boolean isSortEnabled() {
+        return sortEnabled;
+    }
+
+    /**
+     * Disables the sorting by the user altogether.
      * 
      * @param sortDisabled
      *            True iff sorting is disabled.
+     * @deprecated Use {@link #setSortEnabled(boolean)} instead
      */
+    @Deprecated
     public void setSortDisabled(boolean sortDisabled) {
-        if (this.sortDisabled != sortDisabled) {
-            this.sortDisabled = sortDisabled;
-            requestRepaint();
-        }
+        setSortEnabled(!sortDisabled);
     }
 
     /**
-     * Table does not support lazy options loading mode. Setting this true will
-     * throw UnsupportedOperationException.
+     * Enables or disables sorting.
+     * <p>
+     * Setting this to false disallows sorting by the user. It is still possible
+     * to call {@link #sort()}.
+     * </p>
      * 
-     * @see com.vaadin.ui.Select#setLazyLoading(boolean)
+     * @param sortEnabled
+     *            true to allow the user to sort the table, false to disallow it
      */
-    public void setLazyLoading(boolean useLazyLoading) {
-        if (useLazyLoading) {
-            throw new UnsupportedOperationException(
-                    "Lazy options loading is not supported by Table.");
+    public void setSortEnabled(boolean sortEnabled) {
+        if (this.sortEnabled != sortEnabled) {
+            this.sortEnabled = sortEnabled;
+            requestRepaint();
         }
     }
 
@@ -4455,6 +4555,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -4464,10 +4565,6 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             requestRepaintAll();
         }
-    }
-
-    public void requestRepaintAll() {
-        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**
@@ -4583,7 +4680,6 @@ public class Table extends AbstractSelect implements Action.Container,
      * initialized from server and no subsequent requests requests are needed
      * during that drag and drop operation.
      */
-    @ClientCriterion(VLazyInitItemIdentifiers.class)
     public static abstract class TableDropCriterion extends ServerSideCriterion {
 
         private Table table;
@@ -4597,6 +4693,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.ServerSideCriterion#getIdentifier
          * ()
          */
+
         @Override
         protected String getIdentifier() {
             return TableDropCriterion.class.getCanonicalName();
@@ -4628,6 +4725,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#paintResponse(
          * com.vaadin.terminal.PaintTarget)
          */
+
         @Override
         public void paintResponse(PaintTarget target) throws PaintException {
             /*
@@ -5298,5 +5396,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
     public boolean isComponentVisible(Component childComponent) {
         return true;
+    }
+
+    private final Logger getLogger() {
+        if (logger == null) {
+            logger = Logger.getLogger(Table.class.getName());
+        }
+        return logger;
     }
 }

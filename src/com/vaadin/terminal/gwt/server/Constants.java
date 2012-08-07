@@ -68,7 +68,7 @@ public interface Constants {
     // Widget set parameter name
     static final String PARAMETER_WIDGETSET = "widgetset";
 
-    static final String ERROR_NO_WINDOW_FOUND = "No window found. Did you remember to setMainWindow()?";
+    static final String ERROR_NO_ROOT_FOUND = "Application did not return a root for the request and did not request extra information either. Something is wrong.";
 
     static final String DEFAULT_THEME_NAME = "reindeer";
 

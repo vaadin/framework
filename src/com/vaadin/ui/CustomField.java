@@ -62,24 +62,18 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      */
     @Override
     public void attach() {
-        root = getContent();
+        // First call super attach to notify all children (none if content has
+        // not yet been created)
         super.attach();
-        getContent().setParent(this);
-        getContent().attach();
 
-        fireComponentAttachEvent(getContent());
-    }
-
-    /**
-     * Notifies the content that the {@link CustomField} is detached from a
-     * window.
-     * 
-     * @see com.vaadin.ui.Component#detach()
-     */
-    @Override
-    public void detach() {
-        super.detach();
-        getContent().detach();
+        // If the content has not yet been created, we create and attach it at
+        // this point.
+        if (root == null) {
+            // Ensure content is created and its parent is set.
+            // The getContent() call creates the content and attaches the
+            // content
+            fireComponentAttachEvent(getContent());
+        }
     }
 
     /**
@@ -90,6 +84,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     protected Component getContent() {
         if (null == root) {
             root = initContent();
+            root.setParent(this);
         }
         return root;
     }
@@ -152,10 +147,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
 
     public int getComponentCount() {
         return (null != getContent()) ? 1 : 0;
-    }
-
-    public void requestRepaintAll() {
-        AbstractComponentContainer.requestRepaintAll(this);
     }
 
     /**

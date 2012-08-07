@@ -98,8 +98,8 @@ public class VUIDLBrowser extends SimpleTree {
 
         private String getNodeName(UIDL uidl, ApplicationConfiguration conf,
                 int tag) {
-            Class<? extends ComponentConnector> widgetClassByDecodedTag = conf
-                    .getWidgetClassByEncodedTag(tag);
+            Class<? extends ServerConnector> widgetClassByDecodedTag = conf
+                    .getConnectorClassByEncodedTag(tag);
             if (widgetClassByDecodedTag == UnknownComponentConnector.class) {
                 return conf.getUnknownServerClassNameByTag(tag)
                         + "(NO CLIENT IMPLEMENTATION FOUND)";

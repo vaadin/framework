@@ -3,6 +3,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -12,6 +13,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
  * 
  * @since 6.3
  */
+@AcceptCriterion(SourceIs.class)
 final public class VDragSourceIs extends VAcceptCriterion {
 
     @Override

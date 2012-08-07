@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,9 +67,10 @@ public class ServerRpcManager<T> implements RpcManager {
      *            non-null target of the RPC call
      * @param invocation
      *            method invocation to perform
+     * @throws RpcInvocationException
      */
     public static void applyInvocation(RpcTarget target,
-            ServerRpcMethodInvocation invocation) {
+            ServerRpcMethodInvocation invocation) throws RpcInvocationException {
         RpcManager manager = target.getRpcManager(invocation
                 .getInterfaceClass());
         if (manager != null) {
@@ -109,7 +111,8 @@ public class ServerRpcManager<T> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
-    public void applyInvocation(ServerRpcMethodInvocation invocation) {
+    public void applyInvocation(ServerRpcMethodInvocation invocation)
+            throws RpcInvocationException {
         Method method = invocation.getMethod();
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object[] args = new Object[parameterTypes.length];
@@ -125,7 +128,7 @@ public class ServerRpcManager<T> implements RpcManager {
         try {
             method.invoke(implementation, args);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to invoke method "
+            throw new RpcInvocationException("Unable to invoke method "
                     + invocation.getMethodName() + " in "
                     + invocation.getInterfaceName(), e);
         }

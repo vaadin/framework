@@ -6,6 +6,7 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -23,13 +24,13 @@ import com.vaadin.terminal.Vaadin6Component;
 public class Link extends AbstractComponent implements Vaadin6Component {
 
     /* Target window border type constant: No window border */
-    public static final int TARGET_BORDER_NONE = Root.BORDER_NONE;
+    public static final int TARGET_BORDER_NONE = Page.BORDER_NONE;
 
     /* Target window border type constant: Minimal window border */
-    public static final int TARGET_BORDER_MINIMAL = Root.BORDER_MINIMAL;
+    public static final int TARGET_BORDER_MINIMAL = Page.BORDER_MINIMAL;
 
     /* Target window border type constant: Default window border */
-    public static final int TARGET_BORDER_DEFAULT = Root.BORDER_DEFAULT;
+    public static final int TARGET_BORDER_DEFAULT = Page.BORDER_DEFAULT;
 
     private Resource resource = null;
 

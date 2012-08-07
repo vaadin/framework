@@ -71,9 +71,9 @@
 
 	<!-- Generate client side RPC manager for server to client RPC -->
 	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.RpcManagerGenerator">
+		class="com.vaadin.terminal.gwt.widgetsetutils.GeneratedRpcMethodProviderGenerator">
 		<when-type-assignable
-			class="com.vaadin.terminal.gwt.client.communication.RpcManager" />
+			class="com.vaadin.terminal.gwt.client.communication.GeneratedRpcMethodProvider" />
 	</generate-with>
 
 	<generate-with

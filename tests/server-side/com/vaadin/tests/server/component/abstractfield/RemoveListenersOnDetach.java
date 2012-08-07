@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
@@ -25,10 +26,13 @@ public class RemoveListenersOnDetach {
             }
 
         };
+        private Application application = new Application() {
+
+        };
 
         @Override
         public Class<?> getType() {
-            return null;
+            return String.class;
         }
 
         @Override
@@ -48,6 +52,11 @@ public class RemoveListenersOnDetach {
         public com.vaadin.ui.Root getRoot() {
             return root;
         };
+
+        @Override
+        public Application getApplication() {
+            return application;
+        };
     };
 
     Property property = new AbstractProperty() {
@@ -61,7 +70,7 @@ public class RemoveListenersOnDetach {
         }
 
         public Class<?> getType() {
-            return null;
+            return String.class;
         }
     };
 

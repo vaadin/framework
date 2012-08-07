@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
 import com.vaadin.terminal.gwt.client.ui.VBoxLayout;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout;
@@ -441,8 +442,8 @@ public class ComponentLocator {
             } else if (w == null) {
                 String id = part;
                 // Must be old static pid (PID_S*)
-                ComponentConnector connector = (ComponentConnector) ConnectorMap
-                        .get(client).getConnector(id);
+                ServerConnector connector = ConnectorMap.get(client)
+                        .getConnector(id);
                 if (connector == null) {
                     // Lookup by debugId
                     // TODO Optimize this
@@ -450,8 +451,8 @@ public class ComponentLocator {
                             id.substring(5));
                 }
 
-                if (connector != null) {
-                    w = connector.getWidget();
+                if (connector instanceof ComponentConnector) {
+                    w = ((ComponentConnector) connector).getWidget();
                 } else {
                     // Not found
                     return null;
@@ -597,19 +598,16 @@ public class ComponentLocator {
         return w;
     }
 
-    private ComponentConnector findConnectorById(ComponentConnector root,
-            String id) {
-        if (root instanceof ComponentConnector
-                && id.equals(root.getState().getDebugId())) {
+    private ServerConnector findConnectorById(ServerConnector root, String id) {
+        SharedState state = root.getState();
+        if (state instanceof ComponentState
+                && id.equals(((ComponentState) state).getDebugId())) {
             return root;
         }
-        if (root instanceof ComponentContainerConnector) {
-            ComponentContainerConnector ccc = (ComponentContainerConnector) root;
-            for (ComponentConnector child : ccc.getChildren()) {
-                ComponentConnector found = findConnectorById(child, id);
-                if (found != null) {
-                    return found;
-                }
+        for (ServerConnector child : root.getChildren()) {
+            ServerConnector found = findConnectorById(child, id);
+            if (found != null) {
+                return found;
             }
         }
 

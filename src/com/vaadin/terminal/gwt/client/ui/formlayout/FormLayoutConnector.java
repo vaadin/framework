@@ -46,9 +46,9 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
         int childId = 0;
 
-        formLayoutTable.setRowCount(getChildren().size());
+        formLayoutTable.setRowCount(getChildComponents().size());
 
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             Widget childWidget = child.getWidget();
 
             Caption caption = formLayoutTable.getCaption(childWidget);

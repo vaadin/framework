@@ -28,6 +28,7 @@ public class GridLayoutCaptions extends TestBase {
         private CssLayout wrapper2 = new CssLayout();
 
         private FormFieldFactory fff = new FormFieldFactory() {
+
             public Field<?> createField(Item item, Object propertyId,
                     Component uiContext) {
 
@@ -177,11 +178,10 @@ public class GridLayoutCaptions extends TestBase {
 
     @Override
     protected void setup() {
-        LegacyWindow mainWindow = new LegacyWindow(
-                "Formlayoutcaptionboom Application");
+        LegacyWindow mainWindow = getMainWindow();
+
         Label label = new Label("Hello Vaadin user");
         mainWindow.addComponent(label);
-        setMainWindow(mainWindow);
 
         DataPOJO forDemo = new DataPOJO();
 
@@ -194,6 +194,7 @@ public class GridLayoutCaptions extends TestBase {
         mainWindow.addComponent(aFormWithGl);
 
         Button b = new Button("Give me an error!", new Button.ClickListener() {
+
             public void buttonClick(ClickEvent event) {
                 aFormWithGl.createErrors();
 
@@ -203,6 +204,7 @@ public class GridLayoutCaptions extends TestBase {
 
         Button b2 = new Button("Get rid of an error!",
                 new Button.ClickListener() {
+
                     public void buttonClick(ClickEvent event) {
                         aFormWithGl.clearErrors();
 

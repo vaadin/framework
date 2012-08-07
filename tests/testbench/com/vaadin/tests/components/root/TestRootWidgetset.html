@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Ticket4607</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Ticket4607</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.root.TestRootWidgetset</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsrootTestRootWidgetset::/VVerticalLayout[0]/VVerticalLayout[0]/VLabel[0]</td>
+	<td>This component is available in TestingWidgetset, but not in DefaultWidgetset</td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.root.TestRootWidgetset2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsrootTestRootWidgetset2::/VVerticalLayout[0]/VVerticalLayout[0]/VUnknownComponent[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>Widgetset does not contain implementation for com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent. Check its component connector's @Connect mapping, widgetsets GWT module description file and re-compile your widgetset. In case you have downloaded a vaadin add-on package, you might want to refer to add-on instructions.</td>
+</tr>
+</tbody></table>
+</body>
+</html>

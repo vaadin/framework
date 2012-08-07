@@ -61,6 +61,11 @@ public class RootConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
+        registerRpc(PageClientRpc.class, new PageClientRpc() {
+            public void setTitle(String title) {
+                com.google.gwt.user.client.Window.setTitle(title);
+            }
+        });
     }
 
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -93,12 +98,9 @@ public class RootConnector extends AbstractComponentContainerConnector
         }
         getWidget().setStyleName(styles.trim());
 
-        clickEventHandler.handleEventHandlerRegistration();
+        getWidget().makeScrollable();
 
-        if (!getWidget().isEmbedded() && getState().getCaption() != null) {
-            // only change window title if we're in charge of the whole page
-            com.google.gwt.user.client.Window.setTitle(getState().getCaption());
-        }
+        clickEventHandler.handleEventHandlerRegistration();
 
         // Process children
         int childIndex = 0;
@@ -168,9 +170,6 @@ public class RootConnector extends AbstractComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "execJS") {
-                String script = childUidl.getStringAttribute("script");
-                VRoot.eval(script);
             } else if (tag == "notifications") {
                 for (final Iterator<?> it = childUidl.getChildIterator(); it
                         .hasNext();) {
@@ -329,7 +328,7 @@ public class RootConnector extends AbstractComponentContainerConnector
      */
     @Deprecated
     public boolean hasSubWindow(WindowConnector wc) {
-        return getChildren().contains(wc);
+        return getChildComponents().contains(wc);
     }
 
     /**
@@ -340,7 +339,7 @@ public class RootConnector extends AbstractComponentContainerConnector
      */
     public List<WindowConnector> getSubWindows() {
         ArrayList<WindowConnector> windows = new ArrayList<WindowConnector>();
-        for (ComponentConnector child : getChildren()) {
+        for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
             }
@@ -380,7 +379,7 @@ public class RootConnector extends AbstractComponentContainerConnector
             onChildSizeChange();
         }
 
-        for (ComponentConnector c : getChildren()) {
+        for (ComponentConnector c : getChildComponents()) {
             if (c instanceof WindowConnector) {
                 WindowConnector wc = (WindowConnector) c;
                 wc.setWindowOrderAndPosition();

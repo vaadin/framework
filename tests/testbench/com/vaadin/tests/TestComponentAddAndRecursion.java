@@ -3,6 +3,7 @@
  */
 package com.vaadin.tests;
 
+import com.vaadin.terminal.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -10,7 +11,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -92,13 +92,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 try {
                     p3.addComponent(p2);
-                    Root.getCurrentRoot().showNotification("ERROR",
-                            "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("ERROR", "This should have failed",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 } catch (Exception e) {
-                    Root.getCurrentRoot().showNotification("OK",
-                            "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("OK", "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 }
             }
 
@@ -111,13 +111,13 @@ public class TestComponentAddAndRecursion extends CustomComponent {
                 p.addComponent(p2);
                 try {
                     p3.addComponent(p);
-                    Root.getCurrentRoot().showNotification("ERROR",
-                            "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("ERROR", "This should have failed",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 } catch (Exception e) {
-                    Root.getCurrentRoot().showNotification("OK",
-                            "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE);
+                    new Notification("OK", "threw, as expected",
+                            Notification.TYPE_ERROR_MESSAGE).show(Page
+                            .getCurrent());
                 }
             }
 

@@ -9,7 +9,9 @@ package com.vaadin.terminal.gwt.client.ui.dd;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
+import com.vaadin.ui.AbstractSelect;
 
+@AcceptCriterion(AbstractSelect.TargetItemIs.class)
 final public class VIsOverId extends VAcceptCriterion {
 
     @Override

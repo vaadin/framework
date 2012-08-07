@@ -17,7 +17,7 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetMapGenerator;
  */
 abstract class WidgetMap {
 
-    protected static HashMap<Class, WidgetInstantiator> instmap = new HashMap<Class, WidgetInstantiator>();
+    protected static HashMap<Class<? extends ServerConnector>, WidgetInstantiator> instmap = new HashMap<Class<? extends ServerConnector>, WidgetInstantiator>();
 
     /**
      * Create a new instance of a connector based on its type.
@@ -26,8 +26,8 @@ abstract class WidgetMap {
      *            {@link ComponentConnector} class to instantiate
      * @return new instance of the connector
      */
-    public ComponentConnector instantiate(
-            Class<? extends ComponentConnector> classType) {
+    public ServerConnector instantiate(
+            Class<? extends ServerConnector> classType) {
         return instmap.get(classType).get();
     }
 
@@ -39,7 +39,7 @@ abstract class WidgetMap {
      *            fully qualified name of the server side component class
      * @return component connector class to use
      */
-    public abstract Class<? extends ComponentConnector> getConnectorClassForServerSideClassName(
+    public abstract Class<? extends ServerConnector> getConnectorClassForServerSideClassName(
             String fullyqualifiedName);
 
     /**
@@ -49,7 +49,7 @@ abstract class WidgetMap {
      * @return component connector class to load after the initial widgetset
      *         loading
      */
-    public abstract Class<? extends ComponentConnector>[] getDeferredLoadedWidgets();
+    public abstract Class<? extends ServerConnector>[] getDeferredLoadedConnectors();
 
     /**
      * Make sure the code for a (deferred or lazy) component connector type has
@@ -60,6 +60,6 @@ abstract class WidgetMap {
      *            component connector class
      */
     public abstract void ensureInstantiator(
-            Class<? extends ComponentConnector> classType);
+            Class<? extends ServerConnector> classType);
 
 }

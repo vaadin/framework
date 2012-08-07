@@ -127,11 +127,4 @@ public class VNativeButton extends Button implements ClickHandler {
         clickPending = false;
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        if (isEnabled() != enabled) {
-            super.setEnabled(enabled);
-            setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
-        }
-    }
 }

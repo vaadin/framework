@@ -560,23 +560,27 @@ public class VDebugConsole extends VOverlay implements Console {
             Set<ComponentConnector> zeroHeightComponents,
             ApplicationConnection ac) {
         for (final ComponentConnector paintable : zeroHeightComponents) {
-            final Widget layout = paintable.getParent().getWidget();
+            final ServerConnector parent = paintable.getParent();
 
             VerticalPanel errorDetails = new VerticalPanel();
             errorDetails.add(new Label("" + Util.getSimpleName(paintable)
-                    + " inside " + Util.getSimpleName(layout)));
-            final CheckBox emphasisInUi = new CheckBox(
-                    "Emphasize components parent in UI (the actual component is not visible)");
-            emphasisInUi.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    if (paintable != null) {
+                    + " inside " + Util.getSimpleName(parent)));
+            if (parent instanceof ComponentConnector) {
+                ComponentConnector parentComponent = (ComponentConnector) parent;
+                final Widget layout = parentComponent.getWidget();
+
+                final CheckBox emphasisInUi = new CheckBox(
+                        "Emphasize components parent in UI (the actual component is not visible)");
+                emphasisInUi.addClickHandler(new ClickHandler() {
+                    public void onClick(ClickEvent event) {
                         Element element2 = layout.getElement();
                         Widget.setStyleName(element2, "invalidlayout",
-                                emphasisInUi.getValue());
+                                emphasisInUi.getValue().booleanValue());
                     }
-                }
-            });
-            errorDetails.add(emphasisInUi);
+                });
+
+                errorDetails.add(emphasisInUi);
+            }
             panel.add(errorDetails);
         }
     }
@@ -862,7 +866,7 @@ public class VDebugConsole extends VOverlay implements Console {
         log("================");
         log("Connector hierarchy for Root: " + root.getState().getCaption()
                 + " (" + root.getConnectorId() + ")");
-        Set<ComponentConnector> connectorsInHierarchy = new HashSet<ComponentConnector>();
+        Set<ServerConnector> connectorsInHierarchy = new HashSet<ServerConnector>();
         SimpleTree rootHierachy = dumpConnectorHierarchy(root, "",
                 connectorsInHierarchy);
         if (panel.isAttached()) {
@@ -874,7 +878,7 @@ public class VDebugConsole extends VOverlay implements Console {
         Collection<? extends ServerConnector> registeredConnectors = connectorMap
                 .getConnectors();
         log("Sub windows:");
-        Set<ComponentConnector> subWindowHierarchyConnectors = new HashSet<ComponentConnector>();
+        Set<ServerConnector> subWindowHierarchyConnectors = new HashSet<ServerConnector>();
         for (WindowConnector wc : root.getSubWindows()) {
             SimpleTree windowHierachy = dumpConnectorHierarchy(wc, "",
                     subWindowHierarchyConnectors);
@@ -908,14 +912,15 @@ public class VDebugConsole extends VOverlay implements Console {
 
     }
 
-    private SimpleTree dumpConnectorHierarchy(
-            final ComponentConnector connector, String indent,
-            Set<ComponentConnector> connectors) {
+    private SimpleTree dumpConnectorHierarchy(final ServerConnector connector,
+            String indent, Set<ServerConnector> connectors) {
         SimpleTree simpleTree = new SimpleTree(getConnectorString(connector)) {
             @Override
             protected void select(ClickEvent event) {
                 super.select(event);
-                VUIDLBrowser.highlight(connector);
+                if (connector instanceof ComponentConnector) {
+                    VUIDLBrowser.highlight((ComponentConnector) connector);
+                }
             }
         };
         simpleTree.addDomHandler(new MouseOutHandler() {
@@ -930,12 +935,8 @@ public class VDebugConsole extends VOverlay implements Console {
         consoleLog(msg);
         System.out.println(msg);
 
-        if (connector instanceof ComponentContainerConnector) {
-            for (ComponentConnector c : ((ComponentContainerConnector) connector)
-                    .getChildren()) {
-                simpleTree.add(dumpConnectorHierarchy(c, indent + " ",
-                        connectors));
-            }
+        for (ServerConnector c : connector.getChildren()) {
+            simpleTree.add(dumpConnectorHierarchy(c, indent + " ", connectors));
         }
         return simpleTree;
     }

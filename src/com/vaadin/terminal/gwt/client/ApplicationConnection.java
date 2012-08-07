@@ -28,6 +28,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -39,12 +40,17 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
+import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
+import com.vaadin.terminal.gwt.client.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.Type;
+import com.vaadin.terminal.gwt.client.communication.UidlValue;
+import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -362,6 +368,25 @@ public class ApplicationConnection {
     			}
     		}
     	}
+    }-*/;
+
+    /**
+     * If on Liferay and logged in, ask the client side session management
+     * JavaScript to extend the session duration.
+     * 
+     * Otherwise, Liferay client side JavaScript will explicitly expire the
+     * session even though the server side considers the session to be active.
+     * See ticket #8305 for more information.
+     */
+    protected native void extendLiferaySession()
+    /*-{
+    if ($wnd.Liferay && $wnd.Liferay.Session) {
+        $wnd.Liferay.Session.extend();
+        // if the extend banner is visible, hide it
+        if ($wnd.Liferay.Session.banner) {
+            $wnd.Liferay.Session.banner.remove();
+        }
+    }
     }-*/;
 
     /**
@@ -846,6 +871,14 @@ public class ApplicationConnection {
             public void execute() {
                 if (!hasActiveRequest()) {
                     hideLoadingIndicator();
+
+                    // If on Liferay and session expiration management is in
+                    // use, extend session duration on each request.
+                    // Doing it here rather than before the request to improve
+                    // responsiveness.
+                    // Postponed until the end of the next request if other
+                    // requests still pending.
+                    extendLiferaySession();
                 }
             }
         });
@@ -1271,27 +1304,24 @@ public class ApplicationConnection {
                 List<ServerConnector> currentConnectors = new ArrayList<ServerConnector>(
                         connectorMap.getConnectors());
                 for (ServerConnector c : currentConnectors) {
-                    if (c instanceof ComponentConnector) {
-                        ComponentConnector cc = (ComponentConnector) c;
-                        if (cc.getParent() != null) {
-                            if (!cc.getParent().getChildren().contains(cc)) {
-                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
-                            }
-                        } else if ((cc instanceof RootConnector && cc == getRootConnector())) {
-                            // RootConnector for this connection, leave as-is
-                        } else if (cc instanceof WindowConnector
-                                && getRootConnector().hasSubWindow(
-                                        (WindowConnector) cc)) {
-                            // Sub window attached to this RootConnector, leave
-                            // as-is
-                        } else {
-                            // The connector has been detached from the
-                            // hierarchy, unregister it and any possible
-                            // children. The RootConnector should never be
-                            // unregistered even though it has no parent.
-                            connectorMap.unregisterConnector(cc);
-                            unregistered++;
+                    if (c.getParent() != null) {
+                        if (!c.getParent().getChildren().contains(c)) {
+                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
+                    } else if ((c instanceof RootConnector && c == getRootConnector())) {
+                        // RootConnector for this connection, leave as-is
+                    } else if (c instanceof WindowConnector
+                            && getRootConnector().hasSubWindow(
+                                    (WindowConnector) c)) {
+                        // Sub window attached to this RootConnector, leave
+                        // as-is
+                    } else {
+                        // The connector has been detached from the
+                        // hierarchy, unregister it and any possible
+                        // children. The RootConnector should never be
+                        // unregistered even though it has no parent.
+                        connectorMap.unregisterConnector(c);
+                        unregistered++;
                     }
 
                 }
@@ -1319,8 +1349,8 @@ public class ApplicationConnection {
                             continue;
                         }
 
-                        Class<? extends ComponentConnector> connectorClass = configuration
-                                .getWidgetClassByEncodedTag(connectorType);
+                        Class<? extends ServerConnector> connectorClass = configuration
+                                .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
                         if (connectorClass != RootConnector.class) {
@@ -1410,11 +1440,19 @@ public class ApplicationConnection {
                                 .getConnector(connectorId);
                         if (null != connector) {
 
-                            JSONArray stateDataAndType = new JSONArray(
+                            JSONObject stateJson = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
 
-                            JsonDecoder.decodeValue(stateDataAndType,
-                                    connector.getState(), connectorMap,
+                            if (connector instanceof HasJavaScriptConnectorHelper) {
+                                ((HasJavaScriptConnectorHelper) connector)
+                                        .getJavascriptConnectorHelper()
+                                        .setNativeState(
+                                                stateJson.getJavaScriptObject());
+                            }
+
+                            SharedState state = connector.getState();
+                            JsonDecoder.decodeValue(new Type(state.getClass()
+                                    .getName(), null), stateJson, state,
                                     ApplicationConnection.this);
 
                             StateChangeEvent event = GWT
@@ -1454,47 +1492,48 @@ public class ApplicationConnection {
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
                     try {
                         String connectorId = hierarchyKeys.get(i);
-                        ServerConnector connector = connectorMap
+                        ServerConnector parentConnector = connectorMap
                                 .getConnector(connectorId);
-                        if (!(connector instanceof ComponentContainerConnector)) {
-                            VConsole.error("Retrieved a hierarchy update for a connector ("
-                                    + connectorId
-                                    + ") that is not a ComponentContainerConnector");
-                            continue;
-                        }
-                        ComponentContainerConnector ccc = (ComponentContainerConnector) connector;
-
                         JsArrayString childConnectorIds = hierarchies
                                 .getJSStringArray(connectorId);
                         int childConnectorSize = childConnectorIds.length();
 
                         List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
+                        List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
                         for (int connectorIndex = 0; connectorIndex < childConnectorSize; connectorIndex++) {
                             String childConnectorId = childConnectorIds
                                     .get(connectorIndex);
-                            ComponentConnector childConnector = (ComponentConnector) connectorMap
+                            ServerConnector childConnector = connectorMap
                                     .getConnector(childConnectorId);
                             if (childConnector == null) {
                                 VConsole.error("Hierarchy claims that "
                                         + childConnectorId + " is a child for "
                                         + connectorId + " ("
-                                        + connector.getClass().getName()
+                                        + parentConnector.getClass().getName()
                                         + ") but no connector with id "
                                         + childConnectorId
                                         + " has been registered");
                                 continue;
                             }
                             newChildren.add(childConnector);
-                            if (childConnector.getParent() != ccc) {
+                            if (childConnector instanceof ComponentConnector) {
+                                newComponents
+                                        .add((ComponentConnector) childConnector);
+                            } else if (!(childConnector instanceof AbstractExtensionConnector)) {
+                                throw new IllegalStateException(
+                                        Util.getConnectorString(childConnector)
+                                                + " is not a ComponentConnector nor an AbstractExtensionConnector");
+                            }
+                            if (childConnector.getParent() != parentConnector) {
                                 // Avoid extra calls to setParent
-                                childConnector.setParent(ccc);
+                                childConnector.setParent(parentConnector);
                             }
                         }
 
                         // TODO This check should be done on the server side in
                         // the future so the hierarchy update is only sent when
                         // something actually has changed
-                        List<ComponentConnector> oldChildren = ccc
+                        List<ServerConnector> oldChildren = parentConnector
                                 .getChildren();
                         boolean actuallyChanged = !Util.collectionsEquals(
                                 oldChildren, newChildren);
@@ -1503,19 +1542,34 @@ public class ApplicationConnection {
                             continue;
                         }
 
-                        // Fire change event if the hierarchy has changed
-                        ConnectorHierarchyChangeEvent event = GWT
-                                .create(ConnectorHierarchyChangeEvent.class);
-                        event.setOldChildren(oldChildren);
-                        event.setConnector(ccc);
-                        ccc.setChildren((List) newChildren);
-                        events.add(event);
+                        if (parentConnector instanceof ComponentContainerConnector) {
+                            ComponentContainerConnector ccc = (ComponentContainerConnector) parentConnector;
+                            List<ComponentConnector> oldComponents = ccc
+                                    .getChildComponents();
+                            if (!Util.collectionsEquals(oldComponents,
+                                    newComponents)) {
+                                // Fire change event if the hierarchy has
+                                // changed
+                                ConnectorHierarchyChangeEvent event = GWT
+                                        .create(ConnectorHierarchyChangeEvent.class);
+                                event.setOldChildren(oldComponents);
+                                event.setConnector(parentConnector);
+                                ccc.setChildComponents(newComponents);
+                                events.add(event);
+                            }
+                        } else if (!newComponents.isEmpty()) {
+                            VConsole.error("Hierachy claims "
+                                    + Util.getConnectorString(parentConnector)
+                                    + " has component children even though it isn't a ComponentContainerConnector");
+                        }
+
+                        parentConnector.setChildren(newChildren);
 
                         // Remove parent for children that are no longer
                         // attached to this (avoid updating children if they
                         // have already been assigned to a new parent)
-                        for (ComponentConnector oldChild : oldChildren) {
-                            if (oldChild.getParent() != ccc) {
+                        for (ServerConnector oldChild : oldChildren) {
+                            if (oldChild.getParent() != parentConnector) {
                                 continue;
                             }
 
@@ -1543,11 +1597,8 @@ public class ApplicationConnection {
                     for (int i = 0; i < rpcLength; i++) {
                         try {
                             JSONArray rpcCall = (JSONArray) rpcCalls.get(i);
-                            MethodInvocation invocation = parseMethodInvocation(rpcCall);
-                            VConsole.log("Server to client RPC call: "
-                                    + invocation);
-                            rpcManager.applyInvocation(invocation,
-                                    getConnectorMap());
+                            rpcManager.parseAndApplyInvocation(rpcCall,
+                                    ApplicationConnection.this);
                         } catch (final Throwable e) {
                             VConsole.error(e);
                         }
@@ -1558,21 +1609,6 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenWidgetsLoaded(c);
-    }
-
-    private MethodInvocation parseMethodInvocation(JSONArray rpcCall) {
-        String connectorId = ((JSONString) rpcCall.get(0)).stringValue();
-        String interfaceName = ((JSONString) rpcCall.get(1)).stringValue();
-        String methodName = ((JSONString) rpcCall.get(2)).stringValue();
-        JSONArray parametersJson = (JSONArray) rpcCall.get(3);
-        Object[] parameters = new Object[parametersJson.size()];
-        for (int j = 0; j < parametersJson.size(); ++j) {
-            parameters[j] = JsonDecoder.decodeValue(
-                    (JSONArray) parametersJson.get(j), null, getConnectorMap(),
-                    this);
-        }
-        return new MethodInvocation(connectorId, interfaceName, methodName,
-                parameters);
     }
 
     // Redirect browser, null reloads current page
@@ -1591,7 +1627,7 @@ public class ApplicationConnection {
         // TODO could eliminate invocations of same shared variable setter
         addMethodInvocationToQueue(new MethodInvocation(connectorId,
                 UPDATE_VARIABLE_INTERFACE, UPDATE_VARIABLE_METHOD,
-                new Object[] { variableName, value }), immediate);
+                new Object[] { variableName, new UidlValue(value) }), immediate);
     }
 
     /**
@@ -1692,7 +1728,7 @@ public class ApplicationConnection {
                     // TODO non-static encoder? type registration?
                     paramJson.set(i, JsonEncoder.encode(
                             invocation.getParameters()[i],
-                            restrictToInternalTypes, getConnectorMap(), this));
+                            restrictToInternalTypes, this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);
@@ -2079,7 +2115,9 @@ public class ApplicationConnection {
 
     @Deprecated
     public ComponentConnector getPaintable(UIDL uidl) {
-        return getConnector(uidl.getId(), Integer.parseInt(uidl.getTag()));
+        // Non-component connectors shouldn't be painted from legacy connectors
+        return (ComponentConnector) getConnector(uidl.getId(),
+                Integer.parseInt(uidl.getTag()));
     }
 
     /**
@@ -2098,17 +2136,17 @@ public class ApplicationConnection {
      * @return Either an existing ComponentConnector or a new ComponentConnector
      *         of the given type
      */
-    public ComponentConnector getConnector(String connectorId, int connectorType) {
+    public ServerConnector getConnector(String connectorId, int connectorType) {
         if (!connectorMap.hasConnector(connectorId)) {
             return createAndRegisterConnector(connectorId, connectorType);
         }
-        return (ComponentConnector) connectorMap.getConnector(connectorId);
+        return connectorMap.getConnector(connectorId);
     }
 
     /**
-     * Creates a new ComponentConnector with the given type and id.
+     * Creates a new ServerConnector with the given type and id.
      * 
-     * Creates and registers a new ComponentConnector of the given type. Should
+     * Creates and registers a new ServerConnector of the given type. Should
      * never be called with the connector id of an existing connector.
      * 
      * @param connectorId
@@ -2116,12 +2154,12 @@ public class ApplicationConnection {
      * @param connectorType
      *            Type of the connector, as passed from the server side
      * 
-     * @return A new ComponentConnector of the given type
+     * @return A new ServerConnector of the given type
      */
-    private ComponentConnector createAndRegisterConnector(String connectorId,
+    private ServerConnector createAndRegisterConnector(String connectorId,
             int connectorType) {
         // Create and register a new connector with the given type
-        ComponentConnector p = widgetSet.createWidget(connectorType,
+        ServerConnector p = widgetSet.createConnector(connectorType,
                 configuration);
         connectorMap.registerConnector(connectorId, p);
         p.doInit(connectorId, this);

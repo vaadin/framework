@@ -35,7 +35,6 @@ public class VFormLayout extends SimplePanel {
 
     private final static String CLASSNAME = "v-formlayout";
 
-    ApplicationConnection client;
     VFormLayoutTable table;
 
     public VFormLayout() {
@@ -371,7 +370,7 @@ public class VFormLayout extends SimplePanel {
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (owner != null) {
-                client.handleTooltipEvent(event, owner);
+                owner.getConnection().handleTooltipEvent(event, owner);
             }
         }
 

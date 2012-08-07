@@ -18,6 +18,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
@@ -209,7 +210,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<Integer, String> unknownComponents;
 
-    private Class<? extends ComponentConnector>[] classes = new Class[1024];
+    private Class<? extends ServerConnector>[] classes = new Class[1024];
 
     private boolean browserDetailsSent = false;
     private boolean widgetsetVersionSent = false;
@@ -346,6 +347,7 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public static void startApplication(final String applicationId) {
         Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
             public void execute() {
                 ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
                 ApplicationConnection a = GWT
@@ -393,7 +395,7 @@ public class ApplicationConfiguration implements EntryPoint {
         return useDebugIdInDom;
     }
 
-    public Class<? extends ComponentConnector> getWidgetClassByEncodedTag(
+    public Class<? extends ServerConnector> getConnectorClassByEncodedTag(
             int tag) {
         try {
             return classes[tag];
@@ -508,7 +510,7 @@ public class ApplicationConfiguration implements EntryPoint {
         public void run() {
             pending = false;
             if (!isBusy()) {
-                Class<? extends ComponentConnector> nextType = getNextType();
+                Class<? extends ServerConnector> nextType = getNextType();
                 if (nextType == null) {
                     // ensured that all widgets are loaded
                     deferredWidgetLoader = null;
@@ -521,13 +523,13 @@ public class ApplicationConfiguration implements EntryPoint {
             }
         }
 
-        private Class<? extends ComponentConnector> getNextType() {
-            Class<? extends ComponentConnector>[] deferredLoadedWidgets = widgetSet
-                    .getDeferredLoadedWidgets();
-            if (deferredLoadedWidgets.length <= nextWidgetIndex) {
+        private Class<? extends ServerConnector> getNextType() {
+            Class<? extends ServerConnector>[] deferredLoadedConnectors = widgetSet
+                    .getDeferredLoadedConnectors();
+            if (deferredLoadedConnectors.length <= nextWidgetIndex) {
                 return null;
             } else {
-                return deferredLoadedWidgets[nextWidgetIndex++];
+                return deferredLoadedConnectors[nextWidgetIndex++];
             }
         }
 
@@ -568,6 +570,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * GWT hosted mode.
          */
         GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
             public void onUncaughtException(Throwable e) {
                 /*
                  * Note in case of null console (without ?debug) we eat
@@ -602,12 +605,15 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @return true if client side is currently been debugged
      */
-    public native static boolean isDebugMode()
+    public static boolean isDebugMode() {
+        return isDebugAvailable()
+                && Window.Location.getParameter("debug") != null;
+    }
+
+    private native static boolean isDebugAvailable()
     /*-{
         if($wnd.vaadin.debug) {
-            var parameters = $wnd.location.search;
-            var re = /debug[^\/]*$/;
-            return re.test(parameters);
+            return true;
         } else {
             return false;
         }
@@ -618,12 +624,11 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @return <code>true</code> if debug logging should be quiet
      */
-    public native static boolean isQuietDebugMode()
-    /*-{
-        var uri = $wnd.location;
-        var re = /debug=q[^\/]*$/;
-        return re.test(uri);
-    }-*/;
+    public static boolean isQuietDebugMode() {
+        String debugParameter = Window.Location.getParameter("debug");
+        return isDebugAvailable() && debugParameter != null
+                && debugParameter.startsWith("q");
+    }
 
     /**
      * Checks whether information from the web browser (e.g. uri fragment and

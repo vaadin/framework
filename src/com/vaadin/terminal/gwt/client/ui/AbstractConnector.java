@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.event.shared.GwtEvent;
@@ -40,6 +41,16 @@ public abstract class AbstractConnector implements ServerConnector,
     private final boolean debugLogging = false;
 
     private SharedState state;
+    private ServerConnector parent;
+
+    /**
+     * Temporary storage for last enabled state to be able to see if it has
+     * changed. Can be removed once we are able to listen specifically for
+     * enabled changes in the state. Widget.isEnabled() cannot be used as all
+     * Widgets do not implement HasEnabled
+     */
+    private boolean lastEnabledState = true;
+    private List<ServerConnector> children;
 
     /*
      * (non-Javadoc)
@@ -137,16 +148,6 @@ public abstract class AbstractConnector implements ServerConnector,
         return (Collection<T>) rpcImplementations.get(rpcInterfaceId);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
-     */
-    public boolean isConnectorEnabled() {
-        // Client side can always receive message from the server
-        return true;
-    }
-
     public void fireEvent(GwtEvent<?> event) {
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
@@ -176,6 +177,8 @@ public abstract class AbstractConnector implements ServerConnector,
                     + Util.getConnectorString(stateChangeEvent.getConnector())
                     + " received by " + Util.getConnectorString(this));
         }
+
+        updateEnabledState(isEnabled());
     }
 
     /*
@@ -218,4 +221,47 @@ public abstract class AbstractConnector implements ServerConnector,
         return ConnectorStateFactory.createState(getClass());
     }
 
+    public ServerConnector getParent() {
+        return parent;
+    }
+
+    public void setParent(ServerConnector parent) {
+        this.parent = parent;
+    }
+
+    public List<ServerConnector> getChildren() {
+        if (children == null) {
+            return Collections.emptyList();
+        }
+        return children;
+    }
+
+    public void setChildren(List<ServerConnector> children) {
+        this.children = children;
+    }
+
+    public boolean isEnabled() {
+        if (!getState().isEnabled()) {
+            return false;
+        }
+
+        if (getParent() == null) {
+            return true;
+        } else {
+            return getParent().isEnabled();
+        }
+    }
+
+    public void updateEnabledState(boolean enabledState) {
+        if (lastEnabledState == enabledState) {
+            return;
+        }
+        lastEnabledState = enabledState;
+
+        for (ServerConnector c : getChildren()) {
+            // Update children as they might be affected by the enabled state of
+            // their parent
+            c.updateEnabledState(c.isEnabled());
+        }
+    }
 }

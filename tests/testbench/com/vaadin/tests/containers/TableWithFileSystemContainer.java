@@ -4,7 +4,6 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class TableWithFileSystemContainer extends TestBase {
@@ -13,7 +12,6 @@ public class TableWithFileSystemContainer extends TestBase {
 
     @Override
     public void setup() {
-        setMainWindow(new LegacyWindow(""));
         Table table = new Table("Documents", new FilesystemContainer(new File(
                 testPath)));
         table.setWidth("100%");

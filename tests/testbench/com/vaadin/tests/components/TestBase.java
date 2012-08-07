@@ -26,6 +26,16 @@ public abstract class TestBase extends AbstractTestCase {
     }
 
     private LegacyWindow window;
+
+    @Override
+    public void setMainWindow(LegacyWindow mainWindow) {
+        if (mainWindow != window) {
+            throw new IllegalStateException(
+                    "You should not set your own main window when using TestBase. If you need to use a custom Window as the main window, use AbstractTestCase instead.");
+        }
+        super.setMainWindow(mainWindow);
+    }
+
     private VerticalLayout layout;
 
     public TestBase() {

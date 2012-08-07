@@ -64,10 +64,7 @@ import com.vaadin.ui.Root;
 public abstract class AbstractApplicationPortlet extends GenericPortlet
         implements Constants {
 
-    private static final Logger logger = Logger
-            .getLogger(AbstractApplicationPortlet.class.getName());
-
-    private static class WrappedHttpAndPortletRequest extends
+    public static class WrappedHttpAndPortletRequest extends
             WrappedPortletRequest {
 
         public WrappedHttpAndPortletRequest(PortletRequest request,
@@ -112,7 +109,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    private static class WrappedGateinRequest extends
+    public static class WrappedGateinRequest extends
             WrappedHttpAndPortletRequest {
         public WrappedGateinRequest(PortletRequest request,
                 DeploymentConfiguration deploymentConfiguration) {
@@ -134,7 +131,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    private static class WrappedLiferayRequest extends
+    public static class WrappedLiferayRequest extends
             WrappedHttpAndPortletRequest {
 
         public WrappedLiferayRequest(PortletRequest request,
@@ -169,7 +166,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     }
 
-    private static class AbstractApplicationPortletWrapper implements Callback {
+    public static class AbstractApplicationPortletWrapper implements Callback {
 
         private final AbstractApplicationPortlet portlet;
 
@@ -203,6 +200,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      */
     public static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
+    public static final String WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE = "writeAjaxPageScriptWidgetsetShouldWrite";
+
     // TODO some parts could be shared with AbstractApplicationServlet
 
     // TODO Can we close the application when the portlet is removed? Do we know
@@ -213,6 +212,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private boolean productionMode = false;
 
     private DeploymentConfiguration deploymentConfiguration = new DeploymentConfiguration() {
+
         public String getConfiguredWidgetset(WrappedRequest request) {
 
             String widgetset = getApplicationOrSystemProperty(
@@ -271,6 +271,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
          * @return The location of static resources (inside which there should
          * be a VAADIN directory). Does not end with a slash (/).
          */
+
         public String getStaticFileLocation(WrappedRequest request) {
             String staticFileLocation = WrappedPortletRequest.cast(request)
                     .getPortalProperty(
@@ -329,7 +330,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
              * Print an information/warning message about running with xsrf
              * protection disabled
              */
-            logger.warning(WARNING_XSRF_PROTECTION_DISABLED);
+            getLogger().warning(WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -345,7 +346,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         if (!productionMode) {
             /* Print an information/warning message about running in debug mode */
             // TODO Maybe we need a different message for portlets?
-            logger.warning(NOT_PRODUCTION_MODE_INFO);
+            getLogger().warning(NOT_PRODUCTION_MODE_INFO);
         }
     }
 
@@ -500,20 +501,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
 
-        WrappedPortletRequest wrappedRequest;
-
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        if (portalInfo.contains("liferay")) {
-            wrappedRequest = new WrappedLiferayRequest(request,
-                    getDeploymentConfiguration());
-        } else if (portalInfo.contains("gatein")) {
-            wrappedRequest = new WrappedGateinRequest(request,
-                    getDeploymentConfiguration());
-        } else {
-            wrappedRequest = new WrappedPortletRequest(request,
-                    getDeploymentConfiguration());
-        }
+        WrappedPortletRequest wrappedRequest = createWrappedRequest(request);
 
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
@@ -552,7 +540,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 if (application == null) {
                     return;
                 }
-                Application.setCurrentApplication(application);
+                Application.setCurrent(application);
 
                 /*
                  * Get or create an application context and an application
@@ -650,7 +638,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    applicationManager.handleFileUpload(wrappedRequest,
+                    applicationManager.handleFileUpload(root, wrappedRequest,
                             wrappedResponse);
                     return;
                 } else if (requestType == RequestType.BROWSER_DETAILS) {
@@ -678,11 +666,12 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } catch (final SessionExpiredException e) {
                 // TODO Figure out a better way to deal with
                 // SessionExpiredExceptions
-                logger.finest("A user session has expired");
+                getLogger().finest("A user session has expired");
             } catch (final GeneralSecurityException e) {
                 // TODO Figure out a better way to deal with
                 // GeneralSecurityExceptions
-                logger.fine("General security exception, the security key was probably incorrect.");
+                getLogger()
+                        .fine("General security exception, the security key was probably incorrect.");
             } catch (final Throwable e) {
                 handleServiceException(request, response, application, e);
             } finally {
@@ -700,16 +689,42 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
-                        Root.setCurrentRoot(null);
-                        Application.setCurrentApplication(null);
+                        Root.setCurrent(null);
+                        Application.setCurrent(null);
 
-                        requestTimer
-                                .stop((AbstractWebApplicationContext) application
-                                        .getContext());
+                        PortletSession session = request
+                                .getPortletSession(false);
+                        if (session != null) {
+                            requestTimer.stop(getApplicationContext(session));
+                        }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Wraps the request in a (possibly portal specific) wrapped portlet
+     * request.
+     * 
+     * @param request
+     *            The original PortletRequest
+     * @return A wrapped version of the PorletRequest
+     */
+    protected WrappedPortletRequest createWrappedRequest(PortletRequest request) {
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        if (portalInfo.contains("liferay")) {
+            return new WrappedLiferayRequest(request,
+                    getDeploymentConfiguration());
+        } else if (portalInfo.contains("gatein")) {
+            return new WrappedGateinRequest(request,
+                    getDeploymentConfiguration());
+        } else {
+            return new WrappedPortletRequest(request,
+                    getDeploymentConfiguration());
+        }
+
     }
 
     private DeploymentConfiguration getDeploymentConfiguration() {
@@ -718,7 +733,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private void handleUnknownRequest(PortletRequest request,
             PortletResponse response) {
-        logger.warning("Unknown request type");
+        getLogger().warning("Unknown request type");
     }
 
     /**
@@ -784,8 +799,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 os.write(buffer, 0, bytes);
             }
         } else {
-            logger.info("Requested resource [" + resourceID
-                    + "] could not be found");
+            getLogger().info(
+                    "Requested resource [" + resourceID
+                            + "] could not be found");
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }
@@ -1128,6 +1144,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     protected PortletApplicationContext2 getApplicationContext(
             PortletSession portletSession) {
         return PortletApplicationContext2.getApplicationContext(portletSession);
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(AbstractApplicationPortlet.class.getName());
     }
 
 }

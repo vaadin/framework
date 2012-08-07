@@ -6,8 +6,10 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.terminal.gwt.client.UIDL;
 
+@AcceptCriterion(ContainsDataFlavor.class)
 final public class VContainsDataFlavor extends VAcceptCriterion {
 
     @Override

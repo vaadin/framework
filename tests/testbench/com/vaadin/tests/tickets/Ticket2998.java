@@ -20,6 +20,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
@@ -181,8 +182,7 @@ public class Ticket2998 extends Application.LegacyApplication {
                                 @SuppressWarnings("unused")
                                 float f = Float.parseFloat((String) value);
                             } catch (Exception e) {
-                                f.getRoot()
-                                        .showNotification("Bad number value");
+                                Notification.show("Bad number value");
                                 f.setValue(0);
                             }
                         }

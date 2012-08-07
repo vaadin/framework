@@ -14,14 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.ConverterFactory;
+import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
@@ -591,7 +591,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     // Commits the value to datasource
                     committingValueToDataSource = true;
                     getPropertyDataSource().setValue(
-                            convertToDataSource(newFieldValue));
+                            convertToModel(newFieldValue));
 
                     // The buffer is now unmodified
                     setModified(false);
@@ -701,8 +701,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && (getConverter() == null || !newDataSource.getType()
-                        .isAssignableFrom(getConverter().getModelType()))) {
+                && !ConverterUtil.canConverterHandle(getConverter(), getType(),
+                        newDataSource.getType())) {
             // Changing from e.g. Number -> Double should set a new converter,
             // changing from Double -> Number can keep the old one (Property
             // accepts Number)
@@ -760,15 +760,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            from
      */
     public void setConverter(Class<?> datamodelType) {
-        Converter<T, ?> converter = null;
-
-        Application app = Application.getCurrentApplication();
-        if (app != null) {
-            ConverterFactory factory = app.getConverterFactory();
-            converter = (Converter<T, ?>) factory.createConverter(getType(),
-                    datamodelType);
-        }
-        setConverter(converter);
+        Converter<T, ?> c = (Converter<T, ?>) ConverterUtil.getConverter(
+                getType(), datamodelType, getApplication());
+        setConverter(c);
     }
 
     /**
@@ -782,26 +776,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
-    @SuppressWarnings("unchecked")
-    private T convertFromDataSource(Object newValue)
-            throws Converter.ConversionException {
-        if (converter != null) {
-            return converter.convertToPresentation(newValue, getLocale());
-        }
-        if (newValue == null) {
-            return null;
-        }
-
-        if (getType().isAssignableFrom(newValue.getClass())) {
-            return (T) newValue;
-        } else {
-            throw new Converter.ConversionException(
-                    "Unable to convert value of type "
-                            + newValue.getClass().getName()
-                            + " to "
-                            + getType()
-                            + ". No converter is set and the types are not compatible.");
-        }
+    private T convertFromDataSource(Object newValue) {
+        return ConverterUtil.convertFromModel(newValue, getType(),
+                getConverter(), getLocale());
     }
 
     /**
@@ -815,40 +792,21 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
-    private Object convertToDataSource(T fieldValue)
+    private Object convertToModel(T fieldValue)
             throws Converter.ConversionException {
-        if (converter != null) {
-            /*
-             * If there is a converter, always use it. It must convert or throw
-             * an exception.
-             */
-            try {
-                return converter.convertToModel(fieldValue, getLocale());
-            } catch (com.vaadin.data.util.converter.Converter.ConversionException e) {
-                throw new Converter.ConversionException(
-                        getConversionError(converter.getModelType()), e);
+        try {
+            Class<?> modelType = null;
+            Property pd = getPropertyDataSource();
+            if (pd != null) {
+                modelType = pd.getType();
+            } else if (getConverter() != null) {
+                modelType = getConverter().getModelType();
             }
-        }
-
-        if (fieldValue == null) {
-            // Null should always be passed through the converter but if there
-            // is no converter we can safely return null
-            return null;
-        }
-
-        // check that the value class is compatible with the data source type
-        // (if data source set) or field type
-        Class<?> type;
-        if (getPropertyDataSource() != null) {
-            type = getPropertyDataSource().getType();
-        } else {
-            type = getType();
-        }
-
-        if (type.isAssignableFrom(fieldValue.getClass())) {
-            return fieldValue;
-        } else {
-            throw new Converter.ConversionException(getConversionError(type));
+            return ConverterUtil.convertToModel(fieldValue,
+                    (Class<Object>) modelType, getConverter(), getLocale());
+        } catch (ConversionException e) {
+            throw new ConversionException(
+                    getConversionError(converter.getModelType()), e);
         }
     }
 
@@ -880,7 +838,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @return The converted value that is compatible with the data source type
      */
     public Object getConvertedValue() {
-        return convertToDataSource(getFieldValue());
+        return convertToModel(getFieldValue());
     }
 
     /**

@@ -9,7 +9,9 @@ import java.util.Map;
 
 import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.ui.Component;
 
 /**
  * This interface defines the methods for painting XML to the UIDL stream.
@@ -39,7 +41,7 @@ public interface PaintTarget extends Serializable {
 
     /**
      * Result of starting to paint a Paintable (
-     * {@link PaintTarget#startPaintable(ClientConnector, String)}).
+     * {@link PaintTarget#startPaintable(Component, String)}).
      * 
      * @since 7.0
      */
@@ -55,7 +57,7 @@ public interface PaintTarget extends Serializable {
          * changes.
          */
         CACHED
-    };
+    }
 
     /**
      * Prints element start tag of a paintable section. Starts a paintable
@@ -73,8 +75,8 @@ public interface PaintTarget extends Serializable {
      * </p>
      * <p>
      * Each paintable being painted should be closed by a matching
-     * {@link #endPaintable(ClientConnector)} regardless of the
-     * {@link PaintStatus} returned.
+     * {@link #endPaintable(Component)} regardless of the {@link PaintStatus}
+     * returned.
      * </p>
      * 
      * @param paintable
@@ -89,15 +91,15 @@ public interface PaintTarget extends Serializable {
      * @see #startTag(String)
      * @since 7.0 (previously using startTag(Paintable, String))
      */
-    public PaintStatus startPaintable(ClientConnector paintable, String tag)
+    public PaintStatus startPaintable(Component paintable, String tag)
             throws PaintException;
 
     /**
      * Prints paintable element end tag.
      * 
-     * Calls to {@link #startPaintable(ClientConnector, String)}should be
-     * matched by {@link #endPaintable(ClientConnector)}. If the parent tag is
-     * closed before every child tag is closed a PaintException is raised.
+     * Calls to {@link #startPaintable(Component, String)}should be matched by
+     * {@link #endPaintable(Component)}. If the parent tag is closed before
+     * every child tag is closed a PaintException is raised.
      * 
      * @param paintable
      *            the paintable to close.
@@ -105,7 +107,7 @@ public interface PaintTarget extends Serializable {
      *             if the paint operation failed.
      * @since 7.0 (previously using engTag(String))
      */
-    public void endPaintable(ClientConnector paintable) throws PaintException;
+    public void endPaintable(Component paintable) throws PaintException;
 
     /**
      * Prints element start tag.
@@ -289,7 +291,7 @@ public interface PaintTarget extends Serializable {
      *            the Paintable to be referenced on client side
      * @throws PaintException
      */
-    public void addAttribute(String name, ClientConnector value)
+    public void addAttribute(String name, Component value)
             throws PaintException;
 
     /**
@@ -421,8 +423,8 @@ public interface PaintTarget extends Serializable {
      * @throws PaintException
      *             if the paint oparation fails
      */
-    public void addVariable(VariableOwner owner, String name,
-            ClientConnector value) throws PaintException;
+    public void addVariable(VariableOwner owner, String name, Component value)
+            throws PaintException;
 
     /**
      * Adds a upload stream type variable.

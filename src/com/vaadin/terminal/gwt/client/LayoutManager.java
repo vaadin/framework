@@ -120,7 +120,7 @@ public class LayoutManager {
 
     /**
      * Assigns a measured size to an element. Method defined as protected to
-     * allow separate implementation for IE8 in which delete not always works.
+     * allow separate implementation for IE8.
      * 
      * @param element
      *            the dom element to attach the measured size to
@@ -139,18 +139,14 @@ public class LayoutManager {
     }-*/;
 
     /**
-     * Get the measured size of the given element. If no size is set, use the
-     * default size instead.
-     * 
-     * Method defined as protected to allow separate implementation for IE8
-     * (performance reason: storing any data in the DOM causes a reflow).
+     * Gets the measured size for an element. Method defined as protected to
+     * allow separate implementation for IE8.
      * 
      * @param element
-     *            the dom element whose measured size to get
+     *            The element to get measured size for
      * @param defaultSize
-     *            a fallback size if the element doesn't have a measured size
-     *            stored
-     * @return
+     *            The size to return if no measured size could be found
+     * @return The measured size for the element or {@literal defaultSize}
      */
     protected native MeasuredSize getMeasuredSize(Element element,
             MeasuredSize defaultSize)
@@ -185,7 +181,7 @@ public class LayoutManager {
             return;
         }
         measuredSize.removeDependent(owner.getConnectorId());
-        stopMeasuringIfUnnecessary(element);
+        stopMeasuringIfUnecessary(element);
     }
 
     public boolean isLayoutRunning() {
@@ -270,16 +266,10 @@ public class LayoutManager {
             VConsole.log("  Measured " + measuredConnectorCount
                     + " elements in " + measureTime + " ms");
 
-            VConsole.log("  Total of " + measureCount
-                    + " measurement operations");
-
             if (!listenersToFire.isEmpty()) {
                 for (Element element : listenersToFire) {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
-                    if (listeners == null) {
-                        continue;
-                    }
                     ElementResizeListener[] array = listeners
                             .toArray(new ElementResizeListener[listeners.size()]);
                     ElementResizeEvent event = new ElementResizeEvent(this,
@@ -409,8 +399,13 @@ public class LayoutManager {
                 ((PostLayoutListener) connector).postLayout();
             }
         }
-        VConsole.log("Invoke post layout listeners in "
-                + (totalDuration.elapsedMillis() - postLayoutStart) + " ms");
+        int postLayoutDone = (totalDuration.elapsedMillis() - postLayoutStart);
+        VConsole.log("Invoke post layout listeners in " + postLayoutDone
+                + " ms");
+
+        cleanMeasuredSizes();
+        int cleaningDone = (totalDuration.elapsedMillis() - postLayoutDone);
+        VConsole.log("Cleaned old measured sizes in " + cleaningDone + "ms");
 
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
@@ -436,11 +431,13 @@ public class LayoutManager {
             for (ComponentConnector componentConnector : pendingOverflowFixes) {
                 // Delay the overflow fix if the involved connectors might still
                 // change
-                if (!currentDependencyTree
-                        .noMoreChangesExpected(componentConnector)
-                        || !currentDependencyTree
-                                .noMoreChangesExpected(componentConnector
-                                        .getParent())) {
+                boolean connectorChangesExpected = !currentDependencyTree
+                        .noMoreChangesExpected(componentConnector);
+                boolean parentChangesExcpected = componentConnector.getParent() instanceof ComponentConnector
+                        && !currentDependencyTree
+                                .noMoreChangesExpected((ComponentConnector) componentConnector
+                                        .getParent());
+                if (connectorChangesExpected || parentChangesExcpected) {
                     delayedOverflowFixes.add(componentConnector);
                     continue;
                 }
@@ -521,15 +518,8 @@ public class LayoutManager {
     }
 
     private void measureConnector(ComponentConnector connector) {
-        MeasuredSize measuredSize = getMeasuredSize(connector);
-        if (!isManagedLayout(connector)
-                && !isManagedLayout(connector.getParent())
-                && elementResizeListeners.get(connector.getWidget()
-                        .getElement()) == null && !measuredSize.hasDependents()) {
-            return;
-        }
-
         Element element = connector.getWidget().getElement();
+        MeasuredSize measuredSize = getMeasuredSize(connector);
         MeasureResult measureResult = measuredAndUpdate(element, measuredSize);
 
         if (measureResult.isChanged()) {
@@ -569,11 +559,8 @@ public class LayoutManager {
                 + " non connector elements");
     }
 
-    int measureCount = 0;
-
     private MeasureResult measuredAndUpdate(Element element,
             MeasuredSize measuredSize) {
-        measureCount++;
         MeasureResult measureResult = measuredSize.measure(element);
         if (measureResult.isChanged()) {
             notifyListenersAndDepdendents(element,
@@ -1032,12 +1019,48 @@ public class LayoutManager {
         return getMeasuredSize(element, nullSize).getMarginLeft();
     }
 
-    public int getMarginWidth(Element element) {
-        return getMeasuredSize(element, nullSize).getMarginWidth();
+    /**
+     * Gets the combined top & bottom margin of the given element, provided that
+     * they have been measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured margin for
+     * @return the measured top+bottom margin of the element in pixels.
+     */
+    public int getMarginHeight(Element element) {
+        return getMarginTop(element) + getMarginBottom(element);
     }
 
-    public int getMarginHeight(Element element) {
-        return getMeasuredSize(element, nullSize).getMarginHeight();
+    /**
+     * Gets the combined left & right margin of the given element, provided that
+     * they have been measured. These elements are guaranteed to be measured:
+     * <ul>
+     * <li>ManagedLayotus and their child Connectors
+     * <li>Elements for which there is at least one ElementResizeListener
+     * <li>Elements for which at least one ManagedLayout has registered a
+     * dependency
+     * </ul>
+     * 
+     * A negative number is returned if the element has not been measured. If 0
+     * is returned, it might indicate that the element is not attached to the
+     * DOM.
+     * 
+     * @param element
+     *            the element to get the measured margin for
+     * @return the measured left+right margin of the element in pixels.
+     */
+    public int getMarginWidth(Element element) {
+        return getMarginLeft(element) + getMarginRight(element);
     }
 
     /**
@@ -1192,12 +1215,12 @@ public class LayoutManager {
             listeners.remove(listener);
             if (listeners.isEmpty()) {
                 elementResizeListeners.remove(element);
-                stopMeasuringIfUnnecessary(element);
+                stopMeasuringIfUnecessary(element);
             }
         }
     }
 
-    private void stopMeasuringIfUnnecessary(Element element) {
+    private void stopMeasuringIfUnecessary(Element element) {
         if (!needsMeasure(element)) {
             measuredNonConnectorElements.remove(element);
             setMeasuredSize(element, null);
@@ -1225,6 +1248,12 @@ public class LayoutManager {
 
     public void setEverythingNeedsMeasure() {
         everythingNeedsMeasure = true;
+    }
+
+    /**
+     * Clean measured sizes which are no longer needed. Only for IE8.
+     */
+    protected void cleanMeasuredSizes() {
     }
 
 }

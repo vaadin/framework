@@ -6,6 +6,7 @@
  */
 package com.vaadin.terminal.gwt.client.ui.dd;
 
+import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.VConsole;
 
@@ -13,6 +14,7 @@ import com.vaadin.terminal.gwt.client.VConsole;
  * TODO implementation could now be simplified/optimized
  * 
  */
+@AcceptCriterion(Not.class)
 final public class VNot extends VAcceptCriterion {
     private boolean b1;
     private VAcceptCriterion crit1;

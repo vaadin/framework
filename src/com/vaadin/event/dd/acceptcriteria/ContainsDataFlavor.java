@@ -10,7 +10,6 @@ import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.dd.VContainsDataFlavor;
 
 /**
  * A Criterion that checks whether {@link Transferable} contains given data
@@ -19,7 +18,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VContainsDataFlavor;
  * 
  * @since 6.3
  */
-@ClientCriterion(VContainsDataFlavor.class)
 public class ContainsDataFlavor extends ClientSideCriterion {
 
     private String dataFlavorId;

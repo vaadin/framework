@@ -4,6 +4,7 @@
 
 package com.vaadin.ui;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -164,6 +165,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                 .addListener((ComponentContainer.ComponentDetachListener) this);
 
         content = newContent;
+        requestRepaint();
     }
 
     /**
@@ -189,15 +191,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void paintContent(PaintTarget target) throws PaintException {
         if (actionManager != null) {
             actionManager.paintActions(null, target);
-        }
-    }
-
-    @Override
-    public void requestRepaintAll() {
-        // Panel has odd structure, delegate to layout
-        requestRepaint();
-        if (getContent() != null) {
-            getContent().requestRepaintAll();
         }
     }
 
@@ -237,7 +230,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     public Iterator<Component> getComponentIterator() {
-        return content.getComponentIterator();
+        return Collections.singleton((Component) content).iterator();
     }
 
     /**
@@ -351,35 +344,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         if (event.getContainer() == content) {
             fireComponentDetachEvent(event.getDetachedComponent());
         }
-    }
-
-    /**
-     * Notifies the component that it is connected to an application.
-     * 
-     * @see com.vaadin.ui.Component#attach()
-     */
-    @Override
-    public void attach() {
-        getRoot().componentAttached(this);
-        // can't call parent here as this is Panels hierarchy is a hack
-        requestRepaint();
-        if (content != null) {
-            content.attach();
-        }
-    }
-
-    /**
-     * Notifies the component that it is detached from the application.
-     * 
-     * @see com.vaadin.ui.Component#detach()
-     */
-    @Override
-    public void detach() {
-        // can't call parent here as this is Panels hierarchy is a hack
-        if (content != null) {
-            content.detach();
-        }
-        getRoot().componentDetached(this);
     }
 
     /**

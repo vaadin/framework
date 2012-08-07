@@ -129,7 +129,7 @@ public class CombinedRequest implements WrappedRequest {
 
             public WebBrowser getWebBrowser() {
                 WebApplicationContext context = (WebApplicationContext) Application
-                        .getCurrentApplication().getContext();
+                        .getCurrent().getContext();
                 return context.getBrowser();
             }
         };

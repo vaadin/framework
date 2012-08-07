@@ -3,18 +3,19 @@ package com.vaadin.tests.components.root;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
-@Widgetset("invalid")
+@Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class TestRootWidgetset extends AbstractTestRoot {
 
     @Override
     protected void setup(WrappedRequest request) {
-        // Nothing here
+        addComponent(new MissingFromDefaultWidgetsetComponent());
     }
 
     @Override
     public String getTestDescription() {
-        return "This root should never load, as the widgetset can not be loaded";
+        return "This contents if this root should work as the component is present in TestingWidgetSet";
     }
 
     @Override

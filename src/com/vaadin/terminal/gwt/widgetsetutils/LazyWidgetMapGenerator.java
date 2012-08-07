@@ -3,7 +3,7 @@
  */
 package com.vaadin.terminal.gwt.widgetsetutils;
 
-import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
 
 /**
@@ -16,8 +16,7 @@ import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
  */
 public class LazyWidgetMapGenerator extends WidgetMapGenerator {
     @Override
-    protected LoadStyle getLoadStyle(
-            Class<? extends ComponentConnector> connector) {
+    protected LoadStyle getLoadStyle(Class<? extends ServerConnector> connector) {
         return LoadStyle.LAZY;
     }
 

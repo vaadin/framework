@@ -4,6 +4,8 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -17,6 +19,7 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.gwt.client.communication.SharedState;
@@ -25,9 +28,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager.DragEventType;
 import com.vaadin.ui.Component;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
-
-    private static final Logger logger = Logger
-            .getLogger(DragAndDropService.class.getName());
 
     private int lastVisitId;
 
@@ -48,8 +48,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            logger.severe("DropHandler owner " + owner
-                    + " must implement DropTarget");
+            getLogger()
+                    .severe("DropHandler owner " + owner
+                            + " must implement DropTarget");
             return;
         }
         // owner cannot be null here
@@ -79,8 +80,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropHandler dropHandler = (dropTarget).getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            logger.fine("DropTarget.getDropHandler() returned null for owner: "
-                    + dropTarget);
+            getLogger().fine(
+                    "DropTarget.getDropHandler() returned null for owner: "
+                            + dropTarget);
             return;
         }
 
@@ -241,5 +243,48 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     public Class<? extends SharedState> getStateType() {
         return SharedState.class;
+    }
+
+    public void requestRepaint() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public ClientConnector getParent() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void requestRepaintAll() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setParent(ClientConnector parent) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void attach() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void detach() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public Collection<Extension> getExtensions() {
+        // TODO Auto-generated method stub
+        return Collections.emptySet();
+    }
+
+    public void removeExtension(Extension extension) {
+        // TODO Auto-generated method stub
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(DragAndDropService.class.getName());
     }
 }

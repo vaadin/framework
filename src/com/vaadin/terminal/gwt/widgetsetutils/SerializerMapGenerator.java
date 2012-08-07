@@ -17,6 +17,7 @@ import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
@@ -96,6 +97,10 @@ public class SerializerMapGenerator extends Generator {
         JClassType javaSerializable = typeOracle.findType(Serializable.class
                 .getName());
         for (JClassType type : typesNeedingSerializers) {
+            if (type.isArray() != null) {
+                // Don't check for arrays
+                continue;
+            }
             boolean serializable = type.isAssignableTo(javaSerializable);
             if (!serializable) {
                 logger.log(
@@ -166,8 +171,15 @@ public class SerializerMapGenerator extends Generator {
 
         // TODO cache serializer instances in a map
         for (JClassType type : typesNeedingSerializers) {
-            sourceWriter.println("if (type.equals(\""
-                    + type.getQualifiedBinaryName() + "\")) {");
+            sourceWriter.print("if (type.equals(\""
+                    + type.getQualifiedSourceName() + "\")");
+            if (type instanceof JArrayType) {
+                // Also add binary name to support encoding based on
+                // object.getClass().getName()
+                sourceWriter.print("||type.equals(\"" + type.getJNISignature()
+                        + "\")");
+            }
+            sourceWriter.println(") {");
             sourceWriter.indent();
             String serializerName = SerializerGenerator
                     .getFullyQualifiedSerializerClassName(type);
@@ -203,6 +215,7 @@ public class SerializerMapGenerator extends Generator {
         // Generate serializer classes for each subclass of SharedState
         JClassType serializerType = typeOracle.findType(SharedState.class
                 .getName());
+        types.add(serializerType);
         JClassType[] serializerSubtypes = serializerType.getSubtypes();
         for (JClassType type : serializerSubtypes) {
             types.add(type);
@@ -276,6 +289,14 @@ public class SerializerMapGenerator extends Generator {
             serializableTypes.add(typeClass);
             findSubTypesNeedingSerializers(typeClass, serializableTypes);
         }
+
+        // Generate (n-1)-dimensional array serializer for n-dimensional array
+        JArrayType arrayType = type.isArray();
+        if (arrayType != null) {
+            serializableTypes.add(arrayType);
+            addTypeIfNeeded(serializableTypes, arrayType.getComponentType());
+        }
+
     }
 
     Set<Class<?>> frameworkHandledTypes = new HashSet<Class<?>>();
@@ -292,15 +313,14 @@ public class SerializerMapGenerator extends Generator {
         frameworkHandledTypes.add(Map.class);
         frameworkHandledTypes.add(List.class);
         frameworkHandledTypes.add(Set.class);
+        frameworkHandledTypes.add(Byte.class);
+        frameworkHandledTypes.add(Character.class);
 
     }
 
     private boolean serializationHandledByFramework(JType setterType) {
         // Some types are handled by the framework at the moment. See #8449
         // This method should be removed at some point.
-        if (setterType.isArray() != null) {
-            return true;
-        }
         if (setterType.isPrimitive() != null) {
             return true;
         }

@@ -21,10 +21,10 @@ public class GridLayoutExpandRatioModification extends TestBase implements
 
     @Override
     public void setup() {
-        LegacyWindow main = new LegacyWindow("The Main Window");
+        LegacyWindow main = getMainWindow();
+
         mainLayout = new GridLayout(3, 3);
         main.setContent(mainLayout);
-        setMainWindow(main);
 
         // The upper layout
         vl1 = new VerticalLayout();
