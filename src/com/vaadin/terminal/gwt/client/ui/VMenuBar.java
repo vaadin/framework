@@ -793,7 +793,7 @@ public class VMenuBar extends SimpleFocusablePanel implements Paintable,
                             contentWidth + Util.getNativeScrollbarSize(),
                             Unit.PX);
                 }
-                popup.sizeOrPositionUpdated();
+                popup.positionOrSizeUpdated();
             }
         }
         return top;

@@ -30,6 +30,14 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     public static class PositionAndSize {
         private int left, top, width, height;
 
+        public PositionAndSize(int left, int top, int width, int height) {
+            super();
+            setLeft(left);
+            setTop(top);
+            setWidth(width);
+            setHeight(height);
+        }
+
         public int getLeft() {
             return left;
         }
@@ -51,6 +59,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         public void setWidth(int width) {
+            if (width < 0) {
+                width = 0;
+            }
+
             this.width = width;
         }
 
@@ -59,6 +71,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         public void setHeight(int height) {
+            if (height < 0) {
+                height = 0;
+            }
+
             this.height = height;
         }
 
@@ -224,7 +240,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        sizeOrPositionUpdated(isAnimationEnabled() ? 0 : 1);
+        positionOrSizeUpdated(isAnimationEnabled() ? 0 : 1);
     }
 
     private IFrameElement getShimElement() {
@@ -316,7 +332,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
-            sizeOrPositionUpdated(1.0);
+            positionOrSizeUpdated(1.0);
         }
         Util.runIE7ZeroSizedBodyFix();
     }
@@ -348,13 +364,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        sizeOrPositionUpdated(1.0);
+        positionOrSizeUpdated(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        sizeOrPositionUpdated(1.0);
+        positionOrSizeUpdated(1.0);
     }
 
     /**
@@ -378,15 +394,15 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * size of overlay without using normal 'setWidth(String)' and
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
      * 
-     * @deprecated Call {@link #sizeOrPositionUpdated()} instead.
+     * @deprecated Call {@link #positionOrSizeUpdated()} instead.
      */
     @Deprecated
     protected void updateShadowSizeAndPosition() {
-        sizeOrPositionUpdated();
+        positionOrSizeUpdated();
     }
 
-    protected void sizeOrPositionUpdated() {
-        sizeOrPositionUpdated(1.0);
+    protected void positionOrSizeUpdated() {
+        positionOrSizeUpdated(1.0);
     }
 
     /**
@@ -399,7 +415,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
      */
-    private void sizeOrPositionUpdated(final double progress) {
+    private void positionOrSizeUpdated(final double progress) {
         // Don't do anything if overlay element is not attached
         if (!isAttached()) {
             return;
@@ -424,18 +440,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             getOffsetWidth();
         }
 
-        PositionAndSize positionAndSize = new PositionAndSize();
-        positionAndSize.left = getActualLeft();
-        positionAndSize.top = getActualTop();
-        positionAndSize.width = getOffsetWidth();
-        positionAndSize.height = getOffsetHeight();
-
-        if (positionAndSize.width < 0) {
-            positionAndSize.width = 0;
-        }
-        if (positionAndSize.height < 0) {
-            positionAndSize.height = 0;
-        }
+        PositionAndSize positionAndSize = new PositionAndSize(getActualLeft(),
+                getActualTop(), getOffsetWidth(), getOffsetHeight());
 
         // Animate the size
         positionAndSize.setAnimationFromCenterProgress(progress);
@@ -452,12 +458,12 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
         // Update correct values
         if (isShadowEnabled()) {
-            updateSizeAndPosition(shadow, positionAndSize);
+            updatePositionAndSize(shadow, positionAndSize);
             DOM.setStyleAttribute(shadow, "zIndex", zIndex);
             DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
                     : "");
         }
-        updateSizeAndPosition((Element) Element.as(getShimElement()),
+        updatePositionAndSize((Element) Element.as(getShimElement()),
                 positionAndSize);
 
         // Opera fix, part 2 (ticket #2704)
@@ -489,18 +495,18 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     }
 
-    private void updateSizeAndPosition(Element e,
+    private void updatePositionAndSize(Element e,
             PositionAndSize positionAndSize) {
-        e.getStyle().setLeft(positionAndSize.left, Unit.PX);
-        e.getStyle().setTop(positionAndSize.top, Unit.PX);
-        e.getStyle().setWidth(positionAndSize.width, Unit.PX);
-        e.getStyle().setHeight(positionAndSize.height, Unit.PX);
+        e.getStyle().setLeft(positionAndSize.getLeft(), Unit.PX);
+        e.getStyle().setTop(positionAndSize.getTop(), Unit.PX);
+        e.getStyle().setWidth(positionAndSize.getWidth(), Unit.PX);
+        e.getStyle().setHeight(positionAndSize.getHeight(), Unit.PX);
     }
 
     protected class ResizeAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            sizeOrPositionUpdated(progress);
+            positionOrSizeUpdated(progress);
         }
     }
 

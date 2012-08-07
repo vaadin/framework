@@ -154,7 +154,7 @@ public class VNotification extends VOverlay {
         super.show();
         notifications.add(this);
         setPosition(position);
-        sizeOrPositionUpdated();
+        positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
          * nudge (#8551)
