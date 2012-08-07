@@ -450,13 +450,15 @@ public class BrowserInfo {
         if (!isTouchDevice()) {
             return false;
         }
+        // Android 4+ has native scrolling
         if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
             return false;
         }
-        // Cannot enable native touch scrolling on iOS 5 until #8792 is resolved
-        // if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
-        // return false;
-        // }
+        // iOS 5 has native scrolling but suffers from #8792;
+        // iOS 6 works fine.
+        if (isIOS() && isWebkit() && getWebkitVersion() >= 536) {
+            return false;
+        }
         return true;
     }
 
