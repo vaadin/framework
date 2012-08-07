@@ -510,7 +510,9 @@ public class SQLContainer implements Container, Container.Filterable,
      */
     public void removeContainerFilter(Filter filter) {
         filters.remove(filter);
-        refresh();
+        // TODO this cannot be added before ComboBox is fixed
+        // (Select.requestRepaint() must not affect filter string)
+        // refresh();
     }
 
     /**
