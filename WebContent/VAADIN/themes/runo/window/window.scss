@@ -1,0 +1,145 @@
+@mixin runo-window {
+
+.v-window {
+	color: #464f52;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	font-size: 13px;
+	line-height: 18px;
+	background: transparent url(img/bottom-left.png) no-repeat left bottom;
+}
+.v-window-wrap {
+	background: transparent url(img/top-left.png) no-repeat;
+}
+.v-window-outerheader {
+	height: 49px;
+	margin-left: 9px;
+	padding: 15px 40px 11px 12px;
+	background: transparent url(img/top-right.png) no-repeat right top;
+}
+.v-window-header {
+	font-size: 18px;
+	line-height: 1.2;
+	font-weight: normal;
+	letter-spacing: -0.03em;
+	color: #f14c1a;
+	text-shadow: 0 1px 0 #fff;
+}
+.v-window-contents > div {
+	background: #fff;
+	border: 2px solid #babfc0;
+	border-top: none;
+	border-bottom: none;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.v-window div.v-window-footer {
+	height: 8px;
+	margin-left: 9px;
+	background: transparent url(img/bottom-right.png) no-repeat right bottom;
+	overflow: visible;
+}
+.v-window-resizebox {
+	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
+	right: 5px;
+	width: 10px;
+	height: 10px;
+	margin-top: -7px;
+	background: transparent url(img/resize.png);
+}
+.v-window-resizebox-disabled {
+	background: transparent;
+	display: block;
+}
+.v-window-closebox {
+	position: absolute;
+	top: 21px;
+	right: 24px;
+	width: 12px;
+	height: 12px;
+	background: transparent url(img/close.png);
+}
+.v-window-closebox:hover {
+	background-position: 0 -12px;
+}
+.v-window-modalitycurtain {
+	background: #fff;
+}
+/* Dialog style */
+.v-window-dialog {
+	background-image: url(img/dialog/bottom-left.png);
+}
+.v-window-dialog .v-window-outerheader {
+	height: 14px;
+	padding: 13px 30px 5px 8px;
+	background: transparent url(img/top-right.png) no-repeat right top;
+}
+.v-window-dialog .v-window-header {
+	font-size: 12px;
+	line-height: normal;
+	font-weight: bold;
+	letter-spacing: 0;
+	text-shadow: 0 1px 0 #fff;
+}
+.v-window-dialog .v-window-contents {
+	background: #f1f3f3;
+}
+.v-window-dialog div.v-window-footer {
+	background-image: url(img/dialog/bottom-right.png);
+}
+.v-window-dialog .v-window-closebox {
+	top: 14px;
+	right: 16px;
+	background-image: url(img/dialog/close.png);
+}
+/* Shadow for window */
+.v-shadow-window .top-left {
+    top: -13px;             left: -20px;
+    width: 39px;         height: 39px;
+    background: transparent url(img/shadow/top-left.png);
+}
+.v-shadow-window .top {
+    top: -13px;             left: 19px;
+    height: 39px;
+    right: 19px;
+    background: transparent url(img/shadow/top.png);
+}
+.v-shadow-window .top-right {
+    top: -13px;             right: -20px;
+    width: 39px;         height: 39px;
+    background: transparent url(img/shadow/top-right.png);
+}
+.v-shadow-window .left {
+    top: 26px;           left: -20px;
+    width: 39px;
+    bottom: 12px;
+    background: transparent url(img/shadow/left.png);
+}
+.v-shadow-window .center {
+    top: 26px;           left: 19px;
+    bottom: 12px;        right: 19px;
+    background: transparent url(img/shadow/center.png);
+}
+.v-shadow-window .right {
+    top: 26px;           right: -20px;
+    width: 39px;
+    bottom: 12px;
+    background: transparent url(img/shadow/right.png);
+}
+.v-shadow-window .bottom-left {
+    bottom: -27px;           left: -20px;
+    width: 39px;          height: 39px;
+    background: transparent url(img/shadow/bottom-left.png);
+}
+.v-shadow-window .bottom {
+    bottom: -27px;           left: 19px;
+    right: 19px;          height: 39px;
+    background: transparent url(img/shadow/bottom.png);
+}
+.v-shadow-window .bottom-right {
+    bottom: -27px;           right: -20px;
+    width: 39px;          height: 39px;
+    background: transparent url(img/shadow/bottom-right.png);
+}
+
+}

@@ -1,0 +1,22 @@
+/* Standard implementation of the button theme
+ * These files contain styles that apply to all browsers
+ */
+@import "button-standard.scss";
+@import "button-primary-style.scss";
+@import "button-small-style.scss";
+@import "button-link-style.scss";
+
+/* Browser-specific corrections to the standard implementation */
+@import "button-ie.scss";
+
+@mixin reindeer-button {
+
+	@include reindeer-button-standard;
+	@include reindeer-button-primary-style;
+	@include reindeer-button-small-style;
+	@include reindeer-button-link-style;
+
+	/* Browser-specific corrections to the standard implementation */
+	@include reindeer-button-ie;
+
+}

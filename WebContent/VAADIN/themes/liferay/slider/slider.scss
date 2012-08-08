@@ -1,0 +1,36 @@
+@mixin liferay-slider {
+
+.v-slider {
+	border: 1px solid #9e9e9e;
+	border-right: 1px solid #c8c9ca;
+	border-bottom: 1px solid #c8c9ca;
+	margin: 4px 0;
+}
+
+.v-slider-base {
+	height: 1px;
+}
+
+.v-slider-vertical {
+	margin: 0 5px;
+	width: 2px;	
+}
+
+.v-slider-vertical .v-slider-base {
+	width: 1px;
+}
+
+.v-slider-handle {
+	background: transparent url(/html/themes/classic/images/aui/icon_sprite.png) no-repeat -115px -147px;
+	width: 10px;
+	height: 10px;
+}
+
+/* Invalid rule (not used at least by some browsers */
+/*
+.v-slider-feedback {
+	background: #33;
+}
+*/
+
+}

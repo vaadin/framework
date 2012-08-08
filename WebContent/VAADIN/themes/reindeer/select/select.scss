@@ -1,0 +1,264 @@
+@mixin reindeer-select {
+
+.v-filterselect {
+	height: 24px;
+	background-repeat: no-repeat;
+	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+	padding-left: 2px;
+	padding-right: 25px; /* Space for the button */
+}
+.v-app .v-filterselect-input,
+.v-window .v-filterselect-input,
+.v-popupview-popup .v-filterselect-input {
+	background: transparent repeat-x;
+	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+	border: none;
+	height: 24px;
+}
+/* More specific selector to override padding */
+.v-app input.v-filterselect-input,
+.v-window input.v-filterselect-input,
+.v-popupview-popup input.v-filterselect-input {
+	padding: 4px 0 4px 2px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.v-filterselect-prompt .v-filterselect-input {
+	font-style: normal;
+}
+.v-filterselect-input:focus {
+	outline: none;
+}
+.v-filterselect-focus {
+	background-image: url(img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
+}
+.v-filterselect-focus .v-filterselect-input {
+	background-image: url(img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-filterselect-button {
+	overflow: hidden;
+	width: 25px;
+	height: 24px;
+	background-image: url(img/right.png); /** sprite-ref: verticals ; sprite-margin-bottom: 1px */
+	cursor: default;
+	margin-right: -25px;
+}
+.v-filterselect-button:hover {
+	background-image: url(img/right-hover.png); /** sprite-ref: verticals */
+}
+.v-filterselect-button:active {
+	background-image: url(img/right-pressed.png); /** sprite-ref: verticals */
+}
+.v-filterselect-focus .v-filterselect-button {
+	background-image: url(img/right-focus.png); /** sprite-ref: verticals */
+}
+.v-filterselect-focus .v-filterselect-button:hover {
+	background-image: url(img/right-focus-hover.png); /** sprite-ref: verticals */
+}
+.v-filterselect-focus .v-filterselect-button:active {
+	background-image: url(img/right-focus-pressed.png); /** sprite-ref: verticals */
+}
+.v-disabled .v-filterselect-button:hover,
+.v-readonly .v-filterselect-button:hover {
+	background-image: url(img/right.png); /** sprite-ref: verticals */
+}
+.v-filterselect-suggestpopup {
+	background: #f8f8f9;
+	border: none;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	overflow: hidden;
+}
+.v-filterselect-suggestmenu {
+	margin: 4px 0;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 8px;
+	height: 16px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	cursor: default;
+}
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 18px;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
+	margin-right: 3px;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent repeat-x;
+	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	text-shadow: #3b5a7a 0 1px 0;
+}
+.v-filterselect-nextpage,
+.v-filterselect-nextpage-off,
+.v-filterselect-prevpage-off,
+.v-filterselect-prevpage {
+	height: 11px;
+	width: 100%;
+	background: transparent;
+	margin-bottom: -4px;
+}
+.v-filterselect-nextpage,
+.v-filterselect-nextpage-off {
+	margin: -4px 0 0;
+}
+.v-filterselect-nextpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(img/page-down-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-filterselect-prevpage:hover {
+	background-repeat: repeat-x;
+	background-image: url(img/page-up-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-filterselect-nextpage:active {
+	background-repeat: repeat-x;
+	background-image: url(img/page-down-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-filterselect-prevpage:active {
+	background-repeat: repeat-x;
+	background-image: url(img/page-up-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+}
+.v-filterselect-nextpage-off span,
+.v-filterselect-prevpage-off span {
+	display: none;
+}
+.v-filterselect-nextpage span,
+.v-filterselect-prevpage span {
+	display: block;
+	height: 11px;
+	width: 100%;
+	overflow: hidden;
+	text-indent: -99999px;
+	background: transparent no-repeat center 3px;
+	background-image: url(img/arrow-down.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+.v-filterselect-prevpage span {
+	background-image: url(img/arrow-up.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.v-filterselect-nextpage:hover span {
+	background-image: url(img/arrow-down-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.v-filterselect-prevpage:hover span {
+	background-image: url(img/arrow-up-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
+}
+.v-filterselect-status {
+	text-shadow: #e9eaeb 0 1px 0;
+	font-size: 11px;
+	line-height: normal;
+	width: 100%;
+	padding: 3px 0;
+	height: 11px;
+	overflow: hidden;
+	background-repeat: repeat-x;
+	background-image: url(img/status-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+/* IE fails to position background images properly inside table elements */
+.v-ie .v-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: transparent url(../common/img/sel-bg.png) repeat-x;
+}
+.v-ie .v-filterselect-nextpage:hover {
+	background: transparent url(img/page-down-hover.png) repeat-x;
+}
+.v-ie .v-filterselect-prevpage:hover {
+	background: transparent url(img/page-up-hover.png) repeat-x;
+}
+.v-ie .v-filterselect-prevpage span {
+	background: transparent url(img/arrow-up.png) no-repeat center 3px;
+}
+.v-ie .v-filterselect-nextpage span {
+	background: transparent url(img/arrow-down.png) no-repeat center 3px;
+}
+.v-ie .v-filterselect-prevpage:hover span {
+	background: transparent url(img/arrow-up-hover.png) no-repeat center 3px;
+}
+.v-ie .v-filterselect-nextpage:hover span {
+	background: transparent url(img/arrow-down-hover.png) no-repeat center 3px;
+}
+.v-ie .v-filterselect-status {
+	background: transparent url(img/status-bg.png) repeat-x;
+}
+/* Filterselect with icon needs a similar fix than in buttons */
+.v-filterselect .v-icon {
+	width: 16px;
+	position: relative;
+}
+.v-filterselect .v-icon + .v-filterselect-input {
+	margin-left: -16px;
+	padding-left: 18px;
+}
+
+
+
+
+/* Combobox on black background */
+.black .v-filterselect {
+	background-image: url(img/black/left-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.v-app .black .v-filterselect-input,
+.v-window .black .v-filterselect-input,
+.v-window-black .v-filterselect-input,
+.v-popupview-popup .black .v-filterselect-input {
+	color: #c9ccce;
+	background-image: url(img/black/center-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus {
+	background-image: url(img/black/left-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-input {
+	background-image: url(img/black/center-black-focus.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button {
+	background-image: url(img/black/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button:hover {
+	background-image: url(img/black/right-black-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-button:active {
+	background-image: url(img/black/right-black-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button {
+	background-image: url(img/black/right-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button:hover {
+	background-image: url(img/black/right-black-focus-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-focus .v-filterselect-button:active {
+	background-image: url(img/black/right-black-focus-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-disabled .v-filterselect-button:hover,
+.black .v-readonly .v-filterselect-button:hover {
+	background-image: url(img/black/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
+}
+.black .v-filterselect-prompt .v-filterselect-input {
+	color: #5f6366;
+}
+
+
+
+/* Native selects on black background */
+.black .v-select select,
+.black .v-select-twincol select {
+	border-color: #38393a;
+	border-top-color: #2c2d2e;
+	border-bottom-color: #3e3f3f;
+	background: #151717;
+	color: #c9ccce;
+}
+
+}

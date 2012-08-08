@@ -1,8 +1,0 @@
-/* These styles get catenated together on build */
-@import "tabsheet-normal-style.css";
-@import "tabsheet-scroller.css";
-@import "tabsheet-borderless-style.css";
-@import "tabsheet-minimal-style.css";
-@import "tabsheet-small-style.css";
-@import "tabsheet-selected-closable-style.css";
-@import "tabsheet-hover-closable-style.css";

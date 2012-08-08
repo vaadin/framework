@@ -1,0 +1,28 @@
+@mixin chameleon-menubar {
+
+.v-menubar {
+	padding: 0 .4em;
+	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
+	border: 1px solid #b3b3b3;
+	border-width: 1px 0;
+	}
+
+.v-menubar .v-menubar-menuitem {
+	padding: .2em .5em;
+	line-height: normal;
+	}
+
+.v-menubar-submenu .v-menubar-menuitem {
+	padding-right:1.5em;
+	}
+
+.v-menubar-submenu .v-menubar-submenu-indicator {
+	margin-top: .1em;
+	}
+
+.v-menubar-submenu .v-menubar-menuitem-selected {
+	background-image: url(../../img/grad-light-top2.png);
+	background-position: 0 -1px;
+	}
+
+}
