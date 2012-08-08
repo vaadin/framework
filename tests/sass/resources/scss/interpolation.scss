@@ -1,0 +1,3 @@
+$name: foo;
+$attr: border;
+p.#{$name}abc { abc#{$attr}-color: blue }

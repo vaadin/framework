@@ -1,0 +1,9 @@
+.v-button:focus {
+	background-image: url(img/left-focus.png);/** sprite-ref: buttons */
+	outline: none;
+}
+
+.v-button:focus .v-button-wrap {
+	background-image: url(img/right-focus.png);/** sprite-ref: buttons; sprite-alignment: right */
+	outline: none;
+}
