@@ -56,11 +56,11 @@ public class VUIDLBrowser extends SimpleTree {
         for (String key : keySet) {
             if (key.equals("state")) {
                 ValueMap stateJson = u.getValueMap(key);
-                SimpleTree stateChanges = new SimpleTree("Shared state");
+                SimpleTree stateChanges = new SimpleTree("shared state");
 
-                for (String stateKey : stateJson.getKeySet()) {
-                    stateChanges.add(new SharedStateItem(stateKey, stateJson
-                            .getValueMap(stateKey)));
+                for (String connectorId : stateJson.getKeySet()) {
+                    stateChanges.add(new SharedStateItem(connectorId, stateJson
+                            .getValueMap(connectorId)));
                 }
                 add(stateChanges);
 
@@ -75,16 +75,9 @@ public class VUIDLBrowser extends SimpleTree {
                 }
             } else if (key.equals("meta")) {
 
-            } else if (key.equals("hierarchy")) {
-                ValueMap hierJSON = u.getValueMap(key);
-                SimpleTree hierarchy = new SimpleTree("Hierarchy");
-                for (String hierKey : hierJSON.getKeySet()) {
-                    hierarchy.addItem(hierKey + ": "
-                            + hierJSON.getAsString(hierKey));
-                }
-                add(hierarchy);
             } else {
-                // TODO consider pretty printing other request data
+                // TODO consider pretty printing other request data such as
+                // hierarchy changes
                 // addItem(key + " : " + u.getAsString(key));
             }
         }
@@ -146,10 +139,9 @@ public class VUIDLBrowser extends SimpleTree {
             this.connectorId = connectorId;
             ComponentConnector connector = getConnector();
             if (connector != null) {
-                setText(connectorId + " " + connector.getState().getDebugId()
-                        + " " + connector.getClass());
+                setText(Util.getConnectorString(connector));
             } else {
-                setText(connectorId + " unknown");
+                setText("Unknown connector " + connectorId);
             }
             dir(new JSONObject(stateChanges), this);
         }
