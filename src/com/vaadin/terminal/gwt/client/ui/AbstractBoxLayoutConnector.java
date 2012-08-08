@@ -9,7 +9,12 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.AbstractFieldState;
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ui.AlignmentInfo;
+import com.vaadin.shared.ui.LayoutClickRpc;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.terminal.gwt.client.Util;
@@ -20,8 +25,6 @@ import com.vaadin.terminal.gwt.client.ui.VBoxLayout.CaptionPosition;
 import com.vaadin.terminal.gwt.client.ui.VBoxLayout.Slot;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
 import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
-import com.vaadin.terminal.gwt.client.ui.orderedlayout.AbstractOrderedLayoutState;
 
 public abstract class AbstractBoxLayoutConnector extends
         AbstractLayoutConnector /* implements PostLayoutListener */{
@@ -199,7 +202,6 @@ public abstract class AbstractBoxLayoutConnector extends
         super.onStateChanged(stateChangeEvent);
 
         clickEventHandler.handleEventHandlerRegistration();
-
         getWidget().setMargin(new VMarginInfo(getState().getMarginsBitmask()));
         getWidget().setSpacing(getState().isSpacing());
 

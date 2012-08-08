@@ -3,7 +3,8 @@
  */
 package com.vaadin.terminal.gwt.client.ui;
 
-import com.vaadin.terminal.gwt.client.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.VerticalLayout;
 
 @Connect(value = VerticalLayout.class, loadStyle = LoadStyle.EAGER)
