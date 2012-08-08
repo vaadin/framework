@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Set;
+
 import org.junit.Test;
 
 import com.vaadin.Application;
@@ -79,5 +81,20 @@ public class AddRemoveSubWindow {
         removed = mainWindow.removeWindow(subWindow);
         assertTrue("Window was not removed correctly", removed);
         assertNull(subWindow.getParent());
+    }
+
+    @Test
+    public void testChildWindowsIteratorModification() {
+        Window mainWindow = new Window();
+        mainWindow.addWindow(new Window());
+        mainWindow.addWindow(new Window());
+
+        Set<Window> childWindows = mainWindow.getChildWindows();
+        for (Window window : childWindows) {
+            mainWindow.removeWindow(window);
+        }
+
+        assertEquals(2, childWindows.size());
+        assertEquals(0, mainWindow.getChildWindows().size());
     }
 }
