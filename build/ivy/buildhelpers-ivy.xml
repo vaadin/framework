@@ -8,6 +8,12 @@
     </configurations>
     <publications />        
     <dependencies>
-         <dependency org="com.carrotsearch" name="smartsprites" rev="0.2.3-itmill" conf="compile->compile(*),master(*)"/>
+        <dependency org="com.carrotsearch" name="smartsprites" rev="0.2.3-itmill" conf="compile->compile(*),master(*)"/>
+        
+        <!-- These come with GWT for Vaadin JAR but are needed to compile CompileDefaultTheme -->
+        <!-- 
+        <dependency org="org.w3c.css" name="sac" rev="1.3" conf="compile->compile(*),master(*)"/>
+        <dependency org="org.w3c" name="flute" rev="1.2" conf="compile->compile(*),master(*)"/>
+        -->
     </dependencies>
 </ivy-module>
