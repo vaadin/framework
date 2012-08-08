@@ -8,6 +8,7 @@ import com.vaadin.shared.Connector;
 
 public class RootState extends ComponentState {
     private Connector content;
+    private int heartbeatInterval;
 
     public Connector getContent() {
         return content;
@@ -17,4 +18,11 @@ public class RootState extends ComponentState {
         this.content = content;
     }
 
+    public int getHeartbeatInterval() {
+        return heartbeatInterval;
+    }
+
+    public void setHeartbeatInterval(int heartbeatInterval) {
+        this.heartbeatInterval = heartbeatInterval;
+    }
 }
