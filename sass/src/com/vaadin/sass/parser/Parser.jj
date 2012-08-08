@@ -731,7 +731,13 @@ void afterImportDeclaration() :
  Locator l;
 }
 {
-  ( ( variable() | mixinDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+  ( 
+     {
+          if(token.specialToken!=null){
+              documentHandler.comment(token.specialToken.image);
+          }
+     }     
+     ( variable() | mixinDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {

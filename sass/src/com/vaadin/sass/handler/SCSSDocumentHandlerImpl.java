@@ -13,6 +13,7 @@ import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
+import com.vaadin.sass.tree.CommentNode;
 import com.vaadin.sass.tree.EachNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.ForNode;
@@ -123,7 +124,8 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void comment(String text) throws CSSException {
-        System.out.println("comment(String text): " + text);
+        CommentNode node = new CommentNode(text);
+        nodeStack.peek().appendChild(node);
     }
 
     @Override

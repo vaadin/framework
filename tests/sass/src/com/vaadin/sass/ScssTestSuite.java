@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.vaadin.sass.testcases.scss.Comments;
 import com.vaadin.sass.testcases.scss.ControlDirectives;
 import com.vaadin.sass.testcases.scss.Extends;
 import com.vaadin.sass.testcases.scss.Functions;
@@ -20,7 +21,7 @@ import com.vaadin.sass.tree.ImportNodeTest;
 @SuiteClasses({ ControlDirectives.class, Extends.class, Functions.class,
         ImportNodeTest.class, Imports.class, Mixins.class,
         NestedProperties.class, Nesting.class, ParentImports.class,
-        Variables.class, ParentSelector.class })
+        Variables.class, ParentSelector.class, Comments.class })
 public class ScssTestSuite {
 
 }

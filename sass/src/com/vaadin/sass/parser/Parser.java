@@ -556,6 +556,9 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
     label_7:
     while (true) {
       ;
+          if(token.specialToken!=null){
+              documentHandler.comment(token.specialToken.image);
+          }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VARIABLE:
         variable();
@@ -4142,36 +4145,6 @@ LexicalUnit exp;
     finally { jj_save(3, xla); }
   }
 
-  private boolean jj_3R_130() {
-    if (jj_scan_token(COMMA)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_129() {
-    if (jj_scan_token(DIV)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_119() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_129()) {
-    jj_scanpos = xsp;
-    if (jj_3R_130()) return true;
-    }
-    return false;
-  }
-
   private boolean jj_3R_168() {
     if (jj_scan_token(UNICODERANGE)) return true;
     return false;
@@ -4691,6 +4664,36 @@ LexicalUnit exp;
 
   private boolean jj_3R_122() {
     if (jj_3R_107()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_130() {
+    if (jj_scan_token(COMMA)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_129() {
+    if (jj_scan_token(DIV)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_119() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_129()) {
+    jj_scanpos = xsp;
+    if (jj_3R_130()) return true;
+    }
     return false;
   }
 
