@@ -385,20 +385,30 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     private void setMaxLength(int newMaxLength) {
-        if (newMaxLength >= 0) {
+        if (newMaxLength >= 0 && newMaxLength != maxLength) {
             maxLength = newMaxLength;
-            if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlength property for textarea
-            } else {
-                getElement().setPropertyInt("maxLength", maxLength);
-            }
+            updateMaxLength(maxLength);
         } else if (maxLength != -1) {
-            if (getElement().getTagName().toLowerCase().equals("textarea")) {
-                // NOP no maxlength property for textarea
-            } else {
-                getElement().removeAttribute("maxLength");
-            }
             maxLength = -1;
+            updateMaxLength(maxLength);
+        }
+
+    }
+
+    /**
+     * This method is reponsible for updating the DOM or otherwise ensuring that
+     * the given max length is enforced. Called when the max length for the
+     * field has changed.
+     * 
+     * @param maxLength
+     *            The new max length
+     */
+    protected void updateMaxLength(int maxLength) {
+        if (maxLength >= 0) {
+            getElement().setPropertyInt("maxLength", maxLength);
+        } else {
+            getElement().removeAttribute("maxLength");
+
         }
 
     }

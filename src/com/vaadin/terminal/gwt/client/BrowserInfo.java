@@ -128,7 +128,7 @@ public class BrowserInfo {
             if (browserDetails.isFirefox()) {
                 browserIdentifier = BROWSER_FIREFOX;
                 majorVersionClass = browserIdentifier
-                        + browserDetails.getBrowserMajorVersion();
+                        + getBrowserMajorVersion();
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_GECKO;
@@ -140,21 +140,21 @@ public class BrowserInfo {
             } else if (browserDetails.isSafari()) {
                 browserIdentifier = BROWSER_SAFARI;
                 majorVersionClass = browserIdentifier
-                        + browserDetails.getBrowserMajorVersion();
+                        + getBrowserMajorVersion();
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_WEBKIT;
             } else if (browserDetails.isIE()) {
                 browserIdentifier = BROWSER_IE;
                 majorVersionClass = browserIdentifier
-                        + browserDetails.getBrowserMajorVersion();
+                        + getBrowserMajorVersion();
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_TRIDENT;
             } else if (browserDetails.isOpera()) {
                 browserIdentifier = BROWSER_OPERA;
                 majorVersionClass = browserIdentifier
-                        + browserDetails.getBrowserMajorVersion();
+                        + getBrowserMajorVersion();
                 minorVersionClass = majorVersionClass
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_PRESTO;
@@ -211,23 +211,23 @@ public class BrowserInfo {
     }
 
     public boolean isSafari4() {
-        return isSafari() && browserDetails.getBrowserMajorVersion() == 4;
+        return isSafari() && getBrowserMajorVersion() == 4;
     }
 
     public boolean isIE6() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 6;
+        return isIE() && getBrowserMajorVersion() == 6;
     }
 
     public boolean isIE7() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 7;
+        return isIE() && getBrowserMajorVersion() == 7;
     }
 
     public boolean isIE8() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 8;
+        return isIE() && getBrowserMajorVersion() == 8;
     }
 
     public boolean isIE9() {
-        return isIE() && browserDetails.getBrowserMajorVersion() == 9;
+        return isIE() && getBrowserMajorVersion() == 9;
     }
 
     public boolean isChrome() {
@@ -255,8 +255,7 @@ public class BrowserInfo {
     }
 
     public boolean isFF4() {
-        return browserDetails.isFirefox()
-                && browserDetails.getBrowserMajorVersion() == 4;
+        return browserDetails.isFirefox() && getBrowserMajorVersion() == 4;
     }
 
     /**
@@ -292,7 +291,7 @@ public class BrowserInfo {
             return -1;
         }
 
-        return browserDetails.getBrowserMajorVersion();
+        return getBrowserMajorVersion();
     }
 
     public float getOperaVersion() {
@@ -300,7 +299,7 @@ public class BrowserInfo {
             return -1;
         }
 
-        return browserDetails.getBrowserMajorVersion();
+        return getBrowserMajorVersion();
     }
 
     public boolean isOpera() {
@@ -308,13 +307,11 @@ public class BrowserInfo {
     }
 
     public boolean isOpera10() {
-        return browserDetails.isOpera()
-                && browserDetails.getBrowserMajorVersion() == 10;
+        return browserDetails.isOpera() && getBrowserMajorVersion() == 10;
     }
 
     public boolean isOpera11() {
-        return browserDetails.isOpera()
-                && browserDetails.getBrowserMajorVersion() == 11;
+        return browserDetails.isOpera() && getBrowserMajorVersion() == 11;
     }
 
     public native static String getBrowserString()
@@ -474,5 +471,52 @@ public class BrowserInfo {
 
     private int getOperatingSystemMajorVersion() {
         return browserDetails.getOperatingSystemMajorVersion();
+    }
+
+    /**
+     * Returns the browser major version e.g., 3 for Firefox 3.5, 4 for Chrome
+     * 4, 8 for Internet Explorer 8.
+     * <p>
+     * Note that Internet Explorer 8 and newer will return the document mode so
+     * IE8 rendering as IE7 will return 7.
+     * </p>
+     * 
+     * @return The major version of the browser.
+     */
+    public int getBrowserMajorVersion() {
+        return browserDetails.getBrowserMajorVersion();
+    }
+
+    /**
+     * Returns the browser minor version e.g., 5 for Firefox 3.5.
+     * 
+     * @see #getBrowserMajorVersion()
+     * 
+     * @return The minor version of the browser, or -1 if not known/parsed.
+     */
+    public int getBrowserMinorVersion() {
+        return browserDetails.getBrowserMinorVersion();
+    }
+
+    /**
+     * Checks if the browser version is newer or equal to the given major+minor
+     * version.
+     * 
+     * @param majorVersion
+     *            The major version to check for
+     * @param minorVersion
+     *            The minor version to check for
+     * @return true if the browser version is newer or equal to the given
+     *         version
+     */
+    public boolean isBrowserVersionNewerOrEqual(int majorVersion,
+            int minorVersion) {
+        if (getBrowserMajorVersion() == majorVersion) {
+            // Same major
+            return (getBrowserMinorVersion() >= minorVersion);
+        }
+
+        // Older or newer major
+        return (getBrowserMajorVersion() > majorVersion);
     }
 }
