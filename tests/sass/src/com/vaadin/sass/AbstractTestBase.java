@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import junit.framework.Assert;
+
 import org.w3c.css.sac.CSSException;
 
 public abstract class AbstractTestBase {
@@ -62,23 +64,21 @@ public abstract class AbstractTestBase {
         return content.toString();
     }
 
-    public boolean testParser(String file) throws CSSException, IOException,
+    public void testParser(String file) throws CSSException, IOException,
             URISyntaxException {
         originalScss = getFileContent(file);
         ScssStylesheet sheet = getStyleSheet(file);
         parsedScss = sheet.toString();
-        return parsedScss.equals(originalScss);
+        Assert.assertEquals("Original CSS and parsed CSS do not match",
+                originalScss, parsedScss);
     }
 
-    public boolean testCompiler(String scss, String css) {
-        try {
-            comparisonCss = getFileContent(css);
-            ScssStylesheet sheet = getStyleSheet(scss);
-            sheet.compile();
-            parsedScss = sheet.toString();
-        } catch (Exception e) {
-            return false;
-        }
-        return parsedScss.equals(comparisonCss);
+    public void testCompiler(String scss, String css) throws Exception {
+        comparisonCss = getFileContent(css);
+        ScssStylesheet sheet = getStyleSheet(scss);
+        sheet.compile();
+        parsedScss = sheet.toString();
+        Assert.assertEquals("Original CSS and parsed CSS do not match",
+                comparisonCss, parsedScss);
     }
 }

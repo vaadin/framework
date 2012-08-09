@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.LexicalUnit;
 
-import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.AbstractTestBase;
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
@@ -93,11 +93,8 @@ public class Mixins extends AbstractTestBase {
     }
 
     @Test
-    public void testCompiler() throws CSSException, URISyntaxException,
-            IOException {
+    public void testCompiler() throws Exception {
         testCompiler(scss, css);
-        Assert.assertEquals("Original CSS and parsed CSS doesn't match",
-                comparisonCss, parsedScss);
     }
 
 }

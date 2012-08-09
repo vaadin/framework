@@ -3,6 +3,7 @@
 	position: absolute;
 	overflow: hidden;
 }
+
 .missing-semicolon-on-last-row {
 	color: red;
 	background-color: blue;
