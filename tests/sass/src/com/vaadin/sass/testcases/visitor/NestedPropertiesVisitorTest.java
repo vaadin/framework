@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.sass.testcases.visitor;
 
 import org.junit.Assert;

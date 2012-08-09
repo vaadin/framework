@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.sass.visitor;
 
 import com.vaadin.sass.tree.Node;

@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.sass.testcases.css;
 
 import java.io.IOException;
@@ -7,8 +11,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
-import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.AbstractTestBase;
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;

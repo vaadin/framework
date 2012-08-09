@@ -1,5 +1,8 @@
-package com.vaadin.sass.tree;
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
 
+package com.vaadin.sass.tree;
 
 public class WhileNode extends Node {
     private static final long serialVersionUID = 7593896018196027279L;

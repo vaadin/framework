@@ -1,3 +1,7 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
 package com.vaadin.sass.tree;
 
 import org.w3c.css.sac.SACMediaList;
