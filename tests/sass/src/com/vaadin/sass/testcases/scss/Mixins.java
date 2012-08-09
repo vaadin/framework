@@ -10,7 +10,7 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.LexicalUnit;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
@@ -19,7 +19,7 @@ import com.vaadin.sass.tree.MediaNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.MixinNode;
 
-public class Mixins extends TestBase {
+public class Mixins extends AbstractTestBase {
 
     String scss = "/scss/mixins.scss";
     String css = "/css/mixins.css";

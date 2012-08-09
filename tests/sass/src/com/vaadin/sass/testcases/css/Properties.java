@@ -8,9 +8,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 
-public class Properties extends TestBase {
+public class Properties extends AbstractTestBase {
 
     String css = "/basic/properties.css";
 

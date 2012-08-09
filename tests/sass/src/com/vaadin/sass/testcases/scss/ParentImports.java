@@ -9,13 +9,13 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.tree.ImportNode;
 
-public class ParentImports extends TestBase {
+public class ParentImports extends AbstractTestBase {
 
     String scss = "/scss/folder-test/parent-import.scss";
     String css = "/css/parent-import.css";

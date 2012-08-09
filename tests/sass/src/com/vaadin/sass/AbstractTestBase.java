@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 
 import org.w3c.css.sac.CSSException;
 
-public class TestBase {
+public abstract class AbstractTestBase {
 
     protected ScssStylesheet stylesheet;
     protected String originalScss;

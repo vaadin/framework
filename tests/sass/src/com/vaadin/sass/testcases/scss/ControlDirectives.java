@@ -9,12 +9,12 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
 
-public class ControlDirectives extends TestBase {
+public class ControlDirectives extends AbstractTestBase {
 
     String scss = "/scss/control-directives.scss";
     String css = "/css/control-directives.css";

@@ -1252,7 +1252,7 @@
             </classpath>
 
             <batchtest fork="yes">
-                <fileset dir="${result-src-sass-junit}" includes="**/*.java" />
+                <fileset dir="${result-src-sass-junit}" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
     </target>

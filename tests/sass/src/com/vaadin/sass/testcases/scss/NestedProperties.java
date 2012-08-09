@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
@@ -17,7 +17,7 @@ import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.NestPropertiesNode;
 import com.vaadin.sass.tree.RuleNode;
 
-public class NestedProperties extends TestBase {
+public class NestedProperties extends AbstractTestBase {
     String scss = "/scss/nested-properties.scss";
     String css = "/css/nested-properties.css";
 

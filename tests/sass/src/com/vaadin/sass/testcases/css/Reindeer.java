@@ -8,9 +8,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 
-public class Reindeer extends TestBase {
+public class Reindeer extends AbstractTestBase {
 
     String css = "/basic/reindeer.css";
 

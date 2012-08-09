@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.TestBase;
+import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.tree.ExtendNode;
 
-public class Extends extends TestBase {
+public class Extends extends AbstractTestBase {
     String scss = "/scss/extends.scss";
     String css = "/css/extends.css";
 
