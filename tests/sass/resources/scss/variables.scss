@@ -6,7 +6,7 @@ $chameleon-font-family: Arial, Helvetica, "Lucida Grande", "Lucida Sans Unicode"
 	border-color: $blue;
 	$blue: #0000ff;
 	color: $blue;
-	color1: darken($blue);
+	color1: darken($blue, 9%);
 	font-family: $chameleon-font-family;
 }
 

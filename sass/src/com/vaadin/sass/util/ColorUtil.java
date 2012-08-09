@@ -81,7 +81,7 @@ public class ColorUtil {
             hslParam = (LexicalUnitImpl) hslParam.getNextLexicalUnit();
             i++;
         }
-        float h = ((hue.getFloatValue() % 360) + 360) % 360 / 360;
+        float h = ((hue.getIntegerValue() % 360) + 360) % 360 / 360f;
         float s = saturation.getFloatValue() / 100;
         float l = lightness.getFloatValue() / 100;
         float m2, m1;

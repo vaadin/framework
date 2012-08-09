@@ -21,7 +21,7 @@ import com.vaadin.sass.tree.CommentNode;
 
 public class Comments extends AbstractTestBase {
     String scss = "/scss/comments.scss";
-    String css = "/scss/comments.css";
+    String css = "/css/comments.css";
 
     @Test
     public void testParser() throws CSSException, URISyntaxException,

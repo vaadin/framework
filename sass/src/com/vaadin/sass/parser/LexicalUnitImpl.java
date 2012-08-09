@@ -572,4 +572,11 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return new LexicalUnitImpl(SAC_OPERATOR_SLASH, line, column, previous);
     }
 
+    @Override
+    public LexicalUnitImpl clone() {
+        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column,
+                (LexicalUnitImpl) prev);
+        cloned.replaceValue(this);
+        return cloned;
+    }
 }

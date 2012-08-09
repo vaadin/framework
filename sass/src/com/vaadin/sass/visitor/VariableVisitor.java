@@ -52,16 +52,16 @@ public class VariableVisitor implements Visitor {
         if (value == null) {
             return;
         }
-        for (String variable : variables.keySet()) {
-            if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
-                if (value.getStringValue().contains(variable)) {
-                    LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
-                    lexVal.replaceValue(variables.get(variable));
-                }
-            } else if (value.getLexicalUnitType() == SCSSLexicalUnit.SAC_FUNCTION) {
-                LexicalUnit params = value.getParameters();
-                updateValue(params, variables);
+        if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
+            LexicalUnitImpl variableValue = variables.get(
+                    value.getStringValue()).clone();
+            if (variableValue != null) {
+                LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
+                lexVal.replaceValue(variableValue);
             }
+        } else if (value.getLexicalUnitType() == SCSSLexicalUnit.SAC_FUNCTION) {
+            LexicalUnit params = value.getParameters();
+            updateValue(params, variables);
         }
         LexicalUnit next = value.getNextLexicalUnit();
         updateValue(next, variables);

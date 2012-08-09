@@ -25,7 +25,6 @@ import org.w3c.flute.parser.selectors.SelectorFactoryImpl;
 import org.w3c.flute.parser.selectors.ConditionFactoryImpl;
 
 import org.w3c.flute.util.Encoding;
-
 import com.vaadin.sass.handler.*;
 
 import com.vaadin.sass.tree.*;
@@ -556,9 +555,14 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
     label_7:
     while (true) {
       ;
-          if(token.specialToken!=null){
-              documentHandler.comment(token.specialToken.image);
-          }
+         if (token.specialToken != null){
+             Token tmp_t = token.specialToken;
+             while (tmp_t.specialToken != null) tmp_t = tmp_t.specialToken;
+             while (tmp_t != null) {
+                 documentHandler.comment(tmp_t.image);
+                 tmp_t = tmp_t.next;
+             }
+         }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VARIABLE:
         variable();

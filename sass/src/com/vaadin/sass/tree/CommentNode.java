@@ -21,6 +21,6 @@ public class CommentNode extends Node {
 
     @Override
     public String toString() {
-        return comment.trim();
+        return comment;
     }
 }
