@@ -1,6 +1,6 @@
 .all-the-properties {
-	font-family: Arial, Helvetica, "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana, sans-serif; ;
-	position: absolute;;
+	font-family: Arial, Helvetica, "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana, sans-serif;
+	position: absolute;
 	overflow: hidden;
 	outline: none;
 	text-align: left;
@@ -13,11 +13,6 @@
 	overflow: auto;
 	width: 100%;
 	display: inline-block;
-}
-
-.missing-semicolon-on-last-row {
-	color: red;
-	background-color: blue
 }
 
 .lexical-value-test {
