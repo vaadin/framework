@@ -31,9 +31,8 @@ class ServletPortletHelper implements Serializable {
             throws ApplicationClassException {
         String applicationParameter = deploymentConfiguration
                 .getInitParameters().getProperty("application");
-        String rootParameter = deploymentConfiguration
-                .getInitParameters().getProperty(
-                        Application.ROOT_PARAMETER);
+        String rootParameter = deploymentConfiguration.getInitParameters()
+                .getProperty(Application.ROOT_PARAMETER);
         ClassLoader classLoader = deploymentConfiguration.getClassLoader();
 
         if (applicationParameter == null) {
