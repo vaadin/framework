@@ -5,7 +5,9 @@
 package com.vaadin.terminal.gwt.server;
 
 import java.lang.reflect.Constructor;
+import java.util.Iterator;
 import java.util.Properties;
+import java.util.ServiceLoader;
 
 import com.vaadin.terminal.DeploymentConfiguration;
 
@@ -14,6 +16,7 @@ public abstract class AbstractDeploymentConfiguration implements
 
     private final Class<?> systemPropertyBaseClass;
     private final Properties applicationProperties = new Properties();
+    private VaadinContext vaadinContext;
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass) {
         this.systemPropertyBaseClass = systemPropertyBaseClass;
@@ -117,5 +120,24 @@ public abstract class AbstractDeploymentConfiguration implements
     @Override
     public Properties getInitParameters() {
         return applicationProperties;
+    }
+
+    @Override
+    public Iterator<VaadinContextListener> getContextListeners() {
+        // Called once for init and once for destroy, so it's probably not worth
+        // the effort caching the ServiceLoader instance
+        ServiceLoader<VaadinContextListener> contextListenerLoader = ServiceLoader
+                .load(VaadinContextListener.class, getClassLoader());
+        return contextListenerLoader.iterator();
+    }
+
+    @Override
+    public void setVaadinContext(VaadinContext vaadinContext) {
+        this.vaadinContext = vaadinContext;
+    }
+
+    @Override
+    public VaadinContext getVaadinContext() {
+        return vaadinContext;
     }
 }

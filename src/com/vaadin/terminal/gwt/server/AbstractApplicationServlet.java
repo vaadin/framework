@@ -128,6 +128,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     };
 
+    private final VaadinContext vaadinContext = new VaadinContext(
+            getDeploymentConfiguration());
+
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -166,6 +169,15 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         checkProductionMode();
         checkCrossSiteProtection();
         checkResourceCacheTime();
+
+        vaadinContext.init();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        vaadinContext.destroy();
     }
 
     private void checkCrossSiteProtection() {
