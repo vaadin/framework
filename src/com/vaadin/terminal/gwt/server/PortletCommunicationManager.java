@@ -100,7 +100,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected void writeMainScriptTagContents(BootstrapContext context)
+            protected void appendMainScriptTagContents(
+                    BootstrapContext context, StringBuilder builder)
                     throws JSONException, IOException {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
@@ -112,11 +113,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                         && !portalTheme.equals(context.getThemeName())) {
                     String portalThemeUri = getThemeUri(context, portalTheme);
                     // XSS safe - originates from portal properties
-                    context.getWriter().write(
-                            "vaadin.loadTheme('" + portalThemeUri + "');");
+                    builder.append("vaadin.loadTheme('" + portalThemeUri
+                            + "');");
                 }
 
-                super.writeMainScriptTagContents(context);
+                super.appendMainScriptTagContents(context, builder);
             }
 
             @Override
