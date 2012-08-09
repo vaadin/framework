@@ -48,7 +48,7 @@ public class Variables extends AbstractTestBase {
         Assert.assertEquals("chameleon-font-family", varNode3.getName());
 
         BlockNode blockNode1 = (BlockNode) root.getChildren().get(3);
-        Assert.assertEquals(4, blockNode1.getChildren().size());
+        Assert.assertEquals(5, blockNode1.getChildren().size());
         RuleNode ruleNode1Block1 = (RuleNode) blockNode1.getChildren().get(0);
         Assert.assertEquals("border-color", ruleNode1Block1.getVariable());
         Assert.assertEquals(SCSSLexicalUnit.SCSS_VARIABLE, ruleNode1Block1

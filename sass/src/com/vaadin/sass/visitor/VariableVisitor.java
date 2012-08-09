@@ -28,14 +28,7 @@ public class VariableVisitor implements Visitor {
     private void traverse(Node node, Map<String, LexicalUnitImpl> variables) {
         if (node instanceof RuleNode) {
             LexicalUnit value = ((RuleNode) node).getValue();
-            for (String variable : variables.keySet()) {
-                if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
-                    if (value.getStringValue().contains(variable)) {
-                        LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
-                        lexVal.replaceValue(variables.get(variable));
-                    }
-                }
-            }
+            updateValue(value, variables);
         } else {
             Set<Node> toBeDeleted = new HashSet<Node>();
             for (Node child : node.getChildren()) {
@@ -52,5 +45,25 @@ public class VariableVisitor implements Visitor {
                 node.removeChild(child);
             }
         }
+    }
+
+    private void updateValue(LexicalUnit value,
+            Map<String, LexicalUnitImpl> variables) {
+        if (value == null) {
+            return;
+        }
+        for (String variable : variables.keySet()) {
+            if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
+                if (value.getStringValue().contains(variable)) {
+                    LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
+                    lexVal.replaceValue(variables.get(variable));
+                }
+            } else if (value.getLexicalUnitType() == SCSSLexicalUnit.SAC_FUNCTION) {
+                LexicalUnit params = value.getParameters();
+                updateValue(params, variables);
+            }
+        }
+        LexicalUnit next = value.getNextLexicalUnit();
+        updateValue(next, variables);
     }
 }

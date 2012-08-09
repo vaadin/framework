@@ -41,12 +41,12 @@ public class ColorUtil {
         StringBuilder builder = new StringBuilder("#");
         for (int i = 0; i < 3; i++) {
             String color = Integer.toHexString(rgb[i]);
-            if (lengh == 3) {
+            if (lengh == 6) {
                 if (color.length() == 1) {
                     color = "0" + color;
                 }
             }
-            if (lengh == 6) {
+            if (lengh == 3) {
                 color = color.substring(0, 1);
             }
             builder.append(color);
@@ -233,7 +233,7 @@ public class ColorUtil {
 
     public static LexicalUnitImpl darken(LexicalUnitImpl darkenFunc) {
         LexicalUnitImpl color = darkenFunc.getParameters();
-        LexicalUnit amount = color.getNextLexicalUnit().getNextLexicalUnit();
+        float amount = getAmountValue(color);
         LexicalUnitImpl pre = (LexicalUnitImpl) darkenFunc
                 .getPreviousLexicalUnit();
 
@@ -241,7 +241,7 @@ public class ColorUtil {
     }
 
     private static LexicalUnitImpl adjust(LexicalUnitImpl color,
-            LexicalUnit amount, ColorOperation op, LexicalUnitImpl pre) {
+            float amountByPercent, ColorOperation op, LexicalUnitImpl pre) {
         if (color.getLexicalUnitType() == LexicalUnit.SAC_FUNCTION) {
             LexicalUnit funcParam = color.getParameters();
             if ("hsl".equals(color.getFunctionName())) {
@@ -251,12 +251,10 @@ public class ColorUtil {
                 }
                 float newValue = 0f;
                 if (op == ColorOperation.Darken) {
-                    newValue = lightness.getFloatValue()
-                            - amount.getFloatValue();
+                    newValue = lightness.getFloatValue() - amountByPercent;
                     newValue = newValue < 0 ? 0 : newValue;
                 } else if (op == ColorOperation.Lighten) {
-                    newValue = lightness.getFloatValue()
-                            + amount.getFloatValue();
+                    newValue = lightness.getFloatValue() + amountByPercent;
                     newValue = newValue > 100 ? 100 : newValue;
                 }
                 ((LexicalUnitImpl) lightness).setFloatValue(newValue);
@@ -268,12 +266,13 @@ public class ColorUtil {
         } else if (color.getLexicalUnitType() == LexicalUnit.SAC_IDENT) {
             if (color.getStringValue().startsWith("#")) {
                 return hslToHexColor(
-                        adjust(hexColorToHsl(color), amount, op, pre), color
-                                .getStringValue().substring(1).length());
+                        adjust(hexColorToHsl(color), amountByPercent, op, pre),
+                        color.getStringValue().substring(1).length());
             }
         } else if (color.getLexicalUnitType() == LexicalUnit.SAC_RGBCOLOR) {
             LexicalUnitImpl hsl = rgbToHsl(color);
-            LexicalUnitImpl hslAfterDarken = adjust(hsl, amount, op, pre);
+            LexicalUnitImpl hslAfterDarken = adjust(hsl, amountByPercent, op,
+                    pre);
             return hslToRgb(hslAfterDarken);
         }
         return color;
@@ -281,11 +280,21 @@ public class ColorUtil {
 
     public static LexicalUnitImpl lighten(LexicalUnitImpl lightenFunc) {
         LexicalUnitImpl color = lightenFunc.getParameters();
-        LexicalUnit amount = color.getNextLexicalUnit().getNextLexicalUnit();
+        float amount = getAmountValue(color);
         LexicalUnitImpl pre = (LexicalUnitImpl) lightenFunc
                 .getPreviousLexicalUnit();
 
         return adjust(color, amount, ColorOperation.Lighten, pre);
+    }
+
+    private static float getAmountValue(LexicalUnitImpl color) {
+        LexicalUnit next = color.getNextLexicalUnit();
+        float amount = 10f;
+        if (next != null && next.getNextLexicalUnit() != null) {
+            next = next.getNextLexicalUnit();
+            amount = next.getFloatValue();
+        }
+        return amount;
     }
 
     enum ColorOperation {
