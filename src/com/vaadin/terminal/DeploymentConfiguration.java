@@ -5,10 +5,14 @@
 package com.vaadin.terminal;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
+
+import com.vaadin.terminal.gwt.server.VaadinContext;
+import com.vaadin.terminal.gwt.server.VaadinContextListener;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -110,4 +114,10 @@ public interface DeploymentConfiguration extends Serializable {
      * @return properties for the application.
      */
     public Properties getInitParameters();
+
+    public Iterator<VaadinContextListener> getContextListeners();
+
+    public VaadinContext getVaadinContext();
+
+    public void setVaadinContext(VaadinContext vaadinContext);
 }

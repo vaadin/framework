@@ -20,11 +20,10 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * Relative urls are mapped to APP/CONNECTOR/[url] which are by default served
  * from the classpath relative to the class where the annotation is defined.
  * <p>
- * Example: {@code @JavaScript( "http://host.com/file1.js", "file2.js"})} on
- * the class com.example.MyConnector would load the file
- * http://host.com/file1.js as is and file2.js from /com/example/file2.js on the
- * server's classpath using the ClassLoader that was used to load
- * com.example.MyConnector.
+ * Example: {@code @JavaScript( "http://host.com/file1.js", "file2.js"})} on the
+ * class com.example.MyConnector would load the file http://host.com/file1.js as
+ * is and file2.js from /com/example/file2.js on the server's classpath using
+ * the ClassLoader that was used to load com.example.MyConnector.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@

@@ -8,10 +8,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.Writer;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.jsoup.nodes.DataNode;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.DocumentType;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
@@ -31,24 +39,16 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected class BootstrapContext implements Serializable {
 
         private final WrappedResponse response;
-        private final WrappedRequest request;
-        private final Application application;
-        private final Integer rootId;
+        private final BootstrapResponse bootstrapResponse;
 
-        private Writer writer;
-        private Root root;
         private String widgetsetName;
         private String themeName;
         private String appId;
 
-        private boolean rootFetched = false;
-
         public BootstrapContext(WrappedResponse response,
-                WrappedRequest request, Application application, Integer rootId) {
+                BootstrapResponse bootstrapResponse) {
             this.response = response;
-            this.request = request;
-            this.application = application;
-            this.rootId = rootId;
+            this.bootstrapResponse = bootstrapResponse;
         }
 
         public WrappedResponse getResponse() {
@@ -56,32 +56,19 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         public WrappedRequest getRequest() {
-            return request;
+            return bootstrapResponse.getRequest();
         }
 
         public Application getApplication() {
-            return application;
-        }
-
-        public Writer getWriter() throws IOException {
-            if (writer == null) {
-                response.setContentType("text/html");
-                writer = new BufferedWriter(new OutputStreamWriter(
-                        response.getOutputStream(), "UTF-8"));
-            }
-            return writer;
+            return bootstrapResponse.getApplication();
         }
 
         public Integer getRootId() {
-            return rootId;
+            return bootstrapResponse.getRootId();
         }
 
         public Root getRoot() {
-            if (!rootFetched) {
-                root = Root.getCurrent();
-                rootFetched = true;
-            }
-            return root;
+            return bootstrapResponse.getRoot();
         }
 
         public String getWidgetsetName() {
@@ -109,6 +96,10 @@ public abstract class BootstrapHandler implements RequestHandler {
                 appId = getApplicationId(this);
             }
             return appId;
+        }
+
+        public BootstrapResponse getBootstrapResponse() {
+            return bootstrapResponse;
         }
 
     }
@@ -145,8 +136,9 @@ public abstract class BootstrapHandler implements RequestHandler {
             WrappedResponse response, Application application, Integer rootId)
             throws IOException, JSONException {
 
+        Map<String, Object> headers = new LinkedHashMap<String, Object>();
         BootstrapContext context = createContext(request, response,
-                application, rootId);
+                application, rootId, headers);
 
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
@@ -154,28 +146,61 @@ public abstract class BootstrapHandler implements RequestHandler {
         boolean standalone = deploymentConfiguration.isStandalone(request);
         if (standalone) {
             setBootstrapPageHeaders(context);
-            writeBootstrapPageHtmlHeadStart(context);
-            writeBootstrapPageHtmlHeader(context);
-            writeBootstrapPageHtmlBodyStart(context);
+            setBasicHtml(context);
+            setBootstrapPageHtmlHeader(context);
+            setBodyTag(context);
         }
 
-        // TODO include initial UIDL in the scripts?
-        writeBootstrapPageHtmlVaadinScripts(context);
+        setBootstrapPageHtmlVaadinScripts(context);
 
-        writeBootstrapPageHtmlMainDiv(context);
+        setMainDiv(context);
 
-        Writer page = context.getWriter();
+        request.getDeploymentConfiguration().getVaadinContext()
+                .fireModifyBootstrapEvent(context.getBootstrapResponse());
+
+        response.setContentType("text/html");
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                response.getOutputStream(), "UTF-8"));
         if (standalone) {
-            page.write("</body>\n</html>\n");
+            Set<Entry<String, Object>> entrySet = headers.entrySet();
+            for (Entry<String, Object> header : entrySet) {
+                Object value = header.getValue();
+                if (value instanceof String) {
+                    response.setHeader(header.getKey(), (String) value);
+                } else if (value instanceof Long) {
+                    response.setDateHeader(header.getKey(),
+                            ((Long) value).longValue());
+                } else {
+                    throw new RuntimeException("Unsupported header value: "
+                            + value);
+                }
+            }
+            writer.append(context.getBootstrapResponse().getDocument()
+                    .outerHtml());
+        } else {
+            writer.append(context.getBootstrapResponse().getApplicationTag()
+                    .outerHtml());
         }
-
-        page.close();
+        writer.close();
     }
 
     public BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application, Integer rootId) {
-        BootstrapContext context = new BootstrapContext(response, request,
-                application, rootId);
+            WrappedResponse response, Application application, Integer rootId,
+            Map<String, Object> headers) {
+        boolean standalone = request.getDeploymentConfiguration().isStandalone(
+                request);
+        Document document;
+        Element applicationTag;
+        if (standalone) {
+            document = Document.createShell("");
+            applicationTag = document.body();
+        } else {
+            document = null;
+            applicationTag = new Element(Tag.valueOf("div"), "");
+        }
+        BootstrapContext context = new BootstrapContext(response,
+                new BootstrapResponse(this, request, document, applicationTag,
+                        headers, application, rootId));
         return context;
     }
 
@@ -219,9 +244,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeBootstrapPageHtmlMainDiv(BootstrapContext context)
-            throws IOException {
-        Writer page = context.getWriter();
+    protected void setMainDiv(BootstrapContext context) throws IOException {
         String style = getMainDivStyle(context);
 
         /*- Add classnames;
@@ -237,14 +260,16 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String classNames = "v-app " + appClass;
 
+        Element applicationTag = context.getBootstrapResponse()
+                .getApplicationTag();
+        Element mainDiv = applicationTag.appendElement("div");
+        mainDiv.attr("id", context.getAppId());
+        mainDiv.addClass(classNames);
         if (style != null && style.length() != 0) {
-            style = " style=\"" + style + "\"";
+            mainDiv.attr("style", style);
         }
-        page.write("<div id=\"" + context.getAppId() + "\" class=\""
-                + classNames + "\"" + style + ">");
-        page.write("<div class=\"v-app-loading\"></div>");
-        page.write("</div>\n");
-        page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
+        mainDiv.appendElement("div").addClass("v-app-loading");
+        mainDiv.appendElement("noscript").append(getNoScriptMessage());
     }
 
     /**
@@ -279,11 +304,10 @@ public abstract class BootstrapHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeBootstrapPageHtmlBodyStart(BootstrapContext context)
-            throws IOException {
-        Writer page = context.getWriter();
-        page.write("\n</head>\n<body scroll=\"auto\" class=\""
-                + ApplicationConnection.GENERATED_BODY_CLASSNAME + "\">\n");
+    protected void setBodyTag(BootstrapContext context) throws IOException {
+        Element body = context.getBootstrapResponse().getDocument().body();
+        body.attr("scroll", "auto");
+        body.addClass(ApplicationConnection.GENERATED_BODY_CLASSNAME);
     }
 
     /**
@@ -297,61 +321,70 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @throws IOException
      * @throws JSONException
      */
-    protected void writeBootstrapPageHtmlVaadinScripts(BootstrapContext context)
+    protected void setBootstrapPageHtmlVaadinScripts(BootstrapContext context)
             throws IOException, JSONException {
         WrappedRequest request = context.getRequest();
-        Writer page = context.getWriter();
 
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
 
-        page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
-                + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
-                + "hidden;\" src=\"javascript:false\"></iframe>");
+        Element applicationTag = context.getBootstrapResponse()
+                .getApplicationTag();
+
+        applicationTag
+                .appendElement("iframe")
+                .attr("tabIndex", "-1")
+                .attr("id", "__gwt_historyFrame")
+                .attr("style",
+                        "position:absolute;width:0;height:0;border:0;overflow:hidden")
+                .attr("src", "javascript:false");
 
         String bootstrapLocation = staticFileLocation
                 + "/VAADIN/vaadinBootstrap.js";
-        page.write("<script type=\"text/javascript\" src=\"");
-        page.write(bootstrapLocation);
-        page.write("\"></script>\n");
+        applicationTag.appendElement("script").attr("type", "text/javascript")
+                .attr("src", bootstrapLocation);
+        Element mainScriptTag = applicationTag.appendElement("script").attr(
+                "type", "text/javascript");
 
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("//<![CDATA[\n");
-        page.write("if (!window.vaadin) alert("
+        StringBuilder builder = new StringBuilder();
+        builder.append("//<![CDATA[\n");
+        builder.append("if (!window.vaadin) alert("
                 + JSONObject.quote("Failed to load the bootstrap javascript: "
                         + bootstrapLocation) + ");\n");
 
-        writeMainScriptTagContents(context);
-        page.write("//]]>\n</script>\n");
+        appendMainScriptTagContents(context, builder);
+
+        builder.append("//]]>");
+        mainScriptTag.appendChild(new DataNode(builder.toString(),
+                mainScriptTag.baseUri()));
     }
 
-    protected void writeMainScriptTagContents(BootstrapContext context)
-            throws JSONException, IOException {
+    protected void appendMainScriptTagContents(BootstrapContext context,
+            StringBuilder builder) throws JSONException, IOException {
         JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
 
         boolean isDebug = !context.getApplication().isProductionMode();
-        Writer page = context.getWriter();
 
-        page.write("vaadin.setDefaults(");
-        printJsonObject(page, defaults, isDebug);
-        page.write(");\n");
+        builder.append("vaadin.setDefaults(");
+        appendJsonObject(builder, defaults, isDebug);
+        builder.append(");\n");
 
-        page.write("vaadin.initApplication(\"");
-        page.write(context.getAppId());
-        page.write("\",");
-        printJsonObject(page, appConfig, isDebug);
-        page.write(");\n");
+        builder.append("vaadin.initApplication(\"");
+        builder.append(context.getAppId());
+        builder.append("\",");
+        appendJsonObject(builder, appConfig, isDebug);
+        builder.append(");\n");
     }
 
-    private static void printJsonObject(Writer page, JSONObject jsonObject,
-            boolean isDebug) throws IOException, JSONException {
+    private static void appendJsonObject(StringBuilder builder,
+            JSONObject jsonObject, boolean isDebug) throws JSONException {
         if (isDebug) {
-            page.write(jsonObject.toString(4));
+            builder.append(jsonObject.toString(4));
         } else {
-            page.write(jsonObject.toString());
+            builder.append(jsonObject.toString());
         }
     }
 
@@ -456,36 +489,37 @@ public abstract class BootstrapHandler implements RequestHandler {
      * 
      * @throws IOException
      */
-    protected void writeBootstrapPageHtmlHeader(BootstrapContext context)
+    protected void setBootstrapPageHtmlHeader(BootstrapContext context)
             throws IOException {
-        Writer page = context.getWriter();
         String themeName = context.getThemeName();
-
-        page.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+        Element head = context.getBootstrapResponse().getDocument().head();
+        head.appendElement("meta").attr("http-equiv", "Content-Type")
+                .attr("content", "text/html; charset=utf-8");
 
         // Chrome frame in all versions of IE (only if Chrome frame is
         // installed)
-        page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
+        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
+                .attr("content", "chrome=1");
 
-        page.write("<style type=\"text/css\">"
-                + "html, body {height:100%;margin:0;}</style>\n");
+        head.appendElement("style").attr("type", "text/css")
+                .appendText("html, body {height:100%;margin:0;}");
 
         // Add favicon links
         if (themeName != null) {
             String themeUri = getThemeUri(context, themeName);
-            page.write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                    + themeUri + "/favicon.ico\" />\n");
-            page.write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
-                    + themeUri + "/favicon.ico\" />\n");
+            head.appendElement("link").attr("rel", "shortcut icon")
+                    .attr("type", "image/vnd.microsoft.icon")
+                    .attr("href", themeUri + "/favicon.ico");
+            head.appendElement("link").attr("rel", "icon")
+                    .attr("type", "image/vnd.microsoft.icon")
+                    .attr("href", themeUri + "/favicon.ico");
         }
 
         Root root = context.getRoot();
         String title = ((root == null || root.getCaption() == null) ? "" : root
                 .getCaption());
 
-        page.write("<title>"
-                + AbstractApplicationServlet.safeEscapeForHtml(title)
-                + "</title>\n");
+        head.appendElement("title").appendText(title);
     }
 
     /**
@@ -517,18 +551,21 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @param context
      * @throws IOException
      */
-    protected void writeBootstrapPageHtmlHeadStart(BootstrapContext context)
-            throws IOException {
-        Writer page = context.getWriter();
+    protected void setBasicHtml(BootstrapContext context) throws IOException {
 
         // write html header
-        page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
-                + "XHTML 1.0 Transitional//EN\" "
-                + "\"http://www.w3.org/TR/xhtml1/"
-                + "DTD/xhtml1-transitional.dtd\">\n");
+        // page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
+        // + "XHTML 1.0 Transitional//EN\" "
+        // + "\"http://www.w3.org/TR/xhtml1/"
+        // + "DTD/xhtml1-transitional.dtd\">\n");
+        Document document = context.getBootstrapResponse().getDocument();
+        DocumentType doctype = new DocumentType("html",
+                "//W3C//DTD XHTML 1.0 Transitional//EN",
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",
+                document.baseUri());
+        document.child(0).before(doctype);
 
-        page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
-                + ">\n<head>\n");
+        document.body().parent().attr("xmlns", "http://www.w3.org/1999/xhtml");
     }
 
     /**

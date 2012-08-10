@@ -290,6 +290,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     };
 
+    private final VaadinContext vaadinContext = new VaadinContext(
+            getDeploymentConfiguration());
+
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
@@ -315,6 +318,15 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         checkProductionMode();
         checkCrossSiteProtection();
+
+        vaadinContext.init();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        vaadinContext.destroy();
     }
 
     private void checkCrossSiteProtection() {
@@ -787,8 +799,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    getDeploymentConfiguration().getInitParameters(),
-                    context, isProductionMode()));
+                    getDeploymentConfiguration().getInitParameters(), context,
+                    isProductionMode()));
         }
     }
 
