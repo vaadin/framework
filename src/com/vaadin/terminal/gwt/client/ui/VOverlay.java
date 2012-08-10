@@ -244,7 +244,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private IFrameElement getShimElement() {
-        if (shimElement == null) {
+        if (shimElement == null && useShimIframe()) {
             shimElement = Document.get().createIFrameElement();
 
             // Insert shim iframe before the main overlay element. It does not
@@ -463,8 +463,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
                     : "");
         }
-        updatePositionAndSize((Element) Element.as(getShimElement()),
-                positionAndSize);
+        if (useShimIframe()) {
+            updatePositionAndSize((Element) Element.as(getShimElement()),
+                    positionAndSize);
+        }
 
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
@@ -488,11 +490,23 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
             sinkShadowEvents();
         }
-        if (!isShimAttached()) {
+        if (useShimIframe() && !isShimAttached()) {
             RootPanel.get().getElement()
                     .insertBefore(shimElement, getElement());
         }
 
+    }
+
+    /**
+     * Returns true if we should add a shim iframe below the overlay to deal
+     * with zindex issues with PDFs and applets. Can be overriden to disable
+     * shim iframes if they are not needed.
+     * 
+     * @return true if a shim iframe should be added, false otherwise
+     */
+    protected boolean useShimIframe() {
+        BrowserInfo info = BrowserInfo.get();
+        return info.isIE() && info.isBrowserVersionNewerOrEqual(8, 0);
     }
 
     private void updatePositionAndSize(Element e,
