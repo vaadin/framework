@@ -1,0 +1,52 @@
+@mixin liferay-notification {
+
+.v-Notification {
+	background: #dff4ff;
+	color: #34404F;
+	font-weight: bold;
+	cursor: pointer;
+	overflow: hidden;
+	padding: 1em;
+	max-width: 85%;
+	border: 1px solid #a7cedf;
+}
+
+.v-Notification h1,
+.v-Notification p,
+.v-Notification-error h1,
+.v-Notification-error p,
+.v-Notification-warning h1,
+.v-Notification-warning p {
+	display: inline;
+	margin: 0 0.5em 0 0;
+}
+.v-Notification-warning {
+	background: #ffc;
+	border-color: #fc0;
+}
+.v-Notification-error {
+	background-color: #ffdddd;
+	border-color: #ff0000;
+}
+
+.v-Notification-tray {
+	color: #111111;
+	background-color: #e5e5e5;
+	border-color: #b5b5b5;
+}
+.v-Notification-tray h1 {
+	display: block;
+}
+.v-Notification-tray p {
+	display: block;
+}
+.v-Notification-system {
+	background-color: #ffdddd;
+	border-color: #ff0000;
+}
+.v-Notification-system h1 {
+	display: block;
+	margin: 0;
+}
+
+}

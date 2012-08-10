@@ -1,0 +1,67 @@
+@mixin liferay-splitpanel {
+
+.v-splitpanel-hsplitter, 
+.v-splitpanel-hsplitter-locked {
+	font-size: 1px;
+	width: 3px;
+	background-color: #c8c9ca;
+}
+
+.v-splitpanel-hsplitter div {
+	font-size: 1px;
+	width: 3px;
+	background: transparent;
+	background-repeat: no-repeat;
+  	background-image: url(hsplit.png);
+  	background-position: center;
+}
+
+.v-splitpanel-hsplitter-locked div {
+	font-size: 1px;
+	width: 3px;
+}
+
+.v-splitpanel-vsplitter,
+.v-splitpanel-vsplitter-locked {
+	font-size: 1px;
+	height: 3px;
+}
+
+.v-splitpanel-vsplitter div {
+	font-size: 1px;
+	height: 3px;
+	background: transparent;
+	background-color: #c8c9ca;
+	background-repeat: no-repeat;
+  	background-image: url(vsplit.png);
+  	background-position: center;
+}
+
+.v-splitpanel-vsplitter-locked,
+.v-splitpanel-vsplitter-locked div {
+	font-size: 1px;
+	height: 3px;
+	background-color: #c8c9ca;
+}
+
+/* Small SplitPanel */
+
+.v-splitpanel-hsplitter-small,
+.v-splitpanel-hsplitter-small div,
+.v-splitpanel-hsplitter-small-locked,
+.v-splitpanel-hsplitter-small-locked div {
+	font-size: 1px;
+	width: 1px;
+	background: #c8c9ca;
+}
+
+.v-splitpanel-vsplitter-small,
+.v-splitpanel-vsplitter-small div,
+.v-splitpanel-vsplitter-small-locked,
+.v-splitpanel-vsplitter-small-locked div {
+	font-size: 1px;
+	height: 1px;
+	background: #c8c9ca;
+}
+
+}

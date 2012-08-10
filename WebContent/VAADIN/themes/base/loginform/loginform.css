@@ -1,9 +1,0 @@
-.v-loginform {
-	height: 140px;
-	width: 200px;
-}
-
-.v-app-loginpage .v-button,
-.v-app-loginpage .v-button {
-	float: left; /* Force minimum width for button */
-}

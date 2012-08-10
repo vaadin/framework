@@ -1,0 +1,28 @@
+// this file actually attaches all liferay mixins to a parent style
+
+@import "../base/styles.scss";
+@import "liferay.scss";
+
+// .v-theme-liferay {
+	@include liferay-accordion;
+	@include liferay-button;
+	
+	@include liferay-common;
+	
+	@include liferay-contextmenu;
+	@include liferay-datefield;
+	@include liferay-formlayout;
+	@include liferay-menubar;
+	@include liferay-notification;
+	@include liferay-panel;
+	@include liferay-popupview;
+	@include liferay-progressindicator;
+	@include liferay-select;
+	@include liferay-slider;
+	@include liferay-splitpanel;
+	@include liferay-table;
+	@include liferay-tabsheet;
+	@include liferay-textfield;
+	@include liferay-tree;
+	@include liferay-window;
+// }
