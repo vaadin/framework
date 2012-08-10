@@ -32,7 +32,7 @@ public class Comments extends AbstractTestBase {
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
         Assert.assertNotNull(root);
-        Assert.assertEquals(5, root.getChildren().size());
+        Assert.assertEquals(6, root.getChildren().size());
         Assert.assertTrue(root.getChildren().get(0) instanceof CommentNode);
         Assert.assertTrue(root.getChildren().get(2) instanceof CommentNode);
     }
@@ -40,7 +40,5 @@ public class Comments extends AbstractTestBase {
     @Test
     public void testCompiler() throws Exception {
         testCompiler(scss, css);
-        Assert.assertEquals("Original CSS and parsed CSS doesn't match",
-                comparisonCss, parsedScss);
     }
 }

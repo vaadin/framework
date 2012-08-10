@@ -79,23 +79,6 @@ public class CompileDefaultTheme {
                 + "\";}\n");
         cssHeader.append(".v-theme-version-" + version + " {display: none;}\n");
 
-        // TODO temporary hack for Reindeer
-        if (useSmartSprites) {
-            // TODO removed "../" from paths here
-            cssHeader
-                    .append("/** sprite: verticals; sprite-image: url(common/img/vertical-sprites.png); sprite-layout: vertical */\n");
-            cssHeader
-                    .append("/** sprite: horizontals; sprite-image: url(common/img/horizontal-sprites.png); sprite-layout: horizontal */\n");
-            cssHeader
-                    .append("/** sprite: black-verticals; sprite-image: url(common/img/black-vertical-sprites.png); sprite-layout: vertical; sprite-matte-color: #1e2022 */\n");
-            cssHeader
-                    .append("/** sprite: black-horizontals; sprite-image: url(common/img/black-horizontal-sprites.png); sprite-layout: horizontal; sprite-matte-color: #1e2022 */\n");
-            cssHeader
-                    .append("/** sprite: buttons; sprite-image: url(button/img/button-sprites.png); sprite-layout: vertical */\n");
-            cssHeader
-                    .append("/** sprite: black-buttons; sprite-image: url(button/img/black-button-sprites.png); sprite-layout: vertical */\n");
-        }
-
         String stylesCssDir = THEME_DIR + themeName + "/";
         String stylesCssName = stylesCssDir + "styles.css";
 

@@ -25,6 +25,7 @@ import org.w3c.flute.parser.selectors.SelectorFactoryImpl;
 import org.w3c.flute.parser.selectors.ConditionFactoryImpl;
 
 import org.w3c.flute.util.Encoding;
+
 import com.vaadin.sass.handler.*;
 
 import com.vaadin.sass.tree.*;
@@ -449,6 +450,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case S:
           jj_consume_token(S);
+          comments();
           break;
         case CDO:
         case CDC:
@@ -555,14 +557,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
     label_7:
     while (true) {
       ;
-         if (token.specialToken != null){
-             Token tmp_t = token.specialToken;
-             while (tmp_t.specialToken != null) tmp_t = tmp_t.specialToken;
-             while (tmp_t != null) {
-                 documentHandler.comment(tmp_t.image);
-                 tmp_t = tmp_t.next;
-             }
-         }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case VARIABLE:
         variable();
@@ -2790,6 +2784,7 @@ LexicalUnit exp;
   String name;
   LexicalUnit exp;
   Token save;
+  String comment = null;
     try {
       name = property();
        save = token;
@@ -3935,6 +3930,17 @@ LexicalUnit exp;
     return convertStringIndex(s, 0, s.length());
   }
 
+  void comments() throws ParseException {
+    if (token.specialToken != null){
+        Token tmp_t = token.specialToken;
+        while (tmp_t.specialToken != null) tmp_t = tmp_t.specialToken;
+        while (tmp_t != null) {
+            documentHandler.comment(tmp_t.image);
+            tmp_t = tmp_t.next;
+        }
+    }
+  }
+
   void rejectToken(Token t) throws ParseException {
     Token fakeToken = new Token();
     t.next = token;
@@ -4147,6 +4153,26 @@ LexicalUnit exp;
     try { return !jj_3_4(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(3, xla); }
+  }
+
+  private boolean jj_3R_129() {
+    if (jj_scan_token(DIV)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_119() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_129()) {
+    jj_scanpos = xsp;
+    if (jj_3R_130()) return true;
+    }
+    return false;
   }
 
   private boolean jj_3R_168() {
@@ -4442,24 +4468,6 @@ LexicalUnit exp;
     return false;
   }
 
-  private boolean jj_3R_124() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_136()) {
-    jj_scanpos = xsp;
-    if (jj_3R_137()) {
-    jj_scanpos = xsp;
-    if (jj_3R_138()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_136() {
-    if (jj_scan_token(IDENT)) return true;
-    return false;
-  }
-
   private boolean jj_3R_131() {
     Token xsp;
     xsp = jj_scanpos;
@@ -4523,6 +4531,24 @@ LexicalUnit exp;
     return false;
   }
 
+  private boolean jj_3R_124() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_136()) {
+    jj_scanpos = xsp;
+    if (jj_3R_137()) {
+    jj_scanpos = xsp;
+    if (jj_3R_138()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_136() {
+    if (jj_scan_token(IDENT)) return true;
+    return false;
+  }
+
   private boolean jj_3R_108() {
     if (jj_scan_token(IDENT)) return true;
     Token xsp;
@@ -4530,11 +4556,6 @@ LexicalUnit exp;
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  private boolean jj_3R_135() {
-    if (jj_scan_token(PRECEDES)) return true;
     return false;
   }
 
@@ -4549,6 +4570,11 @@ LexicalUnit exp;
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
     }
+    return false;
+  }
+
+  private boolean jj_3R_135() {
+    if (jj_scan_token(PRECEDES)) return true;
     return false;
   }
 
@@ -4677,26 +4703,6 @@ LexicalUnit exp;
     while (true) {
       xsp = jj_scanpos;
       if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_129() {
-    if (jj_scan_token(DIV)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_scan_token(1)) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3R_119() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_129()) {
-    jj_scanpos = xsp;
-    if (jj_3R_130()) return true;
     }
     return false;
   }
