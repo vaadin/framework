@@ -8,17 +8,26 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.AbstractConnector;
 
 public abstract class AbstractExtensionConnector extends AbstractConnector {
+    boolean hasBeenAttached = false;
+
     @Override
     public void setParent(ServerConnector parent) {
         ServerConnector oldParent = getParent();
-        if (oldParent != null && oldParent != parent) {
+        if (oldParent == parent) {
+            // Nothing to do
+            return;
+        }
+        if (hasBeenAttached && parent != null) {
             throw new IllegalStateException(
                     "An extension can not be moved from one parent to another.");
         }
 
         super.setParent(parent);
 
-        extend(parent);
+        if (parent != null) {
+            extend(parent);
+            hasBeenAttached = true;
+        }
     }
 
     protected void extend(ServerConnector target) {
