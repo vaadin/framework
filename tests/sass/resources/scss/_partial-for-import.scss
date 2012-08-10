@@ -1,0 +1,9 @@
+$foo : red;
+
+.caption {
+	$side: right;
+	border: 1px solid black;
+	background: #ff0000;
+	padding: 10px;
+	margin: 10px;
+}

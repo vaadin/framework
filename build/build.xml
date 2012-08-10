@@ -25,10 +25,14 @@
 	
     <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
+    	
         <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
         <ivy:cachepath pathid="ivy.compile.classpath.server-side" conf="ss.compile"/>
         <ivy:cachepath pathid="ivy.compile.classpath.client-side" conf="cs.compile"/>
         <ivy:cachepath pathid="ivy.compile.classpath.server-side-tests" conf="ss.test.compile"/>
+
+        <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
+
     	<!-- Extra JARs for custom builds - taken into account before JARs from Ivy. -->
     	<!-- Note that this should not be used for permanent build dependencies. -->
         <path id="additional.jar.path">
@@ -60,12 +64,6 @@
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-        	<!-- GWT dependencies - included in gwt-user.jar -->
-        	<!--
-            <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
-            <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
-            -->
-
             <path refid="ivy.compile.classpath.server-side" />
         </path>
         <path id="compile.classpath.client-side">
@@ -81,12 +79,6 @@
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-        	<!-- GWT dependencies - included in gwt-user.jar -->
-        	<!--
-            <pathelement location="${gwt.tools.lib}/w3c/sac/sac-1.3.jar" />
-            <pathelement location="${gwt.tools.lib}/w3c/flute/flute-1.3-gg2.jar" />
-            -->
-
         	<path refid="ivy.compile.classpath.client-side" />
         </path>
         <path id="compile.classpath.server-side-tests">
@@ -98,6 +90,16 @@
             <pathelement location="${gwt.dev.jar}" />
 
             <path refid="ivy.compile.classpath.server-side-tests" />
+        </path>
+
+    	<path id="compile.classpath.buildhelpers">
+            <path refid="additional.jar.path" />
+
+        	<!-- GWT -->
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+
+            <path refid="buildhelpers.dependencies" />
         </path>
     </target>
 
@@ -118,9 +120,13 @@
 		<property name="result-src-core" value="${result-path}/src/core"/>
 		<property name="result-src-junit" value="${result-path}/src/junit"/>
 		<property name="result-src-testbench" value="${result-path}/src/testbench"/>
+		<property name="result-src-sass" value="${result-path}/src/sass"/>
+		<property name="result-src-sass-junit" value="${result-path}/src/sass-junit"/>
 		<property name="result-classes-core" value="${result-path}/classes/core"/>
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
+		<property name="result-classes-sass" value="${result-path}/classes/sass"/>
+		<property name="result-classes-sass-junit" value="${result-path}/classes/sass-junit"/>
 		<property name="result-precompiled-widgetsets" value="${result-path}/classes/widgetsets"/>
 		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
 		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
@@ -220,7 +226,11 @@
      	<property name="buildhelpers-src" value="build/buildhelpers" />
      	<property name="buildhelpers-classes" value="${result-path}/buildhelpers/classes" />
 
-        <!-- Create Output Directory Hierarchy -->
+     	<!-- Sass -->
+     	<property name="sass-src" value="sass/src" />
+     	<property name="sass-classes" value="${result-classes-sass}" />
+
+     	<!-- Create Output Directory Hierarchy -->
         <mkdir dir="${output-dir}/WebContent" />
         <mkdir dir="${output-dir}/WebContent/demo" />
         <mkdir dir="${output-dir}/WebContent/docs" />
@@ -330,17 +340,20 @@
         <!--
         Source directories in the project are
          * src (Vaadin core)
+         * sass/src (SASS compiler)
          * tests/testbench (TestBench test cases)
          * tests/server-side (Server-side JUnit test cases)
          * tests/client-side (Client-side JUnit test cases)
 
         These are copied to 
          * ${result-path}/src/core
+         * ${result-path}/src/sass
          * ${result-path}/src/tests
          * ${result-path}/src/junit
 
         And compiled to 
          * ${result-path}/classes/core
+         * ${result-path}/classes/sass
          * ${result-path}/classes/tests
          * ${result-path}/classes/junit
          
@@ -351,9 +364,11 @@
         <loadfile property="VaadinApache2LicenseForJavaFiles" srcFile="build/VaadinApache2LicenseForJavaFiles.txt" />
         
         <mkdir dir="${result-path}/src" />
+        <mkdir dir="${result-src-sass}/src" />
         <mkdir dir="${result-src-core}" />
         <mkdir dir="${result-src-testbench}" />
         <mkdir dir="${result-src-junit}" />
+        <mkdir dir="${result-src-sass-junit}" />
 
         <patternset id="preprocessable-files">
             <include name="**/*.java" />
@@ -388,6 +403,14 @@
             </fileset>
         </copy>
 
+        <copy todir="${result-src-sass}" overwrite="yes">
+            <filterset refid="version-and-license"/>
+            <filterset refid="pre-css-style"/>
+            <fileset dir="sass/src">
+                <patternset refid="preprocessable-files" />
+            </fileset>
+        </copy>
+
         <copy todir="${result-src-testbench}">
             <filterset refid="version-and-license"/>
             <fileset dir="tests/testbench">
@@ -400,6 +423,12 @@
                 <patternset refid="preprocessable-files" />
             </fileset>
             <fileset dir="tests/client-side">
+                <patternset refid="preprocessable-files" />
+            </fileset>
+        </copy>
+        <copy todir="${result-src-sass-junit}">
+            <filterset refid="version-and-license"/>
+            <fileset dir="tests/sass/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
@@ -411,6 +440,11 @@
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
+        <copy todir="${result-src-sass}">
+            <fileset dir="${sass-src}">
+                <patternset refid="non-preprocessable-files" />
+            </fileset>
+        </copy>
         <copy todir="${result-src-testbench}">
             <fileset dir="tests/testbench">
                 <patternset refid="non-preprocessable-files" />
@@ -422,6 +456,14 @@
             </fileset>
             <fileset dir="tests/client-side">
                 <patternset refid="non-preprocessable-files" />
+            </fileset>
+        </copy>
+        <copy todir="${result-src-sass-junit}">
+            <fileset dir="tests/sass/src">
+                <patternset refid="non-preprocessable-files" />
+            </fileset>
+            <fileset dir="tests/sass/resources">
+            	<!-- test resources (files to compile and compare etc.) -->
             </fileset>
         </copy>
 
@@ -505,6 +547,14 @@
             <src path="${result-src-junit}"/>
         </javac>
     	
+        <echo>Compiling SASS JUnit tests</echo>
+    	<!-- Compile server and client side JUnit tests -->
+        <mkdir dir="${result-classes-sass-junit}" />
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-sass-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath path="${result-classes-sass}"></classpath>
+            <src path="${result-src-sass-junit}"/>
+        </javac>
+    	
         <echo>Compiling src (TestBench tests)</echo>
     	<!-- Compile TestBench tests -->
         <mkdir dir="${result-classes-testbench}" />
@@ -516,21 +566,33 @@
     	
     </target>
 
-    <target name="compile-helpers" depends="init">
+    <target name="compile-helpers" depends="init, compile-sass">
     	<mkdir dir="${buildhelpers-classes}" />
-        <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
-        <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" srcdir="${buildhelpers-src}" 
-                	classpathref="buildhelpers.dependencies" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" />
+        <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" classpathref="compile.classpath.buildhelpers" destdir="${buildhelpers-classes}" debug="true" encoding="UTF-8" >
+        	<!-- SASS -->
+            <classpath path="${result-classes-sass}" />
+
+            <src path="${buildhelpers-src}"/>
+		</javac>
     </target>
     
-    <target name="defaulttheme" depends="init, compile-helpers" description="Compile all included themes">
+    <target name="compile-sass" depends="init, preprocess-src">
+    	<!-- TODO also perform javacc compilation of the parser -->
+        <mkdir dir="${result-classes-sass}" />
+        <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" srcdir="${result-src-sass}" 
+                	classpathref="compile.classpath.server-side" destdir="${result-classes-sass}" debug="true" encoding="UTF-8" />
+    </target>
+    
+    <target name="defaulttheme" depends="init, compile-sass, compile-helpers" description="Compile all included themes">
         <echo>Combining default themes css files</echo>
         <java classname="com.vaadin.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
             <arg value="-version" />
             <arg value="${version.full}"/>
             <classpath>
+            	<!-- SASS -->
+                <path path="${result-classes-sass}" />
                 <path location="${buildhelpers-classes}" />
-                <path refid="buildhelpers.dependencies" />
+            	<path refid="compile.classpath.buildhelpers" />
             </classpath>
             <jvmarg value="-Djava.awt.headless=true"/>
         </java>
@@ -731,8 +793,10 @@
             <!-- Include any instrumented class files before the normal classes -->
             <fileset dir="${result-classes-core-for-emma-war}" />
             <fileset dir="${result-classes-core}"/>
+            <fileset dir="${result-classes-sass}"/>
             <!-- add sources -->
             <fileset dir="${result-src-core}"/>
+            <fileset dir="${result-src-sass}"/>
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
                     <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
@@ -849,6 +913,11 @@
     <target name="vaadin-sources.jar" depends="init">
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
             <fileset dir="${result-src-core}">
+                <patternset>
+                    <include name="**/*.java" />
+                </patternset>
+            </fileset>
+            <fileset dir="${result-src-sass}">
                 <patternset>
                     <include name="**/*.java" />
                 </patternset>
@@ -1109,6 +1178,7 @@
         	</sequential>
             <antcall inheritrefs="true" inheritall="true" target="testbench-tests"></antcall>
             <antcall inheritrefs="true" inheritall="true" target="server-side-tests"></antcall>
+            <antcall inheritrefs="true" inheritall="true" target="sass-tests"></antcall>
         </parallel>
         
         <!-- Create a combined report from each test's sub report -->
@@ -1169,6 +1239,22 @@
 			</report>
     	</emma>
         <echo>##teamcity[publishArtifacts '${result-path}/coverage']</echo>
+    </target>
+
+    <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
+    <target name="sass-tests" unless="tests.serverside.skip" depends="compile-tests">
+        <junit printsummary="yes"> 
+            <classpath> 
+                <pathelement path="${result-src-sass-junit}" />
+                <pathelement path="${result-classes-sass}" />
+                <pathelement path="${result-classes-sass-junit}" />
+            	<path refid="compile.classpath.server-side-tests"></path>
+            </classpath>
+
+            <batchtest fork="yes">
+                <fileset dir="${result-src-sass-junit}" includes="**/*.java" excludes="**/Abstract*.java" />
+            </batchtest>
+        </junit>
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->

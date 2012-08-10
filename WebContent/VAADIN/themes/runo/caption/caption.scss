@@ -1,0 +1,12 @@
+@mixin runo-caption {
+
+.v-captionwrapper {
+	margin: 0.3em 0 0 0;
+}
+.v-errorindicator {
+	width: 12px;
+	height: 16px;
+	background: transparent url(../icons/16/error.png) no-repeat top right;
+}
+
+}

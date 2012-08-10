@@ -1,0 +1,32 @@
+// this file actually attaches all reindeer mixins to a parent style
+
+@import "../base/styles.scss";
+@import "reindeer.scss";
+
+// .v-theme-reindeer {
+	@include reindeer-accordion;
+	// TODO this is problematic: comments get stripped out
+	// @include a-sprite-definitions;
+	@include reindeer-button;
+	
+	@include reindeer-common;
+	
+	@include reindeer-datefield;
+	@include reindeer-formlayout;
+	@include reindeer-label;
+	@include reindeer-layouts;
+	@include reindeer-link;
+	@include reindeer-menubar;
+	@include reindeer-notification;
+	@include reindeer-panel;
+	@include reindeer-popupview;
+	@include reindeer-progressindicator;
+	@include reindeer-select;
+	@include reindeer-slider;
+	@include reindeer-splitpanel;
+	@include reindeer-table;
+	@include reindeer-tabsheet;
+	@include reindeer-textfield;
+	@include reindeer-tree;
+	@include reindeer-window;
+// }

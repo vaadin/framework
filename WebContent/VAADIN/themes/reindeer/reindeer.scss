@@ -1,0 +1,28 @@
+// this file just defines all reindeer mixins by importing them
+
+// common between others for now for backwards compatibility
+
+@import "accordion/accordion.scss";
+@import "a-sprite-definitions/a-sprite-definitions.scss";
+@import "button/button.scss";
+
+@import "common/common.scss";
+
+@import "datefield/datefield.scss";
+@import "formlayout/formlayout.scss";
+@import "label/label.scss";
+@import "layouts/layouts.scss";
+@import "link/link.scss";
+@import "menubar/menubar.scss";
+@import "notification/notification.scss";
+@import "panel/panel.scss";
+@import "popupview/popupview.scss";
+@import "progressindicator/progressindicator.scss";
+@import "select/select.scss";
+@import "slider/slider.scss";
+@import "splitpanel/splitpanel.scss";
+@import "table/table.scss";
+@import "tabsheet/tabsheet.scss";
+@import "textfield/textfield.scss";
+@import "tree/tree.scss";
+@import "window/window.scss";

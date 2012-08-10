@@ -1,0 +1,14 @@
+@mixin reindeer-popupview {
+
+.v-popupview {
+	color: #1b699f;
+}
+.v-popupview:hover {
+	color: #2483c4;
+}
+.v-popupview-popup {
+	background: #fff;
+	padding: 3px;
+}
+
+}

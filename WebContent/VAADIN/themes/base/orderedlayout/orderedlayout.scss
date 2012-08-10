@@ -1,0 +1,47 @@
+@mixin base-orderedlayout {
+
+.v-orderedlayout,
+.v-horizontallayout,
+.v-verticallayout {
+	position: relative;
+}
+
+.v-orderedlayout-margin-top,
+.v-horizontallayout-margin-top,
+.v-verticallayout-margin-top {
+	padding-top: 12px;
+}
+.v-orderedlayout-margin-right,
+.v-horizontallayout-margin-right,
+.v-verticallayout-margin-right {
+	padding-right: 12px;
+}
+.v-orderedlayout-margin-bottom,
+.v-horizontallayout-margin-bottom,
+.v-verticallayout-margin-bottom {
+	padding-bottom: 12px;
+}
+.v-orderedlayout-margin-left,
+.v-horizontallayout-margin-left,
+.v-verticallayout-margin-left {
+	padding-left: 12px;
+}
+.v-orderedlayout-spacing-on,
+.v-horizontallayout-spacing-on,
+.v-verticallayout-spacing-on {
+	padding-top: 6px;
+	padding-left: 6px;
+}
+/* This can be used to define spacing if spacing is off server side */
+.v-orderedlayout-spacing-off,
+.v-horizontallayout-spacing-off,
+.v-verticallayout-spacing-off {
+	padding-top: 0;
+	padding-left: 0;
+}
+
+.v-horizontallayout-slot, .v-verticallayout-slot {
+	position: absolute;
+}
+
+}

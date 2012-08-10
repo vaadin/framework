@@ -1,0 +1,14 @@
+$blue: #3bbfce;
+$margin: 8px;
+
+.content-navigation {
+	border-color: $blue;
+	$blue: #0000ff;
+	color: $blue;
+}
+
+.border {
+	padding: $margin;
+	margin: $margin;
+	border-color: $blue;
+}
