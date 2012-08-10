@@ -14,14 +14,26 @@ import com.vaadin.tests.extensions.BasicExtension;
 
 @Connect(BasicExtension.class)
 public class BasicExtensionTestConnector extends AbstractExtensionConnector {
+    private ServerConnector target;
+
     @Override
     protected void extend(ServerConnector target) {
-        String message = Util.getSimpleName(this) + " extending "
+        this.target = target;
+        appendMessage(" extending ");
+    }
+
+    private void appendMessage(String action) {
+        String message = Util.getSimpleName(this) + action
                 + Util.getSimpleName(target);
 
         DivElement element = Document.get().createDivElement();
         element.setInnerText(message);
 
         Document.get().getBody().insertFirst(element);
+    }
+
+    @Override
+    public void onUnregister() {
+        appendMessage(" removed for ");
     }
 }
