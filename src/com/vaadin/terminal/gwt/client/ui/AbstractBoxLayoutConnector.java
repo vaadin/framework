@@ -49,6 +49,7 @@ public abstract class AbstractBoxLayoutConnector extends
 
     @Override
     public void init() {
+        super.init();
         rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
         getWidget().setLayoutManager(getLayoutManager());
     }
@@ -89,7 +90,8 @@ public abstract class AbstractBoxLayoutConnector extends
     /**
      * For bookkeeping. Used in extra calculations for horizontal layout.
      */
-    private HashMap<Element, Integer> childElementHeight = new HashMap<Element, Integer>();
+    // private HashMap<Element, Integer> childElementHeight = new
+    // HashMap<Element, Integer>();
 
     /**
      * For bookkeeping. Used in extra calculations for horizontal layout.
@@ -167,7 +169,7 @@ public abstract class AbstractBoxLayoutConnector extends
                 hasRelativeHeight.remove(child);
                 hasExpandRatio.remove(child);
                 needsMeasure.remove(child.getWidget().getElement());
-                childElementHeight.remove(child.getWidget().getElement());
+                // childElementHeight.remove(child.getWidget().getElement());
                 childCaptionElementHeight
                         .remove(child.getWidget().getElement());
                 getLayoutManager().removeElementResizeListener(
@@ -247,11 +249,11 @@ public abstract class AbstractBoxLayoutConnector extends
                 hasExpandRatio.add(child);
             }
 
-            if (child.getState().isRelativeHeight()) {
-                hasRelativeHeight.add(child);
-            } else {
-                needsMeasure.add(child.getWidget().getElement());
-            }
+            // if (child.getState().isRelativeHeight()) {
+            // hasRelativeHeight.add(child);
+            // } else {
+            // needsMeasure.add(child.getWidget().getElement());
+            // }
         }
 
         updateAllSlotListeners();
@@ -286,6 +288,9 @@ public abstract class AbstractBoxLayoutConnector extends
             // }
 
             updateSlotListeners(child);
+            // updateAllSlotListeners();
+
+            updateLayoutHeight();
         }
     };
 
@@ -464,8 +469,8 @@ public abstract class AbstractBoxLayoutConnector extends
 
     private ElementResizeListener childComponentResizeListener = new ElementResizeListener() {
         public void onElementResize(ElementResizeEvent e) {
-            int h = getLayoutManager().getOuterHeight(e.getElement());
-            childElementHeight.put((Element) e.getElement().cast(), h);
+            // int h = getLayoutManager().getOuterHeight(e.getElement());
+            // childElementHeight.put((Element) e.getElement().cast(), h);
             updateLayoutHeight();
 
             if (needsExpand()) {
@@ -483,7 +488,7 @@ public abstract class AbstractBoxLayoutConnector extends
     };
 
     private void updateLayoutHeight() {
-        if (needsFixedHeight() && childElementHeight.size() > 0) {
+        if (needsFixedHeight()) {
             int h = getMaxHeight();
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
@@ -501,21 +506,19 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     private int getMaxHeight() {
-        // TODO should use layout manager instead of inner lists of element
-        // sizes
         int highestNonRelative = -1;
         int highestRelative = -1;
-        // System.out.println("Child sizes: "
-        // + childElementHeight.values().toString());
-        for (Element el : childElementHeight.keySet()) {
+
+        for (ComponentConnector child : getChildComponents()) {
             // TODO would be more efficient to measure the slot element if both
             // caption and child widget elements need to be measured. Keeping
             // track of what to measure is the most difficult part of this
             // layout.
+            Element el = child.getWidget().getElement();
             CaptionPosition pos = getWidget().getCaptionPositionFromElement(
                     (Element) el.getParentElement().cast());
             if (needsMeasure.contains(el)) {
-                int h = childElementHeight.get(el);
+                int h = getLayoutManager().getOuterHeight(el);
                 String sHeight = el.getStyle().getHeight();
                 // Only add the caption size to the height of the slot if
                 // coption position is top or bottom
@@ -528,7 +531,7 @@ public abstract class AbstractBoxLayoutConnector extends
                     highestNonRelative = h;
                 }
             } else {
-                int h = childElementHeight.get(el);
+                int h = getLayoutManager().getOuterHeight(el);
                 if (childCaptionElementHeight.containsKey(el)
                         && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);

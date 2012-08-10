@@ -54,8 +54,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         getConnection().getVTooltip().connectHandlersToWidget(getWidget());
 
-        // Set v-connector style names for the widget
-        getWidget().setStyleName("v-connector", true);
+        // Set the core 'v' style name for the widget
+        getWidget().setStyleName("v", true);
     }
 
     /**

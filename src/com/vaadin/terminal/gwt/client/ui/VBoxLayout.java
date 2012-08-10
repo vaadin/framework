@@ -26,6 +26,8 @@ import com.vaadin.terminal.gwt.client.LayoutManager;
 
 public class VBoxLayout extends FlowPanel {
 
+    public static final String CLASSNAME = "v-boxlayout";
+
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
     protected boolean spacing = false;
@@ -39,7 +41,7 @@ public class VBoxLayout extends FlowPanel {
     private LayoutManager layoutManager;
 
     public VBoxLayout() {
-        setStylePrimaryName("v-boxlayout");
+        setStyleName(CLASSNAME);
         setVertical(true);
     }
 
