@@ -3,6 +3,7 @@
 }
 .v-textarea {
 	resize: none;
+	white-space: pre-wrap;
 }
 .v-textfield-focus,
 .v-textarea-focus {
