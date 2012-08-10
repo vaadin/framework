@@ -124,7 +124,29 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         try {
-            writeBootstrapPage(request, response, application, rootId);
+            Map<String, Object> headers = new LinkedHashMap<String, Object>();
+            BootstrapContext context = createContext(request, response,
+                    application, rootId, headers);
+            BootstrapResponse bootstrapResponse = context
+                    .getBootstrapResponse();
+
+            setupMainDiv(context);
+
+            DeploymentConfiguration deploymentConfiguration = request
+                    .getDeploymentConfiguration();
+            boolean standalone = deploymentConfiguration.isStandalone(request);
+            if (standalone) {
+                setupStandaloneDocument(context);
+                deploymentConfiguration.getVaadinContext()
+                        .fireModifyBootstrapEvent(bootstrapResponse);
+                sendBootstrapHeaders(response, headers);
+                writeBootstrapPage(response, bootstrapResponse.getDocument());
+            } else {
+                deploymentConfiguration.getVaadinContext()
+                        .fireModifyBootstrapEvent(bootstrapResponse);
+                writeBootstrapPage(response,
+                        bootstrapResponse.getApplicationTag());
+            }
         } catch (JSONException e) {
             writeError(response, e);
         }
@@ -132,56 +154,78 @@ public abstract class BootstrapHandler implements RequestHandler {
         return true;
     }
 
-    protected final void writeBootstrapPage(WrappedRequest request,
-            WrappedResponse response, Application application, Integer rootId)
-            throws IOException, JSONException {
-
-        Map<String, Object> headers = new LinkedHashMap<String, Object>();
-        BootstrapContext context = createContext(request, response,
-                application, rootId, headers);
-
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
-
-        boolean standalone = deploymentConfiguration.isStandalone(request);
-        if (standalone) {
-            setBootstrapPageHeaders(context);
-            setBasicHtml(context);
-            setBootstrapPageHtmlHeader(context);
-            setBodyTag(context);
+    private void sendBootstrapHeaders(WrappedResponse response,
+            Map<String, Object> headers) {
+        Set<Entry<String, Object>> entrySet = headers.entrySet();
+        for (Entry<String, Object> header : entrySet) {
+            Object value = header.getValue();
+            if (value instanceof String) {
+                response.setHeader(header.getKey(), (String) value);
+            } else if (value instanceof Long) {
+                response.setDateHeader(header.getKey(),
+                        ((Long) value).longValue());
+            } else {
+                throw new RuntimeException("Unsupported header value: " + value);
+            }
         }
+    }
 
-        setBootstrapPageHtmlVaadinScripts(context);
-
-        setMainDiv(context);
-
-        request.getDeploymentConfiguration().getVaadinContext()
-                .fireModifyBootstrapEvent(context.getBootstrapResponse());
-
+    private void writeBootstrapPage(WrappedResponse response, Element dom)
+            throws IOException {
         response.setContentType("text/html");
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
-        if (standalone) {
-            Set<Entry<String, Object>> entrySet = headers.entrySet();
-            for (Entry<String, Object> header : entrySet) {
-                Object value = header.getValue();
-                if (value instanceof String) {
-                    response.setHeader(header.getKey(), (String) value);
-                } else if (value instanceof Long) {
-                    response.setDateHeader(header.getKey(),
-                            ((Long) value).longValue());
-                } else {
-                    throw new RuntimeException("Unsupported header value: "
-                            + value);
-                }
-            }
-            writer.append(context.getBootstrapResponse().getDocument()
-                    .outerHtml());
-        } else {
-            writer.append(context.getBootstrapResponse().getApplicationTag()
-                    .outerHtml());
-        }
+        writer.append(dom.outerHtml());
         writer.close();
+    }
+
+    private void setupStandaloneDocument(BootstrapContext context) {
+        BootstrapResponse response = context.getBootstrapResponse();
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
+        Document document = response.getDocument();
+
+        DocumentType doctype = new DocumentType("html",
+                "-//W3C//DTD XHTML 1.0 Transitional//EN",
+                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",
+                document.baseUri());
+        document.child(0).before(doctype);
+        document.body().parent().attr("xmlns", "http://www.w3.org/1999/xhtml");
+
+        Element head = document.head();
+        head.appendElement("meta").attr("http-equiv", "Content-Type")
+                .attr("content", "text/html; charset=utf-8");
+
+        // Chrome frame in all versions of IE (only if Chrome frame is
+        // installed)
+        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
+                .attr("content", "chrome=1");
+
+        Root root = context.getRoot();
+        String title = ((root == null || root.getCaption() == null) ? "" : root
+                .getCaption());
+        head.appendElement("title").appendText(title);
+
+        head.appendElement("style").attr("type", "text/css")
+                .appendText("html, body {height:100%;margin:0;}");
+
+        // Add favicon links
+        String themeName = context.getThemeName();
+        if (themeName != null) {
+            String themeUri = getThemeUri(context, themeName);
+            head.appendElement("link").attr("rel", "shortcut icon")
+                    .attr("type", "image/vnd.microsoft.icon")
+                    .attr("href", themeUri + "/favicon.ico");
+            head.appendElement("link").attr("rel", "icon")
+                    .attr("type", "image/vnd.microsoft.icon")
+                    .attr("href", themeUri + "/favicon.ico");
+        }
+
+        Element body = document.body();
+        body.attr("scroll", "auto");
+        body.addClass(ApplicationConnection.GENERATED_BODY_CLASSNAME);
     }
 
     public BootstrapContext createContext(WrappedRequest request,
@@ -243,8 +287,10 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @param context
      * 
      * @throws IOException
+     * @throws JSONException
      */
-    protected void setMainDiv(BootstrapContext context) throws IOException {
+    private void setupMainDiv(BootstrapContext context) throws IOException,
+            JSONException {
         String style = getMainDivStyle(context);
 
         /*- Add classnames;
@@ -256,7 +302,7 @@ public abstract class BootstrapHandler implements RequestHandler {
          */
 
         String appClass = "v-app-"
-                + getApplicationCSSClassName(context.getApplication());
+                + context.getApplication().getClass().getSimpleName();
 
         String classNames = "v-app " + appClass;
 
@@ -269,69 +315,15 @@ public abstract class BootstrapHandler implements RequestHandler {
             mainDiv.attr("style", style);
         }
         mainDiv.appendElement("div").addClass("v-app-loading");
-        mainDiv.appendElement("noscript").append(getNoScriptMessage());
-    }
+        mainDiv.appendElement("noscript")
+                .append("You have to enable javascript in your browser to use an application built with Vaadin.");
 
-    /**
-     * Returns a message printed for browsers without scripting support or if
-     * browsers scripting support is disabled.
-     */
-    protected String getNoScriptMessage() {
-        return "You have to enable javascript in your browser to use an application built with Vaadin.";
-    }
-
-    /**
-     * Returns the application class identifier for use in the application CSS
-     * class name in the root DIV. The application CSS class name is of form
-     * "v-app-"+getApplicationCSSClassName().
-     * 
-     * This method should normally not be overridden.
-     * 
-     * @return The CSS class name to use in combination with "v-app-".
-     */
-    protected String getApplicationCSSClassName(Application application) {
-        return application.getClass().getSimpleName();
-    }
-
-    /**
-     * 
-     * Method to open the body tag of the html kickstart page.
-     * <p>
-     * This method is responsible for closing the head tag and opening the body
-     * tag.
-     * <p>
-     * Override this method if you want to add some custom html to the page.
-     * 
-     * @throws IOException
-     */
-    protected void setBodyTag(BootstrapContext context) throws IOException {
-        Element body = context.getBootstrapResponse().getDocument().body();
-        body.attr("scroll", "auto");
-        body.addClass(ApplicationConnection.GENERATED_BODY_CLASSNAME);
-    }
-
-    /**
-     * Method to write the script part of the page which loads needed Vaadin
-     * scripts and themes.
-     * <p>
-     * Override this method if you want to add some custom html around scripts.
-     * 
-     * @param context
-     * 
-     * @throws IOException
-     * @throws JSONException
-     */
-    protected void setBootstrapPageHtmlVaadinScripts(BootstrapContext context)
-            throws IOException, JSONException {
         WrappedRequest request = context.getRequest();
 
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
-
-        Element applicationTag = context.getBootstrapResponse()
-                .getApplicationTag();
 
         applicationTag
                 .appendElement("iframe")
@@ -480,93 +472,6 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     protected abstract String getAppUri(BootstrapContext context);
-
-    /**
-     * Method to write the contents of head element in html kickstart page.
-     * <p>
-     * Override this method if you want to add some custom html to the header of
-     * the page.
-     * 
-     * @throws IOException
-     */
-    protected void setBootstrapPageHtmlHeader(BootstrapContext context)
-            throws IOException {
-        String themeName = context.getThemeName();
-        Element head = context.getBootstrapResponse().getDocument().head();
-        head.appendElement("meta").attr("http-equiv", "Content-Type")
-                .attr("content", "text/html; charset=utf-8");
-
-        // Chrome frame in all versions of IE (only if Chrome frame is
-        // installed)
-        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "chrome=1");
-
-        head.appendElement("style").attr("type", "text/css")
-                .appendText("html, body {height:100%;margin:0;}");
-
-        // Add favicon links
-        if (themeName != null) {
-            String themeUri = getThemeUri(context, themeName);
-            head.appendElement("link").attr("rel", "shortcut icon")
-                    .attr("type", "image/vnd.microsoft.icon")
-                    .attr("href", themeUri + "/favicon.ico");
-            head.appendElement("link").attr("rel", "icon")
-                    .attr("type", "image/vnd.microsoft.icon")
-                    .attr("href", themeUri + "/favicon.ico");
-        }
-
-        Root root = context.getRoot();
-        String title = ((root == null || root.getCaption() == null) ? "" : root
-                .getCaption());
-
-        head.appendElement("title").appendText(title);
-    }
-
-    /**
-     * Method to set http request headers for the Vaadin kickstart page.
-     * <p>
-     * Override this method if you need to customize http headers of the page.
-     * 
-     * @param context
-     */
-    protected void setBootstrapPageHeaders(BootstrapContext context) {
-        WrappedResponse response = context.getResponse();
-
-        // Window renders are not cacheable
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        response.setContentType("text/html; charset=UTF-8");
-    }
-
-    /**
-     * Method to write the beginning of the html page.
-     * <p>
-     * This method is responsible for writing appropriate doc type declarations
-     * and to open html and head tags.
-     * <p>
-     * Override this method if you want to add some custom html to the very
-     * beginning of the page.
-     * 
-     * @param context
-     * @throws IOException
-     */
-    protected void setBasicHtml(BootstrapContext context) throws IOException {
-
-        // write html header
-        // page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
-        // + "XHTML 1.0 Transitional//EN\" "
-        // + "\"http://www.w3.org/TR/xhtml1/"
-        // + "DTD/xhtml1-transitional.dtd\">\n");
-        Document document = context.getBootstrapResponse().getDocument();
-        DocumentType doctype = new DocumentType("html",
-                "-//W3C//DTD XHTML 1.0 Transitional//EN",
-                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",
-                document.baseUri());
-        document.child(0).before(doctype);
-
-        document.body().parent().attr("xmlns", "http://www.w3.org/1999/xhtml");
-    }
 
     /**
      * Get the URI for the application theme.
