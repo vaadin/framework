@@ -63,24 +63,24 @@ public class VTextArea extends VTextField {
             enforceMaxLength();
         }
 
-        private void enforceMaxLength() {
-            if (getMaxLength() >= 0) {
-                Scheduler.get().scheduleDeferred(new Command() {
-                    public void execute() {
-                        if (getText().length() > getMaxLength()) {
-                            setText(getText().substring(0, getMaxLength()));
-                        }
-                    }
-                });
-            }
-        }
-
         public void onChange(ChangeEvent event) {
             // Opera does not support paste events so this enforces max length
             // for Opera.
             enforceMaxLength();
         }
 
+    }
+
+    protected void enforceMaxLength() {
+        if (getMaxLength() >= 0) {
+            Scheduler.get().scheduleDeferred(new Command() {
+                public void execute() {
+                    if (getText().length() > getMaxLength()) {
+                        setText(getText().substring(0, getMaxLength()));
+                    }
+                }
+            });
+        }
     }
 
     protected boolean browserSupportsMaxLengthAttribute() {
@@ -105,7 +105,9 @@ public class VTextArea extends VTextField {
         if (browserSupportsMaxLengthAttribute) {
             super.updateMaxLength(maxLength);
         } else {
-            // Handled automatically by MaxLengthHandler
+            // Events handled by MaxLengthHandler. This call enforces max length
+            // when the max length value has changed
+            enforceMaxLength();
         }
     }
 
