@@ -9,11 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
-
 /**
  * An annotation type used to point the server side counterpart for client side
- * a {@link VAcceptCriterion} class.
+ * a {@link com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion} class.
  * <p>
  * Annotations are used at GWT compilation phase, so remember to rebuild your
  * widgetset if you do changes for {@link AcceptCriterion} mappings.

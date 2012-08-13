@@ -6,8 +6,6 @@ package com.vaadin.shared;
 import java.io.Serializable;
 
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * Interface implemented by all classes that are capable of communicating with
@@ -21,8 +19,9 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * <p>
  * No classes should implement this interface directly, client side classes
  * wanting to communicate with server side should implement
- * {@link ServerConnector} and server side classes should implement
- * {@link ClientConnector}.
+ * {@link com.vaadin.terminal.gwt.client.ServerConnector} and server side
+ * classes should implement
+ * {@link com.vaadin.terminal.gwt.server.ClientConnector}.
  * </p>
  * 
  * @author Vaadin Ltd

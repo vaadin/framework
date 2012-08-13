@@ -4,10 +4,9 @@
 package com.vaadin.shared;
 
 import com.vaadin.shared.ui.TabIndexState;
-import com.vaadin.ui.AbstractField;
 
 /**
- * Shared state for {@link AbstractField}.
+ * Shared state for {@link com.vaadin.ui.AbstractField}.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
@@ -73,7 +72,8 @@ public class AbstractFieldState extends ComponentState implements TabIndexState 
     /**
      * Is the field required. Required fields must filled by the user.
      * 
-     * See AbstractField#isRequired() for more information.
+     * See {@link com.vaadin.ui.AbstractField#isRequired()} for more
+     * information.
      * 
      * @return <code>true</code> if the field is required, otherwise
      *         <code>false</code>.
@@ -85,7 +85,8 @@ public class AbstractFieldState extends ComponentState implements TabIndexState 
     /**
      * Sets the field required. Required fields must filled by the user.
      * 
-     * See AbstractField#setRequired(boolean) for more information.
+     * See {@link com.vaadin.ui.AbstractField#setRequired(boolean)} for more
+     * information.
      * 
      * @param required
      *            Is the field required.

@@ -6,10 +6,10 @@ package com.vaadin.shared.ui.button;
 
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.TabIndexState;
-import com.vaadin.ui.Button;
 
 /**
- * Shared state for Button and NativeButton.
+ * Shared state for {@link com.vaadin.ui.Button} and
+ * {@link com.vaadin.ui.NativeButton}.
  * 
  * @see ComponentState
  * 
@@ -51,7 +51,8 @@ public class ButtonState extends ComponentState implements TabIndexState {
     /**
      * Returns the key code for activating the button via a keyboard shortcut.
      * 
-     * See {@link Button#setClickShortcut(int, int...)} for more information.
+     * See {@link com.vaadin.ui.Button#setClickShortcut(int, int...)} for more
+     * information.
      * 
      * @return key code or 0 for none
      */
@@ -62,7 +63,8 @@ public class ButtonState extends ComponentState implements TabIndexState {
     /**
      * Sets the key code for activating the button via a keyboard shortcut.
      * 
-     * See {@link Button#setClickShortcut(int, int...)} for more information.
+     * See {@link com.vaadin.ui.Button#setClickShortcut(int, int...)} for more
+     * information.
      * 
      * @param clickShortcutKeyCode
      *            key code or 0 for none

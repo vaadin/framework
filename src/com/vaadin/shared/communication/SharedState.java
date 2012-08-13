@@ -7,16 +7,13 @@ package com.vaadin.shared.communication;
 import java.io.Serializable;
 
 import com.vaadin.shared.Connector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 /**
  * Interface to be implemented by all shared state classes used to communicate
  * basic information about a {@link Connector} from server to client.
  * 
- * Shared state classes have to be declared in client side packages to be
- * accessible both for server and client code. They can be static nested classes
- * of a {@link ServerConnector}.
+ * Shared state classes have to be declared in shared package to be accessible
+ * both for server and client code.
  * 
  * Shared state objects are only sent from the server to the client, and any
  * modifications from the client should be performed via an RPC call that
@@ -27,9 +24,9 @@ import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
  * arrays of these.
  * 
  * On the client side the connector should override
- * {@link AbstractComponentConnector#createState()} to create the correct state
- * class and {@link AbstractComponentConnector#getState()} override the return
- * type.
+ * {@link com.vaadin.terminal.gwt.client.ui.AbstractConnector#getState()} to
+ * return the correct state type. This automatically causes a correct state
+ * object to be created.
  * 
  * Subclasses of a {@link Connector} using shared state should also provide a
  * subclass of the shared state class of the parent class to extend the state. A

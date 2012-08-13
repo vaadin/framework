@@ -10,7 +10,6 @@ import java.util.Set;
 
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.URLReference;
-import com.vaadin.ui.Component;
 
 /**
  * Default shared state implementation for UI components.
@@ -235,8 +234,8 @@ public class ComponentState extends SharedState {
     /**
      * Returns the visibility state of the component. Note that this state is
      * related to the component only, not its parent. This might differ from
-     * what {@link Component#isVisible()} returns as this takes the hierarchy
-     * into account.
+     * what {@link com.vaadin.ui.Component#isVisible()} returns as this takes
+     * the hierarchy into account.
      * 
      * @return The visibility state.
      */

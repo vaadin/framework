@@ -5,13 +5,12 @@ package com.vaadin.shared;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.gwt.client.BrowserInfo;
-import com.vaadin.terminal.gwt.server.WebBrowser;
-
 /**
  * Class that parses the user agent string from the browser and provides
- * information about the browser. Used internally by {@link BrowserInfo} and
- * {@link WebBrowser}. Should not be used directly.
+ * information about the browser. Used internally by
+ * {@link com.vaadin.terminal.gwt.client.BrowserInfo} and
+ * {@link com.vaadin.terminal.gwt.server.WebBrowser}. Should not be used
+ * directly.
  * 
  * @author Vaadin Ltd.
  * @version @VERSION@
