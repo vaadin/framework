@@ -11,14 +11,14 @@ import com.vaadin.terminal.gwt.server.BootstrapFragmentResponse;
 import com.vaadin.terminal.gwt.server.BootstrapListener;
 import com.vaadin.terminal.gwt.server.BootstrapPageResponse;
 import com.vaadin.terminal.gwt.server.BootstrapResponse;
-import com.vaadin.terminal.gwt.server.VaadinContextEvent;
-import com.vaadin.terminal.gwt.server.VaadinContextListener;
+import com.vaadin.terminal.gwt.server.AddonContextEvent;
+import com.vaadin.terminal.gwt.server.AddonContextListener;
 import com.vaadin.ui.Root;
 
-public class TestVaadinContextListener implements VaadinContextListener {
+public class TestAddonContextListener implements AddonContextListener {
     @Override
-    public void contextCreated(VaadinContextEvent event) {
-        event.getVaadinContext().addBootstrapListener(new BootstrapListener() {
+    public void contextCreated(AddonContextEvent event) {
+        event.getAddonContext().addBootstrapListener(new BootstrapListener() {
             @Override
             public void modifyBootstrapFragment(
                     BootstrapFragmentResponse response) {
@@ -47,7 +47,7 @@ public class TestVaadinContextListener implements VaadinContextListener {
     }
 
     @Override
-    public void contextDestoryed(VaadinContextEvent event) {
+    public void contextDestoryed(AddonContextEvent event) {
         // Nothing to do
     }
 

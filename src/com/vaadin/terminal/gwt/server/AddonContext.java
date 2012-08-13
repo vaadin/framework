@@ -14,7 +14,7 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.tools.ReflectTools;
 
-public class VaadinContext {
+public class AddonContext {
     private static final Method APPLICATION_STARTED_METHOD = ReflectTools
             .findMethod(ApplicationStartedListener.class, "applicationStarted",
                     ApplicationStartedEvent.class);
@@ -25,9 +25,9 @@ public class VaadinContext {
 
     private List<BootstrapListener> bootstrapListeners = new ArrayList<BootstrapListener>();
 
-    public VaadinContext(DeploymentConfiguration deploymentConfiguration) {
+    public AddonContext(DeploymentConfiguration deploymentConfiguration) {
         this.deploymentConfiguration = deploymentConfiguration;
-        deploymentConfiguration.setVaadinContext(this);
+        deploymentConfiguration.setAddonContext(this);
     }
 
     public DeploymentConfiguration getDeploymentConfiguration() {
@@ -35,21 +35,21 @@ public class VaadinContext {
     }
 
     public void init() {
-        VaadinContextEvent event = new VaadinContextEvent(this);
-        Iterator<VaadinContextListener> listeners = deploymentConfiguration
-                .getContextListeners();
+        AddonContextEvent event = new AddonContextEvent(this);
+        Iterator<AddonContextListener> listeners = deploymentConfiguration
+                .getAddonContextListeners();
         while (listeners.hasNext()) {
-            VaadinContextListener listener = listeners.next();
+            AddonContextListener listener = listeners.next();
             listener.contextCreated(event);
         }
     }
 
     public void destroy() {
-        VaadinContextEvent event = new VaadinContextEvent(this);
-        Iterator<VaadinContextListener> listeners = deploymentConfiguration
-                .getContextListeners();
+        AddonContextEvent event = new AddonContextEvent(this);
+        Iterator<AddonContextListener> listeners = deploymentConfiguration
+                .getAddonContextListeners();
         while (listeners.hasNext()) {
-            VaadinContextListener listener = listeners.next();
+            AddonContextListener listener = listeners.next();
             listener.contextDestoryed(event);
         }
     }

@@ -128,7 +128,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
     };
 
-    private final VaadinContext vaadinContext = new VaadinContext(
+    private final AddonContext addonContext = new AddonContext(
             getDeploymentConfiguration());
 
     /**
@@ -170,14 +170,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         checkCrossSiteProtection();
         checkResourceCacheTime();
 
-        vaadinContext.init();
+        addonContext.init();
     }
 
     @Override
     public void destroy() {
         super.destroy();
 
-        vaadinContext.destroy();
+        addonContext.destroy();
     }
 
     private void checkCrossSiteProtection() {
@@ -901,7 +901,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             application.start(new ApplicationStartEvent(applicationUrl,
                     getDeploymentConfiguration().getInitParameters(),
                     webApplicationContext, isProductionMode()));
-            vaadinContext.applicationStarted(application);
+            addonContext.applicationStarted(application);
         }
     }
 

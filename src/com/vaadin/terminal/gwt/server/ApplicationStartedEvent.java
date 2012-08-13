@@ -11,14 +11,14 @@ import com.vaadin.Application;
 public class ApplicationStartedEvent extends EventObject {
     private final Application application;
 
-    public ApplicationStartedEvent(VaadinContext context,
+    public ApplicationStartedEvent(AddonContext context,
             Application application) {
         super(context);
         this.application = application;
     }
 
-    public VaadinContext getContext() {
-        return (VaadinContext) getSource();
+    public AddonContext getContext() {
+        return (AddonContext) getSource();
     }
 
     public Application getApplication() {

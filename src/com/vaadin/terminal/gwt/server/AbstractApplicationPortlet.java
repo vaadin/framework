@@ -290,7 +290,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     };
 
-    private final VaadinContext vaadinContext = new VaadinContext(
+    private final AddonContext addonContext = new AddonContext(
             getDeploymentConfiguration());
 
     @Override
@@ -319,14 +319,14 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         checkProductionMode();
         checkCrossSiteProtection();
 
-        vaadinContext.init();
+        addonContext.init();
     }
 
     @Override
     public void destroy() {
         super.destroy();
 
-        vaadinContext.destroy();
+        addonContext.destroy();
     }
 
     private void checkCrossSiteProtection() {
@@ -801,7 +801,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.start(new ApplicationStartEvent(null,
                     getDeploymentConfiguration().getInitParameters(), context,
                     isProductionMode()));
-            vaadinContext.applicationStarted(application);
+            addonContext.applicationStarted(application);
         }
     }
 

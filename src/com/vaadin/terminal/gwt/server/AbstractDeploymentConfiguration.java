@@ -16,7 +16,7 @@ public abstract class AbstractDeploymentConfiguration implements
 
     private final Class<?> systemPropertyBaseClass;
     private final Properties applicationProperties = new Properties();
-    private VaadinContext vaadinContext;
+    private AddonContext addonContext;
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass) {
         this.systemPropertyBaseClass = systemPropertyBaseClass;
@@ -123,21 +123,21 @@ public abstract class AbstractDeploymentConfiguration implements
     }
 
     @Override
-    public Iterator<VaadinContextListener> getContextListeners() {
+    public Iterator<AddonContextListener> getAddonContextListeners() {
         // Called once for init and once for destroy, so it's probably not worth
         // the effort caching the ServiceLoader instance
-        ServiceLoader<VaadinContextListener> contextListenerLoader = ServiceLoader
-                .load(VaadinContextListener.class, getClassLoader());
+        ServiceLoader<AddonContextListener> contextListenerLoader = ServiceLoader
+                .load(AddonContextListener.class, getClassLoader());
         return contextListenerLoader.iterator();
     }
 
     @Override
-    public void setVaadinContext(VaadinContext vaadinContext) {
-        this.vaadinContext = vaadinContext;
+    public void setAddonContext(AddonContext addonContext) {
+        this.addonContext = addonContext;
     }
 
     @Override
-    public VaadinContext getVaadinContext() {
-        return vaadinContext;
+    public AddonContext getAddonContext() {
+        return addonContext;
     }
 }

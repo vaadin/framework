@@ -11,8 +11,8 @@ import java.util.Properties;
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
-import com.vaadin.terminal.gwt.server.VaadinContext;
-import com.vaadin.terminal.gwt.server.VaadinContextListener;
+import com.vaadin.terminal.gwt.server.AddonContext;
+import com.vaadin.terminal.gwt.server.AddonContextListener;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -115,9 +115,9 @@ public interface DeploymentConfiguration extends Serializable {
      */
     public Properties getInitParameters();
 
-    public Iterator<VaadinContextListener> getContextListeners();
+    public Iterator<AddonContextListener> getAddonContextListeners();
 
-    public VaadinContext getVaadinContext();
+    public AddonContext getAddonContext();
 
-    public void setVaadinContext(VaadinContext vaadinContext);
+    public void setAddonContext(AddonContext vaadinContext);
 }
