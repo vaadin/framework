@@ -4334,8 +4334,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 row.addStyleName("v-selected");
             }
             tBodyElement.appendChild(row.getElement());
-            adopt(row);
+            // Add to renderedRows before adopt so iterator() will return also
+            // this row if called in an attach handler (#9264)
             renderedRows.add(row);
+            adopt(row);
         }
 
         private void insertRowAt(VScrollTableRow row, int index) {
@@ -6098,7 +6100,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
             availW -= totalExtraWidth;
             int forceScrollBodyWidth = -1;
-            
+
             int extraSpace = availW - usedMinimumWidth;
             if (extraSpace < 0) {
                 if (getTotalRows() == 0) {
