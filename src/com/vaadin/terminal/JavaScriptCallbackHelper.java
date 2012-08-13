@@ -19,7 +19,7 @@ import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
-import com.vaadin.ui.JavaScriptCallback;
+import com.vaadin.ui.JavaScriptFunction;
 
 /**
  * Internal helper class used to implement functionality common to
@@ -39,7 +39,7 @@ public class JavaScriptCallbackHelper implements Serializable {
             JavaScriptCallbackRpc.class, "call", String.class, JSONArray.class);
     private AbstractClientConnector connector;
 
-    private Map<String, JavaScriptCallback> callbacks = new HashMap<String, JavaScriptCallback>();
+    private Map<String, JavaScriptFunction> callbacks = new HashMap<String, JavaScriptFunction>();
     private JavaScriptCallbackRpc javascriptCallbackRpc;
 
     public JavaScriptCallbackHelper(AbstractClientConnector connector) {
@@ -47,7 +47,7 @@ public class JavaScriptCallbackHelper implements Serializable {
     }
 
     public void registerCallback(String functionName,
-            JavaScriptCallback javaScriptCallback) {
+            JavaScriptFunction javaScriptCallback) {
         callbacks.put(functionName, javaScriptCallback);
         JavaScriptConnectorState state = getConnectorState();
         if (state.getCallbackNames().add(functionName)) {
@@ -67,7 +67,7 @@ public class JavaScriptCallbackHelper implements Serializable {
             javascriptCallbackRpc = new JavaScriptCallbackRpc() {
                 @Override
                 public void call(String name, JSONArray arguments) {
-                    JavaScriptCallback callback = callbacks.get(name);
+                    JavaScriptFunction callback = callbacks.get(name);
                     try {
                         callback.call(arguments);
                     } catch (JSONException e) {

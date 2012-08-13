@@ -15,15 +15,15 @@ import com.vaadin.terminal.AbstractJavaScriptExtension;
  * the corresponding JavaScript function is called, the {@link #call(JSONArray)}
  * method is invoked.
  * 
- * @see JavaScript#addCallback(String, JavaScriptCallback)
- * @see AbstractJavaScriptComponent#registerCallback(String, JavaScriptCallback)
- * @see AbstractJavaScriptExtension#registerCallback(String, JavaScriptCallback)
+ * @see JavaScript#addFunction(String, JavaScriptCallback)
+ * @see AbstractJavaScriptComponent#addFunction(String, JavaScriptCallback)
+ * @see AbstractJavaScriptExtension#addFunction(String, JavaScriptCallback)
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0.0
  */
-public interface JavaScriptCallback extends Serializable {
+public interface JavaScriptFunction extends Serializable {
     /**
      * Invoked whenever the corresponding JavaScript function is called in the
      * browser.

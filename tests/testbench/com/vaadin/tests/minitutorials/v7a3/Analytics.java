@@ -23,7 +23,7 @@ public class Analytics extends AbstractJavaScriptExtension {
     private void pushCommand(Object... commandAndArguments) {
         // Cast to Object to use Object[] commandAndArguments as the first
         // varargs argument instead of as the full varargs argument array.
-        invokeCallback("pushCommand", (Object) commandAndArguments);
+        callFunction("pushCommand", (Object) commandAndArguments);
     }
 
     protected void extend(Root root) {

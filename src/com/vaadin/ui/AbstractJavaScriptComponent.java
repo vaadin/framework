@@ -77,11 +77,11 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * the field, that function is called whenever the contents of the shared state
  * is changed.</li>
  * <li>Any field name corresponding to a call to
- * {@link #registerCallback(String, JavaScriptCallback)} on the server will
- * automatically be present as a function that triggers the registered callback
+ * {@link #addFunction(String, JavaScriptFunction)} on the server will
+ * automatically be present as a function that triggers the registered function
  * on the server.</li>
  * <li>Any field name referred to using
- * {@link #invokeCallback(String, Object...)} on the server will be called if a
+ * {@link #callFunction(String, Object...)} on the server will be called if a
  * function has been assigned to the field.</li>
  * </ul>
  * <p>
@@ -125,22 +125,21 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
     }
 
     /**
-     * Register a {@link JavaScriptCallback} that can be called from the
+     * Register a {@link JavaScriptFunction} that can be called from the
      * JavaScript using the provided name. A JavaScript function with the
      * provided name will be added to the connector wrapper object (initially
      * available as <code>this</code>). Calling that JavaScript function will
-     * cause the call method in the registered {@link JavaScriptCallback} to be
+     * cause the call method in the registered {@link JavaScriptFunction} to be
      * invoked with the same arguments.
      * 
      * @param functionName
-     *            the name that should be used for client-side callback
-     * @param javaScriptCallback
-     *            the callback object that will be invoked when the JavaScript
-     *            function is called
+     *            the name that should be used for client-side function
+     * @param function
+     *            the {@link JavaScriptFunction} object that will be invoked
+     *            when the JavaScript function is called
      */
-    protected void registerCallback(String functionName,
-            JavaScriptCallback javaScriptCallback) {
-        callbackHelper.registerCallback(functionName, javaScriptCallback);
+    protected void addFunction(String functionName, JavaScriptFunction function) {
+        callbackHelper.registerCallback(functionName, function);
     }
 
     /**
@@ -155,7 +154,7 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
      * @param arguments
      *            function arguments
      */
-    protected void invokeCallback(String name, Object... arguments) {
+    protected void callFunction(String name, Object... arguments) {
         callbackHelper.invokeCallback(name, arguments);
     }
 

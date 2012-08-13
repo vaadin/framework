@@ -21,7 +21,7 @@ import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.JavaScriptCallback;
+import com.vaadin.ui.JavaScriptFunction;
 
 public class BasicJavaScriptComponent extends AbstractTestRoot {
 
@@ -59,14 +59,14 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
                     log.log("Got RPC message: " + message);
                 }
             });
-            registerCallback("messageToServer", new JavaScriptCallback() {
+            addFunction("messageToServer", new JavaScriptFunction() {
                 @Override
                 public void call(JSONArray arguments) throws JSONException {
                     log.log("Got callback message: " + arguments.getString(0));
                 }
             });
 
-            registerCallback("reportParentIds", new JavaScriptCallback() {
+            addFunction("reportParentIds", new JavaScriptFunction() {
                 @Override
                 public void call(JSONArray arguments) throws JSONException {
                     JSONArray parentIds = arguments.getJSONArray(0);
@@ -89,7 +89,7 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
             });
 
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
-            invokeCallback("messageToClient", "Callback message");
+            callFunction("messageToClient", "Callback message");
 
             getState()
                     .setMessages(

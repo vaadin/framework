@@ -16,7 +16,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.JavaScriptCallback;
+import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
 
 public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
@@ -56,7 +56,7 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
                     Notification.show(getState().getPrefix() + message);
                 }
             });
-            registerCallback("greetToServer", new JavaScriptCallback() {
+            addFunction("greetToServer", new JavaScriptFunction() {
                 @Override
                 public void call(JSONArray arguments) throws JSONException {
                     Notification.show(getState().getPrefix()
@@ -81,7 +81,7 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
         }
 
         public void greetCallback(String message) {
-            invokeCallback("greetToClient", message);
+            callFunction("greetToClient", message);
         }
     }
 

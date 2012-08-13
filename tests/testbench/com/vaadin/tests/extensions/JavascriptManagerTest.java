@@ -11,7 +11,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.JavaScript;
-import com.vaadin.ui.JavaScriptCallback;
+import com.vaadin.ui.JavaScriptFunction;
 
 public class JavascriptManagerTest extends AbstractTestRoot {
 
@@ -21,7 +21,7 @@ public class JavascriptManagerTest extends AbstractTestRoot {
     protected void setup(WrappedRequest request) {
         addComponent(log);
         final JavaScript js = JavaScript.getCurrent();
-        js.addCallback("testing.doTest", new JavaScriptCallback() {
+        js.addFunction("testing.doTest", new JavaScriptFunction() {
             @Override
             public void call(JSONArray arguments) throws JSONException {
                 log.log("Got " + arguments.length() + " arguments");
@@ -31,7 +31,7 @@ public class JavascriptManagerTest extends AbstractTestRoot {
                         + arguments.getJSONObject(2).getBoolean("p"));
                 log.log("Argument 4 is JSONObject.NULL: "
                         + (arguments.get(3) == JSONObject.NULL));
-                js.removeCallback("testing.doTest");
+                js.removeFunction("testing.doTest");
             }
         });
         js.execute("window.testing.doTest(42, 'text', {p: true}, null)");
