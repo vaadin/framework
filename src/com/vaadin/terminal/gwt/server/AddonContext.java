@@ -25,6 +25,8 @@ public class AddonContext {
 
     private List<BootstrapListener> bootstrapListeners = new ArrayList<BootstrapListener>();
 
+    private List<AddonContextListener> initedListeners = new ArrayList<AddonContextListener>();
+
     public AddonContext(DeploymentConfiguration deploymentConfiguration) {
         this.deploymentConfiguration = deploymentConfiguration;
         deploymentConfiguration.setAddonContext(this);
@@ -41,15 +43,13 @@ public class AddonContext {
         while (listeners.hasNext()) {
             AddonContextListener listener = listeners.next();
             listener.contextCreated(event);
+            initedListeners.add(listener);
         }
     }
 
     public void destroy() {
         AddonContextEvent event = new AddonContextEvent(this);
-        Iterator<AddonContextListener> listeners = deploymentConfiguration
-                .getAddonContextListeners();
-        while (listeners.hasNext()) {
-            AddonContextListener listener = listeners.next();
+        for (AddonContextListener listener : initedListeners) {
             listener.contextDestoryed(event);
         }
     }

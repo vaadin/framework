@@ -124,8 +124,8 @@ public abstract class AbstractDeploymentConfiguration implements
 
     @Override
     public Iterator<AddonContextListener> getAddonContextListeners() {
-        // Called once for init and once for destroy, so it's probably not worth
-        // the effort caching the ServiceLoader instance
+        // Called once for init and then no more, so there's no point in caching
+        // the instance
         ServiceLoader<AddonContextListener> contextListenerLoader = ServiceLoader
                 .load(AddonContextListener.class, getClassLoader());
         return contextListenerLoader.iterator();
