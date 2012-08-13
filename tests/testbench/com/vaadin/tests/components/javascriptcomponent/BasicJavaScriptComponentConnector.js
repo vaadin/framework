@@ -1,4 +1,5 @@
 window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_ExampleWidget = function() {
+	var self = this;
 	var parentIds = [];
 	var connectorId = this.getConnectorId();
 	while(connectorId) {
@@ -30,7 +31,7 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 	
 	this.registerRpc({
 		sendRpc: function(message) {
-			this.getRpcProxy().sendRpc(message + " processed");
+			self.getRpcProxy().sendRpc(message + " processed");
 		}
 	});
 	
