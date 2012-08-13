@@ -560,7 +560,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         // + "DTD/xhtml1-transitional.dtd\">\n");
         Document document = context.getBootstrapResponse().getDocument();
         DocumentType doctype = new DocumentType("html",
-                "//W3C//DTD XHTML 1.0 Transitional//EN",
+                "-//W3C//DTD XHTML 1.0 Transitional//EN",
                 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",
                 document.baseUri());
         document.child(0).before(doctype);

@@ -1,0 +1,10 @@
+// this file just defines all chameleon mixins by importing them
+
+// common (mostly application or page level) parts of the theme
+
+@import "common/common.scss";
+
+// components - can override or replace in user themes
+
+@import "components/components.scss";
+@import "compound/compound.scss";

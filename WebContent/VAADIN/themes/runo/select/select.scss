@@ -1,0 +1,163 @@
+@mixin runo-select {
+
+.v-select-select {
+	font-size: 13px;
+}
+/* Twincol style */
+.v-select-twincol-options,
+.v-select-twincol-selections {
+	font-size: 13px;
+}
+.v-select-twincol-buttons {
+	padding: 2px; /* does not work in first render in FF ? */
+}
+
+/** Filterselect aka ComboBox styles */
+
+.v-filterselect {
+	height: 23px;
+	background: transparent url(img/bg-left-filter.png) no-repeat;
+	padding-left: 4px;
+}
+.v-app .v-filterselect .v-filterselect-input,
+.v-window .v-filterselect .v-filterselect-input,
+.v-popupview-popup .v-filterselect .v-filterselect-input {
+	background: transparent url(img/bg-center-filter.png) no-repeat 1px 0;
+	border: none;
+	height: 23px;
+	margin: 0;
+	padding: 2px 0 1px 2px;
+	font-size: 13px;
+}
+.v-filterselect-prompt .v-filterselect-input {
+	font-style: normal;
+}
+.v-filterselect-input:focus {
+	/* remove safari/mac outline from this element */
+	outline: none;
+}
+.v-filterselect-focus {
+	outline: 1px solid #5daee8;
+	outline-offset: -1px;
+}
+.v-sa .v-filterselect-focus {
+	/* place safari focus outline around the whole thing */
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -4px;
+}
+.v-filterselect-button {
+	width: 25px;
+	height: 23px;
+	background: transparent url(img/bg-right-filter.png);
+}
+.v-filterselect-button:hover {
+	background-position: bottom left;
+}
+.v-disabled .v-filterselect-button:hover,
+.v-readonly .v-filterselect-button:hover {
+	background-position: top left;
+}
+.v-filterselect.v-readonly .v-filterselect-input {
+	background: transparent;
+}
+.v-filterselect-suggestpopup {
+	background: #f6f7f7;
+	border: 1px solid #b6bbbc;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 18px;
+	margin-top: -1px;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 6px;
+	cursor: pointer;
+	height: 18px;
+}
+.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+	height: 20px;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem .v-icon {
+	margin-right: 3px;
+}
+.v-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #5daee8;
+	color: #fff;
+}
+.v-filterselect-nextpage,
+.v-filterselect-nextpage-off,
+.v-filterselect-prevpage-off,
+.v-filterselect-prevpage {
+	height: 11px;
+	width:100%;
+	background: transparent url(img/button-bg.png) no-repeat 50% 0;
+	margin: 2px 0 0 0;
+}
+.v-filterselect-prevpage,
+.v-filterselect-prevpage-off {
+	background-position: 50% -1px;
+	margin: 0 0 2px 0;
+}
+.v-filterselect-prevpage:hover {
+	background-position: 50% bottom;
+}
+.v-filterselect-nextpage:hover {
+	background-position: 50% -12px;
+}
+.v-filterselect-nextpage span,
+.v-filterselect-nextpage-off span,
+.v-filterselect-prevpage-off span,
+.v-filterselect-prevpage span {
+	display: block;
+	height: 12px;
+	width:100%;
+	background: transparent url(img/arrow-up.png) no-repeat 50% 40%;
+	text-indent: -90000px;
+	cursor: pointer;
+	overflow: hidden;
+}
+.v-filterselect-nextpage span,
+.v-filterselect-nextpage-off span {
+	background: transparent url(img/arrow-down.png) no-repeat 50% 60%;
+}
+.v-filterselect-status {
+	font-size: 11px;
+	line-height: 11px;
+	width: 100%;
+	padding: 4px 0px;
+	height: 11px;
+	border-top: 1px solid #b6bbbc;
+}
+
+
+/* Error styles (disabled by default)
+   ----------------------------------
+
+.v-filterselect-error {
+	background-image: url(img/bg-left-filter-error.png);
+}
+.v-filterselect-error .v-filterselect-input {
+	background-image: url(img/bg-center-filter-error.png);
+}
+.v-filterselect-error .v-filterselect-button {
+	background-image: url(img/bg-right-filter-error.png);
+}
+.v-select-error .v-select-option,
+.v-select-error .v-select-select,
+.v-select-error .v-select-twincol-selections,
+.v-select-error .v-select-twincol-options {
+	background: #FFE0E0;
+}
+*/
+
+/*  Required field styles (disabled by default)
+   --------------------------------------------
+   
+.v-select-required .v-select-option,
+.v-select-required .v-select-select,
+.v-select-required .v-select-twincol-selections,
+.v-select-required .v-select-twincol-options {
+	background: #FFE0E0;
+}
+*/
+}

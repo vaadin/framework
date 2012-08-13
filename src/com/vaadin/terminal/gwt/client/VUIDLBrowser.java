@@ -7,7 +7,6 @@
 package com.vaadin.terminal.gwt.client;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
@@ -25,9 +24,9 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.Connector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.window.VWindow;
 
@@ -38,21 +37,17 @@ public class VUIDLBrowser extends SimpleTree {
     private static final String HELP = "Shift click handle to open recursively. "
             + " Click components to highlight them on client side."
             + " Shift click components to highlight them also on the server side.";
-    private ApplicationConfiguration conf;
+    private ApplicationConnection client;
     private String highlightedPid;
 
-    /**
-     * TODO Should probably take ApplicationConnection instead of
-     * ApplicationConfiguration
-     */
-    public VUIDLBrowser(final UIDL uidl, ApplicationConfiguration conf) {
-        this.conf = conf;
-        final UIDLItem root = new UIDLItem(uidl, conf);
+    public VUIDLBrowser(final UIDL uidl, ApplicationConnection client) {
+        this.client = client;
+        final UIDLItem root = new UIDLItem(uidl);
         add(root);
     }
 
-    public VUIDLBrowser(ValueMap u, ApplicationConfiguration conf) {
-        this.conf = conf;
+    public VUIDLBrowser(ValueMap u, ApplicationConnection client) {
+        this.client = client;
         ValueMap valueMap = u.getValueMap("meta");
         if (valueMap.containsKey("hl")) {
             highlightedPid = valueMap.getString("hl");
@@ -60,13 +55,12 @@ public class VUIDLBrowser extends SimpleTree {
         Set<String> keySet = u.getKeySet();
         for (String key : keySet) {
             if (key.equals("state")) {
-
                 ValueMap stateJson = u.getValueMap(key);
-                SimpleTree stateChanges = new SimpleTree("Shared state");
+                SimpleTree stateChanges = new SimpleTree("shared state");
 
-                for (String stateKey : stateJson.getKeySet()) {
-                    stateChanges.add(new SharedStateItem(stateKey, stateJson
-                            .getValueMap(stateKey)));
+                for (String connectorId : stateJson.getKeySet()) {
+                    stateChanges.add(new SharedStateItem(connectorId, stateJson
+                            .getValueMap(connectorId)));
                 }
                 add(stateChanges);
 
@@ -75,14 +69,15 @@ public class VUIDLBrowser extends SimpleTree {
                         .cast();
                 for (int i = 0; i < jsValueMapArray.length(); i++) {
                     UIDL uidl = jsValueMapArray.get(i);
-                    UIDLItem change = new UIDLItem(uidl, conf);
+                    UIDLItem change = new UIDLItem(uidl);
                     change.setTitle("change " + i);
                     add(change);
                 }
             } else if (key.equals("meta")) {
 
             } else {
-                // TODO consider pretty printing other request data
+                // TODO consider pretty printing other request data such as
+                // hierarchy changes
                 // addItem(key + " : " + u.getAsString(key));
             }
         }
@@ -120,19 +115,14 @@ public class VUIDLBrowser extends SimpleTree {
          * Returns the Connector associated with this state change.
          */
         protected ComponentConnector getConnector() {
-            List<ApplicationConnection> runningApplications = ApplicationConfiguration
-                    .getRunningApplications();
+            Connector connector = client.getConnectorMap().getConnector(
+                    getConnectorId());
 
-            // TODO this does not work properly with multiple application on
-            // same host page
-            for (ApplicationConnection applicationConnection : runningApplications) {
-                ServerConnector connector = ConnectorMap.get(
-                        applicationConnection).getConnector(getConnectorId());
-                if (connector instanceof ComponentConnector) {
-                    return (ComponentConnector) connector;
-                }
+            if (connector instanceof ComponentConnector) {
+                return (ComponentConnector) connector;
+            } else {
+                return null;
             }
-            return new UnknownComponentConnector();
         }
 
         protected abstract String getConnectorId();
@@ -147,7 +137,12 @@ public class VUIDLBrowser extends SimpleTree {
 
         SharedStateItem(String connectorId, ValueMap stateChanges) {
             this.connectorId = connectorId;
-            setText(connectorId);
+            ComponentConnector connector = getConnector();
+            if (connector != null) {
+                setText(Util.getConnectorString(connector));
+            } else {
+                setText("Unknown connector " + connectorId);
+            }
             dir(new JSONObject(stateChanges), this);
         }
 
@@ -166,7 +161,7 @@ public class VUIDLBrowser extends SimpleTree {
                 dir(value.isArray(), subtree);
                 tree.add(subtree);
             } else {
-                tree.add(new HTML(key + "=" + value));
+                tree.addItem(key + "=" + value);
             }
         }
 
@@ -190,12 +185,13 @@ public class VUIDLBrowser extends SimpleTree {
 
         private UIDL uidl;
 
-        UIDLItem(UIDL uidl, ApplicationConfiguration conf) {
+        UIDLItem(UIDL uidl) {
             this.uidl = uidl;
             try {
                 String name = uidl.getTag();
                 try {
-                    name = getNodeName(uidl, conf, Integer.parseInt(name));
+                    name = getNodeName(uidl, client.getConfiguration(),
+                            Integer.parseInt(name));
                 } catch (Exception e) {
                     // NOP
                 }
@@ -238,7 +234,8 @@ public class VUIDLBrowser extends SimpleTree {
 
             String nodeName = uidl.getTag();
             try {
-                nodeName = getNodeName(uidl, conf, Integer.parseInt(nodeName));
+                nodeName = getNodeName(uidl, client.getConfiguration(),
+                        Integer.parseInt(nodeName));
             } catch (Exception e) {
                 // NOP
             }
@@ -302,10 +299,7 @@ public class VUIDLBrowser extends SimpleTree {
             while (i.hasNext()) {
                 final Object child = i.next();
                 try {
-                    final UIDL c = (UIDL) child;
-                    final UIDLItem childItem = new UIDLItem(c, conf);
-                    add(childItem);
-
+                    add(new UIDLItem((UIDL) child));
                 } catch (final Exception e) {
                     addItem(child.toString());
                 }

@@ -16,7 +16,7 @@ import com.google.gwt.core.client.GWT;
 public class NullConsole implements Console {
 
     @Override
-    public void dirUIDL(ValueMap u, ApplicationConfiguration cnf) {
+    public void dirUIDL(ValueMap u, ApplicationConnection conn) {
     }
 
     @Override

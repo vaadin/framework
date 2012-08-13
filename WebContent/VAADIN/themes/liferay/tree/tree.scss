@@ -1,0 +1,62 @@
+@mixin liferay-tree {
+
+.v-tree-node {
+	background: transparent url(arrows_sprites.png) no-repeat -42px 1px;
+}
+
+.v-tree-node span {
+	color: #336699;
+	padding: 1px 2px;
+	display: inline-block;
+}
+
+.v-tree-node:hover {
+	background-position: -14px -30px;
+}
+
+.v-tree-node-expanded {
+	background-position: -28px -14px;
+}
+
+.v-tree-node-expanded:hover {
+	background-position: 0 -47px;
+}
+
+.v-tree .v-tree-node-drag-top {
+	background-position: -42px 0px;
+}
+
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: -28px -15px;
+}
+
+.v-tree-node-selected {
+	background: #333;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.v-tree-node-selected span {
+	display: inline-block;
+	background: transparent;
+	color: #fff;
+	text-shadow: -1px -1px #000;
+	padding: 1px 2px;
+}
+
+.v-tree-node-caption {
+	margin-left: 14px;
+	padding: 1px;
+}
+
+.v-tree-node-focused {
+	border: 1px dotted #555;
+	padding: 0;
+}
+
+.v-tree-node-children {
+	padding-left: 14px;
+}
+
+}

@@ -147,8 +147,6 @@ public class ApplicationConnection {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final boolean debugLogging = true || false;
-
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
 
@@ -1106,14 +1104,6 @@ public class ApplicationConnection {
 
                 MultiStepDuration updateDuration = new MultiStepDuration();
 
-                if (debugLogging) {
-                    VConsole.log(" * Dumping UIDL to the console");
-                    VConsole.dirUIDL(json, configuration);
-
-                    updateDuration.logDuration(
-                            " * Dumping UIDL to the console completed", 10);
-                }
-
                 if (json.containsKey("locales")) {
                     VConsole.log(" * Handling locales");
                     // Store locale data
@@ -1235,6 +1225,16 @@ public class ApplicationConnection {
 
                 updateDuration
                         .logDuration(" * Layout processing completed", 10);
+
+                if (ApplicationConfiguration.isDebugMode()) {
+                    VConsole.log(" * Dumping state changes to the console");
+                    VConsole.dirUIDL(json, ApplicationConnection.this);
+
+                    updateDuration
+                            .logDuration(
+                                    " * Dumping state changes to the console completed",
+                                    10);
+                }
 
                 if (meta != null) {
                     if (meta.containsKey("appError")) {

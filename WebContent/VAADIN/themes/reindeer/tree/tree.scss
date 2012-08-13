@@ -1,0 +1,55 @@
+@mixin reindeer-tree {
+
+.v-tree-node {
+	background: transparent url(img/arrows.png) no-repeat 6px -10px;
+}
+.v-tree-node-expanded {
+	background-position: -7px 5px;
+}
+.v-tree-node-caption {
+	margin-left: 16px;
+	padding-bottom: 1px;
+}
+.v-tree-node span {
+	padding: 1px 2px;
+	display: inline-block;
+}
+.v-tree-node-selected span {
+	background: #4d749f repeat-x;
+	background-image: url(../common/img/sel-bg.png); /* sprite-ref: verticals; sprite-alignment: repeat */
+	color: #fff;
+	padding: 1px 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	text-shadow: #2b425a 0 1px 0;
+	display: inline-block;
+}
+.v-tree-node-children {
+	padding-left: 16px;
+}
+.v-tree-node-caption.v-tree-node-focused span{
+	padding-left: 1px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.v-tree-node-focused span{
+	border: 1px dotted black;	
+}
+/***************************************
+ * Drag'n'drop styles
+ ***************************************/
+.v-tree .v-tree-node-drag-top {
+	background-position: 6px -11px;
+}
+.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+	background-position: -7px 4px;
+}
+.v-tree-connectors .v-tree-node-drag-top,
+.v-tree-connectors .v-tree-node-expanded.v-tree-node-drag-top {
+	background-position: 2px -53px;
+}
+.v-tree-connectors .v-tree-node-drag-top.v-tree-node-leaf {
+	background-position: 2px 50%;
+}
+
+}

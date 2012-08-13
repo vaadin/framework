@@ -492,9 +492,9 @@ public class VDebugConsole extends VOverlay implements Console {
      * .terminal.gwt.client.UIDL)
      */
     @Override
-    public void dirUIDL(ValueMap u, ApplicationConfiguration conf) {
+    public void dirUIDL(ValueMap u, ApplicationConnection client) {
         if (panel.isAttached()) {
-            VUIDLBrowser vuidlBrowser = new VUIDLBrowser(u, conf);
+            VUIDLBrowser vuidlBrowser = new VUIDLBrowser(u, client);
             vuidlBrowser.setText("Response:");
             panel.add(vuidlBrowser);
         }
