@@ -398,7 +398,7 @@
         <copy todir="${result-src-core}" overwrite="yes">
             <filterset refid="version-and-license"/>
             <filterset refid="pre-css-style"/>
-            <fileset dir="src">
+            <fileset dir="server/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
             <fileset dir="shared/src">
@@ -442,7 +442,7 @@
         <!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
         <echo>Copying non java/html/css/xml files such as images.</echo>
         <copy todir="${result-src-core}">
-            <fileset dir="src">
+            <fileset dir="server/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
             <fileset dir="shared/src">
