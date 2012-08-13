@@ -7,5 +7,7 @@ package com.vaadin.terminal.gwt.server;
 import java.util.EventListener;
 
 public interface BootstrapListener extends EventListener {
-    public void modifyBootstrap(BootstrapResponse response);
+    public void modifyBootstrapFragment(BootstrapFragmentResponse response);
+
+    public void modifyBootstrapPage(BootstrapPageResponse response);
 }

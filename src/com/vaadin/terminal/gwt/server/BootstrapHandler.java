@@ -8,7 +8,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,6 +21,7 @@ import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.Application;
@@ -39,14 +42,14 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected class BootstrapContext implements Serializable {
 
         private final WrappedResponse response;
-        private final BootstrapResponse bootstrapResponse;
+        private final BootstrapFragmentResponse bootstrapResponse;
 
         private String widgetsetName;
         private String themeName;
         private String appId;
 
         public BootstrapContext(WrappedResponse response,
-                BootstrapResponse bootstrapResponse) {
+                BootstrapFragmentResponse bootstrapResponse) {
             this.response = response;
             this.bootstrapResponse = bootstrapResponse;
         }
@@ -98,7 +101,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return appId;
         }
 
-        public BootstrapResponse getBootstrapResponse() {
+        public BootstrapFragmentResponse getBootstrapResponse() {
             return bootstrapResponse;
         }
 
@@ -124,34 +127,66 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         try {
-            Map<String, Object> headers = new LinkedHashMap<String, Object>();
             BootstrapContext context = createContext(request, response,
-                    application, rootId, headers);
-            BootstrapResponse bootstrapResponse = context
-                    .getBootstrapResponse();
-
+                    application, rootId);
             setupMainDiv(context);
 
             DeploymentConfiguration deploymentConfiguration = request
                     .getDeploymentConfiguration();
-            boolean standalone = deploymentConfiguration.isStandalone(request);
-            if (standalone) {
-                setupStandaloneDocument(context);
-                deploymentConfiguration.getVaadinContext()
-                        .fireModifyBootstrapEvent(bootstrapResponse);
-                sendBootstrapHeaders(response, headers);
-                writeBootstrapPage(response, bootstrapResponse.getDocument());
-            } else {
-                deploymentConfiguration.getVaadinContext()
-                        .fireModifyBootstrapEvent(bootstrapResponse);
-                writeBootstrapPage(response,
-                        bootstrapResponse.getApplicationTag());
-            }
+
+            VaadinContext vContext = deploymentConfiguration.getVaadinContext();
+            BootstrapFragmentResponse fragmentResponse = context
+                    .getBootstrapResponse();
+            vContext.fireModifyBootstrapEvent(fragmentResponse);
+
+            String html = getBootstrapHtml(context);
+
+            writeBootstrapPage(response, html);
         } catch (JSONException e) {
             writeError(response, e);
         }
 
         return true;
+    }
+
+    private String getBootstrapHtml(BootstrapContext context) {
+        WrappedRequest request = context.getRequest();
+        WrappedResponse response = context.getResponse();
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
+        VaadinContext vContext = deploymentConfiguration.getVaadinContext();
+        BootstrapFragmentResponse fragmentResponse = context
+                .getBootstrapResponse();
+
+        if (deploymentConfiguration.isStandalone(request)) {
+            Map<String, Object> headers = new LinkedHashMap<String, Object>();
+            Document document = Document.createShell("");
+            BootstrapPageResponse pageResponse = new BootstrapPageResponse(
+                    this, request, document, headers, context.getApplication(),
+                    context.getRootId());
+            List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
+            Element body = document.body();
+            for (Node node : fragmentNodes) {
+                body.appendChild(node);
+            }
+
+            setupStandaloneDocument(context, pageResponse);
+            vContext.fireModifyBootstrapEvent(pageResponse);
+
+            sendBootstrapHeaders(response, headers);
+
+            return document.outerHtml();
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (Node node : fragmentResponse.getFragmentNodes()) {
+                if (sb.length() != 0) {
+                    sb.append('\n');
+                }
+                sb.append(node.outerHtml());
+            }
+
+            return sb.toString();
+        }
     }
 
     private void sendBootstrapHeaders(WrappedResponse response,
@@ -170,17 +205,17 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
     }
 
-    private void writeBootstrapPage(WrappedResponse response, Element dom)
+    private void writeBootstrapPage(WrappedResponse response, String html)
             throws IOException {
         response.setContentType("text/html");
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream(), "UTF-8"));
-        writer.append(dom.outerHtml());
+        writer.append(html);
         writer.close();
     }
 
-    private void setupStandaloneDocument(BootstrapContext context) {
-        BootstrapResponse response = context.getBootstrapResponse();
+    private void setupStandaloneDocument(BootstrapContext context,
+            BootstrapPageResponse response) {
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
@@ -229,22 +264,10 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     public BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application, Integer rootId,
-            Map<String, Object> headers) {
-        boolean standalone = request.getDeploymentConfiguration().isStandalone(
-                request);
-        Document document;
-        Element applicationTag;
-        if (standalone) {
-            document = Document.createShell("");
-            applicationTag = document.body();
-        } else {
-            document = null;
-            applicationTag = new Element(Tag.valueOf("div"), "");
-        }
+            WrappedResponse response, Application application, Integer rootId) {
         BootstrapContext context = new BootstrapContext(response,
-                new BootstrapResponse(this, request, document, applicationTag,
-                        headers, application, rootId));
+                new BootstrapFragmentResponse(this, request, new ArrayList<Node>(),
+                        application, rootId));
         return context;
     }
 
@@ -305,10 +328,10 @@ public abstract class BootstrapHandler implements RequestHandler {
                 + context.getApplication().getClass().getSimpleName();
 
         String classNames = "v-app " + appClass;
+        List<Node> fragmentNodes = context.getBootstrapResponse()
+                .getFragmentNodes();
 
-        Element applicationTag = context.getBootstrapResponse()
-                .getApplicationTag();
-        Element mainDiv = applicationTag.appendElement("div");
+        Element mainDiv = new Element(Tag.valueOf("div"), "");
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass(classNames);
         if (style != null && style.length() != 0) {
@@ -317,6 +340,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         mainDiv.appendElement("div").addClass("v-app-loading");
         mainDiv.appendElement("noscript")
                 .append("You have to enable javascript in your browser to use an application built with Vaadin.");
+        fragmentNodes.add(mainDiv);
 
         WrappedRequest request = context.getRequest();
 
@@ -325,19 +349,19 @@ public abstract class BootstrapHandler implements RequestHandler {
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
 
-        applicationTag
-                .appendElement("iframe")
-                .attr("tabIndex", "-1")
-                .attr("id", "__gwt_historyFrame")
-                .attr("style",
-                        "position:absolute;width:0;height:0;border:0;overflow:hidden")
-                .attr("src", "javascript:false");
+        fragmentNodes
+                .add(new Element(Tag.valueOf("iframe"), "")
+                        .attr("tabIndex", "-1")
+                        .attr("id", "__gwt_historyFrame")
+                        .attr("style",
+                                "position:absolute;width:0;height:0;border:0;overflow:hidden")
+                        .attr("src", "javascript:false"));
 
         String bootstrapLocation = staticFileLocation
                 + "/VAADIN/vaadinBootstrap.js";
-        applicationTag.appendElement("script").attr("type", "text/javascript")
-                .attr("src", bootstrapLocation);
-        Element mainScriptTag = applicationTag.appendElement("script").attr(
+        fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
+                "text/javascript").attr("src", bootstrapLocation));
+        Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
                 "type", "text/javascript");
 
         StringBuilder builder = new StringBuilder();
@@ -351,6 +375,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         builder.append("//]]>");
         mainScriptTag.appendChild(new DataNode(builder.toString(),
                 mainScriptTag.baseUri()));
+        fragmentNodes.add(mainScriptTag);
+
     }
 
     protected void appendMainScriptTagContents(BootstrapContext context,

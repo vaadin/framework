@@ -12,9 +12,12 @@ import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.tools.ReflectTools;
 
 public class VaadinContext {
-    private static final Method BOOTSTRAP_GENERATE_METHOD = ReflectTools
-            .findMethod(BootstrapListener.class, "modifyBootstrap",
-                    BootstrapResponse.class);
+    private static final Method BOOTSTRAP_FRAGMENT_METHOD = ReflectTools
+            .findMethod(BootstrapListener.class, "modifyBootstrapFragment",
+                    BootstrapFragmentResponse.class);
+    private static final Method BOOTSTRAP_PAGE_METHOD = ReflectTools
+            .findMethod(BootstrapListener.class, "modifyBootstrapPage",
+                    BootstrapPageResponse.class);
 
     private final DeploymentConfiguration deploymentConfiguration;
 
@@ -50,8 +53,10 @@ public class VaadinContext {
     }
 
     public void addBootstrapListener(BootstrapListener listener) {
-        eventRouter.addListener(BootstrapResponse.class, listener,
-                BOOTSTRAP_GENERATE_METHOD);
+        eventRouter.addListener(BootstrapFragmentResponse.class, listener,
+                BOOTSTRAP_FRAGMENT_METHOD);
+        eventRouter.addListener(BootstrapPageResponse.class, listener,
+                BOOTSTRAP_PAGE_METHOD);
     }
 
     public void fireModifyBootstrapEvent(BootstrapResponse bootstrapResponse) {

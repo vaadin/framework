@@ -2394,8 +2394,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // Use the same logic as for determined roots
             BootstrapHandler bootstrapHandler = getBootstrapHandler();
             BootstrapContext context = bootstrapHandler.createContext(
-                    combinedRequest, response, application, root.getRootId(),
-                    null);
+                    combinedRequest, response, application, root.getRootId());
 
             String widgetset = context.getWidgetsetName();
             String theme = context.getThemeName();
