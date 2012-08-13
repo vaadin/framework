@@ -404,6 +404,9 @@
             <fileset dir="shared/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
+            <fileset dir="client/src">
+                <patternset refid="preprocessable-files" />
+            </fileset>
         </copy>
 
         <copy todir="${result-src-sass}" overwrite="yes">
@@ -443,6 +446,9 @@
                 <patternset refid="non-preprocessable-files" />
             </fileset>
             <fileset dir="shared/src">
+                <patternset refid="non-preprocessable-files" />
+            </fileset>
+            <fileset dir="client/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
