@@ -190,7 +190,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return shadow != null;
     }
 
-    private void removeShim() {
+    private void removeShimElement() {
         if (shimElement != null) {
             shimElement.removeFromParent();
         }
@@ -209,7 +209,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return isShadowEnabled() && shadow.getParentElement() != null;
     }
 
-    private boolean isShimAttached() {
+    private boolean isShimElementAttached() {
         return shimElement != null && shimElement.hasParentElement();
     }
 
@@ -244,7 +244,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     private IFrameElement getShimElement() {
-        if (shimElement == null && useShimIframe()) {
+        if (shimElement == null && needsShimElement()) {
             shimElement = Document.get().createIFrameElement();
 
             // Insert shim iframe before the main overlay element. It does not
@@ -349,7 +349,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
         // Always ensure shadow is removed when the overlay is removed.
         removeShadowIfPresent();
-        removeShim();
+        removeShimElement();
     }
 
     @Override
@@ -463,7 +463,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
                     : "");
         }
-        if (useShimIframe()) {
+        if (needsShimElement()) {
             updatePositionAndSize((Element) Element.as(getShimElement()),
                     positionAndSize);
         }
@@ -490,9 +490,9 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
             sinkShadowEvents();
         }
-        if (useShimIframe() && !isShimAttached()) {
+        if (needsShimElement() && !isShimElementAttached()) {
             RootPanel.get().getElement()
-                    .insertBefore(shimElement, getElement());
+                    .insertBefore(getShimElement(), getElement());
         }
 
     }
@@ -504,7 +504,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * 
      * @return true if a shim iframe should be added, false otherwise
      */
-    protected boolean useShimIframe() {
+    protected boolean needsShimElement() {
         BrowserInfo info = BrowserInfo.get();
         return info.isIE() && info.isBrowserVersionNewerOrEqual(8, 0);
     }
