@@ -28,8 +28,6 @@ public class VDateField extends FlowPanel implements Field {
     public static final int RESOLUTION_MIN = 16;
     public static final int RESOLUTION_SEC = 32;
 
-    public static final String WEEK_NUMBERS = "wn";
-
     static String resolutionToString(int res) {
         if (res > RESOLUTION_DAY) {
             return "full";

@@ -17,11 +17,11 @@ import javax.portlet.ResourceURL;
 import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConfiguration;
 import com.vaadin.ui.Root;
 
 /**
@@ -91,7 +91,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                         .createResourceURL();
                 portletResourceUrl
                         .setResourceID(AbstractApplicationPortlet.RESOURCE_URL_ID);
-                defaults.put(ApplicationConfiguration.PORTLET_RESOUCE_URL_BASE,
+                defaults.put(ApplicationConstants.PORTLET_RESOUCE_URL_BASE,
                         portletResourceUrl.toString());
 
                 defaults.put("pathInfo", "");

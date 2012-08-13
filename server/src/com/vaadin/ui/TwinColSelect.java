@@ -7,9 +7,9 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
+import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.twincolselect.VTwinColSelect;
 
 /**
  * Multiselect component with two lists: left side for available items and right
@@ -128,10 +128,12 @@ public class TwinColSelect extends AbstractSelect {
         String lc = getLeftColumnCaption();
         String rc = getRightColumnCaption();
         if (lc != null) {
-            target.addAttribute(VTwinColSelect.ATTRIBUTE_LEFT_CAPTION, lc);
+            target.addAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION,
+                    lc);
         }
         if (rc != null) {
-            target.addAttribute(VTwinColSelect.ATTRIBUTE_RIGHT_CAPTION, rc);
+            target.addAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION,
+                    rc);
         }
 
         super.paintContent(target);

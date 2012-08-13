@@ -18,6 +18,8 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
+import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.LegacyPaint;
@@ -25,8 +27,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.tabsheet.TabsheetBaseConnector;
-import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheet;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.themes.Reindeer;
 import com.vaadin.ui.themes.Runo;
@@ -390,7 +390,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             target.startTag("tab");
             if (!tab.isEnabled() && tab.isVisible()) {
                 target.addAttribute(
-                        TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED, true);
+                        TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED, true);
             }
 
             if (!tab.isVisible()) {
@@ -405,30 +405,30 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             // VCaption.updateCaption(uidl)
             final Resource icon = tab.getIcon();
             if (icon != null) {
-                target.addAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON,
+                target.addAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON,
                         icon);
             }
             final String caption = tab.getCaption();
             if (caption != null && caption.length() > 0) {
                 target.addAttribute(
-                        TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION, caption);
+                        TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION, caption);
             }
             ErrorMessage tabError = tab.getComponentError();
             if (tabError != null) {
                 target.addAttribute(
-                        TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE,
+                        TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE,
                         tabError.getFormattedHtmlMessage());
             }
             final String description = tab.getDescription();
             if (description != null) {
                 target.addAttribute(
-                        TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION,
+                        TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION,
                         description);
             }
 
             final String styleName = tab.getStyleName();
             if (styleName != null && styleName.length() != 0) {
-                target.addAttribute(VTabsheet.TAB_STYLE_NAME, styleName);
+                target.addAttribute(TabsheetConstants.TAB_STYLE_NAME, styleName);
             }
 
             target.addAttribute("key", keyMapper.key(component));

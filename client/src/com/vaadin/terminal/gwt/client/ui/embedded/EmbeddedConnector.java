@@ -17,6 +17,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -31,8 +32,6 @@ import com.vaadin.ui.Embedded;
 @Connect(Embedded.class)
 public class EmbeddedConnector extends AbstractComponentConnector implements
         Paintable {
-
-    public static final String ALTERNATE_TEXT = "alt";
 
     EmbeddedServerRpc rpc;
 
@@ -96,9 +95,10 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                 DOM.setElementProperty(el, "src",
                         getWidget().getSrc(uidl, client));
 
-                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
-                    el.setPropertyString(ALTERNATE_TEXT,
-                            uidl.getStringAttribute(ALTERNATE_TEXT));
+                if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
+                    el.setPropertyString(
+                            EmbeddedConstants.ALTERNATE_TEXT,
+                            uidl.getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
                 }
 
                 if (created) {
@@ -188,8 +188,9 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                             uidl.getStringAttribute("standby"));
                 }
                 getWidget().getElement().appendChild(obj);
-                if (uidl.hasAttribute(ALTERNATE_TEXT)) {
-                    obj.setInnerText(uidl.getStringAttribute(ALTERNATE_TEXT));
+                if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
+                    obj.setInnerText(uidl
+                            .getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
                 }
             } else {
                 VConsole.log("Unknown Embedded mimetype '" + mime + "'");

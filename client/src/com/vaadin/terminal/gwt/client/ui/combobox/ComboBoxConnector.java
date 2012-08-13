@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui.combobox;
 import java.util.Iterator;
 
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -46,8 +47,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         // Inverse logic here to make the default case (text input enabled)
         // work without additional UIDL messages
         boolean noTextInput = uidl
-                .hasAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT)
-                && uidl.getBooleanAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT);
+                .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
+                && uidl.getBooleanAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT);
         getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
@@ -72,10 +73,10 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().pageLength = uidl.getIntAttribute("pagelength");
         }
 
-        if (uidl.hasAttribute(VFilterSelect.ATTR_INPUTPROMPT)) {
+        if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
             // input prompt changed from server
             getWidget().inputPrompt = uidl
-                    .getStringAttribute(VFilterSelect.ATTR_INPUTPROMPT);
+                    .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
         } else {
             getWidget().inputPrompt = "";
         }

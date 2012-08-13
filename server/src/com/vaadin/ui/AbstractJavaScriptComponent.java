@@ -5,8 +5,6 @@ package com.vaadin.ui;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.JavaScriptCallbackHelper;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
 
 /**
  * Base class for Components with all client-side logic implemented using

@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.menubar.VMenuBar;
 
 /**
  * <p>
@@ -41,10 +41,11 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
     /** Paint (serialise) the component for the client. */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER, openRootOnHover);
+        target.addAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER,
+                openRootOnHover);
 
         if (isHtmlContentAllowed()) {
-            target.addAttribute(VMenuBar.HTML_CONTENT_ALLOWED, true);
+            target.addAttribute(MenuBarConstants.HTML_CONTENT_ALLOWED, true);
         }
 
         target.startTag("options");
@@ -80,7 +81,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
         target.addAttribute("id", item.getId());
 
         if (item.getStyleName() != null) {
-            target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_STYLE,
+            target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE,
                     item.getStyleName());
         }
 
@@ -96,22 +97,24 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
             Resource icon = item.getIcon();
             if (icon != null) {
-                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_ICON, icon);
+                target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_ICON, icon);
             }
 
             if (!item.isEnabled()) {
-                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_DISABLED, true);
+                target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DISABLED,
+                        true);
             }
 
             String description = item.getDescription();
             if (description != null && description.length() > 0) {
-                target.addAttribute(VMenuBar.ATTRIBUTE_ITEM_DESCRIPTION,
+                target.addAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }
             if (item.isCheckable()) {
                 // if the "checked" attribute is present (either true or false),
                 // the item is checkable
-                target.addAttribute(VMenuBar.ATTRIBUTE_CHECKED,
+                target.addAttribute(MenuBarConstants.ATTRIBUTE_CHECKED,
                         item.isChecked());
             }
             if (item.hasChildren()) {

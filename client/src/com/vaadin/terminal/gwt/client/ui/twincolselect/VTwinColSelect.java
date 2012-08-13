@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
@@ -36,8 +37,6 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         MouseDownHandler, DoubleClickHandler, SubPartAware {
 
     private static final String CLASSNAME = "v-select-twincol";
-    public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
-    public static final String ATTRIBUTE_RIGHT_CAPTION = "rc";
 
     private static final int VISIBLE_COUNT = 10;
 
@@ -157,10 +156,14 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     }
 
     protected void updateCaptions(UIDL uidl) {
-        String leftCaption = (uidl.hasAttribute(ATTRIBUTE_LEFT_CAPTION) ? uidl
-                .getStringAttribute(ATTRIBUTE_LEFT_CAPTION) : null);
-        String rightCaption = (uidl.hasAttribute(ATTRIBUTE_RIGHT_CAPTION) ? uidl
-                .getStringAttribute(ATTRIBUTE_RIGHT_CAPTION) : null);
+        String leftCaption = (uidl
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION) ? uidl
+                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_LEFT_CAPTION)
+                : null);
+        String rightCaption = (uidl
+                .hasAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION) ? uidl
+                .getStringAttribute(TwinColSelectConstants.ATTRIBUTE_RIGHT_CAPTION)
+                : null);
 
         boolean hasCaptions = (leftCaption != null || rightCaption != null);
 

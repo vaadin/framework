@@ -29,12 +29,12 @@ import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.Version;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
 
 public abstract class BootstrapHandler implements RequestHandler {
@@ -256,7 +256,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         Element body = document.body();
         body.attr("scroll", "auto");
-        body.addClass(ApplicationConnection.GENERATED_BODY_CLASSNAME);
+        body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
     public BootstrapContext createContext(WrappedRequest request,
@@ -410,7 +410,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject appConfig = new JSONObject();
 
         if (rootId != null) {
-            appConfig.put(ApplicationConnection.ROOT_ID_PARAMETER, rootId);
+            appConfig.put(ApplicationConstants.ROOT_ID_PARAMETER, rootId);
         }
 
         if (context.getThemeName() != null) {

@@ -17,12 +17,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
-import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 
 public class VNotification extends VOverlay {
 
@@ -59,13 +59,6 @@ public class VNotification extends VOverlay {
 
     private ArrayList<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
-
-    public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
-    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
-    public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
-    public static final String ATTRIBUTE_NOTIFICATION_ICON = "icon";
-    public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
-    public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
 
     /**
      * Default constructor. You should use GWT.create instead.
@@ -378,25 +371,29 @@ public class VNotification extends VOverlay {
     public static void showNotification(ApplicationConnection client,
             final UIDL notification) {
         boolean onlyPlainText = notification
-                .hasAttribute(VRoot.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+                .hasAttribute(RootConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
-        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_ICON)) {
-            final String parsedUri = client.translateVaadinUri(notification
-                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_ICON));
+        if (notification
+                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
+            final String parsedUri = client
+                    .translateVaadinUri(notification
+                            .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON));
             html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
         }
-        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_CAPTION)) {
+        if (notification
+                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
             String caption = notification
-                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_CAPTION);
+                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
                 caption = Util.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
             html += "<h1>" + caption + "</h1>";
         }
-        if (notification.hasAttribute(ATTRIBUTE_NOTIFICATION_MESSAGE)) {
+        if (notification
+                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
             String message = notification
-                    .getStringAttribute(ATTRIBUTE_NOTIFICATION_MESSAGE);
+                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
                 message = Util.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
@@ -405,12 +402,13 @@ public class VNotification extends VOverlay {
         }
 
         final String style = notification
-                .hasAttribute(ATTRIBUTE_NOTIFICATION_STYLE) ? notification
-                .getStringAttribute(ATTRIBUTE_NOTIFICATION_STYLE) : null;
+                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE) ? notification
+                .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE)
+                : null;
         final int position = notification
-                .getIntAttribute(ATTRIBUTE_NOTIFICATION_POSITION);
+                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_POSITION);
         final int delay = notification
-                .getIntAttribute(ATTRIBUTE_NOTIFICATION_DELAY);
+                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay).show(html, position, style);
     }
 

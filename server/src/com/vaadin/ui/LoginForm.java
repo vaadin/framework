@@ -13,12 +13,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * LoginForm is a Vaadin component to handle common problem among Ajax
@@ -156,7 +156,7 @@ public class LoginForm extends CustomComponent {
                     + " if (keycode == 13) {document.forms[0].submit();}  } \n"
                     + "</script>"
                     + "</head><body onload='setTarget();' style='margin:0;padding:0; background:transparent;' class=\""
-                    + ApplicationConnection.GENERATED_BODY_CLASSNAME
+                    + ApplicationConstants.GENERATED_BODY_CLASSNAME
                     + "\">"
                     + "<div class='v-app v-app-loginpage' style=\"background:transparent;\">"
                     + "<iframe name='logintarget' style='width:0;height:0;"

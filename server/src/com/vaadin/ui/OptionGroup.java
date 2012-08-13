@@ -15,9 +15,9 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.optiongroup.VOptionGroup;
 
 /**
  * Configures select to be used as an option group.
@@ -49,7 +49,7 @@ public class OptionGroup extends AbstractSelect implements
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "optiongroup");
         if (isHtmlContentAllowed()) {
-            target.addAttribute(VOptionGroup.HTML_CONTENT_ALLOWED, true);
+            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED, true);
         }
         super.paintContent(target);
     }
@@ -59,7 +59,8 @@ public class OptionGroup extends AbstractSelect implements
             throws PaintException {
         super.paintItem(target, itemId);
         if (!isItemEnabled(itemId)) {
-            target.addAttribute(VOptionGroup.ATTRIBUTE_OPTION_DISABLED, true);
+            target.addAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED,
+                    true);
         }
     }
 

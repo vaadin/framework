@@ -13,9 +13,8 @@ import java.util.List;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.root.PageClientRpc;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
-import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.tools.ReflectTools;
@@ -467,31 +466,32 @@ public class Page implements Serializable {
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute(
-                            VNotification.ATTRIBUTE_NOTIFICATION_CAPTION,
+                            RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION,
                             n.getCaption());
                 }
                 if (n.getDescription() != null) {
                     target.addAttribute(
-                            VNotification.ATTRIBUTE_NOTIFICATION_MESSAGE,
+                            RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE,
                             n.getDescription());
                 }
                 if (n.getIcon() != null) {
                     target.addAttribute(
-                            VNotification.ATTRIBUTE_NOTIFICATION_ICON,
+                            RootConstants.ATTRIBUTE_NOTIFICATION_ICON,
                             n.getIcon());
                 }
                 if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
-                            VRoot.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED, true);
+                            RootConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
+                            true);
                 }
                 target.addAttribute(
-                        VNotification.ATTRIBUTE_NOTIFICATION_POSITION,
+                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION,
                         n.getPosition());
-                target.addAttribute(VNotification.ATTRIBUTE_NOTIFICATION_DELAY,
+                target.addAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
                     target.addAttribute(
-                            VNotification.ATTRIBUTE_NOTIFICATION_STYLE,
+                            RootConstants.ATTRIBUTE_NOTIFICATION_STYLE,
                             n.getStyleName());
                 }
                 target.endTag("notification");
@@ -501,7 +501,7 @@ public class Page implements Serializable {
         }
 
         if (fragment != null) {
-            target.addAttribute(VRoot.FRAGMENT_VARIABLE, fragment);
+            target.addAttribute(RootConstants.FRAGMENT_VARIABLE, fragment);
         }
 
     }

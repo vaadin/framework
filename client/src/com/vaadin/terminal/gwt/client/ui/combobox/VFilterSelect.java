@@ -919,8 +919,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";
-    protected static final String ATTR_INPUTPROMPT = "prompt";
-    public static final String ATTR_NO_TEXT_INPUT = "noInput";
     protected String inputPrompt = "";
     protected boolean prompting = false;
 
@@ -1688,9 +1686,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     @Override
     public Element getSubPartElement(String subPart) {
         if ("textbox".equals(subPart)) {
-            return this.tb.getElement();
+            return tb.getElement();
         } else if ("button".equals(subPart)) {
-            return this.popupOpener.getElement();
+            return popupOpener.getElement();
         }
         return null;
     }

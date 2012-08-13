@@ -39,12 +39,11 @@ import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.tree.TreeConnector;
-import com.vaadin.terminal.gwt.client.ui.tree.VTree;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -604,7 +603,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (itemStyleGenerator != null) {
                     String stylename = itemStyleGenerator.getStyle(itemId);
                     if (stylename != null) {
-                        target.addAttribute(TreeConnector.ATTRIBUTE_NODE_STYLE,
+                        target.addAttribute(TreeConstants.ATTRIBUTE_NODE_STYLE,
                                 stylename);
                     }
                 }
@@ -618,11 +617,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
 
                 // Adds the attributes
-                target.addAttribute(TreeConnector.ATTRIBUTE_NODE_CAPTION,
+                target.addAttribute(TreeConstants.ATTRIBUTE_NODE_CAPTION,
                         getItemCaption(itemId));
                 final Resource icon = getItemIcon(itemId);
                 if (icon != null) {
-                    target.addAttribute(TreeConnector.ATTRIBUTE_NODE_ICON,
+                    target.addAttribute(TreeConstants.ATTRIBUTE_NODE_ICON,
                             getItemIcon(itemId));
                 }
                 final String key = itemIdMapper.key(itemId);
@@ -680,11 +679,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Action a = i.next();
                 target.startTag("action");
                 if (a.getCaption() != null) {
-                    target.addAttribute(TreeConnector.ATTRIBUTE_ACTION_CAPTION,
+                    target.addAttribute(TreeConstants.ATTRIBUTE_ACTION_CAPTION,
                             a.getCaption());
                 }
                 if (a.getIcon() != null) {
-                    target.addAttribute(TreeConnector.ATTRIBUTE_ACTION_ICON,
+                    target.addAttribute(TreeConstants.ATTRIBUTE_ACTION_ICON,
                             a.getIcon());
                 }
                 target.addAttribute("key", actionMapper.key(a));
@@ -1162,13 +1161,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     @Override
     public void addListener(ItemClickListener listener) {
-        addListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class, listener,
-                ItemClickEvent.ITEM_CLICK_METHOD);
+        addListener(TreeConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+                listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
     @Override
     public void removeListener(ItemClickListener listener) {
-        removeListener(VTree.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+        removeListener(TreeConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
     }
 

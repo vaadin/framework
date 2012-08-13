@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -70,8 +71,6 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         SubPartAware, ActionOwner {
 
     public static final String CLASSNAME = "v-tree";
-
-    public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 
     /**
      * Click selects the current node, ctrl/shift toggles multi selection
@@ -663,8 +662,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
             final boolean inCaption = isCaptionElement(target);
             if (inCaption
-                    && client
-                            .hasEventListeners(VTree.this, ITEM_CLICK_EVENT_ID)
+                    && client.hasEventListeners(VTree.this,
+                            TreeConstants.ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);

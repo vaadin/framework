@@ -41,12 +41,12 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.LegacyPaint;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.client.ui.table.VScrollTable;
 
 /**
  * <p>
@@ -2874,9 +2874,9 @@ public class Table extends AbstractSelect implements Action.Container,
              */
             int pageBufferLastIndex = pageBufferFirstIndex
                     + pageBuffer[CELL_ITEMID].length - 1;
-            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST,
+            target.addAttribute(TableConstants.ATTRIBUTE_PAGEBUFFER_FIRST,
                     pageBufferFirstIndex);
-            target.addAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_LAST,
+            target.addAttribute(TableConstants.ATTRIBUTE_PAGEBUFFER_LAST,
                     pageBufferLastIndex);
         } else if (target.isFullRepaint() || isRowCacheInvalidated()) {
             paintRows(target, cells, actionSet);
@@ -2899,7 +2899,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (keyMapperReset) {
             keyMapperReset = false;
-            target.addAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET, true);
+            target.addAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET, true);
         }
 
         if (dropHandler != null) {
@@ -4579,14 +4579,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void addListener(ItemClickListener listener) {
-        addListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
+        addListener(TableConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
     @Override
     public void removeListener(ItemClickListener listener) {
-        removeListener(VScrollTable.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
-                listener);
+        removeListener(TableConstants.ITEM_CLICK_EVENT_ID,
+                ItemClickEvent.class, listener);
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();
@@ -4930,8 +4930,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The handler which should handle the header click events.
      */
     public void addListener(HeaderClickListener listener) {
-        addListener(VScrollTable.HEADER_CLICK_EVENT_ID, HeaderClickEvent.class,
-                listener, HeaderClickEvent.HEADER_CLICK_METHOD);
+        addListener(TableConstants.HEADER_CLICK_EVENT_ID,
+                HeaderClickEvent.class, listener,
+                HeaderClickEvent.HEADER_CLICK_METHOD);
     }
 
     /**
@@ -4941,7 +4942,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to remove.
      */
     public void removeListener(HeaderClickListener listener) {
-        removeListener(VScrollTable.HEADER_CLICK_EVENT_ID,
+        removeListener(TableConstants.HEADER_CLICK_EVENT_ID,
                 HeaderClickEvent.class, listener);
     }
 
@@ -4957,8 +4958,9 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The handler which should handle the footer click events.
      */
     public void addListener(FooterClickListener listener) {
-        addListener(VScrollTable.FOOTER_CLICK_EVENT_ID, FooterClickEvent.class,
-                listener, FooterClickEvent.FOOTER_CLICK_METHOD);
+        addListener(TableConstants.FOOTER_CLICK_EVENT_ID,
+                FooterClickEvent.class, listener,
+                FooterClickEvent.FOOTER_CLICK_METHOD);
     }
 
     /**
@@ -4968,7 +4970,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to remove.
      */
     public void removeListener(FooterClickListener listener) {
-        removeListener(VScrollTable.FOOTER_CLICK_EVENT_ID,
+        removeListener(TableConstants.FOOTER_CLICK_EVENT_ID,
                 FooterClickEvent.class, listener);
     }
 
@@ -5124,7 +5126,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to attach to the Table
      */
     public void addListener(ColumnResizeListener listener) {
-        addListener(VScrollTable.COLUMN_RESIZE_EVENT_ID,
+        addListener(TableConstants.COLUMN_RESIZE_EVENT_ID,
                 ColumnResizeEvent.class, listener,
                 ColumnResizeEvent.COLUMN_RESIZE_METHOD);
     }
@@ -5136,7 +5138,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to remove
      */
     public void removeListener(ColumnResizeListener listener) {
-        removeListener(VScrollTable.COLUMN_RESIZE_EVENT_ID,
+        removeListener(TableConstants.COLUMN_RESIZE_EVENT_ID,
                 ColumnResizeEvent.class, listener);
     }
 
@@ -5190,7 +5192,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to attach to the Table
      */
     public void addListener(ColumnReorderListener listener) {
-        addListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
+        addListener(TableConstants.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener, ColumnReorderEvent.METHOD);
     }
 
@@ -5201,7 +5203,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            The listener to remove
      */
     public void removeListener(ColumnReorderListener listener) {
-        removeListener(VScrollTable.COLUMN_REORDER_EVENT_ID,
+        removeListener(TableConstants.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener);
     }
 

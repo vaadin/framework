@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -53,11 +54,11 @@ public class TableConnector extends AbstractComponentContainerConnector
         // required.
         ContextMenuDetails contextMenuBeforeUpdate = getWidget().contextMenu;
 
-        if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST)) {
+        if (uidl.hasAttribute(TableConstants.ATTRIBUTE_PAGEBUFFER_FIRST)) {
             getWidget().serverCacheFirst = uidl
-                    .getIntAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_FIRST);
+                    .getIntAttribute(TableConstants.ATTRIBUTE_PAGEBUFFER_FIRST);
             getWidget().serverCacheLast = uidl
-                    .getIntAttribute(VScrollTable.ATTRIBUTE_PAGEBUFFER_LAST);
+                    .getIntAttribute(TableConstants.ATTRIBUTE_PAGEBUFFER_LAST);
         } else {
             getWidget().serverCacheFirst = -1;
             getWidget().serverCacheLast = -1;
@@ -255,8 +256,8 @@ public class TableConnector extends AbstractComponentContainerConnector
          * be cleared a little later when the row focus has been restored.
          * (#8584)
          */
-        if (uidl.hasAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
-                && uidl.getBooleanAttribute(VScrollTable.ATTRIBUTE_KEY_MAPPER_RESET)
+        if (uidl.hasAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET)
+                && uidl.getBooleanAttribute(TableConstants.ATTRIBUTE_KEY_MAPPER_RESET)
                 && getWidget().selectionRangeStart != null) {
             assert !getWidget().selectionRangeStart.isAttached();
             getWidget().selectionRangeStart = getWidget().focusedRow;

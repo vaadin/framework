@@ -19,6 +19,7 @@ import com.vaadin.ui.TabSheet;
 public class TabsheetConnector extends TabsheetBaseConnector implements
         SimpleManagedLayout, MayScrollChildren {
 
+    // Can't use "style" as it's already in use
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 

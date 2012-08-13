@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -54,10 +55,10 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
             getWidget().startNextUpload();
 
             getWidget().dragStartMode = uidl
-                    .getIntAttribute(VDragAndDropWrapper.DRAG_START_MODE);
+                    .getIntAttribute(DragAndDropWrapperConstants.DRAG_START_MODE);
             getWidget().initDragStartMode();
             getWidget().html5DataFlavors = uidl
-                    .getMapAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS);
+                    .getMapAttribute(DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
 
             // Used to prevent wrapper from stealing tooltips when not defined
             getWidget().hasTooltip = getState().hasDescription();

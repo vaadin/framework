@@ -12,6 +12,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -153,9 +154,9 @@ public class VEmbedded extends HTML {
         // End embed tag
         html.append("></embed>");
 
-        if (uidl.hasAttribute(EmbeddedConnector.ALTERNATE_TEXT)) {
+        if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
             html.append(uidl
-                    .getStringAttribute(EmbeddedConnector.ALTERNATE_TEXT));
+                    .getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
         }
 
         // End object tag

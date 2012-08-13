@@ -6,24 +6,24 @@ package com.vaadin.terminal.gwt.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 public class LegacyChangeVariablesInvocation extends MethodInvocation {
     private Map<String, Object> variableChanges = new HashMap<String, Object>();
 
     public LegacyChangeVariablesInvocation(String connectorId,
             String variableName, Object value) {
-        super(connectorId, ApplicationConnection.UPDATE_VARIABLE_INTERFACE,
-                ApplicationConnection.UPDATE_VARIABLE_METHOD);
+        super(connectorId, ApplicationConstants.UPDATE_VARIABLE_INTERFACE,
+                ApplicationConstants.UPDATE_VARIABLE_METHOD);
         setVariableChange(variableName, value);
     }
 
     public static boolean isLegacyVariableChange(String interfaceName,
             String methodName) {
-        return ApplicationConnection.UPDATE_VARIABLE_METHOD
+        return ApplicationConstants.UPDATE_VARIABLE_METHOD
                 .equals(interfaceName)
-                && ApplicationConnection.UPDATE_VARIABLE_METHOD
+                && ApplicationConstants.UPDATE_VARIABLE_METHOD
                         .equals(methodName);
     }
 

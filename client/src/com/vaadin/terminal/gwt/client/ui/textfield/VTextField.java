@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Util;
@@ -33,9 +34,6 @@ import com.vaadin.terminal.gwt.client.ui.Field;
 public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         FocusHandler, BlurHandler, KeyDownHandler {
 
-    public static final String VAR_CUR_TEXT = "curText";
-
-    public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
     /**
      * The input node CSS classname.
      */
@@ -62,10 +60,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     private int maxLength = -1;
 
     private static final String CLASSNAME_PROMPT = "prompt";
-    public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
-    public static final String VAR_CURSOR = "c";
-    public static final String ATTR_TEXTCHANGE_EVENTMODE = "iem";
-    protected static final String TEXTCHANGE_MODE_EAGER = "EAGER";
     private static final String TEXTCHANGE_MODE_TIMEOUT = "TIMEOUT";
 
     private String inputPrompt = null;
@@ -142,7 +136,8 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
                 client.sendPendingVariableChanges();
             } else {
                 // Default case - just send an immediate text change message
-                client.updateVariable(paintableId, VAR_CUR_TEXT, text, true);
+                client.updateVariable(paintableId,
+                        TextFieldConstants.VAR_CUR_TEXT, text, true);
 
                 // Shouldn't investigate valueBeforeEdit to avoid duplicate text
                 // change events as the states are not in sync any more
@@ -334,7 +329,8 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         if (Util.isAttachedAndDisplayed(this)) {
             int cursorPos = getCursorPos();
             if (lastCursorPos != cursorPos) {
-                client.updateVariable(paintableId, VAR_CURSOR, cursorPos, false);
+                client.updateVariable(paintableId,
+                        TextFieldConstants.VAR_CURSOR, cursorPos, false);
                 lastCursorPos = cursorPos;
                 return true;
             }

@@ -20,12 +20,12 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -161,14 +161,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             sizeHasChanged = true;
         }
         Integer browserHeightVar = (Integer) variables
-                .get(VRoot.BROWSER_HEIGHT_VAR);
+                .get(RootConstants.BROWSER_HEIGHT_VAR);
         if (browserHeightVar != null
                 && browserHeightVar.intValue() != browserWindowHeight) {
             browserWindowHeight = browserHeightVar.intValue();
             sizeHasChanged = true;
         }
         Integer browserWidthVar = (Integer) variables
-                .get(VRoot.BROWSER_WIDTH_VAR);
+                .get(RootConstants.BROWSER_WIDTH_VAR);
         if (browserWidthVar != null
                 && browserWidthVar.intValue() != browserWindowWidth) {
             browserWindowWidth = browserWidthVar.intValue();

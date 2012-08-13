@@ -10,6 +10,7 @@ import java.util.Map;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -23,13 +24,6 @@ import com.vaadin.ui.Tree;
 @Connect(Tree.class)
 public class TreeConnector extends AbstractComponentConnector implements
         Paintable {
-
-    public static final String ATTRIBUTE_NODE_STYLE = "style";
-    public static final String ATTRIBUTE_NODE_CAPTION = "caption";
-    public static final String ATTRIBUTE_NODE_ICON = "icon";
-
-    public static final String ATTRIBUTE_ACTION_CAPTION = "caption";
-    public static final String ATTRIBUTE_ACTION_ICON = ATTRIBUTE_NODE_ICON;
 
     protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
 
@@ -165,11 +159,12 @@ public class TreeConnector extends AbstractComponentConnector implements
             final UIDL action = (UIDL) it.next();
             final String key = action.getStringAttribute("key");
             final String caption = action
-                    .getStringAttribute(ATTRIBUTE_ACTION_CAPTION);
+                    .getStringAttribute(TreeConstants.ATTRIBUTE_ACTION_CAPTION);
             String iconUrl = null;
-            if (action.hasAttribute(ATTRIBUTE_ACTION_ICON)) {
-                iconUrl = getConnection().translateVaadinUri(
-                        action.getStringAttribute(ATTRIBUTE_ACTION_ICON));
+            if (action.hasAttribute(TreeConstants.ATTRIBUTE_ACTION_ICON)) {
+                iconUrl = getConnection()
+                        .translateVaadinUri(
+                                action.getStringAttribute(TreeConstants.ATTRIBUTE_ACTION_ICON));
             }
             getWidget().registerAction(key, caption, iconUrl);
         }
@@ -178,7 +173,8 @@ public class TreeConnector extends AbstractComponentConnector implements
 
     public void updateNodeFromUIDL(TreeNode treeNode, UIDL uidl) {
         String nodeKey = uidl.getStringAttribute("key");
-        treeNode.setText(uidl.getStringAttribute(ATTRIBUTE_NODE_CAPTION));
+        treeNode.setText(uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_CAPTION));
         treeNode.key = nodeKey;
 
         getWidget().registerNode(treeNode);
@@ -197,9 +193,9 @@ public class TreeConnector extends AbstractComponentConnector implements
         } else {
             treeNode.addStyleName(TreeNode.CLASSNAME + "-leaf");
         }
-        if (uidl.hasAttribute(ATTRIBUTE_NODE_STYLE)) {
+        if (uidl.hasAttribute(TreeConstants.ATTRIBUTE_NODE_STYLE)) {
             treeNode.setNodeStyleName(uidl
-                    .getStringAttribute(ATTRIBUTE_NODE_STYLE));
+                    .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_STYLE));
         }
 
         String description = uidl.getStringAttribute("descr");
@@ -218,7 +214,8 @@ public class TreeConnector extends AbstractComponentConnector implements
             getWidget().selectedIds.add(nodeKey);
         }
 
-        treeNode.setIcon(uidl.getStringAttribute(ATTRIBUTE_NODE_ICON));
+        treeNode.setIcon(uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON));
     }
 
     void renderChildNodes(TreeNode containerNode, Iterator<UIDL> i) {

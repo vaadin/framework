@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -15,12 +16,6 @@ import com.vaadin.terminal.gwt.client.ui.AbstractComponentContainerConnector;
 
 public abstract class TabsheetBaseConnector extends
         AbstractComponentContainerConnector implements Paintable {
-
-    public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
-    public static final String ATTRIBUTE_TAB_DESCRIPTION = "description";
-    public static final String ATTRIBUTE_TAB_ERROR_MESSAGE = "error";
-    public static final String ATTRIBUTE_TAB_CAPTION = "caption";
-    public static final String ATTRIBUTE_TAB_ICON = "icon";
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -55,7 +50,7 @@ public abstract class TabsheetBaseConnector extends
             final boolean selected = tab.getBooleanAttribute("selected");
             final boolean hidden = tab.getBooleanAttribute("hidden");
 
-            if (tab.getBooleanAttribute(ATTRIBUTE_TAB_DISABLED)) {
+            if (tab.getBooleanAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED)) {
                 getWidget().disabledTabKeys.add(key);
             }
 

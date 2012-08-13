@@ -4,16 +4,15 @@
 package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.dom.client.NativeEvent;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 
 public abstract class ClickEventHandler extends AbstractClickEventHandler {
 
-    public static final String CLICK_EVENT_IDENTIFIER = "click";
-
     public ClickEventHandler(ComponentConnector connector) {
-        this(connector, CLICK_EVENT_IDENTIFIER);
+        this(connector, EventId.CLICK_EVENT_IDENTIFIER);
     }
 
     public ClickEventHandler(ComponentConnector connector,

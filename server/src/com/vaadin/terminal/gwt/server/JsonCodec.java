@@ -30,8 +30,8 @@ import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
-import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 
@@ -52,24 +52,24 @@ public class JsonCodec implements Serializable {
     private static Map<String, Class<?>> transportTypeToType = new HashMap<String, Class<?>>();
 
     static {
-        registerType(String.class, JsonEncoder.VTYPE_STRING);
-        registerType(Connector.class, JsonEncoder.VTYPE_CONNECTOR);
-        registerType(Boolean.class, JsonEncoder.VTYPE_BOOLEAN);
-        registerType(boolean.class, JsonEncoder.VTYPE_BOOLEAN);
-        registerType(Integer.class, JsonEncoder.VTYPE_INTEGER);
-        registerType(int.class, JsonEncoder.VTYPE_INTEGER);
-        registerType(Float.class, JsonEncoder.VTYPE_FLOAT);
-        registerType(float.class, JsonEncoder.VTYPE_FLOAT);
-        registerType(Double.class, JsonEncoder.VTYPE_DOUBLE);
-        registerType(double.class, JsonEncoder.VTYPE_DOUBLE);
-        registerType(Long.class, JsonEncoder.VTYPE_LONG);
-        registerType(long.class, JsonEncoder.VTYPE_LONG);
-        registerType(String[].class, JsonEncoder.VTYPE_STRINGARRAY);
-        registerType(Object[].class, JsonEncoder.VTYPE_ARRAY);
-        registerType(Map.class, JsonEncoder.VTYPE_MAP);
-        registerType(HashMap.class, JsonEncoder.VTYPE_MAP);
-        registerType(List.class, JsonEncoder.VTYPE_LIST);
-        registerType(Set.class, JsonEncoder.VTYPE_SET);
+        registerType(String.class, JsonConstants.VTYPE_STRING);
+        registerType(Connector.class, JsonConstants.VTYPE_CONNECTOR);
+        registerType(Boolean.class, JsonConstants.VTYPE_BOOLEAN);
+        registerType(boolean.class, JsonConstants.VTYPE_BOOLEAN);
+        registerType(Integer.class, JsonConstants.VTYPE_INTEGER);
+        registerType(int.class, JsonConstants.VTYPE_INTEGER);
+        registerType(Float.class, JsonConstants.VTYPE_FLOAT);
+        registerType(float.class, JsonConstants.VTYPE_FLOAT);
+        registerType(Double.class, JsonConstants.VTYPE_DOUBLE);
+        registerType(double.class, JsonConstants.VTYPE_DOUBLE);
+        registerType(Long.class, JsonConstants.VTYPE_LONG);
+        registerType(long.class, JsonConstants.VTYPE_LONG);
+        registerType(String[].class, JsonConstants.VTYPE_STRINGARRAY);
+        registerType(Object[].class, JsonConstants.VTYPE_ARRAY);
+        registerType(Map.class, JsonConstants.VTYPE_MAP);
+        registerType(HashMap.class, JsonConstants.VTYPE_MAP);
+        registerType(List.class, JsonConstants.VTYPE_LIST);
+        registerType(Set.class, JsonConstants.VTYPE_SET);
     }
 
     private static void registerType(Class<?> type, String transportType) {
@@ -215,24 +215,24 @@ public class JsonCodec implements Serializable {
         }
 
         // Collections
-        if (JsonEncoder.VTYPE_LIST.equals(transportType)) {
+        if (JsonConstants.VTYPE_LIST.equals(transportType)) {
             return decodeList(targetType, restrictToInternalTypes,
                     (JSONArray) encodedJsonValue, connectorTracker);
-        } else if (JsonEncoder.VTYPE_SET.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_SET.equals(transportType)) {
             return decodeSet(targetType, restrictToInternalTypes,
                     (JSONArray) encodedJsonValue, connectorTracker);
-        } else if (JsonEncoder.VTYPE_MAP.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_MAP.equals(transportType)) {
             return decodeMap(targetType, restrictToInternalTypes,
                     encodedJsonValue, connectorTracker);
         }
 
         // Arrays
-        if (JsonEncoder.VTYPE_ARRAY.equals(transportType)) {
+        if (JsonConstants.VTYPE_ARRAY.equals(transportType)) {
 
             return decodeObjectArray(targetType, (JSONArray) encodedJsonValue,
                     connectorTracker);
 
-        } else if (JsonEncoder.VTYPE_STRINGARRAY.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_STRINGARRAY.equals(transportType)) {
             return decodeStringArray((JSONArray) encodedJsonValue);
         }
 
@@ -240,23 +240,23 @@ public class JsonCodec implements Serializable {
 
         String stringValue = String.valueOf(encodedJsonValue);
 
-        if (JsonEncoder.VTYPE_CONNECTOR.equals(transportType)) {
+        if (JsonConstants.VTYPE_CONNECTOR.equals(transportType)) {
             return connectorTracker.getConnector(stringValue);
         }
 
         // Legacy types
 
-        if (JsonEncoder.VTYPE_STRING.equals(transportType)) {
+        if (JsonConstants.VTYPE_STRING.equals(transportType)) {
             return stringValue;
-        } else if (JsonEncoder.VTYPE_INTEGER.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_INTEGER.equals(transportType)) {
             return Integer.valueOf(stringValue);
-        } else if (JsonEncoder.VTYPE_LONG.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_LONG.equals(transportType)) {
             return Long.valueOf(stringValue);
-        } else if (JsonEncoder.VTYPE_FLOAT.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_FLOAT.equals(transportType)) {
             return Float.valueOf(stringValue);
-        } else if (JsonEncoder.VTYPE_DOUBLE.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_DOUBLE.equals(transportType)) {
             return Double.valueOf(stringValue);
-        } else if (JsonEncoder.VTYPE_BOOLEAN.equals(transportType)) {
+        } else if (JsonConstants.VTYPE_BOOLEAN.equals(transportType)) {
             return Boolean.valueOf(stringValue);
         }
 
@@ -280,7 +280,7 @@ public class JsonCodec implements Serializable {
         if (encodedTransportType.equals(transportType)) {
             return true;
         }
-        if (encodedTransportType.equals(JsonEncoder.VTYPE_NULL)) {
+        if (encodedTransportType.equals(JsonConstants.VTYPE_NULL)) {
             return true;
         }
 

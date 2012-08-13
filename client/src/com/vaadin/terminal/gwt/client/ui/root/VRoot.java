@@ -19,6 +19,8 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -38,15 +40,7 @@ import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 public class VRoot extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
 
-    public static final String FRAGMENT_VARIABLE = "fragment";
-
-    public static final String BROWSER_HEIGHT_VAR = "browserHeight";
-
-    public static final String BROWSER_WIDTH_VAR = "browserWidth";
-
     private static final String CLASSNAME = "v-view";
-
-    public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
     private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
@@ -72,9 +66,6 @@ public class VRoot extends SimplePanel implements ResizeHandler,
     private int viewHeight;
 
     ApplicationConnection connection;
-
-    /** Identifies the click event */
-    public static final String CLICK_EVENT_ID = "click";
 
     /**
      * Keep track of possible parent size changes when an embedded application.
@@ -102,11 +93,6 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
     boolean resizeLazy = false;
 
-    /**
-     * Attribute name for the lazy resize setting .
-     */
-    public static final String RESIZE_LAZY = "rL";
-
     private HandlerRegistration historyHandlerRegistration;
 
     private TouchScrollHandler touchScrollHandler;
@@ -130,8 +116,8 @@ public class VRoot extends SimplePanel implements ResizeHandler,
             // Send the new fragment to the server if it has changed
             if (!newFragment.equals(currentFragment) && connection != null) {
                 currentFragment = newFragment;
-                connection.updateVariable(id, FRAGMENT_VARIABLE, newFragment,
-                        true);
+                connection.updateVariable(id, RootConstants.FRAGMENT_VARIABLE,
+                        newFragment, true);
             }
         }
     };
@@ -311,7 +297,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
      */
     public boolean isEmbedded() {
         return !getElement().getOwnerDocument().getBody().getClassName()
-                .contains(ApplicationConnection.GENERATED_BODY_CLASSNAME);
+                .contains(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
     /**
@@ -409,9 +395,10 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         int windowWidth = Window.getClientWidth();
         int windowHeight = Window.getClientHeight();
 
-        connection.updateVariable(id, BROWSER_WIDTH_VAR, windowWidth, false);
-        connection.updateVariable(id, BROWSER_HEIGHT_VAR, windowHeight,
-                immediate);
+        connection.updateVariable(id, RootConstants.BROWSER_WIDTH_VAR,
+                windowWidth, false);
+        connection.updateVariable(id, RootConstants.BROWSER_HEIGHT_VAR,
+                windowHeight, immediate);
     }
 
     public native static void goTo(String url)
@@ -458,4 +445,5 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         }
         touchScrollHandler.addElement(getElement());
     }
+
 }

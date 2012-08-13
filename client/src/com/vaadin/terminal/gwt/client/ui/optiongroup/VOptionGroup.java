@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -35,11 +36,7 @@ import com.vaadin.terminal.gwt.client.ui.checkbox.VCheckBox;
 public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         BlurHandler {
 
-    public static final String HTML_CONTENT_ALLOWED = "usehtml";
-
     public static final String CLASSNAME = "v-select-optiongroup";
-
-    public static final String ATTRIBUTE_OPTION_DISABLED = "disabled";
 
     protected final Panel panel;
 
@@ -112,7 +109,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             op.addStyleName(CLASSNAME_OPTION);
             op.setValue(opUidl.getBooleanAttribute("selected"));
             boolean enabled = !opUidl
-                    .getBooleanAttribute(ATTRIBUTE_OPTION_DISABLED)
+                    .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED)
                     && !isReadonly() && !isDisabled();
             op.setEnabled(enabled);
             setStyleName(op.getElement(),

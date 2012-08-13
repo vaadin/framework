@@ -11,6 +11,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.TooltipInfo;
@@ -19,11 +20,11 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.menubar.VMenuBar.CustomMenuItem;
 
 @Connect(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBarConnector extends AbstractComponentConnector implements
         Paintable, SimpleManagedLayout {
+
     /**
      * This method must be implemented to update the client-side component from
      * UIDL data received from server.
@@ -38,10 +39,10 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         }
 
         getWidget().htmlContentAllowed = uidl
-                .hasAttribute(VMenuBar.HTML_CONTENT_ALLOWED);
+                .hasAttribute(MenuBarConstants.HTML_CONTENT_ALLOWED);
 
         getWidget().openRootOnHover = uidl
-                .getBooleanAttribute(VMenuBar.OPEN_ROOT_MENU_ON_HOWER);
+                .getBooleanAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER);
 
         getWidget().enabled = isEnabled();
 
@@ -74,7 +75,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
             }
             itemHTML.append(moreItemText);
 
-            getWidget().moreItem = GWT.create(CustomMenuItem.class);
+            getWidget().moreItem = GWT.create(VMenuBar.CustomMenuItem.class);
             getWidget().moreItem.setHTML(itemHTML.toString());
             getWidget().moreItem.setCommand(VMenuBar.emptyCommand);
 
@@ -92,13 +93,13 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
-            CustomMenuItem currentItem = null;
+            VMenuBar.CustomMenuItem currentItem = null;
 
             final int itemId = item.getIntAttribute("id");
 
             boolean itemHasCommand = item.hasAttribute("command");
             boolean itemIsCheckable = item
-                    .hasAttribute(VMenuBar.ATTRIBUTE_CHECKED);
+                    .hasAttribute(MenuBarConstants.ATTRIBUTE_CHECKED);
 
             String itemHTML = getWidget().buildItemHTML(item);
 
@@ -138,7 +139,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
             while (!itr.hasNext() && !iteratorStack.empty()) {
                 boolean hasCheckableItem = false;
-                for (CustomMenuItem menuItem : currentMenu.getItems()) {
+                for (VMenuBar.CustomMenuItem menuItem : currentMenu.getItems()) {
                     hasCheckableItem = hasCheckableItem
                             || menuItem.isCheckable();
                 }
@@ -174,7 +175,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
         // Check content of widget to find tooltip for element
         if (element != getWidget().getElement()) {
 
-            CustomMenuItem item = getWidget().getMenuItemWithElement(
+            VMenuBar.CustomMenuItem item = getWidget().getMenuItemWithElement(
                     (com.google.gwt.user.client.Element) element);
             if (item != null) {
                 info = item.getTooltip();

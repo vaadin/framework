@@ -16,10 +16,10 @@ import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
         BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {
@@ -105,9 +105,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         }
 
         if (hasListeners(TextChangeEvent.class)) {
-            target.addAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE,
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE,
                     getTextChangeEventMode().toString());
-            target.addAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT,
+            target.addAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT,
                     getTextChangeTimeout());
             if (lastKnownTextContent != null) {
                 /*
@@ -118,7 +118,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                  * the actual value, depending on its state.
                  */
                 target.addAttribute(
-                        VTextField.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS, true);
+                        TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS,
+                        true);
             }
         }
 
@@ -130,12 +131,13 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
         try {
 
-            if (variables.containsKey(VTextField.VAR_CURSOR)) {
-                Integer object = (Integer) variables.get(VTextField.VAR_CURSOR);
+            if (variables.containsKey(TextFieldConstants.VAR_CURSOR)) {
+                Integer object = (Integer) variables
+                        .get(TextFieldConstants.VAR_CURSOR);
                 lastKnownCursorPosition = object.intValue();
             }
 
-            if (variables.containsKey(VTextField.VAR_CUR_TEXT)) {
+            if (variables.containsKey(TextFieldConstants.VAR_CUR_TEXT)) {
                 /*
                  * NOTE, we might want to develop this further so that on a
                  * value change event the whole text content don't need to be
@@ -439,7 +441,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * some sort of diffs instead of always sending the whole text content.
          * Also on value change events we could use the mechanism.
          */
-        String object = (String) variables.get(VTextField.VAR_CUR_TEXT);
+        String object = (String) variables.get(TextFieldConstants.VAR_CUR_TEXT);
         lastKnownTextContent = object;
         textChangeEventPending = true;
     }

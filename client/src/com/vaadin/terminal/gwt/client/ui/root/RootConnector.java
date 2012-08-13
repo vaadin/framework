@@ -23,6 +23,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.root.PageClientRpc;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.root.RootServerRpc;
 import com.vaadin.shared.ui.root.RootState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -82,7 +83,7 @@ public class RootConnector extends AbstractComponentContainerConnector
         getWidget().connection = client;
 
         getWidget().immediate = getState().isImmediate();
-        getWidget().resizeLazy = uidl.hasAttribute(VRoot.RESIZE_LAZY);
+        getWidget().resizeLazy = uidl.hasAttribute(RootConstants.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
         if (getWidget().theme != null && !newTheme.equals(getWidget().theme)) {
             // Complete page refresh is needed due css can affect layout
@@ -238,9 +239,9 @@ public class RootConnector extends AbstractComponentContainerConnector
             scrollIntoView(connector);
         }
 
-        if (uidl.hasAttribute(VRoot.FRAGMENT_VARIABLE)) {
+        if (uidl.hasAttribute(RootConstants.FRAGMENT_VARIABLE)) {
             getWidget().currentFragment = uidl
-                    .getStringAttribute(VRoot.FRAGMENT_VARIABLE);
+                    .getStringAttribute(RootConstants.FRAGMENT_VARIABLE);
             if (!getWidget().currentFragment.equals(History.getToken())) {
                 History.newItem(getWidget().currentFragment, true);
             }
@@ -250,7 +251,8 @@ public class RootConnector extends AbstractComponentContainerConnector
             getWidget().currentFragment = History.getToken();
 
             // Include current fragment in the next request
-            client.updateVariable(getWidget().id, VRoot.FRAGMENT_VARIABLE,
+            client.updateVariable(getWidget().id,
+                    RootConstants.FRAGMENT_VARIABLE,
                     getWidget().currentFragment, false);
         }
 

@@ -7,9 +7,9 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
+import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.gwt.client.ui.combobox.VFilterSelect;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's
@@ -75,12 +75,12 @@ public class ComboBox extends Select {
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
         if (inputPrompt != null) {
-            target.addAttribute("prompt", inputPrompt);
+            target.addAttribute(ComboBoxConstants.ATTR_INPUTPROMPT, inputPrompt);
         }
         super.paintContent(target);
 
         if (!textInputAllowed) {
-            target.addAttribute(VFilterSelect.ATTR_NO_TEXT_INPUT, true);
+            target.addAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT, true);
         }
     }
 

@@ -38,6 +38,7 @@ import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.service.ApplicationContext;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
@@ -48,7 +49,6 @@ import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.BootstrapFragmentResponse;
 import com.vaadin.terminal.gwt.server.BootstrapListener;
@@ -2300,7 +2300,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             request = combinedRequest.getSecondRequest();
         }
         String rootIdString = request
-                .getParameter(ApplicationConnection.ROOT_ID_PARAMETER);
+                .getParameter(ApplicationConstants.ROOT_ID_PARAMETER);
         Integer rootId = rootIdString == null ? null
                 : new Integer(rootIdString);
         return rootId;

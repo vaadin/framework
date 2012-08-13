@@ -3,9 +3,9 @@ package com.vaadin.terminal.gwt.server;
 import java.io.Serializable;
 
 import com.vaadin.Application;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.Root;
 
 /*
@@ -106,15 +106,15 @@ class ServletPortletHelper implements Serializable {
 
     public static boolean isConnectorResourceRequest(WrappedRequest request) {
         return hasPathPrefix(request,
-                ApplicationConnection.CONNECTOR_RESOURCE_PREFIX + "/");
+                ApplicationConstants.CONNECTOR_RESOURCE_PREFIX + "/");
     }
 
     public static boolean isUIDLRequest(WrappedRequest request) {
-        return hasPathPrefix(request, ApplicationConnection.UIDL_REQUEST_PATH);
+        return hasPathPrefix(request, ApplicationConstants.UIDL_REQUEST_PATH);
     }
 
     public static boolean isApplicationResourceRequest(WrappedRequest request) {
-        return hasPathPrefix(request, ApplicationConnection.APP_REQUEST_PATH);
+        return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
     }
 
 }

@@ -55,6 +55,7 @@ import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
@@ -74,7 +75,6 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.terminal.gwt.server.RpcManager.RpcInvocationException;
@@ -90,7 +90,7 @@ import com.vaadin.ui.Window;
  * This is a common base class for the server-side implementations of the
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
- * {@link ApplicationConnection}.
+ * {@link ApplicationConstants}.
  * 
  * TODO Document better!
  */
@@ -768,8 +768,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public String getSecurityKeyUIDL(WrappedRequest request) {
         final String seckey = getSecurityKey(request);
         if (seckey != null) {
-            return "\"" + ApplicationConnection.UIDL_SECURITY_TOKEN_ID
-                    + "\":\"" + seckey + "\",";
+            return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
+                    + seckey + "\",";
         } else {
             return "";
         }
@@ -784,11 +784,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
     protected String getSecurityKey(WrappedRequest request) {
         String seckey = null;
         seckey = (String) request
-                .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                .getSessionAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         if (seckey == null) {
             seckey = UUID.randomUUID().toString();
             request.setSessionAttribute(
-                    ApplicationConnection.UIDL_SECURITY_TOKEN_ID, seckey);
+                    ApplicationConstants.UIDL_SECURITY_TOKEN_ID, seckey);
         }
 
         return seckey;
@@ -1286,7 +1286,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
 
-        return ApplicationConnection.CONNECTOR_PROTOCOL_PREFIX + "/" + name;
+        return ApplicationConstants.CONNECTOR_PROTOCOL_PREFIX + "/" + name;
     }
 
     /**
@@ -1543,7 +1543,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // ApplicationServlet has stored the security token in the
                     // session; check that it matched the one sent in the UIDL
                     String sessId = (String) request
-                            .getSessionAttribute(ApplicationConnection.UIDL_SECURITY_TOKEN_ID);
+                            .getSessionAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
 
                     if (sessId == null || !sessId.equals(bursts[0])) {
                         throw new InvalidUIDLSecurityKeyException(
@@ -2342,7 +2342,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             streamVariableToSeckey.put(value, seckey);
         }
 
-        return ApplicationConnection.APP_PROTOCOL_PREFIX
+        return ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/" + seckey;
 
     }
@@ -2406,8 +2406,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             params.put("widgetset", widgetset);
             params.put("themeUri", themeUri);
             // Root id might have changed based on e.g. window.name
-            params.put(ApplicationConnection.ROOT_ID_PARAMETER,
-                    root.getRootId());
+            params.put(ApplicationConstants.ROOT_ID_PARAMETER, root.getRootId());
             if (sendUIDL) {
                 String initialUIDL = getInitialUIDL(combinedRequest, root);
                 params.put("uidl", initialUIDL);
@@ -2484,7 +2483,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String pathInfo = request.getRequestPathInfo();
         // + 2 to also remove beginning and ending slashes
         String resourceName = pathInfo
-                .substring(ApplicationConnection.CONNECTOR_RESOURCE_PREFIX
+                .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
                         .length() + 2);
 
         final String mimetype = response.getDeploymentConfiguration()

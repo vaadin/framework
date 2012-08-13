@@ -15,6 +15,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -22,7 +23,6 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate;
 import com.vaadin.terminal.gwt.client.ui.TouchScrollDelegate.TouchScrollHandler;
-import com.vaadin.terminal.gwt.client.ui.tabsheet.TabsheetBaseConnector;
 import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetBase;
 
 public class VAccordion extends VTabsheetBase {
@@ -442,11 +442,11 @@ public class VAccordion extends VTabsheetBase {
         public void updateCaption(UIDL uidl) {
             // TODO need to call this because the caption does not have an owner
             caption.updateCaptionWithoutOwner(
-                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON));
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
         }
 
         public int getWidgetWidth() {

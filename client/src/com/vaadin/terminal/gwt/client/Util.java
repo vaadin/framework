@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.terminal.gwt.client.RenderInformation.FloatSize;
@@ -841,7 +842,7 @@ public class Util {
         for (MethodInvocation invocation : invocations) {
             Object[] parameters = invocation.getParameters();
             String formattedParams = null;
-            if (ApplicationConnection.UPDATE_VARIABLE_METHOD.equals(invocation
+            if (ApplicationConstants.UPDATE_VARIABLE_METHOD.equals(invocation
                     .getMethodName()) && parameters.length == 2) {
                 // name, value
                 Object value = parameters[1];

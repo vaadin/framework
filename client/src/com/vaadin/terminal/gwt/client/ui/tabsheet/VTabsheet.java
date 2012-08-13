@@ -36,6 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
+import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -187,7 +189,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             tabCaption.updateCaption(tabUidl);
 
             // Apply the styleName set for the tab
-            String newStyleName = tabUidl.getStringAttribute(TAB_STYLE_NAME);
+            String newStyleName = tabUidl
+                    .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME);
             // Find the nth td element
             if (newStyleName != null && newStyleName.length() != 0) {
                 if (!newStyleName.equals(styleName)) {
@@ -250,10 +253,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION)) {
+            if (uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION)) {
                 setTooltipInfo(new TooltipInfo(
-                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
-                        uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE)));
+                        uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
+                        uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE)));
             } else {
                 setTooltipInfo(null);
             }
@@ -261,11 +264,11 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             // TODO need to call this instead of super because the caption does
             // not have an owner
             boolean ret = updateCaptionWithoutOwner(
-                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_CAPTION),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DISABLED),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_DESCRIPTION),
-                    uidl.hasAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConnector.ATTRIBUTE_TAB_ICON));
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
+                    uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
 
             setClosable(uidl.hasAttribute("closable"));
 
@@ -540,9 +543,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
     public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
-
-    // Can't use "style" as it's already in use
-    public static final String TAB_STYLE_NAME = "tabstyle";
 
     final Element tabs; // tabbar and 'scroller' container
     Tab focusedTab;

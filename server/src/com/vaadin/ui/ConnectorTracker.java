@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.AbstractClientConnector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**

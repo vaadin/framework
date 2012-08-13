@@ -63,6 +63,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -131,25 +132,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
-    /**
-     * Tell the client that old keys are no longer valid because the server has
-     * cleared its key map.
-     */
-    public static final String ATTRIBUTE_KEY_MAPPER_RESET = "clearKeyMap";
-
     private static final String ROW_HEADER_COLUMN_KEY = "0";
 
     public static final String CLASSNAME = "v-table";
     public static final String CLASSNAME_SELECTION_FOCUS = CLASSNAME + "-focus";
-
-    public static final String ATTRIBUTE_PAGEBUFFER_FIRST = "pb-ft";
-    public static final String ATTRIBUTE_PAGEBUFFER_LAST = "pb-l";
-
-    public static final String ITEM_CLICK_EVENT_ID = "itemClick";
-    public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
-    public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";
-    public static final String COLUMN_RESIZE_EVENT_ID = "columnResize";
-    public static final String COLUMN_REORDER_EVENT_ID = "columnReorder";
 
     private static final double CACHE_RATE_DEFAULT = 2;
 
@@ -1624,7 +1610,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
         client.updateVariable(paintableId, "columnorder", columnOrder, false);
-        if (client.hasEventListeners(this, COLUMN_REORDER_EVENT_ID)) {
+        if (client.hasEventListeners(this,
+                TableConstants.COLUMN_REORDER_EVENT_ID)) {
             client.sendPendingVariableChanges();
         }
     }
@@ -2324,7 +2311,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     boolean stopPropagation = true;
                     if (event.getTypeInt() == Event.ONCONTEXTMENU
                             && !client.hasEventListeners(VScrollTable.this,
-                                    HEADER_CLICK_EVENT_ID)) {
+                                    TableConstants.HEADER_CLICK_EVENT_ID)) {
                         // Prevent showing the browser's context menu only when
                         // there is a header click listener.
                         stopPropagation = false;
@@ -2377,7 +2364,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         private void fireHeaderClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
-                    HEADER_CLICK_EVENT_ID)) {
+                    TableConstants.HEADER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = MouseEventDetailsBuilder
                         .buildMouseEventDetails(event);
                 client.updateVariable(paintableId, "headerClickEvent",
@@ -3424,7 +3411,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 boolean stopPropagation = true;
                 if (event.getTypeInt() == Event.ONCONTEXTMENU
                         && !client.hasEventListeners(VScrollTable.this,
-                                FOOTER_CLICK_EVENT_ID)) {
+                                TableConstants.FOOTER_CLICK_EVENT_ID)) {
                     // Show browser context menu if a footer click listener is
                     // not present
                     stopPropagation = false;
@@ -3458,7 +3445,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          */
         private void fireFooterClickedEvent(Event event) {
             if (client.hasEventListeners(VScrollTable.this,
-                    FOOTER_CLICK_EVENT_ID)) {
+                    TableConstants.FOOTER_CLICK_EVENT_ID)) {
                 MouseEventDetails details = MouseEventDetailsBuilder
                         .buildMouseEventDetails(event);
                 client.updateVariable(paintableId, "footerClickEvent",
@@ -4786,7 +4773,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private boolean handleClickEvent(Event event, Element targetTdOrTr,
                     boolean immediate) {
                 if (!client.hasEventListeners(VScrollTable.this,
-                        ITEM_CLICK_EVENT_ID)) {
+                        TableConstants.ITEM_CLICK_EVENT_ID)) {
                     // Don't send an event if nobody is listening
                     return false;
                 }
@@ -4960,8 +4947,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         showContextMenu(event);
                         if (enabled
                                 && (actionKeys != null || client
-                                        .hasEventListeners(VScrollTable.this,
-                                                ITEM_CLICK_EVENT_ID))) {
+                                        .hasEventListeners(
+                                                VScrollTable.this,
+                                                TableConstants.ITEM_CLICK_EVENT_ID))) {
                             /*
                              * Prevent browser context menu only if there are
                              * action handlers or item click listeners

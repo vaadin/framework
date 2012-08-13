@@ -4,6 +4,7 @@
 package com.vaadin.terminal.gwt.client.ui.treetable;
 
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.treetable.TreeTableConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.ui.FocusableScrollPanel;
@@ -14,7 +15,6 @@ import com.vaadin.ui.TreeTable;
 
 @Connect(TreeTable.class)
 public class TreeTableConnector extends TableConnector {
-    public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -26,8 +26,9 @@ public class TreeTableConnector extends TableConnector {
         }
         getWidget().animationsEnabled = uidl.getBooleanAttribute("animate");
         getWidget().colIndexOfHierarchy = uidl
-                .hasAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
-                .getIntAttribute(ATTRIBUTE_HIERARCHY_COLUMN_INDEX) : 0;
+                .hasAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX) ? uidl
+                .getIntAttribute(TreeTableConstants.ATTRIBUTE_HIERARCHY_COLUMN_INDEX)
+                : 0;
         int oldTotalRows = getWidget().getTotalRows();
         super.updateFromUIDL(uidl, client);
         if (getWidget().collapseRequest) {

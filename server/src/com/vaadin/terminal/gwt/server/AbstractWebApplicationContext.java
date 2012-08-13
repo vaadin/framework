@@ -23,8 +23,8 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
 /**
  * Base class for web application contexts (including portlet contexts) that
@@ -181,8 +181,8 @@ public abstract class AbstractWebApplicationContext implements
 
         final String filename = resource.getFilename();
         if (filename == null) {
-            return ApplicationConnection.APP_PROTOCOL_PREFIX
-                    + ApplicationConnection.APP_REQUEST_PATH + mapKey + "/";
+            return ApplicationConstants.APP_PROTOCOL_PREFIX
+                    + ApplicationConstants.APP_REQUEST_PATH + mapKey + "/";
         } else {
             // #7738 At least Tomcat and JBoss refuses requests containing
             // encoded slashes or backslashes in URLs. Application resource URLs
@@ -190,8 +190,8 @@ public abstract class AbstractWebApplicationContext implements
             // in the future.
             String encodedFileName = urlEncode(filename).replace("%2F", "/")
                     .replace("%5C", "\\");
-            return ApplicationConnection.APP_PROTOCOL_PREFIX
-                    + ApplicationConnection.APP_REQUEST_PATH + mapKey + "/"
+            return ApplicationConstants.APP_PROTOCOL_PREFIX
+                    + ApplicationConstants.APP_REQUEST_PATH + mapKey + "/"
                     + encodedFileName;
         }
 

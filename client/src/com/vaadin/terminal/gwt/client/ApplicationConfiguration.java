@@ -19,11 +19,10 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
-
-    public static final String PORTLET_RESOUCE_URL_BASE = "portletAppURLBase";
 
     /**
      * Helper class for reading configuration options from the bootstap
@@ -230,8 +229,8 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public String getPortletResourceUrl() {
-        return getJsoConfiguration(id)
-                .getConfigString(PORTLET_RESOUCE_URL_BASE);
+        return getJsoConfiguration(id).getConfigString(
+                ApplicationConstants.PORTLET_RESOUCE_URL_BASE);
     }
 
     public String getRootPanelId() {

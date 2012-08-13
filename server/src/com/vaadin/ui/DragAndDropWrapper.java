@@ -20,11 +20,11 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
+import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.draganddropwrapper.VDragAndDropWrapper;
 
 @SuppressWarnings("serial")
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
@@ -221,7 +221,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-        target.addAttribute(VDragAndDropWrapper.DRAG_START_MODE,
+        target.addAttribute(DragAndDropWrapperConstants.DRAG_START_MODE,
                 dragStartMode.ordinal());
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
@@ -245,7 +245,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 }
             }
         }
-        target.addAttribute(VDragAndDropWrapper.HTML5_DATA_FLAVORS,
+        target.addAttribute(DragAndDropWrapperConstants.HTML5_DATA_FLAVORS,
                 html5DataFlavors);
     }
 

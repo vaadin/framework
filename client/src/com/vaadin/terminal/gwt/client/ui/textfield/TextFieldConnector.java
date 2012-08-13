@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
+import com.vaadin.shared.ui.textfield.TextFieldConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -45,13 +46,13 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
             getWidget().textChangeEventMode = uidl
-                    .getStringAttribute(VTextField.ATTR_TEXTCHANGE_EVENTMODE);
+                    .getStringAttribute(TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
             if (getWidget().textChangeEventMode
-                    .equals(VTextField.TEXTCHANGE_MODE_EAGER)) {
+                    .equals(TextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
                 getWidget().textChangeEventTimeout = 1;
             } else {
                 getWidget().textChangeEventTimeout = uidl
-                        .getIntAttribute(VTextField.ATTR_TEXTCHANGE_TIMEOUT);
+                        .getIntAttribute(TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
                 if (getWidget().textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
@@ -72,7 +73,7 @@ public class TextFieldConnector extends AbstractFieldConnector implements
          * value).
          */
         if (!(uidl
-                .getBooleanAttribute(VTextField.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
+                .getBooleanAttribute(TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
                 && getWidget().valueBeforeEdit != null && text
                     .equals(getWidget().valueBeforeEdit))) {
             getWidget().updateFieldContent(text);

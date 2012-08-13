@@ -24,10 +24,10 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.datefield.VDateField;
 
 /**
  * <p>
@@ -303,7 +303,8 @@ public class DateField extends AbstractField<Date> implements
             target.addAttribute("strict", true);
         }
 
-        target.addAttribute(VDateField.WEEK_NUMBERS, isShowISOWeekNumbers());
+        target.addAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS,
+                isShowISOWeekNumbers());
         target.addAttribute("parsable", uiHasValidDateString);
         /*
          * TODO communicate back the invalid date string? E.g. returning back to

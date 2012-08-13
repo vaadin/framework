@@ -37,12 +37,12 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.Root;
 
@@ -299,7 +299,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // key).
             if (requestType == RequestType.UIDL
                     && request.getParameterMap().containsKey(
-                            ApplicationConnection.PARAM_UNLOADBURST)
+                            ApplicationConstants.PARAM_UNLOADBURST)
                     && request.getContentLength() < 1
                     && getExistingApplication(request, false) == null) {
                 redirectToApplication(request, response);
@@ -1204,7 +1204,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private boolean isOnUnloadRequest(HttpServletRequest request) {
-        return request.getParameter(ApplicationConnection.PARAM_UNLOADBURST) != null;
+        return request.getParameter(ApplicationConstants.PARAM_UNLOADBURST) != null;
     }
 
     /**

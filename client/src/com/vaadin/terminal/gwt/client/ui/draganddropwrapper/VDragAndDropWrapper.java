@@ -53,8 +53,6 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
  */
 public class VDragAndDropWrapper extends VCustomComponent implements
         VHasDropHandler {
-    public static final String DRAG_START_MODE = "dragStartMode";
-    public static final String HTML5_DATA_FLAVORS = "html5-data-flavors";
 
     private static final String CLASSNAME = "v-ddwrapper";
     protected static final String DRAGGABLE = "draggable";

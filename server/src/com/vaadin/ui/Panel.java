@@ -13,6 +13,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
@@ -20,7 +21,6 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Scrollable;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.ui.Component.Focusable;
 
 /**
@@ -425,8 +425,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
-                listener, ClickListener.clickMethod);
+        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
+                ClickListener.clickMethod);
     }
 
     /**
@@ -437,8 +437,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
-                ClickEvent.class, listener);
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener);
     }
 
     /**

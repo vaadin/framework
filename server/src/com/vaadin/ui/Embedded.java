@@ -10,14 +10,14 @@ import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
-import com.vaadin.terminal.gwt.client.ui.embedded.EmbeddedConnector;
 
 /**
  * Component for embedding external objects.
@@ -158,7 +158,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
             target.addAttribute("archive", archive);
         }
         if (altText != null && !"".equals(altText)) {
-            target.addAttribute(EmbeddedConnector.ALTERNATE_TEXT, altText);
+            target.addAttribute(EmbeddedConstants.ALTERNATE_TEXT, altText);
         }
 
         // Params
@@ -507,8 +507,8 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
-                listener, ClickListener.clickMethod);
+        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
+                ClickListener.clickMethod);
     }
 
     /**
@@ -519,8 +519,8 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
-                ClickEvent.class, listener);
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener);
     }
 
     @Override

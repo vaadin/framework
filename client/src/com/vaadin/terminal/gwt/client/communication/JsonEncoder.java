@@ -18,6 +18,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 
@@ -33,20 +34,6 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
  * @since 7.0
  */
 public class JsonEncoder {
-
-    public static final String VTYPE_CONNECTOR = "c";
-    public static final String VTYPE_BOOLEAN = "b";
-    public static final String VTYPE_DOUBLE = "d";
-    public static final String VTYPE_FLOAT = "f";
-    public static final String VTYPE_LONG = "l";
-    public static final String VTYPE_INTEGER = "i";
-    public static final String VTYPE_STRING = "s";
-    public static final String VTYPE_ARRAY = "a";
-    public static final String VTYPE_STRINGARRAY = "S";
-    public static final String VTYPE_MAP = "m";
-    public static final String VTYPE_LIST = "L";
-    public static final String VTYPE_SET = "q";
-    public static final String VTYPE_NULL = "n";
 
     /**
      * Encode a value to a JSON representation for transport from the client to
@@ -252,34 +239,34 @@ public class JsonEncoder {
      */
     private static String getTransportType(Object value) {
         if (value == null) {
-            return VTYPE_NULL;
+            return JsonConstants.VTYPE_NULL;
         } else if (value instanceof String) {
-            return VTYPE_STRING;
+            return JsonConstants.VTYPE_STRING;
         } else if (value instanceof Connector) {
-            return VTYPE_CONNECTOR;
+            return JsonConstants.VTYPE_CONNECTOR;
         } else if (value instanceof Boolean) {
-            return VTYPE_BOOLEAN;
+            return JsonConstants.VTYPE_BOOLEAN;
         } else if (value instanceof Integer) {
-            return VTYPE_INTEGER;
+            return JsonConstants.VTYPE_INTEGER;
         } else if (value instanceof Float) {
-            return VTYPE_FLOAT;
+            return JsonConstants.VTYPE_FLOAT;
         } else if (value instanceof Double) {
-            return VTYPE_DOUBLE;
+            return JsonConstants.VTYPE_DOUBLE;
         } else if (value instanceof Long) {
-            return VTYPE_LONG;
+            return JsonConstants.VTYPE_LONG;
         } else if (value instanceof List) {
-            return VTYPE_LIST;
+            return JsonConstants.VTYPE_LIST;
         } else if (value instanceof Set) {
-            return VTYPE_SET;
+            return JsonConstants.VTYPE_SET;
         } else if (value instanceof String[]) {
-            return VTYPE_STRINGARRAY;
+            return JsonConstants.VTYPE_STRINGARRAY;
         } else if (value instanceof Object[]) {
-            return VTYPE_ARRAY;
+            return JsonConstants.VTYPE_ARRAY;
         } else if (value instanceof Map) {
-            return VTYPE_MAP;
+            return JsonConstants.VTYPE_MAP;
         } else if (value instanceof Enum<?>) {
             // Enum value is processed as a string
-            return VTYPE_STRING;
+            return JsonConstants.VTYPE_STRING;
         }
         return null;
     }

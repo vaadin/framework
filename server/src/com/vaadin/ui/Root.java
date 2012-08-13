@@ -20,7 +20,9 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.root.RootServerRpc;
 import com.vaadin.shared.ui.root.RootState;
 import com.vaadin.terminal.Page;
@@ -32,7 +34,6 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.ui.Window.CloseListener;
 
 /**
@@ -412,8 +413,6 @@ public abstract class Root extends AbstractComponentContainer implements
     private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
 
     /** Identifies the click event */
-    private static final String CLICK_EVENT_ID = VRoot.CLICK_EVENT_ID;
-
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
     private Page page = new Page(this);
@@ -537,7 +536,7 @@ public abstract class Root extends AbstractComponentContainer implements
         }
 
         if (isResizeLazy()) {
-            target.addAttribute(VRoot.RESIZE_LAZY, true);
+            target.addAttribute(RootConstants.RESIZE_LAZY, true);
         }
     }
 
@@ -556,8 +555,9 @@ public abstract class Root extends AbstractComponentContainer implements
     @Override
     @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
-        if (variables.containsKey(CLICK_EVENT_ID)) {
-            fireClick((Map<String, Object>) variables.get(CLICK_EVENT_ID));
+        if (variables.containsKey(EventId.CLICK_EVENT_IDENTIFIER)) {
+            fireClick((Map<String, Object>) variables
+                    .get(EventId.CLICK_EVENT_IDENTIFIER));
         }
 
         // Actions
@@ -565,8 +565,9 @@ public abstract class Root extends AbstractComponentContainer implements
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(VRoot.FRAGMENT_VARIABLE)) {
-            String fragment = (String) variables.get(VRoot.FRAGMENT_VARIABLE);
+        if (variables.containsKey(RootConstants.FRAGMENT_VARIABLE)) {
+            String fragment = (String) variables
+                    .get(RootConstants.FRAGMENT_VARIABLE);
             getPage().setFragment(fragment, true);
         }
 
@@ -1026,7 +1027,7 @@ public abstract class Root extends AbstractComponentContainer implements
      *            The listener to add
      */
     public void addListener(ClickListener listener) {
-        addListener(CLICK_EVENT_ID, ClickEvent.class, listener,
+        addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
                 ClickListener.clickMethod);
     }
 
@@ -1038,7 +1039,8 @@ public abstract class Root extends AbstractComponentContainer implements
      *            The listener to remove
      */
     public void removeListener(ClickListener listener) {
-        removeListener(CLICK_EVENT_ID, ClickEvent.class, listener);
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener);
     }
 
     @Override

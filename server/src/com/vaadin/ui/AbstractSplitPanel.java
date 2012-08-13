@@ -10,12 +10,12 @@ import java.util.Iterator;
 
 import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.gwt.client.ui.ClickEventHandler;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -500,13 +500,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     public void addListener(SplitterClickListener listener) {
-        addListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
-                SplitterClickEvent.class, listener,
-                SplitterClickListener.clickMethod);
+        addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
+                listener, SplitterClickListener.clickMethod);
     }
 
     public void removeListener(SplitterClickListener listener) {
-        removeListener(ClickEventHandler.CLICK_EVENT_IDENTIFIER,
+        removeListener(EventId.CLICK_EVENT_IDENTIFIER,
                 SplitterClickEvent.class, listener);
     }
 

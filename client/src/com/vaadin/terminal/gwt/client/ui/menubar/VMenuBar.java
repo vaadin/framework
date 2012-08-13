@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.LayoutManager;
@@ -65,16 +66,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
     // Construct an empty command to be used when the item has no command
     // associated
     protected static final Command emptyCommand = null;
-
-    public static final String OPEN_ROOT_MENU_ON_HOWER = "ormoh";
-
-    public static final String ATTRIBUTE_CHECKED = "checked";
-    public static final String ATTRIBUTE_ITEM_DESCRIPTION = "description";
-    public static final String ATTRIBUTE_ITEM_ICON = "icon";
-    public static final String ATTRIBUTE_ITEM_DISABLED = "disabled";
-    public static final String ATTRIBUTE_ITEM_STYLE = "style";
-
-    public static final String HTML_CONTENT_ALLOWED = "usehtml";
 
     /** Widget fields **/
     protected boolean subMenu;
@@ -905,26 +896,29 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
             setSeparator(uidl.hasAttribute("separator"));
-            setEnabled(!uidl.hasAttribute(ATTRIBUTE_ITEM_DISABLED));
+            setEnabled(!uidl
+                    .hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DISABLED));
 
-            if (!isSeparator() && uidl.hasAttribute(ATTRIBUTE_CHECKED)) {
+            if (!isSeparator()
+                    && uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_CHECKED)) {
                 // if the selected attribute is present (either true or false),
                 // the item is selectable
                 setCheckable(true);
-                setChecked(uidl.getBooleanAttribute(ATTRIBUTE_CHECKED));
+                setChecked(uidl
+                        .getBooleanAttribute(MenuBarConstants.ATTRIBUTE_CHECKED));
             } else {
                 setCheckable(false);
             }
 
-            if (uidl.hasAttribute(ATTRIBUTE_ITEM_STYLE)) {
+            if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE)) {
                 String itemStyle = uidl
-                        .getStringAttribute(ATTRIBUTE_ITEM_STYLE);
+                        .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE);
                 addStyleDependentName(itemStyle);
             }
 
-            if (uidl.hasAttribute(ATTRIBUTE_ITEM_DESCRIPTION)) {
+            if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION)) {
                 description = uidl
-                        .getStringAttribute(ATTRIBUTE_ITEM_DESCRIPTION);
+                        .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
             }
         }
 

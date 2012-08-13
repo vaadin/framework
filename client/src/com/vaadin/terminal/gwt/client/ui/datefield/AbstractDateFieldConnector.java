@@ -5,6 +5,7 @@ package com.vaadin.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 
+import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.LocaleNotLoadedException;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -46,7 +47,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
         getWidget().showISOWeekNumbers = uidl
-                .getBooleanAttribute(VDateField.WEEK_NUMBERS)
+                .getBooleanAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS)
                 && getWidget().dts.getFirstDayOfWeek() == 1;
 
         int newResolution;

@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.ui.OptionGroup;
@@ -21,7 +22,7 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         getWidget().htmlContentAllowed = uidl
-                .hasAttribute(VOptionGroup.HTML_CONTENT_ALLOWED);
+                .hasAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED);
 
         super.updateFromUIDL(uidl, client);
 
