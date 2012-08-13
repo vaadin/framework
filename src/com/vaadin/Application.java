@@ -7,6 +7,7 @@ package com.vaadin;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
+import com.vaadin.event.EventRouter;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
@@ -48,9 +50,14 @@ import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.terminal.gwt.server.BootstrapFragmentResponse;
+import com.vaadin.terminal.gwt.server.BootstrapListener;
+import com.vaadin.terminal.gwt.server.BootstrapPageResponse;
+import com.vaadin.terminal.gwt.server.BootstrapResponse;
 import com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Root;
@@ -118,6 +125,13 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * define the name of the default {@link Root} class.
      */
     public static final String ROOT_PARAMETER = "root";
+
+    private static final Method BOOTSTRAP_FRAGMENT_METHOD = ReflectTools
+            .findMethod(BootstrapListener.class, "modifyBootstrapFragment",
+                    BootstrapFragmentResponse.class);
+    private static final Method BOOTSTRAP_PAGE_METHOD = ReflectTools
+            .findMethod(BootstrapListener.class, "modifyBootstrapPage",
+                    BootstrapPageResponse.class);
 
     /**
      * A special application designed to help migrating applications from Vaadin
@@ -491,6 +505,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private boolean productionMode = true;
 
     private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
+
+    private final EventRouter eventRouter = new EventRouter();
 
     /**
      * Keeps track of which roots have been inited.
@@ -2388,5 +2404,23 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public Root getRootById(int rootId) {
         return roots.get(rootId);
+    }
+
+    public void addBootstrapListener(BootstrapListener listener) {
+        eventRouter.addListener(BootstrapFragmentResponse.class, listener,
+                BOOTSTRAP_FRAGMENT_METHOD);
+        eventRouter.addListener(BootstrapPageResponse.class, listener,
+                BOOTSTRAP_PAGE_METHOD);
+    }
+
+    public void removeBootstrapListener(BootstrapListener listener) {
+        eventRouter.removeListener(BootstrapFragmentResponse.class, listener,
+                BOOTSTRAP_FRAGMENT_METHOD);
+        eventRouter.removeListener(BootstrapPageResponse.class, listener,
+                BOOTSTRAP_PAGE_METHOD);
+    }
+
+    public void modifyBootstrapResponse(BootstrapResponse response) {
+        eventRouter.fireEvent(response);
     }
 }

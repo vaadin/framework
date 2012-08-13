@@ -901,6 +901,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             application.start(new ApplicationStartEvent(applicationUrl,
                     getDeploymentConfiguration().getInitParameters(),
                     webApplicationContext, isProductionMode()));
+            vaadinContext.applicationStarted(application);
         }
     }
 

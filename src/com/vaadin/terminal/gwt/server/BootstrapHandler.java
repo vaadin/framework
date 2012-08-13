@@ -131,13 +131,9 @@ public abstract class BootstrapHandler implements RequestHandler {
                     application, rootId);
             setupMainDiv(context);
 
-            DeploymentConfiguration deploymentConfiguration = request
-                    .getDeploymentConfiguration();
-
-            VaadinContext vContext = deploymentConfiguration.getVaadinContext();
             BootstrapFragmentResponse fragmentResponse = context
                     .getBootstrapResponse();
-            vContext.fireModifyBootstrapEvent(fragmentResponse);
+            application.modifyBootstrapResponse(fragmentResponse);
 
             String html = getBootstrapHtml(context);
 
@@ -154,7 +150,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         WrappedResponse response = context.getResponse();
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
-        VaadinContext vContext = deploymentConfiguration.getVaadinContext();
+
         BootstrapFragmentResponse fragmentResponse = context
                 .getBootstrapResponse();
 
@@ -171,7 +167,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             }
 
             setupStandaloneDocument(context, pageResponse);
-            vContext.fireModifyBootstrapEvent(pageResponse);
+            context.getApplication().modifyBootstrapResponse(pageResponse);
 
             sendBootstrapHeaders(response, headers);
 
@@ -266,8 +262,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     public BootstrapContext createContext(WrappedRequest request,
             WrappedResponse response, Application application, Integer rootId) {
         BootstrapContext context = new BootstrapContext(response,
-                new BootstrapFragmentResponse(this, request, new ArrayList<Node>(),
-                        application, rootId));
+                new BootstrapFragmentResponse(this, request,
+                        new ArrayList<Node>(), application, rootId));
         return context;
     }
 

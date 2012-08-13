@@ -801,6 +801,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.start(new ApplicationStartEvent(null,
                     getDeploymentConfiguration().getInitParameters(), context,
                     isProductionMode()));
+            vaadinContext.applicationStarted(application);
         }
     }
 
