@@ -8,7 +8,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
-import com.vaadin.terminal.gwt.server.JsonCodec;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given
@@ -28,9 +27,8 @@ public interface JSONSerializer<T> {
     /**
      * Creates and deserializes an object received from the server. Must be
      * compatible with {@link #serialize(Object, ConnectorMap)} and also with
-     * the server side
-     * {@link JsonCodec#encode(Object, com.vaadin.terminal.gwt.server.PaintableIdMapper)}
-     * .
+     * the server side JsonCodec.encode(Object,
+     * com.vaadin.terminal.gwt.server.PaintableIdMapper) .
      * 
      * @param jsonValue
      *            JSON map from property name to property value
@@ -42,8 +40,8 @@ public interface JSONSerializer<T> {
     /**
      * Serialize the given object into JSON. Must be compatible with
      * {@link #deserialize(JSONObject, ConnectorMap)} and also with the server
-     * side
-     * {@link JsonCodec#decode(com.vaadin.external.json.JSONArray, com.vaadin.terminal.gwt.server.PaintableIdMapper)}
+     * side JsonCodec.decode(com.vaadin.external.json.JSONArray,
+     * com.vaadin.terminal.gwt.server.PaintableIdMapper)
      * 
      * @param value
      *            The object to serialize

@@ -4,14 +4,12 @@
 
 package com.vaadin.terminal.gwt.client.communication;
 
-import com.vaadin.terminal.gwt.widgetsetutils.SerializerMapGenerator;
-
 /**
  * Provide a mapping from a type (communicated between the server and the
  * client) and a {@link JSONSerializer} instance.
  * 
  * An implementation of this class is created at GWT compilation time by
- * {@link SerializerMapGenerator}, so this interface can be instantiated with
+ * SerializerMapGenerator, so this interface can be instantiated with
  * GWT.create().
  * 
  * @since 7.0

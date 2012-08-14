@@ -62,12 +62,11 @@ import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
 import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
  * This is the client side communication "engine", managing client-server
  * communication with its server side counterpart
- * {@link AbstractCommunicationManager}.
+ * com.vaadin.terminal.gwt.server.AbstractCommunicationManager.
  * 
  * Client-side connectors receive updates from the corresponding server-side
  * connector (typically component) as state updates or RPC calls. The connector
