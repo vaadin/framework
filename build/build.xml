@@ -128,9 +128,6 @@
 		<property name="result-classes-sass" value="${result-path}/classes/sass"/>
 		<property name="result-classes-sass-junit" value="${result-path}/classes/sass-junit"/>
 		<property name="result-precompiled-widgetsets" value="${result-path}/classes/widgetsets"/>
-		<!-- Folder where Emma instrumented classes are placed (if Emma is used)-->
-		<property name="result-classes-core-for-emma-war" value="${result-path}/classes/emma-war"/>
-		<property name="result-classes-core-for-emma-junit" value="${result-path}/classes/emma-junit"/>
 
 		<!-- Default classpath for building widgetsets, overridden for testing widgetset -->
 		<path id="compile.classpath.widgetset">
@@ -195,11 +192,6 @@
 
         <!-- Create result dir unless already exists -->
         <mkdir dir="${result-path}" />
-
-        <!-- Create dirs that might be used by the test coverage generation -->
-    	<mkdir dir="${result-classes-core-for-emma-war}" />
-    	<mkdir dir="${result-classes-core-for-emma-junit}" />
-    	<mkdir dir="${result-path}/coverage" />
 
         <echo>We are using gwt version ${gwt-version}.</echo>
 
@@ -773,18 +765,6 @@
         <mkdir dir="${output-dir}/META-INF"/>
         <echo file="${output-dir}/META-INF/VERSION">${version.full}</echo> 
         	
-		<emma enabled="${emma.enabled}" >
-			<instr instrpath="${result-classes-core}"
-				destdir="${result-classes-core-for-emma-war}"
-				mode="copy"
-				metadatafile="${result-path}/war.es"
-				merge="false"
-			>
-				<filter includes="com.vaadin.*" />
-				<filter excludes="com.vaadin.terminal.gwt.*" />
-			</instr>
-		</emma>
-    	
         <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
             classpath="${jarjar-jar}"/>
     	
@@ -803,7 +783,6 @@
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
             <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-classes-core-for-emma-war}" />
             <fileset dir="${result-classes-core}"/>
             <fileset dir="${result-classes-sass}"/>
             <!-- add sources -->
@@ -1192,65 +1171,22 @@
             <antcall inheritrefs="true" inheritall="true" target="server-side-tests"></antcall>
             <antcall inheritrefs="true" inheritall="true" target="sass-tests"></antcall>
         </parallel>
-        
-        <!-- Create a combined report from each test's sub report -->
-		<emma enabled="${emma.enabled}" >
-			<merge file="${result-path}/combined.es">
-				<fileset dir="${result-path}" >
-					<include name="*.ec" />
-					<include name="*.em" />
-				</fileset>
-			</merge>
-			<report sourcepath="${result-src-core}" >
-				<fileset dir="${result-path}" >
-					<include name="combined.es" />
-				</fileset>
-				
-				<txt outfile="../${result-path}/coverage/coverage-combined/coverage.txt" />
-				<html outfile="../${result-path}/coverage/coverage-combined/coverage.html" />
-			</report>
-		</emma>    	    	
-        <echo>##teamcity[publishArtifacts '${result-path}/coverage']</echo>
     </target>
     
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
     <target name="server-side-tests" unless="tests.serverside.skip" depends="compile-tests">
-		<emma enabled="${emma.enabled}" >
-			<instr instrpath="${result-classes-core}"
-				destdir="${result-classes-core-for-emma-junit}"
-				mode="copy"
-				metadatafile="${result-path}/unittests.em"
-   			    merge="false"
-		        >
-				<filter includes="com.vaadin.*" />
-				<filter excludes="com.vaadin.terminal.gwt.*" />
-			</instr>
-		</emma>    	    	
         <junit printsummary="yes"> 
             <classpath> 
-                <pathelement path="${result-classes-core-for-emma-junit}" />
                 <pathelement path="${result-classes-core}" />
                 <pathelement path="${result-classes-junit}" />
             	<path refid="compile.classpath.server-side-tests"></path>
             </classpath>
-        	<jvmarg value="-Demma.coverage.out.file=../${result-path}/unittests.ec" />
 
             <batchtest fork="yes">
                 <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java,**/VaadinClasses.java" />
                 <fileset dir="tests/client-side" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
-		<emma enabled="${emma.enabled}" >
-			<report sourcepath="${result-src-core}" >
-				<fileset dir="${result-path}" >
-					<include name="unittests.*" />
-				</fileset>
-				
-				<txt outfile="../${result-path}/coverage/coverage-unittests/unittests_coverage.txt" />
-				<html outfile="../${result-path}/coverage/coverage-unittests/unittests_coverage.html" />
-			</report>
-    	</emma>
-        <echo>##teamcity[publishArtifacts '${result-path}/coverage']</echo>
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
@@ -1311,17 +1247,6 @@
         		
         </ant>
     	
-		<emma enabled="${emma.enabled}" >
-			<report sourcepath="${result-src-core}" >
-				<fileset dir="${result-path}" >
-					<include name="war.*" />
-				</fileset>
-				
-				<txt outfile="../${result-path}/coverage/coverage-testbench/testbench_coverage.txt" />
-				<html outfile="../${result-path}/coverage/coverage-testbench/testbench_coverage.html" />
-			</report>
-		</emma>    	
-        <echo>##teamcity[publishArtifacts '${result-path}/coverage/']</echo>
     </target>
 
     <!-- Assumes java classes have been compiled but depends does not work out well as this is run from a <parallel> task-->
