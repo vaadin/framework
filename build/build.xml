@@ -26,12 +26,12 @@
     <target name="init-deps" depends="common.init-deps" >
         <property name="ivy.resolved" value="1" />
     	
-        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.server" conf="ss.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.shared" conf="ss.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.client" conf="cs.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.client-compiler" conf="cs.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.server-tests" conf="ss.test.compile"/>
+        <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="server.extdep, shared.extdep, client.extdep, client-compiler.extdep, server.tests.extdep,client-compiler.extdep"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server" conf="server.extdep"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.shared" conf="shared.extdep"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.client" conf="client.extdep"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.client-compiler" conf="client-compiler.extdep"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server-tests" conf="server.tests.extdep"/>
 
         <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
 
@@ -59,6 +59,11 @@
 
     	<property name="jarjar-jar" value="${gwt.tools.lib}/tonicsystems/jarjar-1.0rc8.jar"/>
 
+        	<!-- GWT -->
+        <path id="gwt.dev.user.jars">
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+        </path>
         <path id="compile.classpath.server">
             <path refid="additional.jar.path" />
             <path refid="ivy.compile.classpath.server" />
@@ -69,45 +74,28 @@
         </path>
     	<path id="compile.classpath.client">
             <path refid="additional.jar.path" />
-        	<!-- GWT -->
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
-
+    		<path refid="gwt.dev.user.jars"/>
         	<path refid="ivy.compile.classpath.client" />
         </path>
     	<path id="compile.classpath.client-compiler">
             <path refid="additional.jar.path" />
-        	<!-- GWT -->
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
-
+    		<path refid="gwt.dev.user.jars"/>
         	<path refid="ivy.compile.classpath.client-compiler" />
         </path>
     	<path id="compile.classpath.sass">
     	     <path refid="additional.jar.path" />
     	     <path refid="ivy.compile.classpath.server" />
-        	<!-- GWT -->
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
+    		<path refid="gwt.dev.user.jars"/>
     	</path>
         <path id="compile.classpath.server-tests">
             <path refid="additional.jar.path" />
-
-        	<!-- GWT -->
-            <pathelement location="${gwt.user.jar}" />
-        	<!-- needed at least for Apache Commons -->
-            <pathelement location="${gwt.dev.jar}" />
-
+    		<path refid="gwt.dev.user.jars"/>
             <path refid="ivy.compile.classpath.server-tests" />
         </path>
 
     	<path id="compile.classpath.buildhelpers">
             <path refid="additional.jar.path" />
-
-        	<!-- GWT -->
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
-
+    		<path refid="gwt.dev.user.jars"/>
             <path refid="buildhelpers.dependencies" />
         </path>
     </target>
@@ -633,12 +621,14 @@
         </javac>
     </target>
 	
-    <target name="compile-tests" depends="compile-server,compile-client">
+    <target name="compile-tests" depends="compile-server,compile-client,compile-sass">
         <echo>Compiling src (Server and client side JUnit tests)</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-junit}" />
         <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath path="${result-classes-shared}"></classpath>
         	<classpath path="${result-classes-server}"></classpath>
+        	<classpath path="${result-classes-client}"></classpath>
             <src path="${result-src-junit}"/>
         </javac>
     	
@@ -656,6 +646,9 @@
         <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-junit}"></classpath>
         	<classpath path="${result-classes-server}"></classpath>
+        	<classpath path="${result-classes-shared}"></classpath>
+        	<classpath path="${result-classes-client}"></classpath>
+        	<classpath refid="gwt.dev.user.jars"/>
             <src path="${result-src-testbench}"/>
         </javac>
     	
