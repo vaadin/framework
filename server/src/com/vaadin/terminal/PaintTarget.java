@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.ui.Component;
 
@@ -40,7 +38,7 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
-     * Result of starting to paint a Paintable (
+     * Result of starting to paint a Component (
      * {@link PaintTarget#startPaintable(Component, String)}).
      * 
      * @since 7.0
@@ -52,7 +50,7 @@ public interface PaintTarget extends Serializable {
          */
         PAINTING,
         /**
-         * A previously unpainted or painted {@link Paintable} has been queued
+         * A previously unpainted or painted {@link Component} has been queued
          * be created/update later in a separate change in the same set of
          * changes.
          */
@@ -65,9 +63,9 @@ public interface PaintTarget extends Serializable {
      * scheme, that checks the paintable has actually changed or can a cached
      * version be used instead. This method should call the startTag method.
      * <p>
-     * If the Paintable is found in cache and this function returns true it may
-     * omit the content and close the tag, in which case cached content should
-     * be used.
+     * If the {@link Component} is found in cache and this function returns true
+     * it may omit the content and close the tag, in which case cached content
+     * should be used.
      * </p>
      * <p>
      * This method may also add only a reference to the paintable and queue the
@@ -186,7 +184,7 @@ public interface PaintTarget extends Serializable {
      * <p>
      * The urls in UIDL message may use Vaadin specific protocol. Before
      * actually using the urls on the client side, they should be passed via
-     * {@link ApplicationConnection#translateVaadinUri(String)}.
+     * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}.
      * <p>
      * Note that in current terminal implementation StreamVariables are cleaned
      * from the terminal only when:
@@ -281,14 +279,14 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
-     * Adds a Paintable type attribute. On client side the value will be a
+     * Adds a Component type attribute. On client side the value will be a
      * terminal specific reference to corresponding component on client side
      * implementation.
      * 
      * @param name
      *            the name of the attribute
      * @param value
-     *            the Paintable to be referenced on client side
+     *            the Component to be referenced on client side
      * @throws PaintException
      */
     public void addAttribute(String name, Component value)
@@ -407,7 +405,7 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
-     * Adds a Paintable type variable. On client side the variable value will be
+     * Adds a Component type variable. On client side the variable value will be
      * a terminal specific reference to corresponding component on client side
      * implementation. When updated from client side, terminal will map the
      * client side component reference back to a corresponding server side

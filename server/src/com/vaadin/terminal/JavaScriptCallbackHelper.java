@@ -15,7 +15,6 @@ import java.util.Set;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.shared.JavaScriptConnectorState;
-import com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;
@@ -25,7 +24,7 @@ import com.vaadin.ui.JavaScriptFunction;
  * Internal helper class used to implement functionality common to
  * {@link AbstractJavaScriptComponent} and {@link AbstractJavaScriptExtension}.
  * Corresponding support in client-side code is in
- * {@link JavaScriptConnectorHelper}.
+ * {@link com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper}.
  * <p>
  * You should most likely no use this class directly.
  * 

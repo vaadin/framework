@@ -22,6 +22,7 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -224,8 +225,6 @@ public class VDragAndDropManager {
         }
 
     }
-
-    public static final String DD_SERVICE = "DD";
 
     private static VDragAndDropManager instance;
     private HandlerRegistration handlerRegistration;
@@ -598,17 +597,20 @@ public class VDragAndDropManager {
          * Transferable is sent on each request)
          */
         visitId++;
-        client.updateVariable(DD_SERVICE, "visitId", visitId, false);
-        client.updateVariable(DD_SERVICE, "eventId", currentDrag.getEventId(),
-                false);
-        client.updateVariable(DD_SERVICE, "dhowner", paintable, false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "visitId", visitId, false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "eventId", currentDrag.getEventId(), false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "dhowner", paintable, false);
 
         VTransferable transferable = currentDrag.getTransferable();
 
-        client.updateVariable(DD_SERVICE, "component",
-                transferable.getDragSource(), false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "component", transferable.getDragSource(), false);
 
-        client.updateVariable(DD_SERVICE, "type", drop.ordinal(), false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "type", drop.ordinal(), false);
 
         if (currentDrag.getCurrentGwtEvent() != null) {
             try {
@@ -624,11 +626,11 @@ public class VDragAndDropManager {
         } else {
             currentDrag.getDropDetails().put("mouseEvent", null);
         }
-        client.updateVariable(DD_SERVICE, "evt", currentDrag.getDropDetails(),
-                false);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "evt", currentDrag.getDropDetails(), false);
 
-        client.updateVariable(DD_SERVICE, "tra", transferable.getVariableMap(),
-                true);
+        client.updateVariable(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID,
+                "tra", transferable.getVariableMap(), true);
 
     }
 

@@ -5,7 +5,6 @@
 package com.vaadin.terminal;
 
 import com.vaadin.shared.JavaScriptExtensionState;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.ui.JavaScriptFunction;
 
 /**
@@ -66,7 +65,8 @@ import com.vaadin.ui.JavaScriptFunction;
  * functions is described bellow.</li>
  * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
  * that can be used in the browser. This is just way of accessing
- * {@link ApplicationConnection#translateVaadinUri(String)}</li>
+ * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}
+ * </li>
  * </ul>
  * The connector wrapper also supports these special functions:
  * <ul>
@@ -77,9 +77,8 @@ import com.vaadin.ui.JavaScriptFunction;
  * {@link #addFunction(String, JavaScriptFunction)} on the server will
  * automatically be present as a function that triggers the registered function
  * on the server.</li>
- * <li>Any field name referred to using
- * {@link #callFunction(String, Object...)} on the server will be called if a
- * function has been assigned to the field.</li>
+ * <li>Any field name referred to using {@link #callFunction(String, Object...)}
+ * on the server will be called if a function has been assigned to the field.</li>
  * </ul>
  * <p>
  * 

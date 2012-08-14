@@ -33,4 +33,6 @@ public class ApplicationConstants {
 
     public static final String V_RESOURCE_PATH = "v-resourcePath";
 
+    @Deprecated
+    public static final String DRAG_AND_DROP_CONNECTOR_ID = "DD";
 }
