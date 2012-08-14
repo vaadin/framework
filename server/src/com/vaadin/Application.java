@@ -2406,6 +2406,18 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return roots.get(rootId);
     }
 
+    /**
+     * Adds a listener that will be invoked when the bootstrap HTML is about to
+     * be generated. This can be used to modify the contents of the HTML that
+     * loads the Vaadin application in the browser and the HTTP headers that are
+     * included in the response serving the HTML.
+     * 
+     * @see BootstrapListener#modifyBootstrapFragment(BootstrapFragmentResponse)
+     * @see BootstrapListener#modifyBootstrapPage(BootstrapPageResponse)
+     * 
+     * @param listener
+     *            the bootstrap listener to add
+     */
     public void addBootstrapListener(BootstrapListener listener) {
         eventRouter.addListener(BootstrapFragmentResponse.class, listener,
                 BOOTSTRAP_FRAGMENT_METHOD);
@@ -2413,6 +2425,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 BOOTSTRAP_PAGE_METHOD);
     }
 
+    /**
+     * Remove a bootstrap listener that was previously added.
+     * 
+     * @see #addBootstrapListener(BootstrapListener)
+     * 
+     * @param listener
+     *            the bootstrap listener to remove
+     */
     public void removeBootstrapListener(BootstrapListener listener) {
         eventRouter.removeListener(BootstrapFragmentResponse.class, listener,
                 BOOTSTRAP_FRAGMENT_METHOD);
@@ -2420,6 +2440,15 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 BOOTSTRAP_PAGE_METHOD);
     }
 
+    /**
+     * Fires a bootstrap event to all registered listeners. There are currently
+     * two supported events, both inheriting from {@link BootstrapResponse}:
+     * {@link BootstrapFragmentResponse} and {@link BootstrapPageResponse}.
+     * 
+     * @param response
+     *            the bootstrap response event for which listeners should be
+     *            fired
+     */
     public void modifyBootstrapResponse(BootstrapResponse response) {
         eventRouter.fireEvent(response);
     }

@@ -7,14 +7,38 @@ package com.vaadin.terminal.gwt.server;
 import java.util.EventObject;
 
 import com.vaadin.Application;
+import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Root;
 
+/**
+ * Base class providing common functionality used in different bootstrap
+ * modification events.
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ */
 public abstract class BootstrapResponse extends EventObject {
     private final WrappedRequest request;
     private final Application application;
     private final Integer rootId;
 
+    /**
+     * Creates a new bootstrap event.
+     * 
+     * @param handler
+     *            the bootstrap handler that is firing the event
+     * @param request
+     *            the wrapped request for which the bootstrap page should be
+     *            generated
+     * @param application
+     *            the application for which the bootstrap page should be
+     *            generated
+     * @param rootId
+     *            the generated id of the Root that will be displayed on the
+     *            page
+     */
     public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
             Application application, Integer rootId) {
         super(handler);
@@ -23,22 +47,64 @@ public abstract class BootstrapResponse extends EventObject {
         this.rootId = rootId;
     }
 
+    /**
+     * Gets the bootstrap handler that fired this event
+     * 
+     * @return the bootstrap handler that fired this event
+     */
     public BootstrapHandler getBootstrapHandler() {
         return (BootstrapHandler) getSource();
     }
 
+    /**
+     * Gets the request for which the generated bootstrap HTML will be the
+     * response. This can be used to read request headers and other additional
+     * information. Please note that {@link WrappedRequest#getBrowserDetails()}
+     * will not be available because the bootstrap page is generated before the
+     * bootstrap javascript has had a chance to send any information back to the
+     * server.
+     * 
+     * @return the wrapped request that is being handled
+     */
     public WrappedRequest getRequest() {
         return request;
     }
 
+    /**
+     * Gets the application to which the rendered view belongs.
+     * 
+     * @return the application
+     */
     public Application getApplication() {
         return application;
     }
 
+    /**
+     * Gets the root id that has been generated for this response. Please note
+     * that if {@link Application#isRootPreserved()} is enabled, a previously
+     * created Root with a different id might eventually end up being used.
+     * 
+     * @return the root id
+     */
     public Integer getRootId() {
         return rootId;
     }
 
+    /**
+     * Gets the Root for which this page is being rendered, if available. Some
+     * features of the framework will postpone the Root selection until after
+     * the bootstrap page has been rendered and required information from the
+     * browser has been sent back. This method will return <code>null</code> if
+     * no Root instance is yet available.
+     * 
+     * @see Application#isRootPreserved()
+     * @see Application#getRoot(WrappedRequest)
+     * @see RootRequiresMoreInformationException
+     * 
+     * @return The Root that will be displayed in the page being generated, or
+     *         <code>null</code> if all required information is not yet
+     *         available.
+     */
     public Root getRoot() {
         return Root.getCurrent();
     }

@@ -158,8 +158,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, document, headers, context.getApplication(),
-                    context.getRootId());
+                    this, request, context.getApplication(), context.getRootId(), document,
+                    headers);
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -263,7 +263,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             WrappedResponse response, Application application, Integer rootId) {
         BootstrapContext context = new BootstrapContext(response,
                 new BootstrapFragmentResponse(this, request,
-                        new ArrayList<Node>(), application, rootId));
+                        application, rootId, new ArrayList<Node>()));
         return context;
     }
 
