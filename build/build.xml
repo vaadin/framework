@@ -83,6 +83,13 @@
 
         	<path refid="ivy.compile.classpath.client-compiler" />
         </path>
+    	<path id="compile.classpath.sass">
+    	     <path refid="additional.jar.path" />
+    	     <path refid="ivy.compile.classpath.server" />
+        	<!-- GWT -->
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+    	</path>
         <path id="compile.classpath.server-tests">
             <path refid="additional.jar.path" />
 
@@ -668,7 +675,7 @@
     	<!-- TODO also perform javacc compilation of the parser -->
         <mkdir dir="${result-classes-sass}" />
         <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" srcdir="${result-src-sass}" 
-                	classpathref="compile.classpath.server" destdir="${result-classes-sass}" debug="true" encoding="UTF-8" />
+                	classpathref="compile.classpath.sass" destdir="${result-classes-sass}" debug="true" encoding="UTF-8" />
     </target>
     
     <target name="defaulttheme" depends="init, compile-sass, compile-helpers" description="Compile all included themes">
