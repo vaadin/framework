@@ -27,9 +27,11 @@
         <property name="ivy.resolved" value="1" />
     	
         <ivy:resolve file="build/ivy/ivy.xml" resolveid="common" conf="ss.compile, cs.compile, ss.test.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.server-side" conf="ss.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.client-side" conf="cs.compile"/>
-        <ivy:cachepath pathid="ivy.compile.classpath.server-side-tests" conf="ss.test.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server" conf="ss.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.shared" conf="ss.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.client" conf="cs.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.client-compiler" conf="cs.compile"/>
+        <ivy:cachepath pathid="ivy.compile.classpath.server-tests" conf="ss.test.compile"/>
 
         <ivy:cachepath pathid="buildhelpers.dependencies" resolveId="buildhelpers" conf="compile" file="build/ivy/buildhelpers-ivy.xml"/>        
 
@@ -57,31 +59,31 @@
 
     	<property name="jarjar-jar" value="${gwt.tools.lib}/tonicsystems/jarjar-1.0rc8.jar"/>
 
-        <path id="compile.classpath.server-side">
+        <path id="compile.classpath.server">
             <path refid="additional.jar.path" />
-
+            <path refid="ivy.compile.classpath.server" />
+        </path>
+        <path id="compile.classpath.shared">
+            <path refid="additional.jar.path" />
+            <path refid="ivy.compile.classpath.shared" />
+        </path>
+    	<path id="compile.classpath.client">
+            <path refid="additional.jar.path" />
         	<!-- GWT -->
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-            <path refid="ivy.compile.classpath.server-side" />
+        	<path refid="ivy.compile.classpath.client" />
         </path>
-        <path id="compile.classpath.client-side">
+    	<path id="compile.classpath.client-compiler">
             <path refid="additional.jar.path" />
-        	
-        	<!-- GWT user -->
-        	<!--
-        	<pathelement path="${gwt.user.dir}/src" />
-        	<pathelement path="${gwt.user.dir}/super" />
-            <pathelement path="${gwt.user.dir}/out/user/bin"/>
-            -->
         	<!-- GWT -->
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.dev.jar}" />
 
-        	<path refid="ivy.compile.classpath.client-side" />
+        	<path refid="ivy.compile.classpath.client-compiler" />
         </path>
-        <path id="compile.classpath.server-side-tests">
+        <path id="compile.classpath.server-tests">
             <path refid="additional.jar.path" />
 
         	<!-- GWT -->
@@ -89,7 +91,7 @@
         	<!-- needed at least for Apache Commons -->
             <pathelement location="${gwt.dev.jar}" />
 
-            <path refid="ivy.compile.classpath.server-side-tests" />
+            <path refid="ivy.compile.classpath.server-tests" />
         </path>
 
     	<path id="compile.classpath.buildhelpers">
@@ -117,12 +119,18 @@
         <property file="build/GWT-VERSION.properties" />
 
 		<!-- result source and classes folders -->
-		<property name="result-src-core" value="${result-path}/src/core"/>
+		<property name="result-src-server" value="${result-path}/src/server"/>
+		<property name="result-src-client" value="${result-path}/src/client"/>
+		<property name="result-src-client-compiler" value="${result-path}/src/client-compiler"/>
+		<property name="result-src-shared" value="${result-path}/src/shared"/>
 		<property name="result-src-junit" value="${result-path}/src/junit"/>
 		<property name="result-src-testbench" value="${result-path}/src/testbench"/>
 		<property name="result-src-sass" value="${result-path}/src/sass"/>
 		<property name="result-src-sass-junit" value="${result-path}/src/sass-junit"/>
-		<property name="result-classes-core" value="${result-path}/classes/core"/>
+		<property name="result-classes-server" value="${result-path}/classes/server"/>
+		<property name="result-classes-client" value="${result-path}/classes/client"/>
+		<property name="result-classes-client-compiler" value="${result-path}/classes/client-compiler"/>
+		<property name="result-classes-shared" value="${result-path}/classes/shared"/>
 		<property name="result-classes-junit" value="${result-path}/classes/junit"/>
 		<property name="result-classes-testbench" value="${result-path}/classes/testbench"/>
 		<property name="result-classes-sass" value="${result-path}/classes/sass"/>
@@ -131,9 +139,21 @@
 
 		<!-- Default classpath for building widgetsets, overridden for testing widgetset -->
 		<path id="compile.classpath.widgetset">
-			<path refid="compile.classpath.client-side" />
-			<pathelement location="${result-classes-core}" />
-			<pathelement location="${result-src-core}" />
+			<path refid="compile.classpath.client" />
+			<!-- Needed to resolve classes which @Connect refers to -->
+			<pathelement location="${result-src-server}" />
+			<!-- Needed to resolve imports in connector classes -->
+			<pathelement location="${result-classes-server}" />
+
+			<!-- The actual sources we want to compile -->
+			<pathelement location="${result-src-client}" />
+			<pathelement location="${result-src-shared}" />
+			<!-- Contains compiled generators -->
+			<pathelement location="${result-classes-client-compiler}" />
+			<!-- Generators depend on shared and client interfaces -->
+			<pathelement location="${result-classes-shared}" />
+			<pathelement location="${result-classes-client}" />
+			
 			<pathelement location="${result-precompiled-widgetsets}" />
 		</path>
 	</target>
@@ -323,7 +343,7 @@
             description="Build package required files, without packing them.">
     </target>
 
-    <target name="compile-server-side" depends="compile-gwt, compile-core, webcontent"/>
+    <target name="compile-server-side" depends="compile-gwt, compile-server, compile-client, webcontent"/>
 
     <!-- Copy and preprocess sources for packaging 
     NOTE: Replaces <version></version> tags with build version tag for some "textual" files
@@ -357,7 +377,10 @@
         
         <mkdir dir="${result-path}/src" />
         <mkdir dir="${result-src-sass}/src" />
-        <mkdir dir="${result-src-core}" />
+        <mkdir dir="${result-src-server}" />
+        <mkdir dir="${result-src-client}" />
+        <mkdir dir="${result-src-client-compiler}" />
+        <mkdir dir="${result-src-shared}" />
         <mkdir dir="${result-src-testbench}" />
         <mkdir dir="${result-src-junit}" />
         <mkdir dir="${result-src-sass-junit}" />
@@ -387,16 +410,31 @@
 
         <echo>Copying src directory and processing copied files.</echo>
         <echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
-        <copy todir="${result-src-core}" overwrite="yes">
+        <copy todir="${result-src-server}" overwrite="yes">
             <filterset refid="version-and-license"/>
             <filterset refid="pre-css-style"/>
             <fileset dir="server/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
+        </copy>
+        <copy todir="${result-src-shared}" overwrite="yes">
+            <filterset refid="version-and-license"/>
+            <filterset refid="pre-css-style"/>
             <fileset dir="shared/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
+        </copy>
+        <copy todir="${result-src-client}" overwrite="yes">
+            <filterset refid="version-and-license"/>
+            <filterset refid="pre-css-style"/>
             <fileset dir="client/src">
+                <patternset refid="preprocessable-files" />
+            </fileset>
+        </copy>
+        <copy todir="${result-src-client-compiler}" overwrite="yes">
+            <filterset refid="version-and-license"/>
+            <filterset refid="pre-css-style"/>
+            <fileset dir="client-compiler/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
@@ -433,17 +471,30 @@
                 
         <!-- Add other files such as images, these are not filtered or processed by fixcrlf task -->
         <echo>Copying non java/html/css/xml files such as images.</echo>
-        <copy todir="${result-src-core}">
+        <copy todir="${result-src-server}">
             <fileset dir="server/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
+        </copy>
+        	
+        <copy todir="${result-src-shared}">
             <fileset dir="shared/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
+        </copy>
+        	
+        <copy todir="${result-src-client}">
             <fileset dir="client/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
+
+    	<copy todir="${result-src-client-compiler}">
+            <fileset dir="client-compiler/src">
+                <patternset refid="non-preprocessable-files" />
+            </fileset>
+        </copy>
+        	
         <copy todir="${result-src-sass}">
             <fileset dir="${sass-src}">
                 <patternset refid="non-preprocessable-files" />
@@ -533,28 +584,61 @@
         </copy>
     </target>
 
-    <target name="compile-core" depends="init, preprocess-src">
-        <echo>Compiling src (server-side)</echo>
+    <target name="compile-server" depends="init, preprocess-src, compile-shared">
+        <echo>Compiling server/src</echo>
     	<!-- Compile core sources first as the other sources depend on these -->
-        <mkdir dir="${result-classes-core}" />
-        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side" destdir="${result-classes-core}" debug="true" encoding="UTF-8" includeantruntime="false">
-            <src path="${result-src-core}"/>
+        <mkdir dir="${result-classes-server}" />
+        <javac destdir="${result-classes-server}" source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath location="${result-classes-shared}"></classpath>
+            <src path="${result-src-server}"/>
+        </javac>
+    </target>
+
+    <target name="compile-client" depends="init, preprocess-src, compile-server, compile-shared">
+        <echo>Compiling client/src</echo>
+    	<!-- Compile core sources first as the other sources depend on these -->
+        <mkdir dir="${result-classes-client}" />
+        <javac destdir="${result-classes-client}" source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.client" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath location="${result-classes-shared}"></classpath>
+        	<classpath location="${result-classes-server}"></classpath>
+            <src path="${result-src-client}"/>
         </javac>
     </target>
 	
-    <target name="compile-tests" depends="compile-core">
+    <target name="compile-client-compiler" depends="init, preprocess-src, compile-client, compile-server, compile-shared">
+        <echo>Compiling client-compiler/src</echo>
+        <mkdir dir="${result-classes-client-compiler}" />
+        <javac destdir="${result-classes-client-compiler}" source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.client-compiler" debug="true" encoding="UTF-8" includeantruntime="false">
+            <src path="${result-src-client-compiler}"/>
+        	<!-- These could be removed by using class names instead of class references in generators -->
+        	<classpath location="${result-classes-shared}"></classpath>
+        	<classpath location="${result-classes-client}"></classpath>
+        	<classpath location="${result-classes-server}"></classpath>
+        </javac>
+    </target>
+	
+    <target name="compile-shared" depends="init, preprocess-src">
+        <echo>Compiling shared/src</echo>
+    	<!-- Compile core sources first as the other sources depend on these -->
+        <mkdir dir="${result-classes-shared}" />
+        <javac destdir="${result-classes-shared}" source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.shared" debug="true" encoding="UTF-8" includeantruntime="false">
+            <src path="${result-src-shared}"/>
+        </javac>
+    </target>
+	
+    <target name="compile-tests" depends="compile-server,compile-client">
         <echo>Compiling src (Server and client side JUnit tests)</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-junit}" />
-        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
-        	<classpath path="${result-classes-core}"></classpath>
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-tests" destdir="${result-classes-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        	<classpath path="${result-classes-server}"></classpath>
             <src path="${result-src-junit}"/>
         </javac>
     	
         <echo>Compiling SASS JUnit tests</echo>
     	<!-- Compile server and client side JUnit tests -->
         <mkdir dir="${result-classes-sass-junit}" />
-        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side-tests" destdir="${result-classes-sass-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-tests" destdir="${result-classes-sass-junit}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-sass}"></classpath>
             <src path="${result-src-sass-junit}"/>
         </javac>
@@ -562,9 +646,9 @@
         <echo>Compiling src (TestBench tests)</echo>
     	<!-- Compile TestBench tests -->
         <mkdir dir="${result-classes-testbench}" />
-        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server-side" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
+        <javac source="${required.java.version}" target="${required.java.version}" classpathref="compile.classpath.server" destdir="${result-classes-testbench}" debug="true" encoding="UTF-8" includeantruntime="false">
         	<classpath path="${result-classes-junit}"></classpath>
-        	<classpath path="${result-classes-core}"></classpath>
+        	<classpath path="${result-classes-server}"></classpath>
             <src path="${result-src-testbench}"/>
         </javac>
     	
@@ -584,7 +668,7 @@
     	<!-- TODO also perform javacc compilation of the parser -->
         <mkdir dir="${result-classes-sass}" />
         <javac source="${required.java.version}" target="${required.java.version}" includeantruntime="false" srcdir="${result-src-sass}" 
-                	classpathref="compile.classpath.server-side" destdir="${result-classes-sass}" debug="true" encoding="UTF-8" />
+                	classpathref="compile.classpath.server" destdir="${result-classes-sass}" debug="true" encoding="UTF-8" />
     </target>
     
     <target name="defaulttheme" depends="init, compile-sass, compile-helpers" description="Compile all included themes">
@@ -628,7 +712,7 @@
     </target>
 
     <!-- The widgetset generator is currently compiled along with rest of server-side Java. -->    
-    <target name="compile-widgetset-generator" depends="compile-core"/>
+    <target name="compile-widgetset-generator" depends="compile-server,compile-client, compile-client-compiler"/>
 
 	<!--  Compiles the widgetset given as the first parameter -->
     <target name="compile-widgetset" depends="init-deps">
@@ -721,7 +805,7 @@
         <!-- Definitions for building the client-side. -->
         <property name="widgetsets-output-dir" value="WebContent/VAADIN/widgetsets" />
 
-        <echo>We are using ${lib-gwt-dev}.</echo>
+        <echo>We are using ${gwt.dev.jar}.</echo>
         <echo>Widget sets output dir: ${widgetsets-output-dir}</echo>
     </target>
 
@@ -782,11 +866,14 @@
                 <attribute name="GWT-Version-Dependencies" value="${gwt-version-dependencies}" />
                 <attribute name="Bundle-Version" value="${version.full}" />
             </manifest>
-            <!-- Include any instrumented class files before the normal classes -->
-            <fileset dir="${result-classes-core}"/>
+            <fileset dir="${result-classes-server}"/>
+            <fileset dir="${result-classes-client}"/>
+            <fileset dir="${result-classes-shared}"/>
             <fileset dir="${result-classes-sass}"/>
             <!-- add sources -->
-            <fileset dir="${result-src-core}"/>
+            <fileset dir="${result-src-server}"/>
+            <fileset dir="${result-src-client}"/>
+            <fileset dir="${result-src-shared}"/>
             <fileset dir="${result-src-sass}"/>
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
@@ -903,7 +990,17 @@
 
     <target name="vaadin-sources.jar" depends="init">
         <jar file="${result-path}/${lib-sources-jar-name}" compress="true">
-            <fileset dir="${result-src-core}">
+            <fileset dir="${result-src-server}">
+                <patternset>
+                    <include name="**/*.java" />
+                </patternset>
+            </fileset>
+            <fileset dir="${result-src-shared}">
+                <patternset>
+                    <include name="**/*.java" />
+                </patternset>
+            </fileset>
+            <fileset dir="${result-src-client}">
                 <patternset>
                     <include name="**/*.java" />
                 </patternset>
@@ -934,8 +1031,10 @@
     <target name="javadoc" depends="init, preprocess-src">
         <property name="javadoc.destdir" value="${output-dir}/WebContent/docs/api"/>
         
-        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client-side">
-            <packageset dir="${result-src-core}"/>
+        <javadoc destdir="${javadoc.destdir}" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath.client">
+            <packageset dir="${result-src-server}"/>
+            <packageset dir="${result-src-client}"/>
+            <packageset dir="${result-src-shared}"/>
             <doctitle>${javadoc.doctitle}</doctitle>
             <!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
             <bottom>${javadoc.bottom}</bottom>
@@ -1177,9 +1276,9 @@
     <target name="server-side-tests" unless="tests.serverside.skip" depends="compile-tests">
         <junit printsummary="yes"> 
             <classpath> 
-                <pathelement path="${result-classes-core}" />
+                <pathelement path="${result-classes-server}" />
                 <pathelement path="${result-classes-junit}" />
-            	<path refid="compile.classpath.server-side-tests"></path>
+            	<path refid="compile.classpath.server-tests"></path>
             </classpath>
 
             <batchtest fork="yes">
@@ -1196,7 +1295,7 @@
                 <pathelement path="${result-src-sass-junit}" />
                 <pathelement path="${result-classes-sass}" />
                 <pathelement path="${result-classes-sass-junit}" />
-            	<path refid="compile.classpath.server-side-tests"></path>
+            	<path refid="compile.classpath.server-tests"></path>
             </classpath>
 
             <batchtest fork="yes">
