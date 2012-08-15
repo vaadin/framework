@@ -61,7 +61,7 @@ public class ImportVisitor implements Visitor {
         if (url == null) {
             return null;
         }
-        int pos = url.lastIndexOf(File.separatorChar);
+        int pos = url.lastIndexOf('/');
         if (pos == -1) {
             return null;
         }
