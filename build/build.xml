@@ -715,7 +715,8 @@
     <target name="compile-widgetset-generator" depends="compile-server,compile-client, compile-client-compiler"/>
 
 	<!--  Compiles the widgetset given as the first parameter -->
-    <target name="compile-widgetset" depends="init-deps, compile-client-compiler">
+	<!-- Caller must ensure necessary classes have been compiled -->
+    <target name="compile-widgetset">
         <fail unless="widgetset" message="No widgetset parameter set"/>
         <property name="widgetset-style" value="OBF" />
     	<property name="widgetset-localWorkers" value="2" />
@@ -768,12 +769,12 @@
         </antcall>
     </target>
     
-    <target name="compile-widgetset-testing">
-    	<!-- Crate a path reference containing default widgetset classpath + testbench files -->
+    <target name="compile-widgetset-testing" depends="compile-tests">
+    	<!-- Create a path reference containing default widgetset classpath + testbench files -->
     	<path id="compile.classpath.testingwidgetset">
     	 	<path refid="compile.classpath.widgetset" />
     		<pathelement location="${result-classes-testbench}" />
-		<pathelement location="${result-src-testbench}" />
+			<pathelement location="${result-src-testbench}" />
     	</path>
         <antcall target="compile-widgetset">
             <reference refid="compile.classpath.testingwidgetset" torefid="compile.classpath.widgetset" />
