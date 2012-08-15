@@ -1620,8 +1620,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
         // Hide the error indicator if needed
         getState().setHideErrors(shouldHideErrors());

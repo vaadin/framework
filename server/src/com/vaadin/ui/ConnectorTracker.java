@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.AbstractClientConnector;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -50,6 +51,7 @@ public class ConnectorTracker implements Serializable {
 
     private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
+    private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
     private Root root;
 
@@ -91,6 +93,7 @@ public class ConnectorTracker implements Serializable {
                 .get(connectorId);
         if (previouslyRegistered == null) {
             connectorIdToConnector.put(connectorId, connector);
+            uninitializedConnectors.add(connector);
             getLogger().fine(
                     "Registered " + connector.getClass().getSimpleName() + " ("
                             + connectorId + ")");
@@ -136,6 +139,47 @@ public class ConnectorTracker implements Serializable {
                 "Unregistered " + connector.getClass().getSimpleName() + " ("
                         + connectorId + ")");
         connectorIdToConnector.remove(connectorId);
+        uninitializedConnectors.remove(connector);
+    }
+
+    /**
+     * Checks whether the given connector has already been initialized in the
+     * browser. The given connector should be registered with this connector
+     * tracker.
+     * 
+     * @param connector
+     *            the client connector to check
+     * @return <code>true</code> if the initial state has previously been sent
+     *         to the browser, <code>false</code> if the client-side doesn't
+     *         already know anything about the connector.
+     */
+    public boolean isClientSideInitialized(ClientConnector connector) {
+        assert connectorIdToConnector.get(connector.getConnectorId()) == connector : "Connector should be registered with this ConnectorTracker";
+        return !uninitializedConnectors.contains(connector);
+    }
+
+    /**
+     * Marks the given connector as initialized, meaning that the client-side
+     * state has been initialized for the connector.
+     * 
+     * @see #isClientSideInitialized(ClientConnector)
+     * 
+     * @param connector
+     *            the connector that should be marked as initialized
+     */
+    public void markClientSideInitialized(ClientConnector connector) {
+        uninitializedConnectors.remove(connector);
+    }
+
+    /**
+     * Marks all currently registered connectors as uninitialized. This should
+     * be done when the client-side has been reset but the server-side state is
+     * retained.
+     * 
+     * @see #isClientSideInitialized(ClientConnector)
+     */
+    public void markAllClientSidesUninitialized() {
+        uninitializedConnectors.addAll(connectorIdToConnector.values());
     }
 
     /**
@@ -175,6 +219,7 @@ public class ConnectorTracker implements Serializable {
                                 "cleanConnectorMap unregistered connector "
                                         + getConnectorAndParentInfo(connector)
                                         + "). This should have been done when the connector was detached.");
+                uninitializedConnectors.remove(connector);
                 iterator.remove();
             }
         }

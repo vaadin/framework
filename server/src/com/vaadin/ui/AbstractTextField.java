@@ -97,8 +97,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
         String value = getValue();
         if (value == null) {

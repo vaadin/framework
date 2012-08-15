@@ -819,6 +819,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (repaintAll) {
             getClientCache(root).clear();
             rootConnectorTracker.markAllConnectorsDirty();
+            rootConnectorTracker.markAllClientSidesUninitialized();
 
             // Reset sent locales
             locales = null;
@@ -833,9 +834,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 "Found " + dirtyVisibleConnectors.size()
                         + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
-            if (connector instanceof Component) {
-                ((Component) connector).updateState();
-            }
+            boolean initialized = rootConnectorTracker
+                    .isClientSideInitialized(connector);
+            connector.beforeClientResponse(!initialized);
         }
         rootConnectorTracker.markAllConnectorsClean();
 
@@ -1249,6 +1250,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
+        }
+
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            rootConnectorTracker.markClientSideInitialized(connector);
         }
 
         writePerformanceData(outWriter);

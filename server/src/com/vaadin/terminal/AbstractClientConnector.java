@@ -518,4 +518,9 @@ public abstract class AbstractClientConnector implements ClientConnector {
             return getParent().isConnectorEnabled();
         }
     }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        // Do nothing by default
+    }
 }

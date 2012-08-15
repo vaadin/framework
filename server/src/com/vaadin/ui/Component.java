@@ -637,18 +637,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public ComponentState getState();
 
     /**
-     * Called before the shared state is sent to the client. Gives the component
-     * an opportunity to set computed/dynamic state values e.g. state values
-     * that depend on other component features.
-     * <p>
-     * This method must not alter the component hierarchy in any way.
-     * </p>
-     * 
-     * @since 7.0
-     */
-    public void updateState();
-
-    /**
      * Adds an unique id for component that get's transferred to terminal for
      * testing purposes. Keeping identifiers unique is the responsibility of the
      * programmer.
