@@ -44,10 +44,4 @@
 		</any>
 	</replace-with>
 
-	<!-- Workaround for #6682. Remove when fixed in GWT. -->
-	<replace-with class="com.google.gwt.dom.client.VaadinDOMImplSafari">
-		<when-type-is class="com.google.gwt.dom.client.DOMImpl" />
-		<when-property-is name="user.agent" value="safari" />
-	</replace-with>
-
 </module>
