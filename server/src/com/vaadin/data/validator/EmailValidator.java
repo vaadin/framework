@@ -12,8 +12,6 @@ package com.vaadin.data.validator;
  * information.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.4
  */
 @SuppressWarnings("serial")

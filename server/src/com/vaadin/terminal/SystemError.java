@@ -16,8 +16,6 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * {@link ErrorMessage}.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

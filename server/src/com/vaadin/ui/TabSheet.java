@@ -56,8 +56,6 @@ import com.vaadin.ui.themes.Runo;
  * time they are shown, but this may change in future releases.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public class TabSheet extends AbstractComponentContainer implements Focusable,

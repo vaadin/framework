@@ -33,8 +33,6 @@ import com.vaadin.shared.ui.label.LabelState;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

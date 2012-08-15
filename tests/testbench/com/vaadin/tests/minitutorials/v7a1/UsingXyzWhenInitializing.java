@@ -14,7 +14,6 @@ import com.vaadin.ui.Root;
  * parameters%20or%20screen%20size%20when%20initializing%20an%20application
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class UsingXyzWhenInitializing extends Root {

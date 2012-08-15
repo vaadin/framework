@@ -13,8 +13,6 @@ import java.io.Serializable;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Scrollable extends Serializable {

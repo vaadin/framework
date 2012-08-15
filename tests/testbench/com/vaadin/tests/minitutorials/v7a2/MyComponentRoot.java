@@ -18,7 +18,6 @@ import com.vaadin.ui.Root;
  * .com/wiki/-/wiki/Main/Using%20RPC%20to%20send%20events%20to%20the%20client
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")

@@ -16,7 +16,6 @@ import com.vaadin.Application;
  * @see AddonContext#addApplicationStartedListener(ApplicationStartedListener)
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface ApplicationStartedListener extends EventListener {

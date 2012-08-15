@@ -109,7 +109,6 @@ import com.vaadin.terminal.JavaScriptCallbackHelper;
  * </ul>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public abstract class AbstractJavaScriptComponent extends AbstractComponent {

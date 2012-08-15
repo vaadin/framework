@@ -16,8 +16,6 @@ import java.util.Locale;
  *            The target type
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class ReverseConverter<PRESENTATION, MODEL> implements

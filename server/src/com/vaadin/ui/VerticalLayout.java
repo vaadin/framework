@@ -11,8 +11,6 @@ package com.vaadin.ui;
  * is by default 100% wide.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.3
  */
 @SuppressWarnings("serial")

@@ -17,7 +17,6 @@ import com.vaadin.ui.Root;
  * https://vaadin.com/wiki/-/wiki/Main/Using%20URI%20fragments
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class UsingUriFragments extends Root {

@@ -14,7 +14,6 @@ import com.vaadin.ui.VerticalLayout;
  * https://vaadin.com/wiki/-/wiki/Main/Creating%20a%20basic%20application
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class BasicApplication extends Root {

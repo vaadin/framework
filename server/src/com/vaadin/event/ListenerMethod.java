@@ -36,8 +36,6 @@ import java.util.logging.Logger;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

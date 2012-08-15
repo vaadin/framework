@@ -16,7 +16,6 @@ import com.vaadin.ui.Root;
  * modification events.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public abstract class BootstrapResponse extends EventObject {

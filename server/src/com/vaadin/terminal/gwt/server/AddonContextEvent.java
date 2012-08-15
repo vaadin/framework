@@ -12,7 +12,6 @@ import java.util.EventObject;
  * @see AddonContextListener
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class AddonContextEvent extends EventObject {

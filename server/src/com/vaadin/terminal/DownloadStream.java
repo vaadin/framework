@@ -20,8 +20,6 @@ import com.vaadin.terminal.gwt.server.Constants;
  * Downloadable stream.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

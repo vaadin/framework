@@ -33,8 +33,6 @@ import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Validator extends Serializable {

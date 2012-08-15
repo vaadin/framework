@@ -13,7 +13,6 @@ import com.vaadin.shared.MouseEventDetails;
  * {@link NativeEvent}.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

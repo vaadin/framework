@@ -21,7 +21,6 @@ public interface RpcManager extends Serializable {
      * call
      * 
      * @author Vaadin Ltd
-     * @version @VERSION@
      * @since 7.0
      * 
      */

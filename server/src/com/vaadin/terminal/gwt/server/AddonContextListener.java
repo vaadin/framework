@@ -16,7 +16,6 @@ import java.util.EventListener;
  * interface.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface AddonContextListener extends EventListener {

@@ -19,8 +19,6 @@ import com.vaadin.Application;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface ApplicationResource extends Resource, Serializable {

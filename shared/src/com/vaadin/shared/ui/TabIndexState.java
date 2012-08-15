@@ -7,7 +7,6 @@ package com.vaadin.shared.ui;
  * Interface implemented by state classes that support tab indexes.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

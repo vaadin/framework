@@ -19,8 +19,6 @@ import com.vaadin.terminal.PaintTarget;
  * @see DateField
  * @see InlineDateField
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 public class PopupDateField extends DateField {

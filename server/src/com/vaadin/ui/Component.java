@@ -47,8 +47,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Component extends ClientConnector, Sizeable, Serializable {

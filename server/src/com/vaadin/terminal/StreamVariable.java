@@ -24,8 +24,6 @@ import com.vaadin.terminal.StreamVariable.StreamingStartEvent;
  * <p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.5
  * @see PaintTarget#addVariable(VariableOwner, String, StreamVariable)
  */

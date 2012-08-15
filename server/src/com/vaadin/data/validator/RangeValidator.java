@@ -21,8 +21,6 @@ package com.vaadin.data.validator;
  *            The type of Number to validate. Must implement Comparable so that
  *            minimum and maximum checks work.
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {

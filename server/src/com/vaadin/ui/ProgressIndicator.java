@@ -22,8 +22,6 @@ import com.vaadin.terminal.Vaadin6Component;
  * May view an other property that indicates progress 0...1
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 4
  */
 @SuppressWarnings("serial")

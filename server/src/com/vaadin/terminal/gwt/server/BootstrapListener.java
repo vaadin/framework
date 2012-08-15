@@ -15,7 +15,6 @@ import javax.portlet.RenderResponse;
  * HTML is generated.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface BootstrapListener extends EventListener {

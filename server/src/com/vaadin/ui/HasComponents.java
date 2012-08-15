@@ -10,7 +10,6 @@ import java.util.Iterator;
  * other {@link Component}s.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

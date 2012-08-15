@@ -19,7 +19,6 @@ import com.vaadin.data.Validator;
  * <code>AND</code> and <code>OR</code>.
  * 
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

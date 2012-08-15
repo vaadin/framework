@@ -22,7 +22,6 @@ import com.vaadin.terminal.Page;
  * corresponding to the current Page.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class JavaScript extends AbstractExtension {

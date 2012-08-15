@@ -17,7 +17,6 @@ import com.vaadin.terminal.WrappedRequest;
  * IP address.
  * 
  * @author Vaadin Ltd.
- * @version @VERSION@
  */
 public class WebBrowser implements Terminal {
 

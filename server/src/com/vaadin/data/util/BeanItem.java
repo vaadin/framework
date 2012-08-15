@@ -22,8 +22,6 @@ import java.util.Set;
  * A wrapper class for adding the Item interface to any Java Bean.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

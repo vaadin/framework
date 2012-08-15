@@ -11,8 +11,6 @@ import com.vaadin.data.Validator;
  * values. By default, nulls are not allowed.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

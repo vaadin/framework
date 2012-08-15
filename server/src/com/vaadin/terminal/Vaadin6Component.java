@@ -14,7 +14,6 @@ import com.vaadin.ui.Component;
  * {@link #changeVariables(Object, java.util.Map)} just like in Vaadin 6.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

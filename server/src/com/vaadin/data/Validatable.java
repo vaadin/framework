@@ -15,8 +15,6 @@ import java.util.Collection;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  * @see com.vaadin.data.Validator
  */

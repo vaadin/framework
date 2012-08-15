@@ -20,7 +20,6 @@ import com.vaadin.ui.TextField;
  * %20to%20validate%20input
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class UsingBeanValidation extends Root {

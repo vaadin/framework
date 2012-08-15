@@ -18,8 +18,6 @@ import com.vaadin.service.FileTypeResolver;
  * @see java.lang.Class#getResource(java.lang.String)
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

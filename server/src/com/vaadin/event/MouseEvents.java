@@ -15,8 +15,6 @@ import com.vaadin.ui.Component;
  * 
  * @author Vaadin Ltd.
  * @see ClickListener
- * @version
- * @VERSION@
  * @since 6.2
  */
 public interface MouseEvents {

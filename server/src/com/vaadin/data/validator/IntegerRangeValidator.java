@@ -7,8 +7,6 @@ package com.vaadin.data.validator;
  * Validator for validating that an {@link Integer} is inside a given range.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.4
  */
 @SuppressWarnings("serial")

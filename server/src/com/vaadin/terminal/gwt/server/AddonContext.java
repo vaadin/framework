@@ -30,7 +30,6 @@ import com.vaadin.tools.ReflectTools;
  * {@link DeploymentConfiguration#getAddonContextListeners()}.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class AddonContext {

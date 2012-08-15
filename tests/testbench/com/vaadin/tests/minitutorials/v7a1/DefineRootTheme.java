@@ -15,7 +15,6 @@ import com.vaadin.ui.VerticalLayout;
  * https://vaadin.com/wiki/-/wiki/Main/Defining%20the%20theme%20for%20a%20Root
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Theme("hello-theme")

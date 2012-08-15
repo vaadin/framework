@@ -14,7 +14,6 @@ import com.vaadin.Application;
  * .
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class ApplicationStartedEvent extends EventObject {

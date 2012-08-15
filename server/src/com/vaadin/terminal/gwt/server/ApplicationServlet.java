@@ -14,8 +14,6 @@ import com.vaadin.terminal.gwt.server.ServletPortletHelper.ApplicationClassExcep
  * This servlet connects a Vaadin Application to Web.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 

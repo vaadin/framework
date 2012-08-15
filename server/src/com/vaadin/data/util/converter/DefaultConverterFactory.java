@@ -18,8 +18,6 @@ import com.vaadin.Application;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class DefaultConverterFactory implements ConverterFactory {

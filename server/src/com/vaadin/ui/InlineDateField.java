@@ -17,8 +17,6 @@ import com.vaadin.data.Property;
  * @see DateField
  * @see PopupDateField
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 public class InlineDateField extends DateField {

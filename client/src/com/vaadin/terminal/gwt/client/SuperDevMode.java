@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0
  * 
  */

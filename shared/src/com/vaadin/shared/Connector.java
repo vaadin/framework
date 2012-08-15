@@ -25,7 +25,6 @@ import com.vaadin.shared.communication.SharedState;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface Connector extends Serializable {

@@ -23,7 +23,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * com.example.MyConnector.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * the ClassLoader that was used to load com.example.MyConnector.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)

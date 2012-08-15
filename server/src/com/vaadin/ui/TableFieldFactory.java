@@ -17,8 +17,6 @@ import com.vaadin.data.Container;
  * <p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.0
  * @see FormFieldFactory
  */

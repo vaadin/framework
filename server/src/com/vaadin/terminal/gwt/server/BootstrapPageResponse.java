@@ -18,7 +18,6 @@ import com.vaadin.terminal.WrappedResponse;
  * that will be included in the corresponding HTTP response.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class BootstrapPageResponse extends BootstrapResponse {

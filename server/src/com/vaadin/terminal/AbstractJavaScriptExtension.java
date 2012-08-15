@@ -107,7 +107,6 @@ import com.vaadin.ui.JavaScriptFunction;
  * </ul>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public abstract class AbstractJavaScriptExtension extends AbstractExtension {

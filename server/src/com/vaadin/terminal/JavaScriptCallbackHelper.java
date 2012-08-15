@@ -29,7 +29,6 @@ import com.vaadin.ui.JavaScriptFunction;
  * You should most likely no use this class directly.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class JavaScriptCallbackHelper implements Serializable {

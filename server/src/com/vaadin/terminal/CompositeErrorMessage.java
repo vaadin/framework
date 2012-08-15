@@ -11,8 +11,6 @@ import java.util.Iterator;
  * Class for combining multiple error messages together.
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

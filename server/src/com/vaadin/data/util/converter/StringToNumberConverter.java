@@ -16,8 +16,6 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class StringToNumberConverter implements Converter<String, Number> {

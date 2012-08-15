@@ -9,8 +9,6 @@ package com.vaadin.data.validator;
  * strings.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

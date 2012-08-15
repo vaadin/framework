@@ -19,8 +19,6 @@ import com.vaadin.terminal.Terminal.ErrorEvent;
  * resource is automatically registered to the application when it is created.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

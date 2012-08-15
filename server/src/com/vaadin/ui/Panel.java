@@ -27,8 +27,6 @@ import com.vaadin.ui.Component.Focusable;
  * Panel - a simple single component container.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

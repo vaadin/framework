@@ -25,8 +25,6 @@ import com.vaadin.tools.ReflectTools;
  * can contain two components. The components are split by a divider element.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.5
  */
 public abstract class AbstractSplitPanel extends AbstractComponentContainer {

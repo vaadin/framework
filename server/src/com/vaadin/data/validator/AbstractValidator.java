@@ -30,8 +30,6 @@ import com.vaadin.data.Validator;
  * @param <T>
  *            The type
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.4
  */
 public abstract class AbstractValidator<T> implements Validator {

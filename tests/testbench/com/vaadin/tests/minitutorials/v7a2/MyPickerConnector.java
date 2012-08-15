@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
  * ayout and https://vaadin.com/wiki/-/wiki/Main/Complex%20widget%20layouts
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class MyPickerConnector extends AbstractComponentConnector implements

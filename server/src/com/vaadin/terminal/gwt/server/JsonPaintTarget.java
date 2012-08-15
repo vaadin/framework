@@ -31,8 +31,6 @@ import com.vaadin.ui.CustomLayout;
  * etc.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 @SuppressWarnings("serial")

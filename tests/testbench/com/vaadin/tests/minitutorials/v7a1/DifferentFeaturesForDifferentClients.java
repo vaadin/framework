@@ -18,7 +18,6 @@ import com.vaadin.ui.Root;
  * %20with%20different%20features%20for%20different%20clients
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class DifferentFeaturesForDifferentClients extends Application {

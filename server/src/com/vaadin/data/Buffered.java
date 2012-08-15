@@ -36,8 +36,6 @@ import com.vaadin.data.Validator.InvalidValueException;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Buffered extends Serializable {
@@ -195,8 +193,6 @@ public interface Buffered extends Serializable {
      * in processing a data source.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     @SuppressWarnings("serial")

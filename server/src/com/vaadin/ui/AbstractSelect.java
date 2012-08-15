@@ -49,8 +49,6 @@ import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 @SuppressWarnings("serial")

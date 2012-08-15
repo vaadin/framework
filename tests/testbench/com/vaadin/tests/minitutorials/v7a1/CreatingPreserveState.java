@@ -14,7 +14,6 @@ import com.vaadin.ui.TextField;
  * %20that%20preserves%20state%20on%20refresh
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class CreatingPreserveState extends Root {

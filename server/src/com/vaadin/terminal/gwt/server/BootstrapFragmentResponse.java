@@ -17,7 +17,6 @@ import com.vaadin.terminal.WrappedRequest;
  * includes the JavaScript that initializes the application.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class BootstrapFragmentResponse extends BootstrapResponse {

@@ -16,7 +16,6 @@ import com.vaadin.ui.Root;
  * a%20form%20based%20on%20a%20bean%20-%20Vaadin%206%20style%20Form
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class AutoGeneratingForm extends Root {

@@ -20,8 +20,6 @@ import com.vaadin.data.Item;
  * tree-like structure.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

@@ -32,7 +32,6 @@ import com.google.gwt.user.client.Timer;
  * while still controlling in which order e.g. scripts are executed.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class ResourceLoader {

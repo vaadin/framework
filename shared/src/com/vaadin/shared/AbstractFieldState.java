@@ -9,7 +9,6 @@ import com.vaadin.shared.ui.TabIndexState;
  * Shared state for {@link com.vaadin.ui.AbstractField}.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

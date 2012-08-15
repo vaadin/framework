@@ -10,8 +10,6 @@ package com.vaadin.ui;
  * subcomponents in the order of their addition (horizontally).
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.3
  */
 @SuppressWarnings("serial")

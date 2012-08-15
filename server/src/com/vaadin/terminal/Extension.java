@@ -16,7 +16,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * Extensions can use shared state and RPC in the same way as components.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface Extension extends ClientConnector {

@@ -28,8 +28,6 @@ import com.vaadin.terminal.Resource;
  * A hierarchical container wrapper for a filesystem.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

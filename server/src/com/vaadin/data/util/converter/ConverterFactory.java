@@ -11,8 +11,6 @@ import java.io.Serializable;
  * model type.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 7.0
  * 
  */

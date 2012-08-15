@@ -19,7 +19,6 @@ import com.vaadin.ui.Root;
  * with the client side
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

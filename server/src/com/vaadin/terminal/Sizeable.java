@@ -11,8 +11,6 @@ import java.io.Serializable;
  * may be dynamically resized during runtime.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Sizeable extends Serializable {

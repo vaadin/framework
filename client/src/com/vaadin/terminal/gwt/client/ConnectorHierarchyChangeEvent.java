@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.communication.AbstractServerConnectorEvent
  * completed.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

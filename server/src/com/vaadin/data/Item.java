@@ -15,8 +15,6 @@ import java.util.Collection;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Item extends Serializable {

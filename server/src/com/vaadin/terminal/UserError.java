@@ -9,8 +9,6 @@ package com.vaadin.terminal;
  * errors are occur in normal usage of the application and guide the user.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

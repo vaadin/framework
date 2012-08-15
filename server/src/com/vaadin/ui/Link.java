@@ -16,8 +16,6 @@ import com.vaadin.terminal.Vaadin6Component;
  * Link is used to create external or internal URL links.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

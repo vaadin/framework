@@ -18,8 +18,6 @@ import java.lang.reflect.Method;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface MethodEventSource extends Serializable {

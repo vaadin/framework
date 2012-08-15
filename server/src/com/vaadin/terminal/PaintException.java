@@ -11,8 +11,6 @@ import java.io.Serializable;
  * <code>PaintExcepection</code> is thrown if painting of a component fails.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

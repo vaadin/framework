@@ -12,8 +12,6 @@ import java.util.HashMap;
  * for objects and retrieving the objects later with the key.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public class KeyMapper<V> implements Serializable {

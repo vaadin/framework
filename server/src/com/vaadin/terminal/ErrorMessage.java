@@ -11,8 +11,6 @@ import java.io.Serializable;
  * shown to user must implement this interface.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface ErrorMessage extends Serializable {

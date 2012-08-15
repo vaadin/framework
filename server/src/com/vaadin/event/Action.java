@@ -14,8 +14,6 @@ import com.vaadin.terminal.Resource;
  * unregistration.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

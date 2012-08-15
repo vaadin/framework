@@ -20,8 +20,6 @@ import java.util.regex.Pattern;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.4
  */
 @SuppressWarnings("serial")

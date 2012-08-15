@@ -26,7 +26,6 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * An abstract implementation of Connector.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

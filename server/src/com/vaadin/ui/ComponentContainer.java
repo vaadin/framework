@@ -12,8 +12,6 @@ import java.io.Serializable;
  * implement this interface.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface ComponentContainer extends HasComponents {

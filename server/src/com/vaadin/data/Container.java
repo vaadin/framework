@@ -65,8 +65,6 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Container extends Serializable {

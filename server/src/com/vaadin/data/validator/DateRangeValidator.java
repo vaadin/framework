@@ -17,8 +17,6 @@ import com.vaadin.ui.DateField.Resolution;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class DateRangeValidator extends RangeValidator<Date> {

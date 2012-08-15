@@ -11,8 +11,6 @@ import java.io.Serializable;
  * displaying the resource type is left to the terminal.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Resource extends Serializable {

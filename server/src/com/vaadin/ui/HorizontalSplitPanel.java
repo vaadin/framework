@@ -22,8 +22,6 @@ package com.vaadin.ui;
  * </pre>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.5
  */
 public class HorizontalSplitPanel extends AbstractSplitPanel {

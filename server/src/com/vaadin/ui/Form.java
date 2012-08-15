@@ -60,8 +60,6 @@ import com.vaadin.terminal.Vaadin6Component;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  * @deprecated Use {@link FieldGroup} instead of {@link Form} for more
  *             flexibility.

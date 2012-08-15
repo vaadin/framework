@@ -55,8 +55,6 @@ import com.vaadin.terminal.gwt.server.NoOutputStreamException;
  * browsers setting size may work to some extend.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

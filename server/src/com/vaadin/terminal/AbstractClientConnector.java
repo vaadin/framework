@@ -35,7 +35,6 @@ import com.vaadin.ui.Root;
  * provides all the basic functionality required for connectors.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public abstract class AbstractClientConnector implements ClientConnector {

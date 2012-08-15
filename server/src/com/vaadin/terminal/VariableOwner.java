@@ -17,8 +17,6 @@ import java.util.Map;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  * @deprecated in 7.0. Only provided to ease porting of Vaadin 6 components. Do
  *             not implement this directly, implement {@link Vaadin6Component}.

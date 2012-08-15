@@ -37,8 +37,6 @@ import com.vaadin.tools.ReflectTools;
  * components. Most components in Vaadin do just that.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

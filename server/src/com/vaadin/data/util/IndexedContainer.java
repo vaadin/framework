@@ -40,8 +40,6 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
  * @see com.vaadin.data.Container
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 
@@ -653,7 +651,6 @@ public class IndexedContainer extends
      * 
      * @author Vaadin Ltd.
      * 
-     * @version @VERSION@
      * 
      * @since 3.0
      */

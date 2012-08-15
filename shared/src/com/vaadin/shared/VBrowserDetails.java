@@ -13,7 +13,6 @@ import java.io.Serializable;
  * directly.
  * 
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 6.3
  */
 public class VBrowserDetails implements Serializable {

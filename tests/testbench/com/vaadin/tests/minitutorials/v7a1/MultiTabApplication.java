@@ -16,7 +16,6 @@ import com.vaadin.ui.VerticalLayout;
  * https://vaadin.com/wiki/-/wiki/Main/Creating%20multi%20tab%20applications
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class MultiTabApplication extends Root {

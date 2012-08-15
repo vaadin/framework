@@ -18,8 +18,6 @@ import java.util.List;
  * {@link com.vaadin.event package documentation}.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

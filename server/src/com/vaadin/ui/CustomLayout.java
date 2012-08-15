@@ -43,8 +43,6 @@ import com.vaadin.terminal.gwt.server.JsonPaintTarget;
  * @author Vaadin Ltd.
  * @author Duy B. Vo (<a
  *         href="mailto:devduy@gmail.com?subject=Vaadin">devduy@gmail.com</a>)
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

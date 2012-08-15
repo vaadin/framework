@@ -12,8 +12,6 @@ import com.vaadin.ui.Layout.MarginHandler;
  * interface.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 @SuppressWarnings("serial")

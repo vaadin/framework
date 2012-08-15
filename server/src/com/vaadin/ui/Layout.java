@@ -16,8 +16,6 @@ import com.vaadin.shared.ui.AlignmentInfo.Bits;
  * specific locations in the UI.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Layout extends ComponentContainer, Serializable {

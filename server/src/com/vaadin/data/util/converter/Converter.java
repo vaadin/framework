@@ -33,8 +33,6 @@ import java.util.Locale;
  *            The presentation type. Must be compatible with what
  *            {@link #getPresentationType()} returns.
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 7.0
  */
 public interface Converter<PRESENTATION, MODEL> extends Serializable {

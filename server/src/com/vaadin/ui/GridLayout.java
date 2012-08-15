@@ -47,8 +47,6 @@ import com.vaadin.terminal.Vaadin6Component;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

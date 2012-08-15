@@ -31,7 +31,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  * 
  */

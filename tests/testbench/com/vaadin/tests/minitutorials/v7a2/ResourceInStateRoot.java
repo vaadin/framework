@@ -15,7 +15,6 @@ import com.vaadin.ui.Root;
  * in%20the%20shared%20state
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")

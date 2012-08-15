@@ -15,8 +15,6 @@ import com.vaadin.service.FileTypeResolver;
  * terminal and are not fetched trough the terminal adapter.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

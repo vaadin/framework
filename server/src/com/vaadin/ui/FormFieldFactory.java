@@ -16,8 +16,6 @@ import com.vaadin.data.Item;
  * <p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.0
  * @see TableFieldFactory
  */

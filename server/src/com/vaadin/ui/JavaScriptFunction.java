@@ -20,7 +20,6 @@ import com.vaadin.terminal.AbstractJavaScriptExtension;
  * @see AbstractJavaScriptExtension#addFunction(String, JavaScriptCallback)
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface JavaScriptFunction extends Serializable {

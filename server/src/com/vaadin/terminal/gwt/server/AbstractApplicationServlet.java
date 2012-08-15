@@ -55,8 +55,6 @@ import com.vaadin.ui.Root;
  * 
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 6.0
  */
 

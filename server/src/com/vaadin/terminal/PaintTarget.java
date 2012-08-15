@@ -15,8 +15,6 @@ import com.vaadin.ui.Component;
  * This interface defines the methods for painting XML to the UIDL stream.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface PaintTarget extends Serializable {

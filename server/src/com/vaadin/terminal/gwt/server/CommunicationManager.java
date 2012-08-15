@@ -24,8 +24,6 @@ import com.vaadin.ui.Root;
  * @see AbstractCommunicationManager
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 5.0
  */
 @SuppressWarnings("serial")

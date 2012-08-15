@@ -12,8 +12,6 @@ import java.io.Serializable;
  * this interface. </p>
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Terminal extends Serializable {

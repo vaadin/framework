@@ -19,8 +19,6 @@ import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
  * qualify as a component container.
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

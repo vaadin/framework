@@ -17,7 +17,6 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * the extend method is declared as protected.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public abstract class AbstractExtension extends AbstractClientConnector

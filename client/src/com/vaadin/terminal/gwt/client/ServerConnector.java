@@ -18,7 +18,6 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * framework when needed and have the ability to communicate with the server.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface ServerConnector extends Connector {

@@ -20,8 +20,6 @@ import java.util.Locale;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class StringToDateConverter implements Converter<String, Date> {

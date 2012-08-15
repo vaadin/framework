@@ -21,7 +21,6 @@ import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
  * Tests for {@link JsonCodec}, {@link JsonEncoder}, {@link JsonDecoder}
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0
  * 
  */

@@ -22,8 +22,6 @@ import com.vaadin.Application;
  * added to a {@link HttpSession}.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.1
  */
 @SuppressWarnings("serial")

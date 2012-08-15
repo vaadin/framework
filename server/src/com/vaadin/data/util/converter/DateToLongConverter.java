@@ -11,8 +11,6 @@ import java.util.Locale;
  * A converter that converts from {@link Long} to {@link Date} and back.
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 7.0
  */
 public class DateToLongConverter implements Converter<Date, Long> {

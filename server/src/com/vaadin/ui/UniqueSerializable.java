@@ -12,7 +12,6 @@ import java.io.Serializable;
  * an anonymous inner class. Otherwise each instance will not be unique.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0
  * 
  */

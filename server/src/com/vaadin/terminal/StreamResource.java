@@ -17,8 +17,6 @@ import com.vaadin.service.FileTypeResolver;
  * registered to window in creation.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

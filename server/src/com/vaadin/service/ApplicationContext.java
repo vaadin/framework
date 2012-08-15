@@ -20,8 +20,6 @@ import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
  * HttpSession.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.1
  */
 public interface ApplicationContext extends Serializable {

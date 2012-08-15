@@ -34,8 +34,6 @@ import java.io.Serializable;
  *            type of values of the property
  * 
  * @author Vaadin Ltd
- * @version
- * @VERSION@
  * @since 3.0
  */
 public interface Property<T> extends Serializable {

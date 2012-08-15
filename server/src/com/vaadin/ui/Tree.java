@@ -51,8 +51,6 @@ import com.vaadin.tools.ReflectTools;
  * a hierarchical set of items.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })

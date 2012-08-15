@@ -21,8 +21,6 @@ import com.vaadin.data.Property;
  * set managed by the class.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")

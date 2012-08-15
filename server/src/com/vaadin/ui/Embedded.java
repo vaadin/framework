@@ -23,8 +23,6 @@ import com.vaadin.terminal.Vaadin6Component;
  * Component for embedding external objects.
  * 
  * @author Vaadin Ltd.
- * @version
- * @VERSION@
  * @since 3.0
  */
 @SuppressWarnings("serial")
