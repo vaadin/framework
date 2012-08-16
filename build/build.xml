@@ -769,7 +769,7 @@
         </antcall>
     </target>
     
-    <target name="compile-widgetset-testing" depends="compile-tests">
+    <target name="compile-widgetset-testing">
     	<!-- Create a path reference containing default widgetset classpath + testbench files -->
     	<path id="compile.classpath.testingwidgetset">
     	 	<path refid="compile.classpath.widgetset" />
@@ -792,7 +792,7 @@
     <!-- Compiles all widgetsets.                                         -->
     <!-- This is called when building packages and when compiling all     -->
     <!-- widgetsets, but not when compiling individual widgetsets.        -->
-    <target name="compile-client-side" depends="compile-gwt, compile-server-side, compile-tests">
+    <target name="compile-client-side" depends="compile-gwt, compile-server-side, compile-tests, compile-client-compiler">
         <echo>Compiling widget sets in parallel.</echo>
         <parallel threadsperprocessor="1">
             <antcall inheritrefs="true" target="compile-widgetset-default"/>
