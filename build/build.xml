@@ -866,11 +866,13 @@
             <fileset dir="${result-classes-client}"/>
             <fileset dir="${result-classes-shared}"/>
             <fileset dir="${result-classes-sass}"/>
+            <fileset dir="${result-classes-client-compiler}"/>
             <!-- add sources -->
             <fileset dir="${result-src-server}"/>
             <fileset dir="${result-src-client}"/>
             <fileset dir="${result-src-shared}"/>
             <fileset dir="${result-src-sass}"/>
+            <fileset dir="${result-src-client-compiler}"/>
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
                     <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
