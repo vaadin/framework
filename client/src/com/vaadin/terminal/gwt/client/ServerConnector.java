@@ -75,7 +75,7 @@ public interface ServerConnector extends Connector {
             String rpcInterfaceId);
 
     /**
-     * Adds a handler that is called whenever some part of the state has been
+     * Adds a handler that is called whenever any part of the state has been
      * updated by the server.
      * 
      * @param handler
@@ -84,6 +84,21 @@ public interface ServerConnector extends Connector {
      *         the handler
      */
     public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
+
+    /**
+     * Adds a handler that is called whenever the given part of the state has
+     * been updated by the server.
+     * 
+     * @param propertyName
+     *            the name of the property for which the handler should be
+     *            called
+     * @param handler
+     *            The handler that should be added.
+     * @return A handler registration reference that can be used to unregister
+     *         the handler
+     */
+    public HandlerRegistration addStateChangeHandler(String propertyName,
+            StateChangeHandler handler);
 
     /**
      * Sends the given event to all registered handlers.

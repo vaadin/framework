@@ -1473,9 +1473,12 @@ public class ApplicationConnection {
                                     .getName(), null), stateJson, state,
                                     ApplicationConnection.this);
 
-                            StateChangeEvent event = GWT
-                                    .create(StateChangeEvent.class);
-                            event.setConnector(connector);
+                            Set<String> changedProperties = new HashSet<String>();
+                            addJsonFields(stateJson, changedProperties, "");
+
+                            StateChangeEvent event = new StateChangeEvent(
+                                    connector, changedProperties);
+
                             events.add(event);
                         }
                     } catch (final Throwable e) {
@@ -1484,6 +1487,30 @@ public class ApplicationConnection {
                 }
 
                 return events;
+            }
+
+            /**
+             * Recursively adds the names of all fields in all objects in the
+             * provided json object.
+             * 
+             * @param json
+             *            the json object to process
+             * @param fields
+             *            a set of all currently added fields
+             * @param context
+             *            the base name of the current object
+             */
+            private void addJsonFields(JSONObject json, Set<String> fields,
+                    String context) {
+                for (String key : json.keySet()) {
+                    String fieldName = context + key;
+                    fields.add(fieldName);
+
+                    JSONObject object = json.get(key).isObject();
+                    if (object != null) {
+                        addJsonFields(object, fields, fieldName + ".");
+                    }
+                }
             }
 
             /**
