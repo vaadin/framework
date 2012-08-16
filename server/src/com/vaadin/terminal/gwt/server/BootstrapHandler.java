@@ -26,10 +26,10 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
-import com.vaadin.Version;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.Version;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.RequestHandler;
