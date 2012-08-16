@@ -255,9 +255,9 @@
                 <include name="${vaadin-package}/tests/**/*" />
                 <include name="${vaadin-package}/launcher/**" />
             </fileset>
-            <fileset dir="${result-classes-junit}">
-            	<!-- VaadinClasses and data classes are used by TestBench tests also -->
-            </fileset>
+            <fileset dir="${result-classes-shared}" />
+           	<!-- VaadinClasses and data classes are used by TestBench tests also -->
+            <fileset dir="${result-classes-junit}" />
             <!-- test resources -->
             <fileset dir="tests/testbench">
                 <include name="${vaadin-package}/tests/**/*" />
@@ -1275,6 +1275,7 @@
         <junit printsummary="yes"> 
             <classpath> 
                 <pathelement path="${result-classes-server}" />
+                <pathelement path="${result-classes-shared}" />
                 <pathelement path="${result-classes-junit}" />
             	<path refid="compile.classpath.server-tests"></path>
             </classpath>
