@@ -165,6 +165,10 @@ public class JsonCodec implements Serializable {
         } else if (targetType == JSONObject.class
                 || targetType == JSONArray.class) {
             return value;
+        } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
+            Class<?> classForType = getClassForType(targetType);
+            return decodeEnum(classForType.asSubclass(Enum.class),
+                    (String) value);
         } else {
             return decodeObject(targetType, (JSONObject) value,
                     connectorTracker);
@@ -420,9 +424,8 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static Object decodeEnum(Class<? extends Enum> cls, JSONObject value) {
-        String enumIdentifier = String.valueOf(value);
-        return Enum.valueOf(cls, enumIdentifier);
+    private static Object decodeEnum(Class<? extends Enum> cls, String value) {
+        return Enum.valueOf(cls, value);
     }
 
     private static String[] decodeStringArray(JSONArray jsonArray)
@@ -491,10 +494,6 @@ public class JsonCodec implements Serializable {
             throws JSONException {
 
         Class<?> targetClass = getClassForType(targetType);
-        if (Enum.class.isAssignableFrom(targetClass)) {
-            return decodeEnum(targetClass.asSubclass(Enum.class),
-                    serializedObject);
-        }
 
         try {
             Object decodedObject = targetClass.newInstance();
