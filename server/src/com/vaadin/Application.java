@@ -792,8 +792,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Application user change event sent when the setUser is called to change
      * the current user of the application.
      * 
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class UserChangeEvent extends java.util.EventObject {
@@ -858,8 +856,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * The <code>UserChangeListener</code> interface for listening application
      * user changes.
      * 
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface UserChangeListener extends EventListener, Serializable {

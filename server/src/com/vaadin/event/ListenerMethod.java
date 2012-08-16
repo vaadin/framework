@@ -608,8 +608,6 @@ public class ListenerMethod implements EventListener, Serializable {
      * MethodException instance and rethrown by the <code>ListenerMethod</code>.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class MethodException extends RuntimeException implements

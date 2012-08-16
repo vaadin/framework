@@ -804,8 +804,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * tab in the tab sheet is changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class SelectedTabChangeEvent extends Component.Event {
@@ -837,8 +835,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * 
      * @author Vaadin Ltd.
      * 
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface SelectedTabChangeListener extends Serializable {

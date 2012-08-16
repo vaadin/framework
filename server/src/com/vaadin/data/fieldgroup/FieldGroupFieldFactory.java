@@ -12,7 +12,6 @@ import com.vaadin.ui.Field;
  * that should be edited.
  * 
  * @author Vaadin Ltd.
- * @version @version@
  * @since 7.0
  */
 public interface FieldGroupFieldFactory extends Serializable {

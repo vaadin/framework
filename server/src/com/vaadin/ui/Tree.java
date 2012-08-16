@@ -840,8 +840,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * the node.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class ExpandEvent extends Component.Event {
@@ -874,8 +872,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Expand event listener.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ExpandListener extends Serializable {
@@ -929,8 +925,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Collapse event
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class CollapseEvent extends Component.Event {
@@ -963,8 +957,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Collapse event listener.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface CollapseListener extends Serializable {

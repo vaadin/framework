@@ -165,8 +165,6 @@ public class StreamResource implements ApplicationResource {
      * Interface implemented by the source of a StreamResource.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface StreamSource extends Serializable {

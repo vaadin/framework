@@ -42,7 +42,6 @@ import com.vaadin.data.Property;
  * @see com.vaadin.data.Container
  * 
  * @author Vaadin Ltd.
- * @version
  * @since 4.0
  * 
  * @deprecated will be removed in the future, use the SQLContainer add-on
@@ -517,7 +516,6 @@ public class QueryContainer implements Container, Container.Ordered,
      * The <code>Row</code> class implements methods of Item.
      * 
      * @author Vaadin Ltd.
-     * @version
      * @since 4.0
      */
     class Row implements Item {

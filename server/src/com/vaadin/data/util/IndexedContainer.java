@@ -421,8 +421,6 @@ public class IndexedContainer extends
      * changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class ItemSetChangeEvent extends BaseItemSetChangeEvent {
@@ -451,8 +449,6 @@ public class IndexedContainer extends
      * value has changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     private static class PropertyValueChangeEvent extends EventObject implements
@@ -788,8 +784,6 @@ public class IndexedContainer extends
      * 
      * @author Vaadin Ltd.
      * 
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     private class IndexedContainerProperty implements Property<Object>,

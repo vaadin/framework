@@ -59,8 +59,6 @@ public interface Validator extends Serializable {
      * </p>
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     @SuppressWarnings("serial")
@@ -158,8 +156,6 @@ public interface Validator extends Serializable {
      * the thrower.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 5.3.0
      */
     @SuppressWarnings("serial")

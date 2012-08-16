@@ -103,8 +103,6 @@ public class Action implements Serializable {
      * Interface implemented by classes who wish to handle actions.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface Handler extends Serializable {
@@ -146,8 +144,6 @@ public class Action implements Serializable {
      * action.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface Container extends Serializable {

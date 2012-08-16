@@ -1186,8 +1186,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * status has changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class ReadOnlyStatusChangeEvent extends Component.Event

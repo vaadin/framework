@@ -94,8 +94,6 @@ public class Button extends AbstractComponent implements
      * Click event. This event is thrown, when the button is clicked.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class ClickEvent extends Component.Event {
@@ -255,8 +253,6 @@ public class Button extends AbstractComponent implements
      * {@link Component}.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ClickListener extends Serializable {

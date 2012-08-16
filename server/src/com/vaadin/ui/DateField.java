@@ -55,8 +55,6 @@ public class DateField extends AbstractField<Date> implements
      * Resolutions for DateFields
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 7.0
      */
     public enum Resolution {

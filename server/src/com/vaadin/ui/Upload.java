@@ -180,8 +180,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Upload component an output stream to write the uploaded data.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface Receiver extends Serializable {
@@ -235,8 +233,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * FailedEvent, which are both subclasses of the FinishedEvent.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class FinishedEvent extends Component.Event {
@@ -318,8 +314,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * reception is interrupted for some reason.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class FailedEvent extends FinishedEvent {
@@ -406,8 +400,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * successfully.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class SucceededEvent extends FinishedEvent {
@@ -430,8 +422,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Upload.StartedEvent event is sent when the upload is started to received.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 5.0
      */
     public static class StartedEvent extends Component.Event {
@@ -498,8 +488,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Receives the events when the upload starts.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 5.0
      */
     public interface StartedListener extends Serializable {
@@ -517,8 +505,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Receives the events when the uploads are ready.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface FinishedListener extends Serializable {
@@ -536,8 +522,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Receives events when the uploads are finished, but unsuccessful.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface FailedListener extends Serializable {
@@ -555,8 +539,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Receives events when the uploads are successfully finished.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface SucceededListener extends Serializable {

@@ -105,8 +105,6 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * {@link Converter#convertToModel(Object, Locale)} could not be converted.
      * 
      * @author Vaadin Ltd
-     * @version
-     * @VERSION@
      * @since 7.0
      */
     public static class ConversionException extends RuntimeException {

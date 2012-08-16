@@ -111,7 +111,6 @@ public interface Property<T> extends Serializable {
      * @param <T>
      *            The type of the property
      * @author Vaadin Ltd
-     * @version @version@
      * @since 7.0
      */
     public interface Transactional<T> extends Property<T> {
@@ -164,8 +163,6 @@ public interface Property<T> extends Serializable {
      * modification failed because it's in read-only mode.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     @SuppressWarnings("serial")
@@ -195,8 +192,6 @@ public interface Property<T> extends Serializable {
      * as a data source.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface Viewer extends Serializable {
@@ -229,8 +224,6 @@ public interface Property<T> extends Serializable {
      * </p>
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface Editor extends Property.Viewer, Serializable {
@@ -244,8 +237,6 @@ public interface Property<T> extends Serializable {
      * changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ValueChangeEvent extends Serializable {
@@ -263,8 +254,6 @@ public interface Property<T> extends Serializable {
      * <code>ValueChangeEvent</code> objects.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ValueChangeListener extends Serializable {
@@ -293,8 +282,6 @@ public interface Property<T> extends Serializable {
      * </p>
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ValueChangeNotifier extends Serializable {
@@ -323,8 +310,6 @@ public interface Property<T> extends Serializable {
      * status has been changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ReadOnlyStatusChangeEvent extends Serializable {
@@ -342,8 +327,6 @@ public interface Property<T> extends Serializable {
      * <code>ReadOnlyStatusChangeEvent</code> objects.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ReadOnlyStatusChangeListener extends Serializable {
@@ -374,8 +357,6 @@ public interface Property<T> extends Serializable {
      * </p>
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public interface ReadOnlyStatusChangeNotifier extends Serializable {

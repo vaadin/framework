@@ -305,8 +305,6 @@ public class Label extends AbstractComponent implements Property<String>,
      * Value change event
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public static class ValueChangeEvent extends Component.Event implements

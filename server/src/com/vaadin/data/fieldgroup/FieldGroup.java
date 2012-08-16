@@ -39,7 +39,6 @@ import com.vaadin.ui.Form;
  * </p>
  * 
  * @author Vaadin Ltd
- * @version @version@
  * @since 7.0
  */
 public class FieldGroup implements Serializable {

@@ -600,8 +600,6 @@ public class FilesystemContainer implements Container.Hierarchical {
      * A Item wrapper for files in a filesystem.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class FileItem implements Item {
@@ -757,8 +755,6 @@ public class FilesystemContainer implements Container.Hierarchical {
      * extension.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class FileExtensionFilter implements FilenameFilter, Serializable {

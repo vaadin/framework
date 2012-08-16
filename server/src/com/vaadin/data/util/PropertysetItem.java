@@ -161,8 +161,6 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     private static class PropertySetChangeEvent extends EventObject implements

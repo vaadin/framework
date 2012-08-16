@@ -29,8 +29,6 @@ public interface MouseEvents {
      * 
      * @author Vaadin Ltd.
      * @see ClickListener
-     * @version
-     * @VERSION@
      * @since 6.2
      */
     public class ClickEvent extends Component.Event {
@@ -167,8 +165,6 @@ public interface MouseEvents {
      * 
      * @see ClickEvent
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 6.2
      */
     public interface ClickListener extends ComponentEventListener {
@@ -192,8 +188,6 @@ public interface MouseEvents {
      * 
      * @see ClickEvent
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 6.2
      */
     public class DoubleClickEvent extends Component.Event {
@@ -209,8 +203,6 @@ public interface MouseEvents {
      * 
      * @see DoubleClickEvent
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 6.2
      */
     public interface DoubleClickListener extends ComponentEventListener {

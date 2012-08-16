@@ -695,8 +695,6 @@ public class GridLayout extends AbstractLayout implements
      * </p>
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class Area implements Serializable {
@@ -870,8 +868,6 @@ public class GridLayout extends AbstractLayout implements
      * (even partly) at the same space on a grid with the new component.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class OverlapsException extends java.lang.RuntimeException {
@@ -928,8 +924,6 @@ public class GridLayout extends AbstractLayout implements
      * bounds of the grid.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     public class OutOfBoundsException extends java.lang.RuntimeException {

@@ -25,7 +25,6 @@ import com.vaadin.data.Property.ValueChangeNotifier;
  * @see com.vaadin.data.Property.Transactional
  * 
  * @author Vaadin Ltd
- * @version @version@
  * @since 7.0
  * 
  * @param <T>

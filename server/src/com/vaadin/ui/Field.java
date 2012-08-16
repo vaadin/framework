@@ -66,8 +66,6 @@ public interface Field<T> extends Component, BufferedValidatable, Property<T>,
      * changed.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     @SuppressWarnings("serial")

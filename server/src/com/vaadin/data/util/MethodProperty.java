@@ -692,8 +692,6 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      * property.
      * 
      * @author Vaadin Ltd.
-     * @version
-     * @VERSION@
      * @since 3.0
      */
     @SuppressWarnings("rawtypes")

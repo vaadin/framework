@@ -36,7 +36,6 @@ import com.vaadin.ui.Window;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @version
  * @since 4.0.1
  */
 @SuppressWarnings("serial")
