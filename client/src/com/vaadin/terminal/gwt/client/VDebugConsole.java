@@ -55,6 +55,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.Version;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
@@ -851,13 +852,11 @@ public class VDebugConsole extends VOverlay implements Console {
         log("Starting Vaadin client side engine. Widgetset: "
                 + GWT.getModuleName());
 
-        log("Widget set is built on version: "
-                + ApplicationConfiguration.VERSION);
+        log("Widget set is built on version: " + Version.getFullVersion());
 
         logToDebugWindow("<div class=\"v-theme-version v-theme-version-"
-                + ApplicationConfiguration.VERSION.replaceAll("\\.", "_")
-                + "\">Warning: widgetset version "
-                + ApplicationConfiguration.VERSION
+                + Version.getFullVersion().replaceAll("\\.", "_")
+                + "\">Warning: widgetset version " + Version.getFullVersion()
                 + " does not seem to match theme version </div>", true);
 
     }

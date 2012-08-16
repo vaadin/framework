@@ -182,20 +182,6 @@ public class ApplicationConfiguration implements EntryPoint {
         }-*/;
     }
 
-    /**
-     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
-     */
-    public static final String VERSION;
-
-    /* Initialize version numbers from string replaced by build-script. */
-    static {
-        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
-        } else {
-            VERSION = "@VERSION@";
-        }
-    }
-
     private static WidgetSet widgetSet = GWT.create(WidgetSet.class);
 
     private String id;

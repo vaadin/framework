@@ -41,6 +41,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
@@ -196,7 +197,7 @@ public class ApplicationConnection {
                 + cnf.getServletVersion());
         VConsole.log("Application version: " + cnf.getApplicationVersion());
 
-        if (!cnf.getServletVersion().equals(ApplicationConfiguration.VERSION)) {
+        if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
             VConsole.error("Warning: your widget set seems to be built with a different "
                     + "version than the one used on server. Unexpected "
                     + "behavior may occur.");
@@ -1818,7 +1819,7 @@ public class ApplicationConnection {
             if (!extraParams.isEmpty()) {
                 extraParams += "&";
             }
-            String widgetsetVersion = ApplicationConfiguration.VERSION;
+            String widgetsetVersion = Version.getFullVersion();
             extraParams += "wsver=" + widgetsetVersion;
 
             getConfiguration().setWidgetsetVersionSent();
