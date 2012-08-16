@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,6 +55,7 @@ public class ConnectorTracker implements Serializable {
     private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
     private Root root;
+    private Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
 
     /**
      * Gets a logger for this class
@@ -140,6 +142,7 @@ public class ConnectorTracker implements Serializable {
                         + connectorId + ")");
         connectorIdToConnector.remove(connectorId);
         uninitializedConnectors.remove(connector);
+        diffStates.remove(connector);
     }
 
     /**
@@ -180,6 +183,7 @@ public class ConnectorTracker implements Serializable {
      */
     public void markAllClientSidesUninitialized() {
         uninitializedConnectors.addAll(connectorIdToConnector.values());
+        diffStates.clear();
     }
 
     /**
@@ -220,6 +224,7 @@ public class ConnectorTracker implements Serializable {
                                         + getConnectorAndParentInfo(connector)
                                         + "). This should have been done when the connector was detached.");
                 uninitializedConnectors.remove(connector);
+                diffStates.remove(connector);
                 iterator.remove();
             }
         }
@@ -370,6 +375,14 @@ public class ConnectorTracker implements Serializable {
      */
     public Collection<ClientConnector> getDirtyConnectors() {
         return dirtyConnectors;
+    }
+
+    public Object getDiffState(ClientConnector connector) {
+        return diffStates.get(connector);
+    }
+
+    public void setDiffState(ClientConnector connector, Object diffState) {
+        diffStates.put(connector, diffState);
     }
 
 }

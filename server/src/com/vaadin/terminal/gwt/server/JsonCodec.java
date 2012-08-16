@@ -526,9 +526,8 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    public static Object encode(Object value, Object referenceValue,
-            Type valueType, ConnectorTracker connectorTracker)
-            throws JSONException {
+    public static Object encode(Object value, Object diffState, Type valueType,
+            ConnectorTracker connectorTracker) throws JSONException {
 
         if (valueType == null) {
             throw new IllegalArgumentException("type must be defined");
@@ -595,7 +594,7 @@ public class JsonCodec implements Serializable {
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return encodeObject(value, referenceValue, connectorTracker);
+            return encodeObject(value, (JSONObject) diffState, connectorTracker);
         }
     }
 
@@ -603,7 +602,7 @@ public class JsonCodec implements Serializable {
         return JSONObject.NULL;
     }
 
-    private static Object encodeObject(Object value, Object referenceValue,
+    private static Object encodeObject(Object value, JSONObject diffState,
             ConnectorTracker connectorTracker) throws JSONException {
         JSONObject jsonMap = new JSONObject();
 
@@ -620,10 +619,11 @@ public class JsonCodec implements Serializable {
                 Type fieldType = getterMethod.getGenericReturnType();
                 Object fieldValue = getterMethod.invoke(value, (Object[]) null);
                 boolean equals = false;
-                Object referenceFieldValue = null;
-                if (referenceValue != null) {
-                    referenceFieldValue = getterMethod.invoke(referenceValue,
-                            (Object[]) null);
+                Object diffStateValue = null;
+                if (diffState != null) {
+                    diffStateValue = diffState.get(fieldName);
+                    Object referenceFieldValue = decodeInternalOrCustomType(
+                            fieldType, diffStateValue, connectorTracker);
                     equals = equals(fieldValue, referenceFieldValue);
                 }
                 if (!equals) {
@@ -637,8 +637,15 @@ public class JsonCodec implements Serializable {
                     }
                     jsonMap.put(
                             fieldName,
-                            encode(fieldValue, referenceFieldValue, fieldType,
+                            encode(fieldValue, diffStateValue, fieldType,
                                     connectorTracker));
+                    if (diffState != null) {
+                        diffState.put(
+                                fieldName,
+                                encode(fieldValue, null, fieldType,
+                                        connectorTracker));
+                    }
+
                     // } else {
                     // System.out.println("Skipping field " + fieldName
                     // + " of type " + fieldType.getName()
