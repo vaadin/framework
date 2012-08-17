@@ -17,13 +17,14 @@ import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
-import org.easymock.EasyMock;
-
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.service.ApplicationContext.TransactionListener;
+import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
+
+import org.easymock.EasyMock;
 
 public class TransactionListenersConcurrency extends TestCase {
 
@@ -71,10 +72,15 @@ public class TransactionListenersConcurrency extends TestCase {
                     // Start the application so the transaction listener is
                     // called later on.
                     try {
+                        DeploymentConfiguration dc = EasyMock
+                                .createMock(DeploymentConfiguration.class);
+                        EasyMock.expect(dc.isProductionMode()).andReturn(true);
+                        EasyMock.expect(dc.getInitParameters()).andReturn(
+                                new Properties());
+                        EasyMock.replay(dc);
 
                         app.start(new ApplicationStartEvent(new URL(
-                                "http://localhost/"), new Properties(),
-                                context, true));
+                                "http://localhost/"), dc, context));
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -101,7 +107,9 @@ public class TransactionListenersConcurrency extends TestCase {
 
                 @Override
                 public void uncaughtException(Thread t, Throwable e) {
-                    e = e.getCause();
+                    if (e.getCause() != null) {
+                        e = e.getCause();
+                    }
                     exceptions.add(e);
                 }
             });
@@ -127,8 +135,10 @@ public class TransactionListenersConcurrency extends TestCase {
             if (t instanceof InvocationTargetException) {
                 t = t.getCause();
             }
-            t.printStackTrace(System.err);
-            fail(t.getClass().getName());
+            if (t != null) {
+                t.printStackTrace(System.err);
+                fail(t.getClass().getName());
+            }
         }
 
         System.out.println("Done, all ok");

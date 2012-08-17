@@ -87,11 +87,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
 
-    private boolean productionMode = false;
-
     private final String resourcePath = null;
-
-    private int resourceCacheTime = 3600;
 
     private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
             getClass()) {
@@ -166,10 +162,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     servletConfig.getInitParameter(name));
         }
 
-        checkProductionMode();
-        checkCrossSiteProtection();
-        checkResourceCacheTime();
-
         vaadinContext.init();
     }
 
@@ -180,47 +172,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         vaadinContext.destroy();
     }
 
-    private void checkCrossSiteProtection() {
-        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
-                "true")) {
-            /*
-             * Print an information/warning message about running with xsrf
-             * protection disabled
-             */
-            getLogger().warning(WARNING_XSRF_PROTECTION_DISABLED);
-        }
-    }
-
-    private void checkProductionMode() {
-        // Check if the application is in production mode.
-        // We are in production mode if productionMode=true
-        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
-            productionMode = true;
-        }
-
-        if (!productionMode) {
-            /* Print an information/warning message about running in debug mode */
-            getLogger().warning(NOT_PRODUCTION_MODE_INFO);
-        }
-
-    }
-
-    private void checkResourceCacheTime() {
-        // Check if the browser caching time has been set in web.xml
-        try {
-            String rct = getDeploymentConfiguration()
-                    .getApplicationOrSystemProperty(
-                            SERVLET_PARAMETER_RESOURCE_CACHE_TIME, "3600");
-            resourceCacheTime = Integer.parseInt(rct);
-        } catch (NumberFormatException nfe) {
-            // Default is 1h
-            resourceCacheTime = 3600;
-            getLogger().warning(WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
-        }
-    }
-
     /**
      * Returns true if the servlet is running in production mode. Production
      * mode disables all debug facilities.
@@ -228,17 +179,17 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
-        return productionMode;
+        return getDeploymentConfiguration().isProductionMode();
     }
 
     /**
-     * Returns the amount of milliseconds the browser should cache a file.
-     * Default is 1 hour (3600 ms).
+     * Returns the number of seconds the browser should cache a file. Default is
+     * 1 hour (3600 s).
      * 
-     * @return The amount of milliseconds files are cached in the browser
+     * @return The number of seconds files are cached in the browser
      */
     public int getResourceCacheTime() {
-        return resourceCacheTime;
+        return getDeploymentConfiguration().getResourceCacheTime();
     }
 
     /**
@@ -899,8 +850,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Locale locale = request.getLocale();
             application.setLocale(locale);
             application.start(new ApplicationStartEvent(applicationUrl,
-                    getDeploymentConfiguration().getInitParameters(),
-                    webApplicationContext, isProductionMode()));
+                    getDeploymentConfiguration(), webApplicationContext));
         }
     }
 
@@ -1045,7 +995,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * parameter in web.xml
              */
             response.setHeader("Cache-Control",
-                    "max-age= " + String.valueOf(resourceCacheTime));
+                    "max-age= " + String.valueOf(getResourceCacheTime()));
         }
 
         // Write the resource to the client.

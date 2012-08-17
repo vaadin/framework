@@ -316,9 +316,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     config.getInitParameter(name));
         }
 
-        checkProductionMode();
-        checkCrossSiteProtection();
-
         vaadinContext.init();
     }
 
@@ -327,34 +324,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         super.destroy();
 
         vaadinContext.destroy();
-    }
-
-    private void checkCrossSiteProtection() {
-        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false").equals(
-                "true")) {
-            /*
-             * Print an information/warning message about running with xsrf
-             * protection disabled
-             */
-            getLogger().warning(WARNING_XSRF_PROTECTION_DISABLED);
-        }
-    }
-
-    private void checkProductionMode() {
-        // TODO Identical code in AbstractApplicationServlet -> refactor
-        // Check if the application is in production mode.
-        // We are in production mode if productionMode=true
-        if (getDeploymentConfiguration().getApplicationOrSystemProperty(
-                SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals("true")) {
-            productionMode = true;
-        }
-
-        if (!productionMode) {
-            /* Print an information/warning message about running in debug mode */
-            // TODO Maybe we need a different message for portlets?
-            getLogger().warning(NOT_PRODUCTION_MODE_INFO);
-        }
     }
 
     protected enum RequestType {
@@ -799,8 +768,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    getDeploymentConfiguration().getInitParameters(), context,
-                    isProductionMode()));
+                    getDeploymentConfiguration(), context));
         }
     }
 
