@@ -22,6 +22,7 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -36,7 +37,9 @@ import com.vaadin.terminal.gwt.client.metadata.TypeDataBundle;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataStore;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.TypeVisitor;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.WidgetInitVisitor;
 
 public class ConnectorBundleLoaderFactory extends Generator {
 
@@ -158,6 +161,30 @@ public class ConnectorBundleLoaderFactory extends Generator {
     private void printBundleData(SourceWriter w, ConnectorBundle bundle) {
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
+        writeReturnTypes(w, bundle);
+    }
+
+    private void writeReturnTypes(SourceWriter w, ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> methodReturnTypes = bundle
+                .getMethodReturnTypes();
+        for (Entry<JClassType, Set<JMethod>> entry : methodReturnTypes
+                .entrySet()) {
+            JClassType type = entry.getKey();
+
+            Set<JMethod> methods = entry.getValue();
+            for (JMethod method : methods) {
+                // setReturnType(Class<?> type, String methodName, Type
+                // returnType)
+                w.print("store.setReturnType(");
+                printClassLiteral(w, type);
+                w.print(", \"");
+                w.print(method.getName());
+                w.print("\", ");
+                GeneratedRpcMethodProviderGenerator.writeTypeCreator(w,
+                        method.getReturnType());
+                w.println(");");
+            }
+        }
     }
 
     private void writeGwtConstructors(SourceWriter w, ConnectorBundle bundle) {
@@ -206,7 +233,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
     }
 
     private List<ConnectorBundle> buildBundles(TreeLogger logger,
-            TypeOracle typeOracle) throws NotFoundException {
+            TypeOracle typeOracle) throws NotFoundException,
+            UnableToCompleteException {
 
         Map<LoadStyle, Collection<JClassType>> connectorsByLoadStyle = new HashMap<LoadStyle, Collection<JClassType>>();
         for (LoadStyle loadStyle : LoadStyle.values()) {
@@ -234,18 +262,18 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
 
         // Eager connectors and all RPC interfaces are loaded by default
-        eagerBundle.visitTypes(connectorsByLoadStyle.get(LoadStyle.EAGER),
-                visitors);
-        eagerBundle.visitSubTypes(
+        eagerBundle.visitTypes(logger,
+                connectorsByLoadStyle.get(LoadStyle.EAGER), visitors);
+        eagerBundle.visitSubTypes(logger,
                 typeOracle.getType(ClientRpc.class.getName()), visitors);
-        eagerBundle.visitSubTypes(
+        eagerBundle.visitSubTypes(logger,
                 typeOracle.getType(ServerRpc.class.getName()), visitors);
 
         bundles.add(eagerBundle);
 
         ConnectorBundle deferredBundle = new ConnectorBundle(
                 ConnectorBundleLoader.DEFERRED_BUNDLE_NAME, eagerBundle);
-        deferredBundle.visitTypes(
+        deferredBundle.visitTypes(logger,
                 connectorsByLoadStyle.get(LoadStyle.DEFERRED), visitors);
 
         bundles.add(deferredBundle);
@@ -254,7 +282,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         for (JClassType type : lazy) {
             ConnectorBundle bundle = new ConnectorBundle(type.getName(),
                     deferredBundle);
-            bundle.visitTypes(Collections.singleton(type), visitors);
+            bundle.visitTypes(logger, Collections.singleton(type), visitors);
 
             bundles.add(bundle);
         }
@@ -264,8 +292,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
     private Collection<TypeVisitor> getVisitors(TypeOracle oracle)
             throws NotFoundException {
-        List<TypeVisitor> visitors = Arrays
-                .<TypeVisitor> asList(new ConnectorInitVisitor());
+        List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
+                new ConnectorInitVisitor(), new StateInitVisitor(),
+                new WidgetInitVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }

@@ -67,7 +67,9 @@ public abstract class ConnectorBundleLoader {
         List<BundleLoadCallback> callbacks = asyncBlockLoaders.get(packageName)
                 .setLoaded();
         for (BundleLoadCallback callback : callbacks) {
-            callback.loaded();
+            if (callback != null) {
+                callback.loaded();
+            }
         }
     }
 

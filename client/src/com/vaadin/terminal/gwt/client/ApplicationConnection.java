@@ -68,6 +68,7 @@ import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
+import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
@@ -239,6 +240,10 @@ public class ApplicationConnection {
         initializeTestbenchHooks(componentLocator, appRootPanelName);
 
         initializeClientHooks();
+
+        // Assuming Root data is eagerly loaded
+        ConnectorBundleLoader.get().loadBundle(
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
 
         rootConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();

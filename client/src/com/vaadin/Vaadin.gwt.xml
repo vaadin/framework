@@ -61,18 +61,6 @@
 		<when-type-assignable
 			class="com.vaadin.terminal.gwt.client.communication.GeneratedRpcMethodProvider" />
 	</generate-with>
-
-	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorWidgetFactoryGenerator">
-		<when-type-assignable
-			class="com.vaadin.terminal.gwt.client.ui.ConnectorWidgetFactory" />
-	</generate-with>
-
-	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorStateFactoryGenerator">
-		<when-type-assignable
-			class="com.vaadin.terminal.gwt.client.ui.ConnectorStateFactory" />
-	</generate-with>
 	
 	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory">
 		<when-type-assignable class="com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader" />

@@ -33,6 +33,8 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.metadata.Type;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 
 /**
  * An abstract implementation of Connector.
@@ -265,7 +267,10 @@ public abstract class AbstractConnector implements ServerConnector,
      * @return A new state object
      */
     protected SharedState createState() {
-        return ConnectorStateFactory.createState(getClass());
+        Type connectorType = TypeData.getType(getClass());
+        Type stateType = connectorType.getMethod("getState").getReturnType();
+        Object stateInstance = stateType.createInstance();
+        return (SharedState) stateInstance;
     }
 
     @Override
