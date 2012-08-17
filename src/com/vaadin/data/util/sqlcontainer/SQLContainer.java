@@ -56,7 +56,9 @@ public class SQLContainer implements Container, Container.Filterable,
     private final List<String> propertyIds = new ArrayList<String>();
     private final Map<String, Class<?>> propertyTypes = new HashMap<String, Class<?>>();
     private final Map<String, Boolean> propertyReadOnly = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> propertyPersistable = new HashMap<String, Boolean>();
     private final Map<String, Boolean> propertyNullable = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> propertyPrimaryKey = new HashMap<String, Boolean>();
 
     /** Filters (WHERE) and sorters (ORDER BY) */
     private final List<Filter> filters = new ArrayList<Filter>();
@@ -136,11 +138,14 @@ public class SQLContainer implements Container, Container.Filterable,
         List<ColumnProperty> itemProperties = new ArrayList<ColumnProperty>();
         for (String propertyId : propertyIds) {
             /* Default settings for new item properties. */
-            itemProperties
-                    .add(new ColumnProperty(propertyId, propertyReadOnly
-                            .get(propertyId),
-                            !propertyReadOnly.get(propertyId), propertyNullable
-                                    .get(propertyId), null, getType(propertyId)));
+            ColumnProperty cp = new ColumnProperty(propertyId,
+                    propertyReadOnly.get(propertyId),
+                    propertyPersistable.get(propertyId),
+                    propertyNullable.get(propertyId),
+                    propertyPrimaryKey.get(propertyId), null,
+                    getType(propertyId));
+
+            itemProperties.add(cp);
         }
         RowItem newRowItem = new RowItem(this, itemId, itemProperties);
 
@@ -1085,14 +1090,22 @@ public class SQLContainer implements Container, Container.Filterable,
                  */
                 boolean readOnly = rsmd.isAutoIncrement(i)
                         || rsmd.isReadOnly(i);
-                if (delegate instanceof TableQuery
-                        && rsmd.getColumnLabel(i).equals(
-                                ((TableQuery) delegate).getVersionColumn())) {
-                    readOnly = true;
+
+                boolean persistable = !rsmd.isReadOnly(i);
+
+                if (delegate instanceof TableQuery) {
+                    if (rsmd.getColumnLabel(i).equals(
+                            ((TableQuery) delegate).getVersionColumn())) {
+                        readOnly = true;
+                    }
                 }
+
                 propertyReadOnly.put(colName, readOnly);
+                propertyPersistable.put(colName, persistable);
                 propertyNullable.put(colName,
                         rsmd.isNullable(i) == ResultSetMetaData.columnNullable);
+                propertyPrimaryKey.put(colName, delegate.getPrimaryKeyColumns()
+                        .contains(rsmd.getColumnLabel(i)));
                 propertyTypes.put(colName, type);
             }
             rs.getStatement().close();
@@ -1192,10 +1205,13 @@ public class SQLContainer implements Container, Container.Filterable,
                          * column.
                          */
                         if (propertiesToAdd.contains(colName)) {
+
                             cp = new ColumnProperty(colName,
                                     propertyReadOnly.get(colName),
-                                    !propertyReadOnly.get(colName),
-                                    propertyNullable.get(colName), value, type);
+                                    propertyPersistable.get(colName),
+                                    propertyNullable.get(colName),
+                                    propertyPrimaryKey.get(colName), value,
+                                    type);
                             itemProperties.add(cp);
                             propertiesToAdd.remove(colName);
                         }
