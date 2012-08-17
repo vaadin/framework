@@ -217,99 +217,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private boolean productionMode = false;
-
-    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
-            getClass()) {
-        @Override
-        public String getConfiguredWidgetset(WrappedRequest request) {
-
-            String widgetset = getApplicationOrSystemProperty(
-                    PARAMETER_WIDGETSET, null);
-
-            if (widgetset == null) {
-                // If no widgetset defined for the application, check the
-                // portal
-                // property
-                widgetset = WrappedPortletRequest.cast(request)
-                        .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
-            }
-
-            if (widgetset == null) {
-                // If no widgetset defined for the portal, use the default
-                widgetset = DEFAULT_WIDGETSET;
-            }
-
-            return widgetset;
-        }
-
-        @Override
-        public String getConfiguredTheme(WrappedRequest request) {
-
-            // is the default theme defined by the portal?
-            String themeName = WrappedPortletRequest.cast(request)
-                    .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_THEME);
-
-            if (themeName == null) {
-                // no, using the default theme defined by Vaadin
-                themeName = DEFAULT_THEME_NAME;
-            }
-
-            return themeName;
-        }
-
-        @Override
-        public boolean isStandalone(WrappedRequest request) {
-            return false;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * com.vaadin.terminal.DeploymentConfiguration#getStaticFileLocation
-         * (com.vaadin.terminal.WrappedRequest)
-         * 
-         * Return the URL from where static files, e.g. the widgetset and the
-         * theme, are served. In a standard configuration the VAADIN folder
-         * inside the returned folder is what is used for widgetsets and themes.
-         * 
-         * @return The location of static resources (inside which there should
-         * be a VAADIN directory). Does not end with a slash (/).
-         */
-
-        @Override
-        public String getStaticFileLocation(WrappedRequest request) {
-            String staticFileLocation = WrappedPortletRequest.cast(request)
-                    .getPortalProperty(
-                            Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-            if (staticFileLocation != null) {
-                // remove trailing slash if any
-                while (staticFileLocation.endsWith(".")) {
-                    staticFileLocation = staticFileLocation.substring(0,
-                            staticFileLocation.length() - 1);
-                }
-                return staticFileLocation;
-            } else {
-                // default for Liferay
-                return "/html";
-            }
-        }
-
-        @Override
-        public String getMimeType(String resourceName) {
-            return getPortletContext().getMimeType(resourceName);
-        }
-    };
-
-    private final AddonContext addonContext = new AddonContext(
-            getDeploymentConfiguration());
+    private DeploymentConfiguration deploymentConfiguration;
+    private AddonContext addonContext;
 
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        Properties applicationProperties = getDeploymentConfiguration()
-                .getInitParameters();
+        Properties applicationProperties = new Properties();
 
         // Read default parameters from the context
         final PortletContext context = config.getPortletContext();
@@ -328,6 +242,93 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     config.getInitParameter(name));
         }
 
+        deploymentConfiguration = new AbstractDeploymentConfiguration(
+                getClass(), applicationProperties) {
+            @Override
+            public String getConfiguredWidgetset(WrappedRequest request) {
+
+                String widgetset = getApplicationOrSystemProperty(
+                        PARAMETER_WIDGETSET, null);
+
+                if (widgetset == null) {
+                    // If no widgetset defined for the application, check the
+                    // portal property
+                    widgetset = WrappedPortletRequest.cast(request)
+                            .getPortalProperty(
+                                    PORTAL_PARAMETER_VAADIN_WIDGETSET);
+                }
+
+                if (widgetset == null) {
+                    // If no widgetset defined for the portal, use the default
+                    widgetset = DEFAULT_WIDGETSET;
+                }
+
+                return widgetset;
+            }
+
+            @Override
+            public String getConfiguredTheme(WrappedRequest request) {
+
+                // is the default theme defined by the portal?
+                String themeName = WrappedPortletRequest.cast(request)
+                        .getPortalProperty(
+                                Constants.PORTAL_PARAMETER_VAADIN_THEME);
+
+                if (themeName == null) {
+                    // no, using the default theme defined by Vaadin
+                    themeName = DEFAULT_THEME_NAME;
+                }
+
+                return themeName;
+            }
+
+            @Override
+            public boolean isStandalone(WrappedRequest request) {
+                return false;
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * com.vaadin.terminal.DeploymentConfiguration#getStaticFileLocation
+             * (com.vaadin.terminal.WrappedRequest)
+             * 
+             * Return the URL from where static files, e.g. the widgetset and
+             * the theme, are served. In a standard configuration the VAADIN
+             * folder inside the returned folder is what is used for widgetsets
+             * and themes.
+             * 
+             * @return The location of static resources (inside which there
+             * should be a VAADIN directory). Does not end with a slash (/).
+             */
+
+            @Override
+            public String getStaticFileLocation(WrappedRequest request) {
+                String staticFileLocation = WrappedPortletRequest
+                        .cast(request)
+                        .getPortalProperty(
+                                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
+                if (staticFileLocation != null) {
+                    // remove trailing slash if any
+                    while (staticFileLocation.endsWith(".")) {
+                        staticFileLocation = staticFileLocation.substring(0,
+                                staticFileLocation.length() - 1);
+                    }
+                    return staticFileLocation;
+                } else {
+                    // default for Liferay
+                    return "/html";
+                }
+            }
+
+            @Override
+            public String getMimeType(String resourceName) {
+                return getPortletContext().getMimeType(resourceName);
+            }
+        };
+
+        addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
     }
 
@@ -384,13 +385,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     /**
-     * Returns true if the servlet is running in production mode. Production
+     * Returns true if the portlet is running in production mode. Production
      * mode disables all debug facilities.
      * 
      * @return true if in production mode, false if in debug mode
      */
     public boolean isProductionMode() {
-        return productionMode;
+        return deploymentConfiguration.isProductionMode();
     }
 
     protected void handleRequest(PortletRequest request,

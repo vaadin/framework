@@ -28,14 +28,16 @@ public abstract class AbstractDeploymentConfiguration implements
         DeploymentConfiguration {
 
     private final Class<?> systemPropertyBaseClass;
-    private final Properties applicationProperties = new Properties();
+    private final Properties applicationProperties;
     private AddonContext addonContext;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
 
-    public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass) {
+    public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass,
+            Properties applicationProperties) {
         this.systemPropertyBaseClass = systemPropertyBaseClass;
+        this.applicationProperties = applicationProperties;
 
         checkProductionMode();
         checkXsrfProtection();
@@ -192,7 +194,7 @@ public abstract class AbstractDeploymentConfiguration implements
      * Log a warning if cross-site request forgery protection is disabled.
      */
     private void checkXsrfProtection() {
-        xsrfProtectionEnabled = getApplicationOrSystemProperty(
+        xsrfProtectionEnabled = !getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false")
                 .equals("true");
         if (!xsrfProtectionEnabled) {

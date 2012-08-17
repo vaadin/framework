@@ -99,43 +99,9 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
     private final String resourcePath = null;
 
-    private DeploymentConfiguration deploymentConfiguration = new AbstractDeploymentConfiguration(
-            getClass()) {
+    private DeploymentConfiguration deploymentConfiguration;
 
-        @Override
-        public String getStaticFileLocation(WrappedRequest request) {
-            HttpServletRequest servletRequest = WrappedHttpServletRequest
-                    .cast(request);
-            return AbstractApplicationServlet.this
-                    .getStaticFilesLocation(servletRequest);
-        }
-
-        @Override
-        public String getConfiguredWidgetset(WrappedRequest request) {
-            return getApplicationOrSystemProperty(
-                    AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                    AbstractApplicationServlet.DEFAULT_WIDGETSET);
-        }
-
-        @Override
-        public String getConfiguredTheme(WrappedRequest request) {
-            // Use the default
-            return AbstractApplicationServlet.getDefaultTheme();
-        }
-
-        @Override
-        public boolean isStandalone(WrappedRequest request) {
-            return true;
-        }
-
-        @Override
-        public String getMimeType(String resourceName) {
-            return getServletContext().getMimeType(resourceName);
-        }
-    };
-
-    private final AddonContext addonContext = new AddonContext(
-            getDeploymentConfiguration());
+    private AddonContext addonContext;
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -152,8 +118,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
-        Properties applicationProperties = getDeploymentConfiguration()
-                .getInitParameters();
+        Properties applicationProperties = new Properties();
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
@@ -172,6 +137,42 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                     servletConfig.getInitParameter(name));
         }
 
+        deploymentConfiguration = new AbstractDeploymentConfiguration(
+                getClass(), applicationProperties) {
+
+            @Override
+            public String getStaticFileLocation(WrappedRequest request) {
+                HttpServletRequest servletRequest = WrappedHttpServletRequest
+                        .cast(request);
+                return AbstractApplicationServlet.this
+                        .getStaticFilesLocation(servletRequest);
+            }
+
+            @Override
+            public String getConfiguredWidgetset(WrappedRequest request) {
+                return getApplicationOrSystemProperty(
+                        AbstractApplicationServlet.PARAMETER_WIDGETSET,
+                        AbstractApplicationServlet.DEFAULT_WIDGETSET);
+            }
+
+            @Override
+            public String getConfiguredTheme(WrappedRequest request) {
+                // Use the default
+                return AbstractApplicationServlet.getDefaultTheme();
+            }
+
+            @Override
+            public boolean isStandalone(WrappedRequest request) {
+                return true;
+            }
+
+            @Override
+            public String getMimeType(String resourceName) {
+                return getServletContext().getMimeType(resourceName);
+            }
+        };
+
+        addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
     }
 
