@@ -1,0 +1,147 @@
+/*
+ * Copyright 2011 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.terminal.gwt.client.ui.formlayout;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
+import com.vaadin.terminal.gwt.client.ComponentConnector;
+import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.terminal.gwt.client.TooltipInfo;
+import com.vaadin.terminal.gwt.client.Util;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.ui.AbstractFieldConnector;
+import com.vaadin.terminal.gwt.client.ui.AbstractLayoutConnector;
+import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.Caption;
+import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.ErrorFlag;
+import com.vaadin.terminal.gwt.client.ui.formlayout.VFormLayout.VFormLayoutTable;
+import com.vaadin.ui.FormLayout;
+
+@Connect(FormLayout.class)
+public class FormLayoutConnector extends AbstractLayoutConnector {
+
+    @Override
+    public AbstractOrderedLayoutState getState() {
+        return (AbstractOrderedLayoutState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        VFormLayoutTable formLayoutTable = getWidget().table;
+
+        formLayoutTable.setMargins(new VMarginInfo(getState()
+                .getMarginsBitmask()));
+        formLayoutTable.setSpacing(getState().isSpacing());
+
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        super.onConnectorHierarchyChange(event);
+
+        VFormLayout formLayout = getWidget();
+        VFormLayoutTable formLayoutTable = getWidget().table;
+
+        int childId = 0;
+
+        formLayoutTable.setRowCount(getChildComponents().size());
+
+        for (ComponentConnector child : getChildComponents()) {
+            Widget childWidget = child.getWidget();
+
+            Caption caption = formLayoutTable.getCaption(childWidget);
+            if (caption == null) {
+                caption = formLayout.new Caption(child);
+                caption.addClickHandler(formLayoutTable);
+            }
+
+            ErrorFlag error = formLayoutTable.getError(childWidget);
+            if (error == null) {
+                error = formLayout.new ErrorFlag(child);
+            }
+
+            formLayoutTable.setChild(childId, childWidget, caption, error);
+            childId++;
+        }
+
+        for (ComponentConnector oldChild : event.getOldChildren()) {
+            if (oldChild.getParent() == this) {
+                continue;
+            }
+
+            formLayoutTable.cleanReferences(oldChild.getWidget());
+        }
+
+    }
+
+    @Override
+    public void updateCaption(ComponentConnector component) {
+        getWidget().table.updateCaption(component.getWidget(),
+                component.getState(), component.isEnabled());
+        boolean hideErrors = false;
+
+        // FIXME This incorrectly depends on AbstractFieldConnector
+        if (component instanceof AbstractFieldConnector) {
+            hideErrors = ((AbstractFieldConnector) component).getState()
+                    .isHideErrors();
+        }
+
+        getWidget().table.updateError(component.getWidget(), component
+                .getState().getErrorMessage(), hideErrors);
+    }
+
+    @Override
+    public VFormLayout getWidget() {
+        return (VFormLayout) super.getWidget();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        TooltipInfo info = null;
+
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VFormLayout.Caption.class);
+
+            if (node != null) {
+                VFormLayout.Caption caption = (VFormLayout.Caption) node;
+                info = caption.getOwner().getTooltipInfo(element);
+            } else {
+
+                node = Util.findWidget(
+                        (com.google.gwt.user.client.Element) element,
+                        VFormLayout.ErrorFlag.class);
+
+                if (node != null) {
+                    VFormLayout.ErrorFlag flag = (VFormLayout.ErrorFlag) node;
+                    info = flag.getOwner().getTooltipInfo(element);
+                }
+            }
+        }
+
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
+    }
+
+}
