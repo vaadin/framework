@@ -20,6 +20,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 public class URLReference_Serializer implements JSONSerializer<URLReference> {
 

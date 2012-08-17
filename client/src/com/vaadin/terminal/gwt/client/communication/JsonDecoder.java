@@ -31,6 +31,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.vaadin.shared.Connector;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 /**
  * Client side decoder for decodeing shared state and other values from JSON

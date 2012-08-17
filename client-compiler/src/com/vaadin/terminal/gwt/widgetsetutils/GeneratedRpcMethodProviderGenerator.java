@@ -104,7 +104,7 @@ public class GeneratedRpcMethodProviderGenerator extends Generator {
         composer.addImport("com.google.gwt.core.client.GWT");
         composer.addImport(RpcMethod.class.getName());
         composer.addImport(ClientRpc.class.getName());
-        composer.addImport(com.vaadin.terminal.gwt.client.communication.Type.class
+        composer.addImport(com.vaadin.terminal.gwt.client.metadata.Type.class
                 .getName());
         composer.addImplementedInterface(GeneratedRpcMethodProvider.class
                 .getName());

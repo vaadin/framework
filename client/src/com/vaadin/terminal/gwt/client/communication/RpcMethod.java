@@ -16,6 +16,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 public abstract class RpcMethod {
     private String interfaceName;

@@ -142,7 +142,7 @@ public class SerializerMapGenerator extends Generator {
                 .findType(JSONSerializer.class.getName());
         JType[] deserializeParamTypes = new JType[] {
                 typeOracle
-                        .findType(com.vaadin.terminal.gwt.client.communication.Type.class
+                        .findType(com.vaadin.terminal.gwt.client.metadata.Type.class
                                 .getName()),
                 typeOracle.findType(JSONValue.class.getName()),
                 typeOracle.findType(ApplicationConnection.class.getName()) };

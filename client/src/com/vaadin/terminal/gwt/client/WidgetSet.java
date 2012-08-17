@@ -18,17 +18,12 @@ package com.vaadin.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
+import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
+import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class WidgetSet {
-
-    /**
-     * WidgetSet (and its extensions) delegate instantiation of widgets and
-     * client-server matching to WidgetMap. The actual implementations are
-     * generated with gwts generators/deferred binding.
-     */
-    private WidgetMap widgetMap = GWT.create(WidgetMap.class);
-
     /**
      * Create an uninitialized connector that best matches given UIDL. The
      * connector must implement {@link ServerConnector}.
@@ -65,7 +60,8 @@ public class WidgetSet {
             /*
              * let the auto generated code instantiate this type
              */
-            ServerConnector connector = widgetMap.instantiate(classType);
+            ServerConnector connector = (ServerConnector) TypeData.getType(
+                    classType).createInstance();
             if (connector instanceof HasJavaScriptConnectorHelper) {
                 ((HasJavaScriptConnectorHelper) connector)
                         .getJavascriptConnectorHelper().setTag(tag);
@@ -102,26 +98,32 @@ public class WidgetSet {
      * @param applicationConfiguration
      * @return
      */
-    public Class<? extends ServerConnector> getConnectorClassByTag(int tag,
-            ApplicationConfiguration conf) {
-        Class<? extends ServerConnector> connectorClass = null;
+    public void ensureConnectorLoaded(int tag, ApplicationConfiguration conf) {
+        ConnectorBundleLoader loader = ConnectorBundleLoader.get();
+        String bundleName = null;
         Integer t = tag;
         do {
             String serverSideClassName = conf.getServerSideClassNameForTag(t);
-            connectorClass = widgetMap
-                    .getConnectorClassForServerSideClassName(serverSideClassName);
+            bundleName = loader.getBundleForIdentifier(serverSideClassName);
+
             t = conf.getParentTag(t);
-        } while (connectorClass == UnknownComponentConnector.class && t != null);
+        } while (bundleName == null && t != null);
 
-        return connectorClass;
-    }
+        if (bundleName != null && !loader.isBundleLoaded(bundleName)) {
+            ApplicationConfiguration.startDependencyLoading();
+            loader.loadBundle(bundleName, new BundleLoadCallback() {
+                @Override
+                public void loaded() {
+                    ApplicationConfiguration.endDependencyLoading();
+                }
 
-    public Class<? extends ServerConnector>[] getDeferredLoadedConnectors() {
-        return widgetMap.getDeferredLoadedConnectors();
-    }
-
-    public void loadImplementation(Class<? extends ServerConnector> nextType) {
-        widgetMap.ensureInstantiator(nextType);
+                @Override
+                public void failed(Throwable reason) {
+                    VConsole.error(reason);
+                    ApplicationConfiguration.endDependencyLoading();
+                }
+            });
+        }
     }
 
 }

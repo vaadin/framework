@@ -36,11 +36,6 @@
 	</replace-with>
 
 	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.EagerWidgetMapGenerator">
-		<when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" />
-	</generate-with>
-
-	<generate-with
 		class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriteriaFactoryGenerator">
 		<when-type-is
 			class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory" />
@@ -77,6 +72,10 @@
 		class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorStateFactoryGenerator">
 		<when-type-assignable
 			class="com.vaadin.terminal.gwt.client.ui.ConnectorStateFactory" />
+	</generate-with>
+	
+	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory">
+		<when-type-assignable class="com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader" />
 	</generate-with>
 
 	<!-- Use the new cross site linker to get a nocache.js without document.write -->

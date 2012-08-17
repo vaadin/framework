@@ -125,7 +125,7 @@ public class SerializerGenerator extends Generator {
                 serializerClassName);
         composer.addImport(GWT.class.getName());
         composer.addImport(JSONValue.class.getName());
-        composer.addImport(com.vaadin.terminal.gwt.client.communication.Type.class
+        composer.addImport(com.vaadin.terminal.gwt.client.metadata.Type.class
                 .getName());
         // composer.addImport(JSONObject.class.getName());
         // composer.addImport(VPaintableMap.class.getName());
