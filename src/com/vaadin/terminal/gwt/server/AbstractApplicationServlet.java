@@ -370,10 +370,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Returns the amount of milliseconds the browser should cache a file.
-     * Default is 1 hour (3600 ms).
+     * Returns the number of seconds the browser should cache a file. Default is
+     * 1 hour (3600 s).
      * 
-     * @return The amount of milliseconds files are cached in the browser
+     * @return The number of seconds files are cached in the browser
      */
     public int getResourceCacheTime() {
         return resourceCacheTime;
