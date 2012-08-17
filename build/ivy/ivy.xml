@@ -3,14 +3,16 @@
 	xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
     
     <info organisation="com.vaadin" module="vaadin"/>
-    <configurations >
-   		<conf name="ss.compile" extends="cs.compile" description="Server side compilation dependencies" visibility="private"/>
-   		<conf name="cs.compile" description="Client side compilation dependencies" visibility="private"/>
-   		<conf name="ss.test.compile" extends="ss.compile" description="Test compilation dependencies" visibility="private"/>
+    <configurations>
+   		<conf name="server.extdep" extends="client.extdep" description="Server side compilation dependencies" visibility="private"/>
+   		<conf name="shared.extdep" extends="server.extdep" description="Shared compilation dependencies" visibility="private"/>
+   		<conf name="client.extdep" description="Client side compilation dependencies" visibility="private"/>
+   		<conf name="client-compiler.extdep" description="Client side compilation dependencies" visibility="private"/>
+   		<conf name="server.tests.extdep" extends="server.extdep" description="Test compilation dependencies" visibility="private"/>
    		<conf name="taskdefs" description="Ant task definitions" visibility="private" />
 	</configurations>
     <publications />        
-	<dependencies defaultconf="ss.compile" defaultconfmapping="ss.compile->master">
+	<dependencies defaultconf="server.extdep" defaultconfmapping="server.extdep->master">
 
 		<!--Servlet API version 2.5 -->
 		<dependency org="javax.servlet" name="servlet-api" rev="2.5" />   		
@@ -23,31 +25,32 @@
    		<dependency org="com.google.appengine" name="appengine-api-1.0-sdk" rev="1.2.1" />  
      
         <!-- GWT dependencies (validation-api) -->
-        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="cs.compile->master,sources" />
+        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA" conf="client.extdep->master,sources" />
          
    		<!-- Test frameworks & related -->
-   		<dependency org="junit" name="junit" rev="4.5" conf="ss.test.compile -> master"/>
-   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="ss.test.compile -> master, runtime(*)"/>  
-   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="ss.test.compile -> master, runtime(*)"/>  
+   		<dependency org="junit" name="junit" rev="4.5" conf="server.tests.extdep -> master"/>
+   		<dependency org="org.easymock" name="easymock" rev="3.0" conf="server.tests.extdep -> master, runtime(*)"/>  
+   		<dependency org="org.hsqldb" name="hsqldb" rev="2.2.6" conf="server.tests.extdep -> master, runtime(*)"/>  
 
    		<!-- Additional libraries used by tests - also included from GWT -->
-   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.26" conf="ss.test.compile -> master"/>
-   		<dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.26" conf="ss.test.compile -> master"/>
-   		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="ss.test.compile -> master"/>
-   		<dependency org="commons-io" name="commons-io" rev="2.3" conf="ss.test.compile -> master"/>
-   		<dependency org="commons-codec" name="commons-codec" rev="1.6" conf="ss.test.compile -> master"/>
+   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.26" conf="server.tests.extdep -> master"/>
+   		<dependency org="org.mortbay.jetty" name="jetty-util" rev="6.1.26" conf="server.tests.extdep -> master"/>
+   		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="server.tests.extdep -> master"/>
+   		<dependency org="commons-io" name="commons-io" rev="2.3" conf="server.tests.extdep -> master"/>
+   		<dependency org="commons-codec" name="commons-codec" rev="1.6" conf="server.tests.extdep -> master"/>
 
    		<!-- Ant tasks -->   	
    		<dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" conf="taskdefs ->master"/>
    		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="taskdefs ->master"/>
+   		<dependency org="com.googlecode.jarjar" name="jarjar" rev="1.3" conf="taskdefs ->master"/>
    	   	   		
    		<!-- Emma -->
-   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="ss.test.compile,taskdefs ->master"/>
-   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="ss.test.compile,taskdefs ->*"/>
+   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="server.tests.extdep,taskdefs ->master"/>
+   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="server.tests.extdep,taskdefs ->*"/>
 
         <!-- Bean Validation implementation -->
-        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="ss.test.compile -> default"/>
-        <dependency org="org.hibernate" name="hibernate-validator" rev="4.2.0.Final" conf="ss.test.compile -> default"/>
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="server.tests.extdep -> default"/>
+        <dependency org="org.hibernate" name="hibernate-validator" rev="4.2.0.Final" conf="server.tests.extdep -> default"/>
 	</dependencies>
 
 </ivy-module>

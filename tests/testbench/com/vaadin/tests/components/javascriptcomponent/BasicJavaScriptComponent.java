@@ -1,5 +1,17 @@
 /* 
-@VaadinApache2LicenseForJavaFiles@
+ * Copyright 2011 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.vaadin.tests.components.javascriptcomponent;
 
@@ -21,7 +33,7 @@ import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.JavaScriptCallback;
+import com.vaadin.ui.JavaScriptFunction;
 
 public class BasicJavaScriptComponent extends AbstractTestRoot {
 
@@ -59,14 +71,14 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
                     log.log("Got RPC message: " + message);
                 }
             });
-            registerCallback("messageToServer", new JavaScriptCallback() {
+            addFunction("messageToServer", new JavaScriptFunction() {
                 @Override
                 public void call(JSONArray arguments) throws JSONException {
                     log.log("Got callback message: " + arguments.getString(0));
                 }
             });
 
-            registerCallback("reportParentIds", new JavaScriptCallback() {
+            addFunction("reportParentIds", new JavaScriptFunction() {
                 @Override
                 public void call(JSONArray arguments) throws JSONException {
                     JSONArray parentIds = arguments.getJSONArray(0);
@@ -89,7 +101,7 @@ public class BasicJavaScriptComponent extends AbstractTestRoot {
             });
 
             getRpcProxy(TestRpc.class).sendRpc("RPC message");
-            invokeCallback("messageToClient", "Callback message");
+            callFunction("messageToClient", "Callback message");
 
             getState()
                     .setMessages(

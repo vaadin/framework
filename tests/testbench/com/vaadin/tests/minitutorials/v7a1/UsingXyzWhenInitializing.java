@@ -1,5 +1,17 @@
 /* 
-@VaadinApache2LicenseForJavaFiles@
+ * Copyright 2011 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 package com.vaadin.tests.minitutorials.v7a1;
@@ -14,7 +26,6 @@ import com.vaadin.ui.Root;
  * parameters%20or%20screen%20size%20when%20initializing%20an%20application
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class UsingXyzWhenInitializing extends Root {
