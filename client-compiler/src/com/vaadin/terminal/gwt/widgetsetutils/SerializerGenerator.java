@@ -473,9 +473,12 @@ public class SerializerGenerator extends Generator {
         if (typePackage == null) {
             return SerializerMap.class.getPackage().getName();
         } else {
-            // What about e.g. java.* packages, can we create classes there or
-            // should we use e.g. com.vaadin.java.*
-            return typePackage.getName();
+            String packageName = typePackage.getName();
+            // Dev mode classloader gets unhappy for some java packages
+            if (packageName.startsWith("java.")) {
+                packageName = "com.vaadin." + packageName;
+            }
+            return packageName;
         }
     }
 }
