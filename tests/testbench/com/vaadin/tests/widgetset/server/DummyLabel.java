@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.root;
 
-import com.vaadin.shared.ComponentState;
-import com.vaadin.shared.Connector;
+package com.vaadin.tests.widgetset.server;
 
-public class RootState extends ComponentState {
-    private Connector content;
-    private int heartbeatInterval;
+import com.vaadin.tests.widgetset.client.LabelState;
+import com.vaadin.ui.AbstractComponent;
 
-    public Connector getContent() {
-        return content;
+/**
+ * Dummy component to cause {@link LabelState} to be used to test #8683
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ */
+public class DummyLabel extends AbstractComponent {
+    public DummyLabel(String text) {
+        getState().setText(text);
     }
 
-    public void setContent(Connector content) {
-        this.content = content;
-    }
-
-    public int getHeartbeatInterval() {
-        return heartbeatInterval;
-    }
-
-    public void setHeartbeatInterval(int heartbeatInterval) {
-        this.heartbeatInterval = heartbeatInterval;
+    @Override
+    public LabelState getState() {
+        return (LabelState) super.getState();
     }
 }

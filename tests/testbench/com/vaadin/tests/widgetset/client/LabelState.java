@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,28 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.root;
+
+package com.vaadin.tests.widgetset.client;
 
 import com.vaadin.shared.ComponentState;
-import com.vaadin.shared.Connector;
 
-public class RootState extends ComponentState {
-    private Connector content;
-    private int heartbeatInterval;
+/**
+ * State class with the same simple name as
+ * {@link com.vaadin.shared.ui.label.LabelState} to test #8683
+ * 
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
+ */
+public class LabelState extends ComponentState {
 
-    public Connector getContent() {
-        return content;
+    private String text;
+
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public void setContent(Connector content) {
-        this.content = content;
+    public String getText() {
+        return text;
     }
 
-    public int getHeartbeatInterval() {
-        return heartbeatInterval;
-    }
-
-    public void setHeartbeatInterval(int heartbeatInterval) {
-        this.heartbeatInterval = heartbeatInterval;
-    }
 }

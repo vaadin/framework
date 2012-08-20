@@ -21,11 +21,7 @@ public class RootConstants {
      */
     @Deprecated
     public static final String RESIZE_LAZY = "rL";
-    @Deprecated
-    public static final String BROWSER_HEIGHT_VAR = "browserHeight";
 
-    @Deprecated
-    public static final String BROWSER_WIDTH_VAR = "browserWidth";
     @Deprecated
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 

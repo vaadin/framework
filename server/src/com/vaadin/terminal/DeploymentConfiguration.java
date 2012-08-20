@@ -132,4 +132,25 @@ public interface DeploymentConfiguration extends Serializable {
     public AddonContext getAddonContext();
 
     public void setAddonContext(AddonContext vaadinContext);
+
+    /**
+     * Returns whether Vaadin is in production mode.
+     * 
+     * @return true if in production mode, false otherwise.
+     */
+    public boolean isProductionMode();
+
+    /**
+     * Returns whether cross-site request forgery protection is enabled.
+     * 
+     * @return true if XSRF protection is enabled, false otherwise.
+     */
+    public boolean isXsrfProtectionEnabled();
+
+    /**
+     * Returns the time resources can be cached in the browsers, in seconds.
+     * 
+     * @return The resource cache time.
+     */
+    public int getResourceCacheTime();
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeSet;
 
 import com.google.gwt.core.ext.Generator;
@@ -116,8 +117,10 @@ public class WidgetMapGenerator extends Generator {
      *            Logger object
      * @param context
      *            Generator context
+     * @throws UnableToCompleteException
      */
-    private void generateClass(TreeLogger logger, GeneratorContext context) {
+    private void generateClass(TreeLogger logger, GeneratorContext context)
+            throws UnableToCompleteException {
         // get print writer that receives the source code
         PrintWriter printWriter = null;
         printWriter = context.tryCreate(logger, packageName, className);
@@ -147,7 +150,7 @@ public class WidgetMapGenerator extends Generator {
         logConnectors(logger, context, connectors);
 
         // generator constructor source code
-        generateImplementationDetector(sourceWriter, connectors);
+        generateImplementationDetector(logger, sourceWriter, connectors);
         generateInstantiatorMethod(sourceWriter, connectors);
         // close generated class
         sourceWriter.outdent();
@@ -369,13 +372,18 @@ public class WidgetMapGenerator extends Generator {
 
     /**
      * 
+     * @param logger
+     *            logger to print messages to
      * @param sourceWriter
      *            Source writer to output source code
      * @param paintablesHavingWidgetAnnotation
+     * @throws UnableToCompleteException
      */
     private void generateImplementationDetector(
+            TreeLogger logger,
             SourceWriter sourceWriter,
-            Collection<Class<? extends ServerConnector>> paintablesHavingWidgetAnnotation) {
+            Collection<Class<? extends ServerConnector>> paintablesHavingWidgetAnnotation)
+            throws UnableToCompleteException {
         sourceWriter
                 .println("public Class<? extends "
                         + serverConnectorClassName
@@ -385,8 +393,24 @@ public class WidgetMapGenerator extends Generator {
         sourceWriter
                 .println("fullyQualifiedName = fullyQualifiedName.intern();");
 
+        // Keep track of encountered mappings to detect conflicts
+        Map<Class<? extends ClientConnector>, Class<? extends ServerConnector>> mappings = new HashMap<Class<? extends ClientConnector>, Class<? extends ServerConnector>>();
+
         for (Class<? extends ServerConnector> connectorClass : paintablesHavingWidgetAnnotation) {
             Class<? extends ClientConnector> clientConnectorClass = getClientConnectorClass(connectorClass);
+
+            // Check for conflicts
+            Class<? extends ServerConnector> prevousMapping = mappings.put(
+                    clientConnectorClass, connectorClass);
+            if (prevousMapping != null) {
+                logger.log(Type.ERROR,
+                        "Both " + connectorClass.getName() + " and "
+                                + prevousMapping.getName()
+                                + " have @Connect referring to "
+                                + clientConnectorClass.getName() + ".");
+                throw new UnableToCompleteException();
+            }
+
             sourceWriter.print("if ( fullyQualifiedName == \"");
             sourceWriter.print(clientConnectorClass.getName());
             sourceWriter.print("\" ) { ensureInstantiator("

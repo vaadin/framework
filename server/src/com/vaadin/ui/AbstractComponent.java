@@ -717,13 +717,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return (ComponentState) super.getState();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Component#updateState()
-     */
     @Override
-    public void updateState() {
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
         // TODO This logic should be on the client side and the state should
         // simply be a data object with "width" and "height".
         if (getHeight() >= 0

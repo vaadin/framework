@@ -197,8 +197,8 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
         getState().getChildCss().clear();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component child = ci.next();

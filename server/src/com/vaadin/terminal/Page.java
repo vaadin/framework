@@ -376,23 +376,17 @@ public class Page implements Serializable {
                 .getBrowser();
     }
 
-    public void setBrowserWindowSize(Integer width, Integer height) {
+    public void setBrowserWindowSize(int width, int height) {
         boolean fireEvent = false;
 
-        if (width != null) {
-            int newWidth = width.intValue();
-            if (newWidth != browserWindowWidth) {
-                browserWindowWidth = newWidth;
-                fireEvent = true;
-            }
+        if (width != browserWindowWidth) {
+            browserWindowWidth = width;
+            fireEvent = true;
         }
 
-        if (height != null) {
-            int newHeight = height.intValue();
-            if (newHeight != browserWindowHeight) {
-                browserWindowHeight = newHeight;
-                fireEvent = true;
-            }
+        if (height != browserWindowHeight) {
+            browserWindowHeight = height;
+            fireEvent = true;
         }
 
         if (fireEvent) {

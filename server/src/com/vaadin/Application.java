@@ -361,31 +361,24 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public static class ApplicationStartEvent implements Serializable {
         private final URL applicationUrl;
 
-        private final Properties applicationProperties;
+        private final DeploymentConfiguration configuration;
 
         private final ApplicationContext context;
-
-        private final boolean productionMode;
 
         /**
          * @param applicationUrl
          *            the URL the application should respond to.
-         * @param applicationProperties
-         *            the Application properties as specified by the deployment
-         *            configuration.
+         * @param configuration
+         *            the deployment configuration for the application.
          * @param context
          *            the context application will be running in.
-         * @param productionMode
-         *            flag indicating whether the application is running in
-         *            production mode.
          */
         public ApplicationStartEvent(URL applicationUrl,
-                Properties applicationProperties, ApplicationContext context,
-                boolean productionMode) {
+                DeploymentConfiguration configuration,
+                ApplicationContext context) {
             this.applicationUrl = applicationUrl;
-            this.applicationProperties = applicationProperties;
+            this.configuration = configuration;
             this.context = context;
-            this.productionMode = productionMode;
         }
 
         /**
@@ -401,15 +394,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         /**
-         * Gets the Application properties as specified by the deployment
-         * configuration.
+         * Returns the deployment configuration used by this application.
          * 
-         * @return the properties configured for the applciation.
-         * 
-         * @see Application#getProperty(String)
+         * @return the deployment configuration.
          */
-        public Properties getApplicationProperties() {
-            return applicationProperties;
+        public DeploymentConfiguration getConfiguration() {
+            return configuration;
         }
 
         /**
@@ -422,18 +412,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         public ApplicationContext getContext() {
             return context;
         }
-
-        /**
-         * Checks whether the application is running in production mode.
-         * 
-         * @return <code>true</code> if in production mode, else
-         *         <code>false</code>
-         * 
-         * @see Application#isProductionMode()
-         */
-        public boolean isProductionMode() {
-            return productionMode;
-        }
     }
 
     private final static Logger logger = Logger.getLogger(Application.class
@@ -443,6 +421,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Application context the application is running in.
      */
     private ApplicationContext context;
+
+    /**
+     * Deployment configuration for the application.
+     */
+    private DeploymentConfiguration configuration;
 
     /**
      * The current user or <code>null</code> if no user has logged in.
@@ -458,11 +441,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Application status.
      */
     private volatile boolean applicationIsRunning = false;
-
-    /**
-     * Application properties.
-     */
-    private Properties properties;
 
     /**
      * Default locale of the application.
@@ -511,8 +489,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     private int nextRootId = 0;
     private Map<Integer, Root> roots = new HashMap<Integer, Root>();
-
-    private boolean productionMode = true;
 
     private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
 
@@ -638,8 +614,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void start(ApplicationStartEvent event) {
         applicationUrl = event.getApplicationUrl();
-        productionMode = event.isProductionMode();
-        properties = event.getApplicationProperties();
+        configuration = event.getConfiguration();
         context = event.getContext();
         init();
         applicationIsRunning = true;
@@ -673,6 +648,16 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
+     * Returns the properties of this application as specified in the deployment
+     * configuration.
+     * 
+     * @return Application properties
+     */
+    protected Properties getProperties() {
+        return configuration.getInitParameters();
+    }
+
+    /**
      * Returns an enumeration of all the names in this application.
      * 
      * <p>
@@ -685,7 +670,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      */
     public Enumeration<?> getPropertyNames() {
-        return properties.propertyNames();
+        return getProperties().propertyNames();
     }
 
     /**
@@ -700,7 +685,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @return the value in this property list with the specified key value.
      */
     public String getProperty(String name) {
-        return properties.getProperty(name);
+        return getProperties().getProperty(name);
     }
 
     /**
@@ -1930,7 +1915,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     protected String getRootClassName(WrappedRequest request) {
-        Object rootClassNameObj = properties.get(ROOT_PARAMETER);
+        Object rootClassNameObj = getProperties().get(ROOT_PARAMETER);
         if (rootClassNameObj instanceof String) {
             return (String) rootClassNameObj;
         } else {
@@ -2181,7 +2166,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public boolean isProductionMode() {
-        return productionMode;
+        return configuration.isProductionMode();
     }
 
     /**

@@ -16,8 +16,11 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
 
 import com.google.gwt.event.shared.EventHandler;
+import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 public class StateChangeEvent extends
@@ -27,12 +30,25 @@ public class StateChangeEvent extends
      */
     public static final Type<StateChangeHandler> TYPE = new Type<StateChangeHandler>();
 
+    private Set<String> changedProperties;
+
     @Override
     public Type<StateChangeHandler> getAssociatedType() {
         return TYPE;
     }
 
-    public StateChangeEvent() {
+    /**
+     * Creates a new state change event.
+     * 
+     * @param connector
+     *            the event whose state has changed
+     * @param changedProperties
+     *            a set of names of the changed properties
+     */
+    public StateChangeEvent(ServerConnector connector,
+            Set<String> changedProperties) {
+        setConnector(connector);
+        this.changedProperties = changedProperties;
     }
 
     @Override
@@ -40,7 +56,30 @@ public class StateChangeEvent extends
         listener.onStateChanged(this);
     }
 
+    /**
+     * Event handler that gets notified whenever any part of the state has been
+     * updated by the server.
+     * 
+     * @author Vaadin Ltd
+     * @version @VERSION@
+     * @since 7.0.0
+     */
     public interface StateChangeHandler extends Serializable, EventHandler {
+        /**
+         * Notifies the event handler that the state has changed.
+         * 
+         * @param stateChangeEvent
+         *            the state change event with details about the change
+         */
         public void onStateChanged(StateChangeEvent stateChangeEvent);
+    }
+
+    /**
+     * Gets the properties that have changed.
+     * 
+     * @return a set of names of the changed properties
+     */
+    public Set<String> getChangedProperties() {
+        return Collections.unmodifiableSet(changedProperties);
     }
 }

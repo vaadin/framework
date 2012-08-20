@@ -29,6 +29,7 @@ import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -129,6 +130,10 @@ public class RpcProxyGenerator extends Generator {
             writer.println(" {");
             writer.indent();
 
+            Delayed delayedAnnotation = m.getAnnotation(Delayed.class);
+            boolean delayed = delayedAnnotation != null;
+            boolean lastonly = delayed && delayedAnnotation.lastonly();
+
             writer.print("this.connector.getConnection().addMethodInvocationToQueue(new MethodInvocation(this.connector.getConnectorId(), \""
                     + requestedType.getQualifiedBinaryName() + "\", \"");
             writer.print(m.getName());
@@ -145,7 +150,7 @@ public class RpcProxyGenerator extends Generator {
 
                 writer.print(p.getName());
             }
-            writer.println("}), true);");
+            writer.println("}), " + delayed + ", " + lastonly + ");");
 
             writer.outdent();
             writer.println("}");

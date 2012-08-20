@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.logging.Logger;
 
 import com.vaadin.terminal.DeploymentConfiguration;
 
@@ -27,11 +28,20 @@ public abstract class AbstractDeploymentConfiguration implements
         DeploymentConfiguration {
 
     private final Class<?> systemPropertyBaseClass;
-    private final Properties applicationProperties = new Properties();
+    private final Properties applicationProperties;
     private AddonContext addonContext;
+    private boolean productionMode;
+    private boolean xsrfProtectionEnabled;
+    private int resourceCacheTime;
 
-    public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass) {
+    public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass,
+            Properties applicationProperties) {
         this.systemPropertyBaseClass = systemPropertyBaseClass;
+        this.applicationProperties = applicationProperties;
+
+        checkProductionMode();
+        checkXsrfProtection();
+        checkResourceCacheTime();
     }
 
     @Override
@@ -151,5 +161,64 @@ public abstract class AbstractDeploymentConfiguration implements
     @Override
     public AddonContext getAddonContext() {
         return addonContext;
+    }
+
+    @Override
+    public boolean isProductionMode() {
+        return productionMode;
+    }
+
+    @Override
+    public boolean isXsrfProtectionEnabled() {
+        return xsrfProtectionEnabled;
+    }
+
+    @Override
+    public int getResourceCacheTime() {
+        return resourceCacheTime;
+    }
+
+    /**
+     * Log a warning if Vaadin is not running in production mode.
+     */
+    private void checkProductionMode() {
+        productionMode = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals(
+                "true");
+        if (!productionMode) {
+            getLogger().warning(Constants.NOT_PRODUCTION_MODE_INFO);
+        }
+    }
+
+    /**
+     * Log a warning if cross-site request forgery protection is disabled.
+     */
+    private void checkXsrfProtection() {
+        xsrfProtectionEnabled = !getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false")
+                .equals("true");
+        if (!xsrfProtectionEnabled) {
+            getLogger().warning(Constants.WARNING_XSRF_PROTECTION_DISABLED);
+        }
+    }
+
+    /**
+     * Log a warning if resource cache time is set but is not an integer.
+     */
+    private void checkResourceCacheTime() {
+        try {
+            resourceCacheTime = Integer
+                    .parseInt(getApplicationOrSystemProperty(
+                            Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
+                            "3600"));
+        } catch (NumberFormatException e) {
+            getLogger().warning(
+                    Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            resourceCacheTime = 3600;
+        }
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(getClass().getName());
     }
 }

@@ -157,4 +157,24 @@ public interface ClientConnector extends Connector, RpcTarget {
      *         attached to any Root
      */
     public Root getRoot();
+
+    /**
+     * Called before the shared state and RPC invocations are sent to the
+     * client. Gives the connector an opportunity to set computed/dynamic state
+     * values or to invoke last minute RPC methods depending on other component
+     * features.
+     * <p>
+     * This method must not alter the component hierarchy in any way. Calling
+     * requestRepaint() from this method will have no effect.
+     * </p>
+     * 
+     * @param initial
+     *            <code>true</code> if the client-side connector will be created
+     *            and initialized after this method has been invoked.
+     *            <code>false</code> if there is already an initialized
+     *            client-side connector.
+     * 
+     * @since 7.0
+     */
+    public void beforeClientResponse(boolean initial);
 }

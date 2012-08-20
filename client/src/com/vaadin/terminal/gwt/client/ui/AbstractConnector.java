@@ -48,6 +48,7 @@ public abstract class AbstractConnector implements ServerConnector,
     private String id;
 
     private HandlerManager handlerManager;
+    private Map<String, HandlerManager> statePropertyHandlerManagers;
     private Map<String, Collection<ClientRpc>> rpcImplementations;
     private final boolean debugLogging = false;
 
@@ -168,6 +169,17 @@ public abstract class AbstractConnector implements ServerConnector,
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
+        if (statePropertyHandlerManagers != null
+                && event instanceof StateChangeEvent) {
+            for (String property : ((StateChangeEvent) event)
+                    .getChangedProperties()) {
+                HandlerManager manager = statePropertyHandlerManagers
+                        .get(property);
+                if (manager != null) {
+                    manager.fireEvent(event);
+                }
+            }
+        }
     }
 
     protected HandlerManager ensureHandlerManager() {
@@ -185,10 +197,25 @@ public abstract class AbstractConnector implements ServerConnector,
     }
 
     @Override
-    public void removeStateChangeHandler(StateChangeHandler handler) {
-        ensureHandlerManager().removeHandler(StateChangeEvent.TYPE, handler);
+    public HandlerRegistration addStateChangeHandler(String propertyName,
+            StateChangeHandler handler) {
+        return ensureHandlerManager(propertyName).addHandler(
+                StateChangeEvent.TYPE, handler);
     }
 
+    private HandlerManager ensureHandlerManager(String propertyName) {
+        if (statePropertyHandlerManagers == null) {
+            statePropertyHandlerManagers = new HashMap<String, HandlerManager>();
+        }
+        HandlerManager manager = statePropertyHandlerManagers.get(propertyName);
+        if (manager == null) {
+            manager = new HandlerManager(this);
+            statePropertyHandlerManagers.put(propertyName, manager);
+        }
+        return manager;
+    }
+
+    @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         if (debugLogging) {
             VConsole.log("State change event for "

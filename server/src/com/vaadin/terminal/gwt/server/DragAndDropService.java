@@ -322,4 +322,9 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public Root getRoot() {
         return null;
     }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        // Nothing to do
+    }
 }

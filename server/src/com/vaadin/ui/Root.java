@@ -434,6 +434,13 @@ public abstract class Root extends AbstractComponentContainer implements
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Root.this, mouseDetails));
         }
+
+        @Override
+        public void resize(int viewWidth, int viewHeight, int windowWidth,
+                int windowHeight) {
+            // TODO We're not doing anything with the view dimensions
+            getPage().setBrowserWindowSize(windowWidth, windowHeight);
+        }
     };
 
     /**
@@ -582,12 +589,6 @@ public abstract class Root extends AbstractComponentContainer implements
                     .get(RootConstants.FRAGMENT_VARIABLE);
             getPage().setFragment(fragment, true);
         }
-
-        if (variables.containsKey("height") || variables.containsKey("width")) {
-            getPage().setBrowserWindowSize((Integer) variables.get("width"),
-                    (Integer) variables.get("height"));
-        }
-
     }
 
     /*
