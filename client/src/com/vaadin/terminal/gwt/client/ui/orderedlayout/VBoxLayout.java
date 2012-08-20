@@ -302,7 +302,8 @@ public class VBoxLayout extends FlowPanel {
             if (required) {
                 if (requiredIcon == null) {
                     requiredIcon = DOM.createSpan();
-                    // TODO decide something better
+                    // TODO decide something better (e.g. use CSS to insert the
+                    // character)
                     requiredIcon.setInnerHTML("*");
                     requiredIcon.setClassName("v-required-field-indicator");
                 }
