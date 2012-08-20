@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.AbstractClientConnector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -41,7 +40,8 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * Tracks which {@link ClientConnector}s are dirty so they can be updated to the
  * client when the following response is sent. A connector is dirty when an
  * operation has been performed on it on the server and as a result of this
- * operation new information needs to be sent to its {@link ServerConnector}.
+ * operation new information needs to be sent to its
+ * {@link com.vaadin.terminal.gwt.client.ServerConnector}.
  * </p>
  * 
  * @author Vaadin Ltd
