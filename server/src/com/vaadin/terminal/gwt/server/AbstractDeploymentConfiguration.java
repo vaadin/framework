@@ -33,6 +33,7 @@ public abstract class AbstractDeploymentConfiguration implements
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
+    private int heartbeatInterval;
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass,
             Properties applicationProperties) {
@@ -42,12 +43,12 @@ public abstract class AbstractDeploymentConfiguration implements
         checkProductionMode();
         checkXsrfProtection();
         checkResourceCacheTime();
+        checkHeartbeatInterval();
     }
 
     @Override
     public String getApplicationOrSystemProperty(String propertyName,
             String defaultValue) {
-
         String val = null;
 
         // Try application properties
@@ -178,6 +179,11 @@ public abstract class AbstractDeploymentConfiguration implements
         return resourceCacheTime;
     }
 
+    @Override
+    public int getHeartbeatInterval() {
+        return heartbeatInterval;
+    }
+
     /**
      * Log a warning if Vaadin is not running in production mode.
      */
@@ -215,6 +221,18 @@ public abstract class AbstractDeploymentConfiguration implements
             getLogger().warning(
                     Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
             resourceCacheTime = 3600;
+        }
+    }
+
+    private void checkHeartbeatInterval() {
+        try {
+            heartbeatInterval = Integer
+                    .parseInt(getApplicationOrSystemProperty(
+                            Constants.SERVLET_PARAMETER_HEARTBEAT_RATE, "500"));
+        } catch (NumberFormatException e) {
+            getLogger().warning(
+                    Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            heartbeatInterval = 500;
         }
     }
 

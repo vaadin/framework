@@ -170,8 +170,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getApplication(), context.getRootId(), document,
-                    headers);
+                    this, request, context.getApplication(),
+                    context.getRootId(), document, headers);
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -274,8 +274,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     public BootstrapContext createContext(WrappedRequest request,
             WrappedResponse response, Application application, Integer rootId) {
         BootstrapContext context = new BootstrapContext(response,
-                new BootstrapFragmentResponse(this, request,
-                        application, rootId, new ArrayList<Node>()));
+                new BootstrapFragmentResponse(this, request, application,
+                        rootId, new ArrayList<Node>()));
         return context;
     }
 
@@ -499,6 +499,9 @@ public abstract class BootstrapHandler implements RequestHandler {
         if (deploymentConfiguration.isStandalone(request)) {
             defaults.put("standalone", true);
         }
+
+        defaults.put("heartbeatInterval",
+                deploymentConfiguration.getHeartbeatInterval());
 
         defaults.put("appUri", getAppUri(context));
 

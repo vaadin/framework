@@ -41,6 +41,12 @@ public interface Constants {
             + "in web.xml. The default of 1h will be used.\n"
             + "===========================================================";
 
+    static final String WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC = "\n"
+            + "===========================================================\n"
+            + "WARNING: heartbeatInterval has been set to a non integer value "
+            + "in web.xml. The default of 5min will be used.\n"
+            + "===========================================================";
+
     static final String WIDGETSET_MISMATCH_INFO = "\n"
             + "=================================================================\n"
             + "The widgetset in use does not seem to be built for the Vaadin\n"
@@ -58,6 +64,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
+    static final String SERVLET_PARAMETER_HEARTBEAT_RATE = "heartbeatRate";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

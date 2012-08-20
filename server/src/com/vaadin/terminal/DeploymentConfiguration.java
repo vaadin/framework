@@ -153,4 +153,11 @@ public interface DeploymentConfiguration extends Serializable {
      * @return The resource cache time.
      */
     public int getResourceCacheTime();
+
+    /**
+     * Returns the number of seconds between heartbeat requests of a root.
+     * 
+     * @return
+     */
+    public int getHeartbeatInterval();
 }
