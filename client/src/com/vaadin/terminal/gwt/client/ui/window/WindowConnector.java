@@ -46,8 +46,8 @@ import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
-        implements Paintable, BeforeShortcutActionListener,
-        SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
+implements Paintable, BeforeShortcutActionListener,
+SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
@@ -102,7 +102,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
             }
             if (!getWidget().isAttached()) {
                 getWidget().setVisible(false); // hide until
-                                               // possible centering
+                // possible centering
                 getWidget().show();
             }
             if (getState().isResizable() != getWidget().resizable) {
@@ -299,7 +299,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         if (window.centered) {
             window.center();
         }
-        window.sizeOrPositionUpdated();
+        window.positionOrSizeUpdated();
     }
 
     @Override

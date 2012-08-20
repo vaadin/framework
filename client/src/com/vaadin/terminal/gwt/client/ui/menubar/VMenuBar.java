@@ -56,8 +56,8 @@ import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class VMenuBar extends SimpleFocusablePanel implements
-        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-        FocusHandler, SubPartAware {
+CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
+FocusHandler, SubPartAware {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -94,11 +94,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
 
-                @Override
-                public void execute() {
-                    iLayout(true);
-                }
-            });
+        @Override
+        public void execute() {
+            iLayout(true);
+        }
+    });
 
     boolean openRootOnHover;
 
@@ -188,7 +188,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 itemHTML.append("<img src=\""
                         + Util.escapeAttribute(client.translateVaadinUri(item
                                 .getStringAttribute("icon"))) + "\" class=\""
-                        + Icon.CLASSNAME + "\" alt=\"\" />");
+                                + Icon.CLASSNAME + "\" alt=\"\" />");
             }
             String itemText = item.getStringAttribute("text");
             if (!htmlContentAllowed) {
@@ -606,7 +606,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 // popup
                 style.setWidth(contentWidth + Util.getNativeScrollbarSize(),
                         Unit.PX);
-                popup.sizeOrPositionUpdated();
+                popup.positionOrSizeUpdated();
             }
         }
         return top;

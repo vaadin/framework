@@ -44,7 +44,7 @@ import com.vaadin.terminal.gwt.client.ui.Field;
  * 
  */
 public class VTextField extends TextBoxBase implements Field, ChangeHandler,
-        FocusHandler, BlurHandler, KeyDownHandler {
+FocusHandler, BlurHandler, KeyDownHandler {
 
     /**
      * The input node CSS classname.
@@ -114,7 +114,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
 
         if (listenTextChangeEvents
                 && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event
-                        .getTypeInt()) {
+                .getTypeInt()) {
             deferTextChangeEvent();
         }
 
@@ -261,12 +261,32 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
     }
 
     protected void setMaxLength(int newMaxLength) {
-        if (newMaxLength >= 0) {
+        if (newMaxLength >= 0 && newMaxLength != maxLength) {
             maxLength = newMaxLength;
-        } else {
+            updateMaxLength(maxLength);
+        } else if (maxLength != -1) {
             maxLength = -1;
+            updateMaxLength(maxLength);
         }
-        setMaxLengthToElement(newMaxLength);
+
+    }
+
+    /**
+     * This method is reponsible for updating the DOM or otherwise ensuring that
+     * the given max length is enforced. Called when the max length for the
+     * field has changed.
+     * 
+     * @param maxLength
+     *            The new max length
+     */
+    protected void updateMaxLength(int maxLength) {
+        if (maxLength >= 0) {
+            getElement().setPropertyInt("maxLength", maxLength);
+        } else {
+            getElement().removeAttribute("maxLength");
+
+        }
+        setMaxLengthToElement(maxLength);
     }
 
     protected void setMaxLengthToElement(int newMaxLength) {

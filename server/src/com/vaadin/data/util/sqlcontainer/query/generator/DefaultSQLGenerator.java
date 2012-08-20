@@ -327,10 +327,8 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }
-            Object value = cp.getValue() == null ? null : cp.getValue();
-            /* Only include properties whose read-only status can be altered */
-            if (cp.isReadOnlyChangeAllowed() && !cp.isVersionColumn()) {
-                columnToValueMap.put(cp.getPropertyId(), value);
+            if (cp.isPersistent()) {
+                columnToValueMap.put(cp.getPropertyId(), cp.getValue());
             }
         }
         return columnToValueMap;
@@ -345,8 +343,16 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     && cp.getPropertyId().equalsIgnoreCase("rownum")) {
                 continue;
             }
-            Object value = cp.getValue() == null ? null : cp.getValue();
-            if (!cp.isReadOnlyChangeAllowed() || cp.isVersionColumn()) {
+
+            if (cp.isRowIdentifier()) {
+                Object value;
+                if (cp.isPrimaryKey()) {
+                    // If the value of a primary key has changed, its old value
+                    // should be used to identify the row (#9145)
+                    value = cp.getOldValue();
+                } else {
+                    value = cp.getValue();
+                }
                 rowIdentifiers.put(cp.getPropertyId(), value);
             }
         }
