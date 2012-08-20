@@ -86,6 +86,15 @@ public interface ServerConnector extends Connector {
     public HandlerRegistration addStateChangeHandler(StateChangeHandler handler);
 
     /**
+     * Removes a handler that is called whenever any part of the state has been
+     * updated by the server.
+     * 
+     * @param handler
+     *            The handler that should be removed.
+     */
+    public void removeStateChangeHandler(StateChangeHandler handler);
+
+    /**
      * Adds a handler that is called whenever the given part of the state has
      * been updated by the server.
      * 
@@ -98,6 +107,19 @@ public interface ServerConnector extends Connector {
      *         the handler
      */
     public HandlerRegistration addStateChangeHandler(String propertyName,
+            StateChangeHandler handler);
+
+    /**
+     * Removes a handler that is called whenever any part of the state has been
+     * updated by the server.
+     * 
+     * @param propertyName
+     *            the name of the property for which the handler should be
+     *            called
+     * @param handler
+     *            The handler that should be removed.
+     */
+    public void removeStateChangeHandler(String propertyName,
             StateChangeHandler handler);
 
     /**

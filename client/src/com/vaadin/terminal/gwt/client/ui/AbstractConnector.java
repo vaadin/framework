@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,7 +42,7 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChange
  * 
  */
 public abstract class AbstractConnector implements ServerConnector,
-        StateChangeHandler {
+StateChangeHandler {
 
     private ApplicationConnection connection;
     private String id;
@@ -197,10 +197,22 @@ public abstract class AbstractConnector implements ServerConnector,
     }
 
     @Override
+    public void removeStateChangeHandler(StateChangeHandler handler) {
+        ensureHandlerManager().removeHandler(StateChangeEvent.TYPE, handler);
+    }
+
+    @Override
     public HandlerRegistration addStateChangeHandler(String propertyName,
             StateChangeHandler handler) {
         return ensureHandlerManager(propertyName).addHandler(
                 StateChangeEvent.TYPE, handler);
+    }
+
+    @Override
+    public void removeStateChangeHandler(String propertyName,
+            StateChangeHandler handler) {
+        ensureHandlerManager(propertyName).removeHandler(StateChangeEvent.TYPE,
+                handler);
     }
 
     private HandlerManager ensureHandlerManager(String propertyName) {
