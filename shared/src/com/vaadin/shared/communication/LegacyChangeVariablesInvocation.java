@@ -13,13 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.server;
+package com.vaadin.shared.communication;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.communication.MethodInvocation;
 
 public class LegacyChangeVariablesInvocation extends MethodInvocation {
     private Map<String, Object> variableChanges = new HashMap<String, Object>();
@@ -27,7 +26,8 @@ public class LegacyChangeVariablesInvocation extends MethodInvocation {
     public LegacyChangeVariablesInvocation(String connectorId,
             String variableName, Object value) {
         super(connectorId, ApplicationConstants.UPDATE_VARIABLE_INTERFACE,
-                ApplicationConstants.UPDATE_VARIABLE_METHOD);
+                ApplicationConstants.UPDATE_VARIABLE_METHOD, new Object[] {
+                        variableName, new UidlValue(value) });
         setVariableChange(variableName, value);
     }
 
@@ -45,6 +45,13 @@ public class LegacyChangeVariablesInvocation extends MethodInvocation {
 
     public Map<String, Object> getVariableChanges() {
         return variableChanges;
+    }
+
+    @Override
+    public String getLastonlyTag() {
+        assert variableChanges.size() == 1;
+        return super.getLastonlyTag()
+                + variableChanges.keySet().iterator().next();
     }
 
 }

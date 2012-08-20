@@ -15,9 +15,12 @@
  */
 package com.vaadin.shared.ui.root;
 
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
 
 public interface RootServerRpc extends ClickRpc, ServerRpc {
-
+    @Delayed(lastonly = true)
+    public void resize(int viewWidth, int viewHeight, int windowWidth,
+            int windowHeight);
 }

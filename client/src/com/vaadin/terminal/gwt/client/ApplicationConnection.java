@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -54,9 +55,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
@@ -132,7 +133,18 @@ public class ApplicationConnection {
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
-    private ArrayList<MethodInvocation> pendingInvocations = new ArrayList<MethodInvocation>();
+    /**
+     * The pending method invocations that will be send to the server by
+     * {@link #sendPendingCommand}. The key is defined differently based on
+     * whether the method invocation is enqueued with lastonly. With lastonly
+     * enabled, the method signature ( {@link MethodInvocation#getLastonlyTag()}
+     * ) is used as the key to make enable removing a previously enqueued
+     * invocation. Without lastonly, an incremental id based on
+     * {@link #lastInvocationTag} is used to get unique values.
+     */
+    private LinkedHashMap<String, MethodInvocation> pendingInvocations = new LinkedHashMap<String, MethodInvocation>();
+
+    private int lastInvocationTag = 0;
 
     private WidgetSet widgetSet;
 
@@ -155,7 +167,7 @@ public class ApplicationConnection {
     private ApplicationConfiguration configuration;
 
     /** List of pending variable change bursts that must be submitted in order */
-    private final ArrayList<ArrayList<MethodInvocation>> pendingBursts = new ArrayList<ArrayList<MethodInvocation>>();
+    private final ArrayList<LinkedHashMap<String, MethodInvocation>> pendingBursts = new ArrayList<LinkedHashMap<String, MethodInvocation>>();
 
     /** Timer for automatic refirect to SessionExpiredURL */
     private Timer redirectTimer;
@@ -886,12 +898,11 @@ public class ApplicationConnection {
     private void checkForPendingVariableBursts() {
         cleanVariableBurst(pendingInvocations);
         if (pendingBursts.size() > 0) {
-            for (Iterator<ArrayList<MethodInvocation>> iterator = pendingBursts
-                    .iterator(); iterator.hasNext();) {
-                cleanVariableBurst(iterator.next());
+            for (LinkedHashMap<String, MethodInvocation> pendingBurst : pendingBursts) {
+                cleanVariableBurst(pendingBurst);
             }
-            ArrayList<MethodInvocation> nextBurst = pendingBursts.get(0);
-            pendingBursts.remove(0);
+            LinkedHashMap<String, MethodInvocation> nextBurst = pendingBursts
+                    .remove(0);
             buildAndSendVariableBurst(nextBurst, false);
         }
     }
@@ -902,13 +913,15 @@ public class ApplicationConnection {
      * 
      * @param variableBurst
      */
-    private void cleanVariableBurst(ArrayList<MethodInvocation> variableBurst) {
-        for (int i = 1; i < variableBurst.size(); i++) {
-            String id = variableBurst.get(i).getConnectorId();
+    private void cleanVariableBurst(
+            LinkedHashMap<String, MethodInvocation> variableBurst) {
+        Iterator<MethodInvocation> iterator = variableBurst.values().iterator();
+        while (iterator.hasNext()) {
+            String id = iterator.next().getConnectorId();
             if (!getConnectorMap().hasConnector(id)
                     && !getConnectorMap().isDragAndDropPaintable(id)) {
                 // variable owner does not exist anymore
-                variableBurst.remove(i);
+                iterator.remove();
                 VConsole.log("Removed variable from removed component: " + id);
             }
         }
@@ -1693,12 +1706,10 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String connectorId, String variableName,
             Object value, boolean immediate) {
+        boolean lastOnly = !immediate;
         // note that type is now deduced from value
-        // TODO could eliminate invocations of same shared variable setter
-        addMethodInvocationToQueue(new MethodInvocation(connectorId,
-                ApplicationConstants.UPDATE_VARIABLE_INTERFACE,
-                ApplicationConstants.UPDATE_VARIABLE_METHOD, new Object[] {
-                        variableName, new UidlValue(value) }), immediate);
+        addMethodInvocationToQueue(new LegacyChangeVariablesInvocation(
+                connectorId, variableName, value), lastOnly, lastOnly);
     }
 
     /**
@@ -1708,16 +1719,31 @@ public class ApplicationConnection {
      * 
      * @param invocation
      *            RPC method invocation
-     * @param immediate
-     *            true to trigger sending within a short time window (possibly
-     *            combining subsequent calls to a single request), false to let
-     *            the framework delay sending of RPC calls and variable changes
-     *            until the next immediate change
+     * @param delayed
+     *            <code>false</code> to trigger sending within a short time
+     *            window (possibly combining subsequent calls to a single
+     *            request), <code>true</code> to let the framework delay sending
+     *            of RPC calls and variable changes until the next non-delayed
+     *            change
+     * @param lastonly
+     *            <code>true</code> to remove all previously delayed invocations
+     *            of the same method that were also enqueued with lastonly set
+     *            to <code>true</code>. <code>false</code> to add invocation to
+     *            the end of the queue without touching previously enqueued
+     *            invocations.
      */
     public void addMethodInvocationToQueue(MethodInvocation invocation,
-            boolean immediate) {
-        pendingInvocations.add(invocation);
-        if (immediate) {
+            boolean delayed, boolean lastonly) {
+        String tag;
+        if (lastonly) {
+            tag = invocation.getLastonlyTag();
+            assert !tag.matches("\\d+") : "getLastonlyTag value must have at least one non-digit character";
+            pendingInvocations.remove(tag);
+        } else {
+            tag = Integer.toString(lastInvocationTag++);
+        }
+        pendingInvocations.put(tag, invocation);
+        if (!delayed) {
             sendPendingVariableChanges();
         }
     }
@@ -1748,14 +1774,15 @@ public class ApplicationConnection {
     };
     private boolean deferedSendPending = false;
 
-    @SuppressWarnings("unchecked")
     private void doSendPendingVariableChanges() {
         if (applicationRunning) {
             if (hasActiveRequest()) {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
                     pendingBursts.add(pendingInvocations);
-                    pendingInvocations = new ArrayList<MethodInvocation>();
+                    pendingInvocations = new LinkedHashMap<String, MethodInvocation>();
+                    // Keep tag string short
+                    lastInvocationTag = 0;
                 }
             } else {
                 buildAndSendVariableBurst(pendingInvocations, false);
@@ -1776,17 +1803,18 @@ public class ApplicationConnection {
      *            Should we use synchronous request?
      */
     private void buildAndSendVariableBurst(
-            ArrayList<MethodInvocation> pendingInvocations, boolean forceSync) {
+            LinkedHashMap<String, MethodInvocation> pendingInvocations,
+            boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
         while (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
-                Util.logVariableBurst(this, pendingInvocations);
+                Util.logVariableBurst(this, pendingInvocations.values());
             }
 
             JSONArray reqJson = new JSONArray();
 
-            for (MethodInvocation invocation : pendingInvocations) {
+            for (MethodInvocation invocation : pendingInvocations.values()) {
                 JSONArray invocationJson = new JSONArray();
                 invocationJson.set(0,
                         new JSONString(invocation.getConnectorId()));
@@ -1810,6 +1838,8 @@ public class ApplicationConnection {
             req.append(escapeBurstContents(reqJson.toString()));
 
             pendingInvocations.clear();
+            // Keep tag string short
+            lastInvocationTag = 0;
             // Append all the bursts to this synchronous request
             if (forceSync && !pendingBursts.isEmpty()) {
                 pendingInvocations = pendingBursts.get(0);

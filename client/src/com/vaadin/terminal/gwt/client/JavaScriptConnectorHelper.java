@@ -267,7 +267,7 @@ public class JavaScriptConnectorHelper {
         }
         connector.getConnection().addMethodInvocationToQueue(
                 new MethodInvocation(connector.getConnectorId(), iface, method,
-                        parameters), true);
+                        parameters), false, false);
     }
 
     private String findWildcardInterface(String method) {
@@ -298,7 +298,8 @@ public class JavaScriptConnectorHelper {
                 connector.getConnectorId(),
                 "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
                 new Object[] { name, new JSONArray(arguments) });
-        connector.getConnection().addMethodInvocationToQueue(invocation, true);
+        connector.getConnection().addMethodInvocationToQueue(invocation, false,
+                false);
     }
 
     public void setNativeState(JavaScriptObject state) {

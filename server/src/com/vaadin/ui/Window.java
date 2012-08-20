@@ -32,7 +32,6 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
 import com.vaadin.terminal.PaintException;
@@ -75,10 +74,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             fireEvent(new ClickEvent(Window.this, mouseDetails));
         }
     };
-
-    private int browserWindowWidth = -1;
-
-    private int browserWindowHeight = -1;
 
     /**
      * Creates a new unnamed window with a default layout.
@@ -168,20 +163,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         if (variables.containsKey("width")
                 && (getWidthUnits() != Unit.PIXELS || (Integer) variables
                         .get("width") != getWidth())) {
-            sizeHasChanged = true;
-        }
-        Integer browserHeightVar = (Integer) variables
-                .get(RootConstants.BROWSER_HEIGHT_VAR);
-        if (browserHeightVar != null
-                && browserHeightVar.intValue() != browserWindowHeight) {
-            browserWindowHeight = browserHeightVar.intValue();
-            sizeHasChanged = true;
-        }
-        Integer browserWidthVar = (Integer) variables
-                .get(RootConstants.BROWSER_WIDTH_VAR);
-        if (browserWidthVar != null
-                && browserWidthVar.intValue() != browserWindowWidth) {
-            browserWindowWidth = browserWidthVar.intValue();
             sizeHasChanged = true;
         }
 
