@@ -27,6 +27,8 @@ public class AbstractOrderedLayoutState extends AbstractLayoutState {
 
     public HashMap<Connector, ChildComponentData> childData = new HashMap<Connector, ChildComponentData>();
 
+    private int marginsBitmask = 0;
+
     public static class ChildComponentData implements Serializable {
         private int alignmentBitmask = AlignmentInfo.TOP_LEFT.getBitMask();
         private float expandRatio = 0.0f;
@@ -63,6 +65,14 @@ public class AbstractOrderedLayoutState extends AbstractLayoutState {
 
     public void setSpacing(boolean spacing) {
         this.spacing = spacing;
+    }
+
+    public int getMarginsBitmask() {
+        return marginsBitmask;
+    }
+
+    public void setMarginsBitmask(int marginsBitmask) {
+        this.marginsBitmask = marginsBitmask;
     }
 
 }

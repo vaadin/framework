@@ -291,33 +291,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
         requestRepaint();
     }
 
-    /**
-     * Although most layouts support margins, CustomLayout does not. The
-     * behaviour of this layout is determined almost completely by the actual
-     * template.
-     * 
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void setMargin(boolean enabled) {
-        throw new UnsupportedOperationException(
-                "CustomLayout does not support margins.");
-    }
-
-    /**
-     * Although most layouts support margins, CustomLayout does not. The
-     * behaviour of this layout is determined almost completely by the actual
-     * template.
-     * 
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void setMargin(boolean topEnabled, boolean rightEnabled,
-            boolean bottomEnabled, boolean leftEnabled) {
-        throw new UnsupportedOperationException(
-                "CustomLayout does not support margins.");
-    }
-
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Nothing to see here

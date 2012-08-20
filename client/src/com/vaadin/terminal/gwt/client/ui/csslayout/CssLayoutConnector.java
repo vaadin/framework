@@ -23,7 +23,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
-import com.vaadin.shared.ui.VMarginInfo;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
@@ -74,9 +73,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-
-        getWidget().setMarginStyles(
-                new VMarginInfo(getState().getMarginsBitmask()));
 
         for (ComponentConnector child : getChildComponents()) {
             if (!getState().getChildCss().containsKey(child)) {

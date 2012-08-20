@@ -23,7 +23,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.LayoutClickRpc;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -133,9 +133,8 @@ public abstract class AbstractOrderedLayoutConnector extends
             slot.setExpandRatio(expandRatio);
         }
 
-        layout.updateMarginStyleNames(new VMarginInfo(getState()
+        layout.updateMarginStyleNames(new MarginInfo(getState()
                 .getMarginsBitmask()));
-
         layout.updateSpacingStyleName(getState().isSpacing());
 
         getLayoutManager().setNeedsLayout(this);

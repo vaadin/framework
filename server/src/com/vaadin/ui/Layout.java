@@ -18,8 +18,8 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.VMarginInfo;
 import com.vaadin.shared.ui.AlignmentInfo.Bits;
+import com.vaadin.shared.ui.MarginInfo;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the
@@ -31,30 +31,6 @@ import com.vaadin.shared.ui.AlignmentInfo.Bits;
  * @since 3.0
  */
 public interface Layout extends ComponentContainer, Serializable {
-
-    /**
-     * Enable layout margins. Affects all four sides of the layout. This will
-     * tell the client-side implementation to leave extra space around the
-     * layout. The client-side implementation decides the actual amount, and it
-     * can vary between themes.
-     * 
-     * @param enabled
-     */
-    public void setMargin(boolean enabled);
-
-    /**
-     * Enable specific layout margins. This will tell the client-side
-     * implementation to leave extra space around the layout in specified edges,
-     * clockwise from top (top, right, bottom, left). The client-side
-     * implementation decides the actual amount, and it can vary between themes.
-     * 
-     * @param top
-     * @param right
-     * @param bottom
-     * @param left
-     */
-    public void setMargin(boolean top, boolean right, boolean bottom,
-            boolean left);
 
     /**
      * AlignmentHandler is most commonly an advanced {@link Layout} that can
@@ -197,6 +173,19 @@ public interface Layout extends ComponentContainer, Serializable {
      * its components).
      */
     public interface MarginHandler extends Serializable {
+
+        /**
+         * Enable layout margins. Affects all four sides of the layout. This
+         * will tell the client-side implementation to leave extra space around
+         * the layout. The client-side implementation decides the actual amount,
+         * and it can vary between themes.
+         * 
+         * @param enabled
+         *            true if margins should be enabled on all sides, false to
+         *            disable all margins
+         */
+        public void setMargin(boolean enabled);
+
         /**
          * Enable margins for this layout.
          * 
@@ -224,16 +213,4 @@ public interface Layout extends ComponentContainer, Serializable {
         public MarginInfo getMargin();
     }
 
-    @SuppressWarnings("serial")
-    public static class MarginInfo extends VMarginInfo implements Serializable {
-
-        public MarginInfo(boolean enabled) {
-            super(enabled, enabled, enabled, enabled);
-        }
-
-        public MarginInfo(boolean top, boolean right, boolean bottom,
-                boolean left) {
-            super(top, right, bottom, left);
-        }
-    }
 }

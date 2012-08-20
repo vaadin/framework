@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
@@ -393,10 +394,13 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
         }
 
         private void updateMarginsAndSpacing() {
-            testedLayout.setMargin(marginTop.getValue().booleanValue(),
-                    marginRight.getValue().booleanValue(), marginBottom
-                            .getValue().booleanValue(), marginLeft.getValue()
-                            .booleanValue());
+            if (testedLayout instanceof Layout.MarginHandler) {
+                ((Layout.MarginHandler) testedLayout).setMargin(new MarginInfo(
+                        marginTop.getValue().booleanValue(), marginRight
+                                .getValue().booleanValue(), marginBottom
+                                .getValue().booleanValue(), marginLeft
+                                .getValue().booleanValue()));
+            }
             if (testedLayout instanceof Layout.SpacingHandler) {
                 ((Layout.SpacingHandler) testedLayout).setSpacing(spacing
                         .getValue().booleanValue());

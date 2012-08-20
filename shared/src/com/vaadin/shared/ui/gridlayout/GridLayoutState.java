@@ -21,6 +21,7 @@ public class GridLayoutState extends AbstractLayoutState {
     private boolean spacing = false;
     private int rows = 0;
     private int columns = 0;
+    private int marginsBitmask = 0;
 
     public boolean isSpacing() {
         return spacing;
@@ -28,6 +29,14 @@ public class GridLayoutState extends AbstractLayoutState {
 
     public void setSpacing(boolean spacing) {
         this.spacing = spacing;
+    }
+
+    public int getMarginsBitmask() {
+        return marginsBitmask;
+    }
+
+    public void setMarginsBitmask(int marginsBitmask) {
+        this.marginsBitmask = marginsBitmask;
     }
 
     public int getRows() {

@@ -25,6 +25,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
@@ -32,7 +33,8 @@ import com.vaadin.terminal.Sizeable;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier {
+        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
+        Layout.MarginHandler {
 
     private AbstractOrderedLayoutServerRpc rpc = new AbstractOrderedLayoutServerRpc() {
 
@@ -392,4 +394,26 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return components.get(index);
     }
 
+    public void setMargin(boolean enabled) {
+        setMargin(new MarginInfo(enabled));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
+     */
+    public MarginInfo getMargin() {
+        return new MarginInfo(getState().getMarginsBitmask());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
+     */
+    public void setMargin(MarginInfo marginInfo) {
+        getState().setMarginsBitmask(marginInfo.getBitMask());
+        requestRepaint();
+    }
 }
