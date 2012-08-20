@@ -32,6 +32,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JEnumConstant;
 import com.google.gwt.core.ext.typeinfo.JEnumType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracleException;
@@ -59,8 +60,6 @@ import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 public class SerializerGenerator extends Generator {
 
     private static final String SUBTYPE_SEPARATOR = "___";
-    private static String serializerPackageName = SerializerMap.class
-            .getPackage().getName();
 
     @Override
     public String generate(TreeLogger logger, GeneratorContext context,
@@ -75,8 +74,8 @@ public class SerializerGenerator extends Generator {
         String serializerClassName = getSerializerSimpleClassName(type);
         try {
             // Generate class source code
-            generateClass(logger, context, type, serializerPackageName,
-                    serializerClassName);
+            generateClass(logger, context, type,
+                    getSerializerPackageName(type), serializerClassName);
         } catch (Exception e) {
             logger.log(TreeLogger.ERROR, "SerializerGenerator failed for "
                     + type.getQualifiedSourceName(), e);
@@ -465,6 +464,18 @@ public class SerializerGenerator extends Generator {
     }
 
     public static String getFullyQualifiedSerializerClassName(JClassType type) {
-        return serializerPackageName + "." + getSerializerSimpleClassName(type);
+        return getSerializerPackageName(type) + "."
+                + getSerializerSimpleClassName(type);
+    }
+
+    private static String getSerializerPackageName(JClassType type) {
+        JPackage typePackage = type.getPackage();
+        if (typePackage == null) {
+            return SerializerMap.class.getPackage().getName();
+        } else {
+            // What about e.g. java.* packages, can we create classes there or
+            // should we use e.g. com.vaadin.java.*
+            return typePackage.getName();
+        }
     }
 }
