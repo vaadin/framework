@@ -188,8 +188,7 @@ public class VTreeTable extends VScrollTable {
                 if (isTreeCellAdded) {
                     return false;
                 }
-                return curColIndex == colIndexOfHierarchy
-                        + (showRowHeaders ? 1 : 0);
+                return curColIndex == getHierarchyColumnIndex();
             }
 
             @Override
@@ -227,6 +226,23 @@ public class VTreeTable extends VScrollTable {
                 super.onAttach();
                 if (getIndentWidth() < 0) {
                     detectIndent(this);
+                    // If we detect indent here then the size of the hierarchy
+                    // column is still wrong as it has been set when the indent
+                    // was not known.
+                    int w = getCellWidthFromDom(getHierarchyColumnIndex());
+                    if (w >= 0) {
+                        setColWidth(getHierarchyColumnIndex(), w);
+                    }
+                }
+            }
+
+            private int getCellWidthFromDom(int cellIndex) {
+                final Element cell = DOM.getChild(getElement(), cellIndex);
+                String w = cell.getStyle().getProperty("width");
+                if (w == null || "".equals(w) || !w.endsWith("px")) {
+                    return -1;
+                } else {
+                    return Integer.parseInt(w.substring(0, w.length() - 2));
                 }
             }
 
@@ -242,12 +258,19 @@ public class VTreeTable extends VScrollTable {
 
             @Override
             protected void setCellWidth(int cellIx, int width) {
-                if (cellIx == colIndexOfHierarchy + (showRowHeaders ? 1 : 0)) {
+                if (cellIx == getHierarchyColumnIndex()) {
                     // take indentation padding into account if this is the
                     // hierarchy column
-                    width = Math.max(width - getIndent(), 0);
+                    int indent = getIndent();
+                    if (indent != -1) {
+                        width = Math.max(width - getIndent(), 0);
+                    }
                 }
                 super.setCellWidth(cellIx, width);
+            }
+
+            private int getHierarchyColumnIndex() {
+                return colIndexOfHierarchy + (showRowHeaders ? 1 : 0);
             }
 
             private int getIndent() {

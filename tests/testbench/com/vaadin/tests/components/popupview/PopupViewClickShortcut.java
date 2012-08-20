@@ -46,17 +46,17 @@ public class PopupViewClickShortcut extends TestBase {
         l.setWidth(null);
 
         Button b = new Button("Submit " + caption + " (Ctrl+Alt+"
-                + String.valueOf(Character.toChars(keyCode)) + ")",
-                new Button.ClickListener() {
-                    private int i = 5;
+                + (char) keyCode + ")", new Button.ClickListener() {
+            private int i = 5;
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.log("Submitted from "
-                                + event.getButton().getParent().getCaption());
-                        t.addItem(new String[] { "added " + i++ }, i);
-                    }
-                });
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log.log("Submitted from "
+                        + event.getButton().getParent().getCaption());
+                t.addItem(new String[] { "added " + i++ }, i);
+            }
+        });
+
         b.setClickShortcut(keyCode, ModifierKey.CTRL, ModifierKey.ALT);
 
         l.addComponent(t);

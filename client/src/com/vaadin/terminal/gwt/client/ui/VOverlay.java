@@ -42,6 +42,14 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     public static class PositionAndSize {
         private int left, top, width, height;
 
+        public PositionAndSize(int left, int top, int width, int height) {
+            super();
+            setLeft(left);
+            setTop(top);
+            setWidth(width);
+            setHeight(height);
+        }
+
         public int getLeft() {
             return left;
         }
@@ -63,6 +71,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         public void setWidth(int width) {
+            if (width < 0) {
+                width = 0;
+            }
+
             this.width = width;
         }
 
@@ -71,6 +83,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
 
         public void setHeight(int height) {
+            if (height < 0) {
+                height = 0;
+            }
+
             this.height = height;
         }
 
@@ -192,7 +208,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return shadow != null;
     }
 
-    private void removeShim() {
+    private void removeShimElement() {
         if (shimElement != null) {
             shimElement.removeFromParent();
         }
@@ -211,7 +227,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return isShadowEnabled() && shadow.getParentElement() != null;
     }
 
-    private boolean isShimAttached() {
+    private boolean isShimElementAttached() {
         return shimElement != null && shimElement.hasParentElement();
     }
 
@@ -242,11 +258,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         style.setMarginLeft(-adjustByRelativeLeftBodyMargin(), Unit.PX);
         style.setMarginTop(-adjustByRelativeTopBodyMargin(), Unit.PX);
         super.setPopupPosition(left, top);
-        sizeOrPositionUpdated(isAnimationEnabled() ? 0 : 1);
+        positionOrSizeUpdated(isAnimationEnabled() ? 0 : 1);
     }
 
     private IFrameElement getShimElement() {
-        if (shimElement == null) {
+        if (shimElement == null && needsShimElement()) {
             shimElement = Document.get().createIFrameElement();
 
             // Insert shim iframe before the main overlay element. It does not
@@ -318,7 +334,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
-            sizeOrPositionUpdated(1.0);
+            positionOrSizeUpdated(1.0);
         }
     }
 
@@ -328,7 +344,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
         // Always ensure shadow is removed when the overlay is removed.
         removeShadowIfPresent();
-        removeShim();
+        removeShimElement();
     }
 
     @Override
@@ -343,13 +359,13 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        sizeOrPositionUpdated(1.0);
+        positionOrSizeUpdated(1.0);
     }
 
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        sizeOrPositionUpdated(1.0);
+        positionOrSizeUpdated(1.0);
     }
 
     /**
@@ -374,8 +390,16 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * 'setHeight(String)' methods (if not calling super.setWidth/Height).
      * 
      */
-    public void sizeOrPositionUpdated() {
-        sizeOrPositionUpdated(1.0);
+    public void positionOrSizeUpdated() {
+        positionOrSizeUpdated(1.0);
+    }
+
+    /**
+     * @deprecated Call {@link #positionOrSizeUpdated()} instead.
+     */
+    @Deprecated
+    protected void updateShadowSizeAndPosition() {
+        positionOrSizeUpdated();
     }
 
     /**
@@ -388,7 +412,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      *            A value between 0.0 and 1.0, indicating the progress of the
      *            animation (0=start, 1=end).
      */
-    private void sizeOrPositionUpdated(final double progress) {
+    private void positionOrSizeUpdated(final double progress) {
         // Don't do anything if overlay element is not attached
         if (!isAttached()) {
             return;
@@ -413,18 +437,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             getOffsetWidth();
         }
 
-        PositionAndSize positionAndSize = new PositionAndSize();
-        positionAndSize.left = getActualLeft();
-        positionAndSize.top = getActualTop();
-        positionAndSize.width = getOffsetWidth();
-        positionAndSize.height = getOffsetHeight();
-
-        if (positionAndSize.width < 0) {
-            positionAndSize.width = 0;
-        }
-        if (positionAndSize.height < 0) {
-            positionAndSize.height = 0;
-        }
+        PositionAndSize positionAndSize = new PositionAndSize(getActualLeft(),
+                getActualTop(), getOffsetWidth(), getOffsetHeight());
 
         // Animate the size
         positionAndSize.setAnimationFromCenterProgress(progress);
@@ -441,29 +455,31 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
         // Update correct values
         if (isShadowEnabled()) {
-            updateSizeAndPosition(shadow, positionAndSize);
+            updatePositionAndSize(shadow, positionAndSize);
             DOM.setStyleAttribute(shadow, "zIndex", zIndex);
             DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
                     : "");
         }
-        updateSizeAndPosition((Element) Element.as(getShimElement()),
-                positionAndSize);
+        if (needsShimElement()) {
+            updatePositionAndSize((Element) Element.as(getShimElement()),
+                    positionAndSize);
+        }
 
         // Opera fix, part 2 (ticket #2704)
         if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // We'll fix the height of all the middle elements
             DOM.getChild(shadow, 3)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 3).getOffsetHeight());
+            .getStyle()
+            .setPropertyPx("height",
+                    DOM.getChild(shadow, 3).getOffsetHeight());
             DOM.getChild(shadow, 4)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 4).getOffsetHeight());
+            .getStyle()
+            .setPropertyPx("height",
+                    DOM.getChild(shadow, 4).getOffsetHeight());
             DOM.getChild(shadow, 5)
-                    .getStyle()
-                    .setPropertyPx("height",
-                            DOM.getChild(shadow, 5).getOffsetHeight());
+            .getStyle()
+            .setPropertyPx("height",
+                    DOM.getChild(shadow, 5).getOffsetHeight());
         }
 
         // Attach to dom if not there already
@@ -471,25 +487,37 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             RootPanel.get().getElement().insertBefore(shadow, getElement());
             sinkShadowEvents();
         }
-        if (!isShimAttached()) {
+        if (needsShimElement() && !isShimElementAttached()) {
             RootPanel.get().getElement()
-                    .insertBefore(shimElement, getElement());
+            .insertBefore(getShimElement(), getElement());
         }
 
     }
 
-    private void updateSizeAndPosition(Element e,
+    /**
+     * Returns true if we should add a shim iframe below the overlay to deal
+     * with zindex issues with PDFs and applets. Can be overriden to disable
+     * shim iframes if they are not needed.
+     * 
+     * @return true if a shim iframe should be added, false otherwise
+     */
+    protected boolean needsShimElement() {
+        BrowserInfo info = BrowserInfo.get();
+        return info.isIE() && info.isBrowserVersionNewerOrEqual(8, 0);
+    }
+
+    private void updatePositionAndSize(Element e,
             PositionAndSize positionAndSize) {
-        e.getStyle().setLeft(positionAndSize.left, Unit.PX);
-        e.getStyle().setTop(positionAndSize.top, Unit.PX);
-        e.getStyle().setWidth(positionAndSize.width, Unit.PX);
-        e.getStyle().setHeight(positionAndSize.height, Unit.PX);
+        e.getStyle().setLeft(positionAndSize.getLeft(), Unit.PX);
+        e.getStyle().setTop(positionAndSize.getTop(), Unit.PX);
+        e.getStyle().setWidth(positionAndSize.getWidth(), Unit.PX);
+        e.getStyle().setHeight(positionAndSize.getHeight(), Unit.PX);
     }
 
     protected class ResizeAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {
-            sizeOrPositionUpdated(progress);
+            positionOrSizeUpdated(progress);
         }
     }
 

@@ -19,6 +19,10 @@ package com.vaadin.terminal.gwt.client.ui.textarea;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -38,10 +42,17 @@ import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 public class VTextArea extends VTextField {
     public static final String CLASSNAME = "v-textarea";
     private boolean wordwrap = true;
+    private MaxLengthHandler maxLengthHandler = new MaxLengthHandler();
+    private boolean browserSupportsMaxLengthAttribute = browserSupportsMaxLengthAttribute();
 
     public VTextArea() {
         super(DOM.createTextArea());
         setStyleName(CLASSNAME);
+        if (!browserSupportsMaxLengthAttribute) {
+            addKeyUpHandler(maxLengthHandler);
+            addChangeHandler(maxLengthHandler);
+            sinkEvents(Event.ONPASTE);
+        }
     }
 
     public TextAreaElement getTextAreaElement() {
@@ -52,22 +63,28 @@ public class VTextArea extends VTextField {
         getTextAreaElement().setRows(rows);
     }
 
-    @Override
-    protected void setMaxLength(int newMaxLength) {
-        super.setMaxLength(newMaxLength);
+    private class MaxLengthHandler implements KeyUpHandler, ChangeHandler {
 
-        boolean hasMaxLength = (newMaxLength >= 0);
-
-        if (hasMaxLength) {
-            sinkEvents(Event.ONKEYUP);
-        } else {
-            unsinkEvents(Event.ONKEYUP);
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            enforceMaxLength();
         }
+
+        public void onPaste(Event event) {
+            enforceMaxLength();
+        }
+
+        @Override
+        public void onChange(ChangeEvent event) {
+            // Opera does not support paste events so this enforces max length
+            // for Opera.
+            enforceMaxLength();
+        }
+
     }
 
-    @Override
-    public void onBrowserEvent(Event event) {
-        if (getMaxLength() >= 0 && event.getTypeInt() == Event.ONKEYUP) {
+    protected void enforceMaxLength() {
+        if (getMaxLength() >= 0) {
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
@@ -77,8 +94,44 @@ public class VTextArea extends VTextField {
                 }
             });
         }
-        super.onBrowserEvent(event);
     }
+
+    protected boolean browserSupportsMaxLengthAttribute() {
+        BrowserInfo info = BrowserInfo.get();
+        if (info.isFirefox() && info.isBrowserVersionNewerOrEqual(4, 0)) {
+            return true;
+        }
+        if (info.isSafari() && info.isBrowserVersionNewerOrEqual(5, 0)) {
+            return true;
+        }
+        if (info.isIE() && info.isBrowserVersionNewerOrEqual(10, 0)) {
+            return true;
+        }
+        if (info.isAndroid() && info.isBrowserVersionNewerOrEqual(2, 3)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void updateMaxLength(int maxLength) {
+        if (browserSupportsMaxLengthAttribute) {
+            super.updateMaxLength(maxLength);
+        } else {
+            // Events handled by MaxLengthHandler. This call enforces max length
+            // when the max length value has changed
+            enforceMaxLength();
+        }
+    }
+
+    @Override
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (event.getTypeInt() == Event.ONPASTE) {
+            maxLengthHandler.onPaste(event);
+        }
+    }
+
 
     @Override
     public int getCursorPos() {

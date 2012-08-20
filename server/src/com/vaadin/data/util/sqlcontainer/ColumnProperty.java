@@ -20,6 +20,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 
 /**
  * ColumnProperty represents the value of one column in a RowItem. In addition
@@ -47,6 +48,7 @@ final public class ColumnProperty implements Property {
     private boolean modified;
 
     private boolean versionColumn;
+    private boolean primaryKey = false;
 
     /**
      * Prevent instantiation without required parameters.
@@ -55,9 +57,50 @@ final public class ColumnProperty implements Property {
     private ColumnProperty() {
     }
 
+    /**
+     * Deprecated constructor for ColumnProperty. If this is used the primary
+     * keys are not identified correctly in some cases for some databases (i.e.
+     * Oracle). See http://dev.vaadin.com/ticket/9145.
+     * 
+     * @param propertyId
+     * @param readOnly
+     * @param allowReadOnlyChange
+     * @param nullable
+     * @param value
+     * @param type
+     * 
+     * @deprecated
+     */
+    @Deprecated
     public ColumnProperty(String propertyId, boolean readOnly,
             boolean allowReadOnlyChange, boolean nullable, Object value,
             Class<?> type) {
+        this(propertyId, readOnly, allowReadOnlyChange, nullable, false, value,
+                type);
+    }
+
+    /**
+     * Creates a new ColumnProperty instance.
+     * 
+     * @param propertyId
+     *            The ID of this property.
+     * @param readOnly
+     *            Whether this property is read-only.
+     * @param allowReadOnlyChange
+     *            Whether the read-only status of this property can be changed.
+     * @param nullable
+     *            Whether this property accepts null values.
+     * @param primaryKey
+     *            Whether this property corresponds to a database primary key.
+     * @param value
+     *            The value of this property.
+     * @param type
+     *            The type of this property.
+     */
+    public ColumnProperty(String propertyId, boolean readOnly,
+            boolean allowReadOnlyChange, boolean nullable, boolean primaryKey,
+            Object value, Class<?> type) {
+
         if (propertyId == null) {
             throw new IllegalArgumentException("Properties must be named.");
         }
@@ -71,8 +114,15 @@ final public class ColumnProperty implements Property {
         this.allowReadOnlyChange = allowReadOnlyChange;
         this.nullable = nullable;
         this.readOnly = readOnly;
+        this.primaryKey = primaryKey;
     }
 
+    /**
+     * Returns the current value for this property. To get the previous value
+     * (if one exists) for a modified property use {@link #getOldValue()}.
+     * 
+     * @return
+     */
     @Override
     public Object getValue() {
         if (isModified()) {
@@ -81,8 +131,20 @@ final public class ColumnProperty implements Property {
         return value;
     }
 
+    /**
+     * Returns the original non-modified value of this property if it has been
+     * modified.
+     * 
+     * @return The original value if <code>isModified()</code> is true,
+     *         <code>getValue()</code> otherwise.
+     */
+    public Object getOldValue() {
+        return value;
+    }
+
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException {
+    public void setValue(Object newValue) throws ReadOnlyException,
+    ConversionException {
         if (newValue == null && !nullable) {
             throw new NotNullableException(
                     "Null values are not allowed for this property.");
@@ -158,6 +220,17 @@ final public class ColumnProperty implements Property {
         return readOnly;
     }
 
+    /**
+     * Returns whether the read-only status of this property can be changed
+     * using {@link #setReadOnly(boolean)}.
+     * <p>
+     * Used to prevent setting to read/write mode a property that is not allowed
+     * to be written by the underlying database. Also used for values like
+     * VERSION and AUTO_INCREMENT fields that might be set to read-only by the
+     * container but the database still allows writes.
+     * 
+     * @return true if the read-only status can be changed, false otherwise.
+     */
     public boolean isReadOnlyChangeAllowed() {
         return allowReadOnlyChange;
     }
@@ -167,6 +240,10 @@ final public class ColumnProperty implements Property {
         if (allowReadOnlyChange) {
             readOnly = newStatus;
         }
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey;
     }
 
     public String getPropertyId() {
@@ -211,6 +288,32 @@ final public class ColumnProperty implements Property {
 
     public boolean isNullable() {
         return nullable;
+    }
+
+    /**
+     * Return whether the value of this property should be persisted to the
+     * database.
+     * 
+     * @return true if the value should be written to the database, false
+     *         otherwise.
+     */
+    public boolean isPersistent() {
+        if (isVersionColumn()) {
+            return false;
+        } else if (isReadOnlyChangeAllowed() && !isReadOnly()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns whether or not this property is used as a row identifier.
+     * 
+     * @return true if the property is a row identifier, false otherwise.
+     */
+    public boolean isRowIdentifier() {
+        return isPrimaryKey() || isVersionColumn();
     }
 
     /**
