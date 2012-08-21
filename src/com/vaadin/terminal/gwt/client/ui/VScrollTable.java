@@ -5517,6 +5517,27 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 return false;
             }
 
+            /**
+             * Checks if the row represented by the row key has been selected
+             * 
+             * @param key
+             *            The generated row key
+             */
+            private boolean rowKeyIsSelected(int rowKey) {
+                // Check single selections
+                if (selectedRowKeys.contains("" + rowKey)) {
+                    return true;
+                }
+
+                // Check range selections
+                for (SelectionRange r : selectedRowRanges) {
+                    if (r.inRange(getRenderedRowByKey("" + rowKey))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             protected void startRowDrag(Event event, final int type,
                     Element targetTdOrTr) {
                 VTransferable transferable = new VTransferable();
@@ -5534,9 +5555,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VDragEvent ev = VDragAndDropManager.get().startDrag(
                         transferable, event, true);
                 if (dragmode == DRAGMODE_MULTIROW && isMultiSelectModeAny()
-                        && selectedRowKeys.contains("" + rowKey)) {
+                        && rowKeyIsSelected(rowKey)) {
+
+                    // Create a drag image of ALL rows
                     ev.createDragImage(
                             (Element) scrollBody.tBodyElement.cast(), true);
+
+                    // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
                     int i = 0;
                     for (Iterator<Widget> iterator = scrollBody.iterator(); iterator
@@ -5544,7 +5569,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         VScrollTableRow next = (VScrollTableRow) iterator
                                 .next();
                         Element child = (Element) dragImage.getChild(i++);
-                        if (!selectedRowKeys.contains("" + next.rowKey)) {
+                        if (!rowKeyIsSelected(next.rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }
