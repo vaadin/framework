@@ -4,39 +4,35 @@
 
 package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
+import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 
 public abstract class TypeVisitor {
-    private JClassType serverConnector;
-    private JClassType componentConnector;
-
     public void init(TypeOracle oracle) throws NotFoundException {
-        serverConnector = oracle.getType(ServerConnector.class.getName());
-        componentConnector = oracle.getType(ComponentConnector.class.getName());
+        // Default does nothing
     }
 
-    public abstract void visit(JClassType type, ConnectorBundle bundle)
-            throws NotFoundException;
-
-    protected boolean isConnectedConnector(JClassType type) {
-        return serverConnector.isAssignableFrom(type)
-                && type.isAnnotationPresent(Connect.class);
+    public void visitConnector(TreeLogger logger, JClassType type,
+            ConnectorBundle bundle) {
+        // Default does nothing
     }
 
-    protected boolean isConnectedComponentConnector(JClassType type) {
-        return componentConnector.isAssignableFrom(type)
-                && type.isAnnotationPresent(Connect.class);
+    public void visitClientRpc(TreeLogger logger, JClassType type,
+            ConnectorBundle bundle) {
+        // Default does nothing
     }
 
-    protected JMethod getInheritedMethod(JClassType type, String methodName,
-            JType... params) throws NotFoundException {
+    public void visitServerRpc(TreeLogger logger, JClassType type,
+            ConnectorBundle bundle) {
+        // Default does nothing
+    }
+
+    protected JMethod findInheritedMethod(JClassType type, String methodName,
+            JType... params) {
 
         JClassType currentType = type;
         while (currentType != null) {
@@ -55,6 +51,7 @@ public abstract class TypeVisitor {
             }
         }
 
-        throw new NotFoundException(methodName + " not found in " + type);
+        return null;
     }
+
 }

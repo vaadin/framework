@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -259,22 +258,26 @@ public class ConnectorBundleLoaderFactory extends Generator {
         Collection<TypeVisitor> visitors = getVisitors(typeOracle);
 
         ConnectorBundle eagerBundle = new ConnectorBundle(
-                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, visitors);
+        TreeLogger eagerLogger = logger.branch(Type.TRACE,
+                "Populating eager bundle");
 
         // Eager connectors and all RPC interfaces are loaded by default
-        eagerBundle.visitTypes(logger,
-                connectorsByLoadStyle.get(LoadStyle.EAGER), visitors);
-        eagerBundle.visitSubTypes(logger,
-                typeOracle.getType(ClientRpc.class.getName()), visitors);
-        eagerBundle.visitSubTypes(logger,
-                typeOracle.getType(ServerRpc.class.getName()), visitors);
+        eagerBundle.processTypes(eagerLogger,
+                connectorsByLoadStyle.get(LoadStyle.EAGER));
+        eagerBundle.processSubTypes(eagerLogger,
+                typeOracle.getType(ClientRpc.class.getName()));
+        eagerBundle.processSubTypes(eagerLogger,
+                typeOracle.getType(ServerRpc.class.getName()));
 
         bundles.add(eagerBundle);
 
         ConnectorBundle deferredBundle = new ConnectorBundle(
                 ConnectorBundleLoader.DEFERRED_BUNDLE_NAME, eagerBundle);
-        deferredBundle.visitTypes(logger,
-                connectorsByLoadStyle.get(LoadStyle.DEFERRED), visitors);
+        TreeLogger deferredLogger = logger.branch(Type.TRACE,
+                "Populating deferred bundle");
+        deferredBundle.processTypes(deferredLogger,
+                connectorsByLoadStyle.get(LoadStyle.DEFERRED));
 
         bundles.add(deferredBundle);
 
@@ -282,7 +285,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
         for (JClassType type : lazy) {
             ConnectorBundle bundle = new ConnectorBundle(type.getName(),
                     deferredBundle);
-            bundle.visitTypes(logger, Collections.singleton(type), visitors);
+            TreeLogger subLogger = logger.branch(Type.TRACE, "Populating "
+                    + type.getName() + " bundle");
+            bundle.processType(subLogger, type);
 
             bundles.add(bundle);
         }
