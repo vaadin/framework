@@ -208,6 +208,9 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
+        // Assuming Root data is eagerly loaded
+        ConnectorBundleLoader.get().loadBundle(
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
         rootConnector = GWT.create(RootConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
@@ -240,10 +243,6 @@ public class ApplicationConnection {
         initializeTestbenchHooks(componentLocator, appRootPanelName);
 
         initializeClientHooks();
-
-        // Assuming Root data is eagerly loaded
-        ConnectorBundleLoader.get().loadBundle(
-                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
 
         rootConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();

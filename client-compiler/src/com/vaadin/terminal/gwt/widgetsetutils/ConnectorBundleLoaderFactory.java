@@ -28,17 +28,22 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.InvokationHandler;
+import com.vaadin.terminal.gwt.client.metadata.ProxyHandler;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataBundle;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataStore;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.TypeVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.WidgetInitVisitor;
@@ -166,6 +171,112 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeReturnTypes(w, bundle);
         writeInvokers(w, bundle);
         writeParamTypes(w, bundle);
+        writeProxys(w, bundle);
+        wirteDelayedInfo(w, bundle);
+    }
+
+    private void wirteDelayedInfo(SourceWriter w, ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> needsDelayedInfo = bundle
+                .getNeedsDelayedInfo();
+        Set<Entry<JClassType, Set<JMethod>>> entrySet = needsDelayedInfo
+                .entrySet();
+        for (Entry<JClassType, Set<JMethod>> entry : entrySet) {
+            JClassType type = entry.getKey();
+            Set<JMethod> methods = entry.getValue();
+            for (JMethod method : methods) {
+                Delayed annotation = method.getAnnotation(Delayed.class);
+                if (annotation != null) {
+                    w.print("store.setDelayed(");
+                    printClassLiteral(w, type);
+                    w.print(", \"");
+                    w.print(escape(method.getName()));
+                    w.println("\");");
+
+                    if (annotation.lastonly()) {
+                        w.print("store.setLastonly(");
+                        printClassLiteral(w, type);
+                        w.print(", \"");
+                        w.print(escape(method.getName()));
+                        w.println("\");");
+                    }
+                }
+            }
+        }
+    }
+
+    private void writeProxys(SourceWriter w, ConnectorBundle bundle) {
+        Set<JClassType> needsProxySupport = bundle.getNeedsProxySupport();
+        for (JClassType type : needsProxySupport) {
+            w.print("store.setProxyHandler(");
+            printClassLiteral(w, type);
+            w.print(", new ");
+            w.print(ProxyHandler.class.getCanonicalName());
+            w.println("() {");
+            w.indent();
+
+            w.println("public Object createProxy(final "
+                    + InvokationHandler.class.getName() + " handler) {");
+            w.indent();
+
+            w.print("return new ");
+            w.print(type.getQualifiedSourceName());
+            w.println("() {");
+            w.indent();
+
+            JMethod[] methods = type.getOverridableMethods();
+            for (JMethod method : methods) {
+                if (method.isAbstract()) {
+                    w.print("public ");
+                    w.print(method.getReturnType().getQualifiedSourceName());
+                    w.print(" ");
+                    w.print(method.getName());
+                    w.print("(");
+
+                    JType[] types = method.getParameterTypes();
+                    for (int i = 0; i < types.length; i++) {
+                        if (i != 0) {
+                            w.print(", ");
+                        }
+                        w.print(types[i].getQualifiedSourceName());
+                        w.print(" p");
+                        w.print(Integer.toString(i));
+                    }
+
+                    w.println(") {");
+                    w.indent();
+
+                    if (!method.getReturnType().getQualifiedSourceName()
+                            .equals("void")) {
+                        w.print("return ");
+                    }
+
+                    w.print("handler.invoke(this, ");
+                    w.print(TypeData.class.getCanonicalName());
+                    w.print(".getType(");
+                    printClassLiteral(w, type);
+                    w.print(").getMethod(\"");
+                    w.print(escape(method.getName()));
+                    w.print("\"), new Object [] {");
+                    for (int i = 0; i < types.length; i++) {
+                        w.print("p" + i + ", ");
+                    }
+                    w.println("});");
+
+                    w.outdent();
+                    w.println("}");
+                }
+            }
+
+            w.outdent();
+            w.println("};");
+
+            w.outdent();
+            w.println("}");
+
+            w.outdent();
+            w.println("});");
+
+        }
     }
 
     private void writeParamTypes(SourceWriter w, ConnectorBundle bundle) {
@@ -176,11 +287,11 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
             Set<JMethod> methods = entry.getValue();
             for (JMethod method : methods) {
-                w.println("store.setParamTypes(");
+                w.print("store.setParamTypes(");
                 printClassLiteral(w, type);
                 w.print(", \"");
                 w.print(escape(method.getName()));
-                w.println("\", new Type[] {");
+                w.print("\", new Type[] {");
 
                 for (JType parameter : method.getParameterTypes()) {
                     ConnectorBundleLoaderFactory.writeTypeCreator(w, parameter);
@@ -272,7 +383,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         for (JClassType type : constructors) {
             w.print("store.setConstructor(");
             printClassLiteral(w, type);
-            w.print(", new Invoker() {");
+            w.println(", new Invoker() {");
             w.indent();
 
             w.println("public Object invoke(Object target, Object[] params) {");
@@ -380,7 +491,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
             throws NotFoundException {
         List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
                 new ConnectorInitVisitor(), new StateInitVisitor(),
-                new WidgetInitVisitor(), new ClientRpcVisitor());
+                new WidgetInitVisitor(), new ClientRpcVisitor(),
+                new ServerRpcVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }

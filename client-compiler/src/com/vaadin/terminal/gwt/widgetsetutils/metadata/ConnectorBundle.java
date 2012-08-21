@@ -36,8 +36,11 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsReturnType = new HashMap<JClassType, Set<JMethod>>();
 
     private final Collection<TypeVisitor> visitors;
+
+    private final Set<JClassType> needsProxySupport = new HashSet<JClassType>();
     private final Map<JClassType, Set<JMethod>> needsInvoker = new HashMap<JClassType, Set<JMethod>>();
     private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
+    private final Map<JClassType, Set<JMethod>> needsDelayedInfo = new HashMap<JClassType, Set<JMethod>>();
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
             Collection<TypeVisitor> visitors) {
@@ -267,5 +270,45 @@ public class ConnectorBundle {
 
     public Map<JClassType, Set<JMethod>> getNeedsParamTypes() {
         return Collections.unmodifiableMap(needsParamTypes);
+    }
+
+    public void setNeedsProxySupport(JClassType type) {
+        if (!isNeedsProxySupport(type)) {
+            ensureVisited(type);
+            needsProxySupport.add(type);
+        }
+    }
+
+    private boolean isNeedsProxySupport(JClassType type) {
+        if (needsProxySupport.contains(type)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsProxySupport(type);
+        }
+    }
+
+    public Set<JClassType> getNeedsProxySupport() {
+        return Collections.unmodifiableSet(needsProxySupport);
+    }
+
+    public void setNeedsDelayedInfo(JClassType type, JMethod method) {
+        if (!isNeedsDelayedInfo(type, method)) {
+            ensureVisited(type);
+            addMapping(needsDelayedInfo, type, method);
+        }
+    }
+
+    private boolean isNeedsDelayedInfo(JClassType type, JMethod method) {
+        if (hasMapping(needsDelayedInfo, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsDelayedInfo(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsDelayedInfo() {
+        return Collections.unmodifiableMap(needsDelayedInfo);
     }
 }

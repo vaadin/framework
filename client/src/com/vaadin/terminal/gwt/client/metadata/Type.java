@@ -76,4 +76,10 @@ public class Type {
         return getSignature().hashCode();
     }
 
+    public Object createProxy(InvokationHandler invokationHandler)
+            throws NoDataException {
+        return TypeDataStore.get().getProxyHandler(this)
+                .createProxy(invokationHandler);
+    }
+
 }

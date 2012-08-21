@@ -41,20 +41,6 @@
 			class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory" />
 	</generate-with>
 
-	<!-- Generate client side proxies for client to server RPC interfaces -->
-	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyGenerator">
-		<when-type-assignable
-			class="com.vaadin.shared.communication.ServerRpc" />
-	</generate-with>
-
-	<!-- Generate client side proxies for client to server RPC interfaces -->
-	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.RpcProxyCreatorGenerator">
-		<when-type-assignable
-			class="com.vaadin.terminal.gwt.client.communication.RpcProxy.RpcProxyCreator" />
-	</generate-with>
-	
 	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory">
 		<when-type-assignable class="com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader" />
 	</generate-with>

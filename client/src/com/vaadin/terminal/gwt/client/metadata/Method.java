@@ -56,8 +56,16 @@ public class Method {
         return getSignature().hashCode();
     }
 
-    public Type[] getParameterTypes() {
+    public Type[] getParameterTypes() throws NoDataException {
         return TypeDataStore.getParamTypes(this);
+    }
+
+    public boolean isDelayed() {
+        return TypeDataStore.isDelayed(this);
+    }
+
+    public boolean isLastonly() {
+        return TypeDataStore.isLastonly(this);
     }
 
 }

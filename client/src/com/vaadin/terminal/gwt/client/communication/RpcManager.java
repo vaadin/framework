@@ -76,14 +76,14 @@ public class RpcManager {
 
     public Type[] getParameterTypes(MethodInvocation invocation) {
         Method method = getMethod(invocation);
-        Type[] parameterTypes = method.getParameterTypes();
-        if (parameterTypes == null) {
+        try {
+            Type[] parameterTypes = method.getParameterTypes();
+            return parameterTypes;
+        } catch (NoDataException e) {
             throw new IllegalStateException("There is no information about "
                     + method.getSignature()
-                    + ". Did you remember to compile the right widgetset?");
-
+                    + ". Did you remember to compile the right widgetset?", e);
         }
-        return parameterTypes;
     }
 
     public void parseAndApplyInvocation(JSONArray rpcCall,
