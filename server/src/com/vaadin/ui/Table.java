@@ -4470,7 +4470,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * would support this.
      * 
      * @return True iff sorting is disabled.
-     * @deprecated Use {@link #isSortEnabled()} instead
+     * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
     @Deprecated
     public boolean isSortDisabled() {
@@ -4491,7 +4491,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param sortDisabled
      *            True iff sorting is disabled.
-     * @deprecated Use {@link #setSortEnabled(boolean)} instead
+     * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
      */
     @Deprecated
     public void setSortDisabled(boolean sortDisabled) {
