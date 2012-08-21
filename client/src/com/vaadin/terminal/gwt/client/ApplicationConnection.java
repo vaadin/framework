@@ -193,6 +193,45 @@ public class ApplicationConnection {
 
     private final RpcManager rpcManager;
 
+    /**
+     * If renderingLocks contains any objects, rendering is to be suspended
+     * until the collection is empty or a timeout has occurred.
+     */
+    private Set<Object> renderingLocks = new HashSet<Object>();
+
+    /**
+     * Data structure holding information about pending UIDL messages.
+     */
+    private class PendingUIDLMessage {
+        private Date start;
+        private String jsonText;
+        private ValueMap json;
+
+        public PendingUIDLMessage(Date start, String jsonText, ValueMap json) {
+            this.start = start;
+            this.jsonText = jsonText;
+            this.json = json;
+        }
+
+        public Date getStart() {
+            return start;
+        }
+
+        public String getJsonText() {
+            return jsonText;
+        }
+
+        public ValueMap getJson() {
+            return json;
+        }
+    }
+
+    /** Contains all UIDL messages received while the rendering is suspended */
+    private List<PendingUIDLMessage> pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
+
+    /** The max timeout the rendering phase may be suspended */
+    private static final int MAX_SUSPENDED_TIMEOUT = 5000;
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -1010,6 +1049,17 @@ public class ApplicationConnection {
 
     protected void handleUIDLMessage(final Date start, final String jsonText,
             final ValueMap json) {
+        if (!renderingLocks.isEmpty()) {
+            // Some component is doing something that can't be interrupted
+            // (e.g. animation that should be smooth). Enqueue the UIDL
+            // message for later processing.
+            VConsole.log("Postponing UIDL handling due to lock...");
+            pendingUIDLMessages.add(new PendingUIDLMessage(start, jsonText,
+                    json));
+            forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
+            return;
+        }
+
         VConsole.log("Handling message from server");
         // Handle redirect
         if (json.containsKey("redirect")) {
@@ -2753,4 +2803,55 @@ public class ApplicationConnection {
             callback.onError(null, re);
         }
     }
+
+    /**
+     * Timer used to make sure that no misbehaving components can lock the
+     * rendering phase forever.
+     */
+    Timer forceHandleMessage = new Timer() {
+        @Override
+        public void run() {
+            VConsole.log("WARNING: rendering was never resumed, forcing reload...");
+            renderingLocks.clear();
+            handlePendingMessages();
+        }
+    };
+
+    /**
+     * This method can be used to postpone rendering of a response for a short
+     * period of time (e.g. to avoid the rendering process during animation).
+     * 
+     * @param lock
+     */
+    public void suspendRendering(Object lock) {
+        renderingLocks.add(lock);
+    }
+
+    /**
+     * Resumes the rendering process once all locks have been removed.
+     * 
+     * @param lock
+     */
+    public void resumeRendering(Object lock) {
+        VConsole.log("...resuming UIDL handling.");
+        renderingLocks.remove(lock);
+        if (renderingLocks.isEmpty()) {
+            VConsole.log("No more rendering locks, rendering pending requests.");
+            forceHandleMessage.cancel();
+            handlePendingMessages();
+        }
+    }
+
+    /**
+     * Handles all pending UIDL messages queued while the rendering was
+     * suspended.
+     */
+    private void handlePendingMessages() {
+        for (PendingUIDLMessage pending : pendingUIDLMessages) {
+            handleUIDLMessage(pending.getStart(), pending.getJsonText(),
+                    pending.getJson());
+        }
+        pendingUIDLMessages.clear();
+    }
+
 }
