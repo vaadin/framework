@@ -256,10 +256,10 @@ public class SerializerGenerator extends Generator {
         JType componentType = type.getComponentType();
 
         sourceWriter.print("value[i] = ("
-                + GeneratedRpcMethodProviderGenerator
+                + ConnectorBundleLoaderFactory
                         .getBoxedTypeName(componentType) + ") "
                 + JsonDecoder.class.getName() + ".decodeValue(");
-        GeneratedRpcMethodProviderGenerator.writeTypeCreator(sourceWriter,
+        ConnectorBundleLoaderFactory.writeTypeCreator(sourceWriter,
                 componentType);
         sourceWriter.print(", jsonArray.get(i), null, connection)");
 
@@ -320,7 +320,7 @@ public class SerializerGenerator extends Generator {
             // connection));
             sourceWriter.print("target." + setterName + "((" + fieldType + ") "
                     + JsonDecoder.class.getName() + ".decodeValue(");
-            GeneratedRpcMethodProviderGenerator.writeTypeCreator(sourceWriter,
+            ConnectorBundleLoaderFactory.writeTypeCreator(sourceWriter,
                     setterParameterType);
             sourceWriter.println(", " + jsonFieldName
                     + ", referenceValue, connection));");

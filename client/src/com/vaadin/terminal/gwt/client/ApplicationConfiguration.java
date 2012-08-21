@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Window;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
@@ -398,8 +399,14 @@ public class ApplicationConfiguration implements EntryPoint {
             Integer currentTag = Integer.valueOf(tag);
             while (type == null && currentTag != null) {
                 String serverSideClassNameForTag = getServerSideClassNameForTag(currentTag);
-                type = (Class<? extends ServerConnector>) TypeData
-                        .getClass(serverSideClassNameForTag);
+                if (TypeData.hasIdentifier(serverSideClassNameForTag)) {
+                    try {
+                        type = (Class<? extends ServerConnector>) TypeData
+                                .getClass(serverSideClassNameForTag);
+                    } catch (NoDataException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 currentTag = getParentTag(currentTag.intValue());
             }
             if (type == null) {

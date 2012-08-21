@@ -13,7 +13,7 @@ public class Property {
         this.name = name;
     }
 
-    public Object getValue(Object bean) {
+    public Object getValue(Object bean) throws NoDataException {
         return TypeDataStore.getGetter(this).invoke(bean, null);
     }
 

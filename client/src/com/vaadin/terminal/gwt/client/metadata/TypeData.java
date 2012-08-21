@@ -10,11 +10,11 @@ public class TypeData {
         return TypeDataStore.getType(type);
     }
 
-    public static Type getType(String identifier) {
-        return TypeDataStore.getType(getClass(identifier));
+    public static Class<?> getClass(String identifier) throws NoDataException {
+        return TypeDataStore.getClass(identifier);
     }
 
-    public static Class<?> getClass(String identifier) {
-        return TypeDataStore.getClass(identifier);
+    public static boolean hasIdentifier(String identifier) {
+        return TypeDataStore.hasIdentifier(identifier);
     }
 }

@@ -22,6 +22,8 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
@@ -34,6 +36,7 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataBundle;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataStore;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.StateInitVisitor;
@@ -161,6 +164,85 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
         writeReturnTypes(w, bundle);
+        writeInvokers(w, bundle);
+        writeParamTypes(w, bundle);
+    }
+
+    private void writeParamTypes(SourceWriter w, ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> needsParamTypes = bundle
+                .getNeedsParamTypes();
+        for (Entry<JClassType, Set<JMethod>> entry : needsParamTypes.entrySet()) {
+            JClassType type = entry.getKey();
+
+            Set<JMethod> methods = entry.getValue();
+            for (JMethod method : methods) {
+                w.println("store.setParamTypes(");
+                printClassLiteral(w, type);
+                w.print(", \"");
+                w.print(escape(method.getName()));
+                w.println("\", new Type[] {");
+
+                for (JType parameter : method.getParameterTypes()) {
+                    ConnectorBundleLoaderFactory.writeTypeCreator(w, parameter);
+                    w.print(", ");
+                }
+
+                w.println("});");
+
+            }
+        }
+    }
+
+    private void writeInvokers(SourceWriter w, ConnectorBundle bundle) {
+        Map<JClassType, Set<JMethod>> needsInvoker = bundle.getNeedsInvoker();
+        for (Entry<JClassType, Set<JMethod>> entry : needsInvoker.entrySet()) {
+            JClassType type = entry.getKey();
+
+            Set<JMethod> methods = entry.getValue();
+            for (JMethod method : methods) {
+                w.print("store.setInvoker(");
+                printClassLiteral(w, type);
+                w.print(", \"");
+                w.print(escape(method.getName()));
+                w.println("\", new Invoker() {");
+                w.indent();
+
+                w.println("public Object invoke(Object target, Object[] params) {");
+                w.indent();
+
+                JType returnType = method.getReturnType();
+                boolean hasReturnType = !"void".equals(returnType
+                        .getQualifiedSourceName());
+                if (hasReturnType) {
+                    w.print("return ");
+                }
+
+                JType[] parameterTypes = method.getParameterTypes();
+
+                w.print("((" + type.getQualifiedSourceName() + ") target)."
+                        + method.getName() + "(");
+                for (int i = 0; i < parameterTypes.length; i++) {
+                    JType parameterType = parameterTypes[i];
+                    if (i != 0) {
+                        w.print(", ");
+                    }
+                    String parameterTypeName = getBoxedTypeName(parameterType);
+                    w.print("(" + parameterTypeName + ") params[" + i + "]");
+                }
+                w.println(");");
+
+                if (!hasReturnType) {
+                    w.println("return null;");
+                }
+
+                w.outdent();
+                w.println("}");
+
+                w.outdent();
+                w.println("});");
+
+            }
+        }
     }
 
     private void writeReturnTypes(SourceWriter w, ConnectorBundle bundle) {
@@ -177,10 +259,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print("store.setReturnType(");
                 printClassLiteral(w, type);
                 w.print(", \"");
-                w.print(method.getName());
+                w.print(escape(method.getName()));
                 w.print("\", ");
-                GeneratedRpcMethodProviderGenerator.writeTypeCreator(w,
-                        method.getReturnType());
+                writeTypeCreator(w, method.getReturnType());
                 w.println(");");
             }
         }
@@ -299,7 +380,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             throws NotFoundException {
         List<TypeVisitor> visitors = Arrays.<TypeVisitor> asList(
                 new ConnectorInitVisitor(), new StateInitVisitor(),
-                new WidgetInitVisitor());
+                new WidgetInitVisitor(), new ClientRpcVisitor());
         for (TypeVisitor typeVisitor : visitors) {
             typeVisitor.init(oracle);
         }
@@ -309,6 +390,33 @@ public class ConnectorBundleLoaderFactory extends Generator {
     protected LoadStyle getLoadStyle(JClassType connectorType) {
         Connect annotation = connectorType.getAnnotation(Connect.class);
         return annotation.loadStyle();
+    }
+
+    public static String getBoxedTypeName(JType type) {
+        if (type.isPrimitive() != null) {
+            // Used boxed types for primitives
+            return type.isPrimitive().getQualifiedBoxedSourceName();
+        } else {
+            return type.getErasedType().getQualifiedSourceName();
+        }
+    }
+
+    public static void writeTypeCreator(SourceWriter sourceWriter, JType type) {
+        String typeName = ConnectorBundleLoaderFactory.getBoxedTypeName(type);
+        sourceWriter.print("new Type(\"" + typeName + "\", ");
+        JParameterizedType parameterized = type.isParameterized();
+        if (parameterized != null) {
+            sourceWriter.print("new Type[] {");
+            JClassType[] typeArgs = parameterized.getTypeArgs();
+            for (JClassType jClassType : typeArgs) {
+                writeTypeCreator(sourceWriter, jClassType);
+                sourceWriter.print(", ");
+            }
+            sourceWriter.print("}");
+        } else {
+            sourceWriter.print("null");
+        }
+        sourceWriter.print(")");
     }
 
 }

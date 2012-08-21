@@ -22,11 +22,11 @@ public class Method {
         return name;
     }
 
-    public Type getReturnType() {
+    public Type getReturnType() throws NoDataException {
         return TypeDataStore.getReturnType(this);
     }
 
-    public void invoke(Object target, Object... params) {
+    public void invoke(Object target, Object... params) throws NoDataException {
         TypeDataStore.getInvoker(this).invoke(target, params);
     }
 
@@ -47,8 +47,17 @@ public class Method {
     }
 
     @Override
+    public String toString() {
+        return getSignature();
+    }
+
+    @Override
     public int hashCode() {
         return getSignature().hashCode();
+    }
+
+    public Type[] getParameterTypes() {
+        return TypeDataStore.getParamTypes(this);
     }
 
 }

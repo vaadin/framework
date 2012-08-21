@@ -37,6 +37,7 @@ import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.datefield.PopupDateFieldConnector;
@@ -80,9 +81,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     protected Widget createWidget() {
         Type type = TypeData.getType(getClass());
-        Type widgetType = type.getMethod("getWidget").getReturnType();
-        Object instance = widgetType.createInstance();
-        return (Widget) instance;
+        try {
+            Type widgetType = type.getMethod("getWidget").getReturnType();
+            Object instance = widgetType.createInstance();
+            return (Widget) instance;
+        } catch (NoDataException e) {
+            throw new IllegalStateException(
+                    "There is no information about the widget for "
+                            + Util.getSimpleName(this)
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
+        }
     }
 
     /**

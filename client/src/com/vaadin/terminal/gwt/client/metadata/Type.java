@@ -25,7 +25,7 @@ public class Type {
         return parameterTypes;
     }
 
-    public Object createInstance() {
+    public Object createInstance() throws NoDataException {
         Invoker invoker = TypeDataStore.getConstructor(this);
         return invoker.invoke(null, null);
     }
@@ -40,7 +40,7 @@ public class Type {
 
     public String getSignature() {
         String string = name;
-        if (parameterTypes != null) {
+        if (parameterTypes != null && parameterTypes.length != 0) {
             string += '<';
             for (int i = 0; i < parameterTypes.length; i++) {
                 if (i != 0) {

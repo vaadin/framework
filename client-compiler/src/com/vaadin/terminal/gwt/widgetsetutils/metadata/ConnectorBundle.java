@@ -36,6 +36,8 @@ public class ConnectorBundle {
     private final Map<JClassType, Set<JMethod>> needsReturnType = new HashMap<JClassType, Set<JMethod>>();
 
     private final Collection<TypeVisitor> visitors;
+    private final Map<JClassType, Set<JMethod>> needsInvoker = new HashMap<JClassType, Set<JMethod>>();
+    private final Map<JClassType, Set<JMethod>> needsParamTypes = new HashMap<JClassType, Set<JMethod>>();
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
             Collection<TypeVisitor> visitors) {
@@ -71,18 +73,12 @@ public class ConnectorBundle {
     public void setIdentifier(JClassType type, String identifier) {
         if (!hasIdentifier(type, identifier)) {
             ensureVisited(type);
-            Set<String> set = identifiers.get(type);
-            if (set == null) {
-                set = new HashSet<String>();
-                identifiers.put(type, set);
-            }
-            set.add(identifier);
+            addMapping(identifiers, type, identifier);
         }
     }
 
     private boolean hasIdentifier(JClassType type, String identifier) {
-        if (identifiers.containsKey(type)
-                && identifiers.get(type).contains(identifier)) {
+        if (hasMapping(identifiers, type, identifier)) {
             return true;
         } else {
             return previousBundle != null
@@ -142,10 +138,13 @@ public class ConnectorBundle {
             if (isTypeVisited(type)) {
                 continue;
             }
+
+            // Mark as visited before visiting to avoid adding to queue again
+            visitedTypes.add(type);
+
             for (TypeVisitor typeVisitor : visitors) {
                 invokeVisitor(logger, type, typeVisitor);
             }
-            visitedTypes.add(type);
         }
     }
 
@@ -171,18 +170,12 @@ public class ConnectorBundle {
     public void setNeedsReturnType(JClassType type, JMethod method) {
         if (!isNeedsReturnType(type, method)) {
             ensureVisited(type);
-            Set<JMethod> set = needsReturnType.get(type);
-            if (set == null) {
-                set = new HashSet<JMethod>();
-                needsReturnType.put(type, set);
-            }
-            set.add(method);
+            addMapping(needsReturnType, type, method);
         }
     }
 
     private boolean isNeedsReturnType(JClassType type, JMethod method) {
-        if (needsReturnType.containsKey(type)
-                && needsReturnType.get(type).contains(method)) {
+        if (hasMapping(needsReturnType, type, method)) {
             return true;
         } else {
             return previousBundle != null
@@ -223,4 +216,56 @@ public class ConnectorBundle {
         }
     }
 
+    public void setNeedsInvoker(JClassType type, JMethod method) {
+        if (!isNeedsInvoker(type, method)) {
+            ensureVisited(type);
+            addMapping(needsInvoker, type, method);
+        }
+    }
+
+    private <K, V> void addMapping(Map<K, Set<V>> map, K key, V value) {
+        Set<V> set = map.get(key);
+        if (set == null) {
+            set = new HashSet<V>();
+            map.put(key, set);
+        }
+        set.add(value);
+    }
+
+    private <K, V> boolean hasMapping(Map<K, Set<V>> map, K key, V value) {
+        return map.containsKey(key) && map.get(key).contains(value);
+    }
+
+    private boolean isNeedsInvoker(JClassType type, JMethod method) {
+        if (hasMapping(needsInvoker, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsInvoker(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsInvoker() {
+        return Collections.unmodifiableMap(needsInvoker);
+    }
+
+    public void setNeedsParamTypes(JClassType type, JMethod method) {
+        if (!isNeedsParamTypes(type, method)) {
+            ensureVisited(type);
+            addMapping(needsParamTypes, type, method);
+        }
+    }
+
+    private boolean isNeedsParamTypes(JClassType type, JMethod method) {
+        if (hasMapping(needsParamTypes, type, method)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsParamTypes(type, method);
+        }
+    }
+
+    public Map<JClassType, Set<JMethod>> getNeedsParamTypes() {
+        return Collections.unmodifiableMap(needsParamTypes);
+    }
 }

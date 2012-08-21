@@ -20,6 +20,7 @@ import com.google.gwt.core.client.GWT;
 import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
@@ -60,13 +61,21 @@ public class WidgetSet {
             /*
              * let the auto generated code instantiate this type
              */
-            ServerConnector connector = (ServerConnector) TypeData.getType(
-                    classType).createInstance();
-            if (connector instanceof HasJavaScriptConnectorHelper) {
-                ((HasJavaScriptConnectorHelper) connector)
-                        .getJavascriptConnectorHelper().setTag(tag);
+            try {
+                ServerConnector connector = (ServerConnector) TypeData.getType(
+                        classType).createInstance();
+                if (connector instanceof HasJavaScriptConnectorHelper) {
+                    ((HasJavaScriptConnectorHelper) connector)
+                            .getJavascriptConnectorHelper().setTag(tag);
+                }
+                return connector;
+            } catch (NoDataException e) {
+                throw new IllegalStateException(
+                        "There is no information about "
+                                + classType
+                                + ". Did you remember to compile the right widgetset?",
+                        e);
             }
-            return connector;
         }
     }
 

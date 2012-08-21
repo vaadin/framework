@@ -33,6 +33,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VConsole;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 
@@ -268,9 +269,19 @@ public abstract class AbstractConnector implements ServerConnector,
      */
     protected SharedState createState() {
         Type connectorType = TypeData.getType(getClass());
-        Type stateType = connectorType.getMethod("getState").getReturnType();
-        Object stateInstance = stateType.createInstance();
-        return (SharedState) stateInstance;
+        try {
+            Type stateType = connectorType.getMethod("getState")
+                    .getReturnType();
+            Object stateInstance = stateType.createInstance();
+            return (SharedState) stateInstance;
+        } catch (NoDataException e) {
+            throw new IllegalStateException(
+                    "There is no information about the state for "
+                            + Util.getSimpleName(this)
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
+        }
+
     }
 
     @Override
