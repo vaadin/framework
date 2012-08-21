@@ -25,16 +25,10 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -92,14 +86,6 @@ public class RootConnector extends AbstractComponentContainerConnector
                 com.google.gwt.user.client.Window.setTitle(title);
             }
         });
-        final int heartbeatInterval = getState().getHeartbeatInterval();
-        new Timer() {
-            @Override
-            public void run() {
-                sendHeartbeat();
-                schedule(heartbeatInterval);
-            }
-        }.schedule(heartbeatInterval);
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
@@ -468,28 +454,4 @@ public class RootConnector extends AbstractComponentContainerConnector
         });
     }
 
-    private void sendHeartbeat() {
-        RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, "url");
-
-        rb.setCallback(new RequestCallback() {
-
-            @Override
-            public void onResponseReceived(Request request, Response response) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onError(Request request, Throwable exception) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
-        try {
-            rb.send();
-        } catch (RequestException re) {
-
-        }
-    }
 }
