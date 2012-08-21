@@ -624,6 +624,9 @@ public class JsonCodec implements Serializable {
                     diffStateValue = diffState.get(fieldName);
                     Object referenceFieldValue = decodeInternalOrCustomType(
                             fieldType, diffStateValue, connectorTracker);
+                    if (JSONObject.NULL.equals(diffStateValue)) {
+                        diffStateValue = null;
+                    }
                     equals = equals(fieldValue, referenceFieldValue);
                 }
                 if (!equals) {
