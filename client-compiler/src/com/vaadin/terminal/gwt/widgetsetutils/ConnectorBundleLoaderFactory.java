@@ -365,7 +365,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         Collection<JClassType> lazy = connectorsByLoadStyle.get(LoadStyle.LAZY);
         for (JClassType type : lazy) {
             ConnectorBundle bundle = new ConnectorBundle(type.getName(),
-                    deferredBundle);
+                    eagerBundle);
             TreeLogger subLogger = logger.branch(Type.TRACE, "Populating "
                     + type.getName() + " bundle");
             bundle.processType(subLogger, type);
