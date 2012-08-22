@@ -219,7 +219,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             writeClassLiteral(w, property.getBeanType());
             w.print(", \"");
             w.print(escape(property.getName()));
-            w.print("\", new Invoker() {");
+            w.println("\", new Invoker() {");
             w.indent();
 
             w.println("public Object invoke(Object bean, Object[] params) {");

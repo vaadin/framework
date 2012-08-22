@@ -372,6 +372,7 @@ public class ConnectorBundle {
         HashSet<Property> properties = new HashSet<Property>();
 
         properties.addAll(MethodProperty.findProperties(type));
+        properties.addAll(FieldProperty.findProperties(type));
 
         return properties;
     }
