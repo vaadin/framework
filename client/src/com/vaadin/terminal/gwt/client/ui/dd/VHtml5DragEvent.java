@@ -53,14 +53,6 @@ public class VHtml5DragEvent extends NativeEvent {
         return null;
     }-*/;
 
-    /**
-     * @deprecated As of Vaadin 6.8, replaced by {@link #setDropEffect(String)}.
-     */
-    @Deprecated
-    public final void setDragEffect(String effect) {
-        setDropEffect(effect);
-    }
-
     public final native void setDropEffect(String effect)
     /*-{
         try {

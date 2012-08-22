@@ -121,34 +121,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return getState().getDebugId();
     }
 
-    /**
-     * Gets style for component. Multiple styles are joined with spaces.
-     * 
-     * @return the component's styleValue of property style.
-     * @deprecated Use getStyleName() instead; renamed for consistency and to
-     *             indicate that "style" should not be used to switch client
-     *             side implementation, only to style the component.
-     */
-    @Deprecated
-    public String getStyle() {
-        return getStyleName();
-    }
-
-    /**
-     * Sets and replaces all previous style names of the component. This method
-     * will trigger a {@link RepaintRequestEvent}.
-     * 
-     * @param style
-     *            the new style of the component.
-     * @deprecated Use setStyleName() instead; renamed for consistency and to
-     *             indicate that "style" should not be used to switch client
-     *             side implementation, only to style the component.
-     */
-    @Deprecated
-    public void setStyle(String style) {
-        setStyleName(style);
-    }
-
     /*
      * Gets the component's style. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.

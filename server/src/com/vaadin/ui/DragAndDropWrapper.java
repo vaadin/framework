@@ -156,22 +156,6 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                     .valueOf((String) getData("horizontalLocation"));
         }
 
-        /**
-         * @deprecated use {@link #getVerticalDropLocation()} instead
-         */
-        @Deprecated
-        public VerticalDropLocation verticalDropLocation() {
-            return getVerticalDropLocation();
-        }
-
-        /**
-         * @deprecated use {@link #getHorizontalDropLocation()} instead
-         */
-        @Deprecated
-        public HorizontalDropLocation horizontalDropLocation() {
-            return getHorizontalDropLocation();
-        }
-
     }
 
     public enum DragStartMode {

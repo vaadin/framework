@@ -856,33 +856,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * This method is deprecated, use addListener(ProgressListener) instead.
-     * 
-     * @deprecated Use addListener(ProgressListener) instead.
-     * @param progressListener
-     */
-    @Deprecated
-    public void setProgressListener(ProgressListener progressListener) {
-        addListener(progressListener);
-    }
-
-    /**
-     * This method is deprecated.
-     * 
-     * @deprecated Replaced with addListener/removeListener
-     * @return listener
-     * 
-     */
-    @Deprecated
-    public ProgressListener getProgressListener() {
-        if (progressListeners == null || progressListeners.isEmpty()) {
-            return null;
-        } else {
-            return progressListeners.iterator().next();
-        }
-    }
-
-    /**
      * ProgressListener receives events to track progress of upload.
      */
     public interface ProgressListener extends Serializable {

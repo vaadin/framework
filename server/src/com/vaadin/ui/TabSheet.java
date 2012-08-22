@@ -361,8 +361,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             String caption = null;
             Resource icon = null;
             if (TabSheet.class.isAssignableFrom(source.getClass())) {
-                caption = ((TabSheet) source).getTabCaption(c);
-                icon = ((TabSheet) source).getTabIcon(c);
+                Tab tab = ((TabSheet) source).getTab(c);
+                caption = tab.getCaption();
+                icon = tab.getIcon();
             }
             source.removeComponent(c);
             addTab(c, caption, icon);
@@ -475,82 +476,6 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     public void hideTabs(boolean tabsHidden) {
         this.tabsHidden = tabsHidden;
         requestRepaint();
-    }
-
-    /**
-     * Gets tab caption. The tab is identified by the tab content component.
-     * 
-     * @param c
-     *            the component in the tab
-     * @deprecated Use {@link #getTab(Component)} and {@link Tab#getCaption()}
-     *             instead.
-     */
-    @Deprecated
-    public String getTabCaption(Component c) {
-        Tab info = tabs.get(c);
-        if (info == null) {
-            return "";
-        } else {
-            return info.getCaption();
-        }
-    }
-
-    /**
-     * Sets tab caption. The tab is identified by the tab content component.
-     * 
-     * @param c
-     *            the component in the tab
-     * @param caption
-     *            the caption to set.
-     * @deprecated Use {@link #getTab(Component)} and
-     *             {@link Tab#setCaption(String)} instead.
-     */
-    @Deprecated
-    public void setTabCaption(Component c, String caption) {
-        Tab info = tabs.get(c);
-        if (info != null) {
-            info.setCaption(caption);
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Gets the icon for a tab. The tab is identified by the tab content
-     * component.
-     * 
-     * @param c
-     *            the component in the tab
-     * @deprecated Use {@link #getTab(Component)} and {@link Tab#getIcon()}
-     *             instead.
-     */
-    @Deprecated
-    public Resource getTabIcon(Component c) {
-        Tab info = tabs.get(c);
-        if (info == null) {
-            return null;
-        } else {
-            return info.getIcon();
-        }
-    }
-
-    /**
-     * Sets icon for the given component. The tab is identified by the tab
-     * content component.
-     * 
-     * @param c
-     *            the component in the tab
-     * @param icon
-     *            the icon to set
-     * @deprecated Use {@link #getTab(Component)} and
-     *             {@link Tab#setIcon(Resource)} instead.
-     */
-    @Deprecated
-    public void setTabIcon(Component c, Resource icon) {
-        Tab info = tabs.get(c);
-        if (info != null) {
-            info.setIcon(icon);
-            requestRepaint();
-        }
     }
 
     /**

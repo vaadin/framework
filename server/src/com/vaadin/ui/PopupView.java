@@ -160,22 +160,6 @@ public class PopupView extends AbstractComponentContainer implements
     }
 
     /**
-     * @deprecated Use {@link #setPopupVisible()} instead.
-     */
-    @Deprecated
-    public void setPopupVisibility(boolean visible) {
-        setPopupVisible(visible);
-    }
-
-    /**
-     * @deprecated Use {@link #isPopupVisible()} instead.
-     */
-    @Deprecated
-    public boolean getPopupVisibility() {
-        return isPopupVisible();
-    }
-
-    /**
      * Set the visibility of the popup. Does not hide the minimal
      * representation.
      * 

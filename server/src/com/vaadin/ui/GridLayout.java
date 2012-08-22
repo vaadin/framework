@@ -806,28 +806,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getColumn1()} instead.
-         */
-        @Deprecated
-        public int getX1() {
-            return getColumn1();
-        }
-
-        /**
          * Gets the column of the top-left corner cell.
          * 
          * @return the column of the top-left corner cell.
          */
         public int getColumn1() {
             return column1;
-        }
-
-        /**
-         * @deprecated Use {@link #getColumn2()} instead.
-         */
-        @Deprecated
-        public int getX2() {
-            return getColumn2();
         }
 
         /**
@@ -840,28 +824,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getRow1()} instead.
-         */
-        @Deprecated
-        public int getY1() {
-            return getRow1();
-        }
-
-        /**
          * Gets the row of the top-left corner cell.
          * 
          * @return the row of the top-left corner cell.
          */
         public int getRow1() {
             return row1;
-        }
-
-        /**
-         * @deprecated Use {@link #getRow2()} instead.
-         */
-        @Deprecated
-        public int getY2() {
-            return getRow2();
         }
 
         /**
@@ -1147,20 +1115,6 @@ public class GridLayout extends AbstractLayout implements
         componentToAlignment = new HashMap<Component, Alignment>();
         cursorX = 0;
         cursorY = 0;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .vaadin.ui.Component, int, int)
-     */
-    @Override
-    public void setComponentAlignment(Component childComponent,
-            int horizontalAlignment, int verticalAlignment) {
-        componentToAlignment.put(childComponent, new Alignment(
-                horizontalAlignment + verticalAlignment));
-        requestRepaint();
     }
 
     @Override

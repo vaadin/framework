@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.AlignmentInfo.Bits;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -37,74 +36,6 @@ public interface Layout extends ComponentContainer, Serializable {
      * align its components.
      */
     public interface AlignmentHandler extends Serializable {
-
-        /**
-         * Contained component should be aligned horizontally to the left.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_LEFT = Bits.ALIGNMENT_LEFT;
-
-        /**
-         * Contained component should be aligned horizontally to the right.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_RIGHT = Bits.ALIGNMENT_RIGHT;
-
-        /**
-         * Contained component should be aligned vertically to the top.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_TOP = Bits.ALIGNMENT_TOP;
-
-        /**
-         * Contained component should be aligned vertically to the bottom.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_BOTTOM = Bits.ALIGNMENT_BOTTOM;
-
-        /**
-         * Contained component should be horizontally aligned to center.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_HORIZONTAL_CENTER = Bits.ALIGNMENT_HORIZONTAL_CENTER;
-
-        /**
-         * Contained component should be vertically aligned to center.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_VERTICAL_CENTER = Bits.ALIGNMENT_VERTICAL_CENTER;
-
-        /**
-         * Set alignment for one contained component in this layout. Alignment
-         * is calculated as a bit mask of the two passed values.
-         * 
-         * @deprecated Use {@link #setComponentAlignment(Component, Alignment)}
-         *             instead
-         * 
-         * @param childComponent
-         *            the component to align within it's layout cell.
-         * @param horizontalAlignment
-         *            the horizontal alignment for the child component (left,
-         *            center, right). Use ALIGNMENT constants.
-         * @param verticalAlignment
-         *            the vertical alignment for the child component (top,
-         *            center, bottom). Use ALIGNMENT constants.
-         */
-        @Deprecated
-        public void setComponentAlignment(Component childComponent,
-                int horizontalAlignment, int verticalAlignment);
 
         /**
          * Set alignment for one contained component in this layout. Use

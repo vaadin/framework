@@ -1507,31 +1507,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Getter for property pageBuffering.
-     * 
-     * @deprecated functionality is not needed in ajax rendering model
-     * 
-     * @return the Value of property pageBuffering.
-     */
-    @Deprecated
-    public boolean isPageBufferingEnabled() {
-        return true;
-    }
-
-    /**
-     * Setter for property pageBuffering.
-     * 
-     * @deprecated functionality is not needed in ajax rendering model
-     * 
-     * @param pageBuffering
-     *            the New value of property pageBuffering.
-     */
-    @Deprecated
-    public void setPageBufferingEnabled(boolean pageBuffering) {
-
-    }
-
-    /**
      * Getter for property selectable.
      * 
      * <p>
@@ -2227,16 +2202,6 @@ public class Table extends AbstractSelect implements Action.Container,
                 field.setPropertyDataSource(null);
             }
         }
-    }
-
-    /**
-     * Refreshes the current page contents.
-     * 
-     * @deprecated should not need to be used
-     */
-    @Deprecated
-    public void refreshCurrentPage() {
-
     }
 
     /**

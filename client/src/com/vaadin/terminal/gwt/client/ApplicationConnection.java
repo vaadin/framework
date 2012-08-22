@@ -396,32 +396,6 @@ public class ApplicationConnection {
     }-*/;
 
     /**
-     * Get the active Console for writing debug messages. May return an actual
-     * logging console, or the NullConsole if debugging is not turned on.
-     * 
-     * @deprecated Developers should use {@link VConsole} since 6.4.5
-     * 
-     * @return the active Console
-     */
-    @Deprecated
-    public static Console getConsole() {
-        return VConsole.getImplementation();
-    }
-
-    /**
-     * Checks if client side is in debug mode. Practically this is invoked by
-     * adding ?debug parameter to URI.
-     * 
-     * @deprecated use ApplicationConfiguration isDebugMode instead.
-     * 
-     * @return true if client side is currently been debugged
-     */
-    @Deprecated
-    public static boolean isDebugMode() {
-        return ApplicationConfiguration.isDebugMode();
-    }
-
-    /**
      * Gets the application base URI. Using this other than as the download
      * action URI can cause problems in Portlet 2.0 deployments.
      * 
@@ -2468,7 +2442,8 @@ public class ApplicationConnection {
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
-     * @deprecated Use {@link ComponentState#hasEventListener(String)} instead
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
      */
     @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,
@@ -2521,11 +2496,13 @@ public class ApplicationConnection {
         return connectorMap;
     }
 
+    /**
+     * @deprecated No longer needed in Vaadin 7
+     */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        System.out.println("unregisterPaintable (unnecessarily) called for "
+        VConsole.log("unregisterPaintable (unnecessarily) called for "
                 + Util.getConnectorString(p));
-        // connectorMap.unregisterConnector(p);
     }
 
     /**
@@ -2564,6 +2541,10 @@ public class ApplicationConnection {
         return false;
     }
 
+    /**
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
+     */
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getConnectorMap().getConnector(widget),

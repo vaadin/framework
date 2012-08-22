@@ -232,19 +232,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .vaadin.ui.Component, int, int)
-     */
-    @Override
-    public void setComponentAlignment(Component childComponent,
-            int horizontalAlignment, int verticalAlignment) {
-        Alignment a = new Alignment(horizontalAlignment + verticalAlignment);
-        setComponentAlignment(childComponent, a);
-    }
-
     @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
