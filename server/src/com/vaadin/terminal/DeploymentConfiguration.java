@@ -136,12 +136,16 @@ public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns whether Vaadin is in production mode.
      * 
+     * @since 7.0.0
+     * 
      * @return true if in production mode, false otherwise.
      */
     public boolean isProductionMode();
 
     /**
      * Returns whether cross-site request forgery protection is enabled.
+     * 
+     * @since 7.0.0
      * 
      * @return true if XSRF protection is enabled, false otherwise.
      */
@@ -150,6 +154,8 @@ public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns the time resources can be cached in the browsers, in seconds.
      * 
+     * @since 7.0.0
+     * 
      * @return The resource cache time.
      */
     public int getResourceCacheTime();
@@ -157,6 +163,8 @@ public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns the number of seconds between heartbeat requests of a root, or a
      * non-negative number if heartbeat is disabled.
+     * 
+     * @since 7.0.0
      * 
      * @return
      */

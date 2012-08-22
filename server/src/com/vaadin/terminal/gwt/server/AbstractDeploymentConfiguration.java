@@ -164,21 +164,41 @@ public abstract class AbstractDeploymentConfiguration implements
         return addonContext;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default is false.
+     */
     @Override
     public boolean isProductionMode() {
         return productionMode;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default is true.
+     */
     @Override
     public boolean isXsrfProtectionEnabled() {
         return xsrfProtectionEnabled;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default interval is 3600 seconds (1 hour).
+     */
     @Override
     public int getResourceCacheTime() {
         return resourceCacheTime;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default interval is 300 seconds (5 minutes).
+     */
     @Override
     public int getHeartbeatInterval() {
         return heartbeatInterval;
