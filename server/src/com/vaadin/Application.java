@@ -2448,7 +2448,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
     /**
      * Removes all those roots from the application whose last heartbeat
      * occurred more than {@link #getHeartbeatTimeout()} seconds ago. Close
-     * events are fired for the removed roots.
+     * events are fired for the removed roots. If
+     * <code>getHeartbeatTimeout()</code> returns a nonpositive number, no
+     * cleanup is performed.
      * <p>
      * Called by the framework at the end of every request.
      * 
@@ -2459,13 +2461,15 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0.0
      */
     public void closeInactiveRoots() {
-        long now = System.currentTimeMillis();
-        for (Iterator<Root> i = roots.values().iterator(); i.hasNext();) {
-            Root root = i.next();
-            if (now - root.getLastHeartbeat() > 1000 * getHeartbeatTimeout()) {
-                i.remove();
-                retainOnRefreshRoots.values().remove(root.getRootId());
-                root.fireCloseEvent();
+        if (getHeartbeatTimeout() > 0) {
+            long now = System.currentTimeMillis();
+            for (Iterator<Root> i = roots.values().iterator(); i.hasNext();) {
+                Root root = i.next();
+                if (now - root.getLastHeartbeat() > 1000 * getHeartbeatTimeout()) {
+                    i.remove();
+                    retainOnRefreshRoots.values().remove(root.getRootId());
+                    root.fireCloseEvent();
+                }
             }
         }
     }
@@ -2478,7 +2482,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @since 7.0.0
      * 
-     * @return The heartbeat timeout in seconds.
+     * @return The heartbeat timeout in seconds or a nonpositive number if
+     *         timeout never occurs.
      */
     public int getHeartbeatTimeout() {
         // Permit three missed heartbeats before closing the root

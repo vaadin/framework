@@ -2524,19 +2524,23 @@ public class ApplicationConnection {
     }
 
     /**
-     * Schedules a heartbeat request.
+     * Schedules a heartbeat request to occur after the configured heartbeat
+     * interval elapses if the interval is a positive number. Otherwise, does
+     * nothing.
      * 
      * @see #sendHeartbeat()
+     * @see ApplicationConfiguration#getHeartbeatInterval()
      */
-    private void scheduleHeartbeat() {
-        final int interval = 1000 * getConfiguration().getHeartbeatInterval();
+    protected void scheduleHeartbeat() {
+        final int interval = getConfiguration().getHeartbeatInterval();
         if (interval > 0) {
+            VConsole.log("Scheduling heartbeat in " + interval + " seconds");
             new Timer() {
                 @Override
                 public void run() {
                     sendHeartbeat();
                 }
-            }.schedule(interval);
+            }.schedule(interval * 1000);
         }
     }
 
@@ -2552,7 +2556,7 @@ public class ApplicationConnection {
      * @see #scheduleHeartbeat()
      * @see com.vaadin.ui.Root#heartbeat()
      */
-    private void sendHeartbeat() {
+    protected void sendHeartbeat() {
         final String uri = addGetParameters(
                 translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.HEARTBEAT_REQUEST_PATH),
@@ -2568,6 +2572,7 @@ public class ApplicationConnection {
                 int status = response.getStatusCode();
                 if (status == Response.SC_OK) {
                     // TODO Permit retry in some error situations
+                    VConsole.log("Heartbeat response OK");
                     scheduleHeartbeat();
                 } else {
                     VConsole.error("Heartbeat request failed with status code "
@@ -2585,6 +2590,7 @@ public class ApplicationConnection {
         rb.setCallback(callback);
 
         try {
+            VConsole.log("Sending heartbeat request...");
             rb.send();
         } catch (RequestException re) {
             callback.onError(null, re);

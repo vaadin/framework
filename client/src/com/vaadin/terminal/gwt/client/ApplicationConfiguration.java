@@ -290,6 +290,10 @@ public class ApplicationConfiguration implements EntryPoint {
         return rootId;
     }
 
+    /**
+     * @return The interval in seconds between heartbeat requests, or a
+     *         non-positive number if heartbeat is disabled.
+     */
     public int getHeartbeatInterval() {
         return heartbeatInterval;
     }

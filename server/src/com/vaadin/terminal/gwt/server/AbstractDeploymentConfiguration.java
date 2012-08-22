@@ -228,11 +228,11 @@ public abstract class AbstractDeploymentConfiguration implements
         try {
             heartbeatInterval = Integer
                     .parseInt(getApplicationOrSystemProperty(
-                            Constants.SERVLET_PARAMETER_HEARTBEAT_RATE, "500"));
+                            Constants.SERVLET_PARAMETER_HEARTBEAT_RATE, "300"));
         } catch (NumberFormatException e) {
             getLogger().warning(
                     Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
-            heartbeatInterval = 500;
+            heartbeatInterval = 300;
         }
     }
 
