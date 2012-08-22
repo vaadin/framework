@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,6 +44,8 @@ import com.vaadin.terminal.gwt.client.metadata.TypeDataStore;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.GeneratedSerializer;
+import com.vaadin.terminal.gwt.widgetsetutils.metadata.Property;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ServerRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.StateInitVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.TypeVisitor;
@@ -134,7 +137,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.println("public void load() {");
             w.indent();
 
-            printBundleData(w, bundle);
+            printBundleData(logger, w, bundle);
 
             // Close load method
             w.outdent();
@@ -165,7 +168,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         w.commit(logger);
     }
 
-    private void printBundleData(SourceWriter w, ConnectorBundle bundle) {
+    private void printBundleData(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) throws UnableToCompleteException {
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
         writeReturnTypes(w, bundle);
@@ -173,6 +177,133 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
         wirteDelayedInfo(w, bundle);
+        writeProperites(logger, w, bundle);
+        writePropertyTypes(w, bundle);
+        writeSetters(logger, w, bundle);
+        writeGetters(logger, w, bundle);
+        writeSerializers(logger, w, bundle);
+    }
+
+    private void writeSerializers(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) throws UnableToCompleteException {
+        Map<JType, GeneratedSerializer> serializers = bundle.getSerializers();
+        for (Entry<JType, GeneratedSerializer> entry : serializers.entrySet()) {
+            JType type = entry.getKey();
+            GeneratedSerializer serializer = entry.getValue();
+
+            w.print("store.setSerializerFactory(");
+            writeClassLiteral(w, type);
+            w.print(", ");
+            w.println("new Invoker() {");
+            w.indent();
+
+            w.println("public Object invoke(Object target, Object[] params) {");
+            w.indent();
+
+            serializer.writeSerializerInstantiator(logger, w);
+
+            w.outdent();
+            w.println("}");
+
+            w.outdent();
+            w.print("}");
+            w.println(");");
+        }
+    }
+
+    private void writeGetters(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) {
+        Set<Property> properties = bundle.getNeedsSetter();
+        for (Property property : properties) {
+            w.print("store.setGetter(");
+            writeClassLiteral(w, property.getBeanType());
+            w.print(", \"");
+            w.print(escape(property.getName()));
+            w.print("\", new Invoker() {");
+            w.indent();
+
+            w.println("public Object invoke(Object bean, Object[] params) {");
+            w.indent();
+
+            property.writeGetterBody(logger, w, "bean");
+            w.println();
+
+            w.outdent();
+            w.println("}");
+
+            w.outdent();
+            w.println("});");
+        }
+    }
+
+    private void writeSetters(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) {
+        Set<Property> properties = bundle.getNeedsSetter();
+        for (Property property : properties) {
+            w.print("store.setSetter(");
+            writeClassLiteral(w, property.getBeanType());
+            w.print(", \"");
+            w.print(escape(property.getName()));
+            w.println("\", new Invoker() {");
+            w.indent();
+
+            w.println("public Object invoke(Object bean, Object[] params) {");
+            w.indent();
+
+            property.writeSetterBody(logger, w, "bean", "params[0]");
+
+            w.println("return null;");
+
+            w.outdent();
+            w.println("}");
+
+            w.outdent();
+            w.println("});");
+        }
+    }
+
+    private void writePropertyTypes(SourceWriter w, ConnectorBundle bundle) {
+        Set<Property> properties = bundle.getNeedsType();
+        for (Property property : properties) {
+            w.print("store.setPropertyType(");
+            writeClassLiteral(w, property.getBeanType());
+            w.print(", \"");
+            w.print(escape(property.getName()));
+            w.print("\", ");
+            writeTypeCreator(w, property.getPropertyType());
+            w.println(");");
+        }
+    }
+
+    private void writeProperites(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) throws UnableToCompleteException {
+        Set<JClassType> needsPropertyListing = bundle.getNeedsPropertyListing();
+        for (JClassType type : needsPropertyListing) {
+            w.print("store.setProperties(");
+            writeClassLiteral(w, type);
+            w.print(", new String[] {");
+
+            Set<String> usedPropertyNames = new HashSet<String>();
+            Collection<Property> properties = bundle.getProperties(type);
+            for (Property property : properties) {
+                String name = property.getName();
+                if (!usedPropertyNames.add(name)) {
+                    logger.log(
+                            Type.ERROR,
+                            type.getQualifiedSourceName()
+                                    + " has multiple properties with the name "
+                                    + name
+                                    + ". This can happen if there are multiple setters with identical names exect casing.");
+                    throw new UnableToCompleteException();
+                }
+
+                w.print("\"");
+                w.print(name);
+                w.print("\", ");
+            }
+
+            w.println("});");
+        }
     }
 
     private void wirteDelayedInfo(SourceWriter w, ConnectorBundle bundle) {
@@ -187,14 +318,14 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 Delayed annotation = method.getAnnotation(Delayed.class);
                 if (annotation != null) {
                     w.print("store.setDelayed(");
-                    printClassLiteral(w, type);
+                    writeClassLiteral(w, type);
                     w.print(", \"");
                     w.print(escape(method.getName()));
                     w.println("\");");
 
                     if (annotation.lastonly()) {
                         w.print("store.setLastonly(");
-                        printClassLiteral(w, type);
+                        writeClassLiteral(w, type);
                         w.print(", \"");
                         w.print(escape(method.getName()));
                         w.println("\");");
@@ -208,7 +339,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         Set<JClassType> needsProxySupport = bundle.getNeedsProxySupport();
         for (JClassType type : needsProxySupport) {
             w.print("store.setProxyHandler(");
-            printClassLiteral(w, type);
+            writeClassLiteral(w, type);
             w.print(", new ");
             w.print(ProxyHandler.class.getCanonicalName());
             w.println("() {");
@@ -253,7 +384,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                     w.print("handler.invoke(this, ");
                     w.print(TypeData.class.getCanonicalName());
                     w.print(".getType(");
-                    printClassLiteral(w, type);
+                    writeClassLiteral(w, type);
                     w.print(").getMethod(\"");
                     w.print(escape(method.getName()));
                     w.print("\"), new Object [] {");
@@ -288,7 +419,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             Set<JMethod> methods = entry.getValue();
             for (JMethod method : methods) {
                 w.print("store.setParamTypes(");
-                printClassLiteral(w, type);
+                writeClassLiteral(w, type);
                 w.print(", \"");
                 w.print(escape(method.getName()));
                 w.print("\", new Type[] {");
@@ -312,7 +443,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             Set<JMethod> methods = entry.getValue();
             for (JMethod method : methods) {
                 w.print("store.setInvoker(");
-                printClassLiteral(w, type);
+                writeClassLiteral(w, type);
                 w.print(", \"");
                 w.print(escape(method.getName()));
                 w.println("\", new Invoker() {");
@@ -368,7 +499,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 // setReturnType(Class<?> type, String methodName, Type
                 // returnType)
                 w.print("store.setReturnType(");
-                printClassLiteral(w, type);
+                writeClassLiteral(w, type);
                 w.print(", \"");
                 w.print(escape(method.getName()));
                 w.print("\", ");
@@ -382,7 +513,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         Set<JClassType> constructors = bundle.getGwtConstructors();
         for (JClassType type : constructors) {
             w.print("store.setConstructor(");
-            printClassLiteral(w, type);
+            writeClassLiteral(w, type);
             w.println(", new Invoker() {");
             w.indent();
 
@@ -392,7 +523,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.print("return ");
             w.print(GWT.class.getName());
             w.print(".create(");
-            printClassLiteral(w, type);
+            writeClassLiteral(w, type);
             w.println(");");
 
             w.outdent();
@@ -403,7 +534,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void printClassLiteral(SourceWriter w, JClassType type) {
+    public static void writeClassLiteral(SourceWriter w, JType type) {
         w.print(type.getQualifiedSourceName());
         w.print(".class");
     }
@@ -417,7 +548,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print("store.setClass(\"");
                 w.print(escape(id));
                 w.print("\", ");
-                printClassLiteral(w, type);
+                writeClassLiteral(w, type);
                 w.println(");");
             }
         }
@@ -450,7 +581,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         Collection<TypeVisitor> visitors = getVisitors(typeOracle);
 
         ConnectorBundle eagerBundle = new ConnectorBundle(
-                ConnectorBundleLoader.EAGER_BUNDLE_NAME, visitors);
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, visitors, typeOracle);
         TreeLogger eagerLogger = logger.branch(Type.TRACE,
                 "Populating eager bundle");
 
@@ -515,9 +646,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
     public static void writeTypeCreator(SourceWriter sourceWriter, JType type) {
         String typeName = ConnectorBundleLoaderFactory.getBoxedTypeName(type);
-        sourceWriter.print("new Type(\"" + typeName + "\", ");
         JParameterizedType parameterized = type.isParameterized();
         if (parameterized != null) {
+            sourceWriter.print("new Type(\"" + typeName + "\", ");
             sourceWriter.print("new Type[] {");
             JClassType[] typeArgs = parameterized.getTypeArgs();
             for (JClassType jClassType : typeArgs) {
@@ -526,7 +657,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
             }
             sourceWriter.print("}");
         } else {
-            sourceWriter.print("null");
+            sourceWriter.print("new Type(" + typeName + ".class");
         }
         sourceWriter.print(")");
     }

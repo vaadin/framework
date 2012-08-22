@@ -16,6 +16,8 @@ public class StateInitVisitor extends TypeVisitor {
         JMethod getState = findInheritedMethod(type, "getState");
         bundle.setNeedsReturnType(type, getState);
 
+        bundle.setNeedsSerialize(getState.getReturnType());
+
         JType stateType = getState.getReturnType();
         bundle.setNeedsGwtConstructor(stateType.isClass());
     }

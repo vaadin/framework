@@ -3,6 +3,10 @@
  */
 package com.vaadin.terminal.gwt.client.metadata;
 
+import java.util.Collection;
+
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
+
 public class Type {
     private final String name;
     private final Type[] parameterTypes;
@@ -27,11 +31,15 @@ public class Type {
 
     public Object createInstance() throws NoDataException {
         Invoker invoker = TypeDataStore.getConstructor(this);
-        return invoker.invoke(null, null);
+        return invoker.invoke(null);
     }
 
     public Method getMethod(String name) {
         return new Method(this, name);
+    }
+
+    public Collection<Property> getProperties() throws NoDataException {
+        return TypeDataStore.getProperties(this);
     }
 
     public Property getProperty(String propertyName) {
@@ -80,6 +88,10 @@ public class Type {
             throws NoDataException {
         return TypeDataStore.get().getProxyHandler(this)
                 .createProxy(invokationHandler);
+    }
+
+    public JSONSerializer<?> findSerializer() {
+        return TypeDataStore.findSerializer(this);
     }
 
 }

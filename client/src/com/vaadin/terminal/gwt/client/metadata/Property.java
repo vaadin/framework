@@ -5,16 +5,20 @@
 package com.vaadin.terminal.gwt.client.metadata;
 
 public class Property {
-    private final Type type;
+    private final Type bean;
     private final String name;
 
-    public Property(Type type, String name) {
-        this.type = type;
+    public Property(Type bean, String name) {
+        this.bean = bean;
         this.name = name;
     }
 
     public Object getValue(Object bean) throws NoDataException {
-        return TypeDataStore.getGetter(this).invoke(bean, null);
+        return TypeDataStore.getGetter(this).invoke(bean);
+    }
+
+    public void setValue(Object bean, Object value) throws NoDataException {
+        TypeDataStore.getSetter(this).invoke(bean, value);
     }
 
     public String getDelegateToWidgetMethod() {
@@ -29,8 +33,12 @@ public class Property {
         }
     }
 
+    public Type getType() throws NoDataException {
+        return TypeDataStore.getType(this);
+    }
+
     public String getSignature() {
-        return type.toString() + "." + name;
+        return bean.toString() + "." + name;
     }
 
     @Override
@@ -48,6 +56,15 @@ public class Property {
     @Override
     public int hashCode() {
         return getSignature().hashCode();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getSignature();
     }
 
 }

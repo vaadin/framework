@@ -31,6 +31,8 @@ import com.google.gwt.json.client.JSONValue;
 import com.vaadin.shared.Connector;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Property;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 
 /**
@@ -106,18 +108,42 @@ public class JsonDecoder {
 
     private static Object decodeObject(Type type, JSONValue jsonValue,
             Object target, ApplicationConnection connection) {
-        JSONSerializer<Object> serializer = connection.getSerializerMap()
-                .getSerializer(type.getBaseTypeName());
-        // TODO handle case with no serializer found
-        // Currently getSerializer throws exception if not found
-
-        if (target != null && serializer instanceof DiffJSONSerializer<?>) {
-            DiffJSONSerializer<Object> diffSerializer = (DiffJSONSerializer<Object>) serializer;
-            diffSerializer.update(target, type, jsonValue, connection);
-            return target;
+        JSONSerializer<Object> serializer = (JSONSerializer<Object>) type
+                .findSerializer();
+        if (serializer != null) {
+            if (target != null && serializer instanceof DiffJSONSerializer<?>) {
+                DiffJSONSerializer<Object> diffSerializer = (DiffJSONSerializer<Object>) serializer;
+                diffSerializer.update(target, type, jsonValue, connection);
+                return target;
+            } else {
+                Object object = serializer.deserialize(type, jsonValue,
+                        connection);
+                return object;
+            }
         } else {
-            Object object = serializer.deserialize(type, jsonValue, connection);
-            return object;
+            try {
+                Collection<Property> properties = type.getProperties();
+                if (target == null) {
+                    target = type.createInstance();
+                }
+                JSONObject jsonObject = jsonValue.isObject();
+
+                for (Property property : properties) {
+                    JSONValue encodedPropertyValue = jsonObject.get(property
+                            .getName());
+                    if (encodedPropertyValue == null) {
+                        continue;
+                    }
+                    Object propertyReference = property.getValue(target);
+                    Object decodedValue = decodeValue(property.getType(),
+                            encodedPropertyValue, propertyReference, connection);
+                    property.setValue(target, decodedValue);
+                }
+                return target;
+            } catch (NoDataException e) {
+                throw new RuntimeException("Can not deserialize "
+                        + type.getSignature(), e);
+            }
         }
     }
 

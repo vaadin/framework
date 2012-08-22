@@ -21,6 +21,7 @@ import java.util.Set;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JType;
 
 public class ServerRpcVisitor extends TypeVisitor {
     @Override
@@ -35,6 +36,11 @@ public class ServerRpcVisitor extends TypeVisitor {
                 JMethod[] methods = subType.getMethods();
                 for (JMethod method : methods) {
                     bundle.setNeedsDelayedInfo(type, method);
+
+                    JType[] parameterTypes = method.getParameterTypes();
+                    for (JType paramType : parameterTypes) {
+                        bundle.setNeedsSerialize(paramType);
+                    }
                 }
             }
         }

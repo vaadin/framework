@@ -65,7 +65,6 @@ import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
-import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
@@ -105,8 +104,6 @@ public class ApplicationConnection {
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
-
-    private static SerializerMap serializerMap;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -215,7 +212,6 @@ public class ApplicationConnection {
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
-        serializerMap = GWT.create(SerializerMap.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -2576,9 +2572,5 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
-    }
-
-    public SerializerMap getSerializerMap() {
-        return serializerMap;
     }
 }

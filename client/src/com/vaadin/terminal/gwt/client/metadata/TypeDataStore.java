@@ -4,17 +4,23 @@
 
 package com.vaadin.terminal.gwt.client.metadata;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
 
 public class TypeDataStore {
     private static final String CONSTRUCTOR_NAME = "!new";
 
     private final Map<String, Class<?>> identifiers = new HashMap<String, Class<?>>();
 
+    private final Map<Type, Invoker> serializerFactories = new HashMap<Type, Invoker>();
     private final Map<Type, ProxyHandler> proxyHandlers = new HashMap<Type, ProxyHandler>();
+    private final Map<Type, Collection<Property>> properties = new HashMap<Type, Collection<Property>>();
 
     private final Set<Method> delayedMethods = new HashSet<Method>();
     private final Set<Method> lastonlyMethods = new HashSet<Method>();
@@ -23,6 +29,8 @@ public class TypeDataStore {
     private final Map<Method, Invoker> invokers = new HashMap<Method, Invoker>();
     private final Map<Method, Type[]> paramTypes = new HashMap<Method, Type[]>();
 
+    private final Map<Property, Type> propertyTypes = new HashMap<Property, Type>();
+    private final Map<Property, Invoker> setters = new HashMap<Property, Invoker>();
     private final Map<Property, Invoker> getters = new HashMap<Property, Invoker>();
     private final Map<Property, String> delegateToWidget = new HashMap<Property, String>();
 
@@ -83,6 +91,10 @@ public class TypeDataStore {
         }
 
         return getter;
+    }
+
+    public void setGetter(Class<?> clazz, String propertyName, Invoker invoker) {
+        getters.put(new Property(getType(clazz), propertyName), invoker);
     }
 
     public static String getDelegateToWidget(Property property) {
@@ -147,5 +159,62 @@ public class TypeDataStore {
 
     public void setLastonly(Class<?> clazz, String methodName) {
         lastonlyMethods.add(getType(clazz).getMethod(methodName));
+    }
+
+    public static Collection<Property> getProperties(Type type)
+            throws NoDataException {
+        Collection<Property> properties = get().properties.get(type);
+        if (properties == null) {
+            throw new NoDataException("No property list for "
+                    + type.getSignature());
+        }
+        return properties;
+    }
+
+    public void setProperties(Class<?> clazz, String[] propertyNames) {
+        Set<Property> properties = new HashSet<Property>();
+        Type type = getType(clazz);
+        for (String name : propertyNames) {
+            properties.add(new Property(type, name));
+        }
+        this.properties.put(type, Collections.unmodifiableSet(properties));
+    }
+
+    public static Type getType(Property property) throws NoDataException {
+        Type type = get().propertyTypes.get(property);
+        if (type == null) {
+            throw new NoDataException("No return type for "
+                    + property.getSignature());
+        }
+        return type;
+    }
+
+    public void setPropertyType(Class<?> clazz, String propertName, Type type) {
+        propertyTypes.put(new Property(getType(clazz), propertName), type);
+    }
+
+    public static Invoker getSetter(Property property) throws NoDataException {
+        Invoker setter = get().setters.get(property);
+        if (setter == null) {
+            throw new NoDataException("No setter for "
+                    + property.getSignature());
+        }
+        return setter;
+    }
+
+    public void setSetter(Class<?> clazz, String propertyName, Invoker setter) {
+        setters.put(new Property(getType(clazz), propertyName), setter);
+    }
+
+    public void setSerializerFactory(Class<?> clazz, Invoker factory) {
+        serializerFactories.put(getType(clazz), factory);
+    }
+
+    public static JSONSerializer<?> findSerializer(Type type) {
+        Invoker factoryCreator = get().serializerFactories.get(type);
+        if (factoryCreator == null) {
+            return null;
+        }
+        return (JSONSerializer<?>) factoryCreator.invoke(null);
     }
 }
