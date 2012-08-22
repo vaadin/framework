@@ -340,7 +340,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
     protected RequestType getRequestType(WrappedPortletRequest wrappedRequest) {
@@ -361,6 +361,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } else if (ServletPortletHelper
                     .isApplicationResourceRequest(wrappedRequest)) {
                 return RequestType.APPLICATION_RESOURCE;
+            } else if (ServletPortletHelper.isHeartbeatRequest(wrappedRequest)) {
+                return RequestType.HEARTBEAT;
             } else if (isDummyRequest(resourceRequest)) {
                 return RequestType.DUMMY;
             } else {
@@ -431,6 +433,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             Application application = null;
             boolean transactionStarted = false;
             boolean requestStarted = false;
+            boolean applicationRunning = false;
 
             try {
                 // TODO What about PARAM_UNLOADBURST & redirectToApplication??
@@ -459,6 +462,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     applicationManager.serveConnectorResource(wrappedRequest,
                             wrappedResponse);
                     return;
+                } else if (requestType == RequestType.HEARTBEAT) {
+                    applicationManager.handleHeartbeatRequest(wrappedRequest,
+                            wrappedResponse, application);
+                    return;
                 }
 
                 /* Update browser information from request */
@@ -477,6 +484,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
+                applicationRunning = true;
 
                 /*
                  * Transaction starts. Call transaction listeners. Transaction
@@ -585,6 +593,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 handleServiceException(wrappedRequest, wrappedResponse,
                         application, e);
             } finally {
+
+                if (applicationRunning) {
+                    application.closeInactiveRoots();
+                }
+
                 // Notifies transaction end
                 try {
                     if (transactionStarted) {

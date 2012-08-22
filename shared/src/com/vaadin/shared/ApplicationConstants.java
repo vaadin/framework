@@ -23,6 +23,8 @@ public class ApplicationConstants {
 
     public static final String UIDL_REQUEST_PATH = "UIDL/";
 
+    public static final String HEARTBEAT_REQUEST_PATH = "HEARTBEAT/";
+
     public static final String CONNECTOR_RESOURCE_PREFIX = APP_REQUEST_PATH
             + "CONNECTOR";
 
