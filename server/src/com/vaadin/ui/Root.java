@@ -16,11 +16,13 @@
 
 package com.vaadin.ui;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -46,7 +48,7 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.tools.ReflectTools;
 
 /**
  * The topmost component in any component hierarchy. There is one root for every
@@ -389,6 +391,42 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     /**
+     * Event fired when a Root is removed from the application.
+     */
+    public static class CloseEvent extends Event {
+
+        private static final String CLOSE_EVENT_IDENTIFIER = "rootClose";
+
+        public CloseEvent(Root source) {
+            super(source);
+        }
+
+        public Root getRoot() {
+            return (Root) getSource();
+        }
+    }
+
+    /**
+     * Interface for listening {@link Root.CloseEvent root close events}.
+     * 
+     */
+    public interface CloseListener extends EventListener {
+
+        public static final Method closeMethod = ReflectTools.findMethod(
+                CloseListener.class, "click", CloseEvent.class);
+
+        /**
+         * Called when a CloseListener is notified of a CloseEvent.
+         * {@link Root#getCurrent()} returns <code>event.getRoot()</code> within
+         * this method.
+         * 
+         * @param event
+         *            The close event that was fired.
+         */
+        public void close(CloseEvent event);
+    }
+
+    /**
      * The application to which this root belongs
      */
     private Application application;
@@ -435,6 +473,13 @@ public abstract class Root extends AbstractComponentContainer implements
             fireEvent(new ClickEvent(Root.this, mouseDetails));
         }
     };
+
+    /**
+     * Timestamp keeping track of the last heartbeat of this Root. Updated to
+     * the current time whenever the application receives a heartbeat or UIDL
+     * request from the client for this Root.
+     */
+    private long lastHeartbeat = System.currentTimeMillis();
 
     /**
      * Creates a new empty root without a caption. This root will have a
@@ -562,6 +607,16 @@ public abstract class Root extends AbstractComponentContainer implements
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
         fireEvent(new ClickEvent(this, mouseDetails));
+    }
+
+    /**
+     * For internal use only.
+     */
+    public void fireCloseEvent() {
+        Root current = Root.getCurrent();
+        Root.setCurrent(this);
+        fireEvent(new CloseEvent(this));
+        Root.setCurrent(current);
     }
 
     @Override
@@ -1055,6 +1110,30 @@ public abstract class Root extends AbstractComponentContainer implements
                 listener);
     }
 
+    /**
+     * Adds a close listener to the Root. The listener is called when the Root
+     * is removed from the application.
+     * 
+     * @param listener
+     *            The listener to add.
+     */
+    public void addListener(CloseListener listener) {
+        addListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
+                listener, CloseListener.closeMethod);
+    }
+
+    /**
+     * Removes a close listener from the Root if it has previously been added
+     * with {@link #addListener(ClickListener)}. Otherwise, has no effect.
+     * 
+     * @param listener
+     *            The listener to remove.
+     */
+    public void removeListener(CloseListener listener) {
+        removeListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
+                listener);
+    }
+
     @Override
     public boolean isConnectorEnabled() {
         // TODO How can a Root be invisible? What does it mean?
@@ -1238,4 +1317,27 @@ public abstract class Root extends AbstractComponentContainer implements
         getPage().showNotification(notification);
     }
 
+    /**
+     * Returns the timestamp (millisecond since the epoch) of the last received
+     * heartbeat for this Root.
+     * 
+     * @see #heartbeat()
+     * @see Application#closeInactiveRoots()
+     * 
+     * @return The time
+     */
+    public long getLastHeartbeat() {
+        return lastHeartbeat;
+    }
+
+    /**
+     * Updates the heartbeat timestamp of this Root to the current time. Called
+     * by the framework whenever the application receives a valid heartbeat or
+     * UIDL request for this Root.
+     * 
+     * @see java.lang.System#currentTimeMillis()
+     */
+    public void heartbeat() {
+        this.lastHeartbeat = System.currentTimeMillis();
+    }
 }

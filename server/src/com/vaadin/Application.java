@@ -31,6 +31,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
@@ -575,19 +576,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     /**
      * Ends the Application.
-     * 
      * <p>
      * In effect this will cause the application stop returning any windows when
-     * asked. When the application is closed, its state is removed from the
-     * session and the browser window is redirected to the application logout
-     * url set with {@link #setLogoutURL(String)}. If the logout url has not
-     * been set, the browser window is reloaded and the application is
-     * restarted.
-     * </p>
-     * .
+     * asked. When the application is closed, close events are fired for its
+     * roots, its state is removed from the session, and the browser window is
+     * redirected to the application logout url set with
+     * {@link #setLogoutURL(String)}. If the logout url has not been set, the
+     * browser window is reloaded and the application is restarted.
      */
     public void close() {
         applicationIsRunning = false;
+        for (Root root : getRoots()) {
+            root.fireCloseEvent();
+        }
     }
 
     /**
@@ -2442,5 +2443,45 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void modifyBootstrapResponse(BootstrapResponse response) {
         eventRouter.fireEvent(response);
+    }
+
+    /**
+     * Removes all those roots from the application whose last heartbeat
+     * occurred more than {@link #getHeartbeatTimeout()} seconds ago. Close
+     * events are fired for the removed roots.
+     * <p>
+     * Called by the framework at the end of every request.
+     * 
+     * @see Root.CloseEvent
+     * @see Root.CloseListener
+     * @see #getHeartbeatTimeout()
+     * 
+     * @since 7.0.0
+     */
+    public void closeInactiveRoots() {
+        long now = System.currentTimeMillis();
+        for (Iterator<Root> i = roots.values().iterator(); i.hasNext();) {
+            Root root = i.next();
+            if (now - root.getLastHeartbeat() > 1000 * getHeartbeatTimeout()) {
+                i.remove();
+                retainOnRefreshRoots.values().remove(root.getRootId());
+                root.fireCloseEvent();
+            }
+        }
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid heartbeat or
+     * UIDL request being received from a root before that root is removed from
+     * the application. This is a lower bound; it might take longer to close an
+     * inactive root.
+     * 
+     * @since 7.0.0
+     * 
+     * @return The heartbeat timeout in seconds.
+     */
+    public int getHeartbeatTimeout() {
+        // Permit three missed heartbeats before closing the root
+        return (int) (configuration.getHeartbeatInterval() * (3.1));
     }
 }
