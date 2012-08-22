@@ -34,6 +34,7 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.root.RootServerRpc;
 import com.vaadin.shared.ui.root.RootState;
@@ -283,13 +284,12 @@ public abstract class Root extends AbstractComponentContainer implements
          * @param height
          *            the height of the window in pixels
          * @param border
-         *            the border style of the window. See {@link #BORDER_NONE
-         *            Window.BORDER_* constants}
+         *            the border style of the window.
          * @deprecated As of 7.0, use getPage().open instead
          */
         @Deprecated
         public void open(Resource resource, String windowName, int width,
-                int height, int border) {
+                int height, BorderStyle border) {
             getPage().open(resource, windowName, width, height, border);
         }
 
