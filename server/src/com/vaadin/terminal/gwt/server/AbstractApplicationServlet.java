@@ -248,6 +248,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         Application application = null;
         boolean transactionStarted = false;
         boolean requestStarted = false;
+        boolean applicationRunning = false;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -287,6 +288,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
                 applicationManager.serveConnectorResource(request, response);
                 return;
+            } else if (requestType == RequestType.HEARTBEAT) {
+                applicationManager.handleHeartbeatRequest(request, response,
+                        application);
+                return;
             }
 
             /* Update browser information from the request */
@@ -304,6 +309,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             // Start the application if it's newly created
             startApplication(request, application, webApplicationContext);
+            applicationRunning = true;
 
             /*
              * Transaction starts. Call transaction listeners. Transaction end
@@ -354,6 +360,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         } catch (final Throwable e) {
             handleServiceException(request, response, application, e);
         } finally {
+
+            if (applicationRunning) {
+                application.closeInactiveRoots();
+            }
+
             // Notifies transaction end
             try {
                 if (transactionStarted) {
@@ -1121,7 +1132,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
     protected RequestType getRequestType(WrappedHttpServletRequest request) {
@@ -1137,6 +1148,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             return RequestType.STATIC_FILE;
         } else if (ServletPortletHelper.isApplicationResourceRequest(request)) {
             return RequestType.APPLICATION_RESOURCE;
+        } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
+            return RequestType.HEARTBEAT;
         }
         return RequestType.OTHER;
 

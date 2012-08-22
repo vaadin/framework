@@ -9,7 +9,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Root;
 
 /*
-  * Copyright 2011 Vaadin Ltd.
+ * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -127,6 +127,11 @@ class ServletPortletHelper implements Serializable {
 
     public static boolean isApplicationResourceRequest(WrappedRequest request) {
         return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
+    }
+
+    public static boolean isHeartbeatRequest(WrappedRequest request) {
+        return hasPathPrefix(request,
+                ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }
 
 }

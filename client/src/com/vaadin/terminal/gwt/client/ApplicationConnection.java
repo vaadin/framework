@@ -230,6 +230,8 @@ public class ApplicationConnection {
 
         rootConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
+
+        scheduleHeartbeat();
     }
 
     /**
@@ -2519,5 +2521,73 @@ public class ApplicationConnection {
 
     public SerializerMap getSerializerMap() {
         return serializerMap;
+    }
+
+    /**
+     * Schedules a heartbeat request.
+     * 
+     * @see #sendHeartbeat()
+     */
+    private void scheduleHeartbeat() {
+        final int interval = 1000 * getConfiguration().getHeartbeatInterval();
+        if (interval > 0) {
+            new Timer() {
+                @Override
+                public void run() {
+                    sendHeartbeat();
+                }
+            }.schedule(interval);
+        }
+    }
+
+    /**
+     * Sends a heartbeat request to the server.
+     * <p>
+     * Heartbeat requests are used to inform the server that the client-side is
+     * still alive. If the client page is closed or the connection lost, the
+     * server will eventually close the inactive Root.
+     * <p>
+     * <b>TODO</b>: Improved error handling, like in doUidlRequest().
+     * 
+     * @see #scheduleHeartbeat()
+     * @see com.vaadin.ui.Root#heartbeat()
+     */
+    private void sendHeartbeat() {
+        final String uri = addGetParameters(
+                translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                        + ApplicationConstants.HEARTBEAT_REQUEST_PATH),
+                ApplicationConstants.ROOT_ID_PARAMETER + "="
+                        + getConfiguration().getRootId());
+
+        final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
+
+        final RequestCallback callback = new RequestCallback() {
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                int status = response.getStatusCode();
+                if (status == Response.SC_OK) {
+                    // TODO Permit retry in some error situations
+                    scheduleHeartbeat();
+                } else {
+                    VConsole.error("Heartbeat request failed with status code "
+                            + status);
+                }
+            }
+
+            @Override
+            public void onError(Request request, Throwable exception) {
+                VConsole.error("Heartbeat request resulted in exception");
+                VConsole.error(exception);
+            }
+        };
+
+        rb.setCallback(callback);
+
+        try {
+            rb.send();
+        } catch (RequestException re) {
+            callback.onError(null, re);
+        }
     }
 }

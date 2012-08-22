@@ -87,6 +87,7 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.terminal.gwt.server.RpcManager.RpcInvocationException;
@@ -102,7 +103,7 @@ import com.vaadin.ui.Window;
  * This is a common base class for the server-side implementations of the
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
- * {@link ApplicationConstants}.
+ * {@link ApplicationConnection}.
  * 
  * TODO Document better!
  */
@@ -576,6 +577,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 endApplication(request, response, application);
                 return;
             }
+
+            // Keep the root alive
+            root.heartbeat();
 
             // Change all variables based on request parameters
             if (!handleVariables(request, response, callback, application, root)) {
@@ -2632,6 +2636,38 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "Security key in upload post did not match!");
         }
 
+    }
+
+    /**
+     * Handles a heartbeat request. Heartbeat requests are periodically sent by
+     * the client-side to inform the server that the root sending the heartbeat
+     * is still alive (the browser window is open, the connection is up) even
+     * when there are no UIDL requests for a prolonged period of time. Roots
+     * that do not receive either heartbeat or UIDL requests are eventually
+     * removed from the application and garbage collected.
+     * 
+     * @param request
+     * @param response
+     * @param application
+     * @throws IOException
+     */
+    public void handleHeartbeatRequest(WrappedRequest request,
+            WrappedResponse response, Application application)
+            throws IOException {
+        Root root = null;
+        try {
+            int rootId = Integer.parseInt(request
+                    .getParameter(ApplicationConstants.ROOT_ID_PARAMETER));
+            root = application.getRootById(rootId);
+        } catch (NumberFormatException nfe) {
+            // null-check below handles this as well
+        }
+        if (root != null) {
+            root.heartbeat();
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "Root not found");
+        }
     }
 
     public StreamVariable getStreamVariable(String connectorId,
