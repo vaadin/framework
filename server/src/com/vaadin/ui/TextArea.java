@@ -81,7 +81,7 @@ public class TextArea extends AbstractTextField {
     }
 
     @Override
-    public TextAreaState getState() {
+    protected TextAreaState getState() {
         return (TextAreaState) super.getState();
     }
 

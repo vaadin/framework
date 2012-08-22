@@ -498,7 +498,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     @Override
-    public RootState getState() {
+    protected RootState getState() {
         return (RootState) super.getState();
     }
 

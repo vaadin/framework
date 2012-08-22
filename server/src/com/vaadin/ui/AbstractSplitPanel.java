@@ -520,7 +520,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     @Override
-    public AbstractSplitPanelState getState() {
+    protected AbstractSplitPanelState getState() {
         return (AbstractSplitPanelState) super.getState();
     }
 

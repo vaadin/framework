@@ -200,7 +200,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     @Override
-    public FormState getState() {
+    protected FormState getState() {
         return (FormState) super.getState();
     }
 

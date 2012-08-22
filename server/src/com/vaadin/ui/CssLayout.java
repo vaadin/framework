@@ -211,7 +211,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     @Override
-    public CssLayoutState getState() {
+    protected CssLayoutState getState() {
         return (CssLayoutState) super.getState();
     }
 

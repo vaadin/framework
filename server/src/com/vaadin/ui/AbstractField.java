@@ -1615,7 +1615,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     @Override
-    public AbstractFieldState getState() {
+    protected AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
     }
 

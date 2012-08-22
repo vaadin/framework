@@ -151,7 +151,7 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     @Override
-    public LabelState getState() {
+    protected LabelState getState() {
         return (LabelState) super.getState();
     }
 

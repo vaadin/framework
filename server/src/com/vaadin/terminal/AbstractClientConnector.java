@@ -31,9 +31,12 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.vaadin.Application;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.RpcManager;
@@ -137,12 +140,16 @@ public abstract class AbstractClientConnector implements ClientConnector {
         registerRpc(implementation, type);
     }
 
-    @Override
-    public SharedState getState() {
+    protected SharedState getState() {
         if (null == sharedState) {
             sharedState = createState();
         }
         return sharedState;
+    }
+
+    @Override
+    public JSONObject encodeState() throws JSONException {
+        return AbstractCommunicationManager.encodeState(this, getState());
     }
 
     /**

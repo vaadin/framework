@@ -123,7 +123,7 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
     }
 
     @Override
-    public CustomLayoutState getState() {
+    protected CustomLayoutState getState() {
         return (CustomLayoutState) super.getState();
     }
 

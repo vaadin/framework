@@ -509,7 +509,7 @@ public class Button extends AbstractComponent implements
     }
 
     @Override
-    public ButtonState getState() {
+    protected ButtonState getState() {
         return (ButtonState) super.getState();
     }
 

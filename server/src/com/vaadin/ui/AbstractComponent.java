@@ -713,7 +713,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return updated component shared state
      */
     @Override
-    public ComponentState getState() {
+    protected ComponentState getState() {
         return (ComponentState) super.getState();
     }
 

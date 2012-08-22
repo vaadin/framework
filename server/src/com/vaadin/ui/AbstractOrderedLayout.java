@@ -63,7 +63,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     @Override
-    public AbstractOrderedLayoutState getState() {
+    protected AbstractOrderedLayoutState getState() {
         return (AbstractOrderedLayoutState) super.getState();
     }
 
@@ -394,6 +394,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return components.get(index);
     }
 
+    @Override
     public void setMargin(boolean enabled) {
         setMargin(new MarginInfo(enabled));
     }
@@ -403,6 +404,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
+    @Override
     public MarginInfo getMargin() {
         return new MarginInfo(getState().getMarginsBitmask());
     }
@@ -412,6 +414,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
      */
+    @Override
     public void setMargin(MarginInfo marginInfo) {
         getState().setMarginsBitmask(marginInfo.getBitMask());
         requestRepaint();

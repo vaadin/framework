@@ -66,7 +66,7 @@ public class JavaScript extends AbstractExtension {
     }
 
     @Override
-    public JavaScriptManagerState getState() {
+    protected JavaScriptManagerState getState() {
         return (JavaScriptManagerState) super.getState();
     }
 

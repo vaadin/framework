@@ -23,7 +23,6 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
@@ -622,19 +621,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         attached to an application.
      */
     public Locale getLocale();
-
-    /**
-     * Returns the current shared state bean for the component. The state (or
-     * changes to it) is communicated from the server to the client.
-     * 
-     * Subclasses can use a more specific return type for this method.
-     * 
-     * @return The state object for the component
-     * 
-     * @since 7.0
-     */
-    @Override
-    public ComponentState getState();
 
     /**
      * Adds an unique id for component that get's transferred to terminal for

@@ -18,6 +18,8 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.AbstractClientConnector;
@@ -177,4 +179,16 @@ public interface ClientConnector extends Connector, RpcTarget {
      * @since 7.0
      */
     public void beforeClientResponse(boolean initial);
+
+    /**
+     * Called by the framework to encode the state to a JSONObject. This is
+     * typically done by calling the static method
+     * {@link AbstractCommunicationManager#encodeState(ClientConnector, SharedState)}
+     * .
+     * 
+     * @return a JSON object with the encoded connector state
+     * @throws JSONException
+     *             if the state can not be encoded
+     */
+    public JSONObject encodeState() throws JSONException;
 }

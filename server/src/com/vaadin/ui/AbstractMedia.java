@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.server.ResourceReference;
 public abstract class AbstractMedia extends AbstractComponent {
 
     @Override
-    public AbstractMediaState getState() {
+    protected AbstractMediaState getState() {
         return (AbstractMediaState) super.getState();
     }
 

@@ -489,7 +489,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     @Override
-    public PanelState getState() {
+    protected PanelState getState() {
         return (PanelState) super.getState();
     }
 

@@ -31,6 +31,8 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
@@ -235,12 +237,6 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public SharedState getState() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public String getConnectorId() {
         return ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID;
     }
@@ -326,5 +322,11 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     @Override
     public void beforeClientResponse(boolean initial) {
         // Nothing to do
+    }
+
+    @Override
+    public JSONObject encodeState() throws JSONException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -141,7 +141,7 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public GridLayoutState getState() {
+    protected GridLayoutState getState() {
         return (GridLayoutState) super.getState();
     }
 

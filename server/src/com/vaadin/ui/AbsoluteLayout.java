@@ -61,7 +61,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     }
 
     @Override
-    public AbsoluteLayoutState getState() {
+    protected AbsoluteLayoutState getState() {
         return (AbsoluteLayoutState) super.getState();
     }
 

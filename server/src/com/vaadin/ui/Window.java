@@ -838,7 +838,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     @Override
-    public WindowState getState() {
+    protected WindowState getState() {
         return (WindowState) super.getState();
     }
 }

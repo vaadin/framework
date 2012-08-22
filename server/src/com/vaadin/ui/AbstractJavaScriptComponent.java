@@ -17,6 +17,8 @@ package com.vaadin.ui;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.JavaScriptCallbackHelper;
+import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
 
 /**
  * Base class for Components with all client-side logic implemented using
@@ -90,9 +92,8 @@ import com.vaadin.terminal.JavaScriptCallbackHelper;
  * {@link #addFunction(String, JavaScriptFunction)} on the server will
  * automatically be present as a function that triggers the registered function
  * on the server.</li>
- * <li>Any field name referred to using
- * {@link #callFunction(String, Object...)} on the server will be called if a
- * function has been assigned to the field.</li>
+ * <li>Any field name referred to using {@link #callFunction(String, Object...)}
+ * on the server will be called if a function has been assigned to the field.</li>
  * </ul>
  * <p>
  * 
@@ -168,7 +169,7 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
     }
 
     @Override
-    public JavaScriptComponentState getState() {
+    protected JavaScriptComponentState getState() {
         return (JavaScriptComponentState) super.getState();
     }
 }

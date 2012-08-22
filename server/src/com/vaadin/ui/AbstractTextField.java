@@ -92,7 +92,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    public AbstractTextFieldState getState() {
+    protected AbstractTextFieldState getState() {
         return (AbstractTextFieldState) super.getState();
     }
 

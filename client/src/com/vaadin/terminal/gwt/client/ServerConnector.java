@@ -22,6 +22,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 
 /**
@@ -142,4 +143,13 @@ public interface ServerConnector extends Connector {
     public void setChildren(List<ServerConnector> children);
 
     public List<ServerConnector> getChildren();
+
+    /**
+     * Gets the current shared state of the connector.
+     * 
+     * @since 7.0.
+     * @return state The shared state object. Can be any sub type of
+     *         {@link SharedState}. Never null.
+     */
+    public SharedState getState();
 }
