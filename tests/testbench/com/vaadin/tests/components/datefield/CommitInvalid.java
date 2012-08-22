@@ -41,7 +41,7 @@ public class CommitInvalid extends TestBase {
          * Create and configure form.
          */
         final Form form = new Form();
-        form.setWriteThrough(false); // set write buffering on
+        form.setBuffered(true); // set write buffering on
         form.setImmediate(true); // make form (and especially its fields
                                  // immediate)
 
@@ -132,8 +132,8 @@ public class CommitInvalid extends TestBase {
     }
 
     private void printState() {
-        log.log("Date. Field: " + f((Date) dateField.getValue())
-                + " Property: " + f(dateProperty.getValue()));
+        log.log("Date. Field: " + f(dateField.getValue()) + " Property: "
+                + f(dateProperty.getValue()));
         log.log("Integer: Field: " + integerField.getValue() + " Property: "
                 + integerProperty.getValue());
     }

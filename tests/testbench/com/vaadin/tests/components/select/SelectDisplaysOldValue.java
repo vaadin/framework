@@ -121,8 +121,7 @@ public class SelectDisplaysOldValue extends TestBase {
             controllerComboBox.setNullSelectionAllowed(false);
             controllerComboBox.setNewItemsAllowed(false);
             controllerComboBox.setImmediate(true);
-            controllerComboBox.setWriteThrough(false);
-            controllerComboBox.setReadThrough(false);
+            controllerComboBox.setBuffered(true);
 
         }
 
@@ -131,8 +130,7 @@ public class SelectDisplaysOldValue extends TestBase {
             slaveComboBox.setNullSelectionAllowed(false);
             slaveComboBox.setNewItemsAllowed(false);
             slaveComboBox.setImmediate(true);
-            slaveComboBox.setWriteThrough(false);
-            slaveComboBox.setReadThrough(false);
+            slaveComboBox.setBuffered(true);
         }
 
         private void refreshSlaveDropdown(Integer masterId) {

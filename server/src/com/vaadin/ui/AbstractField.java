@@ -97,14 +97,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private LinkedList<Validator> validators = null;
 
     /**
-     * Auto commit mode.
+     * True if field is in buffered mode, false otherwise
      */
-    private boolean writeThroughMode = true;
-
-    /**
-     * Reads the value from data-source, when it is not modified.
-     */
-    private boolean readThroughMode = true;
+    private boolean buffered;
 
     /**
      * Flag to indicate that the field is currently committing its value to the
@@ -345,7 +340,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private T getFieldValue() {
         // Give the value from abstract buffers if the field if possible
-        if (dataSource == null || !isReadThrough() || isModified()) {
+        if (dataSource == null || isBuffered() || isModified()) {
             return getInternalValue();
         }
 
@@ -368,91 +363,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         requestRepaint();
     }
 
-    /*
-     * Tests if the field is in write-through mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from the implemented interface.
-     */
-    @Override
-    public boolean isWriteThrough() {
-        return writeThroughMode;
-    }
-
-    /**
-     * Sets the field's write-through mode to the specified status. When
-     * switching the write-through mode on, a {@link #commit()} will be
-     * performed.
-     * 
-     * @see #setBuffered(boolean) for an easier way to control read through and
-     *      write through modes
-     * 
-     * @param writeThrough
-     *            Boolean value to indicate if the object should be in
-     *            write-through mode after the call.
-     * @throws SourceException
-     *             If the operation fails because of an exception is thrown by
-     *             the data source.
-     * @throws InvalidValueException
-     *             If the implicit commit operation fails because of a
-     *             validation error.
-     * @deprecated As of 7.0, use {@link #setBuffered(boolean)} instead. Note
-     *             that setReadThrough(true), setWriteThrough(true) equals
-     *             setBuffered(false)
-     */
-    @Override
-    @Deprecated
-    public void setWriteThrough(boolean writeThrough)
-            throws Buffered.SourceException, InvalidValueException {
-        if (writeThroughMode == writeThrough) {
-            return;
-        }
-        writeThroughMode = writeThrough;
-        if (writeThroughMode) {
-            commit();
-        }
-    }
-
-    /*
-     * Tests if the field is in read-through mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from the implemented interface.
-     */
-    @Override
-    public boolean isReadThrough() {
-        return readThroughMode;
-    }
-
-    /**
-     * Sets the field's read-through mode to the specified status. When
-     * switching read-through mode on, the object's value is updated from the
-     * data source.
-     * 
-     * @see #setBuffered(boolean) for an easier way to control read through and
-     *      write through modes
-     * 
-     * @param readThrough
-     *            Boolean value to indicate if the object should be in
-     *            read-through mode after the call.
-     * 
-     * @throws SourceException
-     *             If the operation fails because of an exception is thrown by
-     *             the data source. The cause is included in the exception.
-     * @deprecated As of 7.0, use {@link #setBuffered(boolean)} instead. Note
-     *             that setReadThrough(true), setWriteThrough(true) equals
-     *             setBuffered(false)
-     */
-    @Override
-    @Deprecated
-    public void setReadThrough(boolean readThrough)
-            throws Buffered.SourceException {
-        if (readThroughMode == readThrough) {
-            return;
-        }
-        readThroughMode = readThrough;
-        if (!isModified() && readThroughMode && getPropertyDataSource() != null) {
-            setInternalValue(convertFromDataSource(getDataSourceValue()));
-            fireValueChange(false);
-        }
-    }
-
     /**
      * Sets the buffered mode of this Field.
      * <p>
@@ -460,34 +370,35 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * property data source until {@link #commit()} is called.
      * </p>
      * <p>
-     * Changing buffered mode will change the read through and write through
-     * state for the field.
+     * Setting buffered mode from true to false will commit any pending changes.
      * </p>
      * <p>
-     * Mixing calls to {@link #setBuffered(boolean)} and
-     * {@link #setReadThrough(boolean)} or {@link #setWriteThrough(boolean)} is
-     * generally a bad idea.
+     * 
      * </p>
      * 
+     * @since 7.0.0
      * @param buffered
      *            true if buffered mode should be turned on, false otherwise
      */
     @Override
     public void setBuffered(boolean buffered) {
-        setReadThrough(!buffered);
-        setWriteThrough(!buffered);
+        if (this.buffered == buffered) {
+            return;
+        }
+        this.buffered = buffered;
+        if (!buffered) {
+            commit();
+        }
     }
 
     /**
      * Checks the buffered mode of this Field.
-     * <p>
-     * This method only returns true if both read and write buffering is used.
      * 
      * @return true if buffered mode is on, false otherwise
      */
     @Override
     public boolean isBuffered() {
-        return !isReadThrough() && !isWriteThrough();
+        return buffered;
     }
 
     /* Property interface implementation */
@@ -607,8 +518,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setModified(dataSource != null);
 
             valueWasModifiedByDataSourceDuringCommit = false;
-            // In write through mode , try to commit
-            if (isWriteThrough() && dataSource != null
+            // In not buffering, try to commit
+            if (!isBuffered() && dataSource != null
                     && (isInvalidCommitted() || isValid())) {
                 try {
 
@@ -1267,7 +1178,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        if (isReadThrough()) {
+        if (!isBuffered()) {
             if (committingValueToDataSource) {
                 boolean propertyNotifiesOfTheBufferedValue = equals(event
                         .getProperty().getValue(), getInternalValue());
@@ -1371,7 +1282,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         if (!isListeningToPropertyEvents) {
             addPropertyListeners();
-            if (!isModified() && isReadThrough()) {
+            if (!isModified() && !isBuffered()) {
                 // Update value from data source
                 discard();
             }

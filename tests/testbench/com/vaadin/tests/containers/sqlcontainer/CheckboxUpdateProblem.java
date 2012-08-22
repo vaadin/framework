@@ -76,7 +76,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
 
         private TestForm() {
             setSizeFull();
-            setWriteThrough(false);
+            setBuffered(true);
             setInvalidCommitted(false);
 
             save = new Button("Save", this);
