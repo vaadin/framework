@@ -813,11 +813,20 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param listener
      *            the user change listener to add.
      */
-    public void addListener(UserChangeListener listener) {
+    public void addUserChangeListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
             userChangeListeners = new LinkedList<UserChangeListener>();
         }
         userChangeListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addUserChangeListener(UserChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(UserChangeListener listener) {
+        addUserChangeListener(listener);
     }
 
     /**
@@ -826,7 +835,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param listener
      *            the user change listener to remove.
      */
-    public void removeListener(UserChangeListener listener) {
+
+    public void removeUserChangeListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
             return;
         }
@@ -834,6 +844,15 @@ public class Application implements Terminal.ErrorListener, Serializable {
         if (userChangeListeners.isEmpty()) {
             userChangeListeners = null;
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeUserChangeListener(UserChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(UserChangeListener listener) {
+        removeUserChangeListener(listener);
     }
 
     /**
