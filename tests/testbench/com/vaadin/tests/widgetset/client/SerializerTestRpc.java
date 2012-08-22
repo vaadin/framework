@@ -23,6 +23,7 @@ import java.util.Set;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
+import com.vaadin.shared.ui.label.ContentMode;
 
 @SuppressWarnings("javadoc")
 public interface SerializerTestRpc extends ServerRpc, ClientRpc {
@@ -72,5 +73,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendWrappedGenerics(
             Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics);
+
+    public void sendEnum(ContentMode contentMode, ContentMode[] array, List<ContentMode> list);
 
 }

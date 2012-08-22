@@ -21,8 +21,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.shared.ui.VMarginInfo;
-import com.vaadin.terminal.gwt.client.StyleConstants;
 
 public class VCssLayout extends SimplePanel {
     public static final String TAGNAME = "csslayout";
@@ -64,21 +62,4 @@ public class VCssLayout extends SimplePanel {
 
     }
 
-    /**
-     * Sets CSS classes for margin based on the given parameters.
-     * 
-     * @param margins
-     *            A {@link VMarginInfo} object that provides info on
-     *            top/left/bottom/right margins
-     */
-    protected void setMarginStyles(VMarginInfo margins) {
-        setStyleName(margin, VCssLayout.CLASSNAME + "-"
-                + StyleConstants.MARGIN_TOP, margins.hasTop());
-        setStyleName(margin, VCssLayout.CLASSNAME + "-"
-                + StyleConstants.MARGIN_RIGHT, margins.hasRight());
-        setStyleName(margin, VCssLayout.CLASSNAME + "-"
-                + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
-        setStyleName(margin, VCssLayout.CLASSNAME + "-"
-                + StyleConstants.MARGIN_LEFT, margins.hasLeft());
-    }
 }

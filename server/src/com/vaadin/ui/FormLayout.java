@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.shared.ui.MarginInfo;
+
 /**
  * FormLayout is used by {@link Form} to layout fields. It may also be used
  * separately without {@link Form}.
@@ -36,7 +38,7 @@ public class FormLayout extends AbstractOrderedLayout {
     public FormLayout() {
         super();
         setSpacing(true);
-        setMargin(true, false, true, false);
+        setMargin(new MarginInfo(true, false, true, false));
         setWidth(100, UNITS_PERCENTAGE);
     }
 

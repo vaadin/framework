@@ -4122,8 +4122,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 row.addStyleName("v-selected");
             }
             tBodyElement.appendChild(row.getElement());
-            adopt(row);
+            // Add to renderedRows before adopt so iterator() will return also
+            // this row if called in an attach handler (#9264)
             renderedRows.add(row);
+            adopt(row);
         }
 
         private void insertRowAt(VScrollTableRow row, int index) {
@@ -5780,14 +5782,37 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // Hey IE, are you really sure about this?
             availW = scrollBody.getAvailableWidth();
             int visibleCellCount = tHead.getVisibleCellCount();
-            availW -= scrollBody.getCellExtraWidth() * visibleCellCount;
+            int totalExtraWidth = scrollBody.getCellExtraWidth()
+                    * visibleCellCount;
             if (willHaveScrollbars()) {
-                availW -= Util.getNativeScrollbarSize();
+                totalExtraWidth += Util.getNativeScrollbarSize();
             }
+            availW -= totalExtraWidth;
+            int forceScrollBodyWidth = -1;
 
             int extraSpace = availW - usedMinimumWidth;
             if (extraSpace < 0) {
+                if (getTotalRows() == 0) {
+                    /*
+                     * Too wide header combined with no rows in the table.
+                     * 
+                     * No horizontal scrollbars would be displayed because
+                     * there's no rows that grows too wide causing the
+                     * scrollBody container div to overflow. Must explicitely
+                     * force a width to a scrollbar. (see #9187)
+                     */
+                    forceScrollBodyWidth = usedMinimumWidth + totalExtraWidth;
+                }
                 extraSpace = 0;
+            }
+
+            if (forceScrollBodyWidth > 0) {
+                scrollBody.container.getStyle().setWidth(forceScrollBodyWidth,
+                        Unit.PX);
+            } else {
+                // Clear width that might have been set to force horizontal
+                // scrolling if there are no rows
+                scrollBody.container.getStyle().clearWidth();
             }
 
             int totalUndefinedNaturalWidths = usedMinimumWidth

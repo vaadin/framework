@@ -1,5 +1,8 @@
 package com.vaadin.tests.application;
 
+import com.vaadin.Application;
+import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
@@ -20,11 +23,14 @@ public class RefreshStatePreserve extends AbstractTestApplication {
     public void init() {
         super.init();
         setRootPreserved(true);
-    }
-
-    @Override
-    protected String getRootClassName(WrappedRequest request) {
-        return RefreshStateRoot.class.getName();
+        addRootProvider(new AbstractRootProvider() {
+            @Override
+            public Class<? extends Root> getRootClass(Application application,
+                    WrappedRequest request)
+                    throws RootRequiresMoreInformationException {
+                return RefreshStateRoot.class;
+            }
+        });
     }
 
     @Override

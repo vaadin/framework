@@ -30,6 +30,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.terminal.LegacyPaint;
@@ -63,8 +64,8 @@ import com.vaadin.terminal.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
-        Vaadin6Component {
+        Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
+        LayoutClickNotifier, Vaadin6Component {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -1414,6 +1415,39 @@ public class GridLayout extends AbstractLayout implements
     public void removeListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#setMargin(boolean)
+     */
+    @Override
+    public void setMargin(boolean enabled) {
+        setMargin(new MarginInfo(enabled));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.Layout.MarginHandler#setMargin(com.vaadin.shared.ui.MarginInfo
+     * )
+     */
+    @Override
+    public void setMargin(MarginInfo marginInfo) {
+        getState().setMarginsBitmask(marginInfo.getBitMask());
+        requestRepaint();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
+     */
+    @Override
+    public MarginInfo getMargin() {
+        return new MarginInfo(getState().getMarginsBitmask());
     }
 
 }

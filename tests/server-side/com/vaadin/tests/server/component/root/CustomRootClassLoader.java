@@ -6,14 +6,15 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
+
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.terminal.DefaultRootProvider;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Root;
-
-import org.easymock.EasyMock;
 
 public class CustomRootClassLoader extends TestCase {
 
@@ -111,10 +112,17 @@ public class CustomRootClassLoader extends TestCase {
 
     private Application createStubApplication() {
         return new Application() {
+            {
+                addRootProvider(new DefaultRootProvider());
+            }
+
             @Override
-            protected String getRootClassName(WrappedRequest request) {
-                // Always use the same root class
-                return MyRoot.class.getName();
+            public String getProperty(String name) {
+                if (name.equals(ROOT_PARAMETER)) {
+                    return MyRoot.class.getName();
+                } else {
+                    return super.getProperty(name);
+                }
             }
 
             @Override

@@ -28,6 +28,7 @@ import java.util.Set;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
@@ -230,6 +231,16 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 rpc.sendListArray(new List[] { objectListArray[1],
                         objectListArray[0] }, new List[] { Collections
                         .singletonList(beanListArray[0].get(0)) });
+            }
+
+            @Override
+            public void sendEnum(ContentMode contentMode, ContentMode[] array,
+                    List<ContentMode> list) {
+                ContentMode nextContentMode = ContentMode.values()[contentMode
+                        .ordinal() + 1];
+                rpc.sendEnum(nextContentMode,
+                        list.toArray(new ContentMode[list.size()]),
+                        Arrays.asList(array));
             }
         });
     }

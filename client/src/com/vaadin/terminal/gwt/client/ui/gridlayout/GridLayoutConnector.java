@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
@@ -163,7 +163,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.colExpandRatioArray = uidl.getIntArrayAttribute("colExpand");
         layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
 
-        layout.updateMarginStyleNames(new VMarginInfo(getState()
+        layout.updateMarginStyleNames(new MarginInfo(getState()
                 .getMarginsBitmask()));
 
         layout.updateSpacingStyleName(getState().isSpacing());

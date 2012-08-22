@@ -131,7 +131,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: seconds.
      * 
-     * @deprecated Use {@link Resolution#SECOND}
+     * @deprecated As of 7.0, use {@link Resolution#SECOND}
      */
     @Deprecated
     public static final Resolution RESOLUTION_SEC = Resolution.SECOND;
@@ -139,7 +139,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: minutes.
      * 
-     * @deprecated Use {@link Resolution#MINUTE}
+     * @deprecated As of 7.0, use {@link Resolution#MINUTE}
      */
     @Deprecated
     public static final Resolution RESOLUTION_MIN = Resolution.MINUTE;
@@ -147,7 +147,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: hours.
      * 
-     * @deprecated Use {@link Resolution#HOUR}
+     * @deprecated As of 7.0, use {@link Resolution#HOUR}
      */
     @Deprecated
     public static final Resolution RESOLUTION_HOUR = Resolution.HOUR;
@@ -155,7 +155,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: days.
      * 
-     * @deprecated Use {@link Resolution#DAY}
+     * @deprecated As of 7.0, use {@link Resolution#DAY}
      */
     @Deprecated
     public static final Resolution RESOLUTION_DAY = Resolution.DAY;
@@ -163,7 +163,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: months.
      * 
-     * @deprecated Use {@link Resolution#MONTH}
+     * @deprecated As of 7.0, use {@link Resolution#MONTH}
      */
     @Deprecated
     public static final Resolution RESOLUTION_MONTH = Resolution.MONTH;
@@ -171,7 +171,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: years.
      * 
-     * @deprecated Use {@link Resolution#YEAR}
+     * @deprecated As of 7.0, use {@link Resolution#YEAR}
      */
     @Deprecated
     public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;

@@ -16,6 +16,8 @@
 
 package com.vaadin.terminal.gwt.client.ui.button;
 
+import java.util.Set;
+
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -34,6 +36,7 @@ import com.vaadin.terminal.gwt.client.EventHelper;
 import com.vaadin.terminal.gwt.client.MouseEventDetailsBuilder;
 import com.vaadin.terminal.gwt.client.communication.RpcProxy;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
+import com.vaadin.terminal.gwt.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.Icon;
 import com.vaadin.ui.Button;
@@ -59,6 +62,47 @@ public class ButtonConnector extends AbstractComponentConnector implements
         super.init();
         getWidget().addClickHandler(this);
         getWidget().client = getConnection();
+        addStateChangeHandler("errorMessage", new StateChangeHandler() {
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                if (null != getState().getErrorMessage()) {
+                    if (getWidget().errorIndicatorElement == null) {
+                        getWidget().errorIndicatorElement = DOM.createSpan();
+                        getWidget().errorIndicatorElement
+                                .setClassName("v-errorindicator");
+                    }
+                    getWidget().wrapper.insertBefore(
+                            getWidget().errorIndicatorElement,
+                            getWidget().captionElement);
+
+                } else if (getWidget().errorIndicatorElement != null) {
+                    getWidget().wrapper
+                            .removeChild(getWidget().errorIndicatorElement);
+                    getWidget().errorIndicatorElement = null;
+                }
+            }
+        });
+
+        addStateChangeHandler("icon", new StateChangeHandler() {
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                if (getState().getIcon() != null) {
+                    if (getWidget().icon == null) {
+                        getWidget().icon = new Icon(getConnection());
+                        getWidget().wrapper.insertBefore(
+                                getWidget().icon.getElement(),
+                                getWidget().captionElement);
+                    }
+                    getWidget().icon.setUri(getState().getIcon().getURL());
+                } else {
+                    if (getWidget().icon != null) {
+                        getWidget().wrapper.removeChild(getWidget().icon
+                                .getElement());
+                        getWidget().icon = null;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -68,39 +112,15 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 focusHandlerRegistration);
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
-        // Set text
-        if (getState().isHtmlContentAllowed()) {
-            getWidget().setHtml(getState().getCaption());
-        } else {
-            getWidget().setText(getState().getCaption());
-        }
 
-        // handle error
-        if (null != getState().getErrorMessage()) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement
-                        .setClassName("v-errorindicator");
-            }
-            getWidget().wrapper.insertBefore(getWidget().errorIndicatorElement,
-                    getWidget().captionElement);
-
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);
-            getWidget().errorIndicatorElement = null;
-        }
-
-        if (getState().getIcon() != null) {
-            if (getWidget().icon == null) {
-                getWidget().icon = new Icon(getConnection());
-                getWidget().wrapper.insertBefore(getWidget().icon.getElement(),
-                        getWidget().captionElement);
-            }
-            getWidget().icon.setUri(getState().getIcon().getURL());
-        } else {
-            if (getWidget().icon != null) {
-                getWidget().wrapper.removeChild(getWidget().icon.getElement());
-                getWidget().icon = null;
+        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
+        if (changedProperties.contains("caption")
+                || changedProperties.contains("htmlContentAllowed")) {
+            // Set text
+            if (getState().isHtmlContentAllowed()) {
+                getWidget().setHtml(getState().getCaption());
+            } else {
+                getWidget().setText(getState().getCaption());
             }
         }
 

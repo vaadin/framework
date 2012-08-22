@@ -23,6 +23,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -82,6 +84,16 @@ public class RootConnector extends AbstractComponentContainerConnector
             @Override
             public void setTitle(String title) {
                 com.google.gwt.user.client.Window.setTitle(title);
+            }
+        });
+        getWidget().addResizeHandler(new ResizeHandler() {
+            @Override
+            public void onResize(ResizeEvent event) {
+                rpc.resize(event.getHeight(), event.getWidth(),
+                        Window.getClientWidth(), Window.getClientHeight());
+                if (getState().isImmediate()) {
+                    getConnection().sendPendingVariableChanges();
+                }
             }
         });
     }

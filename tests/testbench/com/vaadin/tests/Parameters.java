@@ -27,7 +27,7 @@ import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
@@ -90,7 +90,7 @@ public class Parameters extends com.vaadin.Application.LegacyApplication
         final Panel panel2 = new Panel("Parameter Handler");
         params.setSizeFull();
         panel2.setContent(new VerticalLayout());
-        ((Layout) panel2.getContent()).setMargin(true);
+        ((MarginHandler) panel2.getContent()).setMargin(true);
 
         params.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
         panel2.addComponent(params);

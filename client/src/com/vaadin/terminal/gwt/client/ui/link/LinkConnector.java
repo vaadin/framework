@@ -17,6 +17,7 @@
 package com.vaadin.terminal.gwt.client.ui.link;
 
 import com.google.gwt.user.client.DOM;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -57,12 +58,12 @@ public class LinkConnector extends AbstractComponentConnector implements
 
         if (uidl.hasAttribute("border")) {
             if ("none".equals(uidl.getStringAttribute("border"))) {
-                getWidget().borderStyle = VLink.BORDER_STYLE_NONE;
+                getWidget().borderStyle = BorderStyle.NONE;
             } else {
-                getWidget().borderStyle = VLink.BORDER_STYLE_MINIMAL;
+                getWidget().borderStyle = BorderStyle.MINIMAL;
             }
         } else {
-            getWidget().borderStyle = VLink.BORDER_STYLE_DEFAULT;
+            getWidget().borderStyle = BorderStyle.DEFAULT;
         }
 
         getWidget().targetHeight = uidl.hasAttribute("targetHeight") ? uidl

@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ComponentState;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -112,7 +112,7 @@ public class VFormLayout extends SimplePanel {
             }
         }
 
-        public void setMargins(VMarginInfo margins) {
+        public void setMargins(MarginInfo margins) {
             Element margin = getElement();
             setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                     margins.hasTop());

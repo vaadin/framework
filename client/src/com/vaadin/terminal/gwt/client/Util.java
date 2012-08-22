@@ -874,13 +874,13 @@ public class Util {
     }
 
     static void logVariableBurst(ApplicationConnection c,
-            ArrayList<MethodInvocation> loggedBurst) {
+            Collection<MethodInvocation> loggedBurst) {
         try {
             VConsole.log("Variable burst to be sent to server:");
             String curId = null;
             ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
-            for (int i = 0; i < loggedBurst.size(); i++) {
-                String id = loggedBurst.get(i).getConnectorId();
+            for (MethodInvocation methodInvocation : loggedBurst) {
+                String id = methodInvocation.getConnectorId();
 
                 if (curId == null) {
                     curId = id;
@@ -889,7 +889,7 @@ public class Util {
                     invocations.clear();
                     curId = id;
                 }
-                invocations.add(loggedBurst.get(i));
+                invocations.add(methodInvocation);
             }
             if (!invocations.isEmpty()) {
                 printConnectorInvocations(invocations, curId, c);

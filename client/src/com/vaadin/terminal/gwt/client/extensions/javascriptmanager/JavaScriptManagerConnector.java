@@ -124,7 +124,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         getConnection().addMethodInvocationToQueue(
                 new MethodInvocation(getConnectorId(),
                         "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc",
-                        "call", parameters), true);
+                        "call", parameters), false, false);
     }
 
     @Override

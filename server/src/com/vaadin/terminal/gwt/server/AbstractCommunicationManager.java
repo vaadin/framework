@@ -68,7 +68,9 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
@@ -822,6 +824,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (repaintAll) {
             getClientCache(root).clear();
             rootConnectorTracker.markAllConnectorsDirty();
+            rootConnectorTracker.markAllClientSidesUninitialized();
 
             // Reset sent locales
             locales = null;
@@ -836,9 +839,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 "Found " + dirtyVisibleConnectors.size()
                         + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
-            if (connector instanceof Component) {
-                ((Component) connector).updateState();
-            }
+            boolean initialized = rootConnectorTracker
+                    .isClientSideInitialized(connector);
+            connector.beforeClientResponse(!initialized);
         }
         rootConnectorTracker.markAllConnectorsClean();
 
@@ -887,23 +890,36 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 try {
                     Class<? extends SharedState> stateType = connector
                             .getStateType();
-                    SharedState referenceState = null;
-                    if (repaintAll) {
+                    Object diffState = rootConnectorTracker
+                            .getDiffState(connector);
+                    if (diffState == null) {
+                        diffState = new JSONObject();
                         // Use an empty state object as reference for full
                         // repaints
-                        try {
-                            referenceState = stateType.newInstance();
-                        } catch (Exception e) {
-                            getLogger().log(
-                                    Level.WARNING,
-                                    "Error creating reference object for state of type "
-                                            + stateType.getName());
+                        boolean emptyInitialState = JavaScriptConnectorState.class
+                                .isAssignableFrom(stateType);
+                        if (!emptyInitialState) {
+                            try {
+                                SharedState referenceState = stateType
+                                        .newInstance();
+                                diffState = JsonCodec.encode(referenceState,
+                                        null, stateType,
+                                        root.getConnectorTracker());
+                            } catch (Exception e) {
+                                getLogger().log(
+                                        Level.WARNING,
+                                        "Error creating reference object for state of type "
+                                                + stateType.getName());
+                            }
                         }
+                        rootConnectorTracker.setDiffState(connector, diffState);
                     }
-                    Object stateJson = JsonCodec.encode(state, referenceState,
-                            stateType, root.getConnectorTracker());
+                    JSONObject stateJson = (JSONObject) JsonCodec.encode(state,
+                            diffState, stateType, root.getConnectorTracker());
 
-                    sharedStates.put(connector.getConnectorId(), stateJson);
+                    if (stateJson.length() != 0) {
+                        sharedStates.put(connector.getConnectorId(), stateJson);
+                    }
                 } catch (JSONException e) {
                     throw new PaintException(
                             "Failed to serialize shared state for connector "
@@ -1252,6 +1268,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         if (dragAndDropService != null) {
             dragAndDropService.printJSONResponse(outWriter);
+        }
+
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            rootConnectorTracker.markClientSideInitialized(connector);
         }
 
         writePerformanceData(outWriter);

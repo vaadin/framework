@@ -18,7 +18,7 @@ package com.vaadin.terminal.gwt.client.ui.formlayout;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorHierarchyChangeEvent;
@@ -46,7 +46,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
         VFormLayoutTable formLayoutTable = getWidget().table;
 
-        formLayoutTable.setMargins(new VMarginInfo(getState()
+        formLayoutTable.setMargins(new MarginInfo(getState()
                 .getMarginsBitmask()));
         formLayoutTable.setSpacing(getState().isSpacing());
 

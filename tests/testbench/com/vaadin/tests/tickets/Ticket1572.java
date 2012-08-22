@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
@@ -82,19 +83,19 @@ public class Ticket1572 extends com.vaadin.Application.LegacyApplication {
             state.setValue("Margin on");
             break;
         case 2:
-            gl.setMargin(true, false, false, false);
+            gl.setMargin(new MarginInfo(true, false, false, false));
             state.setValue("Margin top");
             break;
         case 3:
-            gl.setMargin(false, true, false, false);
+            gl.setMargin(new MarginInfo(false, true, false, false));
             state.setValue("Margin right");
             break;
         case 4:
-            gl.setMargin(false, false, true, false);
+            gl.setMargin(new MarginInfo(false, false, true, false));
             state.setValue("Margin bottom");
             break;
         case 5:
-            gl.setMargin(false, false, false, true);
+            gl.setMargin(new MarginInfo(false, false, false, true));
             state.setValue("Margin left");
             break;
         default:

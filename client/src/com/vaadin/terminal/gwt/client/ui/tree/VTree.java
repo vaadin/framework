@@ -79,8 +79,8 @@ import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
  * 
  */
 public class VTree extends FocusElementPanel implements VHasDropHandler,
-        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-        SubPartAware, ActionOwner {
+FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
+SubPartAware, ActionOwner {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -137,12 +137,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
 
-                @Override
-                public void execute() {
-                    Util.notifyParentOfSizeChange(VTree.this, true);
-                }
+        @Override
+        public void execute() {
+            Util.notifyParentOfSizeChange(VTree.this, true);
+        }
 
-            });
+    });
 
     public VTree() {
         super();
@@ -601,7 +601,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 focus();
             }
 
-            ScheduledCommand command = new ScheduledCommand() {
+            executeEventCommand(new ScheduledCommand() {
+
                 @Override
                 public void execute() {
 
@@ -636,17 +637,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                         }
                     }
                 }
-            };
-
-            if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
-                /*
-                 * Safari may need to wait for focus. See FocusImplSafari.
-                 */
-                // VConsole.log("Deferring click handling to let webkit gain focus...");
-                Scheduler.get().scheduleDeferred(command);
-            } else {
-                command.execute();
-            }
+            });
 
             return true;
         }
@@ -677,7 +668,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     && client.hasEventListeners(VTree.this,
                             TreeConstants.ITEM_CLICK_EVENT_ID)
 
-                    && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
+                            && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
             if (type == Event.ONCLICK) {
@@ -709,7 +700,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                             .getEventTarget().cast())) {
                         if (dragMode > 0
                                 && (type == Event.ONTOUCHSTART || event
-                                        .getButton() == NativeEvent.BUTTON_LEFT)) {
+                                .getButton() == NativeEvent.BUTTON_LEFT)) {
                             mouseDownEvent = event; // save event for possible
                             // dd operation
                             if (type == Event.ONMOUSEDOWN) {
@@ -790,9 +781,12 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     focus();
                 }
             }
+
             final MouseEventDetails details = MouseEventDetailsBuilder
                     .buildMouseEventDetails(evt);
-            ScheduledCommand command = new ScheduledCommand() {
+
+            executeEventCommand(new ScheduledCommand() {
+
                 @Override
                 public void execute() {
                     // Determine if we should send the event immediately to the
@@ -820,14 +814,18 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     client.updateVariable(paintableId, "clickEvent",
                             details.toString(), sendClickEventNow);
                 }
-            };
-            if (treeHasFocus) {
-                command.execute();
-            } else {
-                /*
-                 * Webkits need a deferring due to FocusImplSafari uses timeout
-                 */
+            });
+        }
+
+        /*
+         * Must wait for Safari to focus before sending click and value change
+         * events (see #6373, #6374)
+         */
+        private void executeEventCommand(ScheduledCommand command) {
+            if (BrowserInfo.get().isWebkit() && !treeHasFocus) {
                 Scheduler.get().scheduleDeferred(command);
+            } else {
+                command.execute();
             }
         }
 
@@ -1723,7 +1721,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 selectNode(
                         focusedNode,
                         (!isMultiselect || multiSelectMode == MULTISELECT_MODE_SIMPLE)
-                                && selectable);
+                        && selectable);
             } else {
                 deselectNode(focusedNode);
             }

@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -57,6 +58,7 @@ import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.RequestHandler;
+import com.vaadin.terminal.RootProvider;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
@@ -503,6 +505,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      */
     private Set<Integer> initedRoots = new HashSet<Integer>();
+
+    private List<RootProvider> rootProviders = new LinkedList<RootProvider>();
 
     /**
      * Gets the user of the application.
@@ -1874,55 +1878,21 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     protected Root getRoot(WrappedRequest request)
             throws RootRequiresMoreInformationException {
-        String rootClassName = getRootClassName(request);
-        try {
-            ClassLoader classLoader = request.getDeploymentConfiguration()
-                    .getClassLoader();
-            if (classLoader == null) {
-                classLoader = getClass().getClassLoader();
-            }
-            Class<? extends Root> rootClass = Class.forName(rootClassName,
-                    true, classLoader).asSubclass(Root.class);
-            try {
-                Root root = rootClass.newInstance();
-                return root;
-            } catch (Exception e) {
-                throw new RuntimeException("Could not instantiate root class "
-                        + rootClassName, e);
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not load root class "
-                    + rootClassName, e);
-        }
-    }
 
-    /**
-     * Provides the name of the <code>Root</code> class that should be used for
-     * a request. The class must have an accessible no-args constructor.
-     * <p>
-     * The default implementation uses the {@value #ROOT_PARAMETER} parameter
-     * from web.xml.
-     * </p>
-     * <p>
-     * This method is mainly used by the default implementation of
-     * {@link #getRoot(WrappedRequest)}. If you override that method with your
-     * own functionality, the results of this method might not be used.
-     * </p>
-     * 
-     * @param request
-     *            the request for which a new root is required
-     * @return the name of the root class to use
-     * 
-     * @since 7.0
-     */
-    protected String getRootClassName(WrappedRequest request) {
-        Object rootClassNameObj = getProperties().get(ROOT_PARAMETER);
-        if (rootClassNameObj instanceof String) {
-            return (String) rootClassNameObj;
-        } else {
-            throw new RuntimeException("No " + ROOT_PARAMETER
-                    + " defined in web.xml");
+        // Iterate in reverse order - test check newest provider first
+        for (int i = rootProviders.size() - 1; i >= 0; i--) {
+            RootProvider provider = rootProviders.get(i);
+
+            Class<? extends Root> rootClass = provider.getRootClass(this,
+                    request);
+
+            if (rootClass != null) {
+                return provider.instantiateRoot(this, rootClass, request);
+            }
         }
+
+        throw new RuntimeException(
+                "No root providers available or providers are not able to find root instance");
     }
 
     /**
@@ -2168,6 +2138,14 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public boolean isProductionMode() {
         return configuration.isProductionMode();
+    }
+
+    public void addRootProvider(RootProvider rootProvider) {
+        rootProviders.add(rootProvider);
+    }
+
+    public void removeRootProvider(RootProvider rootProvider) {
+        rootProviders.remove(rootProvider);
     }
 
     /**

@@ -169,8 +169,8 @@ public class AbsoluteLayout extends AbstractLayout implements
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
         // This could be in internalRemoveComponent and internalSetComponent if
         // Map<Connector,String> was supported. We cannot get the child

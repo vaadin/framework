@@ -25,42 +25,10 @@ import java.io.Serializable;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated Currently only a container for ErrorEvent and ErrorListener
  */
+@Deprecated
 public interface Terminal extends Serializable {
-
-    /**
-     * Gets the name of the default theme for this terminal.
-     * 
-     * @return the name of the theme that is used by default by this terminal.
-     */
-    public String getDefaultTheme();
-
-    /**
-     * Gets the width of the terminal screen in pixels. This is the width of the
-     * screen and not the width available for the application.
-     * <p>
-     * Note that the screen width is typically not available in the
-     * {@link com.vaadin.Application#init()} method as this is called before the
-     * browser has a chance to report the screen size to the server.
-     * </p>
-     * 
-     * @return the width of the terminal screen.
-     */
-    public int getScreenWidth();
-
-    /**
-     * Gets the height of the terminal screen in pixels. This is the height of
-     * the screen and not the height available for the application.
-     * 
-     * <p>
-     * Note that the screen height is typically not available in the
-     * {@link com.vaadin.Application#init()} method as this is called before the
-     * browser has a chance to report the screen size to the server.
-     * </p>
-     * 
-     * @return the height of the terminal screen.
-     */
-    public int getScreenHeight();
 
     /**
      * An error event implementation for Terminal.

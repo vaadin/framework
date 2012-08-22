@@ -394,8 +394,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws InvalidValueException
      *             If the implicit commit operation fails because of a
      *             validation error.
-     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
-     *             setReadThrough(true), setWriteThrough(true) equals
+     * @deprecated As of 7.0, use {@link #setBuffered(boolean)} instead. Note
+     *             that setReadThrough(true), setWriteThrough(true) equals
      *             setBuffered(false)
      */
     @Override
@@ -435,8 +435,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws SourceException
      *             If the operation fails because of an exception is thrown by
      *             the data source. The cause is included in the exception.
-     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
-     *             setReadThrough(true), setWriteThrough(true) equals
+     * @deprecated As of 7.0, use {@link #setBuffered(boolean)} instead. Note
+     *             that setReadThrough(true), setWriteThrough(true) equals
      *             setBuffered(false)
      */
     @Override
@@ -1620,8 +1620,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     @Override
-    public void updateState() {
-        super.updateState();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
         // Hide the error indicator if needed
         getState().setHideErrors(shouldHideErrors());

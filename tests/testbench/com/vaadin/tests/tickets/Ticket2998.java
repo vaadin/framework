@@ -19,6 +19,7 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -252,7 +253,7 @@ public class Ticket2998 extends Application.LegacyApplication {
         // set theme and some layout stuff
         setMainWindow(w);
         w.getContent().setSizeFull();
-        ((Layout) w.getContent()).setMargin(false);
+        ((MarginHandler) w.getContent()).setMargin(false);
 
         Panel p = new Panel("Workout Log");
         p.setStyleName(Reindeer.PANEL_LIGHT);

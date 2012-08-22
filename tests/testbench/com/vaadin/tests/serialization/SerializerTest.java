@@ -28,6 +28,7 @@ import java.util.Set;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestRoot;
 import com.vaadin.tests.util.Log;
@@ -121,6 +122,10 @@ public class SerializerTest extends AbstractTestRoot {
                         });
             }
         });
+
+        rpc.sendEnum(ContentMode.TEXT, new ContentMode[] {
+                ContentMode.PREFORMATTED, ContentMode.XML },
+                Arrays.asList(ContentMode.XHTML, ContentMode.RAW));
 
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override
@@ -286,6 +291,13 @@ public class SerializerTest extends AbstractTestRoot {
             public void sendWrappedGenerics(
                     Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics) {
                 log.log("sendWrappedGenerics: " + generics.toString());
+            }
+
+            @Override
+            public void sendEnum(ContentMode contentMode, ContentMode[] array,
+                    List<ContentMode> list) {
+                log.log("sendEnum: " + contentMode + ", "
+                        + Arrays.toString(array) + ", " + list);
             }
 
         });

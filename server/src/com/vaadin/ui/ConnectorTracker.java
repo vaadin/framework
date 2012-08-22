@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +40,8 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * Tracks which {@link ClientConnector}s are dirty so they can be updated to the
  * client when the following response is sent. A connector is dirty when an
  * operation has been performed on it on the server and as a result of this
- * operation new information needs to be sent to its {@link ServerConnector}.
+ * operation new information needs to be sent to its
+ * {@link com.vaadin.terminal.gwt.client.ServerConnector}.
  * </p>
  * 
  * @author Vaadin Ltd
@@ -50,8 +52,10 @@ public class ConnectorTracker implements Serializable {
 
     private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
+    private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
     private Root root;
+    private Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
 
     /**
      * Gets a logger for this class
@@ -91,6 +95,7 @@ public class ConnectorTracker implements Serializable {
                 .get(connectorId);
         if (previouslyRegistered == null) {
             connectorIdToConnector.put(connectorId, connector);
+            uninitializedConnectors.add(connector);
             getLogger().fine(
                     "Registered " + connector.getClass().getSimpleName() + " ("
                             + connectorId + ")");
@@ -136,6 +141,49 @@ public class ConnectorTracker implements Serializable {
                 "Unregistered " + connector.getClass().getSimpleName() + " ("
                         + connectorId + ")");
         connectorIdToConnector.remove(connectorId);
+        uninitializedConnectors.remove(connector);
+        diffStates.remove(connector);
+    }
+
+    /**
+     * Checks whether the given connector has already been initialized in the
+     * browser. The given connector should be registered with this connector
+     * tracker.
+     * 
+     * @param connector
+     *            the client connector to check
+     * @return <code>true</code> if the initial state has previously been sent
+     *         to the browser, <code>false</code> if the client-side doesn't
+     *         already know anything about the connector.
+     */
+    public boolean isClientSideInitialized(ClientConnector connector) {
+        assert connectorIdToConnector.get(connector.getConnectorId()) == connector : "Connector should be registered with this ConnectorTracker";
+        return !uninitializedConnectors.contains(connector);
+    }
+
+    /**
+     * Marks the given connector as initialized, meaning that the client-side
+     * state has been initialized for the connector.
+     * 
+     * @see #isClientSideInitialized(ClientConnector)
+     * 
+     * @param connector
+     *            the connector that should be marked as initialized
+     */
+    public void markClientSideInitialized(ClientConnector connector) {
+        uninitializedConnectors.remove(connector);
+    }
+
+    /**
+     * Marks all currently registered connectors as uninitialized. This should
+     * be done when the client-side has been reset but the server-side state is
+     * retained.
+     * 
+     * @see #isClientSideInitialized(ClientConnector)
+     */
+    public void markAllClientSidesUninitialized() {
+        uninitializedConnectors.addAll(connectorIdToConnector.values());
+        diffStates.clear();
     }
 
     /**
@@ -175,6 +223,8 @@ public class ConnectorTracker implements Serializable {
                                 "cleanConnectorMap unregistered connector "
                                         + getConnectorAndParentInfo(connector)
                                         + "). This should have been done when the connector was detached.");
+                uninitializedConnectors.remove(connector);
+                diffStates.remove(connector);
                 iterator.remove();
             }
         }
@@ -325,6 +375,14 @@ public class ConnectorTracker implements Serializable {
      */
     public Collection<ClientConnector> getDirtyConnectors() {
         return dirtyConnectors;
+    }
+
+    public Object getDiffState(ClientConnector connector) {
+        return diffStates.get(connector);
+    }
+
+    public void setDiffState(ClientConnector connector, Object diffState) {
+        diffStates.put(connector, diffState);
     }
 
 }

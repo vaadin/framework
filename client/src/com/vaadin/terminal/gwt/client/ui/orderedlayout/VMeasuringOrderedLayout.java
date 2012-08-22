@@ -27,7 +27,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.gwt.client.VCaption;
 import com.vaadin.terminal.gwt.client.ui.layout.VLayoutSlot;
 
@@ -75,7 +75,7 @@ public class VMeasuringOrderedLayout extends ComplexPanel {
         }
     }
 
-    void updateMarginStyleNames(VMarginInfo marginInfo) {
+    void updateMarginStyleNames(MarginInfo marginInfo) {
         togglePrefixedStyleName("margin-top", marginInfo.hasTop());
         togglePrefixedStyleName("margin-right", marginInfo.hasRight());
         togglePrefixedStyleName("margin-bottom", marginInfo.hasBottom());

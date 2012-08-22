@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.HasResizeHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -50,7 +51,8 @@ import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
  *
  */
 public class VRoot extends SimplePanel implements ResizeHandler,
-        Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable {
+        Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
+        HasResizeHandlers {
 
     private static final String CLASSNAME = "v-view";
 
@@ -401,16 +403,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
         int viewHeight = parentElement.getClientHeight();
         int viewWidth = parentElement.getClientWidth();
 
-        connection.updateVariable(id, "height", viewHeight, false);
-        connection.updateVariable(id, "width", viewWidth, false);
-
-        int windowWidth = Window.getClientWidth();
-        int windowHeight = Window.getClientHeight();
-
-        connection.updateVariable(id, RootConstants.BROWSER_WIDTH_VAR,
-                windowWidth, false);
-        connection.updateVariable(id, RootConstants.BROWSER_HEIGHT_VAR,
-                windowHeight, immediate);
+        ResizeEvent.fire(this, viewWidth, viewHeight);
     }
 
     public native static void goTo(String url)
@@ -456,6 +449,11 @@ public class VRoot extends SimplePanel implements ResizeHandler,
             touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
         }
         touchScrollHandler.addElement(getElement());
+    }
+
+    @Override
+    public HandlerRegistration addResizeHandler(ResizeHandler resizeHandler) {
+        return addHandler(resizeHandler, ResizeEvent.getType());
     }
 
 }

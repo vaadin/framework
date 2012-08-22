@@ -531,6 +531,7 @@
                 <include name="VAADIN/themes/**/*" />
             	<include name="VAADIN/vaadinBootstrap.js" />
                 <include name="META-INF/**/*" />
+            	<include name="statictestfiles/**" />
             </fileset>
         </copy>
 

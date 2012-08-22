@@ -23,6 +23,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.ui.Icon;
@@ -31,15 +32,20 @@ public class VLink extends HTML implements ClickHandler {
 
     public static final String CLASSNAME = "v-link";
 
-    protected static final int BORDER_STYLE_DEFAULT = 0;
-    protected static final int BORDER_STYLE_MINIMAL = 1;
-    protected static final int BORDER_STYLE_NONE = 2;
+    @Deprecated
+    protected static final BorderStyle BORDER_STYLE_DEFAULT = BorderStyle.DEFAULT;
+
+    @Deprecated
+    protected static final BorderStyle BORDER_STYLE_MINIMAL = BorderStyle.MINIMAL;
+
+    @Deprecated
+    protected static final BorderStyle BORDER_STYLE_NONE = BorderStyle.NONE;
 
     protected String src;
 
     protected String target;
 
-    protected int borderStyle = BORDER_STYLE_DEFAULT;
+    protected BorderStyle borderStyle = BorderStyle.DEFAULT;
 
     protected boolean enabled;
 
@@ -73,10 +79,10 @@ public class VLink extends HTML implements ClickHandler {
             }
             String features;
             switch (borderStyle) {
-            case BORDER_STYLE_NONE:
+            case NONE:
                 features = "menubar=no,location=no,status=no";
                 break;
-            case BORDER_STYLE_MINIMAL:
+            case MINIMAL:
                 features = "menubar=yes,location=no,status=no";
                 break;
             default:
