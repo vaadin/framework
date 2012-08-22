@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,7 +15,9 @@ import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.Or;
 import com.vaadin.data.util.sqlcontainer.AllTests;
+import com.vaadin.data.util.sqlcontainer.ColumnProperty;
 import com.vaadin.data.util.sqlcontainer.DataGenerator;
+import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
@@ -145,6 +148,86 @@ public class SQLGeneratorsTest {
                 .equals(sh.getQueryString())
                 || "UPDATE people SET \"AGE\" = ?, \"NAME\" = ? WHERE \"ID\" = ?"
                         .equals(sh.getQueryString()));
+    }
+
+    @Test
+    public void generateUpdateQuery_severalPrimKeys_shouldSucceed()
+            throws SQLException {
+        /*
+         * No need to run this for Oracle/MSSQL generators since the
+         * DefaultSQLGenerator method would be called anyway.
+         */
+        if (AllTests.sqlGen instanceof MSSQLGenerator
+                || AllTests.sqlGen instanceof OracleGenerator) {
+            return;
+        }
+
+        DefaultSQLGenerator sqlGen = new DefaultSQLGenerator();
+
+        // Create situation wihere PrimKey is a composite of two columns...
+        ColumnProperty cp1 = new ColumnProperty("FIRSTPK", false, true, false,
+                true, new Integer(1), Integer.class);
+        ColumnProperty cp2 = new ColumnProperty("SECONDPK", false, true, false,
+                true, "primKeyValue", String.class);
+        ColumnProperty cp3 = new ColumnProperty("NONPK", false, true, false,
+                false, new Integer(1), Integer.class);
+
+        SQLContainer container = EasyMock.createNiceMock(SQLContainer.class);
+
+        RowItem ri = new RowItem(container, new RowId(new Object[] { 0L }),
+                Arrays.asList(cp1, cp2, cp3));
+
+        StatementHelper generateUpdateQuery = sqlGen.generateUpdateQuery(
+                "testTable", ri);
+
+        String queryString = generateUpdateQuery.getQueryString();
+
+        // Assert that the WHERE-clause has both prim keys...
+        Assert.assertEquals(
+                "UPDATE testTable SET \"NONPK\" = ?, \"SECONDPK\" = ?, \"FIRSTPK\" = ? WHERE \"SECONDPK\" = ? AND \"FIRSTPK\" = ?",
+                queryString);
+    }
+
+    @Test
+    public void generateUpdateQuery_severalPrimKeysAndVersion_shouldSucceed()
+            throws SQLException {
+        /*
+         * No need to run this for Oracle/MSSQL generators since the
+         * DefaultSQLGenerator method would be called anyway.
+         */
+        if (AllTests.sqlGen instanceof MSSQLGenerator
+                || AllTests.sqlGen instanceof OracleGenerator) {
+            return;
+        }
+
+        DefaultSQLGenerator sqlGen = new DefaultSQLGenerator();
+
+        // Create situation wihere PrimKey is a composite of two columns...
+        ColumnProperty cp1 = new ColumnProperty("FIRSTPK", false, true, false,
+                true, new Integer(1), Integer.class);
+        ColumnProperty cp2 = new ColumnProperty("SECONDPK", false, true, false,
+                true, "primKeyValue", String.class);
+        ColumnProperty cp3 = new ColumnProperty("NONPK", false, true, false,
+                false, new Integer(1), Integer.class);
+        ColumnProperty cp4 = new ColumnProperty("VERSION", false, true, false,
+                false, new Integer(1), Integer.class);
+        cp4.setVersionColumn(true);
+
+        SQLContainer container = EasyMock.createNiceMock(SQLContainer.class);
+
+        RowItem ri = new RowItem(container, new RowId(new Object[] { 0L }),
+                Arrays.asList(cp1, cp2, cp3, cp4));
+
+        StatementHelper generateUpdateQuery = sqlGen.generateUpdateQuery(
+                "testTable", ri);
+
+        String queryString = generateUpdateQuery.getQueryString();
+
+        // Assert that the WHERE-clause has both prim keys and version...
+        // Version should not be in SET...
+        Assert.assertEquals(
+                "UPDATE testTable SET \"NONPK\" = ?, \"SECONDPK\" = ?, \"FIRSTPK\" = ? WHERE \"VERSION\" = ? AND \"SECONDPK\" = ? AND \"FIRSTPK\" = ?",
+                queryString);
     }
 
     @Test
