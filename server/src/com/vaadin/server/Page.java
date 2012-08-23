@@ -301,14 +301,33 @@ public class Page implements Serializable {
         }
     }
 
-    public void addListener(Page.FragmentChangedListener listener) {
+    public void addFragmentChangedListener(Page.FragmentChangedListener listener) {
         addListener(FragmentChangedEvent.class, listener,
                 FRAGMENT_CHANGED_METHOD);
     }
 
-    public void removeListener(Page.FragmentChangedListener listener) {
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFragmentChangedListener(FragmentChangedListener)}
+     **/
+    @Deprecated
+    public void addListener(Page.FragmentChangedListener listener) {
+        addFragmentChangedListener(listener);
+    }
+
+    public void removeFragmentChangedListener(
+            Page.FragmentChangedListener listener) {
         removeListener(FragmentChangedEvent.class, listener,
                 FRAGMENT_CHANGED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFragmentChangedListener(FragmentChangedListener)}
+     **/
+    @Deprecated
+    public void removeListener(Page.FragmentChangedListener listener) {
+        removeFragmentChangedListener(listener);
     }
 
     /**
@@ -407,25 +426,45 @@ public class Page implements Serializable {
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see #setResizeLazy(boolean)
      */
-    public void addListener(BrowserWindowResizeListener resizeListener) {
+    public void addBrowserWindowResizeListener(
+            BrowserWindowResizeListener resizeListener) {
         addListener(BrowserWindowResizeEvent.class, resizeListener,
                 BROWSWER_RESIZE_METHOD);
     }
 
     /**
-     * Removes a {@link BrowserWindowResizeListener} from this uI. The
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
+     **/
+    @Deprecated
+    public void addListener(BrowserWindowResizeListener resizeListener) {
+        addBrowserWindowResizeListener(resizeListener);
+    }
+
+    /**
+     * Removes a {@link BrowserWindowResizeListener} from this UI. The
      * listener will no longer be notified when the browser window is resized.
      * 
      * @param resizeListener
      *            the listener to remove
      */
-    public void removeListener(BrowserWindowResizeListener resizeListener) {
+    public void removeBrowserWindowResizeListener(
+            BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
                 BROWSWER_RESIZE_METHOD);
     }
 
     /**
-     * Gets the last known height of the browser window in which this uI
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeBrowserWindowResizeListener(BrowserWindowResizeListener)}
+     **/
+    @Deprecated
+    public void removeListener(BrowserWindowResizeListener resizeListener) {
+        removeBrowserWindowResizeListener(resizeListener);
+    }
+
+    /**
+     * Gets the last known height of the browser window in which this UI
      * resides.
      * 
      * @return the browser window height in pixels
