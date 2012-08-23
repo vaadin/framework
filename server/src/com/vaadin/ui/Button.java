@@ -478,7 +478,6 @@ public class Button extends AbstractComponent implements
      */
     public void setDisableOnClick(boolean disableOnClick) {
         getState().setDisableOnClick(disableOnClick);
-        requestRepaint();
     }
 
     /*
@@ -499,7 +498,6 @@ public class Button extends AbstractComponent implements
     @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
-        requestRepaint();
     }
 
     @Override
@@ -526,10 +524,7 @@ public class Button extends AbstractComponent implements
      *            <code>false</code> otherwise
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        if (getState().isHtmlContentAllowed() != htmlContentAllowed) {
-            getState().setHtmlContentAllowed(htmlContentAllowed);
-            requestRepaint();
-        }
+        getState().setHtmlContentAllowed(htmlContentAllowed);
     }
 
     /**

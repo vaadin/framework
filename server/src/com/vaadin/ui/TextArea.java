@@ -96,7 +96,6 @@ public class TextArea extends AbstractTextField {
             rows = 0;
         }
         getState().setRows(rows);
-        requestRepaint();
     }
 
     /**
@@ -117,7 +116,6 @@ public class TextArea extends AbstractTextField {
      */
     public void setWordwrap(boolean wordwrap) {
         getState().setWordwrap(wordwrap);
-        requestRepaint();
     }
 
     /**

@@ -80,7 +80,6 @@ public class Video extends AbstractMedia {
      */
     public void setPoster(Resource poster) {
         getState().setPoster(ResourceReference.create(poster));
-        requestRepaint();
     }
 
     /**

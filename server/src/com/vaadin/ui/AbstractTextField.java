@@ -324,7 +324,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setMaxLength(int maxLength) {
         getState().setMaxLength(maxLength);
-        requestRepaint();
     }
 
     /**
@@ -351,7 +350,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
             columns = 0;
         }
         getState().setColumns(columns);
-        requestRepaint();
     }
 
     /**
@@ -372,7 +370,6 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setInputPrompt(String inputPrompt) {
         getState().setInputPrompt(inputPrompt);
-        requestRepaint();
     }
 
     /* ** Text Change Events ** */

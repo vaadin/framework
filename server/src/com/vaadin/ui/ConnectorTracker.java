@@ -385,4 +385,8 @@ public class ConnectorTracker implements Serializable {
         diffStates.put(connector, diffState);
     }
 
+    public boolean isDirty(ClientConnector connector) {
+        return dirtyConnectors.contains(connector);
+    }
+
 }

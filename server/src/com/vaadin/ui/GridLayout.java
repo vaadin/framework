@@ -962,8 +962,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setColumns(columns);
-
-        requestRepaint();
     }
 
     /**
@@ -1006,8 +1004,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setRows(rows);
-
-        requestRepaint();
     }
 
     /**
@@ -1132,7 +1128,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
-        requestRepaint();
     }
 
     /*
@@ -1391,7 +1386,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void setMargin(MarginInfo marginInfo) {
         getState().setMarginsBitmask(marginInfo.getBitMask());
-        requestRepaint();
     }
 
     /*

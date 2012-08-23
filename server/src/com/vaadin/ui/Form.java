@@ -820,10 +820,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // Replace the previous layout
         layout.setParent(this);
         getState().setLayout(layout);
-
-        // Hierarchy has changed so we need to repaint (this could be a
-        // hierarchy repaint only)
-        requestRepaint();
     }
 
     /**
@@ -1239,11 +1235,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         getState().setFooter(footer);
         footer.setParent(this);
-
-        // Hierarchy has changed so we need to repaint (this could be a
-        // hierarchy repaint only)
-        requestRepaint();
-
     }
 
     @Override

@@ -190,7 +190,6 @@ public class Label extends AbstractComponent implements Property<String>,
         }
         if (getPropertyDataSource() == null) {
             getState().text = (String) newStringValue;
-            requestRepaint();
         } else {
             throw new IllegalStateException(
                     "Label is only a Property.Viewer and cannot update its data source");
@@ -294,7 +293,6 @@ public class Label extends AbstractComponent implements Property<String>,
         }
 
         getState().contentMode = contentMode;
-        requestRepaint();
     }
 
     /* Value change events */
@@ -385,7 +383,6 @@ public class Label extends AbstractComponent implements Property<String>,
     public void valueChange(Property.ValueChangeEvent event) {
         // Update the internal value from the data source
         getState().text = getValue();
-        requestRepaint();
 
         fireValueChange();
     }

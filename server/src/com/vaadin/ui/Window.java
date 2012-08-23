@@ -174,14 +174,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             final int x = positionx.intValue();
             // This is information from the client so it is already using the
             // position. No need to repaint.
-            setPositionX(x < 0 ? -1 : x, false);
+            setPositionX(x < 0 ? -1 : x);
         }
         final Integer positiony = (Integer) variables.get("positiony");
         if (positiony != null) {
             final int y = positiony.intValue();
             // This is information from the client so it is already using the
             // position. No need to repaint.
-            setPositionY(y < 0 ? -1 : y, false);
+            setPositionY(y < 0 ? -1 : y);
         }
 
         if (isClosable()) {
@@ -255,26 +255,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public void setPositionX(int positionX) {
-        setPositionX(positionX, true);
-    }
-
-    /**
-     * Sets the distance of Window left border in pixels from left border of the
-     * containing (main window).
-     * 
-     * @param positionX
-     *            the Distance of Window left border in pixels from left border
-     *            of the containing (main window). or -1 if unspecified.
-     * @param repaintRequired
-     *            true if the window needs to be repainted, false otherwise
-     * @since 6.3.4
-     */
-    private void setPositionX(int positionX, boolean repaintRequired) {
         getState().setPositionX(positionX);
         getState().setCentered(false);
-        if (repaintRequired) {
-            requestRepaint();
-        }
     }
 
     /**
@@ -301,27 +283,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public void setPositionY(int positionY) {
-        setPositionY(positionY, true);
-    }
-
-    /**
-     * Sets the distance of Window top border in pixels from top border of the
-     * containing (main window).
-     * 
-     * @param positionY
-     *            the Distance of Window top border in pixels from top border of
-     *            the containing (main window). or -1 if unspecified
-     * @param repaintRequired
-     *            true if the window needs to be repainted, false otherwise
-     * 
-     * @since 6.3.4
-     */
-    private void setPositionY(int positionY, boolean repaintRequired) {
         getState().setPositionY(positionY);
         getState().setCentered(false);
-        if (repaintRequired) {
-            requestRepaint();
-        }
     }
 
     private static final Method WINDOW_CLOSE_METHOD;
@@ -543,7 +506,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public void setModal(boolean modal) {
         getState().setModal(modal);
         center();
-        requestRepaint();
     }
 
     /**
@@ -561,7 +523,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      */
     public void setResizable(boolean resizable) {
         getState().setResizable(resizable);
-        requestRepaint();
     }
 
     /**
@@ -595,7 +556,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      */
     public void setResizeLazy(boolean resizeLazy) {
         getState().setResizeLazy(resizeLazy);
-        requestRepaint();
     }
 
     /**
@@ -609,7 +569,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      */
     public void center() {
         getState().setCentered(true);
-        requestRepaint();
     }
 
     /**
@@ -674,7 +633,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      */
     public void setDraggable(boolean draggable) {
         getState().setDraggable(draggable);
-        requestRepaint();
     }
 
     /*

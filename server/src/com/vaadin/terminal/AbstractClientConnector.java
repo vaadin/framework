@@ -146,6 +146,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
         if (null == sharedState) {
             sharedState = createState();
         }
+
+        Root root = getRoot();
+        if (root != null && !root.getConnectorTracker().isDirty(this)) {
+            requestRepaint();
+        }
+
         return sharedState;
     }
 
@@ -280,8 +286,6 @@ public abstract class AbstractClientConnector implements ClientConnector {
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
             addMethodInvocationToQueue(rpcInterfaceName, method, args);
-            // TODO no need to do full repaint if only RPC calls
-            requestRepaint();
             return null;
         }
 
@@ -304,6 +308,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
         // add to queue
         pendingInvocations.add(new ClientMethodInvocation(this, interfaceName,
                 method, parameters));
+        // TODO no need to do full repaint if only RPC calls
+        requestRepaint();
     }
 
     /**

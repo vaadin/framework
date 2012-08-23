@@ -318,7 +318,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                     "Scroll offset must be at least 0");
         }
         getState().setScrollLeft(scrollLeft);
-        requestRepaint();
     }
 
     /*
@@ -333,7 +332,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                     "Scroll offset must be at least 0");
         }
         getState().setScrollTop(scrollTop);
-        requestRepaint();
     }
 
     /* Documented in superclass */
@@ -465,7 +463,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
-        requestRepaint();
     }
 
     /**

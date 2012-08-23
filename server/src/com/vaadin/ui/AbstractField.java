@@ -360,7 +360,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     private void setModified(boolean modified) {
         getState().setModified(modified);
-        requestRepaint();
     }
 
     /**
@@ -1101,7 +1100,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
         getState().setPropertyReadOnly(event.getProperty().isReadOnly());
-        requestRepaint();
     }
 
     /**
@@ -1233,7 +1231,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
-        requestRepaint();
     }
 
     /**
@@ -1336,7 +1333,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setRequired(boolean required) {
         getState().setRequired(required);
-        requestRepaint();
     }
 
     /**

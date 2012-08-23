@@ -148,7 +148,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void setStyleName(String style) {
         if (style == null || "".equals(style)) {
             getState().setStyles(null);
-            requestRepaint();
             return;
         }
         if (getState().getStyles() == null) {
@@ -162,7 +161,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 styles.add(part);
             }
         }
-        requestRepaint();
     }
 
     @Override
@@ -184,7 +182,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         List<String> styles = getState().getStyles();
         if (!styles.contains(style)) {
             styles.add(style);
-            requestRepaint();
         }
     }
 
@@ -197,7 +194,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     getState().getStyles().remove(part);
                 }
             }
-            requestRepaint();
         }
     }
 
@@ -221,7 +217,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setCaption(String caption) {
         getState().setCaption(caption);
-        requestRepaint();
     }
 
     /*
@@ -289,7 +284,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setIcon(Resource icon) {
         getState().setIcon(ResourceReference.create(icon));
-        requestRepaint();
     }
 
     /*
@@ -309,10 +303,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setEnabled(boolean enabled) {
-        if (getState().isEnabled() != enabled) {
-            getState().setEnabled(enabled);
-            requestRepaint();
-        }
+        getState().setEnabled(enabled);
     }
 
     /*
@@ -355,7 +346,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     public void setImmediate(boolean immediate) {
         getState().setImmediate(immediate);
-        requestRepaint();
     }
 
     /*
@@ -380,7 +370,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         getState().setVisible(visible);
-        requestRepaint();
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
@@ -463,7 +452,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     public void setDescription(String description) {
         getState().setDescription(description);
-        requestRepaint();
     }
 
     /*
@@ -566,7 +554,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setReadOnly(boolean readOnly) {
         getState().setReadOnly(readOnly);
-        requestRepaint();
     }
 
     /*
@@ -716,17 +703,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().setErrorMessage(null);
         }
-    }
-
-    /* Documentation copied from interface */
-    @Override
-    public void requestRepaint() {
-        // Invisible components (by flag in this particular component) do not
-        // need repaints
-        if (!getState().isVisible()) {
-            return;
-        }
-        super.requestRepaint();
     }
 
     /* General event framework */
