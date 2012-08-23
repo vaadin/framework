@@ -258,8 +258,17 @@ public class LoginForm extends CustomComponent {
      * 
      * @param listener
      */
-    public void addListener(LoginListener listener) {
+    public void addLoginListener(LoginListener listener) {
         addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addLoginListener(LoginListener)}
+     **/
+    @Deprecated
+    public void addListener(LoginListener listener) {
+        addLoginListener(listener);
     }
 
     /**
@@ -267,8 +276,17 @@ public class LoginForm extends CustomComponent {
      * 
      * @param listener
      */
-    public void removeListener(LoginListener listener) {
+    public void removeLoginListener(LoginListener listener) {
         removeListener(LoginEvent.class, listener, ON_LOGIN_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeLoginListener(LoginListener)}
+     **/
+    @Deprecated
+    public void removeListener(LoginListener listener) {
+        removeLoginListener(listener);
     }
 
     @Override

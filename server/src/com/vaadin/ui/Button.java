@@ -290,9 +290,18 @@ public class Button extends AbstractComponent implements
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(ClickListener listener) {
+    public void addClickListener(ClickListener listener) {
         addListener(ClickEvent.class, listener,
                 ClickListener.BUTTON_CLICK_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ClickListener listener) {
+        addClickListener(listener);
     }
 
     /**
@@ -301,9 +310,18 @@ public class Button extends AbstractComponent implements
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(ClickListener listener) {
+    public void removeClickListener(ClickListener listener) {
         removeListener(ClickEvent.class, listener,
                 ClickListener.BUTTON_CLICK_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ClickListener listener) {
+        removeClickListener(listener);
     }
 
     /**
@@ -341,26 +359,60 @@ public class Button extends AbstractComponent implements
     }
 
     @Override
-    public void addListener(BlurListener listener) {
+    public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    @Override
-    public void removeListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void addListener(BlurListener listener) {
+        addBlurListener(listener);
     }
 
     @Override
-    public void addListener(FocusListener listener) {
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void removeListener(BlurListener listener) {
+        removeBlurListener(listener);
+    }
+
+    @Override
+    public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Override
-    public void removeListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void addListener(FocusListener listener) {
+        addFocusListener(listener);
+    }
 
+    @Override
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void removeListener(FocusListener listener) {
+        removeFocusListener(listener);
     }
 
     /*

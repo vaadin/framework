@@ -377,9 +377,18 @@ public class PopupView extends AbstractComponentContainer implements
      * @see #removeListener(PopupVisibilityListener)
      * 
      */
-    public void addListener(PopupVisibilityListener listener) {
+    public void addPopupVisibilityListener(PopupVisibilityListener listener) {
         addListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPopupVisibilityListener(PopupVisibilityListener)}
+     **/
+    @Deprecated
+    public void addListener(PopupVisibilityListener listener) {
+        addPopupVisibilityListener(listener);
     }
 
     /**
@@ -391,9 +400,18 @@ public class PopupView extends AbstractComponentContainer implements
      * @see PopupVisibilityListener
      * @see #addListener(PopupVisibilityListener)
      */
-    public void removeListener(PopupVisibilityListener listener) {
+    public void removePopupVisibilityListener(PopupVisibilityListener listener) {
         removeListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePopupVisibilityListener(PopupVisibilityListener)}
+     **/
+    @Deprecated
+    public void removeListener(PopupVisibilityListener listener) {
+        removePopupVisibilityListener(listener);
     }
 
     /**

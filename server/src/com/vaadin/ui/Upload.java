@@ -570,8 +570,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(StartedListener listener) {
+    public void addStartedListener(StartedListener listener) {
         addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addStartedListener(StartedListener)}
+     **/
+    @Deprecated
+    public void addListener(StartedListener listener) {
+        addStartedListener(listener);
     }
 
     /**
@@ -580,8 +589,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(StartedListener listener) {
+    public void removeStartedListener(StartedListener listener) {
         removeListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeStartedListener(StartedListener)}
+     **/
+    @Deprecated
+    public void removeListener(StartedListener listener) {
+        removeStartedListener(listener);
     }
 
     /**
@@ -590,8 +608,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(FinishedListener listener) {
+    public void addFinishedListener(FinishedListener listener) {
         addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFinishedListener(FinishedListener)}
+     **/
+    @Deprecated
+    public void addListener(FinishedListener listener) {
+        addFinishedListener(listener);
     }
 
     /**
@@ -600,8 +627,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(FinishedListener listener) {
+    public void removeFinishedListener(FinishedListener listener) {
         removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFinishedListener(FinishedListener)}
+     **/
+    @Deprecated
+    public void removeListener(FinishedListener listener) {
+        removeFinishedListener(listener);
     }
 
     /**
@@ -610,8 +646,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(FailedListener listener) {
+    public void addFailedListener(FailedListener listener) {
         addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFailedListener(FailedListener)}
+     **/
+    @Deprecated
+    public void addListener(FailedListener listener) {
+        addFailedListener(listener);
     }
 
     /**
@@ -620,8 +665,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(FailedListener listener) {
+    public void removeFailedListener(FailedListener listener) {
         removeListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFailedListener(FailedListener)}
+     **/
+    @Deprecated
+    public void removeListener(FailedListener listener) {
+        removeFailedListener(listener);
     }
 
     /**
@@ -630,8 +684,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(SucceededListener listener) {
+    public void addSucceededListener(SucceededListener listener) {
         addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addSucceededListener(SucceededListener)}
+     **/
+    @Deprecated
+    public void addListener(SucceededListener listener) {
+        addSucceededListener(listener);
     }
 
     /**
@@ -640,8 +703,17 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(SucceededListener listener) {
+    public void removeSucceededListener(SucceededListener listener) {
         removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeSucceededListener(SucceededListener)}
+     **/
+    @Deprecated
+    public void removeListener(SucceededListener listener) {
+        removeSucceededListener(listener);
     }
 
     /**
@@ -650,7 +722,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(ProgressListener listener) {
+    public void addProgressListener(ProgressListener listener) {
         if (progressListeners == null) {
             progressListeners = new LinkedHashSet<ProgressListener>();
         }
@@ -658,15 +730,33 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addProgressListener(ProgressListener)}
+     **/
+    @Deprecated
+    public void addListener(ProgressListener listener) {
+        addProgressListener(listener);
+    }
+
+    /**
      * Removes the upload success event listener.
      * 
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(ProgressListener listener) {
+    public void removeProgressListener(ProgressListener listener) {
         if (progressListeners != null) {
             progressListeners.remove(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeProgressListener(ProgressListener)}
+     **/
+    @Deprecated
+    public void removeListener(ProgressListener listener) {
+        removeProgressListener(listener);
     }
 
     /**

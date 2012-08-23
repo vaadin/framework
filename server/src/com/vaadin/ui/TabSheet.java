@@ -791,9 +791,18 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(SelectedTabChangeListener listener) {
+    public void addSelectedTabChangeListener(SelectedTabChangeListener listener) {
         addListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addSelectedTabChangeListener(SelectedTabChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(SelectedTabChangeListener listener) {
+        addSelectedTabChangeListener(listener);
     }
 
     /**
@@ -802,9 +811,19 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(SelectedTabChangeListener listener) {
+    public void removeSelectedTabChangeListener(
+            SelectedTabChangeListener listener) {
         removeListener(SelectedTabChangeEvent.class, listener,
                 SELECTED_TAB_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeSelectedTabChangeListener(SelectedTabChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(SelectedTabChangeListener listener) {
+        removeSelectedTabChangeListener(listener);
     }
 
     /**
@@ -1211,26 +1230,60 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     @Override
-    public void addListener(BlurListener listener) {
+    public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
-    @Override
-    public void removeListener(BlurListener listener) {
-        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void addListener(BlurListener listener) {
+        addBlurListener(listener);
     }
 
     @Override
-    public void addListener(FocusListener listener) {
+    public void removeBlurListener(BlurListener listener) {
+        removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void removeListener(BlurListener listener) {
+        removeBlurListener(listener);
+    }
+
+    @Override
+    public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Override
-    public void removeListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void addListener(FocusListener listener) {
+        addFocusListener(listener);
+    }
 
+    @Override
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void removeListener(FocusListener listener) {
+        removeFocusListener(listener);
     }
 
     @Override

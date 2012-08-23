@@ -1354,16 +1354,36 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public void addListener(LayoutClickListener listener) {
+    public void addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addLayoutClickListener(LayoutClickListener)}
+     **/
     @Override
-    public void removeListener(LayoutClickListener listener) {
+    @Deprecated
+    public void addListener(LayoutClickListener listener) {
+        addLayoutClickListener(listener);
+    }
+
+    @Override
+    public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeLayoutClickListener(LayoutClickListener)}
+     **/
+    @Override
+    @Deprecated
+    public void removeListener(LayoutClickListener listener) {
+        removeLayoutClickListener(listener);
     }
 
     /*

@@ -1094,9 +1094,18 @@ public abstract class UI extends AbstractComponentContainer implements
      * @param listener
      *            The listener to add
      */
-    public void addListener(ClickListener listener) {
+    public void addClickListener(ClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
                 ClickListener.clickMethod);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ClickListener listener) {
+        addClickListener(listener);
     }
 
     /**
@@ -1106,33 +1115,18 @@ public abstract class UI extends AbstractComponentContainer implements
      * @param listener
      *            The listener to remove
      */
-    public void removeListener(ClickListener listener) {
+    public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
     }
 
     /**
-     * Adds a close listener to the UI. The listener is called when the UI is
-     * removed from the application.
-     * 
-     * @param listener
-     *            The listener to add.
-     */
-    public void addListener(CloseListener listener) {
-        addListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
-                listener, CloseListener.closeMethod);
-    }
-
-    /**
-     * Removes a close listener from the UI if it has previously been added with
-     * {@link #addListener(ClickListener)}. Otherwise, has no effect.
-     * 
-     * @param listener
-     *            The listener to remove.
-     */
-    public void removeListener(CloseListener listener) {
-        removeListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
-                listener);
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ClickListener listener) {
+        removeClickListener(listener);
     }
 
     @Override

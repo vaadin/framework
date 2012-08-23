@@ -431,9 +431,18 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @param listener
      *            The listener to add
      */
-    public void addListener(ClickListener listener) {
+    public void addClickListener(ClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
                 ClickListener.clickMethod);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ClickListener listener) {
+        addClickListener(listener);
     }
 
     /**
@@ -443,9 +452,18 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @param listener
      *            The listener to remove
      */
-    public void removeListener(ClickListener listener) {
+    public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ClickListener listener) {
+        addClickListener(listener);
     }
 
     /**

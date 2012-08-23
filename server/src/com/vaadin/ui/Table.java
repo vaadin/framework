@@ -4575,15 +4575,33 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     @Override
-    public void addListener(ItemClickListener listener) {
+    public void addItemClickListener(ItemClickListener listener) {
         addListener(TableConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addItemClickListener(ItemClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ItemClickListener listener) {
+        addItemClickListener(listener);
+    }
+
     @Override
-    public void removeListener(ItemClickListener listener) {
+    public void removeItemClickListener(ItemClickListener listener) {
         removeListener(TableConstants.ITEM_CLICK_EVENT_ID,
                 ItemClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeItemClickListener(ItemClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ItemClickListener listener) {
+        removeItemClickListener(listener);
     }
 
     // Identical to AbstractCompoenentContainer.setEnabled();
@@ -4926,10 +4944,19 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The handler which should handle the header click events.
      */
-    public void addListener(HeaderClickListener listener) {
+    public void addHeaderClickListener(HeaderClickListener listener) {
         addListener(TableConstants.HEADER_CLICK_EVENT_ID,
                 HeaderClickEvent.class, listener,
                 HeaderClickEvent.HEADER_CLICK_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addHeaderClickListener(HeaderClickListener)}
+     **/
+    @Deprecated
+    public void addListener(HeaderClickListener listener) {
+        addHeaderClickListener(listener);
     }
 
     /**
@@ -4938,9 +4965,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to remove.
      */
-    public void removeListener(HeaderClickListener listener) {
+    public void removeHeaderClickListener(HeaderClickListener listener) {
         removeListener(TableConstants.HEADER_CLICK_EVENT_ID,
                 HeaderClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeHeaderClickListener(HeaderClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(HeaderClickListener listener) {
+        removeHeaderClickListener(listener);
     }
 
     /**
@@ -4954,10 +4990,19 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The handler which should handle the footer click events.
      */
-    public void addListener(FooterClickListener listener) {
+    public void addFooterClickListener(FooterClickListener listener) {
         addListener(TableConstants.FOOTER_CLICK_EVENT_ID,
                 FooterClickEvent.class, listener,
                 FooterClickEvent.FOOTER_CLICK_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFooterClickListener(FooterClickListener)}
+     **/
+    @Deprecated
+    public void addListener(FooterClickListener listener) {
+        addFooterClickListener(listener);
     }
 
     /**
@@ -4966,9 +5011,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to remove.
      */
-    public void removeListener(FooterClickListener listener) {
+    public void removeFooterClickListener(FooterClickListener listener) {
         removeListener(TableConstants.FOOTER_CLICK_EVENT_ID,
                 FooterClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFooterClickListener(FooterClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(FooterClickListener listener) {
+        removeFooterClickListener(listener);
     }
 
     /**
@@ -5122,10 +5176,19 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to attach to the Table
      */
-    public void addListener(ColumnResizeListener listener) {
+    public void addColumnResizeListener(ColumnResizeListener listener) {
         addListener(TableConstants.COLUMN_RESIZE_EVENT_ID,
                 ColumnResizeEvent.class, listener,
                 ColumnResizeEvent.COLUMN_RESIZE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addColumnResizeListener(ColumnResizeListener)}
+     **/
+    @Deprecated
+    public void addListener(ColumnResizeListener listener) {
+        addColumnResizeListener(listener);
     }
 
     /**
@@ -5134,9 +5197,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to remove
      */
-    public void removeListener(ColumnResizeListener listener) {
+    public void removeColumnResizeListener(ColumnResizeListener listener) {
         removeListener(TableConstants.COLUMN_RESIZE_EVENT_ID,
                 ColumnResizeEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeColumnResizeListener(ColumnResizeListener)}
+     **/
+    @Deprecated
+    public void removeListener(ColumnResizeListener listener) {
+        removeColumnResizeListener(listener);
     }
 
     /**
@@ -5188,9 +5260,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to attach to the Table
      */
-    public void addListener(ColumnReorderListener listener) {
+    public void addColumnReorderListener(ColumnReorderListener listener) {
         addListener(TableConstants.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener, ColumnReorderEvent.METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addColumnReorderListener(ColumnReorderListener)}
+     **/
+    @Deprecated
+    public void addListener(ColumnReorderListener listener) {
+        addColumnReorderListener(listener);
     }
 
     /**
@@ -5199,9 +5280,18 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param listener
      *            The listener to remove
      */
-    public void removeListener(ColumnReorderListener listener) {
+    public void removeColumnReorderListener(ColumnReorderListener listener) {
         removeListener(TableConstants.COLUMN_REORDER_EVENT_ID,
                 ColumnReorderEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeColumnReorderListener(ColumnReorderListener)}
+     **/
+    @Deprecated
+    public void removeListener(ColumnReorderListener listener) {
+        removeColumnReorderListener(listener);
     }
 
     /**
