@@ -17,8 +17,6 @@ package com.vaadin.ui;
 
 import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.JavaScriptCallbackHelper;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
 
 /**
  * Base class for Components with all client-side logic implemented using
@@ -36,9 +34,10 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * , then <code>com_example_SuperComponent</code> will also be attempted if
  * <code>com_example_MyComponent</code> has not been defined.
  * <p>
- * JavaScript components have a very simple GWT widget ({@link JavaScriptWidget}
- * ) just consisting of a <code>div</code> element to which the JavaScript code
- * should initialize its own user interface.
+ * JavaScript components have a very simple GWT widget (
+ * {@link com.vaadin.terminal.gwt.client.ui.JavaScriptWidget} ) just consisting
+ * of a <code>div</code> element to which the JavaScript code should initialize
+ * its own user interface.
  * <p>
  * The initialization function will be called with <code>this</code> pointing to
  * a connector wrapper object providing integration to Vaadin with the following
@@ -81,7 +80,8 @@ import com.vaadin.terminal.gwt.client.ui.JavaScriptWidget;
  * functions is described bellow.</li>
  * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
  * that can be used in the browser. This is just way of accessing
- * {@link ApplicationConnection#translateVaadinUri(String)}</li>
+ * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}
+ * </li>
  * </ul>
  * The connector wrapper also supports these special functions:
  * <ul>
