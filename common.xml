@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<dirname property="vaadin.basedir" file="${ant.file.common}" />
+	<property file="${vaadin.basedir}/build.properties" />
+	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
+
+	<union id="empty.reference" />
+
+	<!-- TODO Preprocess @version@ and more -->
+	<fileset dir="${vaadin.basedir}/WebContent" id="common.files.for.all.jars">
+		<patternset>
+			<include name="release-notes.html" />
+			<include name="license.html" />
+			<include name="css/**" />
+			<include name="img/**" />
+		</patternset>
+	</fileset>
+
+
+	<target name="pom.xml" description="Generates a pom.xml based on the Ivy configuration">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
+		<property name="pom.xml" location="${result.dir}/pom.xml" />
+		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="compile, runtime">
+			<mapping conf="compile" scope="compile" />
+			<mapping conf="runtime" scope="runtime" />
+		</ivy:makepom>
+	</target>
+
+
+	<target name="sources.jar" depends="compile">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<fail unless="module.name" message="No module.name parameter given" />
+		<fail unless="src" message="No src directory parameter given" />
+
+		<property name="sources.jar" location="${result.dir}/${module.name}-${vaadin.version}-sources.jar" />
+
+		<jar file="${sources.jar}" compress="true">
+			<fileset dir="${src}">
+				<patternset>
+					<include name="**/*.java" />
+				</patternset>
+			</fileset>
+			<fileset refid="common.files.for.all.jars" />
+		</jar>
+
+	</target>
+
+	<target name="javadoc.jar" depends="dependencies">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<fail unless="module.name" message="No module.name parameter given" />
+		<fail unless="src" message="No src directory parameter given" />
+		<property name="javadoc.dir" value="${result.dir}/javadoc" />
+		<property name="javadoc.jar" location="${result.dir}/${module.name}-${vaadin.version}-javadoc.jar" />
+
+		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
+			<packageset dir="${src}" excludes="${classes.exclude}" />
+			<doctitle>&lt;h1>${module.name}&lt;/h1></doctitle>
+			<!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+			<bottom>${javadoc.bottom}</bottom>
+			<link offline="true" href="http://docs.oracle.com/javase/6/docs/api/" packagelistLoc="build/javadoc/j2se-1.6.0" />
+			<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+			<classpath refid="classpath.compile.dependencies" />
+		</javadoc>
+
+		<!-- Create a javadoc jar -->
+		<jar file="${javadoc.jar}" compress="true">
+			<fileset dir="${javadoc.dir}" />
+			<fileset refid="common.files.for.all.jars" />
+		</jar>
+
+	</target>
+
+	<target name="jar" depends="compile, pom.xml">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<fail unless="module.name" message="No module.name parameter given" />
+
+		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+		<property name="module.symbolic" value="com.vaadin.${module.name}" />
+		<property name="classes" location="{$result.dir}/classes" />
+		<property name="src" location="{$result.dir}/../src" />
+
+		<union id="jar.files">
+			<fileset dir="${classes}" excludes="${classes.exclude}" />
+			<fileset dir="${src}" excludes="${jar.exclude}" />
+			<fileset refid="common.files.for.all.jars" />
+			<fileset file="${pom.xml}" />
+			<union refid="extra.jar.includes" />
+		</union>
+		<jar destfile="${result.jar}" duplicate="fail" index="true">
+			<manifest>
+				<attribute name="Implementation-Vendor" value="Vaadin Ltd" />
+				<attribute name="Implementation-URL" value="http://vaadin.com" />
+				<attribute name="Implementation-Version" value="${vaadin.version}" />
+				<attribute name="Bundle-Version" value="${vaadin.version}" />
+				<attribute name="Bundle-ManifestVersion" value="2" />
+				<attribute name="Bundle-Name" value="${module.name}" />
+				<attribute name="Bundle-SymbolicName" value="${module.symbolic}" />
+				<attribute name="Bundle-Vendor" value="${vaadin.vendor}" />
+				<attribute name="Bundle-RequiredExecutionEnvironment" value="JavaSE-1.6" />
+			</manifest>
+			<union refid="jar.files" />
+		</jar>
+
+		<antcall target="common.generate-osgi-exports">
+			<param name="jar" value="${result.jar}" />
+		</antcall>
+
+	</target>
+
+	<target name="generate-osgi-exports">
+		<fail unless="jar" message="No jar parameter given" />
+
+		<!-- Generate the Export-Package attribute in the manifest of the 
+            JAR -->
+		<java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
+			<arg value="${jar}" />
+			<classpath refid="vaadin.buildhelpers.classpath" />
+		</java>
+	</target>
+
+	<target name="compile" description="Compiles the module" depends="dependencies">
+		<fail unless="module.name" message="No module name given" />
+		<property name="result.dir" location="result" />
+		<property name="src" location="${result.dir}/../src" />
+		<property name="classes" location="${result.dir}/classes" />
+
+		<mkdir dir="${classes}" />
+
+		<javac srcdir="${src}" destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+			<classpath refid="classpath.compile.dependencies" />
+			<classpath refid="classpath.compile.custom" />
+		</javac>
+	</target>
+
+	<target name="dependencies" description="Resolves dependencies needed by this module">
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build" />
+	</target>
+
+	<target name="clean">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<delete dir="${result.dir}" />
+	</target>
+
+	<target name="publish-local" description="Publishes the given module to the local repository">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+
+		<ivy:resolve />
+		<ivy:publish resolver="build-temp" overwrite="true">
+			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
+			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
+
+		</ivy:publish>
+	</target>
+</project>

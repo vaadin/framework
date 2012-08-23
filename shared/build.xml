@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-shared" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Compiles build helpers used when building other modules.
+	</description>
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+	<include file="../gwt-files.xml" as="gwtfiles" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-shared" />
+	<property name="module.symbolic" value="com.vaadin.shared" />
+	<property name="result.dir" value="result" />
+	<path id="classpath.compile.custom" />
+
+
+	<target name="jar">
+		<antcall target="common.jar">
+			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
+		</antcall>
+	</target>
+
+	<target name="publish-local" depends="jar">
+		<antcall target="common.publish-local" />
+	</target>
+	<target name="clean">
+		<antcall target="common.clean">
+		</antcall>
+	</target>
+</project>

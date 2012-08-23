@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+    <info organisation="com.vaadin" module="vaadin-theme-compiler"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="ide" />
+    </configurations>
+    <publications>
+        <artifact type="jar" />
+        <artifact type="sources" ext="jar" />
+        <artifact type="javadoc" ext="jar" />
+    </publications>
+    <dependencies defaultconf="*->default">
+        <dependency org="org.w3c.css" name="sac" rev="1.3"/>
+        <dependency org="milyn" name="flute" rev="1.3" conf="*->default"/>
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" />
+        <dependency org="com.carrotsearch" name="smartsprites"
+            rev="0.2.3-itmill" />
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+            rev="${vaadin.version}" conf="build"></dependency>
+
+    </dependencies>
+
+</ivy-module>

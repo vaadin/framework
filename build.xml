@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="vaadin" basedir="." default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<include file="common.xml" as="common" />
+
+	<path id="vaadin.buildhelpers.classpath" location="${vaadin.basedir}/buildhelpers/result/classes" />
+
+	<!-- ================================= 
+          target: all              
+         ================================= -->
+	<!--<target name="all" description="Compiles all parts of the project" depends="buildhelpers,theme-compiler,shared,server,client">-->
+	<target name="all" description="Compiles all parts of the project" depends="buildorder">
+
+		<subant buildpathref="build-path">
+		</subant>
+	</target>
+
+	<target name="buildorder">
+		<!-- Find out a good build order -->
+		<ivy:buildlist reference="build-path">
+			<fileset dir="." includes="**/build.xml">
+				<exclude name="build.xml" />
+				<exclude name="build/**" />
+			</fileset>
+		</ivy:buildlist>
+	</target>
+	<target name="clean" depends="buildorder">
+		<subant buildpathref="build-path" target="clean">
+		</subant>
+	</target>
+
+</project>

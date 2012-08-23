@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+    <info organisation="com.vaadin" module="vaadin-server"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="ide" />
+        <conf name="tests" />
+    </configurations>
+    <publications>
+        <artifact></artifact>
+    </publications>
+    <dependencies>
+        <!-- Liferay Portal Service -->
+        <dependency org="com.liferay.portal" name="portal-service"
+            rev="6.0.2" />
+        <!--Portlet API version 2.0 (JSR-286) -->
+        <dependency org="javax.portlet" name="portlet-api"
+            rev="2.0" />
+        <!-- Google App Engine -->
+        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
+            rev="1.2.1" />
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build,ide->master,sources" />
+	<!-- Jsoup for BootstrapHandler -->
+	<dependency org="org.jsoup" name="jsoup" rev="1.6.3" />
+
+        <!-- TestBench tests -->
+        <dependency org="commons-codec" name="commons-codec"
+            rev="1.5" conf="tests,ide->master" />
+        <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.11"
+            conf="tests,ide->master" />
+        <dependency org="org.mortbay.jetty" name="jetty-util"
+            rev="6.1.11" conf="tests,ide->master" />
+
+        <!-- Test frameworks & related -->
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="tests,ide -> master" />
+        <dependency org="org.easymock" name="easymock" rev="3.0"
+            conf="tests,ide-> master, runtime(*)" />
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
+            conf="tests,ide -> master, runtime(*)" />
+
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+            rev="${vaadin.version}" conf="build"></dependency>
+    </dependencies>
+
+</ivy-module>

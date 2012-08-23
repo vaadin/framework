@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-buildhelpers" basedir="." default="publish">
+	<description>
+		Compiles build helpers used when building other modules.
+	</description>
+	<include file="../build.xml" as="vaadin" />
+	<include file="../common.xml" as="common" />
+	
+	<property name="module.name" value="vaadin-buildhelpers" />
+	<property name="result.dir" location="result" />
+	<path id="classpath.compile.custom" />
+
+	<target name="jar">
+		<antcall target="common.jar">
+			<reference torefid="extra.jar.includes" refid="empty.reference" />
+		</antcall>
+	</target>
+
+	<target name="publish" depends="jar">
+		<antcall target="common.publish-local" />
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+</project>
