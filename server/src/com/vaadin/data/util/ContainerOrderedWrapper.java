@@ -510,11 +510,21 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * interface.
      */
     @Override
-    public void addListener(Container.ItemSetChangeListener listener) {
+    public void addItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
-                    .addListener(new PiggybackListener(listener));
+                    .addItemSetChangeListener(new PiggybackListener(listener));
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Container.ItemSetChangeListener listener) {
+        addItemSetChangeListener(listener);
     }
 
     /*
@@ -523,11 +533,21 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * interface.
      */
     @Override
-    public void removeListener(Container.ItemSetChangeListener listener) {
+    public void removeItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
-                    .removeListener(new PiggybackListener(listener));
+                    .removeItemSetChangeListener(new PiggybackListener(listener));
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Container.ItemSetChangeListener listener) {
+        removeItemSetChangeListener(listener);
     }
 
     /*
@@ -536,11 +556,22 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * implemented interface.
      */
     @Override
-    public void addListener(Container.PropertySetChangeListener listener) {
+    public void addPropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .addListener(new PiggybackListener(listener));
+                    .addPropertySetChangeListener(new PiggybackListener(
+                            listener));
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Container.PropertySetChangeListener listener) {
+        addPropertySetChangeListener(listener);
     }
 
     /*
@@ -549,11 +580,22 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * interface.
      */
     @Override
-    public void removeListener(Container.PropertySetChangeListener listener) {
+    public void removePropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .removeListener(new PiggybackListener(listener));
+                    .removePropertySetChangeListener(new PiggybackListener(
+                            listener));
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Container.PropertySetChangeListener listener) {
+        removePropertySetChangeListener(listener);
     }
 
     /*

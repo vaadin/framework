@@ -200,11 +200,21 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      *            the new Listener to be registered.
      */
     @Override
-    public void addListener(Item.PropertySetChangeListener listener) {
+    public void addPropertySetChangeListener(
+            Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
             propertySetChangeListeners = new LinkedList<PropertySetChangeListener>();
         }
         propertySetChangeListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPropertySetChangeListener(com.vaadin.data.Item.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Item.PropertySetChangeListener listener) {
+        addPropertySetChangeListener(listener);
     }
 
     /**
@@ -214,10 +224,20 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      *            the Listener to be removed.
      */
     @Override
-    public void removeListener(Item.PropertySetChangeListener listener) {
+    public void removePropertySetChangeListener(
+            Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null) {
             propertySetChangeListeners.remove(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePropertySetChangeListener(com.vaadin.data.Item.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Item.PropertySetChangeListener listener) {
+        removePropertySetChangeListener(listener);
     }
 
     /**

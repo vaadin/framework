@@ -483,13 +483,35 @@ public class IndexedContainer extends
     }
 
     @Override
+    public void addPropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
+        super.addPropertySetChangeListener(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    @Override
     public void addListener(Container.PropertySetChangeListener listener) {
-        super.addListener(listener);
+        addPropertySetChangeListener(listener);
     }
 
     @Override
+    public void removePropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
+        super.removePropertySetChangeListener(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
-        super.removeListener(listener);
+        removePropertySetChangeListener(listener);
     }
 
     /*
@@ -499,11 +521,20 @@ public class IndexedContainer extends
      * vaadin.data.Property.ValueChangeListener)
      */
     @Override
-    public void addListener(Property.ValueChangeListener listener) {
+    public void addValueChangeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
             propertyValueChangeListeners = new LinkedList<Property.ValueChangeListener>();
         }
         propertyValueChangeListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Property.ValueChangeListener listener) {
+        addValueChangeListener(listener);
     }
 
     /*
@@ -513,10 +544,19 @@ public class IndexedContainer extends
      * .vaadin.data.Property.ValueChangeListener)
      */
     @Override
-    public void removeListener(Property.ValueChangeListener listener) {
+    public void removeValueChangeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners != null) {
             propertyValueChangeListeners.remove(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Property.ValueChangeListener listener) {
+        removeValueChangeListener(listener);
     }
 
     /**
@@ -965,8 +1005,17 @@ public class IndexedContainer extends
          * com.vaadin.data.Property.ValueChangeListener)
          */
         @Override
-        public void addListener(Property.ValueChangeListener listener) {
+        public void addValueChangeListener(Property.ValueChangeListener listener) {
             addSinglePropertyChangeListener(propertyId, itemId, listener);
+        }
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+         **/
+        @Deprecated
+        public void addListener(Property.ValueChangeListener listener) {
+            addValueChangeListener(listener);
         }
 
         /*
@@ -976,8 +1025,18 @@ public class IndexedContainer extends
          * (com.vaadin.data.Property.ValueChangeListener)
          */
         @Override
-        public void removeListener(Property.ValueChangeListener listener) {
+        public void removeValueChangeListener(
+                Property.ValueChangeListener listener) {
             removeSinglePropertyChangeListener(propertyId, itemId, listener);
+        }
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+         **/
+        @Deprecated
+        public void removeListener(Property.ValueChangeListener listener) {
+            removeValueChangeListener(listener);
         }
 
         private IndexedContainer getHost() {
