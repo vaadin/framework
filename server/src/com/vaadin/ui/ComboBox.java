@@ -81,7 +81,7 @@ public class ComboBox extends Select {
      */
     public void setInputPrompt(String inputPrompt) {
         this.inputPrompt = inputPrompt;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ComboBox extends Select {
      */
     public void setTextInputAllowed(boolean textInputAllowed) {
         this.textInputAllowed = textInputAllowed;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

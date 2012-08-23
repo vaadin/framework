@@ -138,7 +138,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
             int id = (Integer) variables.get("pollForStart");
             if (!isUploading && id == nextid) {
                 notStarted = true;
-                requestRepaint();
+                markAsDirty();
             } else {
             }
         }
@@ -829,7 +829,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         isUploading = false;
         contentLength = -1;
         interrupted = false;
-        requestRepaint();
+        markAsDirty();
     }
 
     public boolean isUploading() {
@@ -901,7 +901,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -922,14 +922,14 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * fired.
      */
     public void submitUpload() {
-        requestRepaint();
+        markAsDirty();
         forceSubmit = true;
     }
 
     @Override
-    public void requestRepaint() {
+    public void markAsDirty() {
         forceSubmit = false;
-        super.requestRepaint();
+        super.markAsDirty();
     }
 
     /*
@@ -982,7 +982,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
-                    requestRepaint();
+                    markAsDirty();
                 }
 
                 @Override

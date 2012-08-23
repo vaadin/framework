@@ -723,7 +723,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private void attachWindow(Window w) {
         windows.add(w);
         w.setParent(this);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -746,7 +746,7 @@ public abstract class Root extends AbstractComponentContainer implements
         }
         window.setParent(null);
         window.fireClose();
-        requestRepaint();
+        markAsDirty();
 
         return true;
     }
@@ -788,7 +788,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public void setFocusedComponent(Focusable focusable) {
         pendingFocus = focusable;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -808,7 +808,7 @@ public abstract class Root extends AbstractComponentContainer implements
                     "The component where to scroll must belong to this root.");
         }
         scrollIntoView = component;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1013,7 +1013,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public void setResizeLazy(boolean resizeLazy) {
         this.resizeLazy = resizeLazy;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

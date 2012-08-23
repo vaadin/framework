@@ -60,7 +60,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                     String id = (String) rawVariables.get("fi" + i);
                     files[i] = file;
                     receivers.put(id, file);
-                    requestRepaint(); // paint Receivers
+                    markAsDirty(); // paint Receivers
                 }
             }
         }
@@ -207,7 +207,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
      */
     public void setHTML5DataFlavor(String type, Object value) {
         html5DataFlavors.put(type, value);
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -254,7 +254,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public void setDropHandler(DropHandler dropHandler) {
         this.dropHandler = dropHandler;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -270,7 +270,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     public void setDragStartMode(DragStartMode dragStartMode) {
         this.dragStartMode = dragStartMode;
-        requestRepaint();
+        markAsDirty();
     }
 
     public DragStartMode getDragStartMode() {

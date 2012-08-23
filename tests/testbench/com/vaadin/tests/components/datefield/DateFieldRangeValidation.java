@@ -58,7 +58,7 @@ public class DateFieldRangeValidation extends TestBase {
 
         @Override
         public void valueChange(ValueChangeEvent event) {
-            actualDateField.requestRepaint();
+            actualDateField.markAsDirty();
         }
     };
 

@@ -84,7 +84,7 @@ public class PopupDateField extends DateField {
      */
     public void setInputPrompt(String inputPrompt) {
         this.inputPrompt = inputPrompt;
-        requestRepaint();
+        markAsDirty();
     }
 
 }

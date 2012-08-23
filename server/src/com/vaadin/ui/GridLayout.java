@@ -254,7 +254,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -400,7 +400,7 @@ public class GridLayout extends AbstractLayout implements
 
         super.removeComponent(component);
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1096,7 +1096,7 @@ public class GridLayout extends AbstractLayout implements
         } else {
             oldLocation.setComponent(newComponent);
             newLocation.setComponent(oldComponent);
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1117,7 +1117,7 @@ public class GridLayout extends AbstractLayout implements
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
         componentToAlignment.put(childComponent, alignment);
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -1173,7 +1173,7 @@ public class GridLayout extends AbstractLayout implements
 
         setRows(getRows() + 1);
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1232,7 +1232,7 @@ public class GridLayout extends AbstractLayout implements
         }
 
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
 
     }
 
@@ -1257,7 +1257,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1295,7 +1295,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

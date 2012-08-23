@@ -78,7 +78,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
                     getMainWindow().showNotification(
                             "Selected test:" + prev.getTestableName());
                     select.setValue(prev);
-                    select.requestRepaint();
+                    select.markAsDirty();
                 }
             }
         });
@@ -94,7 +94,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
                     getMainWindow().showNotification(
                             "Selected test:" + next.getTestableName());
                     select.setValue(next);
-                    select.requestRepaint();
+                    select.markAsDirty();
                 }
             }
         });

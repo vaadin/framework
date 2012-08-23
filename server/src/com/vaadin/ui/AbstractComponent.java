@@ -262,7 +262,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         this.locale = locale;
 
         // FIXME: Reload value if there is a converter
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -373,7 +373,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
-            getParent().requestRepaint();
+            getParent().markAsDirty();
         }
     }
 
@@ -535,7 +535,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void setComponentError(ErrorMessage componentError) {
         this.componentError = componentError;
         fireComponentErrorEvent();
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -751,7 +751,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         if (needRepaint) {
             getState().addRegisteredEventListener(eventIdentifier);
-            requestRepaint();
         }
     }
 
@@ -800,7 +799,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
             eventRouter.removeListener(eventType, target);
             if (!eventRouter.hasListeners(eventType)) {
                 getState().removeRegisteredEventListener(eventIdentifier);
-                requestRepaint();
             }
         }
     }
@@ -1107,7 +1105,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         this.height = height;
         heightUnit = unit;
-        requestRepaint();
+        markAsDirty();
         // ComponentSizeValidator.setHeightLocation(this);
     }
 
@@ -1145,7 +1143,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         this.width = width;
         widthUnit = unit;
-        requestRepaint();
+        markAsDirty();
         // ComponentSizeValidator.setWidthLocation(this);
     }
 

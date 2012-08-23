@@ -301,7 +301,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 // Sets the buffering state
                 currentBufferedSourceException = new Buffered.SourceException(
                         this, e);
-                requestRepaint();
+                markAsDirty();
 
                 // Throws the source exception
                 throw currentBufferedSourceException;
@@ -316,7 +316,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 fireValueChange(false);
             } else if (wasModified) {
                 // If the value did not change, but the modification status did
-                requestRepaint();
+                markAsDirty();
             }
         }
     }
@@ -535,7 +535,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     // Sets the buffering state
                     currentBufferedSourceException = new Buffered.SourceException(
                             this, e);
-                    requestRepaint();
+                    markAsDirty();
 
                     // Throws the source exception
                     throw currentBufferedSourceException;
@@ -805,7 +805,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             validators = new LinkedList<Validator>();
         }
         validators.add(validator);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -833,7 +833,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (validators != null) {
             validators.remove(validator);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -843,7 +843,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (validators != null) {
             validators.clear();
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1070,7 +1070,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected void fireValueChange(boolean repaintIsNotNeeded) {
         fireEvent(new AbstractField.ValueChangeEvent(this));
         if (!repaintIsNotNeeded) {
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1264,7 +1264,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected void setInternalValue(T newValue) {
         value = newValue;
         if (validators != null && !validators.isEmpty()) {
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1347,7 +1347,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setRequiredError(String requiredMessage) {
         requiredError = requiredMessage;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -1375,7 +1375,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setConversionError(String valueConversionError) {
         this.conversionError = valueConversionError;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1417,7 +1417,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setValidationVisible(boolean validateAutomatically) {
         if (validationVisible != validateAutomatically) {
-            requestRepaint();
+            markAsDirty();
             validationVisible = validateAutomatically;
         }
     }
@@ -1430,7 +1430,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void setCurrentBufferedSourceException(
             Buffered.SourceException currentBufferedSourceException) {
         this.currentBufferedSourceException = currentBufferedSourceException;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1518,7 +1518,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setConverter(Converter<T, ?> converter) {
         this.converter = (Converter<T, Object>) converter;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override

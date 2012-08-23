@@ -154,8 +154,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (c != null) {
             super.addComponent(c);
         }
-
-        requestRepaint();
     }
 
     /**
@@ -179,7 +177,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (c != null) {
             super.addComponent(c);
         }
-        requestRepaint();
     }
 
     /**
@@ -217,7 +214,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (c == getSecondComponent()) {
             getState().setSecondChild(null);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -259,7 +256,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         } else if (oldComponent == getSecondComponent()) {
             setSecondComponent(newComponent);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -329,8 +326,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         splitterState.setPositionUnit(unit.getSymbol());
         splitterState.setPositionReversed(reverse);
         posUnit = unit;
-
-        requestRepaint();
     }
 
     /**
@@ -452,8 +447,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         state.setMaxPosition(maxPos);
         state.setMaxPositionUnit(maxPosUnit.getSymbol());
         posMaxUnit = maxPosUnit;
-
-        requestRepaint();
     }
 
     /**
@@ -465,7 +458,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      */
     public void setLocked(boolean locked) {
         getSplitterState().setLocked(locked);
-        requestRepaint();
     }
 
     /**

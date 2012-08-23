@@ -157,7 +157,7 @@ public class RichTextArea extends AbstractField<String> implements
          */
         selectAll = true;
         focus();
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -183,7 +183,7 @@ public class RichTextArea extends AbstractField<String> implements
                 // If the modified status changes,
                 // repaint is needed after all.
                 if (wasModified != isModified()) {
-                    requestRepaint();
+                    markAsDirty();
                 }
             }
         }

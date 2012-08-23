@@ -676,15 +676,21 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
     }
 
     @Override
+    @Deprecated
     public void requestRepaint() {
-        super.requestRepaint();
+        markAsDirty();
+    }
+
+    @Override
+    public void markAsDirty() {
+        super.markAsDirty();
         optionRequest = false;
         prevfilterstring = filterstring;
         filterstring = null;
     }
 
     private void optionRepaint() {
-        super.requestRepaint();
+        super.markAsDirty();
     }
 
     @Override

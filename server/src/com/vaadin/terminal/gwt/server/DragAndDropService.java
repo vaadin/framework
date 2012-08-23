@@ -264,7 +264,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaint() {
+        markAsDirty();
+    }
+
+    @Override
+    public void markAsDirty() {
         // TODO Auto-generated method stub
 
     }
@@ -276,7 +282,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaintAll() {
+        markAsDirtyRecursive();
+    }
+
+    @Override
+    public void markAsDirtyRecursive() {
         // TODO Auto-generated method stub
 
     }

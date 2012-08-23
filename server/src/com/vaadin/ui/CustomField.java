@@ -120,13 +120,13 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     @Override
     public void setHeight(float height, Unit unit) {
         super.setHeight(height, unit);
-        requestRepaintAll();
+        markAsDirtyRecursive();
     }
 
     @Override
     public void setWidth(float height, Unit unit) {
         super.setWidth(height, unit);
-        requestRepaintAll();
+        markAsDirtyRecursive();
     }
 
     // ComponentContainer methods

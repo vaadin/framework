@@ -84,7 +84,6 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
         public void setPrefix(String prefix) {
             getState().setPrefix(prefix);
-            requestRepaint();
         }
 
         public void greetRpc(String message) {

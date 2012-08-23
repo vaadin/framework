@@ -85,8 +85,15 @@ public abstract class AbstractClientConnector implements ClientConnector {
     private ClientConnector parent;
 
     /* Documentation copied from interface */
+    @Deprecated
     @Override
     public void requestRepaint() {
+        markAsDirty();
+    }
+
+    /* Documentation copied from interface */
+    @Override
+    public void markAsDirty() {
         Root root = getRoot();
         if (root != null) {
             root.getConnectorTracker().markDirty(this);
@@ -389,11 +396,17 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaintAll() {
-        requestRepaint();
+        markAsDirtyRecursive();
+    }
+
+    @Override
+    public void markAsDirtyRecursive() {
+        markAsDirty();
 
         for (ClientConnector connector : getAllChildrenIterable(this)) {
-            connector.requestRepaintAll();
+            connector.markAsDirtyRecursive();
         }
     }
 
@@ -469,14 +482,14 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
         extensions.add(extension);
         extension.setParent(this);
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
     public void removeExtension(Extension extension) {
         extension.setParent(null);
         extensions.remove(extension);
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -513,7 +526,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
     @Override
     public void attach() {
-        requestRepaint();
+        markAsDirty();
 
         getRoot().getConnectorTracker().registerConnector(this);
 

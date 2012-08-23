@@ -125,14 +125,14 @@ public class OptionGroup extends AbstractSelect implements
                 Set<?> newValueSet = (Set<?>) newValue;
                 for (Object itemId : currentValueSet) {
                     if (!isItemEnabled(itemId) && !newValueSet.contains(itemId)) {
-                        requestRepaint();
+                        markAsDirty();
                         return;
                     }
                 }
                 for (Object itemId : newValueSet) {
                     if (!isItemEnabled(itemId)
                             && !currentValueSet.contains(itemId)) {
-                        requestRepaint();
+                        markAsDirty();
                         return;
                     }
                 }
@@ -141,7 +141,7 @@ public class OptionGroup extends AbstractSelect implements
                     newValue = getNullSelectionItemId();
                 }
                 if (!isItemEnabled(newValue)) {
-                    requestRepaint();
+                    markAsDirty();
                     return;
                 }
             }
@@ -169,7 +169,7 @@ public class OptionGroup extends AbstractSelect implements
             } else {
                 disabledItemIds.add(itemId);
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -200,7 +200,7 @@ public class OptionGroup extends AbstractSelect implements
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         this.htmlContentAllowed = htmlContentAllowed;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

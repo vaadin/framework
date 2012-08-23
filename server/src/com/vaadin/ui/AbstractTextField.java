@@ -184,7 +184,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                     // If the modified status changes, or if we have a
                     // formatter, repaint is needed after all.
                     if (wasModified != isModified()) {
-                        requestRepaint();
+                        markAsDirty();
                     }
                 }
             }
@@ -271,7 +271,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setNullRepresentation(String nullRepresentation) {
         this.nullRepresentation = nullRepresentation;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -297,7 +297,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -440,7 +440,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          */
         if (lastKnownTextContent != null) {
             lastKnownTextContent = null;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -465,7 +465,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setTextChangeEventMode(TextChangeEventMode inputEventMode) {
         textChangeEventMode = inputEventMode;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -536,7 +536,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      */
     public void setTextChangeTimeout(int timeout) {
         textChangeEventTimeout = timeout;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -627,7 +627,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         selectionPosition = pos;
         selectionLength = length;
         focus();
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

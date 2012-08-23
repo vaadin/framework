@@ -265,7 +265,7 @@ public class Label extends AbstractComponent implements Property<String>,
                         .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -482,7 +482,7 @@ public class Label extends AbstractComponent implements Property<String>,
      */
     public void setConverter(Converter<String, ?> converter) {
         this.converter = (Converter<String, Object>) converter;
-        requestRepaint();
+        markAsDirty();
     }
 
 }

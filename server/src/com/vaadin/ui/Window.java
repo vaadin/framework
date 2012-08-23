@@ -493,7 +493,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
             }
         }
         bringToFront = Integer.valueOf(maxBringToFront + 1);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

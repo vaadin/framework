@@ -462,7 +462,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     if (!isNullSelectionAllowed()
                             && (id == null || id == getNullSelectionItemId())) {
                         // skip empty selection if nullselection is not allowed
-                        requestRepaint();
+                        markAsDirty();
                     } else if (id != null && containsId(id)) {
                         acceptedSelections.add(id);
                     }
@@ -470,7 +470,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
                 if (!isNullSelectionAllowed() && acceptedSelections.size() < 1) {
                     // empty selection not allowed, keep old value
-                    requestRepaint();
+                    markAsDirty();
                     return;
                 }
 
@@ -498,7 +498,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 if (!isNullSelectionAllowed()
                         && (clientSideSelectedKeys.length == 0
                                 || clientSideSelectedKeys[0] == null || clientSideSelectedKeys[0] == getNullSelectionItemId())) {
-                    requestRepaint();
+                    markAsDirty();
                     return;
                 }
                 if (clientSideSelectedKeys.length == 0) {
@@ -513,7 +513,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     final Object id = itemIdMapper
                             .get(clientSideSelectedKeys[0]);
                     if (!isNullSelectionAllowed() && id == null) {
-                        requestRepaint();
+                        markAsDirty();
                     } else if (id != null
                             && id.equals(getNullSelectionItemId())) {
                         setValue(null, true);
@@ -975,7 +975,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
              */
             setValue(null);
 
-            requestRepaint();
+            markAsDirty();
 
         }
     }
@@ -1042,7 +1042,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 }
             }
 
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1071,7 +1071,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
             this.allowNewOptions = allowNewOptions;
 
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1087,7 +1087,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void setItemCaption(Object itemId, String caption) {
         if (itemId != null) {
             itemCaptions.put(itemId, caption);
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1173,7 +1173,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             } else {
                 itemIcons.put(itemId, icon);
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1239,7 +1239,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void setItemCaptionMode(ItemCaptionMode mode) {
         if (mode != null) {
             itemCaptionMode = mode;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1302,13 +1302,13 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         if (propertyId != null) {
             itemCaptionPropertyId = propertyId;
             setItemCaptionMode(ITEM_CAPTION_MODE_PROPERTY);
-            requestRepaint();
+            markAsDirty();
         } else {
             itemCaptionPropertyId = null;
             if (getItemCaptionMode() == ITEM_CAPTION_MODE_PROPERTY) {
                 setItemCaptionMode(ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID);
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1360,7 +1360,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             throw new IllegalArgumentException(
                     "Property type must be assignable to Resource");
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1579,7 +1579,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         .containerPropertySetChange(event);
             }
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1594,7 +1594,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         .containerItemSetChange(event);
             }
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1665,7 +1665,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public void setNullSelectionAllowed(boolean nullSelectionAllowed) {
         if (nullSelectionAllowed != this.nullSelectionAllowed) {
             this.nullSelectionAllowed = nullSelectionAllowed;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1824,13 +1824,13 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         @Override
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
         public void itemPropertySetChange(
                 com.vaadin.data.Item.PropertySetChangeEvent event) {
-            requestRepaint();
+            markAsDirty();
         }
 
     }

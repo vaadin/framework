@@ -196,7 +196,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (altText != this.altText
                 || (altText != null && !altText.equals(this.altText))) {
             this.altText = altText;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -222,7 +222,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      */
     public void setParameter(String name, String value) {
         parameters.put(name, value);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -244,7 +244,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      */
     public void removeParameter(String name) {
         parameters.remove(name);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -307,7 +307,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (codebase != this.codebase
                 || (codebase != null && !codebase.equals(this.codebase))) {
             this.codebase = codebase;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -325,7 +325,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (codetype != this.codetype
                 || (codetype != null && !codetype.equals(this.codetype))) {
             this.codetype = codetype;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -350,7 +350,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
                     setParameter("wmode", "transparent");
                 }
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -365,7 +365,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (standby != this.standby
                 || (standby != null && !standby.equals(this.standby))) {
             this.standby = standby;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -390,7 +390,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (classId != this.classId
                 || (classId != null && !classId.equals(this.classId))) {
             this.classId = classId;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -443,7 +443,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
             } else {
                 // Keep previous type
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -467,7 +467,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         }
         if (type != this.type) {
             this.type = type;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -502,7 +502,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
         if (archive != this.archive
                 || (archive != null && !archive.equals(this.archive))) {
             this.archive = archive;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

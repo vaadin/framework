@@ -188,7 +188,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetBorder(BorderStyle targetBorder) {
         this.targetBorder = targetBorder;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -199,7 +199,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetHeight(int targetHeight) {
         this.targetHeight = targetHeight;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -210,7 +210,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetName(String targetName) {
         this.targetName = targetName;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -221,7 +221,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetWidth(int targetWidth) {
         this.targetWidth = targetWidth;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -241,7 +241,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setResource(Resource resource) {
         this.resource = resource;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override

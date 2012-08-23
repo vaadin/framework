@@ -47,7 +47,7 @@ public class EmbeddedImageRefresh extends TestBase {
         button.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                embedded.requestRepaint();
+                embedded.markAsDirty();
             }
         });
         addComponent(button);
@@ -57,7 +57,7 @@ public class EmbeddedImageRefresh extends TestBase {
             public void buttonClick(ClickEvent event) {
                 ((StreamResource) embedded.getSource()).setFilename(new Date()
                         .getTime() + ".png");
-                embedded.requestRepaint();
+                embedded.markAsDirty();
             }
         });
         addComponent(button);

@@ -212,7 +212,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         // If the visibility state is toggled it might affect all children
         // aswell, e.g. make container visible should make children visible if
         // they were only hidden because the container was hidden.
-        requestRepaintAll();
+        markAsDirtyRecursive();
     }
 
     @Override
@@ -306,12 +306,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     private void repaintChildTrees(Collection<Component> dirtyChildren) {
         for (Component c : dirtyChildren) {
-            if (c instanceof ComponentContainer) {
-                ComponentContainer cc = (ComponentContainer) c;
-                cc.requestRepaintAll();
-            } else {
-                c.requestRepaint();
-            }
+            c.markAsDirtyRecursive();
         }
     }
 

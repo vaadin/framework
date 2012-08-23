@@ -225,7 +225,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                 components.add(newLocation, oldComponent);
             }
 
-            requestRepaint();
+            markAsDirty();
         }
     }
 

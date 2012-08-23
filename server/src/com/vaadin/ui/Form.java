@@ -133,7 +133,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         @Override
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-            requestRepaint();
+            markAsDirty();
         }
     };
 
@@ -342,7 +342,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (problems == null) {
             if (currentBufferedSourceException != null) {
                 currentBufferedSourceException = null;
-                requestRepaint();
+                markAsDirty();
             }
             return;
         }
@@ -357,7 +357,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
-        requestRepaint();
+        markAsDirty();
         throw e;
     }
 
@@ -386,7 +386,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (problems == null) {
             if (currentBufferedSourceException != null) {
                 currentBufferedSourceException = null;
-                requestRepaint();
+                markAsDirty();
             }
             return;
         }
@@ -401,7 +401,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
-        requestRepaint();
+        markAsDirty();
         throw e;
     }
 
@@ -491,7 +491,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public void addField(Object propertyId, Field<?> field) {
         registerField(propertyId, field);
         attachField(propertyId, field);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -720,7 +720,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         // If the new datasource is null, just set null datasource
         if (itemDatasource == null) {
-            requestRepaint();
+            markAsDirty();
             return;
         }
 
@@ -1244,7 +1244,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             // some ancestor still disabled, don't update children
             return;
         } else {
-            getLayout().requestRepaintAll();
+            getLayout().markAsDirtyRecursive();
         }
     }
 

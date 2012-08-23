@@ -147,7 +147,7 @@ public class PopupView extends AbstractComponentContainer implements
             throw new IllegalArgumentException("Content must not be null");
         }
         content = newContent;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -179,7 +179,7 @@ public class PopupView extends AbstractComponentContainer implements
                 visibleComponent = null;
             }
             fireEvent(new PopupVisibilityEvent(this));
-            requestRepaint();
+            markAsDirty();
         }
     }
 

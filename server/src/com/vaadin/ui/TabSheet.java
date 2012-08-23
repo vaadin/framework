@@ -176,7 +176,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                     fireSelectedTabChange();
                 }
             }
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -301,7 +301,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 fireSelectedTabChange();
             }
             super.addComponent(c);
-            requestRepaint();
+            markAsDirty();
             return tab;
         }
     }
@@ -475,7 +475,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     public void hideTabs(boolean tabsHidden) {
         this.tabsHidden = tabsHidden;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -519,7 +519,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             setSelected(c);
             updateSelection();
             fireSelectedTabChange();
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -537,13 +537,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // "cached" update even though the client knows nothing about the
         // connector
         if (selected instanceof ComponentContainer) {
-            ((ComponentContainer) selected).requestRepaintAll();
+            ((ComponentContainer) selected).markAsDirtyRecursive();
         } else if (selected instanceof Table) {
             // Workaround until there's a generic way of telling a component
             // that there is no client side state to rely on. See #8642
             ((Table) selected).refreshRowCache();
         } else if (selected != null) {
-            selected.requestRepaint();
+            selected.markAsDirty();
         }
 
     }
@@ -716,7 +716,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             copyTabMetadata(oldTab, newTab);
             copyTabMetadata(tmp, oldTab);
 
-            requestRepaint();
+            markAsDirty();
         }
 
     }
@@ -1028,7 +1028,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setCaption(String caption) {
             this.caption = caption;
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1039,7 +1039,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setIcon(Resource icon) {
             this.icon = icon;
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1053,7 +1053,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             if (updateSelection()) {
                 fireSelectedTabChange();
             }
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1067,7 +1067,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             if (updateSelection()) {
                 fireSelectedTabChange();
             }
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1078,7 +1078,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setClosable(boolean closable) {
             this.closable = closable;
-            requestRepaint();
+            markAsDirty();
         }
 
         public void close() {
@@ -1093,7 +1093,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setDescription(String description) {
             this.description = description;
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1104,7 +1104,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1120,7 +1120,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public void setStyleName(String styleName) {
             this.styleName = styleName;
-            requestRepaint();
+            markAsDirty();
         }
 
         @Override
@@ -1180,7 +1180,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         int oldPosition = getTabPosition(tab);
         components.remove(oldPosition);
         components.add(position, tab.getComponent());
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1207,7 +1207,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     @Override
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override

@@ -33,9 +33,9 @@ public class Ticket2060 extends Application.LegacyApplication {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                button1.requestRepaint();
-                button2.requestRepaint();
-                button3.requestRepaint();
+                button1.markAsDirty();
+                button2.markAsDirty();
+                button3.markAsDirty();
 
             }
 

@@ -176,7 +176,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                 .addListener((ComponentContainer.ComponentDetachListener) this);
 
         content = newContent;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

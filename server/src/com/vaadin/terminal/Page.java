@@ -332,7 +332,7 @@ public class Page implements Serializable {
             if (fireEvents) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
-            root.requestRepaint();
+            root.markAsDirty();
         }
     }
 
@@ -523,7 +523,7 @@ public class Page implements Serializable {
      */
     public void open(Resource resource) {
         openList.add(new OpenResource(resource, null, -1, -1, BORDER_DEFAULT));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -566,7 +566,7 @@ public class Page implements Serializable {
     public void open(Resource resource, String windowName) {
         openList.add(new OpenResource(resource, windowName, -1, -1,
                 BORDER_DEFAULT));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -589,7 +589,7 @@ public class Page implements Serializable {
             int height, BorderStyle border) {
         openList.add(new OpenResource(resource, windowName, width, height,
                 border));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -603,7 +603,7 @@ public class Page implements Serializable {
             notifications = new LinkedList<Notification>();
         }
         notifications.add(notification);
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**

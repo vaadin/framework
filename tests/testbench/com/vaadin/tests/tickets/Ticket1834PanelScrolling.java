@@ -66,7 +66,7 @@ public class Ticket1834PanelScrolling extends
         b.addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                p.requestRepaint();
+                p.markAsDirty();
             }
         });
 

@@ -102,7 +102,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         components.add(c);
         try {
             super.addComponent(c);
-            requestRepaint();
+            markAsDirty();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
@@ -125,7 +125,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         components.addFirst(c);
         try {
             super.addComponent(c);
-            requestRepaint();
+            markAsDirty();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
@@ -154,7 +154,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         components.add(index, c);
         try {
             super.addComponent(c);
-            requestRepaint();
+            markAsDirty();
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
@@ -171,7 +171,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     public void removeComponent(Component c) {
         components.remove(c);
         super.removeComponent(c);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -276,7 +276,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
                 components.add(newLocation, oldComponent);
             }
 
-            requestRepaint();
+            markAsDirty();
         }
     }
 

@@ -39,7 +39,6 @@ public class HelloWorldExtension extends AbstractExtension {
 
     public void setGreeting(String greeting) {
         getState().setGreeting(greeting);
-        requestRepaint();
     }
 
     public String getGreeting() {

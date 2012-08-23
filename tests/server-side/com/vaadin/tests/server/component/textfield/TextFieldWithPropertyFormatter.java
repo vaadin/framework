@@ -30,9 +30,9 @@ public class TextFieldWithPropertyFormatter extends TestCase {
 
         field = new TextField() {
             @Override
-            public void requestRepaint() {
+            public void markAsDirty() {
                 repainted++;
-                super.requestRepaint();
+                super.markAsDirty();
             }
         };
 
