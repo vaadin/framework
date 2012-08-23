@@ -71,6 +71,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
      */
     private SharedState sharedState;
 
+    private Class<? extends SharedState> stateType;
+
     /**
      * Pending RPC method invocations to be sent.
      */
@@ -179,26 +181,33 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.server.ClientConnector#getStateType()
-     */
     @Override
     public Class<? extends SharedState> getStateType() {
+        // Lazy load because finding type can be expensive because of the
+        // exceptions flying around
+        if (stateType == null) {
+            stateType = findStateType();
+        }
+
+        return stateType;
+    }
+
+    private Class<? extends SharedState> findStateType() {
         try {
-            Method m = null;
             Class<?> class1 = getClass();
-            while (m == null && class1 != null) {
-                m = class1.getDeclaredMethod("getState", (Class[]) null);
-                class1 = class1.getSuperclass();
+            while (class1 != null) {
+                try {
+                    Method m = class1.getDeclaredMethod("getState",
+                            (Class[]) null);
+                    Class<?> type = m.getReturnType();
+                    return type.asSubclass(SharedState.class);
+                } catch (NoSuchMethodException nsme) {
+                    // Try in superclass instead
+                    class1 = class1.getSuperclass();
+                }
             }
-            if (m == null) {
-                throw new NoSuchMethodException(getClass().getCanonicalName()
-                        + ".getState()");
-            }
-            Class<?> type = m.getReturnType();
-            return type.asSubclass(SharedState.class);
+            throw new NoSuchMethodException(getClass().getCanonicalName()
+                    + ".getState()");
         } catch (Exception e) {
             throw new RuntimeException("Error finding state type for "
                     + getClass().getName(), e);
