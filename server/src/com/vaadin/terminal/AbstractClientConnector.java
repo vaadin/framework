@@ -187,7 +187,16 @@ public abstract class AbstractClientConnector implements ClientConnector {
     @Override
     public Class<? extends SharedState> getStateType() {
         try {
-            Method m = getClass().getMethod("getState", (Class[]) null);
+            Method m = null;
+            Class<?> class1 = getClass();
+            while (m == null && class1 != null) {
+                m = class1.getDeclaredMethod("getState", (Class[]) null);
+                class1 = class1.getSuperclass();
+            }
+            if (m == null) {
+                throw new NoSuchMethodException(getClass().getCanonicalName()
+                        + ".getState()");
+            }
             Class<?> type = m.getReturnType();
             return type.asSubclass(SharedState.class);
         } catch (Exception e) {
