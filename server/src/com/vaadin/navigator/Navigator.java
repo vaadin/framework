@@ -651,8 +651,17 @@ public class Navigator implements Serializable {
      * @param listener
      *            Listener to invoke after view changes.
      */
-    public void addListener(ViewChangeListener listener) {
+    public void addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addViewChangeListener(ViewChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(ViewChangeListener listener) {
+        addViewChangeListener(listener);
     }
 
     /**
@@ -661,8 +670,17 @@ public class Navigator implements Serializable {
      * @param listener
      *            Listener to remove.
      */
-    public void removeListener(ViewChangeListener listener) {
+    public void removeViewChangeListener(ViewChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeViewChangeListener(ViewChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(ViewChangeListener listener) {
+        removeViewChangeListener(listener);
     }
 
 }
