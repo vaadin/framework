@@ -1493,11 +1493,21 @@ public class SQLContainer implements Container, Container.Filterable,
      */
 
     @Override
-    public void addListener(Container.ItemSetChangeListener listener) {
+    public void addItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
             itemSetChangeListeners = new LinkedList<Container.ItemSetChangeListener>();
         }
         itemSetChangeListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Container.ItemSetChangeListener listener) {
+        addItemSetChangeListener(listener);
     }
 
     /*
@@ -1509,10 +1519,20 @@ public class SQLContainer implements Container, Container.Filterable,
      */
 
     @Override
-    public void removeListener(Container.ItemSetChangeListener listener) {
+    public void removeItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
             itemSetChangeListeners.remove(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Container.ItemSetChangeListener listener) {
+        removeItemSetChangeListener(listener);
     }
 
     protected void fireContentsChange() {
@@ -1553,7 +1573,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * 
      * @param listener
      */
-    public void addListener(RowIdChangeListener listener) {
+    public void addRowIdChangeListener(RowIdChangeListener listener) {
         if (delegate instanceof QueryDelegate.RowIdChangeNotifier) {
             ((QueryDelegate.RowIdChangeNotifier) delegate)
                     .addListener(listener);
@@ -1561,15 +1581,33 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addRowIdChangeListener(RowIdChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(RowIdChangeListener listener) {
+        addRowIdChangeListener(listener);
+    }
+
+    /**
      * Removes a RowIdChangeListener from the QueryDelegate
      * 
      * @param listener
      */
-    public void removeListener(RowIdChangeListener listener) {
+    public void removeRowIdChangeListener(RowIdChangeListener listener) {
         if (delegate instanceof QueryDelegate.RowIdChangeNotifier) {
             ((QueryDelegate.RowIdChangeNotifier) delegate)
                     .removeListener(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(RowIdChangeListener listener) {
+        removeRowIdChangeListener(listener);
     }
 
     /**
