@@ -59,6 +59,13 @@ public interface FieldEvents {
          * @see FocusListener
          * @since 6.2
          */
+        public void addFocusListener(FocusListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addFocusListener(FocusListener)}
+         **/
+        @Deprecated
         public void addListener(FocusListener listener);
 
         /**
@@ -68,6 +75,13 @@ public interface FieldEvents {
          * @see FocusListener
          * @since 6.2
          */
+        public void removeFocusListener(FocusListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeFocusListener(FocusListener)}
+         **/
+        @Deprecated
         public void removeListener(FocusListener listener);
     }
 
@@ -97,6 +111,13 @@ public interface FieldEvents {
          * @see BlurListener
          * @since 6.2
          */
+        public void addBlurListener(BlurListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addBlurListener(BlurListener)}
+         **/
+        @Deprecated
         public void addListener(BlurListener listener);
 
         /**
@@ -106,6 +127,13 @@ public interface FieldEvents {
          * @see BlurListener
          * @since 6.2
          */
+        public void removeBlurListener(BlurListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeBlurListener(BlurListener)}
+         **/
+        @Deprecated
         public void removeListener(BlurListener listener);
     }
 
@@ -257,8 +285,22 @@ public interface FieldEvents {
      * {@link TextChangeListener}s.
      */
     public interface TextChangeNotifier extends Serializable {
+        public void addTextChangeListener(TextChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addTextChangeListener(TextChangeListener)}
+         **/
+        @Deprecated
         public void addListener(TextChangeListener listener);
 
+        public void removeTextChangeListener(TextChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeTextChangeListener(TextChangeListener)}
+         **/
+        @Deprecated
         public void removeListener(TextChangeListener listener);
     }
 

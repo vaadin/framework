@@ -78,6 +78,13 @@ public interface LayoutEvents {
          * @param listener
          *            The listener to add
          */
+        public void addLayoutClickListener(LayoutClickListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addLayoutClickListener(LayoutClickListener)}
+         **/
+        @Deprecated
         public void addListener(LayoutClickListener listener);
 
         /**
@@ -86,6 +93,13 @@ public interface LayoutEvents {
          * @param listener
          *            LayoutClickListener to be removed
          */
+        public void removeLayoutClickListener(LayoutClickListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeLayoutClickListener(LayoutClickListener)}
+         **/
+        @Deprecated
         public void removeListener(LayoutClickListener listener);
     }
 
