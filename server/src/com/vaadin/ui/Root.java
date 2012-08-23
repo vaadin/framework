@@ -1124,7 +1124,7 @@ public abstract class Root extends AbstractComponentContainer implements
      *             Notification.show does not allow HTML.
      */
     @Deprecated
-    public void showNotification(String caption, int type) {
+    public void showNotification(String caption, Notification.Type type) {
         Notification notification = new Notification(caption, type);
         notification.setHtmlContentAllowed(true);// Backwards compatibility
         getPage().showNotification(notification);
@@ -1179,7 +1179,8 @@ public abstract class Root extends AbstractComponentContainer implements
      *             be aware that HTML by default not allowed.
      */
     @Deprecated
-    public void showNotification(String caption, String description, int type) {
+    public void showNotification(String caption, String description,
+            Notification.Type type) {
         Notification notification = new Notification(caption, description, type);
         notification.setHtmlContentAllowed(true);// Backwards compatibility
         getPage().showNotification(notification);
@@ -1210,8 +1211,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @deprecated As of 7.0, use new Notification(...).show(Page).
      */
     @Deprecated
-    public void showNotification(String caption, String description, int type,
-            boolean htmlContentAllowed) {
+    public void showNotification(String caption, String description,
+            Notification.Type type, boolean htmlContentAllowed) {
         getPage()
                 .showNotification(
                         new Notification(caption, description, type,

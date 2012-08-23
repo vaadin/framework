@@ -493,8 +493,8 @@ public class Page implements Serializable {
                             true);
                 }
                 target.addAttribute(
-                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION,
-                        n.getPosition());
+                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
+                                .getPosition().ordinal());
                 target.addAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
