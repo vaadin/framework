@@ -1250,12 +1250,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
         Class<? extends SharedState> stateType = connector.getStateType();
         Object diffState = connectorTracker.getDiffState(connector);
         if (diffState == null) {
-            diffState = new JSONObject();
             // Use an empty state object as reference for full
             // repaints
-            boolean emptyInitialState = JavaScriptConnectorState.class
+
+            boolean supportsDiffState = !JavaScriptConnectorState.class
                     .isAssignableFrom(stateType);
-            if (!emptyInitialState) {
+            if (supportsDiffState) {
+                diffState = new JSONObject();
                 try {
                     SharedState referenceState = stateType.newInstance();
                     diffState = JsonCodec.encode(referenceState, null,
@@ -1266,8 +1267,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                             "Error creating reference object for state of type "
                                     + stateType.getName());
                 }
+                connectorTracker.setDiffState(connector, diffState);
             }
-            connectorTracker.setDiffState(connector, diffState);
         }
         JSONObject stateJson = (JSONObject) JsonCodec.encode(state, diffState,
                 stateType, root.getConnectorTracker());
