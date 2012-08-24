@@ -16,11 +16,9 @@
 
 package com.vaadin.ui;
 
-import java.util.Map;
-
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.shared.ui.slider.SliderOrientation;
+import com.vaadin.shared.ui.slider.SliderServerRpc;
+import com.vaadin.shared.ui.slider.SliderState;
 
 /**
  * A component for selecting a numerical value within a range.
@@ -41,9 +39,9 @@ import com.vaadin.terminal.Vaadin6Component;
  * 			vl.addComponent(volumeIndicator);
  * 			volumeIndicator.setValue("Current volume:" + 50.0);
  * 			slider.addListener(this);
- * 			
+ * 
  * 		}
- * 		
+ * 
  * 		public void setVolume(double d) {
  * 			volumeIndicator.setValue("Current volume: " + d);
  * 		}
@@ -58,28 +56,29 @@ import com.vaadin.terminal.Vaadin6Component;
  * 
  * @author Vaadin Ltd.
  */
-public class Slider extends AbstractField<Double> implements Vaadin6Component {
+public class Slider extends AbstractField<Double> {
 
-    public static final int ORIENTATION_HORIZONTAL = 0;
+    private SliderServerRpc rpc = new SliderServerRpc() {
 
-    public static final int ORIENTATION_VERTICAL = 1;
+        @Override
+        public void valueChanged(double value) {
 
-    /** Minimum value of slider */
-    private double min = 0;
+            try {
+                setValue(value, true);
+            } catch (final ValueOutOfBoundsException e) {
+                // Convert to nearest bound
+                double out = e.getValue().doubleValue();
+                if (out < getState().getMinValue()) {
+                    out = getState().getMinValue();
+                }
+                if (out > getState().getMaxValue()) {
+                    out = getState().getMaxValue();
+                }
+                Slider.super.setValue(new Double(out), false);
+            }
+        }
 
-    /** Maximum value of slider */
-    private double max = 100;
-
-    /**
-     * Resolution, how many digits are considered relevant after the decimal
-     * point. Must be a non-negative value
-     */
-    private int resolution = 0;
-
-    /**
-     * Slider orientation (horizontal/vertical), defaults .
-     */
-    private int orientation = ORIENTATION_HORIZONTAL;
+    };
 
     /**
      * Default slider constructor. Sets all values to defaults and the slide
@@ -88,7 +87,8 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      */
     public Slider() {
         super();
-        super.setValue(new Double(min));
+        registerRpc(rpc);
+        super.setValue(new Double(getState().getMinValue()));
     }
 
     /**
@@ -153,13 +153,18 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
         setCaption(caption);
     }
 
+    @Override
+    public SliderState getState() {
+        return (SliderState) super.getState();
+    }
+
     /**
      * Gets the maximum slider value
      * 
      * @return the largest value the slider can have
      */
     public double getMax() {
-        return max;
+        return getState().getMaxValue();
     }
 
     /**
@@ -170,11 +175,10 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      *            The new maximum slider value
      */
     public void setMax(double max) {
-        this.max = max;
+        getState().setMaxValue(max);
         if (getValue() > max) {
             setValue(max);
         }
-        markAsDirty();
     }
 
     /**
@@ -183,7 +187,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      * @return the smallest value the slider can have
      */
     public double getMin() {
-        return min;
+        return getState().getMinValue();
     }
 
     /**
@@ -194,33 +198,32 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      *            The new minimum slider value
      */
     public void setMin(double min) {
-        this.min = min;
+        getState().setMinValue(min);
         if (getValue() < min) {
             setValue(min);
         }
-        markAsDirty();
     }
 
     /**
      * Get the current orientation of the slider (horizontal or vertical).
      * 
-     * @return {@link #ORIENTATION_HORIZONTAL} or
-     *         {@link #ORIENTATION_HORIZONTAL}
+     * @return {@link SliderOrientation#HORIZONTAL} or
+     *         {@link SliderOrientation#VERTICAL}
      */
-    public int getOrientation() {
-        return orientation;
+    public SliderOrientation getOrientation() {
+        return getState().getOrientation();
     }
 
     /**
      * Set the orientation of the slider.
      * 
-     * @param The
-     *            new orientation, either {@link #ORIENTATION_HORIZONTAL} or
-     *            {@link #ORIENTATION_VERTICAL}
+     * @param orientation
+     *            The new orientation, either
+     *            {@link SliderOrientation#HORIZONTAL} or
+     *            {@link SliderOrientation#VERTICAL}
      */
-    public void setOrientation(int orientation) {
-        this.orientation = orientation;
-        markAsDirty();
+    public void setOrientation(SliderOrientation orientation) {
+        getState().setOrientation(orientation);
     }
 
     /**
@@ -230,21 +233,24 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      * @return resolution
      */
     public int getResolution() {
-        return resolution;
+        return getState().getResolution();
     }
 
     /**
      * Set a new resolution for the slider. The resolution is the number of
      * digits after the decimal point.
      * 
+     * @throws IllegalArgumentException
+     *             if resolution is negative.
+     * 
      * @param resolution
      */
     public void setResolution(int resolution) {
         if (resolution < 0) {
-            return;
+            throw new IllegalArgumentException(
+                    "Cannot set a negative resolution to Slider");
         }
-        this.resolution = resolution;
-        markAsDirty();
+        getState().setResolution(resolution);
     }
 
     /**
@@ -261,87 +267,36 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
     @Override
     protected void setValue(Double value, boolean repaintIsNotNeeded) {
         final double v = value.doubleValue();
+        final int resolution = getResolution();
         double newValue;
+
         if (resolution > 0) {
             // Round up to resolution
             newValue = (int) (v * Math.pow(10, resolution));
             newValue = newValue / Math.pow(10, resolution);
-            if (min > newValue || max < newValue) {
+            if (getMin() > newValue || getMax() < newValue) {
                 throw new ValueOutOfBoundsException(value);
             }
         } else {
             newValue = (int) v;
-            if (min > newValue || max < newValue) {
+            if (getMin() > newValue || getMax() < newValue) {
                 throw new ValueOutOfBoundsException(value);
             }
         }
+
+        getState().setValue(newValue);
         super.setValue(newValue, repaintIsNotNeeded);
     }
 
     @Override
-    public void setValue(Object newFieldValue)
-            throws com.vaadin.data.Property.ReadOnlyException {
-        if (newFieldValue != null && newFieldValue instanceof Number
-                && !(newFieldValue instanceof Double)) {
+    public void setValue(Object newFieldValue) {
+        if (newFieldValue instanceof Number) {
             // Support setting all types of Numbers
             newFieldValue = ((Number) newFieldValue).doubleValue();
         }
-
-        super.setValue(newFieldValue);
-    }
-
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-
-        target.addAttribute("min", min);
-        if (max > min) {
-            target.addAttribute("max", max);
-        } else {
-            target.addAttribute("max", min);
-        }
-        target.addAttribute("resolution", resolution);
-
-        if (resolution > 0) {
-            target.addVariable(this, "value", getValue().doubleValue());
-        } else {
-            target.addVariable(this, "value", getValue().intValue());
-        }
-
-        if (orientation == ORIENTATION_VERTICAL) {
-            target.addAttribute("vertical", true);
-        }
-
-    }
-
-    /**
-     * Invoked when the value of a variable has changed. Slider listeners are
-     * notified if the slider value has changed.
-     * 
-     * @param source
-     * @param variables
-     */
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        if (variables.containsKey("value")) {
-            final Object value = variables.get("value");
-            final Double newValue = new Double(value.toString());
-            if (newValue != null && newValue != getValue()
-                    && !newValue.equals(getValue())) {
-                try {
-                    setValue(newValue, true);
-                } catch (final ValueOutOfBoundsException e) {
-                    // Convert to nearest bound
-                    double out = e.getValue().doubleValue();
-                    if (out < min) {
-                        out = min;
-                    }
-                    if (out > max) {
-                        out = max;
-                    }
-                    super.setValue(new Double(out), false);
-                }
-            }
-        }
+        setValue(newFieldValue);
+        // The cast is safe if the above call returned without throwing
+        getState().setValue((Double) newFieldValue);
     }
 
     /**
@@ -373,7 +328,6 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
         public Double getValue() {
             return value;
         }
-
     }
 
     @Override

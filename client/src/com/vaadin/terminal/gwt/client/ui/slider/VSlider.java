@@ -19,12 +19,17 @@ package com.vaadin.terminal.gwt.client.ui.slider;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasValue;
+import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ContainerResizedListener;
@@ -36,7 +41,7 @@ import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class VSlider extends SimpleFocusablePanel implements Field,
-        ContainerResizedListener {
+        ContainerResizedListener, HasValue<Double> {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -46,20 +51,22 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      */
     private static final int MIN_SIZE = 50;
 
-    ApplicationConnection client;
+    protected ApplicationConnection client;
 
-    String id;
+    protected String id;
 
-    boolean immediate;
-    boolean disabled;
-    boolean readonly;
+    protected boolean immediate;
+    protected boolean disabled;
+    protected boolean readonly;
 
     private int acceleration = 1;
-    double min;
-    double max;
-    int resolution;
-    Double value;
-    boolean vertical;
+    protected double min;
+    protected double max;
+    protected int resolution;
+    protected Double value;
+    protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
+
+    private boolean valueChangeHandlerInitialized = false;
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
@@ -92,7 +99,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
                 @Override
                 public void execute() {
-                    updateValueToServer();
+                    fireValueChanged();
                     acceleration = 1;
                 }
             });
@@ -137,7 +144,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     private void updateFeedbackPosition() {
-        if (vertical) {
+        if (isVertical()) {
             feedbackPopup.setPopupPosition(
                     DOM.getAbsoluteLeft(handle) + handle.getOffsetWidth(),
                     DOM.getAbsoluteTop(handle) + handle.getOffsetHeight() / 2
@@ -152,16 +159,17 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     }
 
     void buildBase() {
-        final String styleAttribute = vertical ? "height" : "width";
-        final String oppositeStyleAttribute = vertical ? "width" : "height";
-        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+        final String styleAttribute = isVertical() ? "height" : "width";
+        final String oppositeStyleAttribute = isVertical() ? "width" : "height";
+        final String domProperty = isVertical() ? "offsetHeight"
+                : "offsetWidth";
 
         // clear unnecessary opposite style attribute
         DOM.setStyleAttribute(base, oppositeStyleAttribute, "");
 
         final Element p = DOM.getParent(getElement());
         if (DOM.getElementPropertyInt(p, domProperty) > 50) {
-            if (vertical) {
+            if (isVertical()) {
                 setHeight();
             } else {
                 DOM.setStyleAttribute(base, styleAttribute, "");
@@ -176,7 +184,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 public void execute() {
                     final Element p = DOM.getParent(getElement());
                     if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
-                        if (vertical) {
+                        if (isVertical()) {
                             setHeight();
                         } else {
                             DOM.setStyleAttribute(base, styleAttribute, "");
@@ -188,12 +196,27 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             });
         }
 
+        if (!isVertical()) {
+            // Draw handle with a delay to allow base to gain maximum width
+            Scheduler.get().scheduleDeferred(new Command() {
+                @Override
+                public void execute() {
+                    buildHandle();
+                    setValue(value, false);
+                }
+            });
+        } else {
+            buildHandle();
+            setValue(value, false);
+        }
+
         // TODO attach listeners for focusing and arrow keys
     }
 
     void buildHandle() {
-        final String handleAttribute = vertical ? "marginTop" : "marginLeft";
-        final String oppositeHandleAttribute = vertical ? "marginLeft"
+        final String handleAttribute = isVertical() ? "marginTop"
+                : "marginLeft";
+        final String oppositeHandleAttribute = isVertical() ? "marginLeft"
                 : "marginTop";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
@@ -204,59 +227,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         // Restore visibility
         DOM.setStyleAttribute(handle, "visibility", "visible");
 
-    }
-
-    void setValue(Double value, boolean updateToServer) {
-        if (value == null) {
-            return;
-        }
-
-        if (value < min) {
-            value = min;
-        } else if (value > max) {
-            value = max;
-        }
-
-        // Update handle position
-        final String styleAttribute = vertical ? "marginTop" : "marginLeft";
-        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
-        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
-                domProperty));
-        final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty)) - (2 * BASE_BORDER_WIDTH);
-
-        final int range = baseSize - handleSize;
-        double v = value.doubleValue();
-
-        // Round value to resolution
-        if (resolution > 0) {
-            v = Math.round(v * Math.pow(10, resolution));
-            v = v / Math.pow(10, resolution);
-        } else {
-            v = Math.round(v);
-        }
-        final double valueRange = max - min;
-        double p = 0;
-        if (valueRange > 0) {
-            p = range * ((v - min) / valueRange);
-        }
-        if (p < 0) {
-            p = 0;
-        }
-        if (vertical) {
-            p = range - p;
-        }
-        final double pos = p;
-
-        DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
-
-        // Update value
-        this.value = new Double(v);
-        setFeedbackValue(v);
-
-        if (updateToServer) {
-            updateValueToServer();
-        }
     }
 
     @Override
@@ -386,7 +356,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         final int coord = getEventPosition(event);
 
         final int handleSize, baseSize, baseOffset;
-        if (vertical) {
+        if (isVertical()) {
             handleSize = handle.getOffsetHeight();
             baseSize = base.getOffsetHeight();
             baseOffset = base.getAbsoluteTop() - Window.getScrollTop()
@@ -398,7 +368,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                     + handleSize / 2;
         }
 
-        if (vertical) {
+        if (isVertical()) {
             v = ((baseSize - (coord - baseOffset)) / (double) (baseSize - handleSize))
                     * (max - min) + min;
         } else {
@@ -423,7 +393,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      * @return
      */
     protected int getEventPosition(Event event) {
-        if (vertical) {
+        if (isVertical()) {
             return Util.getTouchOrMouseClientY(event);
         } else {
             return Util.getTouchOrMouseClientX(event);
@@ -432,7 +402,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     @Override
     public void iLayout() {
-        if (vertical) {
+        if (isVertical()) {
             setHeight();
         }
         // Update handle position
@@ -451,8 +421,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         DOM.setStyleAttribute(base, "overflow", "");
     }
 
-    private void updateValueToServer() {
-        client.updateVariable(id, "value", value.doubleValue(), immediate);
+    private void fireValueChanged() {
+        ValueChangeEvent.fire(VSlider.this, value);
     }
 
     /**
@@ -469,8 +439,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             return false;
         }
 
-        if ((keycode == getNavigationUpKey() && vertical)
-                || (keycode == getNavigationRightKey() && !vertical)) {
+        if ((keycode == getNavigationUpKey() && isVertical())
+                || (keycode == getNavigationRightKey() && !isVertical())) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     increaseValue(false);
@@ -480,8 +450,8 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 increaseValue(false);
             }
             return true;
-        } else if (keycode == getNavigationDownKey() && vertical
-                || (keycode == getNavigationLeftKey() && !vertical)) {
+        } else if (keycode == getNavigationDownKey() && isVertical()
+                || (keycode == getNavigationLeftKey() && !isVertical())) {
             if (shift) {
                 for (int a = 0; a < acceleration; a++) {
                     decreaseValue(false);
@@ -538,5 +508,120 @@ public class VSlider extends SimpleFocusablePanel implements Field,
      */
     protected int getNavigationRightKey() {
         return KeyCodes.KEY_RIGHT;
+    }
+
+    public void setConnection(ApplicationConnection client) {
+        this.client = client;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public void setReadOnly(boolean readonly) {
+        this.readonly = readonly;
+    }
+
+    private boolean isVertical() {
+        return orientation == SliderOrientation.VERTICAL;
+    }
+
+    public void setOrientation(SliderOrientation orientation) {
+        if (this.orientation != orientation) {
+            this.orientation = orientation;
+
+            if (isVertical()) {
+                addStyleName(VSlider.CLASSNAME + "-vertical");
+            } else {
+                removeStyleName(VSlider.CLASSNAME + "-vertical");
+            }
+        }
+    }
+
+    public void setMinValue(double value) {
+        min = value;
+    }
+
+    public void setMaxValue(double value) {
+        max = value;
+    }
+
+    public void setResolution(int resolution) {
+        this.resolution = resolution;
+    }
+
+    public HandlerRegistration addValueChangeHandler(
+            ValueChangeHandler<Double> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public void setValue(Double value) {
+        if (value < min) {
+            value = min;
+        } else if (value > max) {
+            value = max;
+        }
+
+        // Update handle position
+        final String styleAttribute = isVertical() ? "marginTop" : "marginLeft";
+        final String domProperty = isVertical() ? "offsetHeight"
+                : "offsetWidth";
+        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
+                domProperty));
+        final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
+                domProperty)) - (2 * BASE_BORDER_WIDTH);
+
+        final int range = baseSize - handleSize;
+        double v = value.doubleValue();
+
+        // Round value to resolution
+        if (resolution > 0) {
+            v = Math.round(v * Math.pow(10, resolution));
+            v = v / Math.pow(10, resolution);
+        } else {
+            v = Math.round(v);
+        }
+        final double valueRange = max - min;
+        double p = 0;
+        if (valueRange > 0) {
+            p = range * ((v - min) / valueRange);
+        }
+        if (p < 0) {
+            p = 0;
+        }
+        if (isVertical()) {
+            p = range - p;
+        }
+        final double pos = p;
+
+        DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
+
+        // Update value
+        this.value = new Double(v);
+        setFeedbackValue(v);
+    }
+
+    public void setValue(Double value, boolean fireEvents) {
+        if (value == null) {
+            return;
+        }
+
+        setValue(value);
+
+        if (fireEvents) {
+            fireValueChanged();
+        }
     }
 }
