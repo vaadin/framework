@@ -244,7 +244,7 @@ public class ConnectorTracker implements Serializable {
             return null;
         }
         if (connector instanceof Component) {
-            return ((Component) connector).getRoot();
+            return ((Component) connector).getUI();
         }
 
         return getRootForConnector(connector.getParent());

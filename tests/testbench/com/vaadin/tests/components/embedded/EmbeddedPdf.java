@@ -35,7 +35,7 @@ public class EmbeddedPdf extends TestBase {
             }
         }));
 
-        player.getRoot().addWindow(new Window("Testwindow"));
+        player.getUI().addWindow(new Window("Testwindow"));
     }
 
 }

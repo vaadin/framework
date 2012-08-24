@@ -45,7 +45,7 @@ public class DDTest2 extends TestBase {
 
     @Override
     protected void setup() {
-        UI w = getLayout().getRoot();
+        UI w = getLayout().getUI();
         /* darn reindeer has no icons */
 
         /* Make all trees (their nodes actually) draggable */

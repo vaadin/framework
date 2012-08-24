@@ -518,7 +518,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         attached to a UI
      */
     @Override
-    public UI getRoot();
+    public UI getUI();
 
     /**
      * Gets the application object to which the component is attached.
@@ -548,7 +548,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getRoot()}, and {@link #getApplication()}
+     * {@link #getParent()}, {@link #getUI()}, and {@link #getApplication()}
      * methods. A component does not yet know these objects in the constructor,
      * so in such case, the methods will return {@code null}. For example, the
      * following is invalid:

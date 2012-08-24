@@ -36,7 +36,7 @@ public class TestStreamVariableMapping extends TestCase {
         };
         owner = new Upload() {
             @Override
-            public UI getRoot() {
+            public UI getUI() {
                 return uI;
             }
         };

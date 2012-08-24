@@ -327,7 +327,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public UI getRoot() {
+    public UI getUI() {
         return null;
     }
 

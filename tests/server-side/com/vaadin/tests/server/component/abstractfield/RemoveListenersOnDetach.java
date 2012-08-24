@@ -49,7 +49,7 @@ public class RemoveListenersOnDetach {
         }
 
         @Override
-        public com.vaadin.ui.UI getRoot() {
+        public com.vaadin.ui.UI getUI() {
             return uI;
         };
 

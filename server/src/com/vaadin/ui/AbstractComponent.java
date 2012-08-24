@@ -561,9 +561,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public UI getRoot() {
+    public UI getUI() {
         // Just make method from implemented Component interface public
-        return super.getRoot();
+        return super.getUI();
     }
 
     /*
@@ -601,7 +601,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (this instanceof Focusable) {
             final Application app = getApplication();
             if (app != null) {
-                getRoot().setFocusedComponent((Focusable) this);
+                getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
             } else {
                 delayedFocus = true;
@@ -1310,13 +1310,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * component.
      */
     private void setActionManagerViewer() {
-        if (actionManager != null && getRoot() != null) {
+        if (actionManager != null && getUI() != null) {
             // Attached and has action manager
             Window w = findAncestor(Window.class);
             if (w != null) {
                 actionManager.setViewer(w);
             } else {
-                actionManager.setViewer(getRoot());
+                actionManager.setViewer(getUI());
             }
         }
 

@@ -1245,7 +1245,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     public static JSONObject encodeState(ClientConnector connector,
             SharedState state) throws JSONException {
-        UI uI = connector.getRoot();
+        UI uI = connector.getUI();
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
         Object diffState = connectorTracker.getDiffState(connector);
@@ -2353,7 +2353,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * handling post
          */
         String paintableId = owner.getConnectorId();
-        int rootId = owner.getRoot().getUIId();
+        int rootId = owner.getUI().getUIId();
         String key = rootId + "/" + paintableId + "/" + name;
 
         if (pidToNameToStreamVariable == null) {

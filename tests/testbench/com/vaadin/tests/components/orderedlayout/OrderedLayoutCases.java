@@ -117,7 +117,7 @@ public class OrderedLayoutCases extends AbstractTestRoot {
     protected void setup(WrappedRequest request) {
         TestUtils
                 .injectCSS(
-                        getRoot(),
+                        getUI(),
                         ".sampleChild, .theLayout {border: 1px solid black;}"
                                 + ".theLayout > div:first-child {background: aqua;}"
                                 + ".theLayout > div:first-child + div {background: yellow;}"

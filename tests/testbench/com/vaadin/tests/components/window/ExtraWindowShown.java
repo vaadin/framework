@@ -29,7 +29,7 @@ public class ExtraWindowShown extends TestBase {
                 iconButton
                         .setIcon(new ThemeResource("../runo/icons/16/ok.png"));
                 w.addComponent(iconButton);
-                event.getButton().getRoot().addWindow(w);
+                event.getButton().getUI().addWindow(w);
             }
 
         });

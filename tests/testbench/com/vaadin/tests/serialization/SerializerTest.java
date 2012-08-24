@@ -98,12 +98,12 @@ public class SerializerTest extends AbstractTestRoot {
         }, new HashMap<Connector, Boolean>() {
             {
                 put(testExtension, true);
-                put(getRoot(), false);
+                put(getUI(), false);
             }
         }, new HashMap<Integer, Connector>() {
             {
                 put(5, testExtension);
-                put(10, getRoot());
+                put(10, getUI());
             }
         }, new HashMap<SimpleTestBean, SimpleTestBean>() {
             {

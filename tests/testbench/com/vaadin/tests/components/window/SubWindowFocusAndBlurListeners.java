@@ -64,7 +64,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
         });
 
-        UI main = getLayout().getRoot();
+        UI main = getLayout().getUI();
 
         main.addWindow(window);
 

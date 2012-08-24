@@ -100,7 +100,7 @@ public class LoginForm extends CustomComponent {
             String requestPathInfo = request.getRequestPathInfo();
             if ("/loginHandler".equals(requestPathInfo)) {
                 // Ensure UI.getCurrent() works in listeners
-                UI.setCurrent(getRoot());
+                UI.setCurrent(getUI());
 
                 response.setCacheTime(-1);
                 response.setContentType("text/html; charset=utf-8");

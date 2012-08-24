@@ -73,7 +73,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         restart.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                mainLayout.getRoot().getApplication().close();
+                mainLayout.getUI().getApplication().close();
             }
         });
 

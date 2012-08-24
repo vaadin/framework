@@ -28,7 +28,7 @@ public class WindowScrollingUp extends AbstractTestCase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                up.getRoot().setScrollTop(0);
+                up.getUI().setScrollTop(0);
             }
         });
 

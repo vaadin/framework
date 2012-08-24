@@ -38,6 +38,6 @@ public class EmbeddedApplet extends TestBase {
 
         Window window = new Window("Testwindow");
         window.addComponent(new Label("I am inside the window"));
-        applet.getRoot().addWindow(window);
+        applet.getUI().addWindow(window);
     }
 }

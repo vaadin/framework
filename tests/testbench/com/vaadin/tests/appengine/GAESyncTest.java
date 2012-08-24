@@ -93,8 +93,8 @@ public class GAESyncTest extends Application.LegacyApplication {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        if (getRoot() == getMainWindow()) {
-                            getRoot().getPage().showNotification(
+                        if (getUI() == getMainWindow()) {
+                            getUI().getPage().showNotification(
                                     new Notification("main"));
                             try {
                                 Thread.sleep((5000));

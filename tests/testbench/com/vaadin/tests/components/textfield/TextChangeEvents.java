@@ -88,7 +88,7 @@ public class TextChangeEvents extends TestBase {
         @Override
         public void attach() {
             super.attach();
-            TestUtils.injectCSS(getRoot(), ".match { background:green ;} "
+            TestUtils.injectCSS(getUI(), ".match { background:green ;} "
                     + ".nomatch {background:red;}");
         }
 

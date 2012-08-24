@@ -180,7 +180,7 @@ public interface ClientConnector extends Connector, RpcTarget {
      * @return The UI this connector is attached to or null if it is not
      *         attached to any UI
      */
-    public UI getRoot();
+    public UI getUI();
 
     /**
      * Called before the shared state and RPC invocations are sent to the

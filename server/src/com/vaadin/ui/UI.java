@@ -515,10 +515,10 @@ public abstract class UI extends AbstractComponentContainer implements
      * 
      * @return this UI
      * 
-     * @see com.vaadin.ui.AbstractComponent#getRoot()
+     * @see com.vaadin.ui.AbstractComponent#getUI()
      */
     @Override
-    public UI getRoot() {
+    public UI getUI() {
         return this;
     }
 
@@ -543,9 +543,9 @@ public abstract class UI extends AbstractComponentContainer implements
 
         if (pendingFocus != null) {
             // ensure focused component is still attached to this main window
-            if (pendingFocus.getRoot() == this
-                    || (pendingFocus.getRoot() != null && pendingFocus
-                            .getRoot().getParent() == this)) {
+            if (pendingFocus.getUI() == this
+                    || (pendingFocus.getUI() != null && pendingFocus
+                            .getUI().getParent() == this)) {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
@@ -804,7 +804,7 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public void scrollIntoView(Component component)
             throws IllegalArgumentException {
-        if (component.getRoot() != this) {
+        if (component.getUI() != this) {
             throw new IllegalArgumentException(
                     "The component where to scroll must belong to this UI.");
         }

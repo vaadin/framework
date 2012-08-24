@@ -47,7 +47,7 @@ public class DDTest5 extends TestBase {
 
     @Override
     protected void setup() {
-        UI w = getLayout().getRoot();
+        UI w = getLayout().getUI();
 
         HorizontalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new HorizontalSortableCssLayoutWithWrappers();
         w.addWindow(verticalSortableCssLayoutWithWrappers);

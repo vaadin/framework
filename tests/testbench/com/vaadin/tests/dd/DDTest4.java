@@ -28,7 +28,7 @@ public class DDTest4 extends TestBase {
 
     @Override
     protected void setup() {
-        UI w = getLayout().getRoot();
+        UI w = getLayout().getUI();
 
         TestUtils
                 .injectCSS(

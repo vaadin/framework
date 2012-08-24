@@ -94,7 +94,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
-        UI uI = getRoot();
+        UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
         }
@@ -154,7 +154,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             sharedState = createState();
         }
 
-        UI uI = getRoot();
+        UI uI = getUI();
         if (uI != null && !uI.getConnectorTracker().isDirty(this)) {
             requestRepaint();
         }
@@ -363,7 +363,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * @return The connector's application, or <code>null</code> if not attached
      */
     protected Application getApplication() {
-        UI uI = getRoot();
+        UI uI = getUI();
         if (uI == null) {
             return null;
         } else {
@@ -380,7 +380,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      *         is found.
      */
     @Override
-    public UI getRoot() {
+    public UI getUI() {
         ClientConnector connector = this;
         while (connector != null) {
             if (connector instanceof UI) {
@@ -528,7 +528,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void attach() {
         markAsDirty();
 
-        getRoot().getConnectorTracker().registerConnector(this);
+        getUI().getConnectorTracker().registerConnector(this);
 
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
@@ -540,7 +540,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * {@inheritDoc}
      * 
      * <p>
-     * The {@link #getApplication()} and {@link #getRoot()} methods might return
+     * The {@link #getApplication()} and {@link #getUI()} methods might return
      * <code>null</code> after this method is called.
      * </p>
      */
@@ -550,7 +550,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             connector.detach();
         }
 
-        getRoot().getConnectorTracker().unregisterConnector(this);
+        getUI().getConnectorTracker().unregisterConnector(this);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class LoginFormRootInLoginHandler extends TestBase {
                 } else {
                     addComponent(new Label("UI.getCurrent() is null"));
                 }
-                UI r2 = ((LoginForm) event.getSource()).getRoot();
+                UI r2 = ((LoginForm) event.getSource()).getUI();
                 if (r2 != null) {
                     addComponent(new Label("event.getSource().data: "
                             + r2.getData()));
@@ -34,7 +34,7 @@ public class LoginFormRootInLoginHandler extends TestBase {
             }
         });
         addComponent(lf);
-        getLayout().getRoot().setData("This root");
+        getLayout().getUI().setData("This root");
     }
 
     @Override

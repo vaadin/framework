@@ -222,7 +222,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * </p>
      */
     public void close() {
-        UI uI = getRoot();
+        UI uI = getUI();
 
         // Don't do anything if not attached to a root
         if (uI != null) {
@@ -476,7 +476,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * <p>
      */
     public void bringToFront() {
-        UI uI = getRoot();
+        UI uI = getUI();
         if (uI == null) {
             throw new IllegalStateException(
                     "Window must be attached to parent before calling bringToFront method.");

@@ -18,7 +18,7 @@ public class TableInTabsheet extends AbstractTestRoot {
 
     @Override
     protected void setup(WrappedRequest request) {
-        getRoot().setCaption("test");
+        getUI().setCaption("test");
         VerticalLayout vPrinc = new VerticalLayout();
         vPrinc.setStyleName(Reindeer.LAYOUT_BLUE);
 
