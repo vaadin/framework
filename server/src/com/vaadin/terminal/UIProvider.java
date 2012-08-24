@@ -20,10 +20,10 @@ import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
-public interface RootProvider {
-    public Class<? extends UI> getRootClass(Application application,
+public interface UIProvider {
+    public Class<? extends UI> getUIClass(Application application,
             WrappedRequest request) throws UIRequiresMoreInformationException;
 
-    public UI instantiateRoot(Application application,
+    public UI instantiateUI(Application application,
             Class<? extends UI> type, WrappedRequest request);
 }

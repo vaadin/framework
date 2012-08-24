@@ -22,7 +22,7 @@ public class LazyInitRoots extends AbstractTestApplication {
     }
 
     @Override
-    public UI getRoot(WrappedRequest request)
+    public UI getUI(WrappedRequest request)
             throws UIRequiresMoreInformationException {
         if (request.getParameter("lazyCreate") != null) {
             // UI created on second request

@@ -27,7 +27,7 @@ import com.vaadin.terminal.WrappedRequest.BrowserDetails;
  * This exception may not be thrown if that information is already present in
  * the current WrappedRequest.
  * 
- * @see Application#getRoot(WrappedRequest)
+ * @see Application#getUI(WrappedRequest)
  * @see WrappedRequest#getBrowserDetails()
  * 
  * @since 7.0

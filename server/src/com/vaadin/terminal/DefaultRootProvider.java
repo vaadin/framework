@@ -23,10 +23,10 @@ import com.vaadin.ui.UI;
 public class DefaultRootProvider extends AbstractRootProvider {
 
     @Override
-    public Class<? extends UI> getRootClass(Application application,
+    public Class<? extends UI> getUIClass(Application application,
             WrappedRequest request) throws UIRequiresMoreInformationException {
         Object rootClassNameObj = application
-                .getProperty(Application.ROOT_PARAMETER);
+                .getProperty(Application.UI_PARAMETER);
 
         if (rootClassNameObj instanceof String) {
             String rootClassName = rootClassNameObj.toString();

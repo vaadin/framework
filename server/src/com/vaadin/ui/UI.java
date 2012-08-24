@@ -47,27 +47,28 @@ import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.ui.Window.CloseListener;
 
 /**
- * The topmost component in any component hierarchy. There is one root for every
- * Vaadin instance in a browser window. A root may either represent an entire
+ * The topmost component in any component hierarchy. There is one UI for every
+ * Vaadin instance in a browser window. A UI may either represent an entire
  * browser window (or tab) or some part of a html page where a Vaadin
  * application is embedded.
  * <p>
- * The root is the server side entry point for various client side features that
+ * The UI is the server side entry point for various client side features that
  * are not represented as components added to a layout, e.g notifications, sub
  * windows, and executing javascript in the browser.
  * </p>
  * <p>
- * When a new application instance is needed, typically because the user opens
- * the application in a browser window,
- * {@link Application#gerRoot(WrappedRequest)} is invoked to get a root. That
- * method does by default create a root according to the
- * {@value Application#ROOT_PARAMETER} parameter from web.xml.
+ * When a new UI instance is needed, typically because the user opens a URL in a
+ * browser window which points to {@link AbstractApplicationServlet},
+ * {@link Application#getUIForRequest(WrappedRequest)} is invoked to get a UI.
+ * That method does by default create a root according to the
+ * {@value Application#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
- * After a root has been created by the application, it is initialized using
+ * After a UI has been created by the application, it is initialized using
  * {@link #init(WrappedRequest)}. This method is intended to be overridden by
  * the developer to add components to the user interface and initialize
  * non-component functionality. The component hierarchy is initialized by
@@ -76,13 +77,13 @@ import com.vaadin.ui.Window.CloseListener;
  * </p>
  * <p>
  * If a {@link EagerInit} annotation is present on a class extending
- * <code>UI</code>, the framework will use a faster initialization method
- * which will not ensure that {@link BrowserDetails} are present in the
+ * <code>UI</code>, the framework will use a faster initialization method which
+ * will not ensure that {@link BrowserDetails} are present in the
  * {@link WrappedRequest} passed to the init method.
  * </p>
  * 
  * @see #init(WrappedRequest)
- * @see Application#getRoot(WrappedRequest)
+ * @see Application#getUI(WrappedRequest)
  * 
  * @since 7.0
  */
@@ -90,7 +91,7 @@ public abstract class UI extends AbstractComponentContainer implements
         Action.Container, Action.Notifier, Vaadin6Component {
 
     /**
-     * Helper class to emulate the main window from Vaadin 6 using roots. This
+     * Helper class to emulate the main window from Vaadin 6 using UIs. This
      * class should be used in the same way as Window used as a browser level
      * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
      */
@@ -210,11 +211,11 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         /**
-         * Opens the given resource in this root. The contents of this UI is
+         * Opens the given resource in this UI. The contents of this UI is
          * replaced by the {@code Resource}.
          * 
          * @param resource
-         *            the resource to show in this root
+         *            the resource to show in this UI
          * 
          * @deprecated As of 7.0, use getPage().open instead
          */
@@ -294,9 +295,9 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         /**
-         * Adds a new {@link BrowserWindowResizeListener} to this root. The
+         * Adds a new {@link BrowserWindowResizeListener} to this UI. The
          * listener will be notified whenever the browser window within which
-         * this root resides is resized.
+         * this UI resides is resized.
          * 
          * @param resizeListener
          *            the listener to add
@@ -312,7 +313,7 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         /**
-         * Removes a {@link BrowserWindowResizeListener} from this root. The
+         * Removes a {@link BrowserWindowResizeListener} from this UI. The
          * listener will no longer be notified when the browser window is
          * resized.
          * 
@@ -326,7 +327,7 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         /**
-         * Gets the last known height of the browser window in which this root
+         * Gets the last known height of the browser window in which this UI
          * resides.
          * 
          * @return the browser window height in pixels
@@ -338,7 +339,7 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         /**
-         * Gets the last known width of the browser window in which this root
+         * Gets the last known width of the browser window in which this UI
          * resides.
          * 
          * @return the browser window width in pixels
@@ -389,12 +390,12 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * The application to which this root belongs
+     * The application to which this UI belongs
      */
     private Application application;
 
     /**
-     * List of windows in this root.
+     * List of windows in this UI.
      */
     private final LinkedHashSet<Window> windows = new LinkedHashSet<Window>();
 
@@ -405,13 +406,13 @@ public abstract class UI extends AbstractComponentContainer implements
     private Component scrollIntoView;
 
     /**
-     * The id of this root, used to find the server side instance of the root
-     * form which a request originates. A negative value indicates that the root
-     * id has not yet been assigned by the Application.
+     * The id of this UI, used to find the server side instance of the UI form
+     * which a request originates. A negative value indicates that the UI id has
+     * not yet been assigned by the Application.
      * 
-     * @see Application#nextRootId
+     * @see Application#nextUIId
      */
-    private int rootId = -1;
+    private int uiId = -1;
 
     /**
      * Keeps track of the Actions added to this component, and manages the
@@ -420,9 +421,9 @@ public abstract class UI extends AbstractComponentContainer implements
     protected ActionManager actionManager;
 
     /**
-     * Thread local for keeping track of the current root.
+     * Thread local for keeping track of the current UI.
      */
-    private static final ThreadLocal<UI> currentRoot = new ThreadLocal<UI>();
+    private static final ThreadLocal<UI> currentUI = new ThreadLocal<UI>();
 
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
@@ -444,7 +445,7 @@ public abstract class UI extends AbstractComponentContainer implements
     };
 
     /**
-     * Creates a new empty root without a caption. This root will have a
+     * Creates a new empty UI without a caption. This UI will have a
      * {@link VerticalLayout} with margins enabled as its content.
      */
     public UI() {
@@ -452,10 +453,10 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Creates a new root with the given component container as its content.
+     * Creates a new UI with the given component container as its content.
      * 
      * @param content
-     *            the content container to use as this roots content.
+     *            the content container to use as this UIs content.
      * 
      * @see #setContent(ComponentContainer)
      */
@@ -466,11 +467,11 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Creates a new empty root with the given caption. This root will have a
+     * Creates a new empty UI with the given caption. This UI will have a
      * {@link VerticalLayout} with margins enabled as its content.
      * 
      * @param caption
-     *            the caption of the root, used as the page title if there's
+     *            the caption of the UI, used as the page title if there's
      *            nothing but the application on the web page
      * 
      * @see #setCaption(String)
@@ -481,13 +482,13 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Creates a new root with the given caption and content.
+     * Creates a new UI with the given caption and content.
      * 
      * @param caption
-     *            the caption of the root, used as the page title if there's
+     *            the caption of the UI, used as the page title if there's
      *            nothing but the application on the web page
      * @param content
-     *            the content container to use as this roots content.
+     *            the content container to use as this UIs content.
      * 
      * @see #setContent(ComponentContainer)
      * @see #setCaption(String)
@@ -512,7 +513,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Overridden to return a value instead of referring to the parent.
      * 
-     * @return this root
+     * @return this UI
      * 
      * @see com.vaadin.ui.AbstractComponent#getRoot()
      */
@@ -622,7 +623,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Sets the application to which this root is assigned. It is not legal to
+     * Sets the application to which this UI is assigned. It is not legal to
      * change the application once it has been set nor to set a
      * <code>null</code> application.
      * <p>
@@ -652,46 +653,46 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Sets the id of this root within its application. The root id is used to
-     * route requests to the right root.
+     * Sets the id of this UI within its application. The UI id is used to route
+     * requests to the right UI.
      * <p>
      * This method is mainly intended for internal use by the framework.
      * </p>
      * 
-     * @param rootId
-     *            the id of this root
+     * @param uiId
+     *            the id of this UI
      * 
      * @throws IllegalStateException
-     *             if the root id has already been set
+     *             if the UI id has already been set
      * 
-     * @see #getRootId()
+     * @see #getUIId()
      */
-    public void setRootId(int rootId) {
-        if (this.rootId != -1) {
+    public void setUIId(int uiId) {
+        if (this.uiId != -1) {
             throw new IllegalStateException("UI id has already been defined");
         }
-        this.rootId = rootId;
+        this.uiId = uiId;
     }
 
     /**
-     * Gets the id of the root, used to identify this root within its
-     * application when processing requests. The root id should be present in
-     * every request to the server that originates from this root.
-     * {@link Application#getRootForRequest(WrappedRequest)} uses this id to
-     * find the route to which the request belongs.
+     * Gets the id of the UI, used to identify this UI within its application
+     * when processing requests. The UI id should be present in every request to
+     * the server that originates from this UI.
+     * {@link Application#getUIForRequest(WrappedRequest)} uses this id to find
+     * the route to which the request belongs.
      * 
      * @return
      */
-    public int getRootId() {
-        return rootId;
+    public int getUIId() {
+        return uiId;
     }
 
     /**
-     * Adds a window as a subwindow inside this root. To open a new browser
-     * window or tab, you should instead use {@link open(Resource)} with an url
+     * Adds a window as a subwindow inside this UI. To open a new browser window
+     * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link Application#getRoot(WrappedRequest)} returns an appropriate root
-     * for the request.
+     * {@link Application#getUI(WrappedRequest)} returns an appropriate UI for
+     * the request.
      * 
      * @param window
      * @throws IllegalArgumentException
@@ -727,7 +728,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Remove the given subwindow from this root.
+     * Remove the given subwindow from this UI.
      * 
      * Since Vaadin 6.5, {@link CloseListener}s are called also when explicitly
      * removing a window by calling this method.
@@ -741,7 +742,7 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public boolean removeWindow(Window window) {
         if (!windows.remove(window)) {
-            // Window window is not a subwindow of this root.
+            // Window window is not a subwindow of this UI.
             return false;
         }
         window.setParent(null);
@@ -752,7 +753,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Gets all the windows added to this root.
+     * Gets all the windows added to this UI.
      * 
      * @return an unmodifiable collection of windows
      */
@@ -792,28 +793,28 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Scrolls any component between the component and root to a suitable
-     * position so the component is visible to the user. The given component
-     * must belong to this root.
+     * Scrolls any component between the component and UI to a suitable position
+     * so the component is visible to the user. The given component must belong
+     * to this UI.
      * 
      * @param component
      *            the component to be scrolled into view
      * @throws IllegalArgumentException
-     *             if {@code component} does not belong to this root
+     *             if {@code component} does not belong to this UI
      */
     public void scrollIntoView(Component component)
             throws IllegalArgumentException {
         if (component.getRoot() != this) {
             throw new IllegalArgumentException(
-                    "The component where to scroll must belong to this root.");
+                    "The component where to scroll must belong to this UI.");
         }
         scrollIntoView = component;
         markAsDirty();
     }
 
     /**
-     * Gets the content of this root. The content is a component container that
-     * serves as the outermost item of the visual contents of this root.
+     * Gets the content of this UI. The content is a component container that
+     * serves as the outermost item of the visual contents of this UI.
      * 
      * @return a component container to use as content
      * 
@@ -837,8 +838,8 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Sets the content of this root. The content is a component container that
-     * serves as the outermost item of the visual contents of this root. If no
+     * Sets the content of this UI. The content is a component container that
+     * serves as the outermost item of the visual contents of this UI. If no
      * content has been set, a {@link VerticalLayout} with margins enabled will
      * be used by default - see {@link #createDefaultLayout()}. The content can
      * also be set in a constructor.
@@ -863,11 +864,11 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Adds a component to this root. The component is not added directly to the
-     * root, but instead to the content container ({@link #getContent()}).
+     * Adds a component to this UI. The component is not added directly to the
+     * UI, but instead to the content container ({@link #getContent()}).
      * 
      * @param component
-     *            the component to add to this root
+     *            the component to add to this UI
      * 
      * @see #getContent()
      */
@@ -878,7 +879,7 @@ public abstract class UI extends AbstractComponentContainer implements
 
     /**
      * This implementation removes the component from the content container (
-     * {@link #getContent()}) instead of from the actual root.
+     * {@link #getContent()}) instead of from the actual UI.
      */
     @Override
     public void removeComponent(Component component) {
@@ -887,7 +888,7 @@ public abstract class UI extends AbstractComponentContainer implements
 
     /**
      * This implementation removes the components from the content container (
-     * {@link #getContent()}) instead of from the actual root.
+     * {@link #getContent()}) instead of from the actual UI.
      */
     @Override
     public void removeAllComponents() {
@@ -910,13 +911,13 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Initializes this root. This method is intended to be overridden by
+     * Initializes this UI. This method is intended to be overridden by
      * subclasses to build the view and configure non-component functionality.
      * Performing the initialization in a constructor is not suggested as the
-     * state of the root is not properly set up when the constructor is invoked.
+     * state of the UI is not properly set up when the constructor is invoked.
      * <p>
      * The {@link WrappedRequest} can be used to get information about the
-     * request that caused this root to be created. By default, the
+     * request that caused this UI to be created. By default, the
      * {@link BrowserDetails} will be available in the request. If the browser
      * details are not required, loading the application in the browser can take
      * some shortcuts giving a faster initial rendering. This can be indicated
@@ -924,42 +925,41 @@ public abstract class UI extends AbstractComponentContainer implements
      * </p>
      * 
      * @param request
-     *            the wrapped request that caused this root to be created
+     *            the wrapped request that caused this UI to be created
      */
     protected abstract void init(WrappedRequest request);
 
     /**
-     * Sets the thread local for the current root. This method is used by the
+     * Sets the thread local for the current UI. This method is used by the
      * framework to set the current application whenever a new request is
      * processed and it is cleared when the request has been processed.
      * <p>
      * The application developer can also use this method to define the current
-     * root outside the normal request handling, e.g. when initiating custom
+     * UI outside the normal request handling, e.g. when initiating custom
      * background threads.
      * </p>
      * 
      * @param uI
-     *            the root to register as the current root
+     *            the UI to register as the current UI
      * 
      * @see #getCurrent()
      * @see ThreadLocal
      */
-    public static void setCurrent(UI uI) {
-        currentRoot.set(uI);
+    public static void setCurrent(UI ui) {
+        currentUI.set(ui);
     }
 
     /**
-     * Gets the currently used root. The current root is automatically defined
-     * when processing requests to the server. In other cases, (e.g. from
-     * background threads), the current root is not automatically defined.
+     * Gets the currently used UI. The current UI is automatically defined when
+     * processing requests to the server. In other cases, (e.g. from background
+     * threads), the current UI is not automatically defined.
      * 
-     * @return the current root instance if available, otherwise
-     *         <code>null</code>
+     * @return the current UI instance if available, otherwise <code>null</code>
      * 
      * @see #setCurrent(UI)
      */
     public static UI getCurrent() {
-        return currentRoot.get();
+        return currentUI.get();
     }
 
     public void setScrollTop(int scrollTop) {
@@ -1027,10 +1027,10 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Add a click listener to the UI. The listener is called whenever the
-     * user clicks inside the UI. Also when the click targets a component
-     * inside the UI, provided the targeted component does not prevent the
-     * click event from propagating.
+     * Add a click listener to the UI. The listener is called whenever the user
+     * clicks inside the UI. Also when the click targets a component inside the
+     * UI, provided the targeted component does not prevent the click event from
+     * propagating.
      * 
      * Use {@link #removeListener(ClickListener)} to remove the listener.
      * 
@@ -1082,7 +1082,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Shows a notification message on the middle of the root. The message
+     * Shows a notification message on the middle of the UI. The message
      * automatically disappears ("humanized message").
      * 
      * Care should be taken to to avoid XSS vulnerabilities as the caption is
@@ -1105,7 +1105,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Shows a notification message the root. The position and behavior of the
+     * Shows a notification message the UI. The position and behavior of the
      * message depends on the type, which is one of the basic types defined in
      * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
      * 
@@ -1132,8 +1132,8 @@ public abstract class UI extends AbstractComponentContainer implements
 
     /**
      * Shows a notification consisting of a bigger caption and a smaller
-     * description on the middle of the root. The message automatically
-     * disappears ("humanized message").
+     * description on the middle of the UI. The message automatically disappears
+     * ("humanized message").
      * 
      * Care should be taken to to avoid XSS vulnerabilities as the caption and
      * description are rendered as html.

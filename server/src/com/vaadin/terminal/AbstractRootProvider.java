@@ -19,10 +19,10 @@ package com.vaadin.terminal;
 import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
-public abstract class AbstractRootProvider implements RootProvider {
+public abstract class AbstractRootProvider implements UIProvider {
 
     @Override
-    public UI instantiateRoot(Application application,
+    public UI instantiateUI(Application application,
             Class<? extends UI> type, WrappedRequest request) {
         try {
             return type.newInstance();

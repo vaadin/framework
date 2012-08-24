@@ -112,10 +112,10 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
                 Application application = new Application();
-                application.addRootProvider(new AbstractRootProvider() {
+                application.addUIProvider(new AbstractRootProvider() {
 
                     @Override
-                    public Class<? extends UI> getRootClass(
+                    public Class<? extends UI> getUIClass(
                             Application application, WrappedRequest request)
                             throws UIRequiresMoreInformationException {
                         return (Class<? extends UI>) classToRun;

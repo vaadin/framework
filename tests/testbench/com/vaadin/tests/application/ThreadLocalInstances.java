@@ -77,7 +77,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     @Override
-    protected UI getRoot(WrappedRequest request)
+    protected UI getUI(WrappedRequest request)
             throws UIRequiresMoreInformationException {
         return mainWindow;
     }

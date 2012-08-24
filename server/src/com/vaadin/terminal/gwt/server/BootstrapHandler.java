@@ -127,13 +127,13 @@ public abstract class BootstrapHandler implements RequestHandler {
         // TODO Should all urls be handled here?
         Integer rootId = null;
         try {
-            UI uI = application.getRootForRequest(request);
+            UI uI = application.getUIForRequest(request);
             if (uI == null) {
                 writeError(response, new Throwable("No UI found"));
                 return true;
             }
 
-            rootId = Integer.valueOf(uI.getRootId());
+            rootId = Integer.valueOf(uI.getUIId());
         } catch (UIRequiresMoreInformationException e) {
             // Just keep going without rootId
         }
@@ -297,7 +297,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         UI uI = context.getRoot();
         WrappedRequest request = context.getRequest();
 
-        String widgetset = uI.getApplication().getWidgetsetForRoot(uI);
+        String widgetset = uI.getApplication().getWidgetsetForUI(uI);
         if (widgetset == null) {
             widgetset = request.getDeploymentConfiguration()
                     .getConfiguredWidgetset(request);
@@ -437,7 +437,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        if (rootId == null || application.isRootInitPending(rootId.intValue())) {
+        if (rootId == null || application.isUIInitPending(rootId.intValue())) {
             appConfig.put("initialPath", context.getRequest()
                     .getRequestPathInfo());
 
@@ -533,7 +533,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication().getThemeForRoot(context.getRoot());
+        return context.getApplication().getThemeForUI(context.getRoot());
     }
 
     /**

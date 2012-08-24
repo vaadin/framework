@@ -92,7 +92,7 @@ public abstract class BootstrapResponse extends EventObject {
 
     /**
      * Gets the root id that has been generated for this response. Please note
-     * that if {@link Application#isRootPreserved()} is enabled, a previously
+     * that if {@link Application#isUiPreserved()} is enabled, a previously
      * created UI with a different id might eventually end up being used.
      * 
      * @return the root id
@@ -108,8 +108,8 @@ public abstract class BootstrapResponse extends EventObject {
      * browser has been sent back. This method will return <code>null</code> if
      * no UI instance is yet available.
      * 
-     * @see Application#isRootPreserved()
-     * @see Application#getRoot(WrappedRequest)
+     * @see Application#isUiPreserved()
+     * @see Application#getUI(WrappedRequest)
      * @see UIRequiresMoreInformationException
      * 
      * @return The UI that will be displayed in the page being generated, or

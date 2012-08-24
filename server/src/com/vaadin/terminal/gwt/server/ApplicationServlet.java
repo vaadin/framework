@@ -70,7 +70,7 @@ public class ApplicationServlet extends AbstractApplicationServlet {
         // Creates a new application instance
         try {
             final Application application = getApplicationClass().newInstance();
-            application.addRootProvider(new DefaultRootProvider());
+            application.addUIProvider(new DefaultRootProvider());
 
             return application;
         } catch (final IllegalAccessException e) {

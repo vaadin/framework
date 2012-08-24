@@ -56,7 +56,7 @@ public class CustomRootClassLoader extends TestCase {
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
-        UI uI = application.getRootForRequest(createRequestMock(null));
+        UI uI = application.getUIForRequest(createRequestMock(null));
         assertTrue(uI instanceof MyRoot);
     }
 
@@ -102,7 +102,7 @@ public class CustomRootClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         UI uI = application
-                .getRootForRequest(createRequestMock(loggingClassLoader));
+                .getUIForRequest(createRequestMock(loggingClassLoader));
         assertTrue(uI instanceof MyRoot);
         assertEquals(1, loggingClassLoader.requestedClasses.size());
         assertEquals(MyRoot.class.getName(),
@@ -113,12 +113,12 @@ public class CustomRootClassLoader extends TestCase {
     private Application createStubApplication() {
         return new Application() {
             {
-                addRootProvider(new DefaultRootProvider());
+                addUIProvider(new DefaultRootProvider());
             }
 
             @Override
             public String getProperty(String name) {
-                if (name.equals(ROOT_PARAMETER)) {
+                if (name.equals(UI_PARAMETER)) {
                     return MyRoot.class.getName();
                 } else {
                     return super.getProperty(name);
@@ -126,11 +126,11 @@ public class CustomRootClassLoader extends TestCase {
             }
 
             @Override
-            public UI getRootForRequest(WrappedRequest request)
+            public UI getUIForRequest(WrappedRequest request)
                     throws UIRequiresMoreInformationException {
                 // Always create a new root for testing (can't directly use
                 // getRoot as it's protected)
-                return getRoot(request);
+                return getUI(request);
             }
         };
     }

@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 public class LoginFormWithMultipleWindows extends Application {
 
     @Override
-    protected UI getRoot(WrappedRequest request) {
+    protected UI getUI(WrappedRequest request) {
         return new LoginFormWindow();
     }
 

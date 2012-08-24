@@ -15,17 +15,17 @@ public class RefreshStatePreserve extends AbstractTestApplication {
             getContent().addComponent(
                     new Label("window.name: "
                             + request.getBrowserDetails().getWindowName()));
-            getContent().addComponent(new Label("UI id: " + getRootId()));
+            getContent().addComponent(new Label("UI id: " + getUIId()));
         }
     }
 
     @Override
     public void init() {
         super.init();
-        setRootPreserved(true);
-        addRootProvider(new AbstractRootProvider() {
+        setUiPreserved(true);
+        addUIProvider(new AbstractRootProvider() {
             @Override
-            public Class<? extends UI> getRootClass(Application application,
+            public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)
                     throws UIRequiresMoreInformationException {
                 return RefreshStateRoot.class;

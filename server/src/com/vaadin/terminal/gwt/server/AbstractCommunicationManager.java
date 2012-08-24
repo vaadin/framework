@@ -1390,7 +1390,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private ClientCache getClientCache(UI uI) {
-        Integer rootId = Integer.valueOf(uI.getRootId());
+        Integer rootId = Integer.valueOf(uI.getUIId());
         ClientCache cache = rootToClientCache.get(rootId);
         if (cache == null) {
             cache = new ClientCache();
@@ -1515,7 +1515,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private String getTheme(UI uI) {
-        String themeName = uI.getApplication().getThemeForRoot(uI);
+        String themeName = uI.getApplication().getThemeForUI(uI);
         String requestThemeName = getRequestTheme();
 
         if (requestThemeName != null) {
@@ -2353,7 +2353,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * handling post
          */
         String paintableId = owner.getConnectorId();
-        int rootId = owner.getRoot().getRootId();
+        int rootId = owner.getRoot().getUIId();
         String key = rootId + "/" + paintableId + "/" + name;
 
         if (pidToNameToStreamVariable == null) {
@@ -2422,13 +2422,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
         try {
             CombinedRequest combinedRequest = new CombinedRequest(request);
 
-            UI uI = application.getRootForRequest(combinedRequest);
+            UI uI = application.getUIForRequest(combinedRequest);
             response.setContentType("application/json; charset=UTF-8");
 
             // Use the same logic as for determined roots
             BootstrapHandler bootstrapHandler = getBootstrapHandler();
             BootstrapContext context = bootstrapHandler.createContext(
-                    combinedRequest, response, application, uI.getRootId());
+                    combinedRequest, response, application, uI.getUIId());
 
             String widgetset = context.getWidgetsetName();
             String theme = context.getThemeName();
@@ -2440,7 +2440,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             params.put("widgetset", widgetset);
             params.put("themeUri", themeUri);
             // UI id might have changed based on e.g. window.name
-            params.put(ApplicationConstants.ROOT_ID_PARAMETER, uI.getRootId());
+            params.put(ApplicationConstants.ROOT_ID_PARAMETER, uI.getUIId());
             if (sendUIDL) {
                 String initialUIDL = getInitialUIDL(combinedRequest, uI);
                 params.put("uidl", initialUIDL);
@@ -2628,7 +2628,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String rootId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
-        UI uI = application.getRootById(Integer.parseInt(rootId));
+        UI uI = application.getUIById(Integer.parseInt(rootId));
         UI.setCurrent(uI);
 
         StreamVariable streamVariable = getStreamVariable(connectorId,

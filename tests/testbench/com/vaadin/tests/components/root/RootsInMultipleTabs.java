@@ -23,9 +23,9 @@ public class RootsInMultipleTabs extends AbstractTestApplication {
     }
 
     public RootsInMultipleTabs() {
-        addRootProvider(new AbstractRootProvider() {
+        addUIProvider(new AbstractRootProvider() {
             @Override
-            public Class<? extends UI> getRootClass(Application application,
+            public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)
                     throws UIRequiresMoreInformationException {
                 return TabRoot.class;

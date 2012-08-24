@@ -499,7 +499,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             // and then do a second request
                             try {
                                 uI = application
-                                        .getRootForRequest(wrappedRequest);
+                                        .getUIForRequest(wrappedRequest);
                             } catch (UIRequiresMoreInformationException e) {
                                 // Ignore problem and continue without root
                             }
@@ -517,7 +517,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             break;
                         default:
                             uI = application
-                                    .getRootForRequest(wrappedRequest);
+                                    .getUIForRequest(wrappedRequest);
                         }
                         // if window not found, not a problem - use null
                     }
@@ -895,7 +895,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException {
         try {
             final Application application = getApplicationClass().newInstance();
-            application.setRootPreserved(true);
+            application.setUiPreserved(true);
             return application;
         } catch (final IllegalAccessException e) {
             throw new PortletException("getNewApplication failed", e);

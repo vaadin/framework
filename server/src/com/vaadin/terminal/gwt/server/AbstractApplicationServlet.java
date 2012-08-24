@@ -319,7 +319,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = application.getRootForRequest(request);
+                UI uI = application.getUIForRequest(request);
                 if (uI == null) {
                     throw new ServletException(ERROR_NO_ROOT_FOUND);
                 }

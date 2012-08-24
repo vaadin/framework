@@ -35,7 +35,7 @@ import com.vaadin.ui.UI;
 public class DifferentFeaturesForDifferentClients extends Application {
 
     @Override
-    protected UI getRoot(WrappedRequest request)
+    protected UI getUI(WrappedRequest request)
             throws UIRequiresMoreInformationException {
         BrowserDetails browserDetails = request.getBrowserDetails();
         // This is a limitation of 7.0.0.alpha1 that there is no better way to

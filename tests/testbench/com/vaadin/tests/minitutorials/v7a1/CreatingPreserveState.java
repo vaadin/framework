@@ -36,7 +36,7 @@ public class CreatingPreserveState extends UI {
         TextField tf = new TextField("Window #" + (++windowCounter));
         tf.setImmediate(true);
         getContent().addComponent(tf);
-        getApplication().setRootPreserved(true);
+        getApplication().setUiPreserved(true);
     }
 
 }

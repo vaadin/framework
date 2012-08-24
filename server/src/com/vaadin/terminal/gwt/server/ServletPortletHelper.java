@@ -44,7 +44,7 @@ class ServletPortletHelper implements Serializable {
         String applicationParameter = deploymentConfiguration
                 .getInitParameters().getProperty("application");
         String rootParameter = deploymentConfiguration.getInitParameters()
-                .getProperty(Application.ROOT_PARAMETER);
+                .getProperty(Application.UI_PARAMETER);
         ClassLoader classLoader = deploymentConfiguration.getClassLoader();
 
         if (applicationParameter == null) {
@@ -69,7 +69,7 @@ class ServletPortletHelper implements Serializable {
     private static void verifyRootClass(String className,
             ClassLoader classLoader) throws ApplicationClassException {
         if (className == null) {
-            throw new ApplicationClassException(Application.ROOT_PARAMETER
+            throw new ApplicationClassException(Application.UI_PARAMETER
                     + " init parameter not defined");
         }
 
