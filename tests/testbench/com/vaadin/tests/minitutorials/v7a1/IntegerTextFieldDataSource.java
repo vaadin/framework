@@ -3,7 +3,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class IntegerTextFieldDataSource extends AbstractTestRoot {
+public class IntegerTextFieldDataSource extends AbstractTestUI {
 
     public class MyBean {
         private int value;

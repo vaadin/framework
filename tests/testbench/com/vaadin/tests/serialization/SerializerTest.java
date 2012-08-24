@@ -30,7 +30,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
@@ -38,7 +38,7 @@ import com.vaadin.tests.widgetset.client.SimpleTestBean;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class SerializerTest extends AbstractTestRoot {
+public class SerializerTest extends AbstractTestUI {
 
     private Log log = new Log(40);
 

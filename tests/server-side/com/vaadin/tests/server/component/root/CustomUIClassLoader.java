@@ -16,12 +16,12 @@ import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.UI;
 
-public class CustomRootClassLoader extends TestCase {
+public class CustomUIClassLoader extends TestCase {
 
     /**
      * Stub root
      */
-    public static class MyRoot extends UI {
+    public static class MyUI extends UI {
         @Override
         protected void init(WrappedRequest request) {
             // Nothing to see here
@@ -57,7 +57,7 @@ public class CustomRootClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         UI uI = application.getUIForRequest(createRequestMock(null));
-        assertTrue(uI instanceof MyRoot);
+        assertTrue(uI instanceof MyUI);
     }
 
     private static DeploymentConfiguration createConfigurationMock() {
@@ -103,9 +103,9 @@ public class CustomRootClassLoader extends TestCase {
 
         UI uI = application
                 .getUIForRequest(createRequestMock(loggingClassLoader));
-        assertTrue(uI instanceof MyRoot);
+        assertTrue(uI instanceof MyUI);
         assertEquals(1, loggingClassLoader.requestedClasses.size());
-        assertEquals(MyRoot.class.getName(),
+        assertEquals(MyUI.class.getName(),
                 loggingClassLoader.requestedClasses.get(0));
 
     }
@@ -119,7 +119,7 @@ public class CustomRootClassLoader extends TestCase {
             @Override
             public String getProperty(String name) {
                 if (name.equals(UI_PARAMETER)) {
-                    return MyRoot.class.getName();
+                    return MyUI.class.getName();
                 } else {
                     return super.getProperty(name);
                 }

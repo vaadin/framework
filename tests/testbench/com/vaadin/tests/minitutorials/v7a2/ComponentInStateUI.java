@@ -14,7 +14,7 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class ComponentInStateRoot extends UI {
+public class ComponentInStateUI extends UI {
     @Override
     protected void init(WrappedRequest request) {
         ComponentInStateComponent component = new ComponentInStateComponent();

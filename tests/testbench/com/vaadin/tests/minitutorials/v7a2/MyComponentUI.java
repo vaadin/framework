@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class MyComponentRoot extends UI {
+public class MyComponentUI extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

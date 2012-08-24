@@ -32,7 +32,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class FindCurrentRootAndApplication extends UI {
+public class FindCurrentUI extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

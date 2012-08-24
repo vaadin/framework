@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -14,7 +14,7 @@ import com.vaadin.ui.Table.Align;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class TableInTabsheet extends AbstractTestRoot {
+public class TableInTabsheet extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

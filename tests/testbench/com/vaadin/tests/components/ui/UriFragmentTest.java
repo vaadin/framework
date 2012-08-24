@@ -1,14 +1,14 @@
-package com.vaadin.tests.components.root;
+package com.vaadin.tests.components.ui;
 
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Page.FragmentChangedEvent;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-public class UriFragmentTest extends AbstractTestRoot {
+public class UriFragmentTest extends AbstractTestUI {
 
     private final Label fragmentLabel = new Label();
 

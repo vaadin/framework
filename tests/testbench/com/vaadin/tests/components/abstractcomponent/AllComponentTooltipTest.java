@@ -17,12 +17,12 @@ package com.vaadin.tests.components.abstractcomponent;
 
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.VaadinClasses;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 
-public class AllComponentTooltipTest extends AbstractTestRoot {
+public class AllComponentTooltipTest extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since 7.0.0
  */
 @Theme("hello-theme")
-public class DefineRootTheme extends UI {
+public class DefineUITheme extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

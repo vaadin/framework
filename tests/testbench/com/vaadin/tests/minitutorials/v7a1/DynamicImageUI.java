@@ -12,10 +12,10 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Embedded;
 
-public class DynamicImageRoot extends AbstractTestRoot {
+public class DynamicImageUI extends AbstractTestUI {
 
     @Override
     public void setup(WrappedRequest request) {

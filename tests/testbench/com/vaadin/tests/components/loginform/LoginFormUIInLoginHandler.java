@@ -7,7 +7,7 @@ import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
 import com.vaadin.ui.UI;
 
-public class LoginFormRootInLoginHandler extends TestBase {
+public class LoginFormUIInLoginHandler extends TestBase {
 
     @Override
     protected void setup() {
@@ -34,7 +34,7 @@ public class LoginFormRootInLoginHandler extends TestBase {
             }
         });
         addComponent(lf);
-        getLayout().getUI().setData("This root");
+        getLayout().getUI().setData("This UI");
     }
 
     @Override

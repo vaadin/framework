@@ -1,10 +1,10 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
 
-public class CustomConverterFactoryRoot extends AbstractTestRoot {
+public class CustomConverterFactoryUI extends AbstractTestUI {
     @Override
     public void setup(WrappedRequest request) {
         getApplication().setConverterFactory(new MyConverterFactory());

@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.root;
+package com.vaadin.tests.components.ui;
 
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
@@ -11,13 +11,13 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;
 
-public class LazyInitRoots extends AbstractTestApplication {
+public class LazyInitUIs extends AbstractTestApplication {
 
     @EagerInit
-    private static class EagerInitRoot extends UI {
+    private static class EagerInitUI extends UI {
         @Override
         public void init(WrappedRequest request) {
-            addComponent(getRequestInfo("EagerInitRoot", request));
+            addComponent(getRequestInfo("EagerInitUI", request));
         }
     }
 
@@ -34,28 +34,28 @@ public class LazyInitRoots extends AbstractTestApplication {
                 UI uI = new UI() {
                     @Override
                     protected void init(WrappedRequest request) {
-                        addComponent(getRequestInfo("LazyCreateRoot", request));
+                        addComponent(getRequestInfo("LazyCreateUI", request));
                     }
                 };
                 return uI;
             }
         } else if (request.getParameter("eagerInit") != null) {
             // UI inited on first request
-            return new EagerInitRoot();
+            return new EagerInitUI();
         } else {
-            // The standard root
+            // The standard UI
             UI uI = new UI() {
                 @Override
                 protected void init(WrappedRequest request) {
-                    addComponent(getRequestInfo("NormalRoot", request));
+                    addComponent(getRequestInfo("NormalUI", request));
 
-                    Link lazyCreateLink = new Link("Open lazyCreate root",
+                    Link lazyCreateLink = new Link("Open lazyCreate UI",
                             new ExternalResource(getURL()
                                     + "?lazyCreate#lazyCreate"));
                     lazyCreateLink.setTargetName("_blank");
                     addComponent(lazyCreateLink);
 
-                    Link lazyInitLink = new Link("Open eagerInit root",
+                    Link lazyInitLink = new Link("Open eagerInit UI",
                             new ExternalResource(getURL()
                                     + "?eagerInit#eagerInit"));
                     lazyInitLink.setTargetName("_blank");
@@ -78,7 +78,7 @@ public class LazyInitRoots extends AbstractTestApplication {
 
     @Override
     protected String getTestDescription() {
-        return "BrowserDetails should be available in Application.getRoot if RootRequiresMoreInformation has been thrown and in UI.init if the root has the @RootInitRequiresBrowserDetals annotation";
+        return "BrowserDetails should be available in Application.getUI if UIRequiresMoreInformation has been thrown and in UI.init if the UI has the @UIInitRequiresBrowserDetals annotation";
     }
 
     @Override

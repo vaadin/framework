@@ -1,10 +1,12 @@
-package com.vaadin.tests.components.root;
+package com.vaadin.tests.components.ui;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.server.MissingFromDefaultWidgetsetComponent;
 
-public class TestRootWidgetset2 extends AbstractTestRoot {
+@Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
+public class TestUIWidgetset extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {
@@ -13,7 +15,7 @@ public class TestRootWidgetset2 extends AbstractTestRoot {
 
     @Override
     public String getTestDescription() {
-        return "This contents if this root should not work as the component is not present in DefaultWidgetSet";
+        return "This contents if this UI should work as the component is present in TestingWidgetSet";
     }
 
     @Override

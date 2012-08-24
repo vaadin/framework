@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class RepaintWindowContents extends AbstractTestRoot {
+public class RepaintWindowContents extends AbstractTestUI {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("serial")

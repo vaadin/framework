@@ -14,18 +14,27 @@
  * the License.
  */
 
-package com.vaadin.tests.minitutorials.v7a3;
+package com.vaadin.tests.vaadincontext;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.UI;
+import com.vaadin.tests.components.AbstractTestUI;
 
-public class ComplexTypesRoot extends UI {
+public class BootstrapModifyUI extends AbstractTestUI {
 
     @Override
-    protected void init(WrappedRequest request) {
-        ComplexTypesComponent complexTypesComponent = new ComplexTypesComponent();
-        complexTypesComponent.sendComplexTypes();
-        addComponent(complexTypesComponent);
+    protected void setup(WrappedRequest request) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected String getTestDescription() {
+        return "There should be two additional divs in the HTML of the bootstrap page for this UI";
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return Integer.valueOf(9274);
     }
 
 }

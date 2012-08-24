@@ -13,7 +13,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class WidgetcontainerRoot extends UI {
+public class WidgetcontainerUI extends UI {
     @Override
     public void init(WrappedRequest request) {
         Label label = new Label("Hello Vaadin user");

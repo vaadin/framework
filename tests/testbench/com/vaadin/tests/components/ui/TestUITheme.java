@@ -1,12 +1,12 @@
-package com.vaadin.tests.components.root;
+package com.vaadin.tests.components.ui;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
 @Theme("tests-tickets")
-public class TestRootTheme extends AbstractTestRoot {
+public class TestUITheme extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {
@@ -17,7 +17,7 @@ public class TestRootTheme extends AbstractTestRoot {
 
     @Override
     public String getTestDescription() {
-        return "UI with @RootTheme(\"tests-tickets\")";
+        return "UI with @Theme(\"tests-tickets\")";
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.root;
+package com.vaadin.tests.components.ui;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
@@ -8,27 +8,27 @@ import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
-public class RootsInMultipleTabs extends AbstractTestApplication {
-    private int numberOfRootsOpened;
+public class UIsInMultipleTabs extends AbstractTestApplication {
+    private int numberOfUIsOpened;
 
-    public static class TabRoot extends UI {
+    public static class TabUI extends UI {
         @Override
         protected void init(WrappedRequest request) {
-            RootsInMultipleTabs application = (RootsInMultipleTabs) getApplication();
-            String message = "This is root number "
-                    + ++application.numberOfRootsOpened;
+            UIsInMultipleTabs application = (UIsInMultipleTabs) getApplication();
+            String message = "This is UI number "
+                    + ++application.numberOfUIsOpened;
 
             addComponent(new Label(message));
         }
     }
 
-    public RootsInMultipleTabs() {
+    public UIsInMultipleTabs() {
         addUIProvider(new AbstractUIProvider() {
             @Override
             public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)
                     throws UIRequiresMoreInformationException {
-                return TabRoot.class;
+                return TabUI.class;
             }
         });
     }

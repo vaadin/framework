@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 public class RefreshStatePreserve extends AbstractTestApplication {
-    public static class RefreshStateRoot extends UI {
+    public static class RefreshStateUI extends UI {
         @Override
         public void init(WrappedRequest request) {
             getContent().addComponent(
@@ -28,7 +28,7 @@ public class RefreshStatePreserve extends AbstractTestApplication {
             public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)
                     throws UIRequiresMoreInformationException {
-                return RefreshStateRoot.class;
+                return RefreshStateUI.class;
             }
         });
     }

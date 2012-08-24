@@ -18,12 +18,12 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.DelegateToWidgetComponent;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class DelegateToWidgetTest extends AbstractTestRoot {
+public class DelegateToWidgetTest extends AbstractTestUI {
     @Override
     protected void setup(WrappedRequest request) {
         addComponent(new DelegateToWidgetComponent());

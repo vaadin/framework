@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public abstract class AbstractTestRoot extends UI {
+public abstract class AbstractTestUI extends UI {
 
     @Override
     public void init(WrappedRequest request) {

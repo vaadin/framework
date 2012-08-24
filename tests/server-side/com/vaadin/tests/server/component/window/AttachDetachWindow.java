@@ -100,12 +100,12 @@ public class AttachDetachWindow {
         }
     }
 
-    private class TestRoot extends UI implements TestContainer {
+    private class TestUI extends UI implements TestContainer {
         boolean rootAttachCalled = false;
         boolean rootDetachCalled = false;
         private TestContent testContent = new TestContent();;
 
-        public TestRoot() {
+        public TestUI() {
             setContent(testContent);
         }
 
@@ -142,7 +142,7 @@ public class AttachDetachWindow {
         }
     }
 
-    TestRoot main = new TestRoot();
+    TestUI main = new TestUI();
     TestWindow sub = new TestWindow();
 
     @Test

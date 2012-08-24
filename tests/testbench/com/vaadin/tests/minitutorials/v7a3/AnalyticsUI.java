@@ -14,27 +14,26 @@
  * the License.
  */
 
-package com.vaadin.tests.vaadincontext;
+package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.UI;
 
-public class BootstrapModifyRoot extends AbstractTestRoot {
-
-    @Override
-    protected void setup(WrappedRequest request) {
-        // TODO Auto-generated method stub
-
-    }
+public class AnalyticsUI extends UI {
 
     @Override
-    protected String getTestDescription() {
-        return "There should be two additional divs in the HTML of the bootstrap page for this UI";
-    }
+    protected void init(WrappedRequest request) {
+        final Analytics analytics = new Analytics("UA-33036133-12");
+        analytics.extend(this);
 
-    @Override
-    protected Integer getTicketNumber() {
-        return Integer.valueOf(9274);
+        addComponent(new Button("Track pageview", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                analytics.trackPageview("/fake/url");
+            }
+        }));
     }
 
 }

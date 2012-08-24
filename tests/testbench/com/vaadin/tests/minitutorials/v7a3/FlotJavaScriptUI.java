@@ -14,30 +14,30 @@
  * the License.
  */
 
-package com.vaadin.tests.minitutorials.v7a2;
+package com.vaadin.tests.minitutorials.v7a3;
 
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-/**
- * Mini tutorial code for
- * https://vaadin.com/wiki/-/wiki/Main/Using%20Resources%20
- * in%20the%20shared%20state
- * 
- * @author Vaadin Ltd
- * @since 7.0.0
- */
-@Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class ResourceInStateRoot extends UI {
+public class FlotJavaScriptUI extends UI {
 
     @Override
     protected void init(WrappedRequest request) {
-        ResourceInStateComponent component = new ResourceInStateComponent();
-        component.setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
+        final Flot flot = new Flot();
+        flot.setHeight("300px");
+        flot.setWidth("400px");
 
-        addComponent(component);
+        flot.addSeries(1, 2, 4, 8, 16);
+        addComponent(flot);
+
+        addComponent(new Button("Highlight point", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                flot.highlight(0, 3);
+            }
+        }));
     }
 
 }

@@ -17,23 +17,15 @@
 package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
-public class AnalyticsRoot extends UI {
+public class ComplexTypesUI extends UI {
 
     @Override
     protected void init(WrappedRequest request) {
-        final Analytics analytics = new Analytics("UA-33036133-12");
-        analytics.extend(this);
-
-        addComponent(new Button("Track pageview", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                analytics.trackPageview("/fake/url");
-            }
-        }));
+        ComplexTypesComponent complexTypesComponent = new ComplexTypesComponent();
+        complexTypesComponent.sendComplexTypes();
+        addComponent(complexTypesComponent);
     }
 
 }

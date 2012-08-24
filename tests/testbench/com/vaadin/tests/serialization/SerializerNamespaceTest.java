@@ -18,13 +18,13 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.DummyLabel;
 import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
-public class SerializerNamespaceTest extends AbstractTestRoot {
+public class SerializerNamespaceTest extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {
