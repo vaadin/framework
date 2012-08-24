@@ -25,8 +25,8 @@ import java.util.List;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
-import com.vaadin.shared.ui.root.PageClientRpc;
-import com.vaadin.shared.ui.root.RootConstants;
+import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
@@ -474,32 +474,32 @@ public class Page implements Serializable {
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute(
-                            RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION,
+                            UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION,
                             n.getCaption());
                 }
                 if (n.getDescription() != null) {
                     target.addAttribute(
-                            RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE,
+                            UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE,
                             n.getDescription());
                 }
                 if (n.getIcon() != null) {
                     target.addAttribute(
-                            RootConstants.ATTRIBUTE_NOTIFICATION_ICON,
+                            UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
                             n.getIcon());
                 }
                 if (!n.isHtmlContentAllowed()) {
                     target.addAttribute(
-                            RootConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
+                            UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
                             true);
                 }
                 target.addAttribute(
-                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
+                        UIConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
                                 .getPosition().ordinal());
-                target.addAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY,
+                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
                     target.addAttribute(
-                            RootConstants.ATTRIBUTE_NOTIFICATION_STYLE,
+                            UIConstants.ATTRIBUTE_NOTIFICATION_STYLE,
                             n.getStyleName());
                 }
                 target.endTag("notification");
@@ -509,7 +509,7 @@ public class Page implements Serializable {
         }
 
         if (fragment != null) {
-            target.addAttribute(RootConstants.FRAGMENT_VARIABLE, fragment);
+            target.addAttribute(UIConstants.FRAGMENT_VARIABLE, fragment);
         }
 
     }
@@ -632,11 +632,11 @@ public class Page implements Serializable {
      *         <code>null</code>
      */
     public static Page getCurrent() {
-        UI currentRoot = UI.getCurrent();
-        if (currentRoot == null) {
+        UI currentUI = UI.getCurrent();
+        if (currentUI == null) {
             return null;
         }
-        return currentRoot.getPage();
+        return currentUI.getPage();
     }
 
     /**

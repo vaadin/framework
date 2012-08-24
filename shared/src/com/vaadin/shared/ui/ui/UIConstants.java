@@ -13,9 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.root;
+package com.vaadin.shared.ui.ui;
 
-public class RootConstants {
+public class UIConstants {
     /**
      * Attribute name for the lazy resize setting .
      */
@@ -40,5 +40,10 @@ public class RootConstants {
     public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
     @Deprecated
     public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
+
+    /**
+     * Name of the parameter used to transmit UI ids back and forth
+     */
+    public static final String UI_ID_PARAMETER = "uiId";
 
 }

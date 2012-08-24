@@ -36,10 +36,10 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.shared.ui.root.PageClientRpc;
-import com.vaadin.shared.ui.root.RootConstants;
-import com.vaadin.shared.ui.root.UIServerRpc;
-import com.vaadin.shared.ui.root.UIState;
+import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIServerRpc;
+import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -107,7 +107,7 @@ public class UIConnector extends AbstractComponentContainerConnector
         getWidget().connection = client;
 
         getWidget().immediate = getState().isImmediate();
-        getWidget().resizeLazy = uidl.hasAttribute(RootConstants.RESIZE_LAZY);
+        getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
         if (getWidget().theme != null && !newTheme.equals(getWidget().theme)) {
             // Complete page refresh is needed due css can affect layout
@@ -263,9 +263,9 @@ public class UIConnector extends AbstractComponentContainerConnector
             scrollIntoView(connector);
         }
 
-        if (uidl.hasAttribute(RootConstants.FRAGMENT_VARIABLE)) {
+        if (uidl.hasAttribute(UIConstants.FRAGMENT_VARIABLE)) {
             getWidget().currentFragment = uidl
-                    .getStringAttribute(RootConstants.FRAGMENT_VARIABLE);
+                    .getStringAttribute(UIConstants.FRAGMENT_VARIABLE);
             if (!getWidget().currentFragment.equals(History.getToken())) {
                 History.newItem(getWidget().currentFragment, true);
             }
@@ -276,7 +276,7 @@ public class UIConnector extends AbstractComponentContainerConnector
 
             // Include current fragment in the next request
             client.updateVariable(getWidget().id,
-                    RootConstants.FRAGMENT_VARIABLE,
+                    UIConstants.FRAGMENT_VARIABLE,
                     getWidget().currentFragment, false);
         }
 

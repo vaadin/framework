@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.shared.ui.root;
+package com.vaadin.shared.ui.ui;
 
 import com.vaadin.shared.communication.ClientRpc;
 

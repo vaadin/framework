@@ -321,14 +321,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             } else if (requestType == RequestType.UIDL) {
                 UI uI = application.getUIForRequest(request);
                 if (uI == null) {
-                    throw new ServletException(ERROR_NO_ROOT_FOUND);
+                    throw new ServletException(ERROR_NO_UI_FOUND);
                 }
                 // Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest(request, response,
                         servletWrapper, uI);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
-                // Browser details - not related to a specific root
+                // Browser details - not related to a specific UI
                 applicationManager.handleBrowserDetailsRequest(request,
                         response, application);
                 return;

@@ -224,11 +224,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public void close() {
         UI uI = getUI();
 
-        // Don't do anything if not attached to a root
+        // Don't do anything if not attached to a UI
         if (uI != null) {
             // focus is restored to the parent window
             uI.focus();
-            // subwindow is removed from the root
+            // subwindow is removed from the UI
             uI.removeWindow(this);
         }
     }
@@ -470,7 +470,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * If there are currently several windows visible, calling this method makes
      * this window topmost.
      * <p>
-     * This method can only be called if this window connected a root. Else an
+     * This method can only be called if this window connected a UI. Else an
      * illegal state exception is thrown. Also if there are modal windows and
      * this window is not modal, and illegal state exception is thrown.
      * <p>
@@ -485,7 +485,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         for (Window w : uI.getWindows()) {
             if (!isModal() && w.isModal()) {
                 throw new IllegalStateException(
-                        "The root contains modal windows, non-modal window cannot be brought to front.");
+                        "The UI contains modal windows, non-modal window cannot be brought to front.");
             }
             if (w.bringToFront != null) {
                 maxBringToFront = Math.max(maxBringToFront,

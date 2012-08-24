@@ -33,7 +33,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.ui.root.RootConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -130,7 +130,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
             // Send the new fragment to the server if it has changed
             if (!newFragment.equals(currentFragment) && connection != null) {
                 currentFragment = newFragment;
-                connection.updateVariable(id, RootConstants.FRAGMENT_VARIABLE,
+                connection.updateVariable(id, UIConstants.FRAGMENT_VARIABLE,
                         newFragment, true);
             }
         }

@@ -48,17 +48,16 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param rootId
-     *            the generated id of the UI that will be displayed on the
-     *            page
+     * @param uiId
+     *            the generated id of the UI that will be displayed on the page
      * @param fragmentNodes
      *            a mutable list containing the DOM nodes that will make up the
      *            application HTML
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application, Integer rootId,
+            WrappedRequest request, Application application, Integer uiId,
             List<Node> fragmentNodes) {
-        super(handler, request, application, rootId);
+        super(handler, request, application, uiId);
         this.fragmentNodes = fragmentNodes;
     }
 

@@ -19,7 +19,7 @@ package com.vaadin.terminal;
 import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
-public abstract class AbstractRootProvider implements UIProvider {
+public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
     public UI instantiateUI(Application application,

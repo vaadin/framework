@@ -42,6 +42,7 @@ import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.RequestHandler;
@@ -78,19 +79,19 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getApplication();
         }
 
-        public Integer getRootId() {
-            return bootstrapResponse.getRootId();
+        public Integer getUIId() {
+            return bootstrapResponse.getUIId();
         }
 
-        public UI getRoot() {
-            return bootstrapResponse.getRoot();
+        public UI getUI() {
+            return bootstrapResponse.getUI();
         }
 
         public String getWidgetsetName() {
             if (widgetsetName == null) {
-                UI uI = getRoot();
+                UI uI = getUI();
                 if (uI != null) {
-                    widgetsetName = getWidgetsetForRoot(this);
+                    widgetsetName = getWidgetsetForUI(this);
                 }
             }
             return widgetsetName;
@@ -98,7 +99,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         public String getThemeName() {
             if (themeName == null) {
-                UI uI = getRoot();
+                UI uI = getUI();
                 if (uI != null) {
                     themeName = findAndEscapeThemeName(this);
                 }
@@ -125,7 +126,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             throws IOException {
 
         // TODO Should all urls be handled here?
-        Integer rootId = null;
+        Integer uiId = null;
         try {
             UI uI = application.getUIForRequest(request);
             if (uI == null) {
@@ -133,14 +134,14 @@ public abstract class BootstrapHandler implements RequestHandler {
                 return true;
             }
 
-            rootId = Integer.valueOf(uI.getUIId());
+            uiId = Integer.valueOf(uI.getUIId());
         } catch (UIRequiresMoreInformationException e) {
-            // Just keep going without rootId
+            // Just keep going without uiId
         }
 
         try {
             BootstrapContext context = createContext(request, response,
-                    application, rootId);
+                    application, uiId);
             setupMainDiv(context);
 
             BootstrapFragmentResponse fragmentResponse = context
@@ -170,8 +171,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getApplication(), context.getRootId(), document,
-                    headers);
+                    this, request, context.getApplication(), context.getUIId(),
+                    document, headers);
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -246,7 +247,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        UI uI = context.getRoot();
+        UI uI = context.getUI();
         String title = ((uI == null || uI.getCaption() == null) ? "" : uI
                 .getCaption());
         head.appendElement("title").appendText(title);
@@ -272,10 +273,10 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     public BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application, Integer rootId) {
+            WrappedResponse response, Application application, Integer uiId) {
         BootstrapContext context = new BootstrapContext(response,
-                new BootstrapFragmentResponse(this, request,
-                        application, rootId, new ArrayList<Node>()));
+                new BootstrapFragmentResponse(this, request, application, uiId,
+                        new ArrayList<Node>()));
         return context;
     }
 
@@ -293,8 +294,8 @@ public abstract class BootstrapHandler implements RequestHandler {
      */
     protected abstract String getApplicationId(BootstrapContext context);
 
-    public String getWidgetsetForRoot(BootstrapContext context) {
-        UI uI = context.getRoot();
+    public String getWidgetsetForUI(BootstrapContext context) {
+        UI uI = context.getUI();
         WrappedRequest request = context.getRequest();
 
         String widgetset = uI.getApplication().getWidgetsetForUI(uI);
@@ -417,12 +418,12 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
         Application application = context.getApplication();
-        Integer rootId = context.getRootId();
+        Integer uiId = context.getUIId();
 
         JSONObject appConfig = new JSONObject();
 
-        if (rootId != null) {
-            appConfig.put(ApplicationConstants.ROOT_ID_PARAMETER, rootId);
+        if (uiId != null) {
+            appConfig.put(UIConstants.UI_ID_PARAMETER, uiId);
         }
 
         if (context.getThemeName() != null) {
@@ -437,7 +438,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        if (rootId == null || application.isUIInitPending(rootId.intValue())) {
+        if (uiId == null || application.isUIInitPending(uiId.intValue())) {
             appConfig.put("initialPath", context.getRequest()
                     .getRequestPathInfo());
 
@@ -447,7 +448,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         } else {
             // write the initial UIDL into the config
             appConfig.put("uidl",
-                    getInitialUIDL(context.getRequest(), context.getRoot()));
+                    getInitialUIDL(context.getRequest(), context.getUI()));
         }
 
         return appConfig;
@@ -533,7 +534,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication().getThemeForUI(context.getRoot());
+        return context.getApplication().getThemeForUI(context.getUI());
     }
 
     /**
@@ -568,15 +569,15 @@ public abstract class BootstrapHandler implements RequestHandler {
      * 
      * @param request
      *            the originating request
-     * @param uI
-     *            the root for which the UIDL should be generated
+     * @param ui
+     *            the UI for which the UIDL should be generated
      * @return a string with the initial UIDL message
      * @throws PaintException
      *             if an exception occurs while painting the components
      * @throws JSONException
      *             if an exception occurs while formatting the output
      */
-    protected abstract String getInitialUIDL(WrappedRequest request, UI uI)
+    protected abstract String getInitialUIDL(WrappedRequest request, UI ui)
             throws PaintException, JSONException;
 
 }

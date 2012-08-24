@@ -35,9 +35,9 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.BorderStyle;
-import com.vaadin.shared.ui.root.RootConstants;
-import com.vaadin.shared.ui.root.UIServerRpc;
-import com.vaadin.shared.ui.root.UIState;
+import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIServerRpc;
+import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
 import com.vaadin.terminal.Page.BrowserWindowResizeListener;
@@ -64,7 +64,7 @@ import com.vaadin.ui.Window.CloseListener;
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to {@link AbstractApplicationServlet},
  * {@link Application#getUIForRequest(WrappedRequest)} is invoked to get a UI.
- * That method does by default create a root according to the
+ * That method does by default create a UI according to the
  * {@value Application#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
@@ -544,8 +544,8 @@ public abstract class UI extends AbstractComponentContainer implements
         if (pendingFocus != null) {
             // ensure focused component is still attached to this main window
             if (pendingFocus.getUI() == this
-                    || (pendingFocus.getUI() != null && pendingFocus
-                            .getUI().getParent() == this)) {
+                    || (pendingFocus.getUI() != null && pendingFocus.getUI()
+                            .getParent() == this)) {
                 target.addAttribute("focused", pendingFocus);
             }
             pendingFocus = null;
@@ -556,7 +556,7 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         if (isResizeLazy()) {
-            target.addAttribute(RootConstants.RESIZE_LAZY, true);
+            target.addAttribute(UIConstants.RESIZE_LAZY, true);
         }
     }
 
@@ -585,9 +585,9 @@ public abstract class UI extends AbstractComponentContainer implements
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(RootConstants.FRAGMENT_VARIABLE)) {
+        if (variables.containsKey(UIConstants.FRAGMENT_VARIABLE)) {
             String fragment = (String) variables
-                    .get(RootConstants.FRAGMENT_VARIABLE);
+                    .get(UIConstants.FRAGMENT_VARIABLE);
             getPage().setFragment(fragment, true);
         }
     }

@@ -20,7 +20,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 
 /**
- * Exception that is thrown to indicate that creating or initializing the root
+ * Exception that is thrown to indicate that creating or initializing the UI
  * requires information detailed from the web browser ({@link BrowserDetails})
  * to be present.
  * 

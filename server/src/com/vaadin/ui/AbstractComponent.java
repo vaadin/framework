@@ -557,16 +557,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /*
-     * Gets the parent window of the component. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
-     */
-    @Override
-    public UI getUI() {
-        // Just make method from implemented Component interface public
-        return super.getUI();
-    }
-
-    /*
      * Notify the component that it's attached to a window. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
      * interface.
@@ -1304,7 +1294,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Set a viewer for the action manager to be the parent sub window (if the
-     * component is in a window) or the root (otherwise). This is still a
+     * component is in a window) or the UI (otherwise). This is still a
      * simplification of the real case as this should be handled by the parent
      * VOverlay (on the client side) if the component is inside an VOverlay
      * component.

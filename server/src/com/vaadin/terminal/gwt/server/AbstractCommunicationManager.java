@@ -74,6 +74,7 @@ import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.LegacyPaint;
@@ -146,7 +147,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
-    private final HashMap<Integer, ClientCache> rootToClientCache = new HashMap<Integer, ClientCache>();
+    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<Integer, ClientCache>();
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -570,7 +571,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 if (uI == null) {
                     // This should not happen, no windows exists but
                     // application is still open.
-                    getLogger().warning("Could not get root for application");
+                    getLogger().warning("Could not get UI for application");
                     return;
                 }
             } else {
@@ -810,17 +811,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     @SuppressWarnings("unchecked")
     public void writeUidlResponse(WrappedRequest request, boolean repaintAll,
-            final PrintWriter outWriter, UI uI, boolean analyzeLayouts)
+            final PrintWriter outWriter, UI ui, boolean analyzeLayouts)
             throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
-        Application application = uI.getApplication();
+        Application application = ui.getApplication();
         // Paints components
-        ConnectorTracker rootConnectorTracker = uI.getConnectorTracker();
+        ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
         if (repaintAll) {
-            getClientCache(uI).clear();
-            rootConnectorTracker.markAllConnectorsDirty();
-            rootConnectorTracker.markAllClientSidesUninitialized();
+            getClientCache(ui).clear();
+            uiConnectorTracker.markAllConnectorsDirty();
+            uiConnectorTracker.markAllClientSidesUninitialized();
 
             // Reset sent locales
             locales = null;
@@ -828,18 +829,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         dirtyVisibleConnectors
-                .addAll(getDirtyVisibleConnectors(rootConnectorTracker));
+                .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
 
         getLogger().log(
                 Level.FINE,
                 "Found " + dirtyVisibleConnectors.size()
                         + " dirty connectors to paint");
         for (ClientConnector connector : dirtyVisibleConnectors) {
-            boolean initialized = rootConnectorTracker
+            boolean initialized = uiConnectorTracker
                     .isClientSideInitialized(connector);
             connector.beforeClientResponse(!initialized);
         }
-        rootConnectorTracker.markAllConnectorsClean();
+        uiConnectorTracker.markAllConnectorsClean();
 
         outWriter.print("\"changes\":[");
 
@@ -851,12 +852,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         if (analyzeLayouts) {
             invalidComponentRelativeSizes = ComponentSizeValidator
-                    .validateComponentRelativeSizes(uI.getContent(), null,
-                            null);
+                    .validateComponentRelativeSizes(ui.getContent(), null, null);
 
             // Also check any existing subwindows
-            if (uI.getWindows() != null) {
-                for (Window subWindow : uI.getWindows()) {
+            if (ui.getWindows() != null) {
+                for (Window subWindow : ui.getWindows()) {
                     invalidComponentRelativeSizes = ComponentSizeValidator
                             .validateComponentRelativeSizes(
                                     subWindow.getContent(),
@@ -951,10 +951,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         outWriter.append(hierarchyInfo.toString());
         outWriter.print(", "); // close hierarchy
 
-        // send server to client RPC calls for components in the root, in call
+        // send server to client RPC calls for components in the UI, in call
         // order
 
-        // collect RPC calls from components in the root in the order in
+        // collect RPC calls from components in the UI in the order in
         // which they were performed, remove the calls from components
 
         LinkedList<ClientConnector> rpcPendingQueue = new LinkedList<ClientConnector>(
@@ -985,7 +985,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // }
                     paramJson.put(JsonCodec.encode(
                             invocation.getParameters()[i], referenceParameter,
-                            parameterType, uI.getConnectorTracker()));
+                            parameterType, ui.getConnectorTracker()));
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);
@@ -1087,7 +1087,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = getThemeResourceAsStream(uI, getTheme(uI), resource);
+                is = getThemeResourceAsStream(ui, getTheme(ui), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 getLogger().log(Level.FINER,
@@ -1124,7 +1124,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
                 .getUsedClientConnectors();
         boolean typeMappingsOpen = false;
-        ClientCache clientCache = getClientCache(uI);
+        ClientCache clientCache = getClientCache(ui);
 
         List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
 
@@ -1237,7 +1237,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         for (ClientConnector connector : dirtyVisibleConnectors) {
-            rootConnectorTracker.markClientSideInitialized(connector);
+            uiConnectorTracker.markClientSideInitialized(connector);
         }
 
         writePerformanceData(outWriter);
@@ -1390,11 +1390,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private ClientCache getClientCache(UI uI) {
-        Integer rootId = Integer.valueOf(uI.getUIId());
-        ClientCache cache = rootToClientCache.get(rootId);
+        Integer uiId = Integer.valueOf(uI.getUIId());
+        ClientCache cache = uiToClientCache.get(uiId);
         if (cache == null) {
             cache = new ClientCache();
-            rootToClientCache.put(rootId, cache);
+            uiToClientCache.put(uiId, cache);
         }
         return cache;
     }
@@ -1633,14 +1633,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @param source
      * @param uI
-     *            the root receiving the burst
+     *            the UI receiving the burst
      * @param burst
      *            the content of the burst as a String to be parsed
      * @return true if the processing of the burst was successful and there were
      *         no messages to non-existent components
      */
-    public boolean handleBurst(WrappedRequest source, UI uI,
-            final String burst) {
+    public boolean handleBurst(WrappedRequest source, UI uI, final String burst) {
         boolean success = true;
         try {
             Set<Connector> enabledConnectors = new HashSet<Connector>();
@@ -1878,8 +1877,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     protected ClientConnector getConnector(UI uI, String connectorId) {
-        ClientConnector c = uI.getConnectorTracker()
-                .getConnector(connectorId);
+        ClientConnector c = uI.getConnectorTracker().getConnector(connectorId);
         if (c == null
                 && connectorId.equals(getDragAndDropService().getConnectorId())) {
             return getDragAndDropService();
@@ -2231,7 +2229,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * invisible subtrees are omitted.
      * 
      * @param w
-     *            root window for which dirty components is to be fetched
+     *            UI window for which dirty components is to be fetched
      * @return
      */
     private ArrayList<ClientConnector> getDirtyVisibleConnectors(
@@ -2344,7 +2342,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
          * 
-         * eg. APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY]
+         * eg. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
          * 
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).
@@ -2353,8 +2351,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * handling post
          */
         String paintableId = owner.getConnectorId();
-        int rootId = owner.getUI().getUIId();
-        String key = rootId + "/" + paintableId + "/" + name;
+        int uiId = owner.getUI().getUIId();
+        String key = uiId + "/" + paintableId + "/" + name;
 
         if (pidToNameToStreamVariable == null) {
             pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
@@ -2415,7 +2413,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response, Application application)
             throws IOException {
 
-        // if we do not yet have a currentRoot, it should be initialized
+        // if we do not yet have a currentUI, it should be initialized
         // shortly, and we should send the initial UIDL
         boolean sendUIDL = UI.getCurrent() == null;
 
@@ -2425,7 +2423,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             UI uI = application.getUIForRequest(combinedRequest);
             response.setContentType("application/json; charset=UTF-8");
 
-            // Use the same logic as for determined roots
+            // Use the same logic as for determined UIs
             BootstrapHandler bootstrapHandler = getBootstrapHandler();
             BootstrapContext context = bootstrapHandler.createContext(
                     combinedRequest, response, application, uI.getUIId());
@@ -2434,13 +2432,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
             String theme = context.getThemeName();
             String themeUri = bootstrapHandler.getThemeUri(context, theme);
 
-            // TODO These are not required if it was only the init of the root
+            // TODO These are not required if it was only the init of the UI
             // that was delayed
             JSONObject params = new JSONObject();
             params.put("widgetset", widgetset);
             params.put("themeUri", themeUri);
             // UI id might have changed based on e.g. window.name
-            params.put(ApplicationConstants.ROOT_ID_PARAMETER, uI.getUIId());
+            params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
             if (sendUIDL) {
                 String initialUIDL = getInitialUIDL(combinedRequest, uI);
                 params.put("uidl", initialUIDL);
@@ -2474,7 +2472,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param request
      *            the request that caused the initialization
      * @param uI
-     *            the root for which the UIDL should be generated
+     *            the UI for which the UIDL should be generated
      * @return a string with the initial UIDL message
      * @throws PaintException
      *             if an exception occurs while painting
@@ -2523,7 +2521,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         final String mimetype = response.getDeploymentConfiguration()
                 .getMimeType(resourceName);
 
-        // Security check: avoid accidentally serving from the root of the
+        // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
         if (resourceName.startsWith("/")) {
             getLogger().warning(
@@ -2598,8 +2596,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * Handles file upload request submitted via Upload component.
      * 
-     * @param root
-     *            The root for this request
+     * @param UI
+     *            The UI for this request
      * 
      * @see #getStreamVariableTargetUrl(ReceiverOwner, String, StreamVariable)
      * 
@@ -2613,7 +2611,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             throws IOException, InvalidUIDLSecurityKeyException {
 
         /*
-         * URI pattern: APP/UPLOAD/[ROOTID]/[PID]/[NAME]/[SECKEY] See
+         * URI pattern: APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY] See
          * #createReceiverUrl
          */
 
@@ -2623,12 +2621,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)
                 + ServletPortletHelper.UPLOAD_URL_PREFIX.length();
         String uppUri = pathInfo.substring(startOfData);
-        String[] parts = uppUri.split("/", 4); // 0= rootid, 1 = cid, 2= name, 3
+        String[] parts = uppUri.split("/", 4); // 0= UIid, 1 = cid, 2= name, 3
                                                // = sec key
-        String rootId = parts[0];
+        String uiId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
-        UI uI = application.getUIById(Integer.parseInt(rootId));
+        UI uI = application.getUIById(Integer.parseInt(uiId));
         UI.setCurrent(uI);
 
         StreamVariable streamVariable = getStreamVariable(connectorId,

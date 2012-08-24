@@ -20,16 +20,16 @@ import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
-public class DefaultRootProvider extends AbstractRootProvider {
+public class DefaultUIProvider extends AbstractUIProvider {
 
     @Override
     public Class<? extends UI> getUIClass(Application application,
             WrappedRequest request) throws UIRequiresMoreInformationException {
-        Object rootClassNameObj = application
+        Object uiClassNameObj = application
                 .getProperty(Application.UI_PARAMETER);
 
-        if (rootClassNameObj instanceof String) {
-            String rootClassName = rootClassNameObj.toString();
+        if (uiClassNameObj instanceof String) {
+            String uiClassName = uiClassNameObj.toString();
 
             ClassLoader classLoader = request.getDeploymentConfiguration()
                     .getClassLoader();
@@ -37,12 +37,12 @@ public class DefaultRootProvider extends AbstractRootProvider {
                 classLoader = getClass().getClassLoader();
             }
             try {
-                Class<? extends UI> rootClass = Class.forName(rootClassName,
-                        true, classLoader).asSubclass(UI.class);
+                Class<? extends UI> uiClass = Class.forName(uiClassName, true,
+                        classLoader).asSubclass(UI.class);
 
-                return rootClass;
+                return uiClass;
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Could not find root class", e);
+                throw new RuntimeException("Could not find UI class", e);
             }
         }
 

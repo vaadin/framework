@@ -395,7 +395,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             PortletURL url = ((MimeResponse) response).createRenderURL();
             url.setPortletMode(portletMode);
             throw new RuntimeException("UI.open has not yet been implemented");
-            // root.open(new ExternalResource(url.toString()));
+            // UI.open(new ExternalResource(url.toString()));
         } else if (response instanceof StateAwareResponse) {
             ((StateAwareResponse) response).setPortletMode(portletMode);
         } else {

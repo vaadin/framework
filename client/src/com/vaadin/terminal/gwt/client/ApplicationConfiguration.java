@@ -31,6 +31,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
 import com.vaadin.terminal.gwt.client.metadata.NoDataException;
@@ -202,7 +203,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private String id;
     private String themeUri;
     private String appUri;
-    private int rootId;
+    private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
@@ -288,8 +289,8 @@ public class ApplicationConfiguration implements EntryPoint {
      * 
      * @return the root id
      */
-    public int getRootId() {
-        return rootId;
+    public int getUIId() {
+        return uiId;
     }
 
     public JavaScriptObject getVersionInfoJSObject() {
@@ -314,7 +315,8 @@ public class ApplicationConfiguration implements EntryPoint {
             appUri += '/';
         }
         themeUri = jsoConfiguration.getConfigString("themeUri");
-        rootId = jsoConfiguration.getConfigInteger("rootId").intValue();
+        uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
+                .intValue();
 
         // null -> true
         useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;

@@ -219,8 +219,9 @@ public interface WrappedRequest extends Serializable {
      * for instance using javascript in the browser.
      * 
      * This information is only guaranteed to be available in some special
-     * cases, for instance when {@link Application#getRoot} is called again
-     * after throwing {@link UIRequiresMoreInformationException} or in
+     * cases, for instance when
+     * {@link Application#getUIForRequest(WrappedRequest)} is called again after
+     * throwing {@link UIRequiresMoreInformationException} or in
      * {@link UI#init(WrappedRequest)} for a UI class not annotated with
      * {@link EagerInit}
      * 

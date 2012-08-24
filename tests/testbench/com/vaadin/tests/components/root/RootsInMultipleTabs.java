@@ -2,7 +2,7 @@ package com.vaadin.tests.components.root;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.AbstractRootProvider;
+import com.vaadin.terminal.AbstractUIProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
@@ -23,7 +23,7 @@ public class RootsInMultipleTabs extends AbstractTestApplication {
     }
 
     public RootsInMultipleTabs() {
-        addUIProvider(new AbstractRootProvider() {
+        addUIProvider(new AbstractUIProvider() {
             @Override
             public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)

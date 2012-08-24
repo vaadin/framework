@@ -58,6 +58,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
@@ -495,8 +496,8 @@ public class ApplicationConnection {
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
         }
-        uri = addGetParameters(uri, ApplicationConstants.ROOT_ID_PARAMETER
-                + "=" + configuration.getRootId());
+        uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
+                + configuration.getUIId());
 
         doUidlRequest(uri, payload, forceSync);
 

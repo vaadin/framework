@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.AbstractRootProvider;
+import com.vaadin.terminal.AbstractUIProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
@@ -112,7 +112,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
                 Application application = new Application();
-                application.addUIProvider(new AbstractRootProvider() {
+                application.addUIProvider(new AbstractUIProvider() {
 
                     @Override
                     public Class<? extends UI> getUIClass(

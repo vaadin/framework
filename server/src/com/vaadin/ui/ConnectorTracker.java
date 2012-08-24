@@ -210,7 +210,7 @@ public class ConnectorTracker implements Serializable {
         while (iterator.hasNext()) {
             String connectorId = iterator.next();
             ClientConnector connector = connectorIdToConnector.get(connectorId);
-            if (getRootForConnector(connector) != uI) {
+            if (getUIForConnector(connector) != uI) {
                 // If connector is no longer part of this uI,
                 // remove it from the map. If it is re-attached to the
                 // application at some point it will be re-added through
@@ -239,7 +239,7 @@ public class ConnectorTracker implements Serializable {
      * @return The uI the connector is attached to or null if it is not
      *         attached to any uI.
      */
-    private UI getRootForConnector(ClientConnector connector) {
+    private UI getUIForConnector(ClientConnector connector) {
         if (connector == null) {
             return null;
         }
@@ -247,7 +247,7 @@ public class ConnectorTracker implements Serializable {
             return ((Component) connector).getUI();
         }
 
-        return getRootForConnector(connector.getParent());
+        return getUIForConnector(connector.getParent());
     }
 
     /**

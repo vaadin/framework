@@ -51,7 +51,7 @@ import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
@@ -2264,8 +2264,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             CombinedRequest combinedRequest = (CombinedRequest) request;
             request = combinedRequest.getSecondRequest();
         }
-        String uiIdString = request
-                .getParameter(ApplicationConstants.ROOT_ID_PARAMETER);
+        String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
         Integer uiId = uiIdString == null ? null : new Integer(uiIdString);
         return uiId;
     }

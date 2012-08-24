@@ -501,23 +501,22 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                                 uI = application
                                         .getUIForRequest(wrappedRequest);
                             } catch (UIRequiresMoreInformationException e) {
-                                // Ignore problem and continue without root
+                                // Ignore problem and continue without UI
                             }
                             break;
                         case BROWSER_DETAILS:
-                            // Should not try to find a root here as the
-                            // combined request details might change the root
+                            // Should not try to find a UI here as the
+                            // combined request details might change the UI
                             break;
                         case FILE_UPLOAD:
                             // no window
                             break;
                         case APPLICATION_RESOURCE:
                             // use main window - should not need any window
-                            // root = application.getRoot();
+                            // UI = application.getUI();
                             break;
                         default:
-                            uI = application
-                                    .getUIForRequest(wrappedRequest);
+                            uI = application.getUIForRequest(wrappedRequest);
                         }
                         // if window not found, not a problem - use null
                     }
@@ -534,9 +533,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             uI, (ActionRequest) request,
                             (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
-                    applicationContext.firePortletEventRequest(application,
-                            uI, (EventRequest) request,
-                            (EventResponse) response);
+                    applicationContext.firePortletEventRequest(application, uI,
+                            (EventRequest) request, (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
                     applicationContext.firePortletResourceRequest(application,
                             uI, (ResourceRequest) request,

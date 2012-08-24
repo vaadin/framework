@@ -175,7 +175,7 @@ public interface ClientConnector extends Connector, RpcTarget {
     public void removeExtension(Extension extension);
 
     /**
-     * Returns the root this connector is attached to
+     * Returns the UI this connector is attached to
      * 
      * @return The UI this connector is attached to or null if it is not
      *         attached to any UI
