@@ -34,6 +34,7 @@ public abstract class AbstractDeploymentConfiguration implements
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
     private int heartbeatInterval;
+    private boolean idleRootCleanupEnabled;
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass,
             Properties applicationProperties) {
@@ -44,6 +45,7 @@ public abstract class AbstractDeploymentConfiguration implements
         checkXsrfProtection();
         checkResourceCacheTime();
         checkHeartbeatInterval();
+        checkIdleRootCleanup();
     }
 
     @Override
@@ -204,6 +206,11 @@ public abstract class AbstractDeploymentConfiguration implements
         return heartbeatInterval;
     }
 
+    @Override
+    public boolean isIdleRootCleanupEnabled() {
+        return idleRootCleanupEnabled;
+    }
+
     /**
      * Log a warning if Vaadin is not running in production mode.
      */
@@ -254,6 +261,12 @@ public abstract class AbstractDeploymentConfiguration implements
                     Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
             heartbeatInterval = 300;
         }
+    }
+
+    private void checkIdleRootCleanup() {
+        idleRootCleanupEnabled = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_CLOSE_IDLE_ROOTS, "false").equals(
+                "true");
     }
 
     private Logger getLogger() {

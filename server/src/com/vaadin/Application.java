@@ -2424,30 +2424,28 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Removes all those roots from the application whose last heartbeat
-     * occurred more than {@link #getHeartbeatTimeout()} seconds ago. Close
-     * events are fired for the removed roots. If
-     * <code>getHeartbeatTimeout()</code> returns a nonpositive number, no
-     * cleanup is performed.
+     * Removes all those roots from the application for whom
+     * {@link #isRootAlive} returns false. Close events are fired for the
+     * removed roots.
      * <p>
      * Called by the framework at the end of every request.
      * 
      * @see Root.CloseEvent
      * @see Root.CloseListener
-     * @see #getHeartbeatTimeout()
+     * @see #isRootAlive(Root)
      * 
      * @since 7.0.0
      */
     public void closeInactiveRoots() {
-        if (getHeartbeatTimeout() > 0) {
-            long now = System.currentTimeMillis();
-            for (Iterator<Root> i = roots.values().iterator(); i.hasNext();) {
-                Root root = i.next();
-                if (now - root.getLastHeartbeat() > 1000 * getHeartbeatTimeout()) {
-                    i.remove();
-                    retainOnRefreshRoots.values().remove(root.getRootId());
-                    root.fireCloseEvent();
-                }
+        for (Iterator<Root> i = roots.values().iterator(); i.hasNext();) {
+            Root root = i.next();
+            if (!isRootAlive(root)) {
+                i.remove();
+                retainOnRefreshRoots.values().remove(root.getRootId());
+                root.fireCloseEvent();
+                getLogger().info(
+                        "Closed root #" + root.getRootId()
+                                + " due to inactivity");
             }
         }
     }
@@ -2456,15 +2454,69 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Returns the number of seconds that must pass without a valid heartbeat or
      * UIDL request being received from a root before that root is removed from
      * the application. This is a lower bound; it might take longer to close an
-     * inactive root.
+     * inactive root. Returns a negative number if heartbeat is disabled and
+     * timeout never occurs.
+     * 
+     * @see #getUidlRequestTimeout()
+     * @see #closeInactiveRoots()
+     * @see DeploymentConfiguration#getHeartbeatInterval()
      * 
      * @since 7.0.0
      * 
-     * @return The heartbeat timeout in seconds or a nonpositive number if
-     *         timeout never occurs.
+     * @return The heartbeat timeout in seconds or a negative number if timeout
+     *         never occurs.
      */
-    public int getHeartbeatTimeout() {
+    protected int getHeartbeatTimeout() {
         // Permit three missed heartbeats before closing the root
         return (int) (configuration.getHeartbeatInterval() * (3.1));
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid UIDL request
+     * being received from a root before the root is removed from the
+     * application, even though heartbeat requests are received. This is a lower
+     * bound; it might take longer to close an inactive root. Returns a negative
+     * number if
+     * <p>
+     * This timeout only has effect if cleanup of inactive roots is enabled;
+     * otherwise heartbeat requests are enough to extend root lifetime
+     * indefinitely.
+     * 
+     * @see DeploymentConfiguration#isIdleRootCleanupEnabled()
+     * @see #getHeartbeatTimeout()
+     * @see #closeInactiveRoots()
+     * 
+     * @since 7.0.0
+     * 
+     * @return The UIDL request timeout in seconds, or a negative number if
+     *         timeout never occurs.
+     */
+    protected int getUidlRequestTimeout() {
+        return configuration.isIdleRootCleanupEnabled() ? getContext()
+                .getMaxInactiveInterval() : -1;
+    }
+
+    /**
+     * Returns whether the given root is alive (the client-side actively
+     * communicates with the server) or whether it can be removed from the
+     * application and eventually collected.
+     * 
+     * @since 7.0.0
+     * 
+     * @param root
+     *            The Root whose status to check
+     * @return true if the root is alive, false if it could be removed.
+     */
+    protected boolean isRootAlive(Root root) {
+        long now = System.currentTimeMillis();
+        if (getHeartbeatTimeout() >= 0
+                && now - root.getLastHeartbeatTime() > 1000 * getHeartbeatTimeout()) {
+            return false;
+        }
+        if (getUidlRequestTimeout() >= 0
+                && now - root.getLastUidlRequestTime() > 1000 * getUidlRequestTimeout()) {
+            return false;
+        }
+        return true;
     }
 }

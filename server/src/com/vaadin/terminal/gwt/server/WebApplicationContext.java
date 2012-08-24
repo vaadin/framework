@@ -187,4 +187,8 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
         return mgr;
     }
 
+    @Override
+    public int getMaxInactiveInterval() {
+        return getHttpSession().getMaxInactiveInterval();
+    }
 }

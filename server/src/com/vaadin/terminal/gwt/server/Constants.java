@@ -65,6 +65,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_RATE = "heartbeatRate";
+    static final String SERVLET_PARAMETER_CLOSE_IDLE_ROOTS = "closeIdleRoots";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";
@@ -95,5 +96,4 @@ public interface Constants {
     static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
     static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
     static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
-
 }

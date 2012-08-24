@@ -404,6 +404,11 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         }
     }
 
+    @Override
+    public int getMaxInactiveInterval() {
+        return getPortletSession().getMaxInactiveInterval();
+    }
+
     private Logger getLogger() {
         return Logger.getLogger(PortletApplicationContext2.class.getName());
     }

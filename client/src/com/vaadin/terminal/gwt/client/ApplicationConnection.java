@@ -2611,7 +2611,6 @@ public class ApplicationConnection {
      * <b>TODO</b>: Improved error handling, like in doUidlRequest().
      * 
      * @see #scheduleHeartbeat()
-     * @see com.vaadin.ui.Root#heartbeat()
      */
     protected void sendHeartbeat() {
         final String uri = addGetParameters(

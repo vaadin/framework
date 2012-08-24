@@ -23,6 +23,7 @@ import java.util.Properties;
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
+import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.gwt.server.AddonContext;
 import com.vaadin.terminal.gwt.server.AddonContextListener;
 
@@ -162,11 +163,26 @@ public interface DeploymentConfiguration extends Serializable {
 
     /**
      * Returns the number of seconds between heartbeat requests of a root, or a
-     * non-negative number if heartbeat is disabled.
+     * non-positive number if heartbeat is disabled.
      * 
      * @since 7.0.0
      * 
-     * @return
+     * @return The time between heartbeats.
      */
     public int getHeartbeatInterval();
+
+    /**
+     * Returns whether roots that have no other activity than heartbeat requests
+     * should be closed after they have been idle the maximum inactivity time
+     * enforced by the session.
+     * 
+     * @see ApplicationContext#getMaxInactiveInterval()
+     * 
+     * @since 7.0.0
+     * 
+     * @return True if roots receiving only heartbeat requests are eventually
+     *         closed; false if heartbeat requests extend root lifetime
+     *         indefinitely.
+     */
+    public boolean isIdleRootCleanupEnabled();
 }

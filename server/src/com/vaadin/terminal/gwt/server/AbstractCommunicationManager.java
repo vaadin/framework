@@ -581,7 +581,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
 
             // Keep the root alive
-            root.heartbeat();
+            root.setLastUidlRequestTime(System.currentTimeMillis());
 
             // Change all variables based on request parameters
             if (!handleVariables(request, response, callback, application, root)) {
@@ -2683,7 +2683,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // null-check below handles this as well
         }
         if (root != null) {
-            root.heartbeat();
+            root.setLastHeartbeatTime(System.currentTimeMillis());
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND,
                     "Root not found");

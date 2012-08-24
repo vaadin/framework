@@ -488,6 +488,8 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     private long lastHeartbeat = System.currentTimeMillis();
 
+    private long lastUidlRequest = System.currentTimeMillis();
+
     /**
      * Creates a new empty root without a caption. This root will have a
      * {@link VerticalLayout} with margins enabled as its content.
@@ -1319,26 +1321,43 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Returns the timestamp (millisecond since the epoch) of the last received
+     * Returns the timestamp (milliseconds since the epoch) of the last received
      * heartbeat for this Root.
      * 
      * @see #heartbeat()
      * @see Application#closeInactiveRoots()
      * 
-     * @return The time
+     * @return The time the last heartbeat request occurred.
      */
-    public long getLastHeartbeat() {
+    public long getLastHeartbeatTime() {
         return lastHeartbeat;
     }
 
     /**
-     * Updates the heartbeat timestamp of this Root to the current time. Called
-     * by the framework whenever the application receives a valid heartbeat or
+     * Returns the timestamp (milliseconds since the epoch) of the last received
      * UIDL request for this Root.
      * 
-     * @see java.lang.System#currentTimeMillis()
+     * @return
      */
-    public void heartbeat() {
-        this.lastHeartbeat = System.currentTimeMillis();
+    public long getLastUidlRequestTime() {
+        return lastUidlRequest;
+    }
+
+    /**
+     * Sets the last heartbeat request timestamp for this Root. Called by the
+     * framework whenever the application receives a valid heartbeat request for
+     * this Root.
+     */
+    public void setLastHeartbeatTime(long lastHeartbeat) {
+        this.lastHeartbeat = lastHeartbeat;
+    }
+
+    /**
+     * Sets the last UIDL request timestamp for this Root. Called by the
+     * framework whenever the application receives a valid UIDL request for this
+     * Root.
+     */
+    public void setLastUidlRequestTime(long lastUidlRequest) {
+        this.lastUidlRequest = lastUidlRequest;
     }
 }
