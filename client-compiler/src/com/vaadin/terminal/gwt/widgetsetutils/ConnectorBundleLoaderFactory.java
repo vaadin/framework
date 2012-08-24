@@ -30,6 +30,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.shared.annotations.Delayed;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
@@ -182,6 +183,18 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeSetters(logger, w, bundle);
         writeGetters(logger, w, bundle);
         writeSerializers(logger, w, bundle);
+        writeDelegateToWidget(logger, w, bundle);
+    }
+
+    private void writeDelegateToWidget(TreeLogger logger, SourceWriter w,
+            ConnectorBundle bundle) {
+        Set<Property> needsDelegateToWidget = bundle.getNeedsDelegateToWidget();
+        for (Property property : needsDelegateToWidget) {
+            w.println("store.setDelegateToWidget(%s, \"%s\", \"%s\");",
+                    getClassLiteralString(property.getBeanType()),
+                    property.getName(),
+                    property.getAnnotation(DelegateToWidget.class).value());
+        }
     }
 
     private void writeSerializers(TreeLogger logger, SourceWriter w,
@@ -535,8 +548,11 @@ public class ConnectorBundleLoaderFactory extends Generator {
     }
 
     public static void writeClassLiteral(SourceWriter w, JType type) {
-        w.print(type.getQualifiedSourceName());
-        w.print(".class");
+        w.print(getClassLiteralString(type));
+    }
+
+    public static String getClassLiteralString(JType type) {
+        return type.getQualifiedSourceName() + ".class";
     }
 
     private void writeIdentifiers(SourceWriter w, ConnectorBundle bundle) {

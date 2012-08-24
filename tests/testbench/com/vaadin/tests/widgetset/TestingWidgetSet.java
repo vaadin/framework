@@ -14,23 +14,8 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.client.ui.textarea;
+package com.vaadin.tests.widgetset;
 
-import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.textarea.TextAreaState;
-import com.vaadin.terminal.gwt.client.ui.textfield.TextFieldConnector;
-import com.vaadin.ui.TextArea;
-
-@Connect(TextArea.class)
-public class TextAreaConnector extends TextFieldConnector {
-
-    @Override
-    public TextAreaState getState() {
-        return (TextAreaState) super.getState();
-    }
-
-    @Override
-    public VTextArea getWidget() {
-        return (VTextArea) super.getWidget();
-    }
+public class TestingWidgetSet {
+    public static final String NAME = "com.vaadin.tests.widgetset.TestingWidgetSet";
 }

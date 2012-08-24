@@ -68,7 +68,10 @@ import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Property;
 import com.vaadin.terminal.gwt.client.metadata.Type;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -1148,6 +1151,8 @@ public class ApplicationConnection {
                         " * Hierarchy state change event processing completed",
                         10);
 
+                delegateToWidget(pendingStateChangeEvents);
+
                 // Fire state change events.
                 sendStateChangeEvents(pendingStateChangeEvents);
 
@@ -1262,6 +1267,62 @@ public class ApplicationConnection {
 
                 endRequest();
 
+            }
+
+            private void delegateToWidget(
+                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                VConsole.log(" * Running @DelegateToWidget");
+
+                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                    ServerConnector connector = sce.getConnector();
+                    if (connector instanceof ComponentConnector) {
+                        ComponentConnector component = (ComponentConnector) connector;
+                        Type type = TypeData.getType(component.getClass());
+
+                        Type stateType;
+                        try {
+                            stateType = type.getMethod("getState")
+                                    .getReturnType();
+                        } catch (NoDataException e) {
+                            throw new RuntimeException(
+                                    "Can not find the state type for "
+                                            + type.getSignature(), e);
+                        }
+
+                        Set<String> changedProperties = sce
+                                .getChangedProperties();
+                        for (String propertyName : changedProperties) {
+                            Property property = stateType
+                                    .getProperty(propertyName);
+                            String method = property
+                                    .getDelegateToWidgetMethodName();
+                            if (method != null) {
+                                doDelegateToWidget(component, property, method);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            private void doDelegateToWidget(ComponentConnector component,
+                    Property property, String methodName) {
+                Type type = TypeData.getType(component.getClass());
+                try {
+                    Type widgetType = type.getMethod("getWidget")
+                            .getReturnType();
+                    Widget widget = component.getWidget();
+
+                    Object propertyValue = property.getValue(component
+                            .getState());
+
+                    widgetType.getMethod(methodName).invoke(widget,
+                            propertyValue);
+                } catch (NoDataException e) {
+                    throw new RuntimeException(
+                            "Missing data needed to invoke @DelegateToWidget for "
+                                    + Util.getSimpleName(component), e);
+                }
             }
 
             /**

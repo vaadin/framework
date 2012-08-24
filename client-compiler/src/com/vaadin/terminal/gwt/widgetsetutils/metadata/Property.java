@@ -16,6 +16,8 @@
 
 package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
+import java.lang.annotation.Annotation;
+
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
@@ -80,5 +82,8 @@ public abstract class Property {
         return getClass().hashCode() * 31 ^ 2 + getBeanType().hashCode() * 31
                 + getName().hashCode();
     }
+
+    public abstract <T extends Annotation> T getAnnotation(
+            Class<T> annotationClass);
 
 }

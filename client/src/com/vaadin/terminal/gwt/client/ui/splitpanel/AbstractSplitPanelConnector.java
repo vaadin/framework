@@ -138,9 +138,6 @@ public abstract class AbstractSplitPanelConnector extends
         // Splitter updates
         SplitterState splitterState = getState().getSplitterState();
 
-        getWidget().setLocked(splitterState.isLocked());
-        getWidget().setPositionReversed(splitterState.isPositionReversed());
-
         getWidget().setStylenames();
 
         getWidget().minimumPosition = splitterState.getMinPosition()

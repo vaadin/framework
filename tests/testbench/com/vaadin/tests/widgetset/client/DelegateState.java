@@ -13,39 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.textarea;
 
+package com.vaadin.tests.widgetset.client;
+
+import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 
-public class TextAreaState extends AbstractTextFieldState {
+public class DelegateState extends ComponentState {
+    @DelegateToWidget
+    public String value1;
 
-    /**
-     * Number of visible rows in the text area. The default is 5.
-     */
-    private int rows = 5;
+    @DelegateToWidget("setValue2")
+    public int renamedValue2;
 
-    /**
-     * Tells if word-wrapping should be used in the text area.
-     */
-    private boolean wordwrap = true;
+    private Boolean value3;
 
-    public int getRows() {
-        return rows;
-    }
+    private double renamedValue4;
 
     @DelegateToWidget
-    public void setRows(int rows) {
-        this.rows = rows;
+    public void setValue3(Boolean value3) {
+        this.value3 = value3;
     }
 
-    public boolean isWordwrap() {
-        return wordwrap;
+    public Boolean getValue3() {
+        return value3;
     }
 
-    @DelegateToWidget
-    public void setWordwrap(boolean wordwrap) {
-        this.wordwrap = wordwrap;
+    @DelegateToWidget("setValue4")
+    public void setRenamedValue4(double renamedValue4) {
+        this.renamedValue4 = renamedValue4;
     }
 
+    public double getRenamedValue4() {
+        return renamedValue4;
+    }
 }

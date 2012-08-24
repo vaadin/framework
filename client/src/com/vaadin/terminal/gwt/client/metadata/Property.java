@@ -4,6 +4,8 @@
 
 package com.vaadin.terminal.gwt.client.metadata;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
+
 public class Property {
     private final Type bean;
     private final String name;
@@ -21,15 +23,12 @@ public class Property {
         TypeDataStore.getSetter(this).invoke(bean, value);
     }
 
-    public String getDelegateToWidgetMethod() {
+    public String getDelegateToWidgetMethodName() {
         String value = TypeDataStore.getDelegateToWidget(this);
         if (value == null) {
             return null;
-        } else if (value.isEmpty()) {
-            return "set" + Character.toUpperCase(value.charAt(0))
-                    + value.substring(1);
         } else {
-            return value;
+            return DelegateToWidget.Helper.getDelegateTarget(getName(), value);
         }
     }
 

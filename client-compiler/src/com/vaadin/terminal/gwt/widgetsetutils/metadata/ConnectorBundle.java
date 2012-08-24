@@ -61,6 +61,7 @@ public class ConnectorBundle {
     private final Set<Property> needsSetter = new HashSet<Property>();
     private final Set<Property> needsType = new HashSet<Property>();
     private final Set<Property> needsGetter = new HashSet<Property>();
+    private final Set<Property> needsDelegateToWidget = new HashSet<Property>();
 
     private ConnectorBundle(String name, ConnectorBundle previousBundle,
             Collection<TypeVisitor> visitors,
@@ -584,5 +585,24 @@ public class ConnectorBundle {
             return previousBundle != null
                     && previousBundle.hasSserializeSupport(type);
         }
+    }
+
+    public void setNeedsDelegateToWidget(Property property) {
+        if (!isNeedsDelegateToWidget(property)) {
+            needsDelegateToWidget.add(property);
+        }
+    }
+
+    private boolean isNeedsDelegateToWidget(Property property) {
+        if (needsDelegateToWidget.contains(property)) {
+            return true;
+        } else {
+            return previousBundle != null
+                    && previousBundle.isNeedsDelegateToWidget(property);
+        }
+    }
+
+    public Set<Property> getNeedsDelegateToWidget() {
+        return Collections.unmodifiableSet(needsDelegateToWidget);
     }
 }
