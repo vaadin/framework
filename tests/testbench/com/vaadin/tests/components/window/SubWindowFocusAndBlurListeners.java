@@ -11,7 +11,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
@@ -64,7 +64,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
             }
         });
 
-        Root main = getLayout().getRoot();
+        UI main = getLayout().getRoot();
 
         main.addWindow(window);
 

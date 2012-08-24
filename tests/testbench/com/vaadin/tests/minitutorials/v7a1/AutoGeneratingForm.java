@@ -20,7 +20,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -30,7 +30,7 @@ import com.vaadin.ui.Root;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class AutoGeneratingForm extends Root {
+public class AutoGeneratingForm extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

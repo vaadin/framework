@@ -46,7 +46,7 @@ import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
@@ -180,18 +180,18 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
         }
     }
 
-    public void firePortletRenderRequest(Application app, Root root,
+    public void firePortletRenderRequest(Application app, UI uI,
             RenderRequest request, RenderResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
                 l.handleRenderRequest(request, new RestrictedRenderResponse(
-                        response), root);
+                        response), uI);
             }
         }
     }
 
-    public void firePortletActionRequest(Application app, Root root,
+    public void firePortletActionRequest(Application app, UI uI,
             ActionRequest request, ActionResponse response) {
         String key = request.getParameter(ActionRequest.ACTION_NAME);
         if (eventActionDestinationMap.containsKey(key)) {
@@ -213,28 +213,28 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             Set<PortletListener> listeners = portletListeners.get(app);
             if (listeners != null) {
                 for (PortletListener l : listeners) {
-                    l.handleActionRequest(request, response, root);
+                    l.handleActionRequest(request, response, uI);
                 }
             }
         }
     }
 
-    public void firePortletEventRequest(Application app, Root root,
+    public void firePortletEventRequest(Application app, UI uI,
             EventRequest request, EventResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
-                l.handleEventRequest(request, response, root);
+                l.handleEventRequest(request, response, uI);
             }
         }
     }
 
-    public void firePortletResourceRequest(Application app, Root root,
+    public void firePortletResourceRequest(Application app, UI uI,
             ResourceRequest request, ResourceResponse response) {
         Set<PortletListener> listeners = portletListeners.get(app);
         if (listeners != null) {
             for (PortletListener l : listeners) {
-                l.handleResourceRequest(request, response, root);
+                l.handleResourceRequest(request, response, uI);
             }
         }
     }
@@ -242,16 +242,16 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
     public interface PortletListener extends Serializable {
 
         public void handleRenderRequest(RenderRequest request,
-                RenderResponse response, Root root);
+                RenderResponse response, UI uI);
 
         public void handleActionRequest(ActionRequest request,
-                ActionResponse response, Root root);
+                ActionResponse response, UI uI);
 
         public void handleEventRequest(EventRequest request,
-                EventResponse response, Root root);
+                EventResponse response, UI uI);
 
         public void handleResourceRequest(ResourceRequest request,
-                ResourceResponse response, Root root);
+                ResourceResponse response, UI uI);
     }
 
     /**
@@ -295,7 +295,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      * Event names for events sent and received by a portlet need to be declared
      * in portlet.xml .
      * 
-     * @param root
+     * @param uI
      *            a window in which a temporary action URL can be opened if
      *            necessary
      * @param name
@@ -304,7 +304,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      *            event value object that is Serializable and, if appropriate,
      *            has a valid JAXB annotation
      */
-    public void sendPortletEvent(Root root, QName name, Serializable value)
+    public void sendPortletEvent(UI uI, QName name, Serializable value)
             throws IllegalStateException {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
@@ -315,7 +315,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 eventActionDestinationMap.put(actionKey, name);
                 eventActionValueMap.put(actionKey, value);
-                root.getPage().open(new ExternalResource(actionUrl.toString()));
+                uI.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
@@ -342,7 +342,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      * Shared parameters set or read by a portlet need to be declared in
      * portlet.xml .
      * 
-     * @param root
+     * @param uI
      *            a window in which a temporary action URL can be opened if
      *            necessary
      * @param name
@@ -350,7 +350,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      * @param value
      *            parameter value
      */
-    public void setSharedRenderParameter(Root root, String name, String value)
+    public void setSharedRenderParameter(UI uI, String name, String value)
             throws IllegalStateException {
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
@@ -361,7 +361,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
             if (actionUrl != null) {
                 sharedParameterActionNameMap.put(actionKey, name);
                 sharedParameterActionValueMap.put(actionKey, value);
-                root.getPage().open(new ExternalResource(actionUrl.toString()));
+                uI.getPage().open(new ExternalResource(actionUrl.toString()));
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
@@ -381,7 +381,7 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      * 
      * Portlet modes used by a portlet need to be declared in portlet.xml .
      * 
-     * @param root
+     * @param uI
      *            a window in which the render URL can be opened if necessary
      * @param portletMode
      *            the portlet mode to switch to
@@ -389,12 +389,12 @@ public class PortletApplicationContext2 extends AbstractWebApplicationContext {
      *             if the portlet mode is not allowed for some reason
      *             (configuration, permissions etc.)
      */
-    public void setPortletMode(Root root, PortletMode portletMode)
+    public void setPortletMode(UI uI, PortletMode portletMode)
             throws IllegalStateException, PortletModeException {
         if (response instanceof MimeResponse) {
             PortletURL url = ((MimeResponse) response).createRenderURL();
             url.setPortletMode(portletMode);
-            throw new RuntimeException("Root.open has not yet been implemented");
+            throw new RuntimeException("UI.open has not yet been implemented");
             // root.open(new ExternalResource(url.toString()));
         } else if (response instanceof StateAwareResponse) {
             ((StateAwareResponse) response).setPortletMode(portletMode);

@@ -9,12 +9,12 @@ import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class LazyInitRoots extends AbstractTestApplication {
 
     @EagerInit
-    private static class EagerInitRoot extends Root {
+    private static class EagerInitRoot extends UI {
         @Override
         public void init(WrappedRequest request) {
             addComponent(getRequestInfo("EagerInitRoot", request));
@@ -22,29 +22,29 @@ public class LazyInitRoots extends AbstractTestApplication {
     }
 
     @Override
-    public Root getRoot(WrappedRequest request)
+    public UI getRoot(WrappedRequest request)
             throws RootRequiresMoreInformationException {
         if (request.getParameter("lazyCreate") != null) {
-            // Root created on second request
+            // UI created on second request
             BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null
                     || browserDetails.getUriFragment() == null) {
                 throw new RootRequiresMoreInformationException();
             } else {
-                Root root = new Root() {
+                UI uI = new UI() {
                     @Override
                     protected void init(WrappedRequest request) {
                         addComponent(getRequestInfo("LazyCreateRoot", request));
                     }
                 };
-                return root;
+                return uI;
             }
         } else if (request.getParameter("eagerInit") != null) {
-            // Root inited on first request
+            // UI inited on first request
             return new EagerInitRoot();
         } else {
             // The standard root
-            Root root = new Root() {
+            UI uI = new UI() {
                 @Override
                 protected void init(WrappedRequest request) {
                     addComponent(getRequestInfo("NormalRoot", request));
@@ -63,7 +63,7 @@ public class LazyInitRoots extends AbstractTestApplication {
                 }
             };
 
-            return root;
+            return uI;
         }
     }
 
@@ -78,7 +78,7 @@ public class LazyInitRoots extends AbstractTestApplication {
 
     @Override
     protected String getTestDescription() {
-        return "BrowserDetails should be available in Application.getRoot if RootRequiresMoreInformation has been thrown and in Root.init if the root has the @RootInitRequiresBrowserDetals annotation";
+        return "BrowserDetails should be available in Application.getRoot if RootRequiresMoreInformation has been thrown and in UI.init if the root has the @RootInitRequiresBrowserDetals annotation";
     }
 
     @Override

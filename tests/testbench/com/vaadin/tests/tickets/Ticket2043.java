@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2043 extends Application.LegacyApplication {
 

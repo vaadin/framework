@@ -21,7 +21,7 @@ import java.util.EventObject;
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Base class providing common functionality used in different bootstrap
@@ -47,7 +47,7 @@ public abstract class BootstrapResponse extends EventObject {
      *            the application for which the bootstrap page should be
      *            generated
      * @param rootId
-     *            the generated id of the Root that will be displayed on the
+     *            the generated id of the UI that will be displayed on the
      *            page
      */
     public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
@@ -93,7 +93,7 @@ public abstract class BootstrapResponse extends EventObject {
     /**
      * Gets the root id that has been generated for this response. Please note
      * that if {@link Application#isRootPreserved()} is enabled, a previously
-     * created Root with a different id might eventually end up being used.
+     * created UI with a different id might eventually end up being used.
      * 
      * @return the root id
      */
@@ -102,21 +102,21 @@ public abstract class BootstrapResponse extends EventObject {
     }
 
     /**
-     * Gets the Root for which this page is being rendered, if available. Some
-     * features of the framework will postpone the Root selection until after
+     * Gets the UI for which this page is being rendered, if available. Some
+     * features of the framework will postpone the UI selection until after
      * the bootstrap page has been rendered and required information from the
      * browser has been sent back. This method will return <code>null</code> if
-     * no Root instance is yet available.
+     * no UI instance is yet available.
      * 
      * @see Application#isRootPreserved()
      * @see Application#getRoot(WrappedRequest)
      * @see RootRequiresMoreInformationException
      * 
-     * @return The Root that will be displayed in the page being generated, or
+     * @return The UI that will be displayed in the page being generated, or
      *         <code>null</code> if all required information is not yet
      *         available.
      */
-    public Root getRoot() {
-        return Root.getCurrent();
+    public UI getRoot() {
+        return UI.getCurrent();
     }
 }

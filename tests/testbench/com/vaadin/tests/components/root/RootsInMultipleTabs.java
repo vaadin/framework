@@ -6,12 +6,12 @@ import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class RootsInMultipleTabs extends AbstractTestApplication {
     private int numberOfRootsOpened;
 
-    public static class TabRoot extends Root {
+    public static class TabRoot extends UI {
         @Override
         protected void init(WrappedRequest request) {
             RootsInMultipleTabs application = (RootsInMultipleTabs) getApplication();
@@ -25,7 +25,7 @@ public class RootsInMultipleTabs extends AbstractTestApplication {
     public RootsInMultipleTabs() {
         addRootProvider(new AbstractRootProvider() {
             @Override
-            public Class<? extends Root> getRootClass(Application application,
+            public Class<? extends UI> getRootClass(Application application,
                     WrappedRequest request)
                     throws RootRequiresMoreInformationException {
                 return TabRoot.class;
@@ -35,7 +35,7 @@ public class RootsInMultipleTabs extends AbstractTestApplication {
 
     @Override
     protected String getTestDescription() {
-        return "Opening the same application again (e.g. in a new tab) should create a new Root.";
+        return "Opening the same application again (e.g. in a new tab) should create a new UI.";
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.vaadin.Application;
 import com.vaadin.terminal.StreamVariable;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 
 public class TestStreamVariableMapping extends TestCase {
@@ -22,7 +22,7 @@ public class TestStreamVariableMapping extends TestCase {
     @Override
     protected void setUp() throws Exception {
         final Application application = new Application();
-        final Root root = new Root() {
+        final UI uI = new UI() {
             @Override
             protected void init(WrappedRequest request) {
                 // TODO Auto-generated method stub
@@ -36,8 +36,8 @@ public class TestStreamVariableMapping extends TestCase {
         };
         owner = new Upload() {
             @Override
-            public Root getRoot() {
-                return root;
+            public UI getRoot() {
+                return uI;
             }
         };
         streamVariable = EasyMock.createMock(StreamVariable.class);

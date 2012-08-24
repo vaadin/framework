@@ -10,10 +10,10 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class WidgetcontainerRoot extends Root {
+public class WidgetcontainerRoot extends UI {
     @Override
     public void init(WrappedRequest request) {
         Label label = new Label("Hello Vaadin user");

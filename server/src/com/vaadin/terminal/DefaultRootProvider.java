@@ -18,12 +18,12 @@ package com.vaadin.terminal;
 
 import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class DefaultRootProvider extends AbstractRootProvider {
 
     @Override
-    public Class<? extends Root> getRootClass(Application application,
+    public Class<? extends UI> getRootClass(Application application,
             WrappedRequest request) throws RootRequiresMoreInformationException {
         Object rootClassNameObj = application
                 .getProperty(Application.ROOT_PARAMETER);
@@ -37,8 +37,8 @@ public class DefaultRootProvider extends AbstractRootProvider {
                 classLoader = getClass().getClassLoader();
             }
             try {
-                Class<? extends Root> rootClass = Class.forName(rootClassName,
-                        true, classLoader).asSubclass(Root.class);
+                Class<? extends UI> rootClass = Class.forName(rootClassName,
+                        true, classLoader).asSubclass(UI.class);
 
                 return rootClass;
             } catch (ClassNotFoundException e) {

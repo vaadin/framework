@@ -8,7 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2432 extends Application.LegacyApplication {
 

@@ -36,7 +36,7 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
@@ -110,15 +110,15 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         // Creates a new application instance
         try {
             final Class<?> classToRun = getClassToRun();
-            if (Root.class.isAssignableFrom(classToRun)) {
+            if (UI.class.isAssignableFrom(classToRun)) {
                 Application application = new Application();
                 application.addRootProvider(new AbstractRootProvider() {
 
                     @Override
-                    public Class<? extends Root> getRootClass(
+                    public Class<? extends UI> getRootClass(
                             Application application, WrappedRequest request)
                             throws RootRequiresMoreInformationException {
-                        return (Class<? extends Root>) classToRun;
+                        return (Class<? extends UI>) classToRun;
                     }
                 });
                 return application;
@@ -126,7 +126,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                 return (Application) classToRun.newInstance();
             } else {
                 throw new ServletException(classToRun.getCanonicalName()
-                        + " is neither an Application nor a Root");
+                        + " is neither an Application nor a UI");
             }
         } catch (final IllegalAccessException e) {
             throw new ServletException(e);
@@ -215,13 +215,13 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
     protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {
         Class<?> classToRun = getClassToRun();
-        if (Root.class.isAssignableFrom(classToRun)) {
+        if (UI.class.isAssignableFrom(classToRun)) {
             return Application.class;
         } else if (Application.class.isAssignableFrom(classToRun)) {
             return classToRun.asSubclass(Application.class);
         } else {
             throw new ClassCastException(classToRun.getCanonicalName()
-                    + " is not an Application nor a Root");
+                    + " is not an Application nor a UI");
         }
     }
 

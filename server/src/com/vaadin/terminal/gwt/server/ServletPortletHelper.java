@@ -6,7 +6,7 @@ import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /*
   * Copyright 2011 Vaadin Ltd.
@@ -76,9 +76,9 @@ class ServletPortletHelper implements Serializable {
         // Check that the root layout class can be found
         try {
             Class<?> rootClass = classLoader.loadClass(className);
-            if (!Root.class.isAssignableFrom(rootClass)) {
+            if (!UI.class.isAssignableFrom(rootClass)) {
                 throw new ApplicationClassException(className
-                        + " does not implement Root");
+                        + " does not implement UI");
             }
             // Try finding a default constructor, else throw exception
             rootClass.getConstructor();

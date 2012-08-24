@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2095 extends Application.LegacyApplication {
 

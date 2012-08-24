@@ -24,7 +24,7 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.Tree;
@@ -45,7 +45,7 @@ public class DDTest2 extends TestBase {
 
     @Override
     protected void setup() {
-        Root w = getLayout().getRoot();
+        UI w = getLayout().getRoot();
         /* darn reindeer has no icons */
 
         /* Make all trees (their nodes actually) draggable */

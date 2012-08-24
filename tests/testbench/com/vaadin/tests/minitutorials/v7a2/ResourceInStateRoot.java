@@ -19,7 +19,7 @@ package com.vaadin.tests.minitutorials.v7a2;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -30,7 +30,7 @@ import com.vaadin.ui.Root;
  * @since 7.0.0
  */
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class ResourceInStateRoot extends Root {
+public class ResourceInStateRoot extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

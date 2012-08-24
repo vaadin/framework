@@ -47,7 +47,7 @@ import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.RequestHandler;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public abstract class BootstrapHandler implements RequestHandler {
 
@@ -82,14 +82,14 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRootId();
         }
 
-        public Root getRoot() {
+        public UI getRoot() {
             return bootstrapResponse.getRoot();
         }
 
         public String getWidgetsetName() {
             if (widgetsetName == null) {
-                Root root = getRoot();
-                if (root != null) {
+                UI uI = getRoot();
+                if (uI != null) {
                     widgetsetName = getWidgetsetForRoot(this);
                 }
             }
@@ -98,8 +98,8 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         public String getThemeName() {
             if (themeName == null) {
-                Root root = getRoot();
-                if (root != null) {
+                UI uI = getRoot();
+                if (uI != null) {
                     themeName = findAndEscapeThemeName(this);
                 }
             }
@@ -127,13 +127,13 @@ public abstract class BootstrapHandler implements RequestHandler {
         // TODO Should all urls be handled here?
         Integer rootId = null;
         try {
-            Root root = application.getRootForRequest(request);
-            if (root == null) {
-                writeError(response, new Throwable("No Root found"));
+            UI uI = application.getRootForRequest(request);
+            if (uI == null) {
+                writeError(response, new Throwable("No UI found"));
                 return true;
             }
 
-            rootId = Integer.valueOf(root.getRootId());
+            rootId = Integer.valueOf(uI.getRootId());
         } catch (RootRequiresMoreInformationException e) {
             // Just keep going without rootId
         }
@@ -246,8 +246,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        Root root = context.getRoot();
-        String title = ((root == null || root.getCaption() == null) ? "" : root
+        UI uI = context.getRoot();
+        String title = ((uI == null || uI.getCaption() == null) ? "" : uI
                 .getCaption());
         head.appendElement("title").appendText(title);
 
@@ -294,10 +294,10 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected abstract String getApplicationId(BootstrapContext context);
 
     public String getWidgetsetForRoot(BootstrapContext context) {
-        Root root = context.getRoot();
+        UI uI = context.getRoot();
         WrappedRequest request = context.getRequest();
 
-        String widgetset = root.getApplication().getWidgetsetForRoot(root);
+        String widgetset = uI.getApplication().getWidgetsetForRoot(uI);
         if (widgetset == null) {
             widgetset = request.getDeploymentConfiguration()
                     .getConfiguredWidgetset(request);
@@ -568,7 +568,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * 
      * @param request
      *            the originating request
-     * @param root
+     * @param uI
      *            the root for which the UIDL should be generated
      * @return a string with the initial UIDL message
      * @throws PaintException
@@ -576,7 +576,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @throws JSONException
      *             if an exception occurs while formatting the output
      */
-    protected abstract String getInitialUIDL(WrappedRequest request, Root root)
+    protected abstract String getInitialUIDL(WrappedRequest request, UI uI)
             throws PaintException, JSONException;
 
 }

@@ -30,7 +30,7 @@ import com.vaadin.Application;
 import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
 import com.vaadin.terminal.gwt.server.WebBrowser;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * A generic request to the server, wrapping a more specific request type, e.g.
@@ -221,7 +221,7 @@ public interface WrappedRequest extends Serializable {
      * This information is only guaranteed to be available in some special
      * cases, for instance when {@link Application#getRoot} is called again
      * after throwing {@link RootRequiresMoreInformationException} or in
-     * {@link Root#init(WrappedRequest)} for a Root class not annotated with
+     * {@link UI#init(WrappedRequest)} for a UI class not annotated with
      * {@link EagerInit}
      * 
      * @return the browser details, or <code>null</code> if details are not

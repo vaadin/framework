@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.TextField;
 
 /**
@@ -28,7 +28,7 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class CreatingPreserveState extends Root {
+public class CreatingPreserveState extends UI {
     private static int windowCounter = 0;
 
     @Override

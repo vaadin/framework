@@ -6,7 +6,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Validator;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2107 extends Application.LegacyApplication {

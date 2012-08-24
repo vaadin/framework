@@ -58,9 +58,9 @@ import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
 import com.vaadin.terminal.gwt.client.ui.layout.MayScrollChildren;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
-@Connect(value = Root.class, loadStyle = LoadStyle.EAGER)
+@Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class RootConnector extends AbstractComponentContainerConnector
         implements Paintable, MayScrollChildren {
 
@@ -359,7 +359,7 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     /**
-     * Checks if the given sub window is a child of this Root Connector
+     * Checks if the given sub window is a child of this UI Connector
      * 
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children

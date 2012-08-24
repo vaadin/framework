@@ -22,7 +22,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -32,7 +32,7 @@ import com.vaadin.ui.Root;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class FindCurrentRootAndApplication extends Root {
+public class FindCurrentRootAndApplication extends UI {
 
     @Override
     protected void init(WrappedRequest request) {
@@ -50,8 +50,8 @@ public class FindCurrentRootAndApplication extends Root {
         helloButton.addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Notification.show("This Root is "
-                        + Root.getCurrent().getClass().getSimpleName());
+                Notification.show("This UI is "
+                        + UI.getCurrent().getClass().getSimpleName());
             }
         });
 

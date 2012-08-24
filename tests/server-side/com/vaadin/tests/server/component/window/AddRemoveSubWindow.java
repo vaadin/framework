@@ -7,8 +7,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class AddRemoveSubWindow {
@@ -27,7 +27,7 @@ public class AddRemoveSubWindow {
         TestApp app = new TestApp();
         app.init();
         Window subWindow = new Window("Sub window");
-        Root mainWindow = app.getMainWindow();
+        UI mainWindow = app.getMainWindow();
 
         mainWindow.addWindow(subWindow);
         // Added to main window so the parent of the sub window should be the
@@ -61,7 +61,7 @@ public class AddRemoveSubWindow {
         TestApp app = new TestApp();
         app.init();
         Window subWindow = new Window("Sub window");
-        Root mainWindow = app.getMainWindow();
+        UI mainWindow = app.getMainWindow();
         mainWindow.addWindow(subWindow);
 
         // Added to main window so the parent of the sub window should be the

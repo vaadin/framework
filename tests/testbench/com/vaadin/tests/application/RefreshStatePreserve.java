@@ -6,16 +6,16 @@ import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class RefreshStatePreserve extends AbstractTestApplication {
-    public static class RefreshStateRoot extends Root {
+    public static class RefreshStateRoot extends UI {
         @Override
         public void init(WrappedRequest request) {
             getContent().addComponent(
                     new Label("window.name: "
                             + request.getBrowserDetails().getWindowName()));
-            getContent().addComponent(new Label("Root id: " + getRootId()));
+            getContent().addComponent(new Label("UI id: " + getRootId()));
         }
     }
 
@@ -25,7 +25,7 @@ public class RefreshStatePreserve extends AbstractTestApplication {
         setRootPreserved(true);
         addRootProvider(new AbstractRootProvider() {
             @Override
-            public Class<? extends Root> getRootClass(Application application,
+            public Class<? extends UI> getRootClass(Application application,
                     WrappedRequest request)
                     throws RootRequiresMoreInformationException {
                 return RefreshStateRoot.class;

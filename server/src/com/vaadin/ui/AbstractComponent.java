@@ -561,7 +561,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public Root getRoot() {
+    public UI getRoot() {
         // Just make method from implemented Component interface public
         return super.getRoot();
     }
@@ -588,9 +588,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void detach() {
         super.detach();
         if (actionManager != null) {
-            // Remove any existing viewer. Root cast is just to make the
+            // Remove any existing viewer. UI cast is just to make the
             // compiler happy
-            actionManager.setViewer((Root) null);
+            actionManager.setViewer((UI) null);
         }
     }
 

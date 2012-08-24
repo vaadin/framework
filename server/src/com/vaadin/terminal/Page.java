@@ -33,19 +33,19 @@ import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class Page implements Serializable {
 
     /**
      * Listener that gets notified when the size of the browser window
-     * containing the root has changed.
+     * containing the uI has changed.
      * 
-     * @see Root#addListener(BrowserWindowResizeListener)
+     * @see UI#addListener(BrowserWindowResizeListener)
      */
     public interface BrowserWindowResizeListener extends Serializable {
         /**
-         * Invoked when the browser window containing a Root has been resized.
+         * Invoked when the browser window containing a UI has been resized.
          * 
          * @param event
          *            a browser window resize event
@@ -54,7 +54,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * Event that is fired when a browser window containing a root is resized.
+     * Event that is fired when a browser window containing a uI is resized.
      */
     public class BrowserWindowResizeEvent extends EventObject {
 
@@ -65,7 +65,7 @@ public class Page implements Serializable {
          * Creates a new event
          * 
          * @param source
-         *            the root for which the browser window has been resized
+         *            the uI for which the browser window has been resized
          * @param width
          *            the new width of the browser window
          * @param height
@@ -254,9 +254,9 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the root in which the fragment has changed.
+         * Gets the uI in which the fragment has changed.
          * 
-         * @return the root in which the fragment has changed
+         * @return the uI in which the fragment has changed
          */
         public Page getPage() {
             return (Page) getSource();
@@ -279,15 +279,15 @@ public class Page implements Serializable {
      */
     private String fragment;
 
-    private final Root root;
+    private final UI uI;
 
     private int browserWindowWidth = -1;
     private int browserWindowHeight = -1;
 
     private JavaScript javaScript;
 
-    public Page(Root root) {
-        this.root = root;
+    public Page(UI uI) {
+        this.uI = uI;
     }
 
     private void addListener(Class<?> eventType, Object target, Method method) {
@@ -332,7 +332,7 @@ public class Page implements Serializable {
             if (fireEvents) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
-            root.markAsDirty();
+            uI.markAsDirty();
         }
     }
 
@@ -374,7 +374,7 @@ public class Page implements Serializable {
     }
 
     public WebBrowser getWebBrowser() {
-        return ((WebApplicationContext) root.getApplication().getContext())
+        return ((WebApplicationContext) uI.getApplication().getContext())
                 .getBrowser();
     }
 
@@ -399,8 +399,8 @@ public class Page implements Serializable {
     }
 
     /**
-     * Adds a new {@link BrowserWindowResizeListener} to this root. The listener
-     * will be notified whenever the browser window within which this root
+     * Adds a new {@link BrowserWindowResizeListener} to this uI. The listener
+     * will be notified whenever the browser window within which this uI
      * resides is resized.
      * 
      * @param resizeListener
@@ -415,7 +415,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * Removes a {@link BrowserWindowResizeListener} from this root. The
+     * Removes a {@link BrowserWindowResizeListener} from this uI. The
      * listener will no longer be notified when the browser window is resized.
      * 
      * @param resizeListener
@@ -427,7 +427,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * Gets the last known height of the browser window in which this root
+     * Gets the last known height of the browser window in which this uI
      * resides.
      * 
      * @return the browser window height in pixels
@@ -437,7 +437,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * Gets the last known width of the browser window in which this root
+     * Gets the last known width of the browser window in which this uI
      * resides.
      * 
      * @return the browser window width in pixels
@@ -450,7 +450,7 @@ public class Page implements Serializable {
         if (javaScript == null) {
             // Create and attach on first use
             javaScript = new JavaScript();
-            javaScript.extend(root);
+            javaScript.extend(uI);
         }
 
         return javaScript;
@@ -515,15 +515,15 @@ public class Page implements Serializable {
     }
 
     /**
-     * Opens the given resource in this root. The contents of this Root is
+     * Opens the given resource in this uI. The contents of this UI is
      * replaced by the {@code Resource}.
      * 
      * @param resource
-     *            the resource to show in this root
+     *            the resource to show in this uI
      */
     public void open(Resource resource) {
         openList.add(new OpenResource(resource, null, -1, -1, BORDER_DEFAULT));
-        root.markAsDirty();
+        uI.markAsDirty();
     }
 
     /**
@@ -566,7 +566,7 @@ public class Page implements Serializable {
     public void open(Resource resource, String windowName) {
         openList.add(new OpenResource(resource, windowName, -1, -1,
                 BORDER_DEFAULT));
-        root.markAsDirty();
+        uI.markAsDirty();
     }
 
     /**
@@ -589,7 +589,7 @@ public class Page implements Serializable {
             int height, BorderStyle border) {
         openList.add(new OpenResource(resource, windowName, width, height,
                 border));
-        root.markAsDirty();
+        uI.markAsDirty();
     }
 
     /**
@@ -603,7 +603,7 @@ public class Page implements Serializable {
             notifications = new LinkedList<Notification>();
         }
         notifications.add(notification);
-        root.markAsDirty();
+        uI.markAsDirty();
     }
 
     /**
@@ -622,17 +622,17 @@ public class Page implements Serializable {
     }
 
     /**
-     * Gets the Page to which the current root belongs. This is automatically
+     * Gets the Page to which the current uI belongs. This is automatically
      * defined when processing requests to the server. In other cases, (e.g.
-     * from background threads), the current root is not automatically defined.
+     * from background threads), the current uI is not automatically defined.
      * 
-     * @see Root#getCurrent()
+     * @see UI#getCurrent()
      * 
      * @return the current page instance if available, otherwise
      *         <code>null</code>
      */
     public static Page getCurrent() {
-        Root currentRoot = Root.getCurrent();
+        UI currentRoot = UI.getCurrent();
         if (currentRoot == null) {
             return null;
         }
@@ -647,7 +647,7 @@ public class Page implements Serializable {
      *            the new page title to set
      */
     public void setTitle(String title) {
-        root.getRpcProxy(PageClientRpc.class).setTitle(title);
+        uI.getRpcProxy(PageClientRpc.class).setTitle(title);
     }
 
 }

@@ -6,7 +6,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * @author Risto Yrjänä / Vaadin Ltd.

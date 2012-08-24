@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;

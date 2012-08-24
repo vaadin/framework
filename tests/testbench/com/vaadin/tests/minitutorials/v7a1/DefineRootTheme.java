@@ -19,7 +19,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.annotations.Theme;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since 7.0.0
  */
 @Theme("hello-theme")
-public class DefineRootTheme extends Root {
+public class DefineRootTheme extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

@@ -76,7 +76,7 @@ import com.vaadin.ui.Window.CloseListener;
  * </p>
  * <p>
  * If a {@link EagerInit} annotation is present on a class extending
- * <code>Root</code>, the framework will use a faster initialization method
+ * <code>UI</code>, the framework will use a faster initialization method
  * which will not ensure that {@link BrowserDetails} are present in the
  * {@link WrappedRequest} passed to the init method.
  * </p>
@@ -86,7 +86,7 @@ import com.vaadin.ui.Window.CloseListener;
  * 
  * @since 7.0
  */
-public abstract class Root extends AbstractComponentContainer implements
+public abstract class UI extends AbstractComponentContainer implements
         Action.Container, Action.Notifier, Vaadin6Component {
 
     /**
@@ -96,7 +96,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     @Deprecated
     @EagerInit
-    public static class LegacyWindow extends Root {
+    public static class LegacyWindow extends UI {
         private String name;
 
         /**
@@ -210,7 +210,7 @@ public abstract class Root extends AbstractComponentContainer implements
         }
 
         /**
-         * Opens the given resource in this root. The contents of this Root is
+         * Opens the given resource in this root. The contents of this UI is
          * replaced by the {@code Resource}.
          * 
          * @param resource
@@ -422,7 +422,7 @@ public abstract class Root extends AbstractComponentContainer implements
     /**
      * Thread local for keeping track of the current root.
      */
-    private static final ThreadLocal<Root> currentRoot = new ThreadLocal<Root>();
+    private static final ThreadLocal<UI> currentRoot = new ThreadLocal<UI>();
 
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
@@ -432,7 +432,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private RootServerRpc rpc = new RootServerRpc() {
         @Override
         public void click(MouseEventDetails mouseDetails) {
-            fireEvent(new ClickEvent(Root.this, mouseDetails));
+            fireEvent(new ClickEvent(UI.this, mouseDetails));
         }
 
         @Override
@@ -447,7 +447,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * Creates a new empty root without a caption. This root will have a
      * {@link VerticalLayout} with margins enabled as its content.
      */
-    public Root() {
+    public UI() {
         this((ComponentContainer) null);
     }
 
@@ -459,7 +459,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see #setContent(ComponentContainer)
      */
-    public Root(ComponentContainer content) {
+    public UI(ComponentContainer content) {
         registerRpc(rpc);
         setSizeFull();
         setContent(content);
@@ -475,7 +475,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @see #setCaption(String)
      */
-    public Root(String caption) {
+    public UI(String caption) {
         this((ComponentContainer) null);
         setCaption(caption);
     }
@@ -492,7 +492,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see #setContent(ComponentContainer)
      * @see #setCaption(String)
      */
-    public Root(String caption, ComponentContainer content) {
+    public UI(String caption, ComponentContainer content) {
         this(content);
         setCaption(caption);
     }
@@ -517,7 +517,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * @see com.vaadin.ui.AbstractComponent#getRoot()
      */
     @Override
-    public Root getRoot() {
+    public UI getRoot() {
         return this;
     }
 
@@ -668,7 +668,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public void setRootId(int rootId) {
         if (this.rootId != -1) {
-            throw new IllegalStateException("Root id has already been defined");
+            throw new IllegalStateException("UI id has already been defined");
         }
         this.rootId = rootId;
     }
@@ -845,7 +845,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * 
      * @return a component container to use as content
      * 
-     * @see #Root(ComponentContainer)
+     * @see #UI(ComponentContainer)
      * @see #createDefaultLayout()
      */
     public void setContent(ComponentContainer content) {
@@ -920,7 +920,7 @@ public abstract class Root extends AbstractComponentContainer implements
      * {@link BrowserDetails} will be available in the request. If the browser
      * details are not required, loading the application in the browser can take
      * some shortcuts giving a faster initial rendering. This can be indicated
-     * by adding the {@link EagerInit} annotation to the Root class.
+     * by adding the {@link EagerInit} annotation to the UI class.
      * </p>
      * 
      * @param request
@@ -938,14 +938,14 @@ public abstract class Root extends AbstractComponentContainer implements
      * background threads.
      * </p>
      * 
-     * @param root
+     * @param uI
      *            the root to register as the current root
      * 
      * @see #getCurrent()
      * @see ThreadLocal
      */
-    public static void setCurrent(Root root) {
-        currentRoot.set(root);
+    public static void setCurrent(UI uI) {
+        currentRoot.set(uI);
     }
 
     /**
@@ -956,9 +956,9 @@ public abstract class Root extends AbstractComponentContainer implements
      * @return the current root instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(Root)
+     * @see #setCurrent(UI)
      */
-    public static Root getCurrent() {
+    public static UI getCurrent() {
         return currentRoot.get();
     }
 
@@ -1027,9 +1027,9 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Add a click listener to the Root. The listener is called whenever the
-     * user clicks inside the Root. Also when the click targets a component
-     * inside the Root, provided the targeted component does not prevent the
+     * Add a click listener to the UI. The listener is called whenever the
+     * user clicks inside the UI. Also when the click targets a component
+     * inside the UI, provided the targeted component does not prevent the
      * click event from propagating.
      * 
      * Use {@link #removeListener(ClickListener)} to remove the listener.
@@ -1043,7 +1043,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Remove a click listener from the Root. The listener should earlier have
+     * Remove a click listener from the UI. The listener should earlier have
      * been added using {@link #addListener(ClickListener)}.
      * 
      * @param listener
@@ -1056,7 +1056,7 @@ public abstract class Root extends AbstractComponentContainer implements
 
     @Override
     public boolean isConnectorEnabled() {
-        // TODO How can a Root be invisible? What does it mean?
+        // TODO How can a UI be invisible? What does it mean?
         return isVisible() && isEnabled();
     }
 
@@ -1069,7 +1069,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     /**
-     * Setting the caption of a Root is not supported. To set the title of the
+     * Setting the caption of a UI is not supported. To set the title of the
      * HTML page, use Page.setTitle
      * 
      * @deprecated as of 7.0.0, use {@link Page#setTitle(String)}
@@ -1078,7 +1078,7 @@ public abstract class Root extends AbstractComponentContainer implements
     @Deprecated
     public void setCaption(String caption) {
         throw new IllegalStateException(
-                "You can not set the title of a Root. To set the title of the HTML page, use Page.setTitle");
+                "You can not set the title of a UI. To set the title of the HTML page, use Page.setTitle");
     }
 
     /**

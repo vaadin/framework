@@ -29,7 +29,7 @@ public class BootstrapModifyRoot extends AbstractTestRoot {
 
     @Override
     protected String getTestDescription() {
-        return "There should be two additional divs in the HTML of the bootstrap page for this Root";
+        return "There should be two additional divs in the HTML of the bootstrap page for this UI";
     }
 
     @Override

@@ -17,7 +17,7 @@ public class TestRootTheme extends AbstractTestRoot {
 
     @Override
     public String getTestDescription() {
-        return "Root with @RootTheme(\"tests-tickets\")";
+        return "UI with @RootTheme(\"tests-tickets\")";
     }
 
     @Override

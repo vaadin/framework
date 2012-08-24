@@ -284,7 +284,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Gets the root if of this application instance. The root id should be
      * included in every request originating from this instance in order to
-     * associate it with the right Root instance on the server.
+     * associate it with the right UI instance on the server.
      * 
      * @return the root id
      */

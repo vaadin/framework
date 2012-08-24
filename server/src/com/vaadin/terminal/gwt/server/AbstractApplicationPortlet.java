@@ -62,7 +62,7 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
@@ -488,17 +488,17 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 /* Notify listeners */
 
                 // Finds the window within the application
-                Root root = null;
+                UI uI = null;
                 synchronized (application) {
                     if (application.isRunning()) {
                         switch (requestType) {
                         case RENDER:
                         case ACTION:
                             // Both action requests and render requests are ok
-                            // without a Root as they render the initial HTML
+                            // without a UI as they render the initial HTML
                             // and then do a second request
                             try {
-                                root = application
+                                uI = application
                                         .getRootForRequest(wrappedRequest);
                             } catch (RootRequiresMoreInformationException e) {
                                 // Ignore problem and continue without root
@@ -516,7 +516,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             // root = application.getRoot();
                             break;
                         default:
-                            root = application
+                            uI = application
                                     .getRootForRequest(wrappedRequest);
                         }
                         // if window not found, not a problem - use null
@@ -527,25 +527,25 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 // starts?
                 if (request instanceof RenderRequest) {
                     applicationContext.firePortletRenderRequest(application,
-                            root, (RenderRequest) request,
+                            uI, (RenderRequest) request,
                             (RenderResponse) response);
                 } else if (request instanceof ActionRequest) {
                     applicationContext.firePortletActionRequest(application,
-                            root, (ActionRequest) request,
+                            uI, (ActionRequest) request,
                             (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
                     applicationContext.firePortletEventRequest(application,
-                            root, (EventRequest) request,
+                            uI, (EventRequest) request,
                             (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
                     applicationContext.firePortletResourceRequest(application,
-                            root, (ResourceRequest) request,
+                            uI, (ResourceRequest) request,
                             (ResourceResponse) response);
                 }
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    // Root is resolved in handleFileUpload by
+                    // UI is resolved in handleFileUpload by
                     // PortletCommunicationManager
                     applicationManager.handleFileUpload(application,
                             wrappedRequest, wrappedResponse);
@@ -557,7 +557,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests
                     applicationManager.handleUidlRequest(wrappedRequest,
-                            wrappedResponse, portletWrapper, root);
+                            wrappedResponse, portletWrapper, uI);
                     return;
                 } else {
                     /*
@@ -599,7 +599,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
-                        Root.setCurrent(null);
+                        UI.setCurrent(null);
                         Application.setCurrent(null);
 
                         PortletSession session = request

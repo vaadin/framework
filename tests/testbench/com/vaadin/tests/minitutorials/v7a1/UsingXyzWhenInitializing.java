@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -28,7 +28,7 @@ import com.vaadin.ui.Root;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class UsingXyzWhenInitializing extends Root {
+public class UsingXyzWhenInitializing extends UI {
 
     @Override
     protected void init(WrappedRequest request) {

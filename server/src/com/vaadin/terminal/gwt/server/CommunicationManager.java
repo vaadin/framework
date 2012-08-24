@@ -25,7 +25,7 @@ import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Application manager processes changes and paints for single application
@@ -111,17 +111,17 @@ public class CommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getInitialUIDL(WrappedRequest request, Root root)
+            protected String getInitialUIDL(WrappedRequest request, UI uI)
                     throws PaintException, JSONException {
-                return CommunicationManager.this.getInitialUIDL(request, root);
+                return CommunicationManager.this.getInitialUIDL(request, uI);
             }
         };
     }
 
     @Override
-    protected InputStream getThemeResourceAsStream(Root root, String themeName,
+    protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
-        WebApplicationContext context = (WebApplicationContext) root
+        WebApplicationContext context = (WebApplicationContext) uI
                 .getApplication().getContext();
         ServletContext servletContext = context.getHttpSession()
                 .getServletContext();

@@ -25,7 +25,7 @@ import com.vaadin.terminal.gwt.server.BootstrapPageResponse;
 import com.vaadin.terminal.gwt.server.BootstrapResponse;
 import com.vaadin.terminal.gwt.server.AddonContextEvent;
 import com.vaadin.terminal.gwt.server.AddonContextListener;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class TestAddonContextListener implements AddonContextListener {
     @Override
@@ -42,9 +42,9 @@ public class TestAddonContextListener implements AddonContextListener {
             }
 
             private boolean shouldModify(BootstrapResponse response) {
-                Root root = response.getRoot();
-                boolean shouldModify = root != null
-                        && root.getClass() == BootstrapModifyRoot.class;
+                UI uI = response.getRoot();
+                boolean shouldModify = uI != null
+                        && uI.getClass() == BootstrapModifyRoot.class;
                 return shouldModify;
             }
 

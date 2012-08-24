@@ -8,10 +8,10 @@ import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public abstract class AbstractTestRoot extends Root {
+public abstract class AbstractTestRoot extends UI {
 
     @Override
     public void init(WrappedRequest request) {

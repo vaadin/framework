@@ -17,13 +17,13 @@
 package com.vaadin.terminal;
 
 import com.vaadin.Application;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public abstract class AbstractRootProvider implements RootProvider {
 
     @Override
-    public Root instantiateRoot(Application application,
-            Class<? extends Root> type, WrappedRequest request) {
+    public UI instantiateRoot(Application application,
+            Class<? extends UI> type, WrappedRequest request) {
         try {
             return type.newInstance();
         } catch (InstantiationException e) {

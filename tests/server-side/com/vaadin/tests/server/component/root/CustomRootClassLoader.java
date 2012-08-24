@@ -14,14 +14,14 @@ import com.vaadin.RootRequiresMoreInformationException;
 import com.vaadin.terminal.DefaultRootProvider;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class CustomRootClassLoader extends TestCase {
 
     /**
      * Stub root
      */
-    public static class MyRoot extends Root {
+    public static class MyRoot extends UI {
         @Override
         protected void init(WrappedRequest request) {
             // Nothing to see here
@@ -45,7 +45,7 @@ public class CustomRootClassLoader extends TestCase {
     }
 
     /**
-     * Tests that a Root class can be loaded even if no classloader has been
+     * Tests that a UI class can be loaded even if no classloader has been
      * provided.
      * 
      * @throws Exception
@@ -56,8 +56,8 @@ public class CustomRootClassLoader extends TestCase {
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
-        Root root = application.getRootForRequest(createRequestMock(null));
-        assertTrue(root instanceof MyRoot);
+        UI uI = application.getRootForRequest(createRequestMock(null));
+        assertTrue(uI instanceof MyRoot);
     }
 
     private static DeploymentConfiguration createConfigurationMock() {
@@ -89,7 +89,7 @@ public class CustomRootClassLoader extends TestCase {
 
     /**
      * Tests that the ClassLoader passed in the ApplicationStartEvent is used to
-     * load Root classes.
+     * load UI classes.
      * 
      * @throws Exception
      *             if thrown
@@ -101,9 +101,9 @@ public class CustomRootClassLoader extends TestCase {
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
-        Root root = application
+        UI uI = application
                 .getRootForRequest(createRequestMock(loggingClassLoader));
-        assertTrue(root instanceof MyRoot);
+        assertTrue(uI instanceof MyRoot);
         assertEquals(1, loggingClassLoader.requestedClasses.size());
         assertEquals(MyRoot.class.getName(),
                 loggingClassLoader.requestedClasses.get(0));
@@ -126,7 +126,7 @@ public class CustomRootClassLoader extends TestCase {
             }
 
             @Override
-            public Root getRootForRequest(WrappedRequest request)
+            public UI getRootForRequest(WrappedRequest request)
                     throws RootRequiresMoreInformationException {
                 // Always create a new root for testing (can't directly use
                 // getRoot as it's protected)

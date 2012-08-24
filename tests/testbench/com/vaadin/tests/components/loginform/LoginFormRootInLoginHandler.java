@@ -5,7 +5,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class LoginFormRootInLoginHandler extends TestBase {
 
@@ -16,14 +16,14 @@ public class LoginFormRootInLoginHandler extends TestBase {
 
             @Override
             public void onLogin(LoginEvent event) {
-                Root r1 = Root.getCurrent();
+                UI r1 = UI.getCurrent();
                 if (r1 != null) {
-                    addComponent(new Label("Root.getCurrent().data: "
+                    addComponent(new Label("UI.getCurrent().data: "
                             + r1.getData()));
                 } else {
-                    addComponent(new Label("Root.getCurrent() is null"));
+                    addComponent(new Label("UI.getCurrent() is null"));
                 }
-                Root r2 = ((LoginForm) event.getSource()).getRoot();
+                UI r2 = ((LoginForm) event.getSource()).getRoot();
                 if (r2 != null) {
                     addComponent(new Label("event.getSource().data: "
                             + r2.getData()));

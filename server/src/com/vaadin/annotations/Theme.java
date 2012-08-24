@@ -21,10 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
- * Defines a specific theme for a {@link Root}.
+ * Defines a specific theme for a {@link UI}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

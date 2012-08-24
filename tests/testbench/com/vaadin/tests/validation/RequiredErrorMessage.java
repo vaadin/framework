@@ -2,7 +2,7 @@ package com.vaadin.tests.validation;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Form;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 

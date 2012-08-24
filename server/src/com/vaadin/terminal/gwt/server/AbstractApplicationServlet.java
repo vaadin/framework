@@ -56,7 +56,7 @@ import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Abstract implementation of the ApplicationServlet which handles all
@@ -314,18 +314,18 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
-                // Root is resolved in communication manager
+                // UI is resolved in communication manager
                 applicationManager.handleFileUpload(application, request,
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                Root root = application.getRootForRequest(request);
-                if (root == null) {
+                UI uI = application.getRootForRequest(request);
+                if (uI == null) {
                     throw new ServletException(ERROR_NO_ROOT_FOUND);
                 }
                 // Handles AJAX UIDL requests
                 applicationManager.handleUidlRequest(request, response,
-                        servletWrapper, root);
+                        servletWrapper, uI);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
                 // Browser details - not related to a specific root
@@ -369,7 +369,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                                 .onRequestEnd(request, response);
                     }
                 } finally {
-                    Root.setCurrent(null);
+                    UI.setCurrent(null);
                     Application.setCurrent(null);
 
                     HttpSession session = request.getSession(false);

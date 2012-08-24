@@ -208,7 +208,7 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
-        // Assuming Root data is eagerly loaded
+        // Assuming UI data is eagerly loaded
         ConnectorBundleLoader.get().loadBundle(
                 ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
         rootConnector = GWT.create(RootConnector.class);

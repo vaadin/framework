@@ -24,7 +24,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
@@ -107,7 +107,7 @@ public class VaadinClasses {
         classes.remove(DragAndDropWrapper.class);
         classes.remove(CustomComponent.class);
         classes.remove(LoginForm.class);
-        classes.remove(Root.class);
+        classes.remove(UI.class);
 
         return classes;
     }

@@ -19,9 +19,9 @@ package com.vaadin.tests.minitutorials.v7a3;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
-public class AnalyticsRoot extends Root {
+public class AnalyticsRoot extends UI {
 
     @Override
     protected void init(WrappedRequest request) {
