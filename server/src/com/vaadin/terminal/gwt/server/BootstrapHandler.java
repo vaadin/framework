@@ -37,7 +37,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
@@ -134,7 +134,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             }
 
             rootId = Integer.valueOf(uI.getRootId());
-        } catch (RootRequiresMoreInformationException e) {
+        } catch (UIRequiresMoreInformationException e) {
             // Just keep going without rootId
         }
 

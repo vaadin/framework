@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.root;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
@@ -27,7 +27,7 @@ public class RootsInMultipleTabs extends AbstractTestApplication {
             @Override
             public Class<? extends UI> getRootClass(Application application,
                     WrappedRequest request)
-                    throws RootRequiresMoreInformationException {
+                    throws UIRequiresMoreInformationException {
                 return TabRoot.class;
             }
         });

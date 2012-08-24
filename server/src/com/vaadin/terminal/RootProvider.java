@@ -17,12 +17,12 @@
 package com.vaadin.terminal;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
 public interface RootProvider {
     public Class<? extends UI> getRootClass(Application application,
-            WrappedRequest request) throws RootRequiresMoreInformationException;
+            WrappedRequest request) throws UIRequiresMoreInformationException;
 
     public UI instantiateRoot(Application application,
             Class<? extends UI> type, WrappedRequest request);

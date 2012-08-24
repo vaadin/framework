@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
@@ -117,7 +117,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
                     @Override
                     public Class<? extends UI> getRootClass(
                             Application application, WrappedRequest request)
-                            throws RootRequiresMoreInformationException {
+                            throws UIRequiresMoreInformationException {
                         return (Class<? extends UI>) classToRun;
                     }
                 });

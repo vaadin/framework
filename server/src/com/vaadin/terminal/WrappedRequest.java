@@ -27,7 +27,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.UI;
@@ -220,7 +220,7 @@ public interface WrappedRequest extends Serializable {
      * 
      * This information is only guaranteed to be available in some special
      * cases, for instance when {@link Application#getRoot} is called again
-     * after throwing {@link RootRequiresMoreInformationException} or in
+     * after throwing {@link UIRequiresMoreInformationException} or in
      * {@link UI#init(WrappedRequest)} for a UI class not annotated with
      * {@link EagerInit}
      * 

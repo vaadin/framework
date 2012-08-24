@@ -36,8 +36,8 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.root.RootConstants;
-import com.vaadin.shared.ui.root.RootServerRpc;
-import com.vaadin.shared.ui.root.RootState;
+import com.vaadin.shared.ui.root.UIServerRpc;
+import com.vaadin.shared.ui.root.UIState;
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
 import com.vaadin.terminal.Page.BrowserWindowResizeListener;
@@ -429,7 +429,7 @@ public abstract class UI extends AbstractComponentContainer implements
 
     private Page page = new Page(this);
 
-    private RootServerRpc rpc = new RootServerRpc() {
+    private UIServerRpc rpc = new UIServerRpc() {
         @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(UI.this, mouseDetails));
@@ -498,15 +498,15 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     @Override
-    protected RootState getState() {
-        return (RootState) super.getState();
+    protected UIState getState() {
+        return (UIState) super.getState();
     }
 
     @Override
-    public Class<? extends RootState> getStateType() {
+    public Class<? extends UIState> getStateType() {
         // This is a workaround for a problem with creating the correct state
         // object during build
-        return RootState.class;
+        return UIState.class;
     }
 
     /**

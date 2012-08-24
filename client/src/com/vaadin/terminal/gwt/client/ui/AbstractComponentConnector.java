@@ -40,8 +40,8 @@ import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.metadata.NoDataException;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.datefield.PopupDateFieldConnector;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
@@ -151,7 +151,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             ServerConnector parent = getParent();
             if (parent instanceof ComponentContainerConnector) {
                 ((ComponentContainerConnector) parent).updateCaption(this);
-            } else if (parent == null && !(this instanceof RootConnector)) {
+            } else if (parent == null && !(this instanceof UIConnector)) {
                 VConsole.error("Parent of connector "
                         + Util.getConnectorString(this)
                         + " is null. This is typically an indication of a broken component hierarchy");
@@ -181,7 +181,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 ServerConnector parent = getParent();
                 if (parent instanceof ComponentContainerConnector) {
                     ((ComponentContainerConnector) parent).updateCaption(this);
-                } else if (parent == null && !(this instanceof RootConnector)) {
+                } else if (parent == null && !(this instanceof UIConnector)) {
                     VConsole.error("Parent of connector "
                             + Util.getConnectorString(this)
                             + " is null. This is typically an indication of a broken component hierarchy");

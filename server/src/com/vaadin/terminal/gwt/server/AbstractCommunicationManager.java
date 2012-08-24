@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
@@ -2457,7 +2457,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // NOTE GateIn requires the buffers to be flushed to work
             outWriter.flush();
             out.flush();
-        } catch (RootRequiresMoreInformationException e) {
+        } catch (UIRequiresMoreInformationException e) {
             // Requiring more information at this point is not allowed
             // TODO handle in a better way
             throw new RuntimeException(e);

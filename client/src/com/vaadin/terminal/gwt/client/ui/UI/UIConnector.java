@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.client.ui.root;
+package com.vaadin.terminal.gwt.client.ui.UI;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,8 +38,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.root.PageClientRpc;
 import com.vaadin.shared.ui.root.RootConstants;
-import com.vaadin.shared.ui.root.RootServerRpc;
-import com.vaadin.shared.ui.root.RootState;
+import com.vaadin.shared.ui.root.UIServerRpc;
+import com.vaadin.shared.ui.root.UIState;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -61,10 +61,10 @@ import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 import com.vaadin.ui.UI;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
-public class RootConnector extends AbstractComponentContainerConnector
+public class UIConnector extends AbstractComponentContainerConnector
         implements Paintable, MayScrollChildren {
 
-    private RootServerRpc rpc = RpcProxy.create(RootServerRpc.class, this);
+    private UIServerRpc rpc = RpcProxy.create(UIServerRpc.class, this);
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -151,14 +151,14 @@ public class RootConnector extends AbstractComponentContainerConnector
                 Scheduler.get().scheduleDeferred(new Command() {
                     @Override
                     public void execute() {
-                        VRoot.goTo(url);
+                        VUI.goTo(url);
                     }
                 });
             } else if ("_self".equals(target)) {
                 // This window is closing (for sure). Only other opens are
                 // relevant in this change. See #3558, #2144
                 isClosed = true;
-                VRoot.goTo(url);
+                VUI.goTo(url);
             } else {
                 String options;
                 if (open.hasAttribute("border")) {
@@ -333,8 +333,8 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public VRoot getWidget() {
-        return (VRoot) super.getWidget();
+    public VUI getWidget() {
+        return (VUI) super.getWidget();
     }
 
     protected ComponentConnector getContent() {
@@ -388,8 +388,8 @@ public class RootConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public RootState getState() {
-        return (RootState) super.getState();
+    public UIState getState() {
+        return (UIState) super.getState();
     }
 
     @Override

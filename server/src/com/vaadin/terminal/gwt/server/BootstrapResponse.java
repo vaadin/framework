@@ -19,7 +19,7 @@ package com.vaadin.terminal.gwt.server;
 import java.util.EventObject;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.UI;
 
@@ -110,7 +110,7 @@ public abstract class BootstrapResponse extends EventObject {
      * 
      * @see Application#isRootPreserved()
      * @see Application#getRoot(WrappedRequest)
-     * @see RootRequiresMoreInformationException
+     * @see UIRequiresMoreInformationException
      * 
      * @return The UI that will be displayed in the page being generated, or
      *         <code>null</code> if all required information is not yet

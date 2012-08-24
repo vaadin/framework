@@ -15,12 +15,18 @@
  */
 package com.vaadin.shared.ui.root;
 
-import com.vaadin.shared.annotations.Delayed;
-import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.shared.ui.ClickRpc;
+import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.Connector;
 
-public interface RootServerRpc extends ClickRpc, ServerRpc {
-    @Delayed(lastonly = true)
-    public void resize(int viewWidth, int viewHeight, int windowWidth,
-            int windowHeight);
+public class UIState extends ComponentState {
+    private Connector content;
+
+    public Connector getContent() {
+        return content;
+    }
+
+    public void setContent(Connector content) {
+        this.content = content;
+    }
+
 }

@@ -10,7 +10,7 @@ import org.easymock.EasyMock;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.DefaultRootProvider;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
@@ -127,7 +127,7 @@ public class CustomRootClassLoader extends TestCase {
 
             @Override
             public UI getRootForRequest(WrappedRequest request)
-                    throws RootRequiresMoreInformationException {
+                    throws UIRequiresMoreInformationException {
                 // Always create a new root for testing (can't directly use
                 // getRoot as it's protected)
                 return getRoot(request);

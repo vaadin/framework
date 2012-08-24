@@ -74,10 +74,10 @@ import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
@@ -156,7 +156,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final RootConnector rootConnector;
+    private final UIConnector uIConnector;
 
     protected boolean applicationRunning = false;
 
@@ -211,7 +211,7 @@ public class ApplicationConnection {
         // Assuming UI data is eagerly loaded
         ConnectorBundleLoader.get().loadBundle(
                 ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
-        rootConnector = GWT.create(RootConnector.class);
+        uIConnector = GWT.create(UIConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
@@ -243,7 +243,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        rootConnector.init(cnf.getRootPanelId(), this);
+        uIConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
     }
 
@@ -909,7 +909,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(rootConnector.getWidget().getElement(), loadElement);
+            DOM.appendChild(uIConnector.getWidget().getElement(), loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -1093,7 +1093,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        rootConnector.getWidget().clear();
+                        uIConnector.getWidget().clear();
                         getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1361,17 +1361,17 @@ public class ApplicationConnection {
                         if (!c.getParent().getChildren().contains(c)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
-                    } else if ((c instanceof RootConnector && c == getRootConnector())) {
-                        // RootConnector for this connection, leave as-is
+                    } else if ((c instanceof UIConnector && c == getRootConnector())) {
+                        // UIConnector for this connection, leave as-is
                     } else if (c instanceof WindowConnector
                             && getRootConnector().hasSubWindow(
                                     (WindowConnector) c)) {
-                        // Sub window attached to this RootConnector, leave
+                        // Sub window attached to this UIConnector, leave
                         // as-is
                     } else {
                         // The connector has been detached from the
                         // hierarchy, unregister it and any possible
-                        // children. The RootConnector should never be
+                        // children. The UIConnector should never be
                         // unregistered even though it has no parent.
                         connectorMap.unregisterConnector(c);
                         unregistered++;
@@ -1406,17 +1406,17 @@ public class ApplicationConnection {
                                 .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
-                        if (connectorClass != RootConnector.class) {
+                        if (connectorClass != UIConnector.class) {
                             // create, initialize and register the paintable
                             getConnector(connectorId, connectorType);
                         } else {
-                            // First RootConnector update. Before this the
-                            // RootConnector has been created but not
+                            // First UIConnector update. Before this the
+                            // UIConnector has been created but not
                             // initialized as the connector id has not been
                             // known
                             connectorMap.registerConnector(connectorId,
-                                    rootConnector);
-                            rootConnector.doInit(connectorId,
+                                    uIConnector);
+                            uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
                         }
                     } catch (final Throwable e) {
@@ -2477,8 +2477,8 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public RootConnector getRootConnector() {
-        return rootConnector;
+    public UIConnector getRootConnector() {
+        return uIConnector;
     }
 
     /**

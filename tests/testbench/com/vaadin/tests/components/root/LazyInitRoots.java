@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.root;
 
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
@@ -23,13 +23,13 @@ public class LazyInitRoots extends AbstractTestApplication {
 
     @Override
     public UI getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+            throws UIRequiresMoreInformationException {
         if (request.getParameter("lazyCreate") != null) {
             // UI created on second request
             BrowserDetails browserDetails = request.getBrowserDetails();
             if (browserDetails == null
                     || browserDetails.getUriFragment() == null) {
-                throw new RootRequiresMoreInformationException();
+                throw new UIRequiresMoreInformationException();
             } else {
                 UI uI = new UI() {
                     @Override

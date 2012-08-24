@@ -1845,7 +1845,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * <p>
      * If {@link BrowserDetails} are required to create a UI, the
-     * implementation can throw a {@link RootRequiresMoreInformationException}
+     * implementation can throw a {@link UIRequiresMoreInformationException}
      * exception. In this case, the framework will instruct the browser to send
      * the additional details, whereupon this method is invoked again with the
      * browser details present in the wrapped request. Throwing the exception if
@@ -1864,19 +1864,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param request
      *            the wrapped request for which a root is needed
      * @return a root instance to use for the request
-     * @throws RootRequiresMoreInformationException
+     * @throws UIRequiresMoreInformationException
      *             may be thrown by an implementation to indicate that
      *             {@link BrowserDetails} are required to create a root
      * 
      * @see #getRootClassName(WrappedRequest)
      * @see UI
-     * @see RootRequiresMoreInformationException
+     * @see UIRequiresMoreInformationException
      * @see WrappedRequest#getBrowserDetails()
      * 
      * @since 7.0
      */
     protected UI getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+            throws UIRequiresMoreInformationException {
 
         // Iterate in reverse order - test check newest provider first
         for (int i = rootProviders.size() - 1; i >= 0; i--) {
@@ -2151,7 +2151,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Finds the {@link UI} to which a particular request belongs. If the
      * request originates from an existing UI, that root is returned. In other
      * cases, the method attempts to create and initialize a new root and might
-     * throw a {@link RootRequiresMoreInformationException} if all required
+     * throw a {@link UIRequiresMoreInformationException} if all required
      * information is not available.
      * <p>
      * Please note that this method can also return a newly created
@@ -2164,17 +2164,17 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param request
      *            the request for which a root is desired
      * @return a root belonging to the request
-     * @throws RootRequiresMoreInformationException
+     * @throws UIRequiresMoreInformationException
      *             if no existing root could be found and creating a new root
      *             requires additional information from the browser
      * 
      * @see #getRoot(WrappedRequest)
-     * @see RootRequiresMoreInformationException
+     * @see UIRequiresMoreInformationException
      * 
      * @since 7.0
      */
     public UI getRootForRequest(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+            throws UIRequiresMoreInformationException {
         UI uI = UI.getCurrent();
         if (uI != null) {
             return uI;
@@ -2194,7 +2194,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
                     Integer retainedRootId;
                     if (!hasBrowserDetails) {
-                        throw new RootRequiresMoreInformationException();
+                        throw new UIRequiresMoreInformationException();
                     } else {
                         String windowName = browserDetails.getWindowName();
                         retainedRootId = retainOnRefreshRoots.get(windowName);

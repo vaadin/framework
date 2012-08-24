@@ -17,14 +17,14 @@
 package com.vaadin.terminal;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
 public class DefaultRootProvider extends AbstractRootProvider {
 
     @Override
     public Class<? extends UI> getRootClass(Application application,
-            WrappedRequest request) throws RootRequiresMoreInformationException {
+            WrappedRequest request) throws UIRequiresMoreInformationException {
         Object rootClassNameObj = application
                 .getProperty(Application.ROOT_PARAMETER);
 

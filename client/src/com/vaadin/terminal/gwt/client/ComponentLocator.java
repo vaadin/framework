@@ -28,9 +28,9 @@ import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.gwt.client.ui.SubPartAware;
+import com.vaadin.terminal.gwt.client.ui.UI.VUI;
 import com.vaadin.terminal.gwt.client.ui.gridlayout.VGridLayout;
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.VMeasuringOrderedLayout;
-import com.vaadin.terminal.gwt.client.ui.root.VRoot;
 import com.vaadin.terminal.gwt.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.terminal.gwt.client.ui.window.VWindow;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
@@ -385,7 +385,7 @@ public class ComponentLocator {
             return null;
         }
 
-        if (w instanceof VRoot) {
+        if (w instanceof VUI) {
             return "";
         } else if (w instanceof VWindow) {
             Connector windowConnector = ConnectorMap.get(client)

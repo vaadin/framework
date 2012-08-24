@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.client.ui.root;
+package com.vaadin.terminal.gwt.client.ui.UI;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ import com.vaadin.terminal.gwt.client.ui.textfield.VTextField;
 /**
  *
  */
-public class VRoot extends SimplePanel implements ResizeHandler,
+public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
         HasResizeHandlers {
 
@@ -146,7 +146,7 @@ public class VRoot extends SimplePanel implements ResizeHandler,
 
             });
 
-    public VRoot() {
+    public VUI() {
         super();
         setStyleName(CLASSNAME);
 
