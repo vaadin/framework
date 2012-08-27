@@ -5297,14 +5297,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 if (dragmode == DRAGMODE_MULTIROW && isMultiSelectModeAny()
                         && rowKeyIsSelected(rowKey)) {
 
-                    // Create a drag image of ALL rows (ie6,7 has a different
-                    // DOM structure)
-                    if(BrowserInfo.get().isIE6() || BrowserInfo.get().isIE7()){
-                        ev.createDragImage(scrollBody.getElement(), true);
-                    } else {
-                        ev.createDragImage(
-                                (Element) scrollBody.tBodyElement.cast(), true);
-                    }
+                    // Create a drag image of ALL rows
+                    ev.createDragImage(
+                            (Element) scrollBody.tBodyElement.cast(), true);
 
                     // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
@@ -5314,18 +5309,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         VScrollTableRow next = (VScrollTableRow) iterator
                                 .next();
 
-                        Element child;
-                        if(BrowserInfo.get().isIE6() || BrowserInfo.get().isIE7()){
-                            child = (Element) dragImage.getChild(1)
-                                    .getChild(0)
-                                    .getChild(i++);
-                        } else {
-                            child = (Element) dragImage.getChild(i++);
-                        }
+                        Element child = (Element) dragImage.getChild(i++);
 
                         if (!rowKeyIsSelected(next.rowKey)) {
-                            child.getStyle().setVisibility(
-                                    Visibility.HIDDEN);
+                            child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }
                 } else {
