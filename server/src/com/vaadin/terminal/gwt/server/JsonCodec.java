@@ -595,8 +595,9 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    public static Object encode(Object value, Object diffState, Type valueType,
-            ConnectorTracker connectorTracker) throws JSONException {
+    public static EncodeResult encode(Object value, Object diffState,
+            Type valueType, ConnectorTracker connectorTracker)
+            throws JSONException {
 
         if (valueType == null) {
             throw new IllegalArgumentException("type must be defined");
@@ -617,37 +618,37 @@ public class JsonCodec implements Serializable {
             for (int i = 0; i < array.length; ++i) {
                 jsonArray.put(array[i]);
             }
-            return jsonArray;
+            return new EncodeResult(jsonArray);
         } else if (value instanceof String) {
-            return value;
+            return new EncodeResult(value);
         } else if (value instanceof Boolean) {
-            return value;
+            return new EncodeResult(value);
         } else if (value instanceof Number) {
-            return value;
+            return new EncodeResult(value);
         } else if (value instanceof Character) {
             // Character is not a Number
-            return value;
+            return new EncodeResult(value);
         } else if (value instanceof Collection) {
             Collection<?> collection = (Collection<?>) value;
             JSONArray jsonArray = encodeCollection(valueType, collection,
                     connectorTracker);
-            return jsonArray;
+            return new EncodeResult(jsonArray);
         } else if (valueType instanceof Class<?>
                 && ((Class<?>) valueType).isArray()) {
             JSONArray jsonArray = encodeArrayContents(
                     ((Class<?>) valueType).getComponentType(), value,
                     connectorTracker);
-            return jsonArray;
+            return new EncodeResult(jsonArray);
         } else if (valueType instanceof GenericArrayType) {
             Type componentType = ((GenericArrayType) valueType)
                     .getGenericComponentType();
             JSONArray jsonArray = encodeArrayContents(componentType, value,
                     connectorTracker);
-            return jsonArray;
+            return new EncodeResult(jsonArray);
         } else if (value instanceof Map) {
             Object jsonMap = encodeMap(valueType, (Map<?, ?>) value,
                     connectorTracker);
-            return jsonMap;
+            return new EncodeResult(jsonMap);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             if (value instanceof Component
@@ -655,11 +656,11 @@ public class JsonCodec implements Serializable {
                             .isVisible((Component) value))) {
                 return encodeNull();
             }
-            return connector.getConnectorId();
+            return new EncodeResult(connector.getConnectorId());
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, connectorTracker);
         } else if (value instanceof JSONArray || value instanceof JSONObject) {
-            return value;
+            return new EncodeResult(value);
         } else {
             // Any object that we do not know how to encode we encode by looping
             // through fields
@@ -667,8 +668,8 @@ public class JsonCodec implements Serializable {
         }
     }
 
-    private static Object encodeNull() {
-        return JSONObject.NULL;
+    private static EncodeResult encodeNull() {
+        return new EncodeResult(JSONObject.NULL);
     }
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
@@ -681,9 +682,11 @@ public class JsonCodec implements Serializable {
         return properties;
     }
 
-    private static Object encodeObject(Object value, JSONObject diffState,
-            ConnectorTracker connectorTracker) throws JSONException {
-        JSONObject jsonMap = new JSONObject();
+    private static EncodeResult encodeObject(Object value,
+            JSONObject referenceValue, ConnectorTracker connectorTracker)
+            throws JSONException {
+        JSONObject encoded = new JSONObject();
+        JSONObject diff = new JSONObject();
 
         try {
             for (BeanProperty property : getProperties(value.getClass())) {
@@ -692,49 +695,39 @@ public class JsonCodec implements Serializable {
                 // not support generics
                 Type fieldType = property.getType();
                 Object fieldValue = property.getValue(value);
-                boolean equals = false;
-                Object diffStateValue = null;
-                if (diffState != null && diffState.has(fieldName)) {
-                    diffStateValue = diffState.get(fieldName);
-                    Object referenceFieldValue = decodeInternalOrCustomType(
-                            fieldType, diffStateValue, connectorTracker);
-                    if (JSONObject.NULL.equals(diffStateValue)) {
-                        diffStateValue = null;
-                    }
-                    equals = equals(fieldValue, referenceFieldValue);
-                }
-                if (!equals) {
-                    if (jsonMap.has(fieldName)) {
-                        throw new RuntimeException(
-                                "Can't encode "
-                                        + value.getClass().getName()
-                                        + " as it has multiple fields with the name "
-                                        + fieldName.toLowerCase()
-                                        + ". This can happen if only casing distinguishes one property name from another.");
-                    }
-                    jsonMap.put(
-                            fieldName,
-                            encode(fieldValue, diffStateValue, fieldType,
-                                    connectorTracker));
-                    if (diffState != null) {
-                        diffState.put(
-                                fieldName,
-                                encode(fieldValue, null, fieldType,
-                                        connectorTracker));
-                    }
 
-                    // } else {
-                    // System.out.println("Skipping field " + fieldName
-                    // + " of type " + fieldType.getName()
-                    // + " for object " + value.getClass().getName()
-                    // + " as " + fieldValue + "==" + referenceFieldValue);
+                if (encoded.has(fieldName)) {
+                    throw new RuntimeException(
+                            "Can't encode "
+                                    + value.getClass().getName()
+                                    + " as it has multiple fields with the name "
+                                    + fieldName.toLowerCase()
+                                    + ". This can happen if only casing distinguishes one property name from another.");
+                }
+
+                Object fieldReference;
+                if (referenceValue != null) {
+                    fieldReference = referenceValue.get(fieldName);
+                    if (JSONObject.NULL.equals(fieldReference)) {
+                        fieldReference = null;
+                    }
+                } else {
+                    fieldReference = null;
+                }
+
+                EncodeResult encodeResult = encode(fieldValue, fieldReference,
+                        fieldType, connectorTracker);
+                encoded.put(fieldName, encodeResult.getEncodedValue());
+
+                if (!jsonEquals(encodeResult.getEncodedValue(), fieldReference)) {
+                    diff.put(fieldName, encodeResult.getDiffOrValue());
                 }
             }
         } catch (Exception e) {
             // TODO: Should exceptions be handled in a different way?
             throw new JSONException(e);
         }
-        return jsonMap;
+        return new EncodeResult(encoded, diff);
     }
 
     /**
@@ -744,21 +737,19 @@ public class JsonCodec implements Serializable {
      * @param referenceValue
      * @return
      */
-    private static boolean equals(Object fieldValue, Object referenceValue) {
-        if (fieldValue == null) {
-            return referenceValue == null;
-        }
-
-        if (fieldValue.equals(referenceValue)) {
+    private static boolean jsonEquals(Object fieldValue, Object referenceValue) {
+        if (fieldValue == referenceValue) {
             return true;
+        } else if (fieldValue == null || referenceValue == null) {
+            return false;
+        } else {
+            return fieldValue.toString().equals(referenceValue.toString());
         }
-
-        return false;
     }
 
-    private static String encodeEnum(Enum<?> e,
+    private static EncodeResult encodeEnum(Enum<?> e,
             ConnectorTracker connectorTracker) throws JSONException {
-        return e.name();
+        return new EncodeResult(e.name());
     }
 
     private static JSONArray encodeArrayContents(Type componentType,
@@ -766,8 +757,9 @@ public class JsonCodec implements Serializable {
             throws JSONException {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < Array.getLength(array); i++) {
-            jsonArray.put(encode(Array.get(array, i), null, componentType,
-                    connectorTracker));
+            EncodeResult encodeResult = encode(Array.get(array, i), null,
+                    componentType, connectorTracker);
+            jsonArray.put(encodeResult.getEncodedValue());
         }
         return jsonArray;
     }
@@ -788,7 +780,9 @@ public class JsonCodec implements Serializable {
             Type childType = ((ParameterizedType) targetType)
                     .getActualTypeArguments()[typeIndex];
             // Encode using the given type
-            return encode(o, null, childType, connectorTracker);
+            EncodeResult encodeResult = encode(o, null, childType,
+                    connectorTracker);
+            return encodeResult.getEncodedValue();
         } else {
             throw new JSONException("Collection is missing generics");
         }
@@ -827,13 +821,13 @@ public class JsonCodec implements Serializable {
         JSONArray values = new JSONArray();
 
         for (Entry<?, ?> entry : map.entrySet()) {
-            Object encodedKey = encode(entry.getKey(), null, keyType,
+            EncodeResult encodedKey = encode(entry.getKey(), null, keyType,
                     connectorTracker);
-            Object encodedValue = encode(entry.getValue(), null, valueType,
-                    connectorTracker);
+            EncodeResult encodedValue = encode(entry.getValue(), null,
+                    valueType, connectorTracker);
 
-            keys.put(encodedKey);
-            values.put(encodedValue);
+            keys.put(encodedKey.getEncodedValue());
+            values.put(encodedValue.getEncodedValue());
         }
 
         return new JSONArray(Arrays.asList(keys, values));
@@ -845,9 +839,9 @@ public class JsonCodec implements Serializable {
 
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector key = (Connector) entry.getKey();
-            Object encodedValue = encode(entry.getValue(), null, valueType,
-                    connectorTracker);
-            jsonMap.put(key.getConnectorId(), encodedValue);
+            EncodeResult encodedValue = encode(entry.getValue(), null,
+                    valueType, connectorTracker);
+            jsonMap.put(key.getConnectorId(), encodedValue.getEncodedValue());
         }
 
         return jsonMap;
@@ -859,9 +853,9 @@ public class JsonCodec implements Serializable {
 
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = (String) entry.getKey();
-            Object encodedValue = encode(entry.getValue(), null, valueType,
-                    connectorTracker);
-            jsonMap.put(key, encodedValue);
+            EncodeResult encodedValue = encode(entry.getValue(), null,
+                    valueType, connectorTracker);
+            jsonMap.put(key, encodedValue.getEncodedValue());
         }
 
         return jsonMap;

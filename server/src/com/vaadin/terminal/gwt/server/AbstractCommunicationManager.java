@@ -986,9 +986,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // + parameterType.getName());
                     // }
                     // }
-                    paramJson.put(JsonCodec.encode(
+                    EncodeResult encodeResult = JsonCodec.encode(
                             invocation.getParameters()[i], referenceParameter,
-                            parameterType, ui.getConnectorTracker()));
+                            parameterType, ui.getConnectorTracker());
+                    paramJson.put(encodeResult.getEncodedValue());
                 }
                 invocationJson.put(paramJson);
                 rpcCalls.put(invocationJson);
@@ -1252,30 +1253,31 @@ public abstract class AbstractCommunicationManager implements Serializable {
         ConnectorTracker connectorTracker = uI.getConnectorTracker();
         Class<? extends SharedState> stateType = connector.getStateType();
         Object diffState = connectorTracker.getDiffState(connector);
-        if (diffState == null) {
+        boolean supportsDiffState = !JavaScriptConnectorState.class
+                .isAssignableFrom(stateType);
+        if (diffState == null && supportsDiffState) {
             // Use an empty state object as reference for full
             // repaints
 
-            boolean supportsDiffState = !JavaScriptConnectorState.class
-                    .isAssignableFrom(stateType);
-            if (supportsDiffState) {
-                diffState = new JSONObject();
-                try {
-                    SharedState referenceState = stateType.newInstance();
-                    diffState = JsonCodec.encode(referenceState, null,
-                            stateType, uI.getConnectorTracker());
-                } catch (Exception e) {
-                    getLogger().log(
-                            Level.WARNING,
-                            "Error creating reference object for state of type "
-                                    + stateType.getName());
-                }
-                connectorTracker.setDiffState(connector, diffState);
+            try {
+                SharedState referenceState = stateType.newInstance();
+                EncodeResult encodeResult = JsonCodec.encode(referenceState,
+                        null, stateType, uI.getConnectorTracker());
+                diffState = encodeResult.getEncodedValue();
+            } catch (Exception e) {
+                getLogger().log(
+                        Level.WARNING,
+                        "Error creating reference object for state of type "
+                                + stateType.getName());
             }
         }
-        JSONObject stateJson = (JSONObject) JsonCodec.encode(state, diffState,
+        EncodeResult encodeResult = JsonCodec.encode(state, diffState,
                 stateType, uI.getConnectorTracker());
-        return stateJson;
+        if (supportsDiffState) {
+            connectorTracker.setDiffState(connector,
+                    encodeResult.getEncodedValue());
+        }
+        return (JSONObject) encodeResult.getDiff();
     }
 
     /**
