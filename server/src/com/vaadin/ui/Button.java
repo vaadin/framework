@@ -472,6 +472,10 @@ public class Button extends AbstractComponent implements
      * Determines if a button is automatically disabled when clicked. If this is
      * set to true the button will be automatically disabled when clicked,
      * typically to prevent (accidental) extra clicks on a button.
+     * <p>
+     * Note that this is only used when the click comes from the user, not when
+     * calling {@link #click()}.
+     * </p>
      * 
      * @param disableOnClick
      *            true to disable button when it is clicked, false otherwise
