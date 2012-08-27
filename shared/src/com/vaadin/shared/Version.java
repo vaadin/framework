@@ -47,10 +47,10 @@ public class Version implements Serializable {
 
     /* Initialize version numbers from string replaced by build-script. */
     static {
-        if ("7.0.0.dev-20120816-12".equals("@" + "VERSION" + "@")) {
+        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
             VERSION = "9.9.9.INTERNAL-DEBUG-BUILD";
         } else {
-            VERSION = "7.0.0.dev-20120816-12";
+            VERSION = "@VERSION@";
         }
         final String[] digits = VERSION.split("\\.", 4);
         VERSION_MAJOR = Integer.parseInt(digits[0]);
