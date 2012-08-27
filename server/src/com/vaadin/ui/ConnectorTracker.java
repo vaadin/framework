@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.terminal.AbstractClientConnector;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -69,8 +70,8 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Creates a new ConnectorTracker for the given uI. A tracker is always
-     * attached to a uI and the uI cannot be changed during the lifetime of
-     * a {@link ConnectorTracker}.
+     * attached to a uI and the uI cannot be changed during the lifetime of a
+     * {@link ConnectorTracker}.
      * 
      * @param uI
      *            The uI to attach to. Cannot be null.
@@ -226,6 +227,14 @@ public class ConnectorTracker implements Serializable {
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();
+            } else if (!AbstractCommunicationManager.isVisible(connector)
+                    && !uninitializedConnectors.contains(connector)) {
+                uninitializedConnectors.add(connector);
+                diffStates.remove(connector);
+                getLogger().fine(
+                        "cleanConnectorMap removed state for "
+                                + getConnectorAndParentInfo(connector)
+                                + " as it is not visible");
             }
         }
 
@@ -236,8 +245,8 @@ public class ConnectorTracker implements Serializable {
      * 
      * @param connector
      *            The connector to lookup
-     * @return The uI the connector is attached to or null if it is not
-     *         attached to any uI.
+     * @return The uI the connector is attached to or null if it is not attached
+     *         to any uI.
      */
     private UI getUIForConnector(ClientConnector connector) {
         if (connector == null) {

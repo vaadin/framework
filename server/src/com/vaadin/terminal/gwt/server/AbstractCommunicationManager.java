@@ -1415,7 +1415,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return <code>true</code> if the connector is visible to the client,
      *         <code>false</code> otherwise
      */
-    static boolean isVisible(ClientConnector connector) {
+    public static boolean isVisible(ClientConnector connector) {
         if (connector instanceof Component) {
             return isVisible((Component) connector);
         } else {
