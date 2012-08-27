@@ -114,7 +114,7 @@ public class EditableTableLeak extends TestBase {
         addComponent(new Button("Show size of the table", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                table.requestRepaintAll();
+                table.markAsDirtyRecursive();
                 updateSize();
             }
 

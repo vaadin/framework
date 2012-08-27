@@ -5,10 +5,10 @@ import java.util.Locale;
 
 import com.vaadin.data.util.converter.StringToNumberConverter;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
 
-public class FormatTableValue extends AbstractTestRoot {
+public class FormatTableValue extends AbstractTestUI {
 
     private static final String PERCENT_PROPERTY = "percent";
     private static final String CURRENCY_PROPERTY = "currency";

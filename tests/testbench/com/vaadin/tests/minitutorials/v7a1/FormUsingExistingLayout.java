@@ -4,12 +4,12 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.PropertyId;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-public class FormUsingExistingLayout extends AbstractTestRoot {
+public class FormUsingExistingLayout extends AbstractTestUI {
 
     public static class Notice {
         String firstName;

@@ -58,6 +58,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
@@ -65,16 +66,19 @@ import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
-import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.communication.Type;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
+import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Property;
+import com.vaadin.terminal.gwt.client.metadata.Type;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
@@ -104,8 +108,6 @@ public class ApplicationConnection {
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
-
-    private static SerializerMap serializerMap;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -155,7 +157,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final RootConnector rootConnector;
+    private final UIConnector uIConnector;
 
     protected boolean applicationRunning = false;
 
@@ -207,11 +209,13 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
-        rootConnector = GWT.create(RootConnector.class);
+        // Assuming UI data is eagerly loaded
+        ConnectorBundleLoader.get().loadBundle(
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
+        uIConnector = GWT.create(UIConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
-        serializerMap = GWT.create(SerializerMap.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -240,7 +244,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        rootConnector.init(cnf.getRootPanelId(), this);
+        uIConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
 
         scheduleHeartbeat();
@@ -398,32 +402,6 @@ public class ApplicationConnection {
     }-*/;
 
     /**
-     * Get the active Console for writing debug messages. May return an actual
-     * logging console, or the NullConsole if debugging is not turned on.
-     * 
-     * @deprecated Developers should use {@link VConsole} since 6.4.5
-     * 
-     * @return the active Console
-     */
-    @Deprecated
-    public static Console getConsole() {
-        return VConsole.getImplementation();
-    }
-
-    /**
-     * Checks if client side is in debug mode. Practically this is invoked by
-     * adding ?debug parameter to URI.
-     * 
-     * @deprecated use ApplicationConfiguration isDebugMode instead.
-     * 
-     * @return true if client side is currently been debugged
-     */
-    @Deprecated
-    public static boolean isDebugMode() {
-        return ApplicationConfiguration.isDebugMode();
-    }
-
-    /**
      * Gets the application base URI. Using this other than as the download
      * action URI can cause problems in Portlet 2.0 deployments.
      * 
@@ -520,8 +498,8 @@ public class ApplicationConnection {
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
         }
-        uri = addGetParameters(uri, ApplicationConstants.ROOT_ID_PARAMETER
-                + "=" + configuration.getRootId());
+        uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
+                + configuration.getUIId());
 
         doUidlRequest(uri, payload, forceSync);
 
@@ -934,7 +912,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(rootConnector.getWidget().getElement(), loadElement);
+            DOM.appendChild(uIConnector.getWidget().getElement(), loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -1118,7 +1096,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        rootConnector.getWidget().clear();
+                        uIConnector.getWidget().clear();
                         getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1175,6 +1153,8 @@ public class ApplicationConnection {
                 updateDuration.logDuration(
                         " * Hierarchy state change event processing completed",
                         10);
+
+                delegateToWidget(pendingStateChangeEvents);
 
                 // Fire state change events.
                 sendStateChangeEvents(pendingStateChangeEvents);
@@ -1292,6 +1272,62 @@ public class ApplicationConnection {
 
             }
 
+            private void delegateToWidget(
+                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                VConsole.log(" * Running @DelegateToWidget");
+
+                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                    ServerConnector connector = sce.getConnector();
+                    if (connector instanceof ComponentConnector) {
+                        ComponentConnector component = (ComponentConnector) connector;
+                        Type type = TypeData.getType(component.getClass());
+
+                        Type stateType;
+                        try {
+                            stateType = type.getMethod("getState")
+                                    .getReturnType();
+                        } catch (NoDataException e) {
+                            throw new RuntimeException(
+                                    "Can not find the state type for "
+                                            + type.getSignature(), e);
+                        }
+
+                        Set<String> changedProperties = sce
+                                .getChangedProperties();
+                        for (String propertyName : changedProperties) {
+                            Property property = stateType
+                                    .getProperty(propertyName);
+                            String method = property
+                                    .getDelegateToWidgetMethodName();
+                            if (method != null) {
+                                doDelegateToWidget(component, property, method);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            private void doDelegateToWidget(ComponentConnector component,
+                    Property property, String methodName) {
+                Type type = TypeData.getType(component.getClass());
+                try {
+                    Type widgetType = type.getMethod("getWidget")
+                            .getReturnType();
+                    Widget widget = component.getWidget();
+
+                    Object propertyValue = property.getValue(component
+                            .getState());
+
+                    widgetType.getMethod(methodName).invoke(widget,
+                            propertyValue);
+                } catch (NoDataException e) {
+                    throw new RuntimeException(
+                            "Missing data needed to invoke @DelegateToWidget for "
+                                    + Util.getSimpleName(component), e);
+                }
+            }
+
             /**
              * Sends the state change events created while updating the state
              * information.
@@ -1328,17 +1364,17 @@ public class ApplicationConnection {
                         if (!c.getParent().getChildren().contains(c)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
-                    } else if ((c instanceof RootConnector && c == getRootConnector())) {
-                        // RootConnector for this connection, leave as-is
+                    } else if ((c instanceof UIConnector && c == getRootConnector())) {
+                        // UIConnector for this connection, leave as-is
                     } else if (c instanceof WindowConnector
                             && getRootConnector().hasSubWindow(
                                     (WindowConnector) c)) {
-                        // Sub window attached to this RootConnector, leave
+                        // Sub window attached to this UIConnector, leave
                         // as-is
                     } else {
                         // The connector has been detached from the
                         // hierarchy, unregister it and any possible
-                        // children. The RootConnector should never be
+                        // children. The UIConnector should never be
                         // unregistered even though it has no parent.
                         connectorMap.unregisterConnector(c);
                         unregistered++;
@@ -1373,17 +1409,17 @@ public class ApplicationConnection {
                                 .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
-                        if (connectorClass != RootConnector.class) {
+                        if (connectorClass != UIConnector.class) {
                             // create, initialize and register the paintable
                             getConnector(connectorId, connectorType);
                         } else {
-                            // First RootConnector update. Before this the
-                            // RootConnector has been created but not
+                            // First UIConnector update. Before this the
+                            // UIConnector has been created but not
                             // initialized as the connector id has not been
                             // known
                             connectorMap.registerConnector(connectorId,
-                                    rootConnector);
-                            rootConnector.doInit(connectorId,
+                                    uIConnector);
+                            uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
                         }
                     } catch (final Throwable e) {
@@ -2444,8 +2480,8 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public RootConnector getRootConnector() {
-        return rootConnector;
+    public UIConnector getRootConnector() {
+        return uIConnector;
     }
 
     /**
@@ -2470,7 +2506,8 @@ public class ApplicationConnection {
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
-     * @deprecated Use {@link ComponentState#hasEventListener(String)} instead
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
      */
     @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,
@@ -2523,11 +2560,13 @@ public class ApplicationConnection {
         return connectorMap;
     }
 
+    /**
+     * @deprecated No longer needed in Vaadin 7
+     */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        System.out.println("unregisterPaintable (unnecessarily) called for "
+        VConsole.log("unregisterPaintable (unnecessarily) called for "
                 + Util.getConnectorString(p));
-        // connectorMap.unregisterConnector(p);
     }
 
     /**
@@ -2566,6 +2605,10 @@ public class ApplicationConnection {
         return false;
     }
 
+    /**
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
+     */
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getConnectorMap().getConnector(widget),
@@ -2574,10 +2617,6 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
-    }
-
-    public SerializerMap getSerializerMap() {
-        return serializerMap;
     }
 
     /**
@@ -2616,8 +2655,8 @@ public class ApplicationConnection {
         final String uri = addGetParameters(
                 translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                         + ApplicationConstants.HEARTBEAT_REQUEST_PATH),
-                ApplicationConstants.ROOT_ID_PARAMETER + "="
-                        + getConfiguration().getRootId());
+                UIConstants.UI_ID_PARAMETER + "="
+                        + getConfiguration().getUIId());
 
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
 

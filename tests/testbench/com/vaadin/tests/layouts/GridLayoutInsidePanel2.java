@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
 

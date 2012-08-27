@@ -29,7 +29,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.shared.ui.root.RootConstants;
+import com.vaadin.shared.Position;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -38,13 +39,13 @@ import com.vaadin.terminal.gwt.client.ui.VOverlay;
 
 public class VNotification extends VOverlay {
 
-    public static final int CENTERED = 1;
-    public static final int CENTERED_TOP = 2;
-    public static final int CENTERED_BOTTOM = 3;
-    public static final int TOP_LEFT = 4;
-    public static final int TOP_RIGHT = 5;
-    public static final int BOTTOM_LEFT = 6;
-    public static final int BOTTOM_RIGHT = 7;
+    public static final Position CENTERED = Position.MIDDLE_CENTER;
+    public static final Position CENTERED_TOP = Position.TOP_CENTER;
+    public static final Position CENTERED_BOTTOM = Position.BOTTOM_CENTER;
+    public static final Position TOP_LEFT = Position.TOP_LEFT;
+    public static final Position TOP_RIGHT = Position.TOP_RIGHT;
+    public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
+    public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
 
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
@@ -144,21 +145,21 @@ public class VNotification extends VOverlay {
         show(CENTERED, style);
     }
 
-    public void show(int position) {
+    public void show(com.vaadin.shared.Position position) {
         show(position, null);
     }
 
-    public void show(Widget widget, int position, String style) {
+    public void show(Widget widget, Position position, String style) {
         setWidget(widget);
         show(position, style);
     }
 
-    public void show(String html, int position, String style) {
+    public void show(String html, Position position, String style) {
         setWidget(new HTML(html));
         show(position, style);
     }
 
-    public void show(int position, String style) {
+    public void show(Position position, String style) {
         setOpacity(getElement(), startOpacity);
         if (style != null) {
             temporaryStyle = style;
@@ -231,7 +232,7 @@ public class VNotification extends VOverlay {
         }
     }
 
-    public void setPosition(int position) {
+    public void setPosition(com.vaadin.shared.Position position) {
         final Element el = getElement();
         DOM.setStyleAttribute(el, "top", "");
         DOM.setStyleAttribute(el, "left", "");
@@ -260,17 +261,17 @@ public class VNotification extends VOverlay {
             DOM.setStyleAttribute(el, "bottom", "0px");
             DOM.setStyleAttribute(el, "left", "0px");
             break;
-        case CENTERED_TOP:
+        case TOP_CENTER:
             center();
             DOM.setStyleAttribute(el, "top", "0px");
             break;
-        case CENTERED_BOTTOM:
+        case BOTTOM_CENTER:
             center();
             DOM.setStyleAttribute(el, "top", "");
             DOM.setStyleAttribute(el, "bottom", "0px");
             break;
         default:
-        case CENTERED:
+        case MIDDLE_CENTER:
             center();
             break;
         }
@@ -383,19 +384,19 @@ public class VNotification extends VOverlay {
     public static void showNotification(ApplicationConnection client,
             final UIDL notification) {
         boolean onlyPlainText = notification
-                .hasAttribute(RootConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+                .hasAttribute(UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
             final String parsedUri = client
                     .translateVaadinUri(notification
-                            .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON));
+                            .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON));
             html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
         }
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
             String caption = notification
-                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
+                    .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
                 caption = Util.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
@@ -403,9 +404,9 @@ public class VNotification extends VOverlay {
             html += "<h1>" + caption + "</h1>";
         }
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
             String message = notification
-                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
+                    .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
                 message = Util.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
@@ -414,13 +415,16 @@ public class VNotification extends VOverlay {
         }
 
         final String style = notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE) ? notification
-                .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE)
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE) ? notification
+                .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
                 : null;
-        final int position = notification
-                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_POSITION);
+
+        final int pos = notification
+                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION);
+        Position position = Position.values()[pos];
+
         final int delay = notification
-                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY);
+                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay).show(html, position, style);
     }
 

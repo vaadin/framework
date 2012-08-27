@@ -5,10 +5,12 @@ import java.util.Iterator;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.shared.ui.AlignmentInfo.Bits;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.SystemError;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -22,7 +24,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -320,76 +322,66 @@ public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
             hAlign.setNullSelectionAllowed(false);
             vAlign.setNullSelectionAllowed(false);
 
-            vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
-            vAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_TOP), "top");
-            vAlign.addItem(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER));
-            vAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER),
+            vAlign.addItem(new Integer(Bits.ALIGNMENT_TOP));
+            vAlign.setItemCaption(new Integer(Bits.ALIGNMENT_TOP), "top");
+            vAlign.addItem(new Integer(Bits.ALIGNMENT_VERTICAL_CENTER));
+            vAlign.setItemCaption(new Integer(Bits.ALIGNMENT_VERTICAL_CENTER),
                     "center");
-            vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_BOTTOM));
-            vAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_BOTTOM), "bottom");
+            vAlign.addItem(new Integer(Bits.ALIGNMENT_BOTTOM));
+            vAlign.setItemCaption(new Integer(Bits.ALIGNMENT_BOTTOM), "bottom");
 
-            hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
-            hAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
-            hAlign.addItem(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
-            hAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
-                    "center");
-            hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
-            hAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+            hAlign.addItem(new Integer(Bits.ALIGNMENT_LEFT));
+            hAlign.setItemCaption(new Integer(Bits.ALIGNMENT_LEFT), "left");
+            hAlign.addItem(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER));
+            hAlign.setItemCaption(
+                    new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            hAlign.addItem(new Integer(Bits.ALIGNMENT_RIGHT));
+            hAlign.setItemCaption(new Integer(Bits.ALIGNMENT_RIGHT), "right");
 
             Property.ValueChangeListener alignmentChangeListener = new Property.ValueChangeListener() {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                    updateAlignments(((Integer) hAlign.getValue()).intValue(),
-                            ((Integer) vAlign.getValue()).intValue());
+                    Integer h = ((Integer) hAlign.getValue()).intValue();
+                    int v = ((Integer) vAlign.getValue()).intValue();
+
+                    updateAlignments(new Alignment(h + v));
                 }
 
             };
 
-            hAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
+            hAlign.setValue(new Integer(Bits.ALIGNMENT_LEFT));
             vAlign.addListener(alignmentChangeListener);
             hAlign.addListener(alignmentChangeListener);
-            vAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
+            vAlign.setValue(new Integer(Bits.ALIGNMENT_TOP));
 
             controls.addComponent(new Label("layout alignment"));
             final NativeSelect lAlign = new NativeSelect();
             controls.addComponent(lAlign);
             lAlign.setNullSelectionAllowed(false);
-            lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
-            lAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
-            lAlign.addItem(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
-            lAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
-                    "center");
-            lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_RIGHT));
-            lAlign.setItemCaption(new Integer(
-                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+            lAlign.addItem(new Integer(Bits.ALIGNMENT_LEFT));
+            lAlign.setItemCaption(new Integer(Bits.ALIGNMENT_LEFT), "left");
+            lAlign.addItem(new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER));
+            lAlign.setItemCaption(
+                    new Integer(Bits.ALIGNMENT_HORIZONTAL_CENTER), "center");
+            lAlign.addItem(new Integer(Bits.ALIGNMENT_RIGHT));
+            lAlign.setItemCaption(new Integer(Bits.ALIGNMENT_RIGHT), "right");
 
             lAlign.addListener(new Property.ValueChangeListener() {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
-                    testPanelLayout.setComponentAlignment(testedLayout,
-                            ((Integer) lAlign.getValue()).intValue(),
-                            VerticalLayout.ALIGNMENT_TOP);
+                    testPanelLayout.setComponentAlignment(
+                            testedLayout,
+                            new Alignment(((Integer) lAlign.getValue())
+                                    .intValue() + Bits.ALIGNMENT_TOP));
                 }
             });
         }
 
-        @SuppressWarnings("deprecation")
-        private void updateAlignments(int h, int v) {
+        private void updateAlignments(Alignment a) {
             for (Iterator<Component> i = testedLayout.getComponentIterator(); i
                     .hasNext();) {
                 ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(
-                        i.next(), h, v);
+                        i.next(), a);
             }
         }
 

@@ -44,7 +44,7 @@ import com.vaadin.terminal.gwt.server.ResourceReference;
 public class Video extends AbstractMedia {
 
     @Override
-    public VideoState getState() {
+    protected VideoState getState() {
         return (VideoState) super.getState();
     }
 
@@ -80,7 +80,6 @@ public class Video extends AbstractMedia {
      */
     public void setPoster(Resource poster) {
         getState().setPoster(ResourceReference.create(poster));
-        requestRepaint();
     }
 
     /**

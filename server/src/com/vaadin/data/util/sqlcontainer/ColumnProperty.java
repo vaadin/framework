@@ -69,7 +69,9 @@ final public class ColumnProperty implements Property {
      * @param value
      * @param type
      * 
-     * @deprecated
+     * @deprecated as of 7.0. Use
+     *             {@link #ColumnProperty(String, boolean, boolean, boolean, boolean, Object, Class)
+     *             instead
      */
     @Deprecated
     public ColumnProperty(String propertyId, boolean readOnly,
@@ -144,7 +146,7 @@ final public class ColumnProperty implements Property {
 
     @Override
     public void setValue(Object newValue) throws ReadOnlyException,
-    ConversionException {
+            ConversionException {
         if (newValue == null && !nullable) {
             throw new NotNullableException(
                     "Null values are not allowed for this property.");

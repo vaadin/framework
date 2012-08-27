@@ -10,6 +10,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Resource;
@@ -39,7 +40,6 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
 import com.vaadin.ui.TabSheet;
@@ -50,6 +50,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
@@ -534,7 +535,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         l.addComponent(new Label("Vertical Slider", ContentMode.XHTML));
         s = new Slider();
-        s.setOrientation(Slider.ORIENTATION_VERTICAL);
+        s.setOrientation(SliderOrientation.VERTICAL);
         s.setHeight("200px");
         try {
             s.setValue(50);

@@ -19,9 +19,9 @@ package com.vaadin.terminal.gwt.server;
 import java.util.EventObject;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Base class providing common functionality used in different bootstrap
@@ -33,7 +33,7 @@ import com.vaadin.ui.Root;
 public abstract class BootstrapResponse extends EventObject {
     private final WrappedRequest request;
     private final Application application;
-    private final Integer rootId;
+    private final Integer uiId;
 
     /**
      * Creates a new bootstrap event.
@@ -46,16 +46,15 @@ public abstract class BootstrapResponse extends EventObject {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param rootId
-     *            the generated id of the Root that will be displayed on the
-     *            page
+     * @param uiId
+     *            the generated id of the UI that will be displayed on the page
      */
     public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
-            Application application, Integer rootId) {
+            Application application, Integer uiId) {
         super(handler);
         this.request = request;
         this.application = application;
-        this.rootId = rootId;
+        this.uiId = uiId;
     }
 
     /**
@@ -91,32 +90,32 @@ public abstract class BootstrapResponse extends EventObject {
     }
 
     /**
-     * Gets the root id that has been generated for this response. Please note
-     * that if {@link Application#isRootPreserved()} is enabled, a previously
-     * created Root with a different id might eventually end up being used.
+     * Gets the UI id that has been generated for this response. Please note
+     * that if {@link Application#isUiPreserved()} is enabled, a previously
+     * created UI with a different id might eventually end up being used.
      * 
-     * @return the root id
+     * @return the UI id
      */
-    public Integer getRootId() {
-        return rootId;
+    public Integer getUIId() {
+        return uiId;
     }
 
     /**
-     * Gets the Root for which this page is being rendered, if available. Some
-     * features of the framework will postpone the Root selection until after
-     * the bootstrap page has been rendered and required information from the
+     * Gets the UI for which this page is being rendered, if available. Some
+     * features of the framework will postpone the UI selection until after the
+     * bootstrap page has been rendered and required information from the
      * browser has been sent back. This method will return <code>null</code> if
-     * no Root instance is yet available.
+     * no UI instance is yet available.
      * 
-     * @see Application#isRootPreserved()
-     * @see Application#getRoot(WrappedRequest)
-     * @see RootRequiresMoreInformationException
+     * @see Application#isUiPreserved()
+     * @see Application#getUI(WrappedRequest)
+     * @see UIRequiresMoreInformationException
      * 
-     * @return The Root that will be displayed in the page being generated, or
+     * @return The UI that will be displayed in the page being generated, or
      *         <code>null</code> if all required information is not yet
      *         available.
      */
-    public Root getRoot() {
-        return Root.getCurrent();
+    public UI getUI() {
+        return UI.getCurrent();
     }
 }

@@ -12,7 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class CheckboxUpdateProblem extends Application.LegacyApplication
@@ -76,7 +76,7 @@ public class CheckboxUpdateProblem extends Application.LegacyApplication
 
         private TestForm() {
             setSizeFull();
-            setWriteThrough(false);
+            setBuffered(true);
             setInvalidCommitted(false);
 
             save = new Button("Save", this);

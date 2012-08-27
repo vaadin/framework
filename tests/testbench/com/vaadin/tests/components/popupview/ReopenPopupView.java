@@ -16,13 +16,13 @@
 package com.vaadin.tests.components.popupview;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.PopupView;
 
-public class ReopenPopupView extends AbstractTestRoot {
+public class ReopenPopupView extends AbstractTestUI {
     private final Log log = new Log(5);
 
     @Override

@@ -29,7 +29,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
         implements Layout {
 
     @Override
-    public AbstractLayoutState getState() {
+    protected AbstractLayoutState getState() {
         return (AbstractLayoutState) super.getState();
     }
 

@@ -61,7 +61,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     }
 
     @Override
-    public AbsoluteLayoutState getState() {
+    protected AbsoluteLayoutState getState() {
         return (AbsoluteLayoutState) super.getState();
     }
 
@@ -153,7 +153,7 @@ public class AbsoluteLayout extends AbstractLayout implements
             internalRemoveComponent(c);
             throw e;
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -197,7 +197,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     public void removeComponent(Component c) {
         internalRemoveComponent(c);
         super.removeComponent(c);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -245,7 +245,7 @@ public class AbsoluteLayout extends AbstractLayout implements
     private void internalSetPosition(Component component,
             ComponentPosition position) {
         componentToCoordinates.put(component, position);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -322,7 +322,7 @@ public class AbsoluteLayout extends AbstractLayout implements
                     }
                 }
             }
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -363,7 +363,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         public void setTop(Float topValue, Unit topUnits) {
             this.topValue = topValue;
             this.topUnits = topUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -379,7 +379,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         public void setRight(Float rightValue, Unit rightUnits) {
             this.rightValue = rightValue;
             this.rightUnits = rightUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -395,7 +395,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         public void setBottom(Float bottomValue, Unit bottomUnits) {
             this.bottomValue = bottomValue;
             this.bottomUnits = bottomUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -411,7 +411,7 @@ public class AbsoluteLayout extends AbstractLayout implements
         public void setLeft(Float leftValue, Unit leftUnits) {
             this.leftValue = leftValue;
             this.leftUnits = leftUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -422,7 +422,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setZIndex(int zIndex) {
             this.zIndex = zIndex;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -434,7 +434,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setTopValue(Float topValue) {
             this.topValue = topValue;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -468,7 +468,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setRightValue(Float rightValue) {
             this.rightValue = rightValue;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -492,7 +492,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setBottomValue(Float bottomValue) {
             this.bottomValue = bottomValue;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -516,7 +516,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setLeftValue(Float leftValue) {
             this.leftValue = leftValue;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -538,7 +538,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setTopUnits(Unit topUnits) {
             this.topUnits = topUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -560,7 +560,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setRightUnits(Unit rightUnits) {
             this.rightUnits = rightUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -582,7 +582,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setBottomUnits(Unit bottomUnits) {
             this.bottomUnits = bottomUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -604,7 +604,7 @@ public class AbsoluteLayout extends AbstractLayout implements
          */
         public void setLeftUnits(Unit leftUnits) {
             this.leftUnits = leftUnits;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**

@@ -11,7 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -95,7 +95,7 @@ public class Ticket34 extends Application.LegacyApplication {
                 public void buttonClick(ClickEvent event) {
                     String viewName = tf.getValue().toString();
                     // fragmentChangedListener will change the view if possible
-                    event.getButton().getRoot().getPage().setFragment(viewName);
+                    event.getButton().getUI().getPage().setFragment(viewName);
                 }
             });
 

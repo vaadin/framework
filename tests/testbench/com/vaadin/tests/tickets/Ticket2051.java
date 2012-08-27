@@ -7,7 +7,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 

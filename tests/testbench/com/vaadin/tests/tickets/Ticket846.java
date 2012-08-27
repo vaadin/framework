@@ -5,7 +5,7 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket846 extends Application.LegacyApplication {

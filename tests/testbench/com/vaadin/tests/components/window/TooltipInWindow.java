@@ -17,11 +17,11 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-public class TooltipInWindow extends AbstractTestRoot {
+public class TooltipInWindow extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

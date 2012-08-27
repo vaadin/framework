@@ -271,14 +271,14 @@ public class TestAbsoluteLayout extends TestBase {
             addComponent(addComp);
 
             componentEditor = new Form();
-            componentEditor.setWriteThrough(false);
+            componentEditor.setBuffered(true);
             componentEditor.setCaption("Component properties:");
             componentEditor.setFormFieldFactory(MFieldFactory.get());
             addComponent(componentEditor);
 
             positionEditor = new Form();
             positionEditor.setCaption("Component position");
-            positionEditor.setWriteThrough(false);
+            positionEditor.setBuffered(true);
             positionEditor.setFormFieldFactory(MFieldFactory.get());
             addComponent(positionEditor);
 

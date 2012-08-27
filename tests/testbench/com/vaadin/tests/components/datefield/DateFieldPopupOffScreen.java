@@ -8,7 +8,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class DateFieldPopupOffScreen extends AbstractTestCase {
 

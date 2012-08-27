@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
- * Root.
+ * UI.
  * <p>
  * Provides {@link #getConnector(String)} which can be used to lookup a
  * connector from its id. This is for framework use only and should not be
@@ -54,7 +54,7 @@ public class ConnectorTracker implements Serializable {
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
-    private Root root;
+    private UI uI;
     private Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
 
     /**
@@ -68,15 +68,15 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Creates a new ConnectorTracker for the given root. A tracker is always
-     * attached to a root and the root cannot be changed during the lifetime of
+     * Creates a new ConnectorTracker for the given uI. A tracker is always
+     * attached to a uI and the uI cannot be changed during the lifetime of
      * a {@link ConnectorTracker}.
      * 
-     * @param root
-     *            The root to attach to. Cannot be null.
+     * @param uI
+     *            The uI to attach to. Cannot be null.
      */
-    public ConnectorTracker(Root root) {
-        this.root = root;
+    public ConnectorTracker(UI uI) {
+        this.uI = uI;
     }
 
     /**
@@ -210,8 +210,8 @@ public class ConnectorTracker implements Serializable {
         while (iterator.hasNext()) {
             String connectorId = iterator.next();
             ClientConnector connector = connectorIdToConnector.get(connectorId);
-            if (getRootForConnector(connector) != root) {
-                // If connector is no longer part of this root,
+            if (getUIForConnector(connector) != uI) {
+                // If connector is no longer part of this uI,
                 // remove it from the map. If it is re-attached to the
                 // application at some point it will be re-added through
                 // registerConnector(connector)
@@ -232,22 +232,22 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Finds the root that the connector is attached to.
+     * Finds the uI that the connector is attached to.
      * 
      * @param connector
      *            The connector to lookup
-     * @return The root the connector is attached to or null if it is not
-     *         attached to any root.
+     * @return The uI the connector is attached to or null if it is not
+     *         attached to any uI.
      */
-    private Root getRootForConnector(ClientConnector connector) {
+    private UI getUIForConnector(ClientConnector connector) {
         if (connector == null) {
             return null;
         }
         if (connector instanceof Component) {
-            return ((Component) connector).getRoot();
+            return ((Component) connector).getUI();
         }
 
-        return getRootForConnector(connector.getParent());
+        return getUIForConnector(connector.getParent());
     }
 
     /**
@@ -330,15 +330,15 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Mark all connectors in this root as dirty.
+     * Mark all connectors in this uI as dirty.
      */
     public void markAllConnectorsDirty() {
-        markConnectorsDirtyRecursively(root);
+        markConnectorsDirtyRecursively(uI);
         getLogger().fine("All connectors are now dirty");
     }
 
     /**
-     * Mark all connectors in this root as clean.
+     * Mark all connectors in this uI as clean.
      */
     public void markAllConnectorsClean() {
         dirtyConnectors.clear();
@@ -370,7 +370,7 @@ public class ConnectorTracker implements Serializable {
      * client in the following request.
      * </p>
      * 
-     * @return A collection of all dirty connectors for this root. This list may
+     * @return A collection of all dirty connectors for this uI. This list may
      *         contain invisible connectors.
      */
     public Collection<ClientConnector> getDirtyConnectors() {
@@ -383,6 +383,10 @@ public class ConnectorTracker implements Serializable {
 
     public void setDiffState(ClientConnector connector, Object diffState) {
         diffStates.put(connector, diffState);
+    }
+
+    public boolean isDirty(ClientConnector connector) {
+        return dirtyConnectors.contains(connector);
     }
 
 }

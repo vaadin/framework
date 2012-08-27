@@ -63,7 +63,7 @@ public class TableClickValueChangeInteraction extends TestBase {
 
                 @Override
                 public void itemClick(ItemClickEvent event) {
-                    table.requestRepaint();
+                    table.markAsDirty();
                     clickLabel.setValue("Click " + event.getItemId());
                 }
             });

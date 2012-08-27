@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 

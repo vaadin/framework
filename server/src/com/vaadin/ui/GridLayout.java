@@ -141,7 +141,7 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public GridLayoutState getState() {
+    protected GridLayoutState getState() {
         return (GridLayoutState) super.getState();
     }
 
@@ -254,7 +254,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -400,7 +400,7 @@ public class GridLayout extends AbstractLayout implements
 
         super.removeComponent(component);
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -806,28 +806,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getColumn1()} instead.
-         */
-        @Deprecated
-        public int getX1() {
-            return getColumn1();
-        }
-
-        /**
          * Gets the column of the top-left corner cell.
          * 
          * @return the column of the top-left corner cell.
          */
         public int getColumn1() {
             return column1;
-        }
-
-        /**
-         * @deprecated Use {@link #getColumn2()} instead.
-         */
-        @Deprecated
-        public int getX2() {
-            return getColumn2();
         }
 
         /**
@@ -840,28 +824,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getRow1()} instead.
-         */
-        @Deprecated
-        public int getY1() {
-            return getRow1();
-        }
-
-        /**
          * Gets the row of the top-left corner cell.
          * 
          * @return the row of the top-left corner cell.
          */
         public int getRow1() {
             return row1;
-        }
-
-        /**
-         * @deprecated Use {@link #getRow2()} instead.
-         */
-        @Deprecated
-        public int getY2() {
-            return getRow2();
         }
 
         /**
@@ -994,8 +962,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setColumns(columns);
-
-        requestRepaint();
     }
 
     /**
@@ -1038,8 +1004,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setRows(rows);
-
-        requestRepaint();
     }
 
     /**
@@ -1132,7 +1096,7 @@ public class GridLayout extends AbstractLayout implements
         } else {
             oldLocation.setComponent(newComponent);
             newLocation.setComponent(oldComponent);
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1149,25 +1113,11 @@ public class GridLayout extends AbstractLayout implements
         cursorY = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .vaadin.ui.Component, int, int)
-     */
-    @Override
-    public void setComponentAlignment(Component childComponent,
-            int horizontalAlignment, int verticalAlignment) {
-        componentToAlignment.put(childComponent, new Alignment(
-                horizontalAlignment + verticalAlignment));
-        requestRepaint();
-    }
-
     @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
         componentToAlignment.put(childComponent, alignment);
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -1178,7 +1128,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
-        requestRepaint();
     }
 
     /*
@@ -1224,7 +1173,7 @@ public class GridLayout extends AbstractLayout implements
 
         setRows(getRows() + 1);
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1283,7 +1232,7 @@ public class GridLayout extends AbstractLayout implements
         }
 
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
 
     }
 
@@ -1308,7 +1257,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1346,7 +1295,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1437,7 +1386,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void setMargin(MarginInfo marginInfo) {
         getState().setMarginsBitmask(marginInfo.getBitMask());
-        requestRepaint();
     }
 
     /*

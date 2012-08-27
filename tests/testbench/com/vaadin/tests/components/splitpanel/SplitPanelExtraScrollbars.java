@@ -8,7 +8,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         ClickListener {
@@ -62,8 +62,8 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         }
 
         // Sending all changes in one repaint triggers the bug
-        hl.requestRepaint();
-        sp.requestRepaint();
+        hl.markAsDirty();
+        sp.markAsDirty();
     }
 
 }

@@ -19,7 +19,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class TerminalErrorNotification extends TestBase {
 
@@ -41,7 +41,7 @@ public class TerminalErrorNotification extends TestBase {
     public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
         event.getThrowable().printStackTrace();
 
-        Root mainWindow = getMainWindow();
+        UI mainWindow = getMainWindow();
         if (mainWindow != null) {
             Throwable throwable = event.getThrowable();
 

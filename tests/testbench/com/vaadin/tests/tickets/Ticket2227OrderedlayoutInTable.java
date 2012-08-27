@@ -5,7 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 

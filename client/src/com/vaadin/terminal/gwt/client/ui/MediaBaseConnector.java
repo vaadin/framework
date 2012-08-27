@@ -49,9 +49,6 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setControls(getState().isShowControls());
-        getWidget().setAutoplay(getState().isAutoplay());
-        getWidget().setMuted(getState().isMuted());
         for (int i = 0; i < getState().getSources().size(); i++) {
             URLReference source = getState().getSources().get(i);
             String sourceType = getState().getSourceTypes().get(i);

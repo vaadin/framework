@@ -164,7 +164,7 @@ public class DDTest6 extends TestBase {
         getLayout().addComponent(sp);
         TestUtils
                 .injectCSS(
-                        getLayout().getRoot(),
+                        getLayout().getUI(),
                         ""
                                 + ".v-tree .v-icon {height:16px;} "
                                 + ".v-tree-node-caption-drag-top {/*border-top: none;*/} "

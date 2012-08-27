@@ -29,13 +29,13 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.ResourceReference;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.JavaScriptFunction;
 
-public class BasicJavaScriptComponent extends AbstractTestRoot {
+public class BasicJavaScriptComponent extends AbstractTestUI {
 
     public interface TestRpc extends ServerRpc, ClientRpc {
         public void sendRpc(String message);

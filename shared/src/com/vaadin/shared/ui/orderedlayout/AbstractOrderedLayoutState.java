@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.AlignmentInfo;
 public class AbstractOrderedLayoutState extends AbstractLayoutState {
     private boolean spacing = false;
 
-    public HashMap<Connector, ChildComponentData> childData = new HashMap<Connector, ChildComponentData>();
+    private HashMap<Connector, ChildComponentData> childData = new HashMap<Connector, ChildComponentData>();
 
     private int marginsBitmask = 0;
 

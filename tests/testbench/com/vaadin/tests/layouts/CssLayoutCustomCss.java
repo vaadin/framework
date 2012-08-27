@@ -85,7 +85,7 @@ public class CssLayoutCustomCss extends TestBase implements ClickListener {
             css.remove(b);
             b.setCaption("not " + b.getCaption());
         }
-        layout.requestRepaint();
+        layout.markAsDirty();
 
     }
 

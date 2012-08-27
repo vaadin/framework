@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket2240 extends Application.LegacyApplication {

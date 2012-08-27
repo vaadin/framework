@@ -31,6 +31,8 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
@@ -38,7 +40,7 @@ import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
@@ -235,12 +237,6 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public SharedState getState() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public String getConnectorId() {
         return ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID;
     }
@@ -268,7 +264,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaint() {
+        markAsDirty();
+    }
+
+    @Override
+    public void markAsDirty() {
         // TODO Auto-generated method stub
 
     }
@@ -280,7 +282,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaintAll() {
+        markAsDirtyRecursive();
+    }
+
+    @Override
+    public void markAsDirtyRecursive() {
         // TODO Auto-generated method stub
 
     }
@@ -319,12 +327,18 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public Root getRoot() {
+    public UI getUI() {
         return null;
     }
 
     @Override
     public void beforeClientResponse(boolean initial) {
         // Nothing to do
+    }
+
+    @Override
+    public JSONObject encodeState() throws JSONException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

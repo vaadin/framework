@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.TextField;
 
 /**
@@ -34,7 +34,7 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class UsingBeanValidation extends Root {
+public class UsingBeanValidation extends UI {
     class Person {
 
         @Size(min = 5, max = 50)

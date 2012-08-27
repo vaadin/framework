@@ -123,7 +123,7 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
     }
 
     @Override
-    public CustomLayoutState getState() {
+    protected CustomLayoutState getState() {
         return (CustomLayoutState) super.getState();
     }
 
@@ -145,7 +145,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
         getState().getChildLocations().put(c, location);
         c.setParent(this);
         fireComponentAttachEvent(c);
-        requestRepaint();
     }
 
     /**
@@ -176,7 +175,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
         slots.values().remove(c);
         getState().getChildLocations().remove(c);
         super.removeComponent(c);
-        requestRepaint();
     }
 
     /**
@@ -251,7 +249,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
             slots.put(oldLocation, newComponent);
             getState().getChildLocations().put(newComponent, oldLocation);
             getState().getChildLocations().put(oldComponent, newLocation);
-            requestRepaint();
         }
     }
 
@@ -277,7 +274,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
     public void setTemplateName(String templateName) {
         getState().setTemplateName(templateName);
         getState().setTemplateContents(null);
-        requestRepaint();
     }
 
     /**
@@ -288,7 +284,6 @@ public class CustomLayout extends AbstractLayout implements Vaadin6Component {
     public void setTemplateContents(String templateContents) {
         getState().setTemplateContents(templateContents);
         getState().setTemplateName(null);
-        requestRepaint();
     }
 
     @Override

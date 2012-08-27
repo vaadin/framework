@@ -9,7 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -107,7 +107,7 @@ public class Ticket1983 extends Application.LegacyApplication {
                         isLong = true;
                     }
                     // Works the same way with or without repaint request
-                    table.requestRepaint();
+                    table.markAsDirty();
                 }
             });
 

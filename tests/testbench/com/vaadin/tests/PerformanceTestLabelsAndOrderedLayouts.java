@@ -62,7 +62,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
                 new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        testContainer.requestRepaint();
+                        testContainer.markAsDirty();
                     }
                 }));
 

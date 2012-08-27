@@ -2,6 +2,7 @@ package com.vaadin.tests.components.slider;
 
 import java.util.LinkedHashMap;
 
+import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.Slider;
 
@@ -21,9 +22,9 @@ public class SliderTest extends AbstractFieldTest<Slider> {
         }
     };
 
-    private Command<Slider, Integer> orientationCommand = new Command<Slider, Integer>() {
+    private Command<Slider, SliderOrientation> orientationCommand = new Command<Slider, SliderOrientation>() {
         @Override
-        public void execute(Slider c, Integer value, Object data) {
+        public void execute(Slider c, SliderOrientation value, Object data) {
             c.setOrientation(value);
         }
     };
@@ -56,9 +57,9 @@ public class SliderTest extends AbstractFieldTest<Slider> {
     }
 
     private void createOrientationSelect(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Horizontal", Slider.ORIENTATION_HORIZONTAL);
-        options.put("Vertical", Slider.ORIENTATION_VERTICAL);
+        LinkedHashMap<String, SliderOrientation> options = new LinkedHashMap<String, SliderOrientation>();
+        options.put("Horizontal", SliderOrientation.HORIZONTAL);
+        options.put("Vertical", SliderOrientation.VERTICAL);
         createSelectAction("Orientation", category, options, "Horizontal",
                 orientationCommand);
 

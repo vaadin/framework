@@ -1,34 +1,34 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
-import com.vaadin.terminal.AbstractRootProvider;
+import com.vaadin.UIRequiresMoreInformationException;
+import com.vaadin.terminal.AbstractUIProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class RefreshStatePreserve extends AbstractTestApplication {
-    public static class RefreshStateRoot extends Root {
+    public static class RefreshStateUI extends UI {
         @Override
         public void init(WrappedRequest request) {
             getContent().addComponent(
                     new Label("window.name: "
                             + request.getBrowserDetails().getWindowName()));
-            getContent().addComponent(new Label("Root id: " + getRootId()));
+            getContent().addComponent(new Label("UI id: " + getUIId()));
         }
     }
 
     @Override
     public void init() {
         super.init();
-        setRootPreserved(true);
-        addRootProvider(new AbstractRootProvider() {
+        setUiPreserved(true);
+        addUIProvider(new AbstractUIProvider() {
             @Override
-            public Class<? extends Root> getRootClass(Application application,
+            public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request)
-                    throws RootRequiresMoreInformationException {
-                return RefreshStateRoot.class;
+                    throws UIRequiresMoreInformationException {
+                return RefreshStateUI.class;
             }
         });
     }

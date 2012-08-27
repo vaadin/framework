@@ -25,13 +25,13 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.AbstractJavaScriptExtension;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
 
-public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
+public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
 
     public static class SimpleJavaScriptExtensionState extends
             JavaScriptExtensionState {
@@ -84,7 +84,6 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestRoot {
 
         public void setPrefix(String prefix) {
             getState().setPrefix(prefix);
-            requestRepaint();
         }
 
         public void greetRpc(String message) {

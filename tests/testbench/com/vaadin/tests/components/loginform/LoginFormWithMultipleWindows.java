@@ -5,14 +5,14 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class LoginFormWithMultipleWindows extends Application {
 
     @Override
-    protected Root getRoot(WrappedRequest request) {
+    protected UI getUI(WrappedRequest request) {
         return new LoginFormWindow();
     }
 

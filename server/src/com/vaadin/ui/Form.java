@@ -99,14 +99,9 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     private Buffered.SourceException currentBufferedSourceException = null;
 
     /**
-     * Is the form in write trough mode.
+     * Is the form in buffered mode.
      */
-    private boolean writeThrough = true;
-
-    /**
-     * Is the form in read trough mode.
-     */
-    private boolean readThrough = true;
+    private boolean buffered = false;
 
     /**
      * Mapping from propertyName to corresponding field.
@@ -138,7 +133,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         @Override
         public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-            requestRepaint();
+            markAsDirty();
         }
     };
 
@@ -200,7 +195,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     @Override
-    public FormState getState() {
+    protected FormState getState() {
         return (FormState) super.getState();
     }
 
@@ -347,7 +342,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (problems == null) {
             if (currentBufferedSourceException != null) {
                 currentBufferedSourceException = null;
-                requestRepaint();
+                markAsDirty();
             }
             return;
         }
@@ -362,7 +357,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
-        requestRepaint();
+        markAsDirty();
         throw e;
     }
 
@@ -391,7 +386,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (problems == null) {
             if (currentBufferedSourceException != null) {
                 currentBufferedSourceException = null;
-                requestRepaint();
+                markAsDirty();
             }
             return;
         }
@@ -406,7 +401,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
-        requestRepaint();
+        markAsDirty();
         throw e;
     }
 
@@ -427,50 +422,15 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     /*
-     * Is the editor in a read-through mode? Don't add a JavaDoc comment here,
-     * we use the default one from the interface.
-     */
-    @Override
-    @Deprecated
-    public boolean isReadThrough() {
-        return readThrough;
-    }
-
-    /*
-     * Is the editor in a write-through mode? Don't add a JavaDoc comment here,
-     * we use the default one from the interface.
-     */
-    @Override
-    @Deprecated
-    public boolean isWriteThrough() {
-        return writeThrough;
-    }
-
-    /*
-     * Sets the editor's read-through mode to the specified status. Don't add a
+     * Sets the editor's buffered mode to the specified status. Don't add a
      * JavaDoc comment here, we use the default one from the interface.
      */
     @Override
-    public void setReadThrough(boolean readThrough) {
-        if (readThrough != this.readThrough) {
-            this.readThrough = readThrough;
+    public void setBuffered(boolean buffered) {
+        if (buffered != this.buffered) {
+            this.buffered = buffered;
             for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-                (fields.get(i.next())).setReadThrough(readThrough);
-            }
-        }
-    }
-
-    /*
-     * Sets the editor's read-through mode to the specified status. Don't add a
-     * JavaDoc comment here, we use the default one from the interface.
-     */
-    @Override
-    public void setWriteThrough(boolean writeThrough) throws SourceException,
-            InvalidValueException {
-        if (writeThrough != this.writeThrough) {
-            this.writeThrough = writeThrough;
-            for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-                (fields.get(i.next())).setWriteThrough(writeThrough);
+                (fields.get(i.next())).setBuffered(buffered);
             }
         }
     }
@@ -531,7 +491,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public void addField(Object propertyId, Field<?> field) {
         registerField(propertyId, field);
         attachField(propertyId, field);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -560,11 +520,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             propertyIds.addLast(propertyId);
         }
 
-        // Update the read and write through status and immediate to match the
+        // Update the buffered mode and immediate to match the
         // form.
         // Should this also include invalidCommitted (#3993)?
-        field.setReadThrough(readThrough);
-        field.setWriteThrough(writeThrough);
+        field.setBuffered(buffered);
         if (isImmediate() && field instanceof AbstractComponent) {
             ((AbstractComponent) field).setImmediate(true);
         }
@@ -761,7 +720,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         // If the new datasource is null, just set null datasource
         if (itemDatasource == null) {
-            requestRepaint();
+            markAsDirty();
             return;
         }
 
@@ -861,10 +820,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         // Replace the previous layout
         layout.setParent(this);
         getState().setLayout(layout);
-
-        // Hierarchy has changed so we need to repaint (this could be a
-        // hierarchy repaint only)
-        requestRepaint();
     }
 
     /**
@@ -949,8 +904,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
                 : new Select();
         newField.setCaption(oldField.getCaption());
         newField.setReadOnly(oldField.isReadOnly());
-        newField.setReadThrough(oldField.isReadThrough());
-        newField.setWriteThrough(oldField.isWriteThrough());
+        newField.setBuffered(oldField.isBuffered());
 
         // Creates the options list
         newField.addContainerProperty("desc", String.class, "");
@@ -1281,11 +1235,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         getState().setFooter(footer);
         footer.setParent(this);
-
-        // Hierarchy has changed so we need to repaint (this could be a
-        // hierarchy repaint only)
-        requestRepaint();
-
     }
 
     @Override
@@ -1295,7 +1244,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             // some ancestor still disabled, don't update children
             return;
         } else {
-            getLayout().requestRepaintAll();
+            getLayout().markAsDirtyRecursive();
         }
     }
 

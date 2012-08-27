@@ -4,7 +4,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -73,7 +73,7 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         restart.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                mainLayout.getRoot().getApplication().close();
+                mainLayout.getUI().getApplication().close();
             }
         });
 

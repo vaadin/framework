@@ -18,7 +18,7 @@ public abstract class Evaluator {
     /**
      * Test if the element meets the evaluator's requirements.
      *
-     * @param root    Root of the matching subtree
+     * @param root    UI of the matching subtree
      * @param element tested element
      */
     public abstract boolean matches(Element root, Element element);

@@ -45,18 +45,6 @@ public class BaseTheme {
     public static final String BUTTON_LINK = "link";
 
     /**
-     * Removes extra decorations from the panel.
-     * 
-     * @deprecated Base theme does not implement this style, but it is defined
-     *             here since it has been a part of the framework before
-     *             multiple themes were available. Use the constant provided by
-     *             the theme you're using instead, e.g.
-     *             {@link Reindeer#PANEL_LIGHT} or {@link Runo#PANEL_LIGHT}.
-     */
-    @Deprecated
-    public static final String PANEL_LIGHT = "light";
-
-    /**
      * Adds the connector lines between a parent node and its child nodes to
      * indicate the tree hierarchy better.
      */

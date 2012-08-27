@@ -12,7 +12,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class GAESyncTest extends Application.LegacyApplication {
@@ -93,8 +93,8 @@ public class GAESyncTest extends Application.LegacyApplication {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        if (getRoot() == getMainWindow()) {
-                            getRoot().getPage().showNotification(
+                        if (getUI() == getMainWindow()) {
+                            getUI().getPage().showNotification(
                                     new Notification("main"));
                             try {
                                 Thread.sleep((5000));

@@ -106,7 +106,7 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     @Override
-    public CheckBoxState getState() {
+    protected CheckBoxState getState() {
         return (CheckBoxState) super.getState();
     }
 

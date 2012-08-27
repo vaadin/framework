@@ -17,6 +17,7 @@ package com.vaadin.terminal.gwt.client.communication;
 
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 public interface DiffJSONSerializer<T> extends JSONSerializer<T> {
     /**

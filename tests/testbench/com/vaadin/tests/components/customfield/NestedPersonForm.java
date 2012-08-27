@@ -31,7 +31,7 @@ public class NestedPersonForm extends Form {
 
         beanItem = new BeanItem<Person>(person);
         setCaption("Update person details");
-        setWriteThrough(false);
+        setBuffered(true);
         setFormFieldFactory(new PersonFieldFactory());
         // set the data source and the visible fields
         // Note that if the nested form is the first or last field in the parent

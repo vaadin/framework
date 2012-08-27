@@ -48,7 +48,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
     @Override
     protected void setup() {
 
-        getLayout().getRoot().addActionHandler(actionHandler);
+        getLayout().getUI().addActionHandler(actionHandler);
         getLayout().addComponent(createRichTextArea("InMainLayout"));
 
         Panel panel = new Panel("RTA Panel");
@@ -61,7 +61,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         w.addComponent(createRichTextArea("InSubWindow"));
         w.getContent().setSizeUndefined();
 
-        getLayout().getRoot().addWindow(w);
+        getLayout().getUI().addWindow(w);
 
     }
 

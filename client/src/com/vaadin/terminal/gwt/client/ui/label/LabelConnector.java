@@ -43,10 +43,10 @@ public class LabelConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         boolean sinkOnloads = false;
-        switch (getState().getContentMode()) {
+        switch (getState().contentMode) {
         case PREFORMATTED:
             PreElement preElement = Document.get().createPreElement();
-            preElement.setInnerText(getState().getText());
+            preElement.setInnerText(getState().text);
             // clear existing content
             getWidget().setHTML("");
             // add preformatted text to dom
@@ -54,14 +54,14 @@ public class LabelConnector extends AbstractComponentConnector {
             break;
 
         case TEXT:
-            getWidget().setText(getState().getText());
+            getWidget().setText(getState().text);
             break;
 
         case XHTML:
         case RAW:
             sinkOnloads = true;
         case XML:
-            getWidget().setHTML(getState().getText());
+            getWidget().setHTML(getState().text);
             break;
         default:
             getWidget().setText("");

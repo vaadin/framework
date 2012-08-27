@@ -5,7 +5,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 

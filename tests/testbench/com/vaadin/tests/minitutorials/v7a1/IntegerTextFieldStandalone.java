@@ -3,7 +3,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
-public class IntegerTextFieldStandalone extends AbstractTestRoot {
+public class IntegerTextFieldStandalone extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

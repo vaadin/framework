@@ -42,8 +42,7 @@ public abstract class AbstractTestFieldValueChange<T> extends TestCase {
      */
     public void testRemoveListener() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));
-        getField().setWriteThrough(true);
-        getField().setReadThrough(true);
+        getField().setBuffered(false);
 
         // Expectations and start test
         listener.valueChange(EasyMock.isA(ValueChangeEvent.class));
@@ -76,10 +75,9 @@ public abstract class AbstractTestFieldValueChange<T> extends TestCase {
      * Field value change notifications closely mirror value changes of the data
      * source behind the field.
      */
-    public void testWriteThroughReadThrough() {
+    public void testNonBuffered() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));
-        getField().setWriteThrough(true);
-        getField().setReadThrough(true);
+        getField().setBuffered(false);
 
         expectValueChangeFromSetValueNotCommit();
     }
@@ -91,47 +89,9 @@ public abstract class AbstractTestFieldValueChange<T> extends TestCase {
      * Field value change notifications reflect the buffered value in the field,
      * not the original data source value changes.
      */
-    public void testNoWriteThroughNoReadThrough() {
+    public void testBuffered() {
         getField().setPropertyDataSource(new ObjectProperty<String>(""));
-        getField().setWriteThrough(false);
-        getField().setReadThrough(false);
-
-        expectValueChangeFromSetValueNotCommit();
-    }
-
-    /**
-     * Less common partly buffered case: writeThrough (auto-commit) is on and
-     * readThrough is off. Calling commit() should not cause notifications.
-     * 
-     * Without readThrough activated, changes to the data source that do not
-     * cause notifications are not reflected by the field value.
-     * 
-     * Field value change notifications correspond to changes made to the data
-     * source value through the text field or the (notifying) property.
-     */
-    public void testWriteThroughNoReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty<String>(""));
-        getField().setWriteThrough(true);
-        getField().setReadThrough(false);
-
-        expectValueChangeFromSetValueNotCommit();
-    }
-
-    /**
-     * Partly buffered use where the data source is read but not nor modified
-     * during editing, and is updated at commit().
-     * 
-     * When used like this, a field is updated from the data source if necessary
-     * when its value is requested and the property value has changed but the
-     * field has not been modified in its buffer.
-     * 
-     * Field value change notifications reflect the buffered value in the field,
-     * not the original data source value changes.
-     */
-    public void testNoWriteThroughReadThrough() {
-        getField().setPropertyDataSource(new ObjectProperty<String>(""));
-        getField().setWriteThrough(false);
-        getField().setReadThrough(true);
+        getField().setBuffered(true);
 
         expectValueChangeFromSetValueNotCommit();
     }

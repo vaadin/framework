@@ -184,7 +184,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public boolean expandItem(Object itemId) {
         boolean success = expandItem(itemId, true);
-        requestRepaint();
+        markAsDirty();
         return success;
     }
 
@@ -215,7 +215,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         expandedItemId = itemId;
         if (initialPaint) {
-            requestRepaint();
+            markAsDirty();
         } else if (sendChildTree) {
             requestPartialRepaint();
         }
@@ -225,13 +225,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     @Override
-    public void requestRepaint() {
-        super.requestRepaint();
+    public void markAsDirty() {
+        super.markAsDirty();
         partialUpdate = false;
     }
 
     private void requestPartialRepaint() {
-        super.requestRepaint();
+        super.markAsDirty();
         partialUpdate = true;
     }
 
@@ -262,7 +262,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 todo.addAll(getChildren(id));
             }
         }
-        requestRepaint();
+        markAsDirty();
         return result;
     }
 
@@ -282,7 +282,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         // Collapse
         expanded.remove(itemId);
-        requestRepaint();
+        markAsDirty();
         fireCollapseEvent(itemId);
 
         return true;
@@ -349,7 +349,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public void setSelectable(boolean selectable) {
         if (this.selectable != selectable) {
             this.selectable = selectable;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -362,7 +362,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public void setMultiselectMode(MultiSelectMode mode) {
         if (multiSelectMode != mode && mode != null) {
             multiSelectMode = mode;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -478,7 +478,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             if (!isNullSelectionAllowed()
                     && (id == null || id == getNullSelectionItemId())) {
                 // skip empty selection if nullselection is not allowed
-                requestRepaint();
+                markAsDirty();
             } else if (id != null && containsId(id)) {
                 s.add(id);
             }
@@ -486,7 +486,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         if (!isNullSelectionAllowed() && s.size() < 1) {
             // empty selection not allowed, keep old value
-            requestRepaint();
+            markAsDirty();
             return;
         }
 
@@ -796,7 +796,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final boolean success = ((Container.Hierarchical) items)
                 .setChildrenAllowed(itemId, areChildrenAllowed);
         if (success) {
-            requestRepaint();
+            markAsDirty();
         }
         return success;
     }
@@ -812,7 +812,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         final boolean success = ((Container.Hierarchical) items).setParent(
                 itemId, newParentId);
         if (success) {
-            requestRepaint();
+            markAsDirty();
         }
         return success;
     }
@@ -1036,7 +1036,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             if (!actionHandlers.contains(actionHandler)) {
                 actionHandlers.add(actionHandler);
-                requestRepaint();
+                markAsDirty();
             }
         }
     }
@@ -1058,7 +1058,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 actionMapper = null;
             }
 
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1068,7 +1068,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public void removeAllActionHandlers() {
         actionHandlers = null;
         actionMapper = null;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1182,7 +1182,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public void setItemStyleGenerator(ItemStyleGenerator itemStyleGenerator) {
         if (this.itemStyleGenerator != itemStyleGenerator) {
             this.itemStyleGenerator = itemStyleGenerator;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1342,7 +1342,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public void setDragMode(TreeDragMode dragMode) {
         this.dragMode = dragMode;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1601,7 +1601,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     public void setItemDescriptionGenerator(ItemDescriptionGenerator generator) {
         if (generator != itemDescriptionGenerator) {
             itemDescriptionGenerator = generator;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

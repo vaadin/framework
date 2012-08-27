@@ -24,7 +24,7 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
                 super.attach();
                 TestUtils
                         .injectCSS(
-                                getRoot(),
+                                getUI(),
                                 ".red { background:red;} "
                                         + ".green { background:green;} .blue { background:blue;} .cyan { background:cyan;} .magenta { background:magenta;}");
             }

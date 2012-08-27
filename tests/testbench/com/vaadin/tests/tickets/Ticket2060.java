@@ -6,7 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2060 extends Application.LegacyApplication {
 
@@ -33,9 +33,9 @@ public class Ticket2060 extends Application.LegacyApplication {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                button1.requestRepaint();
-                button2.requestRepaint();
-                button3.requestRepaint();
+                button1.markAsDirty();
+                button2.markAsDirty();
+                button3.markAsDirty();
 
             }
 

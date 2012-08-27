@@ -20,7 +20,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class MultiTabApplication extends Root {
+public class MultiTabApplication extends UI {
 
     private class MainView extends VerticalLayout {
         public MainView() {

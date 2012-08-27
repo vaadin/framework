@@ -48,12 +48,6 @@ public class Reindeer extends BaseTheme {
      */
     public static final String LABEL_SMALL = "light";
 
-    /**
-     * @deprecated Use {@link #LABEL_SMALL} instead.
-     */
-    @Deprecated
-    public static final String LABEL_LIGHT = "small";
-
     /***************************************************************************
      * 
      * Button styles
@@ -66,12 +60,6 @@ public class Reindeer extends BaseTheme {
      * button per view should be visible.
      */
     public static final String BUTTON_DEFAULT = "primary";
-
-    /**
-     * @deprecated Use {@link #BUTTON_DEFAULT} instead
-     */
-    @Deprecated
-    public static final String BUTTON_PRIMARY = BUTTON_DEFAULT;
 
     /**
      * Small sized button, use for context specific actions for example
@@ -127,12 +115,6 @@ public class Reindeer extends BaseTheme {
      * tabs as a small bar.
      */
     public static final String TABSHEET_SMALL = "bar";
-
-    /**
-     * @deprecated Use {@link #TABSHEET_SMALL} instead.
-     */
-    @Deprecated
-    public static final String TABSHEET_BAR = TABSHEET_SMALL;
 
     /**
      * Removes borders and background color from the tab sheet. The tabs are

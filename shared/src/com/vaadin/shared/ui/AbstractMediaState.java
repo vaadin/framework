@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.communication.URLReference;
 
 public class AbstractMediaState extends ComponentState {
@@ -39,6 +40,7 @@ public class AbstractMediaState extends ComponentState {
         return showControls;
     }
 
+    @DelegateToWidget("setControls")
     public void setShowControls(boolean showControls) {
         this.showControls = showControls;
     }
@@ -63,6 +65,7 @@ public class AbstractMediaState extends ComponentState {
         return autoplay;
     }
 
+    @DelegateToWidget
     public void setAutoplay(boolean autoplay) {
         this.autoplay = autoplay;
     }
@@ -71,6 +74,7 @@ public class AbstractMediaState extends ComponentState {
         return muted;
     }
 
+    @DelegateToWidget
     public void setMuted(boolean muted) {
         this.muted = muted;
     }

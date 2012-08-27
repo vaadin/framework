@@ -52,4 +52,15 @@ public interface Vaadin6Component extends VariableOwner, Component,
      */
     public void paintContent(PaintTarget target) throws PaintException;
 
+    /**
+     * (non-Javadoc) {@inheritDoc}
+     * <p>
+     * For a Vaadin6Component, markAsDirty will also cause
+     * {@link #paintContent(PaintTarget)} to be called before sending changes to
+     * the client.
+     * 
+     * @see com.vaadin.terminal.gwt.server.ClientConnector#markAsDirty()
+     */
+    @Override
+    public void markAsDirty();
 }

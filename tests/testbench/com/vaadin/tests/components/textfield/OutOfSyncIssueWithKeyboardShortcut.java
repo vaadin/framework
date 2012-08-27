@@ -70,7 +70,7 @@ public class OutOfSyncIssueWithKeyboardShortcut extends TestBase {
 
             form.setImmediate(true);
             // this is critical for the problem to occur
-            form.setWriteThrough(false);
+            form.setBuffered(true);
 
             HorizontalLayout footer = new HorizontalLayout();
             footer.setSpacing(true);

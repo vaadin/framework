@@ -70,8 +70,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.Version;
 import com.vaadin.terminal.gwt.client.ui.VLazyExecutor;
 import com.vaadin.terminal.gwt.client.ui.VOverlay;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
@@ -924,7 +924,7 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     protected void dumpConnectorInfo(ApplicationConnection a) {
-        RootConnector root = a.getRootConnector();
+        UIConnector root = a.getRootConnector();
         log("================");
         log("Connector hierarchy for Root: " + root.getState().getCaption()
                 + " (" + root.getConnectorId() + ")");

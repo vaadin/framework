@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class Ticket2323 extends Application.LegacyApplication {

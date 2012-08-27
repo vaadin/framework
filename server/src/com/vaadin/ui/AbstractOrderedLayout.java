@@ -63,7 +63,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     @Override
-    public AbstractOrderedLayoutState getState() {
+    protected AbstractOrderedLayoutState getState() {
         return (AbstractOrderedLayoutState) super.getState();
     }
 
@@ -144,13 +144,10 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
 
     private void componentRemoved(Component c) {
         getState().getChildData().remove(c);
-        requestRepaint();
     }
 
     private void componentAdded(Component c) {
         getState().getChildData().put(c, new ChildComponentData());
-        requestRepaint();
-
     }
 
     /**
@@ -228,21 +225,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
                 components.add(newLocation, oldComponent);
             }
 
-            requestRepaint();
+            markAsDirty();
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .vaadin.ui.Component, int, int)
-     */
-    @Override
-    public void setComponentAlignment(Component childComponent,
-            int horizontalAlignment, int verticalAlignment) {
-        Alignment a = new Alignment(horizontalAlignment + verticalAlignment);
-        setComponentAlignment(childComponent, a);
     }
 
     @Override
@@ -253,7 +237,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         if (childData != null) {
             // Alignments are bit masks
             childData.setAlignmentBitmask(alignment.getBitMask());
-            requestRepaint();
         } else {
             throw new IllegalArgumentException(
                     "Component must be added to layout before using setComponentAlignment()");
@@ -287,7 +270,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
-        requestRepaint();
     }
 
     /*
@@ -337,8 +319,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         }
 
         childData.setExpandRatio(ratio);
-        requestRepaint();
-    };
+    }
 
     /**
      * Returns the expand ratio of given component.
@@ -394,6 +375,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         return components.get(index);
     }
 
+    @Override
     public void setMargin(boolean enabled) {
         setMargin(new MarginInfo(enabled));
     }
@@ -403,6 +385,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
+    @Override
     public MarginInfo getMargin() {
         return new MarginInfo(getState().getMarginsBitmask());
     }
@@ -412,8 +395,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * 
      * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
      */
+    @Override
     public void setMargin(MarginInfo marginInfo) {
         getState().setMarginsBitmask(marginInfo.getBitMask());
-        requestRepaint();
     }
 }

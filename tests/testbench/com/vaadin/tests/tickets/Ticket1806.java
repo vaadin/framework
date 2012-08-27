@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
 public class Ticket1806 extends com.vaadin.Application.LegacyApplication {
@@ -17,8 +17,7 @@ public class Ticket1806 extends com.vaadin.Application.LegacyApplication {
         final ObjectProperty<String> prop = new ObjectProperty<String>("");
         final TextField tf1 = new TextField(
                 "Buffered TextField bound to ObjectProperty");
-        tf1.setWriteThrough(false);
-        tf1.setReadThrough(false);
+        tf1.setBuffered(true);
         tf1.setPropertyDataSource(prop);
         main.addComponent(tf1);
         main.addComponent(new Button(

@@ -138,7 +138,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
             int id = (Integer) variables.get("pollForStart");
             if (!isUploading && id == nextid) {
                 notStarted = true;
-                requestRepaint();
+                markAsDirty();
             } else {
             }
         }
@@ -829,7 +829,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
         isUploading = false;
         contentLength = -1;
         interrupted = false;
-        requestRepaint();
+        markAsDirty();
     }
 
     public boolean isUploading() {
@@ -853,33 +853,6 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     public long getUploadSize() {
         return contentLength;
-    }
-
-    /**
-     * This method is deprecated, use addListener(ProgressListener) instead.
-     * 
-     * @deprecated Use addListener(ProgressListener) instead.
-     * @param progressListener
-     */
-    @Deprecated
-    public void setProgressListener(ProgressListener progressListener) {
-        addListener(progressListener);
-    }
-
-    /**
-     * This method is deprecated.
-     * 
-     * @deprecated Replaced with addListener/removeListener
-     * @return listener
-     * 
-     */
-    @Deprecated
-    public ProgressListener getProgressListener() {
-        if (progressListeners == null || progressListeners.isEmpty()) {
-            return null;
-        } else {
-            return progressListeners.iterator().next();
-        }
     }
 
     /**
@@ -928,7 +901,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -949,14 +922,14 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * fired.
      */
     public void submitUpload() {
-        requestRepaint();
+        markAsDirty();
         forceSubmit = true;
     }
 
     @Override
-    public void requestRepaint() {
+    public void markAsDirty() {
         forceSubmit = false;
-        super.requestRepaint();
+        super.markAsDirty();
     }
 
     /*
@@ -1009,7 +982,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
-                    requestRepaint();
+                    markAsDirty();
                 }
 
                 @Override

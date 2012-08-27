@@ -7,7 +7,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.terminal.ClassResource;
 import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class IntegrationTestApplication extends Application.LegacyApplication {

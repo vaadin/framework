@@ -37,7 +37,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
@@ -78,7 +78,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
                     getMainWindow().showNotification(
                             "Selected test:" + prev.getTestableName());
                     select.setValue(prev);
-                    select.requestRepaint();
+                    select.markAsDirty();
                 }
             }
         });
@@ -94,7 +94,7 @@ public class TestSizeableIncomponents extends Application.LegacyApplication {
                     getMainWindow().showNotification(
                             "Selected test:" + next.getTestableName());
                     select.setValue(next);
-                    select.requestRepaint();
+                    select.markAsDirty();
                 }
             }
         });

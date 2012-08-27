@@ -19,6 +19,7 @@ import java.io.Serializable;
 
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.annotations.DelegateToWidget;
 
 public class AbstractSplitPanelState extends ComponentState {
 
@@ -120,6 +121,7 @@ public class AbstractSplitPanelState extends ComponentState {
             return positionReversed;
         }
 
+        @DelegateToWidget
         public void setPositionReversed(boolean positionReversed) {
             this.positionReversed = positionReversed;
         }
@@ -128,6 +130,7 @@ public class AbstractSplitPanelState extends ComponentState {
             return locked;
         }
 
+        @DelegateToWidget
         public void setLocked(boolean locked) {
             this.locked = locked;
         }

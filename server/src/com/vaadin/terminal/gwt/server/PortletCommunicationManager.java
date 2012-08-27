@@ -34,7 +34,7 @@ import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * TODO document me!
@@ -142,10 +142,10 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getInitialUIDL(WrappedRequest request, Root root)
+            protected String getInitialUIDL(WrappedRequest request, UI uI)
                     throws PaintException, JSONException {
                 return PortletCommunicationManager.this.getInitialUIDL(request,
-                        root);
+                        uI);
             }
 
             @Override
@@ -168,9 +168,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected InputStream getThemeResourceAsStream(Root root, String themeName,
+    protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
-        PortletApplicationContext2 context = (PortletApplicationContext2) root
+        PortletApplicationContext2 context = (PortletApplicationContext2) uI
                 .getApplication().getContext();
         PortletContext portletContext = context.getPortletSession()
                 .getPortletContext();

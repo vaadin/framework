@@ -45,7 +45,7 @@ public abstract class AbstractDeploymentConfiguration implements
         checkXsrfProtection();
         checkResourceCacheTime();
         checkHeartbeatInterval();
-        checkIdleRootCleanup();
+        checkIdleUICleanup();
     }
 
     @Override
@@ -207,7 +207,7 @@ public abstract class AbstractDeploymentConfiguration implements
     }
 
     @Override
-    public boolean isIdleRootCleanupEnabled() {
+    public boolean isIdleUICleanupEnabled() {
         return idleRootCleanupEnabled;
     }
 
@@ -263,9 +263,9 @@ public abstract class AbstractDeploymentConfiguration implements
         }
     }
 
-    private void checkIdleRootCleanup() {
+    private void checkIdleUICleanup() {
         idleRootCleanupEnabled = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_CLOSE_IDLE_ROOTS, "false").equals(
+                Constants.SERVLET_PARAMETER_CLOSE_IDLE_UIS, "false").equals(
                 "true");
     }
 

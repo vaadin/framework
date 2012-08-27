@@ -23,7 +23,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 

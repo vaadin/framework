@@ -51,7 +51,7 @@ public class TouchScrollables extends TestBase {
 
         TestUtils
                 .injectCSS(
-                        getLayout().getRoot(),
+                        getLayout().getUI(),
                         "body * {-webkit-user-select: none;} .v-table-row-drag-middle .v-table-cell-content {"
                                 + "        background-color: inherit ; border-bottom: 1px solid cyan;"
                                 + "}"
@@ -81,7 +81,7 @@ public class TouchScrollables extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        getLayout().getRoot().scrollIntoView(l);
+                        getLayout().getUI().scrollIntoView(l);
                     }
                 });
         cssLayout.addComponent(button);

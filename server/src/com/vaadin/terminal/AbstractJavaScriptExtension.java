@@ -166,7 +166,7 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
     }
 
     @Override
-    public JavaScriptExtensionState getState() {
+    protected JavaScriptExtensionState getState() {
         return (JavaScriptExtensionState) super.getState();
     }
 }

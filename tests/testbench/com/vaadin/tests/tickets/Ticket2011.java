@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
 
 public class Ticket2011 extends Application.LegacyApplication {

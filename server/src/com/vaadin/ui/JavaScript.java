@@ -66,7 +66,7 @@ public class JavaScript extends AbstractExtension {
     }
 
     @Override
-    public JavaScriptManagerState getState() {
+    protected JavaScriptManagerState getState() {
         return (JavaScriptManagerState) super.getState();
     }
 
@@ -93,9 +93,7 @@ public class JavaScript extends AbstractExtension {
      */
     public void addFunction(String name, JavaScriptFunction function) {
         functions.put(name, function);
-        if (getState().getNames().add(name)) {
-            requestRepaint();
-        }
+        getState().getNames().add(name);
     }
 
     /**
@@ -111,9 +109,7 @@ public class JavaScript extends AbstractExtension {
      */
     public void removeFunction(String name) {
         functions.remove(name);
-        if (getState().getNames().remove(name)) {
-            requestRepaint();
-        }
+        getState().getNames().remove(name);
     }
 
     /**

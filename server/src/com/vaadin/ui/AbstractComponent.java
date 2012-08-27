@@ -121,34 +121,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return getState().getDebugId();
     }
 
-    /**
-     * Gets style for component. Multiple styles are joined with spaces.
-     * 
-     * @return the component's styleValue of property style.
-     * @deprecated Use getStyleName() instead; renamed for consistency and to
-     *             indicate that "style" should not be used to switch client
-     *             side implementation, only to style the component.
-     */
-    @Deprecated
-    public String getStyle() {
-        return getStyleName();
-    }
-
-    /**
-     * Sets and replaces all previous style names of the component. This method
-     * will trigger a {@link RepaintRequestEvent}.
-     * 
-     * @param style
-     *            the new style of the component.
-     * @deprecated Use setStyleName() instead; renamed for consistency and to
-     *             indicate that "style" should not be used to switch client
-     *             side implementation, only to style the component.
-     */
-    @Deprecated
-    public void setStyle(String style) {
-        setStyleName(style);
-    }
-
     /*
      * Gets the component's style. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
@@ -176,7 +148,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void setStyleName(String style) {
         if (style == null || "".equals(style)) {
             getState().setStyles(null);
-            requestRepaint();
             return;
         }
         if (getState().getStyles() == null) {
@@ -190,7 +161,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 styles.add(part);
             }
         }
-        requestRepaint();
     }
 
     @Override
@@ -212,7 +182,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         List<String> styles = getState().getStyles();
         if (!styles.contains(style)) {
             styles.add(style);
-            requestRepaint();
         }
     }
 
@@ -225,7 +194,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                     getState().getStyles().remove(part);
                 }
             }
-            requestRepaint();
         }
     }
 
@@ -249,7 +217,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setCaption(String caption) {
         getState().setCaption(caption);
-        requestRepaint();
     }
 
     /*
@@ -295,7 +262,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         this.locale = locale;
 
         // FIXME: Reload value if there is a converter
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -317,7 +284,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setIcon(Resource icon) {
         getState().setIcon(ResourceReference.create(icon));
-        requestRepaint();
     }
 
     /*
@@ -337,10 +303,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setEnabled(boolean enabled) {
-        if (getState().isEnabled() != enabled) {
-            getState().setEnabled(enabled);
-            requestRepaint();
-        }
+        getState().setEnabled(enabled);
     }
 
     /*
@@ -383,7 +346,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     public void setImmediate(boolean immediate) {
         getState().setImmediate(immediate);
-        requestRepaint();
     }
 
     /*
@@ -408,11 +370,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         getState().setVisible(visible);
-        requestRepaint();
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
-            getParent().requestRepaint();
+            getParent().markAsDirty();
         }
     }
 
@@ -491,7 +452,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     public void setDescription(String description) {
         getState().setDescription(description);
-        requestRepaint();
     }
 
     /*
@@ -575,7 +535,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void setComponentError(ErrorMessage componentError) {
         this.componentError = componentError;
         fireComponentErrorEvent();
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -594,17 +554,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setReadOnly(boolean readOnly) {
         getState().setReadOnly(readOnly);
-        requestRepaint();
-    }
-
-    /*
-     * Gets the parent window of the component. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
-     */
-    @Override
-    public Root getRoot() {
-        // Just make method from implemented Component interface public
-        return super.getRoot();
     }
 
     /*
@@ -629,9 +578,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void detach() {
         super.detach();
         if (actionManager != null) {
-            // Remove any existing viewer. Root cast is just to make the
+            // Remove any existing viewer. UI cast is just to make the
             // compiler happy
-            actionManager.setViewer((Root) null);
+            actionManager.setViewer((UI) null);
         }
     }
 
@@ -642,7 +591,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (this instanceof Focusable) {
             final Application app = getApplication();
             if (app != null) {
-                getRoot().setFocusedComponent((Focusable) this);
+                getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
             } else {
                 delayedFocus = true;
@@ -713,7 +662,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return updated component shared state
      */
     @Override
-    public ComponentState getState() {
+    protected ComponentState getState() {
         return (ComponentState) super.getState();
     }
 
@@ -744,17 +693,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         } else {
             getState().setErrorMessage(null);
         }
-    }
-
-    /* Documentation copied from interface */
-    @Override
-    public void requestRepaint() {
-        // Invisible components (by flag in this particular component) do not
-        // need repaints
-        if (!getState().isVisible()) {
-            return;
-        }
-        super.requestRepaint();
     }
 
     /* General event framework */
@@ -803,7 +741,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
         if (needRepaint) {
             getState().addRegisteredEventListener(eventIdentifier);
-            requestRepaint();
         }
     }
 
@@ -852,7 +789,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
             eventRouter.removeListener(eventType, target);
             if (!eventRouter.hasListeners(eventType)) {
                 getState().removeRegisteredEventListener(eventIdentifier);
-                requestRepaint();
             }
         }
     }
@@ -1159,7 +1095,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         this.height = height;
         heightUnit = unit;
-        requestRepaint();
+        markAsDirty();
         // ComponentSizeValidator.setHeightLocation(this);
     }
 
@@ -1197,7 +1133,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         this.width = width;
         widthUnit = unit;
-        requestRepaint();
+        markAsDirty();
         // ComponentSizeValidator.setWidthLocation(this);
     }
 
@@ -1358,19 +1294,19 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Set a viewer for the action manager to be the parent sub window (if the
-     * component is in a window) or the root (otherwise). This is still a
+     * component is in a window) or the UI (otherwise). This is still a
      * simplification of the real case as this should be handled by the parent
      * VOverlay (on the client side) if the component is inside an VOverlay
      * component.
      */
     private void setActionManagerViewer() {
-        if (actionManager != null && getRoot() != null) {
+        if (actionManager != null && getUI() != null) {
             // Attached and has action manager
             Window w = findAncestor(Window.class);
             if (w != null) {
                 actionManager.setViewer(w);
             } else {
-                actionManager.setViewer(getRoot());
+                actionManager.setViewer(getUI());
             }
         }
 

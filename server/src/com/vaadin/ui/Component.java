@@ -23,7 +23,6 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.shared.ComponentState;
 import com.vaadin.terminal.ErrorMessage;
 import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.Sizeable;
@@ -508,18 +507,18 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setIcon(Resource icon);
 
     /**
-     * Gets the Root the component is attached to.
+     * Gets the UI the component is attached to.
      * 
      * <p>
-     * If the component is not attached to a Root through a component
+     * If the component is not attached to a UI through a component
      * containment hierarchy, <code>null</code> is returned.
      * </p>
      * 
-     * @return the Root of the component or <code>null</code> if it is not
-     *         attached to a Root
+     * @return the UI of the component or <code>null</code> if it is not
+     *         attached to a UI
      */
     @Override
-    public Root getRoot();
+    public UI getUI();
 
     /**
      * Gets the application object to which the component is attached.
@@ -549,7 +548,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getRoot()}, and {@link #getApplication()}
+     * {@link #getParent()}, {@link #getUI()}, and {@link #getApplication()}
      * methods. A component does not yet know these objects in the constructor,
      * so in such case, the methods will return {@code null}. For example, the
      * following is invalid:
@@ -575,8 +574,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * {@link #setParent(Component)}.
      * </p>
      * <p>
-     * This method must call {@link Root#componentAttached(Component)} to let
-     * the Root know that a new Component has been attached.
+     * This method must call {@link UI#componentAttached(Component)} to let
+     * the UI know that a new Component has been attached.
      * </p>
      * 
      * 
@@ -622,19 +621,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      *         attached to an application.
      */
     public Locale getLocale();
-
-    /**
-     * Returns the current shared state bean for the component. The state (or
-     * changes to it) is communicated from the server to the client.
-     * 
-     * Subclasses can use a more specific return type for this method.
-     * 
-     * @return The state object for the component
-     * 
-     * @since 7.0
-     */
-    @Override
-    public ComponentState getState();
 
     /**
      * Adds an unique id for component that get's transferred to terminal for

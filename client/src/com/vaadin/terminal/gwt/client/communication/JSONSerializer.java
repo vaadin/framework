@@ -20,6 +20,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given

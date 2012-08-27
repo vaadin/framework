@@ -28,8 +28,8 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Root;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
@@ -101,13 +101,13 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         @Override
         public void handleActionRequest(ActionRequest request,
-                ActionResponse response, Root window) {
+                ActionResponse response, UI window) {
             main.addComponent(new Label("Action received"));
         }
 
         @Override
         public void handleRenderRequest(RenderRequest request,
-                RenderResponse response, Root window) {
+                RenderResponse response, UI window) {
             // Portlet up-and-running, enable stuff
             portletEdit.setEnabled(true);
             portletMax.setEnabled(true);
@@ -181,13 +181,13 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         @Override
         public void handleEventRequest(EventRequest request,
-                EventResponse response, Root window) {
+                EventResponse response, UI window) {
             // events not used by this test
         }
 
         @Override
         public void handleResourceRequest(ResourceRequest request,
-                ResourceResponse response, Root window) {
+                ResourceResponse response, UI window) {
             // nothing special to do here
         }
     }

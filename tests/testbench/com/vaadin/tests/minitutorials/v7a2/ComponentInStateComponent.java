@@ -29,7 +29,6 @@ public class ComponentInStateComponent extends AbstractComponent {
 
     public void setOtherComponent(Component component) {
         getState().setOtherComponent(component);
-        requestRepaint();
     }
 
     public Component getOtherComponent() {

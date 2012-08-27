@@ -147,7 +147,7 @@ public class PopupView extends AbstractComponentContainer implements
             throw new IllegalArgumentException("Content must not be null");
         }
         content = newContent;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -157,22 +157,6 @@ public class PopupView extends AbstractComponentContainer implements
      */
     public PopupView.Content getContent() {
         return content;
-    }
-
-    /**
-     * @deprecated Use {@link #setPopupVisible()} instead.
-     */
-    @Deprecated
-    public void setPopupVisibility(boolean visible) {
-        setPopupVisible(visible);
-    }
-
-    /**
-     * @deprecated Use {@link #isPopupVisible()} instead.
-     */
-    @Deprecated
-    public boolean getPopupVisibility() {
-        return isPopupVisible();
     }
 
     /**
@@ -195,7 +179,7 @@ public class PopupView extends AbstractComponentContainer implements
                 visibleComponent = null;
             }
             fireEvent(new PopupVisibilityEvent(this));
-            requestRepaint();
+            markAsDirty();
         }
     }
 

@@ -34,14 +34,14 @@ public class TableColumnResizeContentsWidth extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnWidth(COL1, table.getColumnWidth(COL1) + 20);
-                table.requestRepaint();
+                table.markAsDirty();
             }
         }));
         addComponent(new Button("Decrease width", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 table.setColumnWidth(COL1, table.getColumnWidth(COL1) - 40);
-                table.requestRepaint();
+                table.markAsDirty();
             }
         }));
     }

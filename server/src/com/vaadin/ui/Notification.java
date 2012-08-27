@@ -18,6 +18,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.Position;
 import com.vaadin.terminal.Page;
 import com.vaadin.terminal.Resource;
 
@@ -61,18 +62,33 @@ import com.vaadin.terminal.Resource;
  * 
  */
 public class Notification implements Serializable {
-    public static final int TYPE_HUMANIZED_MESSAGE = 1;
-    public static final int TYPE_WARNING_MESSAGE = 2;
-    public static final int TYPE_ERROR_MESSAGE = 3;
-    public static final int TYPE_TRAY_NOTIFICATION = 4;
+    public enum Type {
+        HUMANIZED_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE, TRAY_NOTIFICATION;
+    }
 
-    public static final int POSITION_CENTERED = 1;
-    public static final int POSITION_CENTERED_TOP = 2;
-    public static final int POSITION_CENTERED_BOTTOM = 3;
-    public static final int POSITION_TOP_LEFT = 4;
-    public static final int POSITION_TOP_RIGHT = 5;
-    public static final int POSITION_BOTTOM_LEFT = 6;
-    public static final int POSITION_BOTTOM_RIGHT = 7;
+    @Deprecated
+    public static final Type TYPE_HUMANIZED_MESSAGE = Type.HUMANIZED_MESSAGE;
+    @Deprecated
+    public static final Type TYPE_WARNING_MESSAGE = Type.WARNING_MESSAGE;
+    @Deprecated
+    public static final Type TYPE_ERROR_MESSAGE = Type.ERROR_MESSAGE;
+    @Deprecated
+    public static final Type TYPE_TRAY_NOTIFICATION = Type.TRAY_NOTIFICATION;
+
+    @Deprecated
+    public static final Position POSITION_CENTERED = Position.MIDDLE_CENTER;
+    @Deprecated
+    public static final Position POSITION_CENTERED_TOP = Position.TOP_CENTER;
+    @Deprecated
+    public static final Position POSITION_CENTERED_BOTTOM = Position.BOTTOM_CENTER;
+    @Deprecated
+    public static final Position POSITION_TOP_LEFT = Position.TOP_LEFT;
+    @Deprecated
+    public static final Position POSITION_TOP_RIGHT = Position.TOP_RIGHT;
+    @Deprecated
+    public static final Position POSITION_BOTTOM_LEFT = Position.BOTTOM_LEFT;
+    @Deprecated
+    public static final Position POSITION_BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
 
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
@@ -80,7 +96,7 @@ public class Notification implements Serializable {
     private String caption;
     private String description;
     private Resource icon;
-    private int position = POSITION_CENTERED;
+    private Position position = Position.MIDDLE_CENTER;
     private int delayMsec = 0;
     private String styleName;
     private boolean htmlContentAllowed;
@@ -107,7 +123,7 @@ public class Notification implements Serializable {
      * @param type
      *            The type of message
      */
-    public Notification(String caption, int type) {
+    public Notification(String caption, Type type) {
         this(caption, null, type);
     }
 
@@ -141,7 +157,7 @@ public class Notification implements Serializable {
      * @param type
      *            The type of message
      */
-    public Notification(String caption, String description, int type) {
+    public Notification(String caption, String description, Type type) {
         this(caption, description, type, false);
     }
 
@@ -161,7 +177,7 @@ public class Notification implements Serializable {
      *            Whether html in the caption and description should be
      *            displayed as html or as plain text
      */
-    public Notification(String caption, String description, int type,
+    public Notification(String caption, String description, Type type,
             boolean htmlContentAllowed) {
         this.caption = caption;
         this.description = description;
@@ -169,22 +185,22 @@ public class Notification implements Serializable {
         setType(type);
     }
 
-    private void setType(int type) {
+    private void setType(Type type) {
         switch (type) {
-        case TYPE_WARNING_MESSAGE:
+        case WARNING_MESSAGE:
             delayMsec = 1500;
             styleName = "warning";
             break;
-        case TYPE_ERROR_MESSAGE:
+        case ERROR_MESSAGE:
             delayMsec = -1;
             styleName = "error";
             break;
-        case TYPE_TRAY_NOTIFICATION:
+        case TRAY_NOTIFICATION:
             delayMsec = 3000;
-            position = POSITION_BOTTOM_RIGHT;
+            position = Position.BOTTOM_RIGHT;
             styleName = "tray";
 
-        case TYPE_HUMANIZED_MESSAGE:
+        case HUMANIZED_MESSAGE:
         default:
             break;
         }
@@ -233,7 +249,7 @@ public class Notification implements Serializable {
      * 
      * @return The position
      */
-    public int getPosition() {
+    public Position getPosition() {
         return position;
     }
 
@@ -243,7 +259,7 @@ public class Notification implements Serializable {
      * @param position
      *            The desired notification position
      */
-    public void setPosition(int position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
@@ -373,7 +389,7 @@ public class Notification implements Serializable {
      * @param type
      *            The message type
      */
-    public static void show(String caption, int type) {
+    public static void show(String caption, Type type) {
         new Notification(caption, type).show(Page.getCurrent());
     }
 }

@@ -25,7 +25,7 @@ import java.util.Map;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractJavaScriptComponent;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 @JavaScript("complex_types_connector.js")
 public class ComplexTypesComponent extends AbstractJavaScriptComponent {
@@ -45,7 +45,7 @@ public class ComplexTypesComponent extends AbstractJavaScriptComponent {
 
         Map<Connector, String> connectorMap = new HashMap<Connector, String>();
         connectorMap.put(this, "this");
-        connectorMap.put(Root.getCurrent(), "root");
+        connectorMap.put(UI.getCurrent(), "root");
 
         boolean[] bits = { true, true, false, true };
 

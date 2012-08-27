@@ -34,7 +34,7 @@ public class AddressField extends CustomField<Address> {
             addressForm = new Form();
         }
         addressForm.setCaption("Address");
-        addressForm.setWriteThrough(false);
+        addressForm.setBuffered(true);
 
         // make sure field changes are sent early
         addressForm.setImmediate(true);

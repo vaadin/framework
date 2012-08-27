@@ -98,7 +98,7 @@ public interface DeploymentConfiguration extends Serializable {
 
     /**
      * Get the class loader to use for loading classes loaded by name, e.g.
-     * custom Root classes. <code>null</code> indicates that the default class
+     * custom UI classes. <code>null</code> indicates that the default class
      * loader should be used.
      * 
      * @return the class loader to use, or <code>null</code>
@@ -162,7 +162,7 @@ public interface DeploymentConfiguration extends Serializable {
     public int getResourceCacheTime();
 
     /**
-     * Returns the number of seconds between heartbeat requests of a root, or a
+     * Returns the number of seconds between heartbeat requests of a UI, or a
      * non-positive number if heartbeat is disabled.
      * 
      * @since 7.0.0
@@ -172,7 +172,7 @@ public interface DeploymentConfiguration extends Serializable {
     public int getHeartbeatInterval();
 
     /**
-     * Returns whether roots that have no other activity than heartbeat requests
+     * Returns whether UIs that have no other activity than heartbeat requests
      * should be closed after they have been idle the maximum inactivity time
      * enforced by the session.
      * 
@@ -180,9 +180,9 @@ public interface DeploymentConfiguration extends Serializable {
      * 
      * @since 7.0.0
      * 
-     * @return True if roots receiving only heartbeat requests are eventually
-     *         closed; false if heartbeat requests extend root lifetime
+     * @return True if UIs receiving only heartbeat requests are eventually
+     *         closed; false if heartbeat requests extend UI lifetime
      *         indefinitely.
      */
-    public boolean isIdleRootCleanupEnabled();
+    public boolean isIdleUICleanupEnabled();
 }
