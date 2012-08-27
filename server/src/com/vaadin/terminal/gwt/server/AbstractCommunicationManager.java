@@ -90,7 +90,6 @@ import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.terminal.gwt.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.terminal.gwt.server.RpcManager.RpcInvocationException;
@@ -106,8 +105,8 @@ import com.vaadin.ui.Window;
  * This is a common base class for the server-side implementations of the
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
- * {@link ApplicationConnection}.
- * 
+ * {@link com.vaadin.terminal.gwt.client.ApplicationConnection}.
+ * <p>
  * TODO Document better!
  */
 @SuppressWarnings("serial")
