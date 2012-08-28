@@ -6,7 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
@@ -14,7 +14,7 @@ public class LayoutRenderTimeTest extends LegacyApplication {
 
     @Override
     public void init() {
-        Root.LegacyWindow main = new Root.LegacyWindow();
+        UI.LegacyWindow main = new UI.LegacyWindow();
         setMainWindow(main);
 
         VerticalLayout root = new VerticalLayout();

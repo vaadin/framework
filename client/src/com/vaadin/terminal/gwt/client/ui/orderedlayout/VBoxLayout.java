@@ -1,4 +1,4 @@
-/* 
+/*
 @VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.client.ui.orderedlayout;
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.AlignmentInfo;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
 
@@ -374,7 +374,7 @@ public class VBoxLayout extends FlowPanel {
                 captionWrap.getStyle().setProperty(
                         direction,
                         getWidget().getElement().getStyle()
-                                .getProperty(direction));
+                        .getProperty(direction));
                 captionWrap.addClassName("v-has-" + direction);
             } else if (hasCaption()) {
                 if (direction.equals("height")) {
@@ -548,7 +548,7 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    void setMargin(VMarginInfo marginInfo) {
+    void setMargin(MarginInfo marginInfo) {
         toggleStyleName("v-margin-top", marginInfo.hasTop());
         toggleStyleName("v-margin-right", marginInfo.hasRight());
         toggleStyleName("v-margin-bottom", marginInfo.hasBottom());
@@ -698,11 +698,11 @@ public class VBoxLayout extends FlowPanel {
             if (vertical) {
                 expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
                 expandWrapper.getFirstChildElement().getStyle()
-                        .setMarginTop(-totalSize, Unit.PX);
+                .setMarginTop(-totalSize, Unit.PX);
             } else {
                 expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
                 expandWrapper.getFirstChildElement().getStyle()
-                        .setMarginLeft(-totalSize, Unit.PX);
+                .setMarginLeft(-totalSize, Unit.PX);
             }
 
             recalculateExpands();
@@ -740,7 +740,7 @@ public class VBoxLayout extends FlowPanel {
                 newHeight = getElement().getOffsetHeight();
             }
             VBoxLayout.this.getElement().getStyle()
-                    .setHeight(newHeight, Unit.PX);
+            .setHeight(newHeight, Unit.PX);
         }
 
     }

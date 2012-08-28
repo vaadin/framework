@@ -2,13 +2,13 @@ package com.vaadin.tests.themes;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.themes.LiferayTheme;
 
 @Theme("liferay")
-public class LiferayThemeTest extends AbstractTestRoot {
+public class LiferayThemeTest extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

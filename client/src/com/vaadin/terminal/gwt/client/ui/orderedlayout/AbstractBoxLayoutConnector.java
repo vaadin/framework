@@ -1,4 +1,4 @@
-/* 
+/*
 @VaadinApache2LicenseForJavaFiles@
  */
 package com.vaadin.terminal.gwt.client.ui.orderedlayout;
@@ -12,7 +12,7 @@ import com.google.gwt.user.client.Element;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.LayoutClickRpc;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.ui.orderedlayout.VBoxLayout.CaptionPositio
 import com.vaadin.terminal.gwt.client.ui.orderedlayout.VBoxLayout.Slot;
 
 public abstract class AbstractBoxLayoutConnector extends
-        AbstractLayoutConnector /* implements PostLayoutListener */{
+AbstractLayoutConnector /* implements PostLayoutListener */{
 
     AbstractOrderedLayoutServerRpc rpc;
 
@@ -101,52 +101,53 @@ public abstract class AbstractBoxLayoutConnector extends
      */
     private HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
 
+    @Override
     public void updateCaption(ComponentConnector child) {
         Slot slot = getWidget().getSlot(child);
 
         String caption = child.getState().getCaption();
         String iconUrl = child.getState().getIcon() != null ? child.getState()
                 .getIcon().getURL() : null;
-        List<String> styles = child.getState().getStyles();
-        String error = child.getState().getErrorMessage();
-        boolean showError = error != null;
-        if (child.getState() instanceof AbstractFieldState) {
-            AbstractFieldState abstractFieldState = (AbstractFieldState) child
-                    .getState();
-            showError = showError && !abstractFieldState.isHideErrors();
-        }
-        boolean required = false;
-        if (child instanceof AbstractFieldConnector) {
-            required = ((AbstractFieldConnector) child).isRequired();
-        }
-        boolean enabled = child.getState().isEnabled();
+                List<String> styles = child.getState().getStyles();
+                String error = child.getState().getErrorMessage();
+                boolean showError = error != null;
+                if (child.getState() instanceof AbstractFieldState) {
+                    AbstractFieldState abstractFieldState = (AbstractFieldState) child
+                            .getState();
+                    showError = showError && !abstractFieldState.isHideErrors();
+                }
+                boolean required = false;
+                if (child instanceof AbstractFieldConnector) {
+                    required = ((AbstractFieldConnector) child).isRequired();
+                }
+                boolean enabled = child.getState().isEnabled();
 
-        slot.setCaption(caption, iconUrl, styles, error, showError, required,
-                enabled);
+                slot.setCaption(caption, iconUrl, styles, error, showError, required,
+                        enabled);
 
-        slot.setRelativeWidth(child.isRelativeWidth());
-        slot.setRelativeHeight(child.isRelativeHeight());
+                slot.setRelativeWidth(child.isRelativeWidth());
+                slot.setRelativeHeight(child.isRelativeHeight());
 
-        if (slot.hasCaption()) {
-            CaptionPosition pos = slot.getCaptionPosition();
-            getLayoutManager().addElementResizeListener(
-                    slot.getCaptionElement(), slotCaptionResizeListener);
-            if (child.isRelativeHeight()
-                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
-                getWidget().updateCaptionOffset(slot.getCaptionElement());
-            } else if (child.isRelativeWidth()
-                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
-                getWidget().updateCaptionOffset(slot.getCaptionElement());
-            }
-        } else {
-            childCaptionElementHeight.remove(child.getWidget().getElement());
-        }
+                if (slot.hasCaption()) {
+                    CaptionPosition pos = slot.getCaptionPosition();
+                    getLayoutManager().addElementResizeListener(
+                            slot.getCaptionElement(), slotCaptionResizeListener);
+                    if (child.isRelativeHeight()
+                            && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+                        getWidget().updateCaptionOffset(slot.getCaptionElement());
+                    } else if (child.isRelativeWidth()
+                            && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+                        getWidget().updateCaptionOffset(slot.getCaptionElement());
+                    }
+                } else {
+                    childCaptionElementHeight.remove(child.getWidget().getElement());
+                }
 
-        updateLayoutHeight();
+                updateLayoutHeight();
 
-        if (needsExpand()) {
-            updateExpand();
-        }
+                if (needsExpand()) {
+                    updateExpand();
+                }
     }
 
     @Override
@@ -174,15 +175,15 @@ public abstract class AbstractBoxLayoutConnector extends
                 needsMeasure.remove(child.getWidget().getElement());
                 // childElementHeight.remove(child.getWidget().getElement());
                 childCaptionElementHeight
-                        .remove(child.getWidget().getElement());
+                .remove(child.getWidget().getElement());
                 getLayoutManager().removeElementResizeListener(
                         child.getWidget().getElement(),
                         childComponentResizeListener);
                 if (slot.hasCaption()) {
                     getLayoutManager()
-                            .removeElementResizeListener(
-                                    slot.getCaptionElement(),
-                                    slotCaptionResizeListener);
+                    .removeElementResizeListener(
+                            slot.getCaptionElement(),
+                            slotCaptionResizeListener);
                 }
                 if (slot.getSpacingElement() != null) {
                     getLayoutManager().removeElementResizeListener(
@@ -207,7 +208,7 @@ public abstract class AbstractBoxLayoutConnector extends
         super.onStateChanged(stateChangeEvent);
 
         clickEventHandler.handleEventHandlerRegistration();
-        getWidget().setMargin(new VMarginInfo(getState().getMarginsBitmask()));
+        getWidget().setMargin(new MarginInfo(getState().getMarginsBitmask()));
         getWidget().setSpacing(getState().isSpacing());
 
         hasExpandRatio.clear();
@@ -265,6 +266,7 @@ public abstract class AbstractBoxLayoutConnector extends
     }
 
     StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
+        @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
             ComponentConnector child = (ComponentConnector) stateChangeEvent
@@ -413,6 +415,7 @@ public abstract class AbstractBoxLayoutConnector extends
     // };
 
     private ElementResizeListener slotCaptionResizeListener = new ElementResizeListener() {
+        @Override
         public void onElementResize(ElementResizeEvent e) {
 
             // Get all needed element references
@@ -471,6 +474,7 @@ public abstract class AbstractBoxLayoutConnector extends
     };
 
     private ElementResizeListener childComponentResizeListener = new ElementResizeListener() {
+        @Override
         public void onElementResize(ElementResizeEvent e) {
             // int h = getLayoutManager().getOuterHeight(e.getElement());
             // childElementHeight.put((Element) e.getElement().cast(), h);
@@ -483,6 +487,7 @@ public abstract class AbstractBoxLayoutConnector extends
     };
 
     private ElementResizeListener spacingResizeListener = new ElementResizeListener() {
+        @Override
         public void onElementResize(ElementResizeEvent e) {
             if (needsExpand()) {
                 updateExpand();

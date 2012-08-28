@@ -12,7 +12,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.UserError;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 @Theme("tests-components")
-public class BoxLayoutTest extends AbstractTestRoot {
+public class BoxLayoutTest extends AbstractTestUI {
 
     protected AbstractOrderedLayout view;
 
@@ -66,7 +66,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         }
 
         setContent(view);
-        getApplication().setRootPreserved(true);
+        getApplication().setUiPreserved(true);
     }
 
     private Component createHorizontalTest() {
@@ -108,6 +108,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         final CheckBox vertical = new CheckBox("Vertical", !horizontal);
         vertical.setImmediate(true);
         vertical.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 view.removeAllComponents();
 
@@ -124,37 +125,40 @@ public class BoxLayoutTest extends AbstractTestRoot {
 
         Button addComponent = new Button("Add Component",
                 new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                GridLayout grid = new GridLayout(2, 2);
+                Button grow = new Button("Grow Me",
+                        new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
-                        GridLayout grid = new GridLayout(2, 2);
-                        Button grow = new Button("Grow Me",
-                                new Button.ClickListener() {
-                                    public void buttonClick(ClickEvent event) {
-                                        if (event.getButton().getWidth() == -1) {
-                                            event.getButton().setHeight("50px");
-                                            event.getButton().setWidth("200px");
-                                        } else {
-                                            event.getButton()
-                                                    .setSizeUndefined();
-                                        }
-                                    }
-                                });
-                        grid.addComponent(new Label("Grid cell 1"));
-                        grid.addComponent(new Label("Grid cell 2"));
-                        grid.addComponent(grow);
-                        grid.addComponent(new Label("Grid cell 4"));
-                        l.addComponent(grid);
-                        // l.addComponent(new TextField("Some field"));
+                        if (event.getButton().getWidth() == -1) {
+                            event.getButton().setHeight("50px");
+                            event.getButton().setWidth("200px");
+                        } else {
+                            event.getButton()
+                            .setSizeUndefined();
+                        }
                     }
                 });
+                grid.addComponent(new Label("Grid cell 1"));
+                grid.addComponent(new Label("Grid cell 2"));
+                grid.addComponent(grow);
+                grid.addComponent(new Label("Grid cell 4"));
+                l.addComponent(grid);
+                // l.addComponent(new TextField("Some field"));
+            }
+        });
         header.addComponent(addComponent);
 
         Button removeComponent = new Button("Remove Component",
                 new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Component last = l.getComponent(l.getComponentCount() - 1);
-                        l.removeComponent(last);
-                    }
-                });
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Component last = l.getComponent(l.getComponentCount() - 1);
+                l.removeComponent(last);
+            }
+        });
         header.addComponent(removeComponent);
 
         // Second row
@@ -175,6 +179,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         final NativeSelect width = new NativeSelect(null, sizes);
         width.setImmediate(true);
         width.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (width.getValue() != null) {
                     l.setWidth(width.getValue().toString());
@@ -188,6 +193,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         final NativeSelect height = new NativeSelect(null, sizes);
         height.setImmediate(true);
         height.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (height.getValue() != null) {
                     l.setHeight(height.getValue().toString());
@@ -200,6 +206,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
 
         final CheckBox margin = new CheckBox("Margin", false);
         margin.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 l.setMargin(margin.getValue().booleanValue());
             }
@@ -210,6 +217,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
 
         final CheckBox spacing = new CheckBox("Spacing", false);
         spacing.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 l.setSpacing(spacing.getValue().booleanValue());
             }
@@ -241,6 +249,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         align.setNullSelectionAllowed(false);
         align.select(Alignment.TOP_LEFT);
         align.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (target == null) {
                     return;
@@ -254,6 +263,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         expand.setImmediate(true);
         expand.setEnabled(false);
         expand.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (target != null) {
                     l.setExpandRatio(target, expand.getValue() ? 1 : 0);
@@ -276,6 +286,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentWidth.setImmediate(true);
         componentWidth.setEnabled(false);
         componentWidth.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (target == null) {
                     return;
@@ -294,6 +305,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentHeight.setImmediate(true);
         componentHeight.setEnabled(false);
         componentHeight.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (componentHeight.getValue() != null) {
                     target.setHeight(componentHeight.getValue().toString());
@@ -309,6 +321,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentCaption.setImmediate(true);
         componentCaption.setEnabled(false);
         componentCaption.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (componentCaption.getValue() != null) {
                     target.setCaption(componentCaption.getValue().toString());
@@ -324,6 +337,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentIcon.setImmediate(true);
         componentIcon.setEnabled(false);
         componentIcon.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (componentIcon.getValue() != null) {
                     target.setIcon(new ThemeResource(componentIcon.getValue()
@@ -339,6 +353,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentDescription.setImmediate(true);
         componentDescription.setEnabled(false);
         componentDescription.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 target.setDescription(componentDescription.getValue());
             }
@@ -349,6 +364,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentError.setImmediate(true);
         componentError.setEnabled(false);
         componentError.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (target != null) {
                     target.setComponentError(componentError.getValue() ? new UserError(
@@ -362,6 +378,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         componentRequired.setImmediate(true);
         componentRequired.setEnabled(false);
         componentRequired.addListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (target != null && target instanceof AbstractField) {
                     ((AbstractField<?>) target).setRequired(componentRequired
@@ -389,6 +406,7 @@ public class BoxLayoutTest extends AbstractTestRoot {
         l.addComponent(new Button("Component 2"));
 
         l.addListener(new LayoutClickListener() {
+            @Override
             public void layoutClick(LayoutClickEvent event) {
                 if (event.getChildComponent() == null
                         || target == event.getChildComponent()) {
@@ -416,15 +434,15 @@ public class BoxLayoutTest extends AbstractTestRoot {
                 if (target != null) {
                     if (target.getWidth() > -1) {
                         componentWidth.select(new Float(target.getWidth())
-                                .intValue()
-                                + target.getWidthUnits().getSymbol());
+                        .intValue()
+                        + target.getWidthUnits().getSymbol());
                     } else {
                         componentWidth.select(null);
                     }
                     if (target.getHeight() > -1) {
                         componentHeight.select(new Float(target.getHeight())
-                                .intValue()
-                                + target.getHeightUnits().getSymbol());
+                        .intValue()
+                        + target.getHeightUnits().getSymbol());
                     } else {
                         componentHeight.select(null);
                     }

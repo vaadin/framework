@@ -37,27 +37,27 @@ public class LayoutResizeTest extends TestBase {
 
         Button resize = new Button("Resize to 700x400",
                 new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        event.getButton()
-                                .getRoot()
-                                .getPage()
-                                .getJavaScript()
-                                .execute(
-                                        "setTimeout(function() {window.resizeTo(700,400)}, 500)");
-                    }
-                });
+            @Override
+            public void buttonClick(ClickEvent event) {
+                event.getButton()
+                .getUI()
+                .getPage()
+                .getJavaScript()
+                .execute(
+                        "setTimeout(function() {window.resizeTo(700,400)}, 500)");
+            }
+        });
         left.addComponent(resize);
 
         resize = new Button("Resize to 900x600", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 event.getButton()
-                        .getRoot()
-                        .getPage()
-                        .getJavaScript()
-                        .execute(
-                                "setTimeout(function() {window.resizeTo(900,600)}, 500)");
+                        .getUI()
+                .getPage()
+                .getJavaScript()
+                .execute(
+                        "setTimeout(function() {window.resizeTo(900,600)}, 500)");
             }
         });
         left.addComponent(resize);

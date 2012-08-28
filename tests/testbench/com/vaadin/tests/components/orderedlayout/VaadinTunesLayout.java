@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -19,7 +21,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 @Theme("tests-components")
-public class VaadinTunesLayout extends AbstractTestRoot {
+public class VaadinTunesLayout extends AbstractTestUI {
 
     @Override
     public void setup(WrappedRequest request) {
@@ -53,7 +55,9 @@ public class VaadinTunesLayout extends AbstractTestRoot {
         // modes and search
         HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
-        top.setMargin(false, true, false, true); // Enable horizontal margins
+        top.setMargin(new MarginInfo(false, true, false, true)); // Enable
+        // horizontal
+        // margins
         top.setSpacing(true);
 
         // Let's attach that one straight away too
@@ -100,7 +104,7 @@ public class VaadinTunesLayout extends AbstractTestRoot {
         // Volume controls
         Button mute = new NativeButton("mute");
         Slider vol = new Slider();
-        vol.setOrientation(Slider.ORIENTATION_HORIZONTAL);
+        vol.setOrientation(SliderOrientation.HORIZONTAL);
         vol.setWidth("100px");
         Button max = new NativeButton("max");
         volume.addComponent(mute);
@@ -123,7 +127,7 @@ public class VaadinTunesLayout extends AbstractTestRoot {
         track.setWidth(null);
         album.setWidth(null);
         Slider progress = new Slider();
-        progress.setOrientation(Slider.ORIENTATION_HORIZONTAL);
+        progress.setOrientation(SliderOrientation.HORIZONTAL);
         progress.setWidth("100%");
         trackDetails.addComponent(track);
         trackDetails.addComponent(album);
@@ -252,7 +256,7 @@ public class VaadinTunesLayout extends AbstractTestRoot {
                 "Bullet For My Valentine", "Chasing Victory", "Chimaira",
                 "Danko Jones", "Deadlock", "Deftones", "From Autumn To Ashes",
                 "Haste The Day", "Four Year Strong", "In Flames", "Kemopetrol",
-                "John Legend" };
+        "John Legend" };
         String[] albums = new String[] { "Once Again", "The Caitiff Choir",
                 "The Devil And God", "Light Grenades", "Dicthonomy",
                 "Back In Black", "Dreamer", "Come Clarity", "Year Zero",
@@ -261,7 +265,7 @@ public class VaadinTunesLayout extends AbstractTestRoot {
         String[] genres = new String[] { "Rock", "Metal", "Hardcore", "Indie",
                 "Pop", "Alternative", "Blues", "Jazz", "Hip Hop",
                 "Electronica", "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel",
-                "Country" };
+        "Country" };
         for (int i = 0; i < 1000; i++) {
             NativeSelect s = new NativeSelect();
             s.addItem("1 star");
@@ -294,7 +298,9 @@ public class VaadinTunesLayout extends AbstractTestRoot {
         top.setHeight("75px"); // Same as the background image height
 
         playback.setStyleName("playback");
-        playback.setMargin(false, true, false, false); // Add right-side margin
+        playback.setMargin(new MarginInfo(false, true, false, false)); // Add
+                                                                       // right-side
+                                                                       // margin
         play.setStyleName("play");
         next.setStyleName("next");
         prev.setStyleName("prev");
