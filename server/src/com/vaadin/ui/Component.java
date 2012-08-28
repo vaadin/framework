@@ -136,8 +136,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setStyleName(String style);
 
     /**
-     * Adds a style name to component. The style name will be rendered as a HTML
-     * class name, which can be used in a CSS definition.
+     * Adds one or more style names to this component. Multiple styles can be
+     * specified as a space-separated list of style names. The style name will
+     * be rendered as a HTML class name, which can be used in a CSS definition.
      * 
      * <pre>
      * Label label = new Label(&quot;This text has style&quot;);
