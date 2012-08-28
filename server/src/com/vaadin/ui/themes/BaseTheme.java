@@ -56,4 +56,9 @@ public class BaseTheme {
      */
     public static final String CLIP = "v-clip";
 
+    /**
+     * Added to all UI components
+     */
+    public static final String UI_WIDGET = "v-widget";
+
 }

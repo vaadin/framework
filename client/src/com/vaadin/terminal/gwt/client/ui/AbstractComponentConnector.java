@@ -42,9 +42,10 @@ import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.datefield.PopupDateFieldConnector;
+import com.vaadin.ui.themes.BaseTheme;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector {
+implements ComponentConnector {
 
     private Widget widget;
 
@@ -70,7 +71,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         getConnection().getVTooltip().connectHandlersToWidget(getWidget());
 
         // Set the core 'v' style name for the widget
-        getWidget().setStyleName("v", true);
+        getWidget().setStyleName(BaseTheme.UI_WIDGET, true);
     }
 
     /**
@@ -90,7 +91,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     "There is no information about the widget for "
                             + Util.getSimpleName(this)
                             + ". Did you remember to compile the right widgetset?",
-                    e);
+                            e);
         }
     }
 

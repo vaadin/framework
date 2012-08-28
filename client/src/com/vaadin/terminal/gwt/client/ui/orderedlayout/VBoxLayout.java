@@ -23,6 +23,7 @@ import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.LayoutManager;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class VBoxLayout extends FlowPanel {
 
@@ -254,7 +255,7 @@ public class VBoxLayout extends FlowPanel {
                 if (caption == null) {
                     caption = DOM.createDiv();
                     captionWrap = DOM.createDiv();
-                    captionWrap.addClassName("v");
+                    captionWrap.addClassName(BaseTheme.UI_WIDGET);
                     captionWrap.addClassName("v-has-caption");
                     getElement().appendChild(captionWrap);
                     captionWrap.appendChild(getWidget().getElement());
