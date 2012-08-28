@@ -34,6 +34,7 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
+import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
@@ -431,7 +432,9 @@ public class ConnectorBundle {
     }
 
     private static boolean isConnected(JClassType type) {
-        return type.isAnnotationPresent(Connect.class);
+        return type.isAnnotationPresent(Connect.class)
+                || type.getQualifiedSourceName().equals(
+                        UnknownComponentConnector.class.getCanonicalName());
     }
 
     public static boolean isConnectedComponentConnector(JClassType type) {

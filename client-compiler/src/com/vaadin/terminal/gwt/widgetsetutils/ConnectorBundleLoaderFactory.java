@@ -42,6 +42,7 @@ import com.vaadin.terminal.gwt.client.metadata.ProxyHandler;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataBundle;
 import com.vaadin.terminal.gwt.client.metadata.TypeDataStore;
+import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ClientRpcVisitor;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
 import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
@@ -604,6 +605,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         // Eager connectors and all RPC interfaces are loaded by default
         eagerBundle.processTypes(eagerLogger,
                 connectorsByLoadStyle.get(LoadStyle.EAGER));
+        eagerBundle.processType(eagerLogger, typeOracle
+                .findType(UnknownComponentConnector.class.getCanonicalName()));
         eagerBundle.processSubTypes(eagerLogger,
                 typeOracle.getType(ClientRpc.class.getName()));
         eagerBundle.processSubTypes(eagerLogger,
