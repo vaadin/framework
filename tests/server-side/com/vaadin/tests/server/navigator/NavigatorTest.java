@@ -204,7 +204,7 @@ public class NavigatorTest extends TestCase {
 
         // create and test navigator
         Navigator navigator = new Navigator(manager, display);
-        navigator.registerProvider(provider);
+        navigator.addProvider(provider);
 
         navigator.navigateTo("test1");
         navigator.navigateTo("test2/");
@@ -246,7 +246,7 @@ public class NavigatorTest extends TestCase {
 
         // create and test navigator
         Navigator navigator = new Navigator(manager, display);
-        navigator.registerProvider(provider);
+        navigator.addProvider(provider);
 
         navigator.navigateTo("test2");
         navigator.navigateTo("");
@@ -291,7 +291,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // test navigator
-        navigator.registerProvider(provider);
+        navigator.addProvider(provider);
         navigator.addListener(listener);
 
         navigator.navigateTo("test1");
@@ -363,7 +363,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // test navigator
-        navigator.registerProvider(provider);
+        navigator.addProvider(provider);
         navigator.addListener(listener1);
         navigator.addListener(listener2);
 
