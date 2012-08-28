@@ -18,6 +18,7 @@ package com.vaadin.terminal.gwt.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -74,6 +75,7 @@ import com.vaadin.terminal.gwt.client.metadata.Property;
 import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
+import com.vaadin.terminal.gwt.client.ui.AbstractConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -1130,13 +1132,14 @@ public class ApplicationConnection {
                 int startProcessing = updateDuration.elapsedMillis();
 
                 // Ensure that all connectors that we are about to update exist
-                createConnectorsIfNeeded(json);
+                Set<ServerConnector> createdConnectors = createConnectorsIfNeeded(json);
 
                 updateDuration.logDuration(" * Creating connectors completed",
                         10);
 
                 // Update states, do not fire events
-                Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(json);
+                Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
+                        json, createdConnectors);
 
                 updateDuration.logDuration(
                         " * Update of connector states completed", 10);
@@ -1280,17 +1283,9 @@ public class ApplicationConnection {
                     ServerConnector connector = sce.getConnector();
                     if (connector instanceof ComponentConnector) {
                         ComponentConnector component = (ComponentConnector) connector;
-                        Type type = TypeData.getType(component.getClass());
 
-                        Type stateType;
-                        try {
-                            stateType = type.getMethod("getState")
-                                    .getReturnType();
-                        } catch (NoDataException e) {
-                            throw new RuntimeException(
-                                    "Can not find the state type for "
-                                            + type.getSignature(), e);
-                        }
+                        Type stateType = AbstractConnector
+                                .getStateType(component);
 
                         Set<String> changedProperties = sce
                                 .getChangedProperties();
@@ -1385,12 +1380,14 @@ public class ApplicationConnection {
                 VConsole.log("* Unregistered " + unregistered + " connectors");
             }
 
-            private void createConnectorsIfNeeded(ValueMap json) {
+            private Set<ServerConnector> createConnectorsIfNeeded(ValueMap json) {
                 VConsole.log(" * Creating connectors (if needed)");
 
                 if (!json.containsKey("types")) {
-                    return;
+                    return Collections.emptySet();
                 }
+
+                Set<ServerConnector> createdConnectors = new HashSet<ServerConnector>();
 
                 ValueMap types = json.getValueMap("types");
                 JsArrayString keyArray = types.getKeyArray();
@@ -1411,7 +1408,8 @@ public class ApplicationConnection {
                         // Connector does not exist so we must create it
                         if (connectorClass != UIConnector.class) {
                             // create, initialize and register the paintable
-                            getConnector(connectorId, connectorType);
+                            connector = getConnector(connectorId, connectorType);
+                            createdConnectors.add(connector);
                         } else {
                             // First UIConnector update. Before this the
                             // UIConnector has been created but not
@@ -1421,11 +1419,13 @@ public class ApplicationConnection {
                                     uIConnector);
                             uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
+                            createdConnectors.add(uIConnector);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
                 }
+                return createdConnectors;
             }
 
             private void updateVaadin6StyleConnectors(ValueMap json) {
@@ -1480,12 +1480,15 @@ public class ApplicationConnection {
             }
 
             private Collection<StateChangeEvent> updateConnectorState(
-                    ValueMap json) {
+                    ValueMap json, Set<ServerConnector> newConnectors) {
                 ArrayList<StateChangeEvent> events = new ArrayList<StateChangeEvent>();
                 VConsole.log(" * Updating connector states");
                 if (!json.containsKey("state")) {
                     return events;
                 }
+                HashSet<ServerConnector> remainingNewConnectors = new HashSet<ServerConnector>(
+                        newConnectors);
+
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
                 JsArrayString keyArray = states.getKeyArray();
@@ -1514,6 +1517,16 @@ public class ApplicationConnection {
                             Set<String> changedProperties = new HashSet<String>();
                             addJsonFields(stateJson, changedProperties, "");
 
+                            if (newConnectors.contains(connector)) {
+                                remainingNewConnectors.remove(connector);
+                                // Fire events for properties using the default
+                                // value for newly created connectors
+                                addAllStateFields(
+                                        AbstractConnector
+                                                .getStateType(connector),
+                                        changedProperties, "");
+                            }
+
                             StateChangeEvent event = new StateChangeEvent(
                                     connector, changedProperties);
 
@@ -1524,7 +1537,56 @@ public class ApplicationConnection {
                     }
                 }
 
+                // Fire events for properties using the default value for newly
+                // created connectors even if there were no state changes
+                for (ServerConnector connector : remainingNewConnectors) {
+                    Set<String> changedProperties = new HashSet<String>();
+                    addAllStateFields(
+                            AbstractConnector.getStateType(connector),
+                            changedProperties, "");
+
+                    StateChangeEvent event = new StateChangeEvent(connector,
+                            changedProperties);
+
+                    events.add(event);
+
+                }
+
                 return events;
+            }
+
+            /**
+             * Recursively adds the names of all properties in the provided
+             * state type.
+             * 
+             * @param type
+             *            the type to process
+             * @param foundProperties
+             *            a set of all currently added properties
+             * @param context
+             *            the base name of the current object
+             */
+            private void addAllStateFields(Type type,
+                    Set<String> foundProperties, String context) {
+                try {
+                    Collection<Property> properties = type.getProperties();
+                    for (Property property : properties) {
+                        String propertyName = context + property.getName();
+                        foundProperties.add(propertyName);
+
+                        Type propertyType = property.getType();
+                        if (propertyType.hasProperties()) {
+                            addAllStateFields(propertyType, foundProperties,
+                                    propertyName + ".");
+                        }
+                    }
+                } catch (NoDataException e) {
+                    throw new IllegalStateException(
+                            "No property info for "
+                                    + type
+                                    + ". Did you remember to compile the right widgetset?",
+                            e);
+                }
             }
 
             /**

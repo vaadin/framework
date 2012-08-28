@@ -16,7 +16,7 @@ public class CloseSubWindow extends TestBase {
     @Override
     protected void setup() {
         Button openWindowButton = new Button("Open sub-window");
-        openWindowButton.setDebugId("opensub");
+        openWindowButton.setId("opensub");
         openWindowButton.addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

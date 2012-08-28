@@ -34,7 +34,7 @@ public class AllComponentTooltipTest extends AbstractTestUI {
                     continue;
                 }
 
-                c.setDebugId(cls.getName());
+                c.setId(cls.getName());
                 c.setCaption(cls.getName());
                 c.setDescription(cls.getName());
                 c.setWidth("100px");

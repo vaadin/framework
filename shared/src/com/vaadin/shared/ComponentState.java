@@ -42,7 +42,7 @@ public class ComponentState extends SharedState {
     private boolean visible = true;
     private URLReference icon = null;
     private List<String> styles = null;
-    private String debugId = null;
+    private String id = null;
     /**
      * A set of event identifiers with registered listeners.
      */
@@ -293,25 +293,25 @@ public class ComponentState extends SharedState {
     }
 
     /**
-     * Gets the debug id for the component. The debugId is added as DOM id for
-     * the component.
+     * Gets the id for the component. The id is added as DOM id for the
+     * component.
      * 
-     * @return The debug id for the component or null if not set
+     * @return The id for the component or null if not set
      */
-    public String getDebugId() {
-        return debugId;
+    public String getId() {
+        return id;
     }
 
     /**
-     * Sets the debug id for the component. The debugId is added as DOM id for
-     * the component.
+     * Sets the id for the component. The id is added as DOM id for the
+     * component.
      * 
-     * @param debugId
-     *            The new debugId for the component or null for no debug id
+     * @param id
+     *            The new id for the component or null for no id
      * 
      */
-    public void setDebugId(String debugId) {
-        this.debugId = debugId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**

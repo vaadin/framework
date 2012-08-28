@@ -24,7 +24,7 @@ public class FooterClick extends TestBase {
     @Override
     protected void setup() {
         final Table table = new Table();
-        table.setDebugId("table");
+        table.setId("table");
         table.setContainerDataSource(createContainer());
         table.setWidth("400px");
         table.setHeight("400px");
@@ -38,7 +38,7 @@ public class FooterClick extends TestBase {
 
         final TextField columnField = new TextField(
                 "ProperyId of clicked column");
-        columnField.setDebugId("ClickedColumn");
+        columnField.setId("ClickedColumn");
 
         // Add a footer click listener
         table.addListener(new Table.FooterClickListener() {

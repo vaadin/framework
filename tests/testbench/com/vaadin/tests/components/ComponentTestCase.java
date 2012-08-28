@@ -124,7 +124,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
         checkBox.setValue(initialState);
         checkBox.setImmediate(true);
 
-        checkBox.setDebugId("checkboxaction-" + caption);
+        checkBox.setId("checkboxaction-" + caption);
         // Set default value for all components
         doCommand(command, initialState);
 
@@ -146,7 +146,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
             }
         });
 
-        button.setDebugId("buttonaction-" + caption);
+        button.setId("buttonaction-" + caption);
         button.setImmediate(true);
 
         return button;
@@ -187,7 +187,7 @@ public abstract class ComponentTestCase<T extends AbstractComponent> extends
 
         }
 
-        select.setDebugId("selectaction-" + caption);
+        select.setId("selectaction-" + caption);
 
         select.setImmediate(true);
 

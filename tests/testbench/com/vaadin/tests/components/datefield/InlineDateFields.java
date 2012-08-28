@@ -33,14 +33,14 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
         InlineDateField pd = createInlineDateField("Undefined width", "-1",
                 locale);
-        pd.setDebugId("Locale-" + locale.toString() + "-undefined-wide");
+        pd.setId("Locale-" + locale.toString() + "-undefined-wide");
         addTestComponent(pd);
         pd = createInlineDateField("300px width", "300px", locale);
-        pd.setDebugId("Locale-" + locale.toString() + "-300px-wide");
+        pd.setId("Locale-" + locale.toString() + "-300px-wide");
         addTestComponent(pd);
         pd = createInlineDateField("Initially empty", "", locale);
         pd.setValue(null);
-        pd.setDebugId("Locale-" + locale.toString() + "-initially-empty");
+        pd.setId("Locale-" + locale.toString() + "-initially-empty");
         addTestComponent(pd);
 
     }

@@ -47,7 +47,7 @@ public class Ticket1973_2 extends Application.LegacyApplication {
             int randInt = i;
             Item item = container.addItem(new Integer(i));
             VerticalLayout layout = new VerticalLayout();
-            layout.setDebugId("lo" + i);
+            layout.setId("lo" + i);
             layout.addComponent(new Button("Test " + randInt));
             item.getItemProperty("layout").setValue(layout);
         }

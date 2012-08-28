@@ -149,7 +149,7 @@ public class CustomDateFormats extends TestBase {
         while (usedDebugIds.contains(debugId)) {
             debugId = debugId + "-";
         }
-        df.setDebugId(debugId);
+        df.setId(debugId);
         usedDebugIds.add(debugId);
 
         df.setData(new Data(serversideValueLabel, pattern));

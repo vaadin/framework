@@ -68,7 +68,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
 
         MyComponent(String name) {
             HorizontalLayout ol = new HorizontalLayout();
-            ol.setDebugId(name.replaceAll(" ", ""));
+            ol.setId(name.replaceAll(" ", ""));
             ol.addComponent(new Label(name));
             up = new Button("up");
             up.addListener(new Button.ClickListener() {

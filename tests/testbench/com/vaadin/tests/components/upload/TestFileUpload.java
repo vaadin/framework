@@ -26,7 +26,7 @@ public class TestFileUpload extends TestBase implements Receiver {
                 return baos;
             }
         });
-        u.setDebugId("UPL");
+        u.setId("UPL");
         u.addListener(new Upload.FinishedListener() {
 
             @Override

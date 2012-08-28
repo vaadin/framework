@@ -268,10 +268,8 @@ public abstract class AbstractConnector implements ServerConnector,
      * @return A new state object
      */
     protected SharedState createState() {
-        Type connectorType = TypeData.getType(getClass());
         try {
-            Type stateType = connectorType.getMethod("getState")
-                    .getReturnType();
+            Type stateType = getStateType(this);
             Object stateInstance = stateType.createInstance();
             return (SharedState) stateInstance;
         } catch (NoDataException e) {
@@ -282,6 +280,19 @@ public abstract class AbstractConnector implements ServerConnector,
                     e);
         }
 
+    }
+
+    public static Type getStateType(ServerConnector connector) {
+        try {
+            return TypeData.getType(connector.getClass()).getMethod("getState")
+                    .getReturnType();
+        } catch (NoDataException e) {
+            throw new IllegalStateException(
+                    "There is no information about the state for "
+                            + Util.getSimpleName(connector)
+                            + ". Did you remember to compile the right widgetset?",
+                    e);
+        }
     }
 
     @Override

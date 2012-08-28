@@ -21,10 +21,10 @@ public class MultipleDebugIds extends TestBase {
         TextField textField2 = new TextField();
         Button button = new Button();
         Button button2 = new Button();
-        textField.setDebugId("textfield");
-        button.setDebugId("button");
-        textField2.setDebugId("textfield2");
-        button2.setDebugId("textfield");
+        textField.setId("textfield");
+        button.setId("button");
+        textField2.setId("textfield2");
+        button2.setId("textfield");
 
         addComponent(textField);
         addComponent(textField2);

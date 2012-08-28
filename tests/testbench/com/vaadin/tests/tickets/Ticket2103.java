@@ -37,9 +37,9 @@ public class Ticket2103 extends Application.LegacyApplication {
         public MyAccordion(Component[] components, String id) {
             this.setWidth("100%");
             this.setHeight("100%");
-            setDebugId(id);
+            setId(id);
             for (int i = 0; i < components.length; i++) {
-                this.addTab(components[i], components[i].getDebugId(), null);
+                this.addTab(components[i], components[i].getId(), null);
             }
         }
     }
@@ -51,7 +51,7 @@ public class Ticket2103 extends Application.LegacyApplication {
         private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
-            setDebugId(id);
+            setId(id);
             setSizeFull();
             columns = initializeColumns(columnNumber);
             table.setWidth("100%");

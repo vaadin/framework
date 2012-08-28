@@ -41,17 +41,17 @@ public class TooltipTests extends TestBase {
 
         panel = new Panel();
         panel.setCaption("Panel caption");
-        panel.setDebugId("panel");
+        panel.setId("panel");
         addComponent(panel);
 
         layout = new VerticalLayout();
-        layout.setDebugId("layout");
+        layout.setId("layout");
         layout.setMargin(true);
         layout.setSpacing(true);
         panel.setContent(layout);
 
         label = new Label("Hover me!");
-        label.setDebugId("label");
+        label.setId("label");
         layout.addComponent(label);
     }
 

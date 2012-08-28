@@ -33,8 +33,8 @@ public class ScrollDetachSynchronization extends TestBase {
         buttonBar.setSizeUndefined();
         Button first = new Button("First layout");
         Button second = new Button("Second layout");
-        first.setDebugId("FirstButton");
-        second.setDebugId("SecondButton");
+        first.setId("FirstButton");
+        second.setId("SecondButton");
         buttonBar.addComponent(first);
         buttonBar.addComponent(second);
         mainLayout.addComponent(buttonBar);
@@ -73,7 +73,7 @@ public class ScrollDetachSynchronization extends TestBase {
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSizeFull();
-        hl.setDebugId(which + "Layout");
+        hl.setId(which + "Layout");
 
         Table t = new Table();
         t.addContainerProperty("name", String.class, null);
@@ -81,7 +81,7 @@ public class ScrollDetachSynchronization extends TestBase {
             String id = which + " " + i;
             t.addItem(new String[] { id }, id);
         }
-        t.setDebugId(which + "Table");
+        t.setId(which + "Table");
         t.setItemCaptionPropertyId("name");
         t.setSizeFull();
 

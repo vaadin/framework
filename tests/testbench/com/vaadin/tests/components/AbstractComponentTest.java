@@ -98,7 +98,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
 
     private MenuBar createMainMenu() {
         menu = new MenuBar();
-        menu.setDebugId("menu");
+        menu.setId("menu");
         mainMenu = menu.addItem("Component", null);
         settingsMenu = menu.addItem("Settings", null);
         populateSettingsMenu(settingsMenu);
@@ -189,7 +189,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     @Override
     protected void initializeComponents() {
         component = constructComponent();
-        component.setDebugId("testComponent");
+        component.setId("testComponent");
         addTestComponent(component);
     }
 
