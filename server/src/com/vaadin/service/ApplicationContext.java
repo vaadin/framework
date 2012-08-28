@@ -80,6 +80,12 @@ public interface ApplicationContext extends Serializable {
     public void removeTransactionListener(TransactionListener listener);
 
     /**
+     * Returns the time between requests, in seconds, before this context is
+     * invalidated. A negative time indicates the context should never timeout.
+     */
+    public int getMaxInactiveInterval();
+
+    /**
      * Generate a URL that can be used as the relative location of e.g. an
      * {@link ApplicationResource}.
      * 

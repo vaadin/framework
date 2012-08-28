@@ -16,6 +16,7 @@
 
 package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,8 +30,11 @@ import com.google.gwt.user.rebind.SourceWriter;
 
 public class FieldProperty extends Property {
 
+    private final JField field;
+
     private FieldProperty(JClassType beanType, JField field) {
         super(field.getName(), beanType, field.getType());
+        this.field = field;
     }
 
     @Override
@@ -72,6 +76,11 @@ public class FieldProperty extends Property {
             }
         }
         return fields;
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+        return field.getAnnotation(annotationClass);
     }
 
 }

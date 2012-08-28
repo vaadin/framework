@@ -23,16 +23,14 @@ public class ApplicationConstants {
 
     public static final String UIDL_REQUEST_PATH = "UIDL/";
 
+    public static final String HEARTBEAT_REQUEST_PATH = "HEARTBEAT/";
+
     public static final String CONNECTOR_RESOURCE_PREFIX = APP_REQUEST_PATH
             + "CONNECTOR";
 
     public static final String APP_PROTOCOL_PREFIX = "app://";
     public static final String CONNECTOR_PROTOCOL_PREFIX = "connector://";
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
-    /**
-     * Name of the parameter used to transmit root ids back and forth
-     */
-    public static final String ROOT_ID_PARAMETER = "rootId";
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
 

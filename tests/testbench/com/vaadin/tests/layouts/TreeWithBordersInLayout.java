@@ -2,7 +2,7 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 

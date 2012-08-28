@@ -33,6 +33,8 @@ public abstract class AbstractDeploymentConfiguration implements
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
+    private int heartbeatInterval;
+    private boolean idleRootCleanupEnabled;
 
     public AbstractDeploymentConfiguration(Class<?> systemPropertyBaseClass,
             Properties applicationProperties) {
@@ -42,12 +44,13 @@ public abstract class AbstractDeploymentConfiguration implements
         checkProductionMode();
         checkXsrfProtection();
         checkResourceCacheTime();
+        checkHeartbeatInterval();
+        checkIdleUICleanup();
     }
 
     @Override
     public String getApplicationOrSystemProperty(String propertyName,
             String defaultValue) {
-
         String val = null;
 
         // Try application properties
@@ -163,19 +166,49 @@ public abstract class AbstractDeploymentConfiguration implements
         return addonContext;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default is false.
+     */
     @Override
     public boolean isProductionMode() {
         return productionMode;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default is true.
+     */
     @Override
     public boolean isXsrfProtectionEnabled() {
         return xsrfProtectionEnabled;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * The default interval is 3600 seconds (1 hour).
+     */
     @Override
     public int getResourceCacheTime() {
         return resourceCacheTime;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * The default interval is 300 seconds (5 minutes).
+     */
+    @Override
+    public int getHeartbeatInterval() {
+        return heartbeatInterval;
+    }
+
+    @Override
+    public boolean isIdleUICleanupEnabled() {
+        return idleRootCleanupEnabled;
     }
 
     /**
@@ -216,6 +249,24 @@ public abstract class AbstractDeploymentConfiguration implements
                     Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
             resourceCacheTime = 3600;
         }
+    }
+
+    private void checkHeartbeatInterval() {
+        try {
+            heartbeatInterval = Integer
+                    .parseInt(getApplicationOrSystemProperty(
+                            Constants.SERVLET_PARAMETER_HEARTBEAT_RATE, "300"));
+        } catch (NumberFormatException e) {
+            getLogger().warning(
+                    Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            heartbeatInterval = 300;
+        }
+    }
+
+    private void checkIdleUICleanup() {
+        idleRootCleanupEnabled = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_CLOSE_IDLE_UIS, "false").equals(
+                "true");
     }
 
     private Logger getLogger() {

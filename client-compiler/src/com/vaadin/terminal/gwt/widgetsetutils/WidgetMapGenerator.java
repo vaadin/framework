@@ -40,7 +40,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -284,7 +284,7 @@ public class WidgetMapGenerator extends Generator {
             if (connectorsWithInstantiator.contains(clientClass)) {
                 continue;
             }
-            if (clientClass == RootConnector.class) {
+            if (clientClass == UIConnector.class) {
                 // Roots are not instantiated by widgetset
                 continue;
             }

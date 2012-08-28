@@ -40,8 +40,8 @@ import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * A component that represents a floating popup window that can be added to a
- * {@link Root}. A window is added to a {@code Root} using
- * {@link Root#addWindow(Window)}. </p>
+ * {@link UI}. A window is added to a {@code UI} using
+ * {@link UI#addWindow(Window)}. </p>
  * <p>
  * The contents of a window is set using {@link #setContent(ComponentContainer)}
  * or by using the {@link #Window(String, ComponentContainer)} constructor. The
@@ -57,7 +57,7 @@ import com.vaadin.terminal.Vaadin6Component;
  * </p>
  * <p>
  * In Vaadin versions prior to 7.0.0, Window was also used as application level
- * windows. This function is now covered by the {@link Root} class.
+ * windows. This function is now covered by the {@link UI} class.
  * </p>
  * 
  * @author Vaadin Ltd.
@@ -222,14 +222,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * </p>
      */
     public void close() {
-        Root root = getRoot();
+        UI uI = getUI();
 
-        // Don't do anything if not attached to a root
-        if (root != null) {
+        // Don't do anything if not attached to a UI
+        if (uI != null) {
             // focus is restored to the parent window
-            root.focus();
-            // subwindow is removed from the root
-            root.removeWindow(this);
+            uI.focus();
+            // subwindow is removed from the UI
+            uI.removeWindow(this);
         }
     }
 
@@ -470,22 +470,22 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * If there are currently several windows visible, calling this method makes
      * this window topmost.
      * <p>
-     * This method can only be called if this window connected a root. Else an
+     * This method can only be called if this window connected a UI. Else an
      * illegal state exception is thrown. Also if there are modal windows and
      * this window is not modal, and illegal state exception is thrown.
      * <p>
      */
     public void bringToFront() {
-        Root root = getRoot();
-        if (root == null) {
+        UI uI = getUI();
+        if (uI == null) {
             throw new IllegalStateException(
                     "Window must be attached to parent before calling bringToFront method.");
         }
         int maxBringToFront = -1;
-        for (Window w : root.getWindows()) {
+        for (Window w : uI.getWindows()) {
             if (!isModal() && w.isModal()) {
                 throw new IllegalStateException(
-                        "The root contains modal windows, non-modal window cannot be brought to front.");
+                        "The UI contains modal windows, non-modal window cannot be brought to front.");
             }
             if (w.bringToFront != null) {
                 maxBringToFront = Math.max(maxBringToFront,

@@ -41,6 +41,12 @@ public interface Constants {
             + "in web.xml. The default of 1h will be used.\n"
             + "===========================================================";
 
+    static final String WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC = "\n"
+            + "===========================================================\n"
+            + "WARNING: heartbeatInterval has been set to a non integer value "
+            + "in web.xml. The default of 5min will be used.\n"
+            + "===========================================================";
+
     static final String WIDGETSET_MISMATCH_INFO = "\n"
             + "=================================================================\n"
             + "The widgetset in use does not seem to be built for the Vaadin\n"
@@ -58,6 +64,8 @@ public interface Constants {
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
+    static final String SERVLET_PARAMETER_HEARTBEAT_RATE = "heartbeatRate";
+    static final String SERVLET_PARAMETER_CLOSE_IDLE_UIS = "closeIdleUIs";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";
@@ -78,7 +86,7 @@ public interface Constants {
     // Widget set parameter name
     static final String PARAMETER_WIDGETSET = "widgetset";
 
-    static final String ERROR_NO_ROOT_FOUND = "Application did not return a root for the request and did not request extra information either. Something is wrong.";
+    static final String ERROR_NO_UI_FOUND = "No UIProvider returned a UI for the request.";
 
     static final String DEFAULT_THEME_NAME = "reindeer";
 
@@ -88,5 +96,4 @@ public interface Constants {
     static final String PORTAL_PARAMETER_VAADIN_WIDGETSET = "vaadin.widgetset";
     static final String PORTAL_PARAMETER_VAADIN_RESOURCE_PATH = "vaadin.resources.path";
     static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
-
 }

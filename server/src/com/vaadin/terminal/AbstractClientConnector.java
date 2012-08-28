@@ -43,7 +43,7 @@ import com.vaadin.terminal.gwt.server.RpcManager;
 import com.vaadin.terminal.gwt.server.RpcTarget;
 import com.vaadin.terminal.gwt.server.ServerRpcManager;
 import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * An abstract base class for ClientConnector implementations. This class
@@ -94,9 +94,9 @@ public abstract class AbstractClientConnector implements ClientConnector {
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
-        Root root = getRoot();
-        if (root != null) {
-            root.getConnectorTracker().markDirty(this);
+        UI uI = getUI();
+        if (uI != null) {
+            uI.getConnectorTracker().markDirty(this);
         }
     }
 
@@ -154,8 +154,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
             sharedState = createState();
         }
 
-        Root root = getRoot();
-        if (root != null && !root.getConnectorTracker().isDirty(this)) {
+        UI uI = getUI();
+        if (uI != null && !uI.getConnectorTracker().isDirty(this)) {
             requestRepaint();
         }
 
@@ -363,28 +363,28 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * @return The connector's application, or <code>null</code> if not attached
      */
     protected Application getApplication() {
-        Root root = getRoot();
-        if (root == null) {
+        UI uI = getUI();
+        if (uI == null) {
             return null;
         } else {
-            return root.getApplication();
+            return uI.getApplication();
         }
     }
 
     /**
-     * Finds a Root ancestor of this connector. <code>null</code> is returned if
-     * no Root ancestor is found (typically because the connector is not
+     * Finds a UI ancestor of this connector. <code>null</code> is returned if
+     * no UI ancestor is found (typically because the connector is not
      * attached to a proper hierarchy).
      * 
-     * @return the Root ancestor of this connector, or <code>null</code> if none
+     * @return the UI ancestor of this connector, or <code>null</code> if none
      *         is found.
      */
     @Override
-    public Root getRoot() {
+    public UI getUI() {
         ClientConnector connector = this;
         while (connector != null) {
-            if (connector instanceof Root) {
-                return (Root) connector;
+            if (connector instanceof UI) {
+                return (UI) connector;
             }
             connector = connector.getParent();
         }
@@ -528,7 +528,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
     public void attach() {
         markAsDirty();
 
-        getRoot().getConnectorTracker().registerConnector(this);
+        getUI().getConnectorTracker().registerConnector(this);
 
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
@@ -540,7 +540,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * {@inheritDoc}
      * 
      * <p>
-     * The {@link #getApplication()} and {@link #getRoot()} methods might return
+     * The {@link #getApplication()} and {@link #getUI()} methods might return
      * <code>null</code> after this method is called.
      * </p>
      */
@@ -550,7 +550,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
             connector.detach();
         }
 
-        getRoot().getConnectorTracker().unregisterConnector(this);
+        getUI().getConnectorTracker().unregisterConnector(this);
     }
 
     @Override

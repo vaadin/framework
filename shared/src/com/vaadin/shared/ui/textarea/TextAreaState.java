@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.textarea;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 
 public class TextAreaState extends AbstractTextFieldState {
@@ -33,6 +34,7 @@ public class TextAreaState extends AbstractTextFieldState {
         return rows;
     }
 
+    @DelegateToWidget
     public void setRows(int rows) {
         this.rows = rows;
     }
@@ -41,6 +43,7 @@ public class TextAreaState extends AbstractTextFieldState {
         return wordwrap;
     }
 
+    @DelegateToWidget
     public void setWordwrap(boolean wordwrap) {
         this.wordwrap = wordwrap;
     }

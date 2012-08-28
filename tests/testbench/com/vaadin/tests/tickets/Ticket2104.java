@@ -11,7 +11,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 
@@ -68,16 +68,16 @@ public class Ticket2104 extends Application.LegacyApplication {
         main.addComponent(tree);
         tree.setImmediate(true);
         tree.setNullSelectionAllowed(false);
-        tree.addItem("Root 1");
+        tree.addItem("UI 1");
         tree.addItem("1. Child 1");
-        tree.setParent("1. Child 1", "Root 1");
+        tree.setParent("1. Child 1", "UI 1");
         tree.addItem("1. Child 2");
-        tree.setParent("1. Child 2", "Root 1");
-        tree.addItem("Root 2");
+        tree.setParent("1. Child 2", "UI 1");
+        tree.addItem("UI 2");
         tree.addItem("2. Child 1");
-        tree.setParent("2. Child 1", "Root 2");
+        tree.setParent("2. Child 1", "UI 2");
         tree.addItem("2. Child 2");
-        tree.setParent("2. Child 2", "Root 2");
+        tree.setParent("2. Child 2", "UI 2");
         tree.addContainerProperty("icon", ExternalResource.class,
                 new ExternalResource(
                         "http://www.itmill.com/res/images/itmill_logo.gif"));

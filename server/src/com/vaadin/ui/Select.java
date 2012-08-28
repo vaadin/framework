@@ -654,7 +654,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
             if (filterstring != null) {
                 filterstring = filterstring.toLowerCase();
             }
-            optionRepaint();
+            requestRepaint();
         } else if (isNewItemsAllowed()) {
             // New option entered (and it is allowed)
             final String newitem = (String) variables.get("newitem");
@@ -679,18 +679,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering,
     @Deprecated
     public void requestRepaint() {
         markAsDirty();
-    }
-
-    @Override
-    public void markAsDirty() {
-        super.markAsDirty();
-        optionRequest = false;
-        prevfilterstring = filterstring;
-        filterstring = null;
-    }
-
-    private void optionRepaint() {
-        super.markAsDirty();
     }
 
     @Override

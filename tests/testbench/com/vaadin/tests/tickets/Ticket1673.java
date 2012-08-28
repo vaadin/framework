@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1673 extends com.vaadin.Application.LegacyApplication {
 

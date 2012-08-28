@@ -56,13 +56,13 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
@@ -340,7 +340,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
     protected RequestType getRequestType(WrappedPortletRequest wrappedRequest) {
@@ -361,6 +361,8 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } else if (ServletPortletHelper
                     .isApplicationResourceRequest(wrappedRequest)) {
                 return RequestType.APPLICATION_RESOURCE;
+            } else if (ServletPortletHelper.isHeartbeatRequest(wrappedRequest)) {
+                return RequestType.HEARTBEAT;
             } else if (isDummyRequest(resourceRequest)) {
                 return RequestType.DUMMY;
             } else {
@@ -431,6 +433,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             Application application = null;
             boolean transactionStarted = false;
             boolean requestStarted = false;
+            boolean applicationRunning = false;
 
             try {
                 // TODO What about PARAM_UNLOADBURST & redirectToApplication??
@@ -459,6 +462,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     applicationManager.serveConnectorResource(wrappedRequest,
                             wrappedResponse);
                     return;
+                } else if (requestType == RequestType.HEARTBEAT) {
+                    applicationManager.handleHeartbeatRequest(wrappedRequest,
+                            wrappedResponse, application);
+                    return;
                 }
 
                 /* Update browser information from request */
@@ -477,6 +484,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
+                applicationRunning = true;
 
                 /*
                  * Transaction starts. Call transaction listeners. Transaction
@@ -488,36 +496,35 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 /* Notify listeners */
 
                 // Finds the window within the application
-                Root root = null;
+                UI uI = null;
                 synchronized (application) {
                     if (application.isRunning()) {
                         switch (requestType) {
                         case RENDER:
                         case ACTION:
                             // Both action requests and render requests are ok
-                            // without a Root as they render the initial HTML
+                            // without a UI as they render the initial HTML
                             // and then do a second request
                             try {
-                                root = application
-                                        .getRootForRequest(wrappedRequest);
-                            } catch (RootRequiresMoreInformationException e) {
-                                // Ignore problem and continue without root
+                                uI = application
+                                        .getUIForRequest(wrappedRequest);
+                            } catch (UIRequiresMoreInformationException e) {
+                                // Ignore problem and continue without UI
                             }
                             break;
                         case BROWSER_DETAILS:
-                            // Should not try to find a root here as the
-                            // combined request details might change the root
+                            // Should not try to find a UI here as the
+                            // combined request details might change the UI
                             break;
                         case FILE_UPLOAD:
                             // no window
                             break;
                         case APPLICATION_RESOURCE:
                             // use main window - should not need any window
-                            // root = application.getRoot();
+                            // UI = application.getUI();
                             break;
                         default:
-                            root = application
-                                    .getRootForRequest(wrappedRequest);
+                            uI = application.getUIForRequest(wrappedRequest);
                         }
                         // if window not found, not a problem - use null
                     }
@@ -527,25 +534,24 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 // starts?
                 if (request instanceof RenderRequest) {
                     applicationContext.firePortletRenderRequest(application,
-                            root, (RenderRequest) request,
+                            uI, (RenderRequest) request,
                             (RenderResponse) response);
                 } else if (request instanceof ActionRequest) {
                     applicationContext.firePortletActionRequest(application,
-                            root, (ActionRequest) request,
+                            uI, (ActionRequest) request,
                             (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
-                    applicationContext.firePortletEventRequest(application,
-                            root, (EventRequest) request,
-                            (EventResponse) response);
+                    applicationContext.firePortletEventRequest(application, uI,
+                            (EventRequest) request, (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
                     applicationContext.firePortletResourceRequest(application,
-                            root, (ResourceRequest) request,
+                            uI, (ResourceRequest) request,
                             (ResourceResponse) response);
                 }
 
                 /* Handle the request */
                 if (requestType == RequestType.FILE_UPLOAD) {
-                    // Root is resolved in handleFileUpload by
+                    // UI is resolved in handleFileUpload by
                     // PortletCommunicationManager
                     applicationManager.handleFileUpload(application,
                             wrappedRequest, wrappedResponse);
@@ -557,7 +563,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 } else if (requestType == RequestType.UIDL) {
                     // Handles AJAX UIDL requests
                     applicationManager.handleUidlRequest(wrappedRequest,
-                            wrappedResponse, portletWrapper, root);
+                            wrappedResponse, portletWrapper, uI);
                     return;
                 } else {
                     /*
@@ -585,6 +591,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 handleServiceException(wrappedRequest, wrappedResponse,
                         application, e);
             } finally {
+
+                if (applicationRunning) {
+                    application.closeInactiveUIs();
+                }
+
                 // Notifies transaction end
                 try {
                     if (transactionStarted) {
@@ -599,7 +610,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
                         }
                     } finally {
-                        Root.setCurrent(null);
+                        UI.setCurrent(null);
                         Application.setCurrent(null);
 
                         PortletSession session = request
@@ -895,7 +906,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException {
         try {
             final Application application = getApplicationClass().newInstance();
-            application.setRootPreserved(true);
+            application.setUiPreserved(true);
             return application;
         } catch (final IllegalAccessException e) {
             throw new PortletException("getNewApplication failed", e);

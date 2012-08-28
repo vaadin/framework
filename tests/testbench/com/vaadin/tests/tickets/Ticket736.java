@@ -15,7 +15,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket736 extends Application.LegacyApplication {
 

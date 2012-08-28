@@ -40,7 +40,7 @@ import com.vaadin.terminal.Extension;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
@@ -327,7 +327,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public Root getRoot() {
+    public UI getUI() {
         return null;
     }
 

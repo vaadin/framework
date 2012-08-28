@@ -31,6 +31,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -51,14 +52,14 @@ import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.AbstractErrorMessage;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.CombinedRequest;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.RootProvider;
 import com.vaadin.terminal.Terminal;
+import com.vaadin.terminal.UIProvider;
 import com.vaadin.terminal.VariableOwner;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
@@ -74,8 +75,8 @@ import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Root;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
 /**
@@ -134,9 +135,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
-     * define the name of the default {@link Root} class.
+     * define the name of the default {@link UI} class.
      */
-    public static final String ROOT_PARAMETER = "root";
+    public static final String UI_PARAMETER = "UI";
 
     private static final Method BOOTSTRAP_FRAGMENT_METHOD = ReflectTools
             .findMethod(BootstrapListener.class, "modifyBootstrapFragment",
@@ -164,19 +165,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
         private static final Pattern WINDOW_NAME_PATTERN = Pattern
                 .compile("^/?([^/]+).*");
 
-        private Root.LegacyWindow mainWindow;
+        private UI.LegacyWindow mainWindow;
         private String theme;
 
-        private Map<String, Root.LegacyWindow> legacyRootNames = new HashMap<String, Root.LegacyWindow>();
+        private Map<String, UI.LegacyWindow> legacyUINames = new HashMap<String, UI.LegacyWindow>();
 
         /**
          * Sets the main window of this application. Setting window as a main
          * window of this application also adds the window to this application.
          * 
          * @param mainWindow
-         *            the root to set as the default window
+         *            the UI to set as the default window
          */
-        public void setMainWindow(Root.LegacyWindow mainWindow) {
+        public void setMainWindow(UI.LegacyWindow mainWindow) {
             if (this.mainWindow != null) {
                 throw new IllegalStateException(
                         "mainWindow has already been set");
@@ -201,9 +202,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * Note that each application must have at least one main window.
          * </p>
          * 
-         * @return the root used as the default window
+         * @return the UI used as the default window
          */
-        public Root.LegacyWindow getMainWindow() {
+        public UI.LegacyWindow getMainWindow() {
             return mainWindow;
         }
 
@@ -215,11 +216,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * {@inheritDoc}
          * 
          * @see #getWindow(String)
-         * @see Application#getRoot(WrappedRequest)
+         * @see Application#getUI(WrappedRequest)
          */
 
         @Override
-        public Root.LegacyWindow getRoot(WrappedRequest request) {
+        public UI.LegacyWindow getUI(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
             String name = null;
             if (pathInfo != null && pathInfo.length() > 0) {
@@ -229,7 +230,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     name = matcher.group(1);
                 }
             }
-            Root.LegacyWindow window = getWindow(name);
+            UI.LegacyWindow window = getWindow(name);
             if (window != null) {
                 return window;
             }
@@ -239,8 +240,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
         /**
          * Sets the application's theme.
          * <p>
-         * Note that this theme can be overridden for a specific root with
-         * {@link Application#getThemeForRoot(Root)}. Setting theme to be
+         * Note that this theme can be overridden for a specific UI with
+         * {@link Application#getThemeForUI(UI)}. Setting theme to be
          * <code>null</code> selects the default theme. For the available theme
          * names, see the contents of the VAADIN/themes directory.
          * </p>
@@ -254,7 +255,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         /**
          * Gets the application's theme. The application's theme is the default
-         * theme used by all the roots for which a theme is not explicitly
+         * theme used by all the uIs for which a theme is not explicitly
          * defined. If the application theme is not explicitly set,
          * <code>null</code> is returned.
          * 
@@ -272,70 +273,70 @@ public class Application implements Terminal.ErrorListener, Serializable {
          */
 
         @Override
-        public String getThemeForRoot(Root root) {
+        public String getThemeForUI(UI uI) {
             return theme;
         }
 
         /**
          * <p>
-         * Gets a root by name. Returns <code>null</code> if the application is
+         * Gets a UI by name. Returns <code>null</code> if the application is
          * not running or it does not contain a window corresponding to the
          * name.
          * </p>
          * 
          * @param name
          *            the name of the requested window
-         * @return a root corresponding to the name, or <code>null</code> to use
+         * @return a UI corresponding to the name, or <code>null</code> to use
          *         the default window
          */
-        public Root.LegacyWindow getWindow(String name) {
-            return legacyRootNames.get(name);
+        public UI.LegacyWindow getWindow(String name) {
+            return legacyUINames.get(name);
         }
 
         /**
          * Counter to get unique names for windows with no explicit name
          */
-        private int namelessRootIndex = 0;
+        private int namelessUIIndex = 0;
 
         /**
          * Adds a new browser level window to this application. Please note that
-         * Root doesn't have a name that is used in the URL - to add a named
-         * window you should instead use {@link #addWindow(Root, String)}
+         * UI doesn't have a name that is used in the URL - to add a named
+         * window you should instead use {@link #addWindow(UI, String)}
          * 
-         * @param root
-         *            the root window to add to the application
+         * @param uI
+         *            the UI window to add to the application
          * @return returns the name that has been assigned to the window
          * 
-         * @see #addWindow(Root, String)
+         * @see #addWindow(UI, String)
          */
-        public void addWindow(Root.LegacyWindow root) {
-            if (root.getName() == null) {
-                String name = Integer.toString(namelessRootIndex++);
-                root.setName(name);
+        public void addWindow(UI.LegacyWindow uI) {
+            if (uI.getName() == null) {
+                String name = Integer.toString(namelessUIIndex++);
+                uI.setName(name);
             }
 
-            legacyRootNames.put(root.getName(), root);
-            root.setApplication(this);
+            legacyUINames.put(uI.getName(), uI);
+            uI.setApplication(this);
         }
 
         /**
          * Removes the specified window from the application. This also removes
-         * all name mappings for the window (see
-         * {@link #addWindow(Root, String) and #getWindowName(Root)}.
+         * all name mappings for the window (see {@link #addWindow(UI, String)
+         * and #getWindowName(UI)}.
          * 
          * <p>
          * Note that removing window from the application does not close the
          * browser window - the window is only removed from the server-side.
          * </p>
          * 
-         * @param root
-         *            the root to remove
+         * @param uI
+         *            the UI to remove
          */
-        public void removeWindow(Root.LegacyWindow root) {
-            for (Entry<String, Root.LegacyWindow> entry : legacyRootNames
+        public void removeWindow(UI.LegacyWindow uI) {
+            for (Entry<String, UI.LegacyWindow> entry : legacyUINames
                     .entrySet()) {
-                if (entry.getValue() == root) {
-                    legacyRootNames.remove(entry.getKey());
+                if (entry.getValue() == uI) {
+                    legacyUINames.remove(entry.getKey());
                 }
             }
         }
@@ -349,8 +350,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * 
          * @return the unmodifiable collection of windows.
          */
-        public Collection<Root.LegacyWindow> getWindows() {
-            return Collections.unmodifiableCollection(legacyRootNames.values());
+        public Collection<UI.LegacyWindow> getWindows() {
+            return Collections.unmodifiableCollection(legacyUINames.values());
         }
     }
 
@@ -489,23 +490,23 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     private LinkedList<RequestHandler> requestHandlers = new LinkedList<RequestHandler>();
 
-    private int nextRootId = 0;
-    private Map<Integer, Root> roots = new HashMap<Integer, Root>();
+    private int nextUIId = 0;
+    private Map<Integer, UI> uIs = new HashMap<Integer, UI>();
 
-    private final Map<String, Integer> retainOnRefreshRoots = new HashMap<String, Integer>();
+    private final Map<String, Integer> retainOnRefreshUIs = new HashMap<String, Integer>();
 
     private final EventRouter eventRouter = new EventRouter();
 
     /**
-     * Keeps track of which roots have been inited.
+     * Keeps track of which uIs have been inited.
      * <p>
      * TODO Investigate whether this might be derived from the different states
-     * in getRootForRrequest.
+     * in getUIForRrequest.
      * </p>
      */
-    private Set<Integer> initedRoots = new HashSet<Integer>();
+    private Set<Integer> initedUIs = new HashSet<Integer>();
 
-    private List<RootProvider> rootProviders = new LinkedList<RootProvider>();
+    private List<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
     /**
      * Gets the user of the application.
@@ -579,19 +580,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     /**
      * Ends the Application.
-     * 
      * <p>
      * In effect this will cause the application stop returning any windows when
-     * asked. When the application is closed, its state is removed from the
-     * session and the browser window is redirected to the application logout
-     * url set with {@link #setLogoutURL(String)}. If the logout url has not
-     * been set, the browser window is reloaded and the application is
-     * restarted.
-     * </p>
-     * .
+     * asked. When the application is closed, close events are fired for its
+     * UIs, its state is removed from the session, and the browser window is
+     * redirected to the application logout url set with
+     * {@link #setLogoutURL(String)}. If the logout url has not been set, the
+     * browser window is reloaded and the application is restarted.
      */
     public void close() {
         applicationIsRunning = false;
+        for (UI ui : getUIs()) {
+            ui.fireCloseEvent();
+        }
     }
 
     /**
@@ -1830,110 +1831,108 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Gets a root for a request for which no root is already known. This method
-     * is called when the framework processes a request that does not originate
-     * from an existing root instance. This typically happens when a host page
-     * is requested.
+     * Gets a UI for a request for which no UI is already known. This method is
+     * called when the framework processes a request that does not originate
+     * from an existing UI instance. This typically happens when a host page is
+     * requested.
      * 
      * <p>
      * Subclasses of Application may override this method to provide custom
-     * logic for choosing how to create a suitable root or for picking an
-     * already created root. If an existing root is picked, care should be taken
-     * to avoid keeping the same root open in multiple browser windows, as that
-     * will cause the states to go out of sync.
+     * logic for choosing how to create a suitable UI or for picking an already
+     * created UI. If an existing UI is picked, care should be taken to avoid
+     * keeping the same UI open in multiple browser windows, as that will cause
+     * the states to go out of sync.
      * </p>
      * 
      * <p>
-     * If {@link BrowserDetails} are required to create a Root, the
-     * implementation can throw a {@link RootRequiresMoreInformationException}
-     * exception. In this case, the framework will instruct the browser to send
-     * the additional details, whereupon this method is invoked again with the
-     * browser details present in the wrapped request. Throwing the exception if
-     * the browser details are already available is not supported.
+     * If {@link BrowserDetails} are required to create a UI, the implementation
+     * can throw a {@link UIRequiresMoreInformationException} exception. In this
+     * case, the framework will instruct the browser to send the additional
+     * details, whereupon this method is invoked again with the browser details
+     * present in the wrapped request. Throwing the exception if the browser
+     * details are already available is not supported.
      * </p>
      * 
      * <p>
      * The default implementation in {@link Application} creates a new instance
-     * of the Root class returned by {@link #getRootClassName(WrappedRequest)},
-     * which in turn uses the {@value #ROOT_PARAMETER} parameter from web.xml.
-     * If {@link DeploymentConfiguration#getClassLoader()} for the request
-     * returns a {@link ClassLoader}, it is used for loading the Root class.
-     * Otherwise the {@link ClassLoader} used to load this class is used.
+     * of the UI class returned by {@link #getUIClassName(WrappedRequest)},
+     * which in turn uses the {@value #UI_PARAMETER} parameter from web.xml. If
+     * {@link DeploymentConfiguration#getClassLoader()} for the request returns
+     * a {@link ClassLoader}, it is used for loading the UI class. Otherwise the
+     * {@link ClassLoader} used to load this class is used.
      * </p>
      * 
      * @param request
-     *            the wrapped request for which a root is needed
-     * @return a root instance to use for the request
-     * @throws RootRequiresMoreInformationException
+     *            the wrapped request for which a UI is needed
+     * @return a UI instance to use for the request
+     * @throws UIRequiresMoreInformationException
      *             may be thrown by an implementation to indicate that
-     *             {@link BrowserDetails} are required to create a root
+     *             {@link BrowserDetails} are required to create a UI
      * 
-     * @see #getRootClassName(WrappedRequest)
-     * @see Root
-     * @see RootRequiresMoreInformationException
+     * @see #getUIClassName(WrappedRequest)
+     * @see UI
+     * @see UIRequiresMoreInformationException
      * @see WrappedRequest#getBrowserDetails()
      * 
      * @since 7.0
      */
-    protected Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+    protected UI getUI(WrappedRequest request)
+            throws UIRequiresMoreInformationException {
 
         // Iterate in reverse order - test check newest provider first
-        for (int i = rootProviders.size() - 1; i >= 0; i--) {
-            RootProvider provider = rootProviders.get(i);
+        for (int i = uiProviders.size() - 1; i >= 0; i--) {
+            UIProvider provider = uiProviders.get(i);
 
-            Class<? extends Root> rootClass = provider.getRootClass(this,
-                    request);
+            Class<? extends UI> uiClass = provider.getUIClass(this, request);
 
-            if (rootClass != null) {
-                return provider.instantiateRoot(this, rootClass, request);
+            if (uiClass != null) {
+                return provider.instantiateUI(this, uiClass, request);
             }
         }
 
         throw new RuntimeException(
-                "No root providers available or providers are not able to find root instance");
+                "No UI providers available or providers are not able to find UI instance");
     }
 
     /**
-     * Finds the theme to use for a specific root. If no specific theme is
+     * Finds the theme to use for a specific UI. If no specific theme is
      * required, <code>null</code> is returned.
      * 
      * TODO Tell what the default implementation does once it does something.
      * 
-     * @param root
-     *            the root to get a theme for
+     * @param uI
+     *            the UI to get a theme for
      * @return the name of the theme, or <code>null</code> if the default theme
      *         should be used
      * 
      * @since 7.0
      */
-    public String getThemeForRoot(Root root) {
-        Theme rootTheme = getAnnotationFor(root.getClass(), Theme.class);
-        if (rootTheme != null) {
-            return rootTheme.value();
+    public String getThemeForUI(UI uI) {
+        Theme uiTheme = getAnnotationFor(uI.getClass(), Theme.class);
+        if (uiTheme != null) {
+            return uiTheme.value();
         } else {
             return null;
         }
     }
 
     /**
-     * Finds the widgetset to use for a specific root. If no specific widgetset
-     * is required, <code>null</code> is returned.
+     * Finds the widgetset to use for a specific UI. If no specific widgetset is
+     * required, <code>null</code> is returned.
      * 
      * TODO Tell what the default implementation does once it does something.
      * 
-     * @param root
-     *            the root to get a widgetset for
+     * @param uI
+     *            the UI to get a widgetset for
      * @return the name of the widgetset, or <code>null</code> if the default
      *         widgetset should be used
      * 
      * @since 7.0
      */
-    public String getWidgetsetForRoot(Root root) {
-        Widgetset rootWidgetset = getAnnotationFor(root.getClass(),
-                Widgetset.class);
-        if (rootWidgetset != null) {
-            return rootWidgetset.value();
+    public String getWidgetsetForUI(UI uI) {
+        Widgetset uiWidgetset = getAnnotationFor(uI.getClass(), Widgetset.class);
+        if (uiWidgetset != null) {
+            return uiWidgetset.value();
         } else {
             return null;
         }
@@ -2087,7 +2086,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
 
-    private boolean rootPreserved = false;
+    private boolean uiPreserved = false;
 
     /**
      * Gets the currently used application. The current application is
@@ -2139,144 +2138,140 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return configuration.isProductionMode();
     }
 
-    public void addRootProvider(RootProvider rootProvider) {
-        rootProviders.add(rootProvider);
+    public void addUIProvider(UIProvider uIProvider) {
+        uiProviders.add(uIProvider);
     }
 
-    public void removeRootProvider(RootProvider rootProvider) {
-        rootProviders.remove(rootProvider);
+    public void removeUIProvider(UIProvider uIProvider) {
+        uiProviders.remove(uIProvider);
     }
 
     /**
-     * Finds the {@link Root} to which a particular request belongs. If the
-     * request originates from an existing Root, that root is returned. In other
-     * cases, the method attempts to create and initialize a new root and might
-     * throw a {@link RootRequiresMoreInformationException} if all required
+     * Finds the {@link UI} to which a particular request belongs. If the
+     * request originates from an existing UI, that UI is returned. In other
+     * cases, the method attempts to create and initialize a new UI and might
+     * throw a {@link UIRequiresMoreInformationException} if all required
      * information is not available.
      * <p>
      * Please note that this method can also return a newly created
-     * <code>Root</code> which has not yet been initialized. You can use
-     * {@link #isRootInitPending(int)} with the root's id (
-     * {@link Root#getRootId()} to check whether the initialization is still
-     * pending.
+     * <code>UI</code> which has not yet been initialized. You can use
+     * {@link #isUIInitPending(int)} with the UI's id ( {@link UI#getUIId()} to
+     * check whether the initialization is still pending.
      * </p>
      * 
      * @param request
-     *            the request for which a root is desired
-     * @return a root belonging to the request
-     * @throws RootRequiresMoreInformationException
-     *             if no existing root could be found and creating a new root
+     *            the request for which a UI is desired
+     * @return a UI belonging to the request
+     * @throws UIRequiresMoreInformationException
+     *             if no existing UI could be found and creating a new UI
      *             requires additional information from the browser
      * 
-     * @see #getRoot(WrappedRequest)
-     * @see RootRequiresMoreInformationException
+     * @see #getUI(WrappedRequest)
+     * @see UIRequiresMoreInformationException
      * 
      * @since 7.0
      */
-    public Root getRootForRequest(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
-        Root root = Root.getCurrent();
-        if (root != null) {
-            return root;
+    public UI getUIForRequest(WrappedRequest request)
+            throws UIRequiresMoreInformationException {
+        UI uI = UI.getCurrent();
+        if (uI != null) {
+            return uI;
         }
-        Integer rootId = getRootId(request);
+        Integer uiId = getUIId(request);
 
         synchronized (this) {
             BrowserDetails browserDetails = request.getBrowserDetails();
             boolean hasBrowserDetails = browserDetails != null
                     && browserDetails.getUriFragment() != null;
 
-            root = roots.get(rootId);
+            uI = uIs.get(uiId);
 
-            if (root == null && isRootPreserved()) {
-                // Check for a known root
-                if (!retainOnRefreshRoots.isEmpty()) {
+            if (uI == null && isUiPreserved()) {
+                // Check for a known UI
+                if (!retainOnRefreshUIs.isEmpty()) {
 
-                    Integer retainedRootId;
+                    Integer retainedUIId;
                     if (!hasBrowserDetails) {
-                        throw new RootRequiresMoreInformationException();
+                        throw new UIRequiresMoreInformationException();
                     } else {
                         String windowName = browserDetails.getWindowName();
-                        retainedRootId = retainOnRefreshRoots.get(windowName);
+                        retainedUIId = retainOnRefreshUIs.get(windowName);
                     }
 
-                    if (retainedRootId != null) {
-                        rootId = retainedRootId;
-                        root = roots.get(rootId);
+                    if (retainedUIId != null) {
+                        uiId = retainedUIId;
+                        uI = uIs.get(uiId);
                     }
                 }
             }
 
-            if (root == null) {
-                // Throws exception if root can not yet be created
-                root = getRoot(request);
+            if (uI == null) {
+                // Throws exception if UI can not yet be created
+                uI = getUI(request);
 
-                // Initialize some fields for a newly created root
-                if (root.getApplication() == null) {
-                    root.setApplication(this);
+                // Initialize some fields for a newly created UI
+                if (uI.getApplication() == null) {
+                    uI.setApplication(this);
                 }
-                if (root.getRootId() < 0) {
+                if (uI.getUIId() < 0) {
 
-                    if (rootId == null) {
+                    if (uiId == null) {
                         // Get the next id if none defined
-                        rootId = Integer.valueOf(nextRootId++);
+                        uiId = Integer.valueOf(nextUIId++);
                     }
-                    root.setRootId(rootId.intValue());
-                    roots.put(rootId, root);
+                    uI.setUIId(uiId.intValue());
+                    uIs.put(uiId, uI);
                 }
             }
 
             // Set thread local here so it is available in init
-            Root.setCurrent(root);
+            UI.setCurrent(uI);
 
-            if (!initedRoots.contains(rootId)) {
-                boolean initRequiresBrowserDetails = isRootPreserved()
-                        || !root.getClass()
-                                .isAnnotationPresent(EagerInit.class);
+            if (!initedUIs.contains(uiId)) {
+                boolean initRequiresBrowserDetails = isUiPreserved()
+                        || !uI.getClass().isAnnotationPresent(EagerInit.class);
                 if (!initRequiresBrowserDetails || hasBrowserDetails) {
-                    root.doInit(request);
+                    uI.doInit(request);
 
-                    // Remember that this root has been initialized
-                    initedRoots.add(rootId);
+                    // Remember that this UI has been initialized
+                    initedUIs.add(uiId);
 
                     // init() might turn on preserve so do this afterwards
-                    if (isRootPreserved()) {
-                        // Remember this root
+                    if (isUiPreserved()) {
+                        // Remember this UI
                         String windowName = request.getBrowserDetails()
                                 .getWindowName();
-                        retainOnRefreshRoots.put(windowName, rootId);
+                        retainOnRefreshUIs.put(windowName, uiId);
                     }
                 }
             }
         } // end synchronized block
 
-        return root;
+        return uI;
     }
 
     /**
-     * Internal helper to finds the root id for a request.
+     * Internal helper to finds the UI id for a request.
      * 
      * @param request
-     *            the request to get the root id for
-     * @return a root id, or <code>null</code> if no root id is defined
+     *            the request to get the UI id for
+     * @return a UI id, or <code>null</code> if no UI id is defined
      * 
      * @since 7.0
      */
-    private static Integer getRootId(WrappedRequest request) {
+    private static Integer getUIId(WrappedRequest request) {
         if (request instanceof CombinedRequest) {
-            // Combined requests has the rootid parameter in the second request
+            // Combined requests has the uiId parameter in the second request
             CombinedRequest combinedRequest = (CombinedRequest) request;
             request = combinedRequest.getSecondRequest();
         }
-        String rootIdString = request
-                .getParameter(ApplicationConstants.ROOT_ID_PARAMETER);
-        Integer rootId = rootIdString == null ? null
-                : new Integer(rootIdString);
-        return rootId;
+        String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
+        Integer uiId = uiIdString == null ? null : new Integer(uiIdString);
+        return uiId;
     }
 
     /**
-     * Sets whether the same Root state should be reused if the framework can
+     * Sets whether the same UI state should be reused if the framework can
      * detect that the application is opened in a browser window where it has
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
@@ -2285,62 +2280,62 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * the UI is already shown, as it might not be retained as intended.
      * </p>
      * 
-     * @param rootPreserved
-     *            <code>true</code>if the same Root instance should be reused
-     *            e.g. when the browser window is refreshed.
+     * @param uiPreserved
+     *            <code>true</code>if the same UI instance should be reused e.g.
+     *            when the browser window is refreshed.
      */
-    public void setRootPreserved(boolean rootPreserved) {
-        this.rootPreserved = rootPreserved;
-        if (!rootPreserved) {
-            retainOnRefreshRoots.clear();
+    public void setUiPreserved(boolean uiPreserved) {
+        this.uiPreserved = uiPreserved;
+        if (!uiPreserved) {
+            retainOnRefreshUIs.clear();
         }
     }
 
     /**
-     * Checks whether the same Root state should be reused if the framework can
+     * Checks whether the same UI state should be reused if the framework can
      * detect that the application is opened in a browser window where it has
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
      * 
-     * @return <code>true</code>if the same Root instance should be reused e.g.
+     * @return <code>true</code>if the same UI instance should be reused e.g.
      *         when the browser window is refreshed.
      */
-    public boolean isRootPreserved() {
-        return rootPreserved;
+    public boolean isUiPreserved() {
+        return uiPreserved;
     }
 
     /**
-     * Checks whether there's a pending initialization for the root with the
-     * given id.
+     * Checks whether there's a pending initialization for the UI with the given
+     * id.
      * 
-     * @param rootId
-     *            root id to check for
+     * @param uiId
+     *            UI id to check for
      * @return <code>true</code> of the initialization is pending,
-     *         <code>false</code> if the root id is not registered or if the
-     *         root has already been initialized
+     *         <code>false</code> if the UI id is not registered or if the UI
+     *         has already been initialized
      * 
-     * @see #getRootForRequest(WrappedRequest)
+     * @see #getUIForRequest(WrappedRequest)
      */
-    public boolean isRootInitPending(int rootId) {
-        return !initedRoots.contains(Integer.valueOf(rootId));
+    public boolean isUIInitPending(int uiId) {
+        return !initedUIs.contains(Integer.valueOf(uiId));
     }
 
     /**
-     * Gets all the roots of this application. This includes roots that have
-     * been requested but not yet initialized. Please note, that roots are not
+     * Gets all the uIs of this application. This includes uIs that have been
+     * requested but not yet initialized. Please note, that uIs are not
      * automatically removed e.g. if the browser window is closed and that there
-     * is no way to manually remove a root. Inactive roots will thus not be
-     * released for GC until the entire application is released when the session
-     * has timed out (unless there are dangling references). Improved support
-     * for releasing unused roots is planned for an upcoming alpha release of
-     * Vaadin 7.
+     * is no way to manually remove a UI. Inactive uIs will thus not be released
+     * for GC until the entire application is released when the session has
+     * timed out (unless there are dangling references). Improved support for
+     * releasing unused uIs is planned for an upcoming alpha release of Vaadin
+     * 7.
      * 
-     * @return a collection of roots belonging to this application
+     * @return a collection of uIs belonging to this application
      * 
      * @since 7.0
      */
-    public Collection<Root> getRoots() {
-        return Collections.unmodifiableCollection(roots.values());
+    public Collection<UI> getUIs() {
+        return Collections.unmodifiableCollection(uIs.values());
     }
 
     private int connectorIdSequence = 0;
@@ -2362,17 +2357,17 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Returns a Root with the given id.
+     * Returns a UI with the given id.
      * <p>
      * This is meant for framework internal use.
      * </p>
      * 
-     * @param rootId
-     *            The root id
-     * @return The root with the given id or null if not found
+     * @param uiId
+     *            The UI id
+     * @return The UI with the given id or null if not found
      */
-    public Root getRootById(int rootId) {
-        return roots.get(rootId);
+    public UI getUIById(int uiId) {
+        return uIs.get(uiId);
     }
 
     /**
@@ -2420,5 +2415,99 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void modifyBootstrapResponse(BootstrapResponse response) {
         eventRouter.fireEvent(response);
+    }
+
+    /**
+     * Removes all those UIs from the application for which {@link #isUIAlive}
+     * returns false. Close events are fired for the removed UIs.
+     * <p>
+     * Called by the framework at the end of every request.
+     * 
+     * @see UI.CloseEvent
+     * @see UI.CloseListener
+     * @see #isUIAlive(UI)
+     * 
+     * @since 7.0.0
+     */
+    public void closeInactiveUIs() {
+        for (Iterator<UI> i = uIs.values().iterator(); i.hasNext();) {
+            UI ui = i.next();
+            if (!isUIAlive(ui)) {
+                i.remove();
+                retainOnRefreshUIs.values().remove(ui.getUIId());
+                ui.fireCloseEvent();
+                getLogger().info(
+                        "Closed UI #" + ui.getUIId() + " due to inactivity");
+            }
+        }
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid heartbeat or
+     * UIDL request being received from a UI before that UI is removed from the
+     * application. This is a lower bound; it might take longer to close an
+     * inactive UI. Returns a negative number if heartbeat is disabled and
+     * timeout never occurs.
+     * 
+     * @see #getUidlRequestTimeout()
+     * @see #closeInactiveUIs()
+     * @see DeploymentConfiguration#getHeartbeatInterval()
+     * 
+     * @since 7.0.0
+     * 
+     * @return The heartbeat timeout in seconds or a negative number if timeout
+     *         never occurs.
+     */
+    protected int getHeartbeatTimeout() {
+        // Permit three missed heartbeats before closing the UI
+        return (int) (configuration.getHeartbeatInterval() * (3.1));
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid UIDL request
+     * being received from a UI before the UI is removed from the application,
+     * even though heartbeat requests are received. This is a lower bound; it
+     * might take longer to close an inactive UI. Returns a negative number if
+     * <p>
+     * This timeout only has effect if cleanup of inactive UIs is enabled;
+     * otherwise heartbeat requests are enough to extend UI lifetime
+     * indefinitely.
+     * 
+     * @see DeploymentConfiguration#isIdleUICleanupEnabled()
+     * @see #getHeartbeatTimeout()
+     * @see #closeInactiveUIs()
+     * 
+     * @since 7.0.0
+     * 
+     * @return The UIDL request timeout in seconds, or a negative number if
+     *         timeout never occurs.
+     */
+    protected int getUidlRequestTimeout() {
+        return configuration.isIdleUICleanupEnabled() ? getContext()
+                .getMaxInactiveInterval() : -1;
+    }
+
+    /**
+     * Returns whether the given UI is alive (the client-side actively
+     * communicates with the server) or whether it can be removed from the
+     * application and eventually collected.
+     * 
+     * @since 7.0.0
+     * 
+     * @param ui
+     *            The UI whose status to check
+     * @return true if the UI is alive, false if it could be removed.
+     */
+    protected boolean isUIAlive(UI ui) {
+        long now = System.currentTimeMillis();
+        if (getHeartbeatTimeout() >= 0
+                && now - ui.getLastHeartbeatTime() > 1000 * getHeartbeatTimeout()) {
+            return false;
+        }
+        if (getUidlRequestTimeout() >= 0
+                && now - ui.getLastUidlRequestTime() > 1000 * getUidlRequestTimeout()) {
+            return false;
+        }
+        return true;
     }
 }

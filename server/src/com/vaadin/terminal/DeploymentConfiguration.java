@@ -23,6 +23,7 @@ import java.util.Properties;
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
+import com.vaadin.service.ApplicationContext;
 import com.vaadin.terminal.gwt.server.AddonContext;
 import com.vaadin.terminal.gwt.server.AddonContextListener;
 
@@ -97,7 +98,7 @@ public interface DeploymentConfiguration extends Serializable {
 
     /**
      * Get the class loader to use for loading classes loaded by name, e.g.
-     * custom Root classes. <code>null</code> indicates that the default class
+     * custom UI classes. <code>null</code> indicates that the default class
      * loader should be used.
      * 
      * @return the class loader to use, or <code>null</code>
@@ -136,12 +137,16 @@ public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns whether Vaadin is in production mode.
      * 
+     * @since 7.0.0
+     * 
      * @return true if in production mode, false otherwise.
      */
     public boolean isProductionMode();
 
     /**
      * Returns whether cross-site request forgery protection is enabled.
+     * 
+     * @since 7.0.0
      * 
      * @return true if XSRF protection is enabled, false otherwise.
      */
@@ -150,7 +155,34 @@ public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns the time resources can be cached in the browsers, in seconds.
      * 
+     * @since 7.0.0
+     * 
      * @return The resource cache time.
      */
     public int getResourceCacheTime();
+
+    /**
+     * Returns the number of seconds between heartbeat requests of a UI, or a
+     * non-positive number if heartbeat is disabled.
+     * 
+     * @since 7.0.0
+     * 
+     * @return The time between heartbeats.
+     */
+    public int getHeartbeatInterval();
+
+    /**
+     * Returns whether UIs that have no other activity than heartbeat requests
+     * should be closed after they have been idle the maximum inactivity time
+     * enforced by the session.
+     * 
+     * @see ApplicationContext#getMaxInactiveInterval()
+     * 
+     * @since 7.0.0
+     * 
+     * @return True if UIs receiving only heartbeat requests are eventually
+     *         closed; false if heartbeat requests extend UI lifetime
+     *         indefinitely.
+     */
+    public boolean isIdleUICleanupEnabled();
 }

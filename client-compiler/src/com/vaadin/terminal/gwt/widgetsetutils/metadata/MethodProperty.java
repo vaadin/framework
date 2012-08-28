@@ -16,6 +16,7 @@
 
 package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -119,6 +120,11 @@ public class MethodProperty extends Property {
         String baseName = setter.getName().substring(3);
         return Character.toLowerCase(baseName.charAt(0))
                 + baseName.substring(1);
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+        return setter.getAnnotation(annotationClass);
     }
 
 }

@@ -19,7 +19,7 @@ package com.vaadin.tests.minitutorials.v7a3;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.terminal.AbstractJavaScriptExtension;
 import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 @JavaScript("analytics_connector.js")
 public class Analytics extends AbstractJavaScriptExtension {
@@ -38,12 +38,12 @@ public class Analytics extends AbstractJavaScriptExtension {
         callFunction("pushCommand", (Object) commandAndArguments);
     }
 
-    protected void extend(Root root) {
-        super.extend(root);
+    protected void extend(UI uI) {
+        super.extend(uI);
     }
 
     @Override
     protected Class<? extends ClientConnector> getSupportedParentType() {
-        return Root.class;
+        return UI.class;
     }
 }

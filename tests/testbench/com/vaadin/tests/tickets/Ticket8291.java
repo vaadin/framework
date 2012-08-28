@@ -11,14 +11,14 @@ import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Table;
 
 /**
  * Test for #8291 and #7666: NegativeArraySizeException when Table scrolled to
  * the end and its size reduced.
  */
-public class Ticket8291 extends Root {
+public class Ticket8291 extends UI {
 
     @Override
     public void init(WrappedRequest request) {

@@ -20,12 +20,12 @@ import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.JavaScriptFunction;
 
-public class JavascriptManagerTest extends AbstractTestRoot {
+public class JavascriptManagerTest extends AbstractTestUI {
 
     private Log log = new Log(5);
 

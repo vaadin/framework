@@ -5,7 +5,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Select;
 
 @SuppressWarnings("serial")
@@ -13,7 +13,7 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
 
     @Override
     public void init() {
-        Root.LegacyWindow mainWindow = new Root.LegacyWindow(
+        UI.LegacyWindow mainWindow = new UI.LegacyWindow(
                 "Gridlayoutbug Application");
         setMainWindow(mainWindow);
 

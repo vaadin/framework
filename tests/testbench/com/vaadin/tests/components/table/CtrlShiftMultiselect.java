@@ -5,6 +5,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.TableDragMode;
 
 @SuppressWarnings("serial")
 public class CtrlShiftMultiselect extends TestBase {
@@ -18,6 +19,7 @@ public class CtrlShiftMultiselect extends TestBase {
 
         table.setSelectable(true);
         table.setMultiSelect(true);
+        table.setDragMode(TableDragMode.MULTIROW);
 
         table.setWidth("400px");
         table.setHeight("400px");

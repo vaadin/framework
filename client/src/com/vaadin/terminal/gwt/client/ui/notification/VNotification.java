@@ -30,7 +30,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.root.RootConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.UIDL;
@@ -384,19 +384,19 @@ public class VNotification extends VOverlay {
     public static void showNotification(ApplicationConnection client,
             final UIDL notification) {
         boolean onlyPlainText = notification
-                .hasAttribute(RootConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+                .hasAttribute(UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
             final String parsedUri = client
                     .translateVaadinUri(notification
-                            .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_ICON));
+                            .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON));
             html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
         }
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
             String caption = notification
-                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
+                    .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
             if (onlyPlainText) {
                 caption = Util.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
@@ -404,9 +404,9 @@ public class VNotification extends VOverlay {
             html += "<h1>" + caption + "</h1>";
         }
         if (notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
             String message = notification
-                    .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
+                    .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
             if (onlyPlainText) {
                 message = Util.escapeHTML(message);
                 message = message.replaceAll("\\n", "<br />");
@@ -415,16 +415,16 @@ public class VNotification extends VOverlay {
         }
 
         final String style = notification
-                .hasAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE) ? notification
-                .getStringAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_STYLE)
+                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE) ? notification
+                .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
                 : null;
 
         final int pos = notification
-                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_POSITION);
+                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION);
         Position position = Position.values()[pos];
 
         final int delay = notification
-                .getIntAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY);
+                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
         createNotification(delay).show(html, position, style);
     }
 

@@ -58,6 +58,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.terminal.gwt.client.ResourceLoader.ResourceLoadListener;
@@ -68,13 +69,16 @@ import com.vaadin.terminal.gwt.client.communication.RpcManager;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Property;
 import com.vaadin.terminal.gwt.client.metadata.Type;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
+import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification;
 import com.vaadin.terminal.gwt.client.ui.notification.VNotification.HideEvent;
-import com.vaadin.terminal.gwt.client.ui.root.RootConnector;
 import com.vaadin.terminal.gwt.client.ui.window.WindowConnector;
 
 /**
@@ -153,7 +157,7 @@ public class ApplicationConnection {
     private Timer loadTimer3;
     private Element loadElement;
 
-    private final RootConnector rootConnector;
+    private final UIConnector uIConnector;
 
     protected boolean applicationRunning = false;
 
@@ -205,10 +209,10 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
-        // Assuming Root data is eagerly loaded
+        // Assuming UI data is eagerly loaded
         ConnectorBundleLoader.get().loadBundle(
                 ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
-        rootConnector = GWT.create(RootConnector.class);
+        uIConnector = GWT.create(UIConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
@@ -240,8 +244,10 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        rootConnector.init(cnf.getRootPanelId(), this);
+        uIConnector.init(cnf.getRootPanelId(), this);
         showLoadingIndicator();
+
+        scheduleHeartbeat();
     }
 
     /**
@@ -492,8 +498,8 @@ public class ApplicationConnection {
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
         }
-        uri = addGetParameters(uri, ApplicationConstants.ROOT_ID_PARAMETER
-                + "=" + configuration.getRootId());
+        uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
+                + configuration.getUIId());
 
         doUidlRequest(uri, payload, forceSync);
 
@@ -906,7 +912,7 @@ public class ApplicationConnection {
         if (loadElement == null) {
             loadElement = DOM.createDiv();
             DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(rootConnector.getWidget().getElement(), loadElement);
+            DOM.appendChild(uIConnector.getWidget().getElement(), loadElement);
             VConsole.log("inserting load indicator");
         }
         DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
@@ -1090,7 +1096,7 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         repaintAll = true;
-                        rootConnector.getWidget().clear();
+                        uIConnector.getWidget().clear();
                         getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
@@ -1147,6 +1153,8 @@ public class ApplicationConnection {
                 updateDuration.logDuration(
                         " * Hierarchy state change event processing completed",
                         10);
+
+                delegateToWidget(pendingStateChangeEvents);
 
                 // Fire state change events.
                 sendStateChangeEvents(pendingStateChangeEvents);
@@ -1264,6 +1272,62 @@ public class ApplicationConnection {
 
             }
 
+            private void delegateToWidget(
+                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                VConsole.log(" * Running @DelegateToWidget");
+
+                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                    ServerConnector connector = sce.getConnector();
+                    if (connector instanceof ComponentConnector) {
+                        ComponentConnector component = (ComponentConnector) connector;
+                        Type type = TypeData.getType(component.getClass());
+
+                        Type stateType;
+                        try {
+                            stateType = type.getMethod("getState")
+                                    .getReturnType();
+                        } catch (NoDataException e) {
+                            throw new RuntimeException(
+                                    "Can not find the state type for "
+                                            + type.getSignature(), e);
+                        }
+
+                        Set<String> changedProperties = sce
+                                .getChangedProperties();
+                        for (String propertyName : changedProperties) {
+                            Property property = stateType
+                                    .getProperty(propertyName);
+                            String method = property
+                                    .getDelegateToWidgetMethodName();
+                            if (method != null) {
+                                doDelegateToWidget(component, property, method);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            private void doDelegateToWidget(ComponentConnector component,
+                    Property property, String methodName) {
+                Type type = TypeData.getType(component.getClass());
+                try {
+                    Type widgetType = type.getMethod("getWidget")
+                            .getReturnType();
+                    Widget widget = component.getWidget();
+
+                    Object propertyValue = property.getValue(component
+                            .getState());
+
+                    widgetType.getMethod(methodName).invoke(widget,
+                            propertyValue);
+                } catch (NoDataException e) {
+                    throw new RuntimeException(
+                            "Missing data needed to invoke @DelegateToWidget for "
+                                    + Util.getSimpleName(component), e);
+                }
+            }
+
             /**
              * Sends the state change events created while updating the state
              * information.
@@ -1300,17 +1364,17 @@ public class ApplicationConnection {
                         if (!c.getParent().getChildren().contains(c)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
-                    } else if ((c instanceof RootConnector && c == getRootConnector())) {
-                        // RootConnector for this connection, leave as-is
+                    } else if ((c instanceof UIConnector && c == getRootConnector())) {
+                        // UIConnector for this connection, leave as-is
                     } else if (c instanceof WindowConnector
                             && getRootConnector().hasSubWindow(
                                     (WindowConnector) c)) {
-                        // Sub window attached to this RootConnector, leave
+                        // Sub window attached to this UIConnector, leave
                         // as-is
                     } else {
                         // The connector has been detached from the
                         // hierarchy, unregister it and any possible
-                        // children. The RootConnector should never be
+                        // children. The UIConnector should never be
                         // unregistered even though it has no parent.
                         connectorMap.unregisterConnector(c);
                         unregistered++;
@@ -1345,17 +1409,17 @@ public class ApplicationConnection {
                                 .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
-                        if (connectorClass != RootConnector.class) {
+                        if (connectorClass != UIConnector.class) {
                             // create, initialize and register the paintable
                             getConnector(connectorId, connectorType);
                         } else {
-                            // First RootConnector update. Before this the
-                            // RootConnector has been created but not
+                            // First UIConnector update. Before this the
+                            // UIConnector has been created but not
                             // initialized as the connector id has not been
                             // known
                             connectorMap.registerConnector(connectorId,
-                                    rootConnector);
-                            rootConnector.doInit(connectorId,
+                                    uIConnector);
+                            uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
                         }
                     } catch (final Throwable e) {
@@ -2416,8 +2480,8 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public RootConnector getRootConnector() {
-        return rootConnector;
+    public UIConnector getRootConnector() {
+        return uIConnector;
     }
 
     /**
@@ -2553,5 +2617,78 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
+    }
+
+    /**
+     * Schedules a heartbeat request to occur after the configured heartbeat
+     * interval elapses if the interval is a positive number. Otherwise, does
+     * nothing.
+     * 
+     * @see #sendHeartbeat()
+     * @see ApplicationConfiguration#getHeartbeatInterval()
+     */
+    protected void scheduleHeartbeat() {
+        final int interval = getConfiguration().getHeartbeatInterval();
+        if (interval > 0) {
+            VConsole.log("Scheduling heartbeat in " + interval + " seconds");
+            new Timer() {
+                @Override
+                public void run() {
+                    sendHeartbeat();
+                }
+            }.schedule(interval * 1000);
+        }
+    }
+
+    /**
+     * Sends a heartbeat request to the server.
+     * <p>
+     * Heartbeat requests are used to inform the server that the client-side is
+     * still alive. If the client page is closed or the connection lost, the
+     * server will eventually close the inactive Root.
+     * <p>
+     * <b>TODO</b>: Improved error handling, like in doUidlRequest().
+     * 
+     * @see #scheduleHeartbeat()
+     */
+    protected void sendHeartbeat() {
+        final String uri = addGetParameters(
+                translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                        + ApplicationConstants.HEARTBEAT_REQUEST_PATH),
+                UIConstants.UI_ID_PARAMETER + "="
+                        + getConfiguration().getUIId());
+
+        final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
+
+        final RequestCallback callback = new RequestCallback() {
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                int status = response.getStatusCode();
+                if (status == Response.SC_OK) {
+                    // TODO Permit retry in some error situations
+                    VConsole.log("Heartbeat response OK");
+                    scheduleHeartbeat();
+                } else {
+                    VConsole.error("Heartbeat request failed with status code "
+                            + status);
+                }
+            }
+
+            @Override
+            public void onError(Request request, Throwable exception) {
+                VConsole.error("Heartbeat request resulted in exception");
+                VConsole.error(exception);
+            }
+        };
+
+        rb.setCallback(callback);
+
+        try {
+            VConsole.log("Sending heartbeat request...");
+            rb.send();
+        } catch (RequestException re) {
+            callback.onError(null, re);
+        }
     }
 }

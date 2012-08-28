@@ -5,6 +5,7 @@
 package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -17,7 +18,7 @@ public abstract class TypeVisitor {
     }
 
     public void visitConnector(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         // Default does nothing
     }
 

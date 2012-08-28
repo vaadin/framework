@@ -51,8 +51,8 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param rootId
-     *            the generated id of the Root that will be displayed on the
+     * @param uiId
+     *            the generated id of the UI that will be displayed on the
      *            page
      * @param document
      *            the DOM document making up the HTML page
@@ -60,9 +60,9 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            a map into which header data can be added
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application, Integer rootId,
+            WrappedRequest request, Application application, Integer uiId,
             Document document, Map<String, Object> headers) {
-        super(handler, request, application, rootId);
+        super(handler, request, application, uiId);
         this.headers = headers;
         this.document = document;
     }

@@ -557,16 +557,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /*
-     * Gets the parent window of the component. Don't add a JavaDoc comment
-     * here, we use the default documentation from implemented interface.
-     */
-    @Override
-    public Root getRoot() {
-        // Just make method from implemented Component interface public
-        return super.getRoot();
-    }
-
-    /*
      * Notify the component that it's attached to a window. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
      * interface.
@@ -588,9 +578,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void detach() {
         super.detach();
         if (actionManager != null) {
-            // Remove any existing viewer. Root cast is just to make the
+            // Remove any existing viewer. UI cast is just to make the
             // compiler happy
-            actionManager.setViewer((Root) null);
+            actionManager.setViewer((UI) null);
         }
     }
 
@@ -601,7 +591,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (this instanceof Focusable) {
             final Application app = getApplication();
             if (app != null) {
-                getRoot().setFocusedComponent((Focusable) this);
+                getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
             } else {
                 delayedFocus = true;
@@ -1304,19 +1294,19 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /**
      * Set a viewer for the action manager to be the parent sub window (if the
-     * component is in a window) or the root (otherwise). This is still a
+     * component is in a window) or the UI (otherwise). This is still a
      * simplification of the real case as this should be handled by the parent
      * VOverlay (on the client side) if the component is inside an VOverlay
      * component.
      */
     private void setActionManagerViewer() {
-        if (actionManager != null && getRoot() != null) {
+        if (actionManager != null && getUI() != null) {
             // Attached and has action manager
             Window w = findAncestor(Window.class);
             if (w != null) {
                 actionManager.setViewer(w);
             } else {
-                actionManager.setViewer(getRoot());
+                actionManager.setViewer(getUI());
             }
         }
 

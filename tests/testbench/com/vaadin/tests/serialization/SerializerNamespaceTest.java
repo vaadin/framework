@@ -18,12 +18,13 @@ package com.vaadin.tests.serialization;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.DummyLabel;
 import com.vaadin.ui.Label;
 
-@Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
-public class SerializerNamespaceTest extends AbstractTestRoot {
+@Widgetset(TestingWidgetSet.NAME)
+public class SerializerNamespaceTest extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {
@@ -33,7 +34,7 @@ public class SerializerNamespaceTest extends AbstractTestRoot {
 
     @Override
     protected String getTestDescription() {
-        return "Using connectors with different state classes having the same simple name should not cause any clietn-side exceptions";
+        return "Using connectors with different state classes having the same simple name should not cause any client-side exceptions";
     }
 
     @Override

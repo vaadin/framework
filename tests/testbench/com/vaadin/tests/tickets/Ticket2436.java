@@ -4,7 +4,7 @@ import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2436 extends Application.LegacyApplication {
 

@@ -34,7 +34,7 @@ public class ClientMethodInvocation implements Serializable,
     private final Object[] parameters;
     private Type[] parameterTypes;
 
-    // used for sorting calls between different connectors in the same Root
+    // used for sorting calls between different connectors in the same UI
     private final long sequenceNumber;
     // TODO may cause problems when clustering etc.
     private static long counter = 0;

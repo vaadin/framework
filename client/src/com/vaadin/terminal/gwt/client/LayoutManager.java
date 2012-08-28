@@ -315,7 +315,7 @@ public class LayoutManager {
                         try {
                             cl.layoutHorizontally();
                         } catch (RuntimeException e) {
-                            VConsole.log(e);
+                            VConsole.error(e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -326,7 +326,7 @@ public class LayoutManager {
                         try {
                             rr.layout();
                         } catch (RuntimeException e) {
-                            VConsole.log(e);
+                            VConsole.error(e);
                         }
                         countLayout(layoutCounts, rr);
                     }
@@ -343,7 +343,7 @@ public class LayoutManager {
                         try {
                             cl.layoutVertically();
                         } catch (RuntimeException e) {
-                            VConsole.log(e);
+                            VConsole.error(e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -354,7 +354,7 @@ public class LayoutManager {
                         try {
                             rr.layout();
                         } catch (RuntimeException e) {
-                            VConsole.log(e);
+                            VConsole.error(e);
                         }
                         countLayout(layoutCounts, rr);
                     }

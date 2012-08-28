@@ -2,7 +2,7 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.GridLayout;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-public class MarginsInLabels extends AbstractTestRoot {
+public class MarginsInLabels extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {

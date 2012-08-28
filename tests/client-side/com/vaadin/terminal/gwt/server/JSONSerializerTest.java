@@ -52,7 +52,7 @@ public class JSONSerializerTest extends TestCase {
         stringToStateMap.put("String - state 2", s2);
 
         Object encodedMap = JsonCodec.encode(stringToStateMap, null, mapType,
-                null);
+                null).getEncodedValue();
 
         ensureDecodedCorrectly(stringToStateMap, encodedMap, mapType);
     }
@@ -69,7 +69,7 @@ public class JSONSerializerTest extends TestCase {
         stateToStringMap.put(s2, "String - state 2");
 
         Object encodedMap = JsonCodec.encode(stateToStringMap, null, mapType,
-                null);
+                null).getEncodedValue();
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
     }

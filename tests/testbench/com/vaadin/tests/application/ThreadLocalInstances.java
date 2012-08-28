@@ -1,7 +1,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.ApplicationResource;
 import com.vaadin.terminal.DownloadStream;
 import com.vaadin.terminal.PaintException;
@@ -12,14 +12,14 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 public class ThreadLocalInstances extends AbstractTestApplication {
     private static final Application staticInitApplication = Application
             .getCurrent();
-    private static final Root staticInitRoot = Root.getCurrent();
+    private static final UI staticInitRoot = UI.getCurrent();
 
-    private final Root mainWindow = new Root() {
+    private final UI mainWindow = new UI() {
         boolean paintReported = false;
 
         @Override
@@ -77,14 +77,14 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     @Override
-    protected Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+    protected UI getUI(WrappedRequest request)
+            throws UIRequiresMoreInformationException {
         return mainWindow;
     }
 
     @Override
     protected String getTestDescription() {
-        return "Tests the precence of Application.getCurrentApplication() and Root.getCurrentRoot() from different contexts";
+        return "Tests the precence of Application.getCurrentApplication() and UI.getCurrentRoot() from different contexts";
     }
 
     @Override
@@ -93,12 +93,12 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     private void reportCurrentStatus(String phase) {
-        reportStatus(phase, Application.getCurrent(), Root.getCurrent());
+        reportStatus(phase, Application.getCurrent(), UI.getCurrent());
     }
 
-    private void reportStatus(String phase, Application application, Root root) {
+    private void reportStatus(String phase, Application application, UI uI) {
         log.log(getState(application, this) + " app in " + phase);
-        log.log(getState(root, mainWindow) + " root in " + phase);
+        log.log(getState(uI, mainWindow) + " root in " + phase);
     }
 
     private static String getState(Object value, Object reference) {

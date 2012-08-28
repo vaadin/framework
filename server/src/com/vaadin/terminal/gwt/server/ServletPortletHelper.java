@@ -6,10 +6,10 @@ import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /*
-  * Copyright 2011 Vaadin Ltd.
+ * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,14 +43,14 @@ class ServletPortletHelper implements Serializable {
             throws ApplicationClassException {
         String applicationParameter = deploymentConfiguration
                 .getInitParameters().getProperty("application");
-        String rootParameter = deploymentConfiguration.getInitParameters()
-                .getProperty(Application.ROOT_PARAMETER);
+        String uiParameter = deploymentConfiguration.getInitParameters()
+                .getProperty(Application.UI_PARAMETER);
         ClassLoader classLoader = deploymentConfiguration.getClassLoader();
 
         if (applicationParameter == null) {
 
             // Validate the parameter value
-            verifyRootClass(rootParameter, classLoader);
+            verifyUIClass(uiParameter, classLoader);
 
             // Application can be used if a valid rootLayout is defined
             return Application.class;
@@ -66,22 +66,22 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    private static void verifyRootClass(String className,
-            ClassLoader classLoader) throws ApplicationClassException {
+    private static void verifyUIClass(String className, ClassLoader classLoader)
+            throws ApplicationClassException {
         if (className == null) {
-            throw new ApplicationClassException(Application.ROOT_PARAMETER
+            throw new ApplicationClassException(Application.UI_PARAMETER
                     + " init parameter not defined");
         }
 
-        // Check that the root layout class can be found
+        // Check that the UI layout class can be found
         try {
-            Class<?> rootClass = classLoader.loadClass(className);
-            if (!Root.class.isAssignableFrom(rootClass)) {
+            Class<?> uiClass = classLoader.loadClass(className);
+            if (!UI.class.isAssignableFrom(uiClass)) {
                 throw new ApplicationClassException(className
-                        + " does not implement Root");
+                        + " does not implement UI");
             }
             // Try finding a default constructor, else throw exception
-            rootClass.getConstructor();
+            uiClass.getConstructor();
         } catch (ClassNotFoundException e) {
             throw new ApplicationClassException(className
                     + " could not be loaded", e);
@@ -127,6 +127,11 @@ class ServletPortletHelper implements Serializable {
 
     public static boolean isApplicationResourceRequest(WrappedRequest request) {
         return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
+    }
+
+    public static boolean isHeartbeatRequest(WrappedRequest request) {
+        return hasPathPrefix(request,
+                ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }
 
 }

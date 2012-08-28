@@ -25,7 +25,7 @@ public class ComboBoxInPopup extends TestBase {
         close.setClickShortcut(KeyCode.ESCAPE, null);
         w.addComponent(close);
 
-        getLayout().getRoot().addWindow(w);
+        getLayout().getUI().addWindow(w);
 
     }
 

@@ -17,12 +17,12 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.Application;
-import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -35,13 +35,13 @@ import com.vaadin.ui.Root;
 public class DifferentFeaturesForDifferentClients extends Application {
 
     @Override
-    protected Root getRoot(WrappedRequest request)
-            throws RootRequiresMoreInformationException {
+    protected UI getUI(WrappedRequest request)
+            throws UIRequiresMoreInformationException {
         BrowserDetails browserDetails = request.getBrowserDetails();
         // This is a limitation of 7.0.0.alpha1 that there is no better way to
         // check if WebBrowser has been fully initialized
         if (browserDetails.getUriFragment() == null) {
-            throw new RootRequiresMoreInformationException();
+            throw new UIRequiresMoreInformationException();
         }
 
         // could also use screen size, browser version etc.
@@ -53,7 +53,7 @@ public class DifferentFeaturesForDifferentClients extends Application {
     }
 }
 
-class DefaultRoot extends Root {
+class DefaultRoot extends UI {
     @Override
     protected void init(WrappedRequest request) {
         getContent().addComponent(
@@ -61,7 +61,7 @@ class DefaultRoot extends Root {
     }
 }
 
-class TouchRoot extends Root {
+class TouchRoot extends UI {
     @Override
     protected void init(WrappedRequest request) {
         WebBrowser webBrowser = request.getBrowserDetails().getWebBrowser();

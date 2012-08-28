@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Root.LegacyWindow;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
 public class Ticket1991 extends com.vaadin.Application.LegacyApplication {

@@ -101,6 +101,12 @@ public class TypeDataStore {
         return get().delegateToWidget.get(property);
     }
 
+    public void setDelegateToWidget(Class<?> clazz, String propertyName,
+            String delegateValue) {
+        delegateToWidget.put(new Property(getType(clazz), propertyName),
+                delegateValue);
+    }
+
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
         returnTypes.put(new Method(getType(type), methodName), returnType);
     }

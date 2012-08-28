@@ -31,6 +31,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
 import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
 import com.vaadin.terminal.gwt.client.metadata.NoDataException;
@@ -202,11 +203,12 @@ public class ApplicationConfiguration implements EntryPoint {
     private String id;
     private String themeUri;
     private String appUri;
-    private int rootId;
+    private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
     private boolean useDebugIdInDom = true;
+    private int heartbeatInterval;
 
     private HashMap<Integer, String> unknownComponents;
 
@@ -284,12 +286,20 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Gets the root if of this application instance. The root id should be
      * included in every request originating from this instance in order to
-     * associate it with the right Root instance on the server.
+     * associate it with the right UI instance on the server.
      * 
      * @return the root id
      */
-    public int getRootId() {
-        return rootId;
+    public int getUIId() {
+        return uiId;
+    }
+
+    /**
+     * @return The interval in seconds between heartbeat requests, or a
+     *         non-positive number if heartbeat is disabled.
+     */
+    public int getHeartbeatInterval() {
+        return heartbeatInterval;
     }
 
     public JavaScriptObject getVersionInfoJSObject() {
@@ -314,13 +324,17 @@ public class ApplicationConfiguration implements EntryPoint {
             appUri += '/';
         }
         themeUri = jsoConfiguration.getConfigString("themeUri");
-        rootId = jsoConfiguration.getConfigInteger("rootId").intValue();
+        uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
+                .intValue();
 
         // null -> true
         useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;
 
         // null -> false
         standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;
+
+        heartbeatInterval = jsoConfiguration
+                .getConfigInteger("heartbeatInterval");
 
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
         authorizationError = jsoConfiguration.getConfigError("authErrMsg");

@@ -26,7 +26,7 @@ import com.vaadin.terminal.AbstractClientConnector;
 import com.vaadin.terminal.Extension;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Root;
+import com.vaadin.ui.UI;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -175,12 +175,12 @@ public interface ClientConnector extends Connector, RpcTarget {
     public void removeExtension(Extension extension);
 
     /**
-     * Returns the root this connector is attached to
+     * Returns the UI this connector is attached to
      * 
-     * @return The Root this connector is attached to or null if it is not
-     *         attached to any Root
+     * @return The UI this connector is attached to or null if it is not
+     *         attached to any UI
      */
-    public Root getRoot();
+    public UI getUI();
 
     /**
      * Called before the shared state and RPC invocations are sent to the

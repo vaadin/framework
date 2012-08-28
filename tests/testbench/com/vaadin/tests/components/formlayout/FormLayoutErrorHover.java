@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestRoot;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.PopupDateField;
 
-public class FormLayoutErrorHover extends AbstractTestRoot {
+public class FormLayoutErrorHover extends AbstractTestUI {
 
     @Override
     protected void setup(WrappedRequest request) {
