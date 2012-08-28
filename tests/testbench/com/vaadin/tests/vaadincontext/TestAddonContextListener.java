@@ -44,7 +44,7 @@ public class TestAddonContextListener implements AddonContextListener {
             private boolean shouldModify(BootstrapResponse response) {
                 Root root = response.getRoot();
                 boolean shouldModify = root != null
-                        && root.getClass() == BoostrapModifyRoot.class;
+                        && root.getClass() == BootstrapModifyRoot.class;
                 return shouldModify;
             }
 

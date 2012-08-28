@@ -226,7 +226,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
      */
     public void setIndeterminate(boolean newValue) {
         indeterminate = newValue;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -246,7 +246,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
      */
     public void setPollingInterval(int newValue) {
         pollingInterval = newValue;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

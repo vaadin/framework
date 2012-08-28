@@ -88,7 +88,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
             final Form generalForm = new Form();
             {
                 generalForm.setCaption("My form");
-                generalForm.setWriteThrough(true);
+                generalForm.setBuffered(false);
                 generalForm.setFormFieldFactory(fieldFactory);
 
                 BeanItem<MyBean> myBeanItem = new BeanItem<MyBean>(myBean);

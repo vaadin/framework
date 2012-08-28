@@ -151,7 +151,7 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     @Override
-    public LabelState getState() {
+    protected LabelState getState() {
         return (LabelState) super.getState();
     }
 
@@ -168,7 +168,7 @@ public class Label extends AbstractComponent implements Property<String>,
     public String getValue() {
         if (getPropertyDataSource() == null) {
             // Use internal value if we are running without a data source
-            return getState().getText();
+            return getState().text;
         }
         return ConverterUtil.convertFromModel(getPropertyDataSource()
                 .getValue(), String.class, getConverter(), getLocale());
@@ -189,8 +189,7 @@ public class Label extends AbstractComponent implements Property<String>,
                     + String.class.getName());
         }
         if (getPropertyDataSource() == null) {
-            getState().setText((String) newStringValue);
-            requestRepaint();
+            getState().text = (String) newStringValue;
         } else {
             throw new IllegalStateException(
                     "Label is only a Property.Viewer and cannot update its data source");
@@ -266,7 +265,7 @@ public class Label extends AbstractComponent implements Property<String>,
                         .isAssignableFrom(dataSource.getClass())) {
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -277,7 +276,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @see ContentMode
      */
     public ContentMode getContentMode() {
-        return getState().getContentMode();
+        return getState().contentMode;
     }
 
     /**
@@ -293,8 +292,7 @@ public class Label extends AbstractComponent implements Property<String>,
             throw new IllegalArgumentException("Content mode can not be null");
         }
 
-        getState().setContentMode(contentMode);
-        requestRepaint();
+        getState().contentMode = contentMode;
     }
 
     /* Value change events */
@@ -384,8 +382,7 @@ public class Label extends AbstractComponent implements Property<String>,
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
         // Update the internal value from the data source
-        getState().setText(getValue());
-        requestRepaint();
+        getState().text = getValue();
 
         fireValueChange();
     }
@@ -485,7 +482,7 @@ public class Label extends AbstractComponent implements Property<String>,
      */
     public void setConverter(Converter<String, ?> converter) {
         this.converter = (Converter<String, Object>) converter;
-        requestRepaint();
+        markAsDirty();
     }
 
 }

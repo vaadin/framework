@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.server.ResourceReference;
 public abstract class AbstractMedia extends AbstractComponent {
 
     @Override
-    public AbstractMediaState getState() {
+    protected AbstractMediaState getState() {
         return (AbstractMediaState) super.getState();
     }
 
@@ -66,7 +66,6 @@ public abstract class AbstractMedia extends AbstractComponent {
         if (source != null) {
             getState().getSources().add(new ResourceReference(source));
             getState().getSourceTypes().add(source.getMIMEType());
-            requestRepaint();
         }
     }
 
@@ -103,7 +102,6 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void setShowControls(boolean showControls) {
         getState().setShowControls(showControls);
-        requestRepaint();
     }
 
     /**
@@ -126,7 +124,6 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void setAltText(String altText) {
         getState().setAltText(altText);
-        requestRepaint();
     }
 
     /**
@@ -145,7 +142,6 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         getState().setHtmlContentAllowed(htmlContentAllowed);
-        requestRepaint();
     }
 
     /**
@@ -164,7 +160,6 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void setAutoplay(boolean autoplay) {
         getState().setAutoplay(autoplay);
-        requestRepaint();
     }
 
     /**
@@ -181,7 +176,6 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void setMuted(boolean muted) {
         getState().setMuted(muted);
-        requestRepaint();
     }
 
     /**

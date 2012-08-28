@@ -51,7 +51,6 @@ public class MyComponent extends AbstractComponent {
 
     public void setText(String text) {
         getState().setText(text);
-        requestRepaint();
     }
 
     public String getText() {

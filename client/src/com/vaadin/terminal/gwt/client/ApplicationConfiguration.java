@@ -29,9 +29,12 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.terminal.gwt.client.metadata.BundleLoadCallback;
+import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ApplicationConfiguration implements EntryPoint {
@@ -207,7 +210,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private HashMap<Integer, String> unknownComponents;
 
-    private Class<? extends ServerConnector>[] classes = new Class[1024];
+    private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<Integer, Class<? extends ServerConnector>>();
 
     private boolean browserDetailsSent = false;
     private boolean widgetsetVersionSent = false;
@@ -390,12 +393,32 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public Class<? extends ServerConnector> getConnectorClassByEncodedTag(
             int tag) {
-        try {
-            return classes[tag];
-        } catch (Exception e) {
-            // component was not present in mappings
-            return UnknownComponentConnector.class;
+        Class<? extends ServerConnector> type = classes.get(tag);
+        if (type == null && !classes.containsKey(tag)) {
+            // Initialize if not already loaded
+            Integer currentTag = Integer.valueOf(tag);
+            while (type == null && currentTag != null) {
+                String serverSideClassNameForTag = getServerSideClassNameForTag(currentTag);
+                if (TypeData.hasIdentifier(serverSideClassNameForTag)) {
+                    try {
+                        type = (Class<? extends ServerConnector>) TypeData
+                                .getClass(serverSideClassNameForTag);
+                    } catch (NoDataException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                currentTag = getParentTag(currentTag.intValue());
+            }
+            if (type == null) {
+                type = UnknownComponentConnector.class;
+                if (unknownComponents == null) {
+                    unknownComponents = new HashMap<Integer, String>();
+                }
+                unknownComponents.put(tag, getServerSideClassNameForTag(tag));
+            }
+            classes.put(tag, type);
         }
+        return type;
     }
 
     public void addComponentInheritanceInfo(ValueMap valueMap) {
@@ -418,13 +441,7 @@ public class ApplicationConfiguration implements EntryPoint {
         for (int i = 0; i < keyArray.length(); i++) {
             String key = keyArray.get(i).intern();
             int value = valueMap.getInt(key);
-            classes[value] = widgetSet.getConnectorClassByTag(value, this);
-            if (classes[value] == UnknownComponentConnector.class) {
-                if (unknownComponents == null) {
-                    unknownComponents = new HashMap<Integer, String>();
-                }
-                unknownComponents.put(value, key);
-            }
+            widgetSet.ensureConnectorLoaded(value, this);
         }
     }
 
@@ -466,85 +483,24 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (dependenciesLoading == 0 && deferredWidgetLoader != null) {
-            deferredWidgetLoader.trigger();
-        }
+        } else if (dependenciesLoading == 0
+                && !ConnectorBundleLoader.get().isBundleLoaded(
+                        ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
+            ConnectorBundleLoader.get().loadBundle(
+                    ConnectorBundleLoader.DEFERRED_BUNDLE_NAME,
+                    new BundleLoadCallback() {
+                        @Override
+                        public void loaded() {
+                            // Nothing to do
+                        }
 
-    }
-
-    /*
-     * This loop loads widget implementation that should be loaded deferred.
-     */
-    static class DeferredWidgetLoader extends Timer {
-        private static final int FREE_LIMIT = 4;
-        private static final int FREE_CHECK_TIMEOUT = 100;
-
-        int communicationFree = 0;
-        int nextWidgetIndex = 0;
-        private boolean pending;
-
-        public DeferredWidgetLoader() {
-            schedule(5000);
-        }
-
-        public void trigger() {
-            if (!pending) {
-                schedule(FREE_CHECK_TIMEOUT);
-            }
-        }
-
-        @Override
-        public void schedule(int delayMillis) {
-            super.schedule(delayMillis);
-            pending = true;
-        }
-
-        @Override
-        public void run() {
-            pending = false;
-            if (!isBusy()) {
-                Class<? extends ServerConnector> nextType = getNextType();
-                if (nextType == null) {
-                    // ensured that all widgets are loaded
-                    deferredWidgetLoader = null;
-                } else {
-                    communicationFree = 0;
-                    widgetSet.loadImplementation(nextType);
-                }
-            } else {
-                schedule(FREE_CHECK_TIMEOUT);
-            }
-        }
-
-        private Class<? extends ServerConnector> getNextType() {
-            Class<? extends ServerConnector>[] deferredLoadedConnectors = widgetSet
-                    .getDeferredLoadedConnectors();
-            if (deferredLoadedConnectors.length <= nextWidgetIndex) {
-                return null;
-            } else {
-                return deferredLoadedConnectors[nextWidgetIndex++];
-            }
-        }
-
-        private boolean isBusy() {
-            if (dependenciesLoading > 0) {
-                communicationFree = 0;
-                return true;
-            }
-            for (ApplicationConnection app : runningApplications) {
-                if (app.hasActiveRequest()) {
-                    // if an UIDL request or widget loading is active, mark as
-                    // busy
-                    communicationFree = 0;
-                    return true;
-                }
-            }
-            communicationFree++;
-            return communicationFree < FREE_LIMIT;
+                        @Override
+                        public void failed(Throwable reason) {
+                            VConsole.error(reason);
+                        }
+                    });
         }
     }
-
-    private static DeferredWidgetLoader deferredWidgetLoader;
 
     @Override
     public void onModuleLoad() {
@@ -582,7 +538,6 @@ public class ApplicationConfiguration implements EntryPoint {
             return;
         }
         registerCallback(GWT.getModuleName());
-        deferredWidgetLoader = new DeferredWidgetLoader();
     }
 
     /**

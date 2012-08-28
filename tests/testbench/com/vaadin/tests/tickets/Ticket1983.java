@@ -107,7 +107,7 @@ public class Ticket1983 extends Application.LegacyApplication {
                         isLong = true;
                     }
                     // Works the same way with or without repaint request
-                    table.requestRepaint();
+                    table.markAsDirty();
                 }
             });
 

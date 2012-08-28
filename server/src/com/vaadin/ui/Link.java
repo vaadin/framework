@@ -18,7 +18,7 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.terminal.Page;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.Resource;
@@ -34,19 +34,22 @@ import com.vaadin.terminal.Vaadin6Component;
 public class Link extends AbstractComponent implements Vaadin6Component {
 
     /* Target window border type constant: No window border */
-    public static final int TARGET_BORDER_NONE = Page.BORDER_NONE;
+    @Deprecated
+    public static final BorderStyle TARGET_BORDER_NONE = BorderStyle.NONE;
 
     /* Target window border type constant: Minimal window border */
-    public static final int TARGET_BORDER_MINIMAL = Page.BORDER_MINIMAL;
+    @Deprecated
+    public static final BorderStyle TARGET_BORDER_MINIMAL = BorderStyle.MINIMAL;
 
     /* Target window border type constant: Default window border */
-    public static final int TARGET_BORDER_DEFAULT = Page.BORDER_DEFAULT;
+    @Deprecated
+    public static final BorderStyle TARGET_BORDER_DEFAULT = BorderStyle.DEFAULT;
 
     private Resource resource = null;
 
     private String targetName;
 
-    private int targetBorder = TARGET_BORDER_DEFAULT;
+    private BorderStyle targetBorder = BorderStyle.DEFAULT;
 
     private int targetWidth = -1;
 
@@ -89,7 +92,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      * 
      */
     public Link(String caption, Resource resource, String targetName,
-            int width, int height, int border) {
+            int width, int height, BorderStyle border) {
         setCaption(caption);
         this.resource = resource;
         setTargetName(targetName);
@@ -131,10 +134,10 @@ public class Link extends AbstractComponent implements Vaadin6Component {
 
         // Target window border
         switch (getTargetBorder()) {
-        case TARGET_BORDER_MINIMAL:
+        case MINIMAL:
             target.addAttribute("border", "minimal");
             break;
-        case TARGET_BORDER_NONE:
+        case NONE:
             target.addAttribute("border", "none");
             break;
         }
@@ -145,7 +148,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      * 
      * @return the target window border.
      */
-    public int getTargetBorder() {
+    public BorderStyle getTargetBorder() {
         return targetBorder;
     }
 
@@ -183,13 +186,9 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      * @param targetBorder
      *            the targetBorder to set.
      */
-    public void setTargetBorder(int targetBorder) {
-        if (targetBorder == TARGET_BORDER_DEFAULT
-                || targetBorder == TARGET_BORDER_MINIMAL
-                || targetBorder == TARGET_BORDER_NONE) {
-            this.targetBorder = targetBorder;
-            requestRepaint();
-        }
+    public void setTargetBorder(BorderStyle targetBorder) {
+        this.targetBorder = targetBorder;
+        markAsDirty();
     }
 
     /**
@@ -200,7 +199,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetHeight(int targetHeight) {
         this.targetHeight = targetHeight;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -211,7 +210,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetName(String targetName) {
         this.targetName = targetName;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -222,7 +221,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setTargetWidth(int targetWidth) {
         this.targetWidth = targetWidth;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -242,7 +241,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public void setResource(Resource resource) {
         this.resource = resource;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override

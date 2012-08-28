@@ -729,7 +729,7 @@ public class Table extends AbstractSelect implements Action.Container,
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -788,7 +788,7 @@ public class Table extends AbstractSelect implements Action.Container,
             this.columnIcons.put(it.next(), columnIcons[i]);
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -888,7 +888,7 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             columnWidths.put(propertyId, Integer.valueOf(width));
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1026,7 +1026,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (this.cacheRate != cacheRate) {
             this.cacheRate = cacheRate;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1158,7 +1158,7 @@ public class Table extends AbstractSelect implements Action.Container,
             columnIcons.put(propertyId, icon);
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1198,7 +1198,7 @@ public class Table extends AbstractSelect implements Action.Container,
             columnHeaders.put(propertyId, header);
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1361,7 +1361,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
         if (columnReorderingAllowed != this.columnReorderingAllowed) {
             this.columnReorderingAllowed = columnReorderingAllowed;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1507,31 +1507,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Getter for property pageBuffering.
-     * 
-     * @deprecated functionality is not needed in ajax rendering model
-     * 
-     * @return the Value of property pageBuffering.
-     */
-    @Deprecated
-    public boolean isPageBufferingEnabled() {
-        return true;
-    }
-
-    /**
-     * Setter for property pageBuffering.
-     * 
-     * @deprecated functionality is not needed in ajax rendering model
-     * 
-     * @param pageBuffering
-     *            the New value of property pageBuffering.
-     */
-    @Deprecated
-    public void setPageBufferingEnabled(boolean pageBuffering) {
-
-    }
-
-    /**
      * Getter for property selectable.
      * 
      * <p>
@@ -1557,7 +1532,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setSelectable(boolean selectable) {
         if (this.selectable != selectable) {
             this.selectable = selectable;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1583,7 +1558,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         if (columnHeaderMode != this.columnHeaderMode) {
             this.columnHeaderMode = columnHeaderMode;
-            requestRepaint();
+            markAsDirty();
         }
 
     }
@@ -1652,7 +1627,23 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         setRowCacheInvalidated(true);
-        requestRepaint();
+        markAsDirty();
+    }
+
+    /**
+     * Requests that the Table should be repainted as soon as possible.
+     * 
+     * Note that a {@code Table} does not necessarily repaint its contents when
+     * this method has been called. See {@link #refreshRowCache()} for forcing
+     * an update of the contents.
+     * 
+     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
+     */
+
+    @Deprecated
+    @Override
+    public void requestRepaint() {
+        markAsDirty();
     }
 
     /**
@@ -1664,14 +1655,20 @@ public class Table extends AbstractSelect implements Action.Container,
      */
 
     @Override
-    public void requestRepaint() {
+    public void markAsDirty() {
         // Overridden only for javadoc
-        super.requestRepaint();
+        super.markAsDirty();
+    }
+
+    @Deprecated
+    @Override
+    public void requestRepaintAll() {
+        markAsDirtyRecursive();
     }
 
     @Override
-    public void requestRepaintAll() {
-        super.requestRepaintAll();
+    public void markAsDirtyRecursive() {
+        super.markAsDirtyRecursive();
 
         // Avoid sending a partial repaint (#8714)
         refreshRowCache();
@@ -2230,16 +2227,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Refreshes the current page contents.
-     * 
-     * @deprecated should not need to be used
-     */
-    @Deprecated
-    public void refreshCurrentPage() {
-
-    }
-
-    /**
      * Sets the row header mode.
      * <p>
      * The mode can be one of the following ones:
@@ -2471,7 +2458,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (!isNullSelectionAllowed()
                     && (id == null || id == getNullSelectionItemId())) {
                 // skip empty selection if nullselection is not allowed
-                requestRepaint();
+                markAsDirty();
             } else if (id != null && containsId(id)) {
                 newValue.add(id);
                 renderedButNotSelectedItemIds.remove(id);
@@ -2498,7 +2485,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (!isNullSelectionAllowed() && newValue.isEmpty()) {
             // empty selection not allowed, keep old value
-            requestRepaint();
+            markAsDirty();
             return;
         }
 
@@ -2837,7 +2824,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (refreshContent) {
             refreshRenderedCells();
             // Ensure that client gets a response
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -3786,7 +3773,7 @@ public class Table extends AbstractSelect implements Action.Container,
             refreshRowCache();
             containerChangeToBeRendered = true;
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -4470,7 +4457,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * would support this.
      * 
      * @return True iff sorting is disabled.
-     * @deprecated Use {@link #isSortEnabled()} instead
+     * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
     @Deprecated
     public boolean isSortDisabled() {
@@ -4491,7 +4478,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param sortDisabled
      *            True iff sorting is disabled.
-     * @deprecated Use {@link #setSortEnabled(boolean)} instead
+     * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
      */
     @Deprecated
     public void setSortDisabled(boolean sortDisabled) {
@@ -4511,7 +4498,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setSortEnabled(boolean sortEnabled) {
         if (this.sortEnabled != sortEnabled) {
             this.sortEnabled = sortEnabled;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -4608,7 +4595,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // some ancestor still disabled, don't update children
             return;
         } else {
-            requestRepaintAll();
+            markAsDirtyRecursive();
         }
     }
 
@@ -4620,7 +4607,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setDragMode(TableDragMode newDragMode) {
         dragMode = newDragMode;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -4704,7 +4691,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setMultiSelectMode(MultiSelectMode mode) {
         multiSelectMode = mode;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -5012,7 +4999,7 @@ public class Table extends AbstractSelect implements Action.Container,
             columnFooters.put(propertyId, footer);
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -5028,7 +5015,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setFooterVisible(boolean visible) {
         if (visible != columnFootersVisible) {
             columnFootersVisible = visible;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

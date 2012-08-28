@@ -18,8 +18,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.VMarginInfo;
-import com.vaadin.shared.ui.AlignmentInfo.Bits;
+import com.vaadin.shared.ui.MarginInfo;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the
@@ -33,102 +32,10 @@ import com.vaadin.shared.ui.AlignmentInfo.Bits;
 public interface Layout extends ComponentContainer, Serializable {
 
     /**
-     * Enable layout margins. Affects all four sides of the layout. This will
-     * tell the client-side implementation to leave extra space around the
-     * layout. The client-side implementation decides the actual amount, and it
-     * can vary between themes.
-     * 
-     * @param enabled
-     */
-    public void setMargin(boolean enabled);
-
-    /**
-     * Enable specific layout margins. This will tell the client-side
-     * implementation to leave extra space around the layout in specified edges,
-     * clockwise from top (top, right, bottom, left). The client-side
-     * implementation decides the actual amount, and it can vary between themes.
-     * 
-     * @param top
-     * @param right
-     * @param bottom
-     * @param left
-     */
-    public void setMargin(boolean top, boolean right, boolean bottom,
-            boolean left);
-
-    /**
      * AlignmentHandler is most commonly an advanced {@link Layout} that can
      * align its components.
      */
     public interface AlignmentHandler extends Serializable {
-
-        /**
-         * Contained component should be aligned horizontally to the left.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_LEFT = Bits.ALIGNMENT_LEFT;
-
-        /**
-         * Contained component should be aligned horizontally to the right.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_RIGHT = Bits.ALIGNMENT_RIGHT;
-
-        /**
-         * Contained component should be aligned vertically to the top.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_TOP = Bits.ALIGNMENT_TOP;
-
-        /**
-         * Contained component should be aligned vertically to the bottom.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_BOTTOM = Bits.ALIGNMENT_BOTTOM;
-
-        /**
-         * Contained component should be horizontally aligned to center.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_HORIZONTAL_CENTER = Bits.ALIGNMENT_HORIZONTAL_CENTER;
-
-        /**
-         * Contained component should be vertically aligned to center.
-         * 
-         * @deprecated Use of {@link Alignment} class and its constants
-         */
-        @Deprecated
-        public static final int ALIGNMENT_VERTICAL_CENTER = Bits.ALIGNMENT_VERTICAL_CENTER;
-
-        /**
-         * Set alignment for one contained component in this layout. Alignment
-         * is calculated as a bit mask of the two passed values.
-         * 
-         * @deprecated Use {@link #setComponentAlignment(Component, Alignment)}
-         *             instead
-         * 
-         * @param childComponent
-         *            the component to align within it's layout cell.
-         * @param horizontalAlignment
-         *            the horizontal alignment for the child component (left,
-         *            center, right). Use ALIGNMENT constants.
-         * @param verticalAlignment
-         *            the vertical alignment for the child component (top,
-         *            center, bottom). Use ALIGNMENT constants.
-         */
-        @Deprecated
-        public void setComponentAlignment(Component childComponent,
-                int horizontalAlignment, int verticalAlignment);
 
         /**
          * Set alignment for one contained component in this layout. Use
@@ -197,6 +104,19 @@ public interface Layout extends ComponentContainer, Serializable {
      * its components).
      */
     public interface MarginHandler extends Serializable {
+
+        /**
+         * Enable layout margins. Affects all four sides of the layout. This
+         * will tell the client-side implementation to leave extra space around
+         * the layout. The client-side implementation decides the actual amount,
+         * and it can vary between themes.
+         * 
+         * @param enabled
+         *            true if margins should be enabled on all sides, false to
+         *            disable all margins
+         */
+        public void setMargin(boolean enabled);
+
         /**
          * Enable margins for this layout.
          * 
@@ -224,16 +144,4 @@ public interface Layout extends ComponentContainer, Serializable {
         public MarginInfo getMargin();
     }
 
-    @SuppressWarnings("serial")
-    public static class MarginInfo extends VMarginInfo implements Serializable {
-
-        public MarginInfo(boolean enabled) {
-            super(enabled, enabled, enabled, enabled);
-        }
-
-        public MarginInfo(boolean top, boolean right, boolean bottom,
-                boolean left) {
-            super(top, right, bottom, left);
-        }
-    }
 }

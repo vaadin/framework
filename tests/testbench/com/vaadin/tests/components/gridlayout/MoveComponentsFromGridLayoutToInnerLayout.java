@@ -40,7 +40,7 @@ public class MoveComponentsFromGridLayoutToInnerLayout extends TestBase {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        vl.requestRepaint();
+                        vl.markAsDirty();
                     }
                 });
 

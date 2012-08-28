@@ -62,8 +62,8 @@ public class SplitPanelExtraScrollbars extends AbstractTestCase implements
         }
 
         // Sending all changes in one repaint triggers the bug
-        hl.requestRepaint();
-        sp.requestRepaint();
+        hl.markAsDirty();
+        sp.markAsDirty();
     }
 
 }

@@ -17,8 +17,6 @@ package com.vaadin.shared;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.communication.SharedState;
-
 /**
  * Interface implemented by all classes that are capable of communicating with
  * the server or the client side.
@@ -40,15 +38,6 @@ import com.vaadin.shared.communication.SharedState;
  * @since 7.0.0
  */
 public interface Connector extends Serializable {
-    /**
-     * Gets the current shared state of the connector.
-     * 
-     * @since 7.0.
-     * @return state The shared state object. Can be any sub type of
-     *         {@link SharedState}. Never null.
-     */
-    public SharedState getState();
-
     /**
      * Returns the id for this connector. This is set by the framework and does
      * not change during the lifetime of a connector.

@@ -31,9 +31,12 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.vaadin.Application;
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
 import com.vaadin.terminal.gwt.server.RpcManager;
@@ -68,6 +71,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
      */
     private SharedState sharedState;
 
+    private Class<? extends SharedState> stateType;
+
     /**
      * Pending RPC method invocations to be sent.
      */
@@ -80,8 +85,15 @@ public abstract class AbstractClientConnector implements ClientConnector {
     private ClientConnector parent;
 
     /* Documentation copied from interface */
+    @Deprecated
     @Override
     public void requestRepaint() {
+        markAsDirty();
+    }
+
+    /* Documentation copied from interface */
+    @Override
+    public void markAsDirty() {
         Root root = getRoot();
         if (root != null) {
             root.getConnectorTracker().markDirty(this);
@@ -137,12 +149,22 @@ public abstract class AbstractClientConnector implements ClientConnector {
         registerRpc(implementation, type);
     }
 
-    @Override
-    public SharedState getState() {
+    protected SharedState getState() {
         if (null == sharedState) {
             sharedState = createState();
         }
+
+        Root root = getRoot();
+        if (root != null && !root.getConnectorTracker().isDirty(this)) {
+            requestRepaint();
+        }
+
         return sharedState;
+    }
+
+    @Override
+    public JSONObject encodeState() throws JSONException {
+        return AbstractCommunicationManager.encodeState(this, getState());
     }
 
     /**
@@ -172,17 +194,33 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.gwt.server.ClientConnector#getStateType()
-     */
     @Override
     public Class<? extends SharedState> getStateType() {
+        // Lazy load because finding type can be expensive because of the
+        // exceptions flying around
+        if (stateType == null) {
+            stateType = findStateType();
+        }
+
+        return stateType;
+    }
+
+    private Class<? extends SharedState> findStateType() {
         try {
-            Method m = getClass().getMethod("getState", (Class[]) null);
-            Class<?> type = m.getReturnType();
-            return type.asSubclass(SharedState.class);
+            Class<?> class1 = getClass();
+            while (class1 != null) {
+                try {
+                    Method m = class1.getDeclaredMethod("getState",
+                            (Class[]) null);
+                    Class<?> type = m.getReturnType();
+                    return type.asSubclass(SharedState.class);
+                } catch (NoSuchMethodException nsme) {
+                    // Try in superclass instead
+                    class1 = class1.getSuperclass();
+                }
+            }
+            throw new NoSuchMethodException(getClass().getCanonicalName()
+                    + ".getState()");
         } catch (Exception e) {
             throw new RuntimeException("Error finding state type for "
                     + getClass().getName(), e);
@@ -255,8 +293,6 @@ public abstract class AbstractClientConnector implements ClientConnector {
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
             addMethodInvocationToQueue(rpcInterfaceName, method, args);
-            // TODO no need to do full repaint if only RPC calls
-            requestRepaint();
             return null;
         }
 
@@ -279,6 +315,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
         // add to queue
         pendingInvocations.add(new ClientMethodInvocation(this, interfaceName,
                 method, parameters));
+        // TODO no need to do full repaint if only RPC calls
+        requestRepaint();
     }
 
     /**
@@ -358,11 +396,17 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     @Override
+    @Deprecated
     public void requestRepaintAll() {
-        requestRepaint();
+        markAsDirtyRecursive();
+    }
+
+    @Override
+    public void markAsDirtyRecursive() {
+        markAsDirty();
 
         for (ClientConnector connector : getAllChildrenIterable(this)) {
-            connector.requestRepaintAll();
+            connector.markAsDirtyRecursive();
         }
     }
 
@@ -438,14 +482,14 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
         extensions.add(extension);
         extension.setParent(this);
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
     public void removeExtension(Extension extension) {
         extension.setParent(null);
         extensions.remove(extension);
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -482,7 +526,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
     @Override
     public void attach() {
-        requestRepaint();
+        markAsDirty();
 
         getRoot().getConnectorTracker().registerConnector(this);
 

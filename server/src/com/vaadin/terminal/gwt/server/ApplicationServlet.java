@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.DefaultRootProvider;
 import com.vaadin.terminal.gwt.server.ServletPortletHelper.ApplicationClassException;
 
 /**
@@ -69,6 +70,7 @@ public class ApplicationServlet extends AbstractApplicationServlet {
         // Creates a new application instance
         try {
             final Application application = getApplicationClass().newInstance();
+            application.addRootProvider(new DefaultRootProvider());
 
             return application;
         } catch (final IllegalAccessException e) {

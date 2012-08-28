@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.AlignmentInfo;
-import com.vaadin.shared.ui.VMarginInfo;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ComponentConnector;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
@@ -677,7 +677,7 @@ public class VGridLayout extends ComplexPanel {
         }
     }
 
-    void updateMarginStyleNames(VMarginInfo marginInfo) {
+    void updateMarginStyleNames(MarginInfo marginInfo) {
         togglePrefixedStyleName("margin-top", marginInfo.hasTop());
         togglePrefixedStyleName("margin-right", marginInfo.hasRight());
         togglePrefixedStyleName("margin-bottom", marginInfo.hasBottom());

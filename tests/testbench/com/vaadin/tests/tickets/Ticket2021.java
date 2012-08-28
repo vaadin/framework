@@ -9,6 +9,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextArea;
@@ -78,7 +79,7 @@ public class Ticket2021 extends Application.LegacyApplication {
         p3.setHeight("500px");
         // p3.setContent(new GridLayout());
         p3.getContent().setSizeFull();
-        ((Layout) p3.getContent()).setMargin(false);
+        ((MarginHandler) p3.getContent()).setMargin(false);
 
         GridLayout gl = new GridLayout();
         gl.setSizeFull();

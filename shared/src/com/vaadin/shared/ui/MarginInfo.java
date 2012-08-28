@@ -18,8 +18,7 @@ package com.vaadin.shared.ui;
 
 import java.io.Serializable;
 
-@SuppressWarnings("serial")
-public class VMarginInfo implements Serializable {
+public class MarginInfo implements Serializable {
 
     private static final int TOP = 1;
     private static final int RIGHT = 2;
@@ -28,11 +27,15 @@ public class VMarginInfo implements Serializable {
 
     private int bitMask;
 
-    public VMarginInfo(int bitMask) {
+    public MarginInfo(boolean enabled) {
+        this(enabled, enabled, enabled, enabled);
+    }
+
+    public MarginInfo(int bitMask) {
         this.bitMask = bitMask;
     }
 
-    public VMarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
+    public MarginInfo(boolean top, boolean right, boolean bottom, boolean left) {
         setMargins(top, right, bottom, left);
     }
 
@@ -44,7 +47,7 @@ public class VMarginInfo implements Serializable {
         bitMask += left ? LEFT : 0;
     }
 
-    public void setMargins(VMarginInfo marginInfo) {
+    public void setMargins(MarginInfo marginInfo) {
         bitMask = marginInfo.bitMask;
     }
 
@@ -78,11 +81,11 @@ public class VMarginInfo implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof VMarginInfo)) {
+        if (!(obj instanceof MarginInfo)) {
             return false;
         }
 
-        return ((VMarginInfo) obj).bitMask == bitMask;
+        return ((MarginInfo) obj).bitMask == bitMask;
     }
 
     @Override

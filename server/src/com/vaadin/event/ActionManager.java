@@ -67,7 +67,7 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     private void requestRepaint() {
         if (viewer != null) {
-            viewer.requestRepaint();
+            viewer.markAsDirty();
         }
     }
 

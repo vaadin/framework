@@ -60,9 +60,7 @@ public class JavaScriptCallbackHelper implements Serializable {
             JavaScriptFunction javaScriptCallback) {
         callbacks.put(functionName, javaScriptCallback);
         JavaScriptConnectorState state = getConnectorState();
-        if (state.getCallbackNames().add(functionName)) {
-            connector.requestRepaint();
-        }
+        state.getCallbackNames().add(functionName);
         ensureRpc();
     }
 
@@ -100,7 +98,6 @@ public class JavaScriptCallbackHelper implements Serializable {
         connector.addMethodInvocationToQueue(
                 JavaScriptCallbackRpc.class.getName(), CALL_METHOD,
                 new Object[] { name, args });
-        connector.requestRepaint();
     }
 
     public void registerRpc(Class<?> rpcInterfaceType) {
@@ -119,7 +116,6 @@ public class JavaScriptCallbackHelper implements Serializable {
             }
 
             rpcInterfaces.put(interfaceName, methodNames);
-            connector.requestRepaint();
         }
     }
 

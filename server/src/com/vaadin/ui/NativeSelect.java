@@ -64,7 +64,7 @@ public class NativeSelect extends AbstractSelect {
         }
         if (this.columns != columns) {
             this.columns = columns;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

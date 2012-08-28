@@ -17,7 +17,6 @@
 package com.vaadin.ui;
 
 import com.vaadin.shared.ui.AbstractLayoutState;
-import com.vaadin.ui.Layout.MarginHandler;
 
 /**
  * An abstract class that defines default implementation for the {@link Layout}
@@ -26,62 +25,12 @@ import com.vaadin.ui.Layout.MarginHandler;
  * @author Vaadin Ltd.
  * @since 5.0
  */
-@SuppressWarnings("serial")
 public abstract class AbstractLayout extends AbstractComponentContainer
-        implements Layout, MarginHandler {
-
-    protected MarginInfo margins = new MarginInfo(false);
+        implements Layout {
 
     @Override
-    public AbstractLayoutState getState() {
+    protected AbstractLayoutState getState() {
         return (AbstractLayoutState) super.getState();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout#setMargin(boolean)
-     */
-    @Override
-    public void setMargin(boolean enabled) {
-        margins.setMargins(enabled);
-        getState().setMarginsBitmask(margins.getBitMask());
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
-     */
-    @Override
-    public MarginInfo getMargin() {
-        return margins;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.MarginHandler#setMargin(MarginInfo)
-     */
-    @Override
-    public void setMargin(MarginInfo marginInfo) {
-        margins.setMargins(marginInfo);
-        getState().setMarginsBitmask(margins.getBitMask());
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout#setMargin(boolean, boolean, boolean, boolean)
-     */
-    @Override
-    public void setMargin(boolean topEnabled, boolean rightEnabled,
-            boolean bottomEnabled, boolean leftEnabled) {
-        margins.setMargins(topEnabled, rightEnabled, bottomEnabled, leftEnabled);
-        getState().setMarginsBitmask(margins.getBitMask());
-        requestRepaint();
     }
 
 }

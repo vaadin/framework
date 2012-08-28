@@ -15,9 +15,13 @@
  */
 package com.vaadin.terminal.gwt.client.communication;
 
-import com.google.gwt.core.client.GWT;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.terminal.gwt.client.ServerConnector;
+import com.vaadin.terminal.gwt.client.metadata.InvokationHandler;
+import com.vaadin.terminal.gwt.client.metadata.Method;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.TypeData;
 
 /**
  * Class for creating proxy instances for Client to Server RPC.
@@ -26,25 +30,38 @@ import com.vaadin.terminal.gwt.client.ServerConnector;
  */
 public class RpcProxy {
 
-    private static RpcProxyCreator impl = GWT.create(RpcProxyCreator.class);
-
-    /**
-     * Create a proxy class for the given Rpc interface and assign it to the
-     * given connector.
-     * 
-     * @param rpcInterface
-     *            The rpc interface to construct a proxy for
-     * @param connector
-     *            The connector this proxy is connected to
-     * @return A proxy class used for calling Rpc methods.
-     */
     public static <T extends ServerRpc> T create(Class<T> rpcInterface,
             ServerConnector connector) {
-        return impl.create(rpcInterface, connector);
+        try {
+            return (T) TypeData.getType(rpcInterface).createProxy(
+                    new RpcInvokationHandler(rpcInterface, connector));
+        } catch (NoDataException e) {
+            throw new IllegalStateException("There is no information about "
+                    + rpcInterface
+                    + ". Did you forget to compile the widgetset?");
+        }
     }
 
-    public interface RpcProxyCreator {
-        <T extends ServerRpc> T create(Class<T> rpcInterface,
-                ServerConnector connector);
+    private static final class RpcInvokationHandler implements
+            InvokationHandler {
+        private final Class<?> rpcInterface;
+        private final ServerConnector connector;
+
+        private RpcInvokationHandler(Class<?> rpcInterface,
+                ServerConnector connector) {
+            this.rpcInterface = rpcInterface;
+            this.connector = connector;
+        }
+
+        @Override
+        public Object invoke(Object target, Method method, Object[] params) {
+            MethodInvocation invocation = new MethodInvocation(
+                    connector.getConnectorId(), rpcInterface.getName(),
+                    method.getName(), params);
+            connector.getConnection().addMethodInvocationToQueue(invocation,
+                    method.isDelayed(), method.isLastonly());
+            // No RPC iface should have a return value
+            return null;
+        }
     }
 }

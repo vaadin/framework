@@ -33,6 +33,9 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Property;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 /**
  * Encoder for converting RPC parameters and other values to JSON for transfer
@@ -99,12 +102,33 @@ public class JsonEncoder {
             } else {
                 // Try to find a generated serializer object, class name is the
                 // type
-                transportType = value.getClass().getName();
-                JSONSerializer serializer = connection.getSerializerMap()
-                        .getSerializer(transportType);
+                Type type = new Type(value.getClass());
 
-                // TODO handle case with no serializer found
-                return serializer.serialize(value, connection);
+                JSONSerializer<Object> serializer = (JSONSerializer<Object>) type
+                        .findSerializer();
+                if (serializer != null) {
+                    return serializer.serialize(value, connection);
+                } else {
+                    try {
+                        Collection<Property> properties = type.getProperties();
+
+                        JSONObject jsonObject = new JSONObject();
+                        for (Property property : properties) {
+                            Object propertyValue = property.getValue(value);
+                            JSONValue encodedPropertyValue = encode(
+                                    propertyValue, restrictToInternalTypes,
+                                    connection);
+                            jsonObject.put(property.getName(),
+                                    encodedPropertyValue);
+                        }
+                        return jsonObject;
+
+                    } catch (NoDataException e) {
+                        throw new RuntimeException("Can not encode "
+                                + type.getSignature(), e);
+                    }
+                }
+
             }
         }
     }

@@ -3,7 +3,7 @@ package com.vaadin.tests.layouts;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Panel;
 
 public class GridLayoutInsidePanel extends TestBase {
@@ -27,7 +27,7 @@ public class GridLayoutInsidePanel extends TestBase {
                     "A label which defines the size of the GL"));
 
             Panel p = new Panel("Panel 1");
-            ((Layout) p.getContent()).setMargin(false);
+            ((MarginHandler) p.getContent()).setMargin(false);
             p.setSizeUndefined();
             p.getContent().setSizeUndefined();
 
@@ -41,7 +41,7 @@ public class GridLayoutInsidePanel extends TestBase {
                     "A label which defines the size of the GL"));
 
             Panel p = new Panel("Panel 2", gl);
-            ((Layout) p.getContent()).setMargin(false);
+            ((MarginHandler) p.getContent()).setMargin(false);
             p.setSizeUndefined();
             p.getContent().setSizeUndefined();
 

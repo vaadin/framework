@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.root.PageClientRpc;
 import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.terminal.WrappedRequest.BrowserDetails;
@@ -128,7 +129,7 @@ public class Page implements Serializable {
         /**
          * The border style of the target window
          */
-        private final int border;
+        private final BorderStyle border;
 
         /**
          * Creates a new open resource.
@@ -145,7 +146,7 @@ public class Page implements Serializable {
          *            The border style of the target window
          */
         private OpenResource(Resource resource, String name, int width,
-                int height, int border) {
+                int height, BorderStyle border) {
             this.resource = resource;
             this.name = name;
             this.width = width;
@@ -174,10 +175,10 @@ public class Page implements Serializable {
                 target.addAttribute("height", height);
             }
             switch (border) {
-            case BORDER_MINIMAL:
+            case MINIMAL:
                 target.addAttribute("border", "minimal");
                 break;
-            case BORDER_NONE:
+            case NONE:
                 target.addAttribute("border", "none");
                 break;
             }
@@ -193,19 +194,20 @@ public class Page implements Serializable {
     /**
      * A border style used for opening resources in a window without a border.
      */
-    public static final int BORDER_NONE = 0;
+    @Deprecated
+    public static final BorderStyle BORDER_NONE = BorderStyle.NONE;
 
     /**
      * A border style used for opening resources in a window with a minimal
      * border.
      */
-    public static final int BORDER_MINIMAL = 1;
+    public static final BorderStyle BORDER_MINIMAL = BorderStyle.MINIMAL;
 
     /**
      * A border style that indicates that the default border style should be
      * used when opening resources.
      */
-    public static final int BORDER_DEFAULT = 2;
+    public static final BorderStyle BORDER_DEFAULT = BorderStyle.DEFAULT;
 
     /**
      * Listener that listens changes in URI fragment.
@@ -330,7 +332,7 @@ public class Page implements Serializable {
             if (fireEvents) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
-            root.requestRepaint();
+            root.markAsDirty();
         }
     }
 
@@ -491,8 +493,8 @@ public class Page implements Serializable {
                             true);
                 }
                 target.addAttribute(
-                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION,
-                        n.getPosition());
+                        RootConstants.ATTRIBUTE_NOTIFICATION_POSITION, n
+                                .getPosition().ordinal());
                 target.addAttribute(RootConstants.ATTRIBUTE_NOTIFICATION_DELAY,
                         n.getDelayMsec());
                 if (n.getStyleName() != null) {
@@ -521,7 +523,7 @@ public class Page implements Serializable {
      */
     public void open(Resource resource) {
         openList.add(new OpenResource(resource, null, -1, -1, BORDER_DEFAULT));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -564,7 +566,7 @@ public class Page implements Serializable {
     public void open(Resource resource, String windowName) {
         openList.add(new OpenResource(resource, windowName, -1, -1,
                 BORDER_DEFAULT));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -581,14 +583,13 @@ public class Page implements Serializable {
      * @param height
      *            the height of the window in pixels
      * @param border
-     *            the border style of the window. See {@link #BORDER_NONE
-     *            Window.BORDER_* constants}
+     *            the border style of the window.
      */
     public void open(Resource resource, String windowName, int width,
-            int height, int border) {
+            int height, BorderStyle border) {
         openList.add(new OpenResource(resource, windowName, width, height,
                 border));
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**
@@ -602,7 +603,7 @@ public class Page implements Serializable {
             notifications = new LinkedList<Notification>();
         }
         notifications.add(notification);
-        root.requestRepaint();
+        root.markAsDirty();
     }
 
     /**

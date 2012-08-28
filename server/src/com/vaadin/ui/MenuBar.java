@@ -223,7 +223,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
         }
         MenuItem newItem = new MenuItem(caption, icon, command);
         menuItems.add(newItem);
-        requestRepaint();
+        markAsDirty();
 
         return newItem;
 
@@ -259,7 +259,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
             menuItems.add(newItem);
         }
 
-        requestRepaint();
+        markAsDirty();
 
         return newItem;
     }
@@ -283,7 +283,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
         if (item != null) {
             menuItems.remove(item);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -291,7 +291,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
      */
     public void removeItems() {
         menuItems.clear();
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -318,7 +318,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
         } else {
             moreItem = new MenuItem("", null, null);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -345,7 +345,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
     public void setAutoOpen(boolean autoOpenTopLevelMenu) {
         if (autoOpenTopLevelMenu != openRootOnHover) {
             openRootOnHover = autoOpenTopLevelMenu;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -373,7 +373,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         this.htmlContentAllowed = htmlContentAllowed;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -521,7 +521,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
             newItem.setParent(this);
             itsChildren.add(newItem);
 
-            requestRepaint();
+            markAsDirty();
 
             return newItem;
         }
@@ -560,7 +560,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
                 newItem = addItem(caption, icon, command);
             }
 
-            requestRepaint();
+            markAsDirty();
 
             return newItem;
         }
@@ -651,7 +651,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
          */
         public void setIcon(Resource icon) {
             itsIcon = icon;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -664,7 +664,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
             if (text != null) {
                 itsText = text;
             }
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -679,7 +679,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
                 if (itsChildren.isEmpty()) {
                     itsChildren = null;
                 }
-                requestRepaint();
+                markAsDirty();
             }
         }
 
@@ -690,7 +690,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
             if (itsChildren != null) {
                 itsChildren.clear();
                 itsChildren = null;
-                requestRepaint();
+                markAsDirty();
             }
         }
 
@@ -706,7 +706,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
-            requestRepaint();
+            markAsDirty();
         }
 
         public boolean isEnabled() {
@@ -715,7 +715,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
         public void setVisible(boolean visible) {
             this.visible = visible;
-            requestRepaint();
+            markAsDirty();
         }
 
         public boolean isVisible() {
@@ -724,7 +724,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
         private void setSeparator(boolean isSeparator) {
             this.isSeparator = isSeparator;
-            requestRepaint();
+            markAsDirty();
         }
 
         public boolean isSeparator() {
@@ -733,7 +733,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
 
         public void setStyleName(String styleName) {
             this.styleName = styleName;
-            requestRepaint();
+            markAsDirty();
         }
 
         public String getStyleName() {
@@ -750,7 +750,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
          */
         public void setDescription(String description) {
             this.description = description;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -855,7 +855,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
                         "A menu item with children cannot be checkable");
             }
             this.checkable = checkable;
-            requestRepaint();
+            markAsDirty();
         }
 
         /**
@@ -897,7 +897,7 @@ public class MenuBar extends AbstractComponent implements Vaadin6Component {
          */
         public void setChecked(boolean checked) {
             this.checked = checked;
-            requestRepaint();
+            markAsDirty();
         }
 
     }// class MenuItem

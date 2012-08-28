@@ -97,14 +97,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     private LinkedList<Validator> validators = null;
 
     /**
-     * Auto commit mode.
+     * True if field is in buffered mode, false otherwise
      */
-    private boolean writeThroughMode = true;
-
-    /**
-     * Reads the value from data-source, when it is not modified.
-     */
-    private boolean readThroughMode = true;
+    private boolean buffered;
 
     /**
      * Flag to indicate that the field is currently committing its value to the
@@ -306,7 +301,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 // Sets the buffering state
                 currentBufferedSourceException = new Buffered.SourceException(
                         this, e);
-                requestRepaint();
+                markAsDirty();
 
                 // Throws the source exception
                 throw currentBufferedSourceException;
@@ -321,7 +316,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 fireValueChange(false);
             } else if (wasModified) {
                 // If the value did not change, but the modification status did
-                requestRepaint();
+                markAsDirty();
             }
         }
     }
@@ -345,7 +340,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private T getFieldValue() {
         // Give the value from abstract buffers if the field if possible
-        if (dataSource == null || !isReadThrough() || isModified()) {
+        if (dataSource == null || isBuffered() || isModified()) {
             return getInternalValue();
         }
 
@@ -365,92 +360,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
     private void setModified(boolean modified) {
         getState().setModified(modified);
-        requestRepaint();
-    }
-
-    /*
-     * Tests if the field is in write-through mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from the implemented interface.
-     */
-    @Override
-    public boolean isWriteThrough() {
-        return writeThroughMode;
-    }
-
-    /**
-     * Sets the field's write-through mode to the specified status. When
-     * switching the write-through mode on, a {@link #commit()} will be
-     * performed.
-     * 
-     * @see #setBuffered(boolean) for an easier way to control read through and
-     *      write through modes
-     * 
-     * @param writeThrough
-     *            Boolean value to indicate if the object should be in
-     *            write-through mode after the call.
-     * @throws SourceException
-     *             If the operation fails because of an exception is thrown by
-     *             the data source.
-     * @throws InvalidValueException
-     *             If the implicit commit operation fails because of a
-     *             validation error.
-     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
-     *             setReadThrough(true), setWriteThrough(true) equals
-     *             setBuffered(false)
-     */
-    @Override
-    @Deprecated
-    public void setWriteThrough(boolean writeThrough)
-            throws Buffered.SourceException, InvalidValueException {
-        if (writeThroughMode == writeThrough) {
-            return;
-        }
-        writeThroughMode = writeThrough;
-        if (writeThroughMode) {
-            commit();
-        }
-    }
-
-    /*
-     * Tests if the field is in read-through mode. Don't add a JavaDoc comment
-     * here, we use the default documentation from the implemented interface.
-     */
-    @Override
-    public boolean isReadThrough() {
-        return readThroughMode;
-    }
-
-    /**
-     * Sets the field's read-through mode to the specified status. When
-     * switching read-through mode on, the object's value is updated from the
-     * data source.
-     * 
-     * @see #setBuffered(boolean) for an easier way to control read through and
-     *      write through modes
-     * 
-     * @param readThrough
-     *            Boolean value to indicate if the object should be in
-     *            read-through mode after the call.
-     * 
-     * @throws SourceException
-     *             If the operation fails because of an exception is thrown by
-     *             the data source. The cause is included in the exception.
-     * @deprecated Use {@link #setBuffered(boolean)} instead. Note that
-     *             setReadThrough(true), setWriteThrough(true) equals
-     *             setBuffered(false)
-     */
-    @Override
-    @Deprecated
-    public void setReadThrough(boolean readThrough)
-            throws Buffered.SourceException {
-        if (readThroughMode == readThrough) {
-            return;
-        }
-        readThroughMode = readThrough;
-        if (!isModified() && readThroughMode && getPropertyDataSource() != null) {
-            setInternalValue(convertFromDataSource(getDataSourceValue()));
-            fireValueChange(false);
-        }
     }
 
     /**
@@ -460,34 +369,35 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * property data source until {@link #commit()} is called.
      * </p>
      * <p>
-     * Changing buffered mode will change the read through and write through
-     * state for the field.
+     * Setting buffered mode from true to false will commit any pending changes.
      * </p>
      * <p>
-     * Mixing calls to {@link #setBuffered(boolean)} and
-     * {@link #setReadThrough(boolean)} or {@link #setWriteThrough(boolean)} is
-     * generally a bad idea.
+     * 
      * </p>
      * 
+     * @since 7.0.0
      * @param buffered
      *            true if buffered mode should be turned on, false otherwise
      */
     @Override
     public void setBuffered(boolean buffered) {
-        setReadThrough(!buffered);
-        setWriteThrough(!buffered);
+        if (this.buffered == buffered) {
+            return;
+        }
+        this.buffered = buffered;
+        if (!buffered) {
+            commit();
+        }
     }
 
     /**
      * Checks the buffered mode of this Field.
-     * <p>
-     * This method only returns true if both read and write buffering is used.
      * 
      * @return true if buffered mode is on, false otherwise
      */
     @Override
     public boolean isBuffered() {
-        return !isReadThrough() && !isWriteThrough();
+        return buffered;
     }
 
     /* Property interface implementation */
@@ -607,8 +517,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setModified(dataSource != null);
 
             valueWasModifiedByDataSourceDuringCommit = false;
-            // In write through mode , try to commit
-            if (isWriteThrough() && dataSource != null
+            // In not buffering, try to commit
+            if (!isBuffered() && dataSource != null
                     && (isInvalidCommitted() || isValid())) {
                 try {
 
@@ -625,7 +535,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                     // Sets the buffering state
                     currentBufferedSourceException = new Buffered.SourceException(
                             this, e);
-                    requestRepaint();
+                    markAsDirty();
 
                     // Throws the source exception
                     throw currentBufferedSourceException;
@@ -895,7 +805,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             validators = new LinkedList<Validator>();
         }
         validators.add(validator);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -923,7 +833,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (validators != null) {
             validators.remove(validator);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -933,7 +843,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (validators != null) {
             validators.clear();
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1160,7 +1070,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected void fireValueChange(boolean repaintIsNotNeeded) {
         fireEvent(new AbstractField.ValueChangeEvent(this));
         if (!repaintIsNotNeeded) {
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1190,7 +1100,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
         getState().setPropertyReadOnly(event.getProperty().isReadOnly());
-        requestRepaint();
     }
 
     /**
@@ -1267,7 +1176,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        if (isReadThrough()) {
+        if (!isBuffered()) {
             if (committingValueToDataSource) {
                 boolean propertyNotifiesOfTheBufferedValue = equals(event
                         .getProperty().getValue(), getInternalValue());
@@ -1322,7 +1231,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setTabIndex(int tabIndex) {
         getState().setTabIndex(tabIndex);
-        requestRepaint();
     }
 
     /**
@@ -1356,7 +1264,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     protected void setInternalValue(T newValue) {
         value = newValue;
         if (validators != null && !validators.isEmpty()) {
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1371,7 +1279,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         if (!isListeningToPropertyEvents) {
             addPropertyListeners();
-            if (!isModified() && isReadThrough()) {
+            if (!isModified() && !isBuffered()) {
                 // Update value from data source
                 discard();
             }
@@ -1425,7 +1333,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setRequired(boolean required) {
         getState().setRequired(required);
-        requestRepaint();
     }
 
     /**
@@ -1440,7 +1347,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public void setRequiredError(String requiredMessage) {
         requiredError = requiredMessage;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -1468,7 +1375,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setConversionError(String valueConversionError) {
         this.conversionError = valueConversionError;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1510,7 +1417,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setValidationVisible(boolean validateAutomatically) {
         if (validationVisible != validateAutomatically) {
-            requestRepaint();
+            markAsDirty();
             validationVisible = validateAutomatically;
         }
     }
@@ -1523,7 +1430,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void setCurrentBufferedSourceException(
             Buffered.SourceException currentBufferedSourceException) {
         this.currentBufferedSourceException = currentBufferedSourceException;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1611,11 +1518,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setConverter(Converter<T, ?> converter) {
         this.converter = (Converter<T, Object>) converter;
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
-    public AbstractFieldState getState() {
+    protected AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
     }
 

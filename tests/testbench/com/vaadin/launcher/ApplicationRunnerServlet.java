@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.RootRequiresMoreInformationException;
+import com.vaadin.terminal.AbstractRootProvider;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
@@ -38,23 +40,6 @@ import com.vaadin.ui.Root;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends AbstractApplicationServlet {
-
-    /**
-     * Internal implementation of an application with a dynamically selected
-     * Root implementation;
-     */
-    private static class RootRunnerApplication extends Application {
-        private final Class<?> runnableClass;
-
-        private RootRunnerApplication(Class<?> runnableClass) {
-            this.runnableClass = runnableClass;
-        }
-
-        @Override
-        protected String getRootClassName(WrappedRequest request) {
-            return runnableClass.getCanonicalName();
-        }
-    }
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -126,7 +111,17 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (Root.class.isAssignableFrom(classToRun)) {
-                return new RootRunnerApplication(classToRun);
+                Application application = new Application();
+                application.addRootProvider(new AbstractRootProvider() {
+
+                    @Override
+                    public Class<? extends Root> getRootClass(
+                            Application application, WrappedRequest request)
+                            throws RootRequiresMoreInformationException {
+                        return (Class<? extends Root>) classToRun;
+                    }
+                });
+                return application;
             } else if (Application.class.isAssignableFrom(classToRun)) {
                 return (Application) classToRun.newInstance();
             } else {
@@ -221,7 +216,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             throws ClassNotFoundException {
         Class<?> classToRun = getClassToRun();
         if (Root.class.isAssignableFrom(classToRun)) {
-            return RootRunnerApplication.class;
+            return Application.class;
         } else if (Application.class.isAssignableFrom(classToRun)) {
             return classToRun.asSubclass(Application.class);
         } else {

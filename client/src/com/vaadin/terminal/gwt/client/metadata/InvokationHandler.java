@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,20 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.client.communication;
 
-import java.util.Collection;
+package com.vaadin.terminal.gwt.client.metadata;
 
-/**
- * Provides runtime data about client side RPC calls received from the server to
- * the client-side code.
- * 
- * A GWT generator is used to create an implementation of this class at
- * run-time.
- * 
- * @since 7.0
- */
-public interface GeneratedRpcMethodProvider {
-
-    public Collection<RpcMethod> getGeneratedRpcMethods();
+public interface InvokationHandler {
+    public Object invoke(Object target, Method method, Object[] params);
 }

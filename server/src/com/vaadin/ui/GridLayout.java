@@ -30,6 +30,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.terminal.LegacyPaint;
@@ -63,8 +64,8 @@ import com.vaadin.terminal.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
-        Layout.AlignmentHandler, Layout.SpacingHandler, LayoutClickNotifier,
-        Vaadin6Component {
+        Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
+        LayoutClickNotifier, Vaadin6Component {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -140,7 +141,7 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public GridLayoutState getState() {
+    protected GridLayoutState getState() {
         return (GridLayoutState) super.getState();
     }
 
@@ -253,7 +254,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -399,7 +400,7 @@ public class GridLayout extends AbstractLayout implements
 
         super.removeComponent(component);
 
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -805,28 +806,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getColumn1()} instead.
-         */
-        @Deprecated
-        public int getX1() {
-            return getColumn1();
-        }
-
-        /**
          * Gets the column of the top-left corner cell.
          * 
          * @return the column of the top-left corner cell.
          */
         public int getColumn1() {
             return column1;
-        }
-
-        /**
-         * @deprecated Use {@link #getColumn2()} instead.
-         */
-        @Deprecated
-        public int getX2() {
-            return getColumn2();
         }
 
         /**
@@ -839,28 +824,12 @@ public class GridLayout extends AbstractLayout implements
         }
 
         /**
-         * @deprecated Use {@link #getRow1()} instead.
-         */
-        @Deprecated
-        public int getY1() {
-            return getRow1();
-        }
-
-        /**
          * Gets the row of the top-left corner cell.
          * 
          * @return the row of the top-left corner cell.
          */
         public int getRow1() {
             return row1;
-        }
-
-        /**
-         * @deprecated Use {@link #getRow2()} instead.
-         */
-        @Deprecated
-        public int getY2() {
-            return getRow2();
         }
 
         /**
@@ -993,8 +962,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setColumns(columns);
-
-        requestRepaint();
     }
 
     /**
@@ -1037,8 +1004,6 @@ public class GridLayout extends AbstractLayout implements
         }
 
         getState().setRows(rows);
-
-        requestRepaint();
     }
 
     /**
@@ -1131,7 +1096,7 @@ public class GridLayout extends AbstractLayout implements
         } else {
             oldLocation.setComponent(newComponent);
             newLocation.setComponent(oldComponent);
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -1148,25 +1113,11 @@ public class GridLayout extends AbstractLayout implements
         cursorY = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.Layout.AlignmentHandler#setComponentAlignment(com
-     * .vaadin.ui.Component, int, int)
-     */
-    @Override
-    public void setComponentAlignment(Component childComponent,
-            int horizontalAlignment, int verticalAlignment) {
-        componentToAlignment.put(childComponent, new Alignment(
-                horizontalAlignment + verticalAlignment));
-        requestRepaint();
-    }
-
     @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
         componentToAlignment.put(childComponent, alignment);
-        requestRepaint();
+        markAsDirty();
     }
 
     /*
@@ -1177,7 +1128,6 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public void setSpacing(boolean spacing) {
         getState().setSpacing(spacing);
-        requestRepaint();
     }
 
     /*
@@ -1223,7 +1173,7 @@ public class GridLayout extends AbstractLayout implements
 
         setRows(getRows() + 1);
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1282,7 +1232,7 @@ public class GridLayout extends AbstractLayout implements
         }
 
         structuralChange = true;
-        requestRepaint();
+        markAsDirty();
 
     }
 
@@ -1307,7 +1257,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1345,7 +1295,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1414,6 +1364,38 @@ public class GridLayout extends AbstractLayout implements
     public void removeListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#setMargin(boolean)
+     */
+    @Override
+    public void setMargin(boolean enabled) {
+        setMargin(new MarginInfo(enabled));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.Layout.MarginHandler#setMargin(com.vaadin.shared.ui.MarginInfo
+     * )
+     */
+    @Override
+    public void setMargin(MarginInfo marginInfo) {
+        getState().setMarginsBitmask(marginInfo.getBitMask());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
+     */
+    @Override
+    public MarginInfo getMargin() {
+        return new MarginInfo(getState().getMarginsBitmask());
     }
 
 }

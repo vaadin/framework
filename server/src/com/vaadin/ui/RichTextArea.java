@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.text.Format;
 import java.util.Map;
 
 import com.vaadin.data.Property;
@@ -33,12 +32,6 @@ import com.vaadin.terminal.Vaadin6Component;
  */
 public class RichTextArea extends AbstractField<String> implements
         Vaadin6Component {
-
-    /**
-     * Value formatter used to format the string contents.
-     */
-    @Deprecated
-    private Format format;
 
     /**
      * Null representation.
@@ -123,7 +116,7 @@ public class RichTextArea extends AbstractField<String> implements
         }
 
         // Adds the content as variable
-        String value = getFormattedValue();
+        String value = getValue();
         if (value == null) {
             value = getNullRepresentation();
         }
@@ -164,38 +157,7 @@ public class RichTextArea extends AbstractField<String> implements
          */
         selectAll = true;
         focus();
-        requestRepaint();
-    }
-
-    /**
-     * Gets the formatted string value. Sets the field value by using the
-     * assigned Format.
-     * 
-     * @return the Formatted value.
-     * @see #setFormat(Format)
-     * @see Format
-     * @deprecated
-     */
-    @Deprecated
-    protected String getFormattedValue() {
-        Object v = getValue();
-        if (v == null) {
-            return null;
-        }
-        return v.toString();
-    }
-
-    @Override
-    public String getValue() {
-        String v = super.getValue();
-        if (format == null || v == null) {
-            return v;
-        }
-        try {
-            return format.format(v);
-        } catch (final IllegalArgumentException e) {
-            return v;
-        }
+        markAsDirty();
     }
 
     @Override
@@ -207,7 +169,7 @@ public class RichTextArea extends AbstractField<String> implements
             // has been updated
             String newValue = (String) variables.get("text");
 
-            final String oldValue = getFormattedValue();
+            final String oldValue = getValue();
             if (newValue != null
                     && (oldValue == null || isNullSettingAllowed())
                     && newValue.equals(getNullRepresentation())) {
@@ -218,10 +180,10 @@ public class RichTextArea extends AbstractField<String> implements
                 boolean wasModified = isModified();
                 setValue(newValue, true);
 
-                // If the modified status changes, or if we have a formatter,
+                // If the modified status changes,
                 // repaint is needed after all.
-                if (format != null || wasModified != isModified()) {
-                    requestRepaint();
+                if (wasModified != isModified()) {
+                    markAsDirty();
                 }
             }
         }
@@ -321,31 +283,6 @@ public class RichTextArea extends AbstractField<String> implements
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
         this.nullSettingAllowed = nullSettingAllowed;
-    }
-
-    /**
-     * Gets the value formatter of TextField.
-     * 
-     * @return the Format used to format the value.
-     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
-     */
-    @Deprecated
-    public Format getFormat() {
-        return format;
-    }
-
-    /**
-     * Gets the value formatter of TextField.
-     * 
-     * @param format
-     *            the Format used to format the value. Null disables the
-     *            formatting.
-     * @deprecated replaced by {@link com.vaadin.data.util.PropertyFormatter}
-     */
-    @Deprecated
-    public void setFormat(Format format) {
-        this.format = format;
-        requestRepaint();
     }
 
     @Override

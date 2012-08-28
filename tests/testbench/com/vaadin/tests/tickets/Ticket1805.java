@@ -6,7 +6,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.TextField;
 
@@ -17,7 +17,7 @@ public class Ticket1805 extends com.vaadin.Application.LegacyApplication {
         final LegacyWindow main = new LegacyWindow(getClass().getName()
                 .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
-        ((Layout) main.getContent()).setMargin(false);
+        ((MarginHandler) main.getContent()).setMargin(false);
 
         Label description = new Label(
                 "GridLayout with 100% (no height), is wanted to "

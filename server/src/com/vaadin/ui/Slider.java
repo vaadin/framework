@@ -174,7 +174,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
         if (getValue() > max) {
             setValue(max);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -198,7 +198,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
         if (getValue() < min) {
             setValue(min);
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -220,7 +220,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
      */
     public void setOrientation(int orientation) {
         this.orientation = orientation;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -244,7 +244,7 @@ public class Slider extends AbstractField<Double> implements Vaadin6Component {
             return;
         }
         this.resolution = resolution;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

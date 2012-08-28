@@ -18,6 +18,8 @@ package com.vaadin.terminal.gwt.server;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.external.json.JSONException;
+import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.terminal.AbstractClientConnector;
@@ -63,17 +65,39 @@ public interface ClientConnector extends Connector, RpcTarget {
     public ClientConnector getParent();
 
     /**
-     * Requests that the connector should be repainted as soon as possible.
+     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
      */
+    @Deprecated
     public void requestRepaint();
 
     /**
-     * Causes a repaint of this connector, and all connectors below it.
+     * Marks that this connector's state might have changed. When the framework
+     * is about to send new data to the client-side, it will run
+     * {@link #beforeClientResponse(boolean)} followed by {@link #encodeState()}
+     * for all connectors that are marked as dirty and send any updated state
+     * info to the client.
      * 
+     * @since 7.0.0
+     */
+    public void markAsDirty();
+
+    /**
+     * @deprecated As of 7.0.0, use {@link #markAsDirtyRecursive()} instead
+     */
+    @Deprecated
+    public void requestRepaintAll();
+
+    /**
+     * Causes this connector and all connectors below it to be marked as dirty.
+     * <p>
      * This should only be used in special cases, e.g when the state of a
      * descendant depends on the state of an ancestor.
+     * 
+     * @see #markAsDirty()
+     * 
+     * @since 7.0.0
      */
-    public void requestRepaintAll();
+    public void markAsDirtyRecursive();
 
     /**
      * Sets the parent connector of the connector.
@@ -177,4 +201,16 @@ public interface ClientConnector extends Connector, RpcTarget {
      * @since 7.0
      */
     public void beforeClientResponse(boolean initial);
+
+    /**
+     * Called by the framework to encode the state to a JSONObject. This is
+     * typically done by calling the static method
+     * {@link AbstractCommunicationManager#encodeState(ClientConnector, SharedState)}
+     * .
+     * 
+     * @return a JSON object with the encoded connector state
+     * @throws JSONException
+     *             if the state can not be encoded
+     */
+    public JSONObject encodeState() throws JSONException;
 }

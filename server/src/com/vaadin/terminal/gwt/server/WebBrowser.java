@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.shared.VBrowserDetails;
-import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.WrappedRequest;
 
 /**
@@ -30,7 +29,7 @@ import com.vaadin.terminal.WrappedRequest;
  * 
  * @author Vaadin Ltd.
  */
-public class WebBrowser implements Terminal {
+public class WebBrowser {
 
     private int screenHeight = 0;
     private int screenWidth = 0;
@@ -48,34 +47,21 @@ public class WebBrowser implements Terminal {
     private long clientServerTimeDelta;
 
     /**
-     * There is no default-theme for this terminal type.
+     * Gets the height of the screen in pixels. This is the full screen
+     * resolution and not the height available for the application.
      * 
-     * @return Always returns null.
+     * @return the height of the screen in pixels.
      */
-
-    @Override
-    public String getDefaultTheme() {
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.terminal.Terminal#getScreenHeight()
-     */
-
-    @Override
     public int getScreenHeight() {
         return screenHeight;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Gets the width of the screen in pixels. This is the full screen
+     * resolution and not the width available for the application.
      * 
-     * @see com.vaadin.terminal.Terminal#getScreenWidth()
+     * @return the width of the screen in pixels.
      */
-
-    @Override
     public int getScreenWidth() {
         return screenWidth;
     }

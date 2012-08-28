@@ -880,49 +880,19 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // processing.
         JSONObject sharedStates = new JSONObject();
         for (ClientConnector connector : dirtyVisibleConnectors) {
-            SharedState state = connector.getState();
-            if (null != state) {
-                // encode and send shared state
-                try {
-                    Class<? extends SharedState> stateType = connector
-                            .getStateType();
-                    Object diffState = rootConnectorTracker
-                            .getDiffState(connector);
-                    if (diffState == null) {
-                        diffState = new JSONObject();
-                        // Use an empty state object as reference for full
-                        // repaints
-                        boolean emptyInitialState = JavaScriptConnectorState.class
-                                .isAssignableFrom(stateType);
-                        if (!emptyInitialState) {
-                            try {
-                                SharedState referenceState = stateType
-                                        .newInstance();
-                                diffState = JsonCodec.encode(referenceState,
-                                        null, stateType,
-                                        root.getConnectorTracker());
-                            } catch (Exception e) {
-                                getLogger().log(
-                                        Level.WARNING,
-                                        "Error creating reference object for state of type "
-                                                + stateType.getName());
-                            }
-                        }
-                        rootConnectorTracker.setDiffState(connector, diffState);
-                    }
-                    JSONObject stateJson = (JSONObject) JsonCodec.encode(state,
-                            diffState, stateType, root.getConnectorTracker());
+            // encode and send shared state
+            try {
+                JSONObject stateJson = connector.encodeState();
 
-                    if (stateJson.length() != 0) {
-                        sharedStates.put(connector.getConnectorId(), stateJson);
-                    }
-                } catch (JSONException e) {
-                    throw new PaintException(
-                            "Failed to serialize shared state for connector "
-                                    + connector.getClass().getName() + " ("
-                                    + connector.getConnectorId() + "): "
-                                    + e.getMessage(), e);
+                if (stateJson != null && stateJson.length() != 0) {
+                    sharedStates.put(connector.getConnectorId(), stateJson);
                 }
+            } catch (JSONException e) {
+                throw new PaintException(
+                        "Failed to serialize shared state for connector "
+                                + connector.getClass().getName() + " ("
+                                + connector.getConnectorId() + "): "
+                                + e.getMessage(), e);
             }
         }
         outWriter.print("\"state\":");
@@ -1271,6 +1241,37 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         writePerformanceData(outWriter);
+    }
+
+    public static JSONObject encodeState(ClientConnector connector,
+            SharedState state) throws JSONException {
+        Root root = connector.getRoot();
+        ConnectorTracker connectorTracker = root.getConnectorTracker();
+        Class<? extends SharedState> stateType = connector.getStateType();
+        Object diffState = connectorTracker.getDiffState(connector);
+        if (diffState == null) {
+            diffState = new JSONObject();
+            // Use an empty state object as reference for full
+            // repaints
+            boolean emptyInitialState = JavaScriptConnectorState.class
+                    .isAssignableFrom(stateType);
+            if (!emptyInitialState) {
+                try {
+                    SharedState referenceState = stateType.newInstance();
+                    diffState = JsonCodec.encode(referenceState, null,
+                            stateType, root.getConnectorTracker());
+                } catch (Exception e) {
+                    getLogger().log(
+                            Level.WARNING,
+                            "Error creating reference object for state of type "
+                                    + stateType.getName());
+                }
+            }
+            connectorTracker.setDiffState(connector, diffState);
+        }
+        JSONObject stateJson = (JSONObject) JsonCodec.encode(state, diffState,
+                stateType, root.getConnectorTracker());
+        return stateJson;
     }
 
     /**

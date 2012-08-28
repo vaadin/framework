@@ -13,30 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.client;
 
-import com.google.gwt.core.client.GWT;
+package com.vaadin.terminal.gwt.widgetsetutils.metadata;
 
-@Deprecated
-public class ClientExceptionHandler {
+import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.user.rebind.SourceWriter;
 
-    public static void displayError(Throwable e) {
-        displayError(e.getClass().getName() + ": " + e.getMessage());
-
-        GWT.log(e.getMessage(), e);
-    }
-
-    @Deprecated
-    public static void displayError(String msg) {
-        VConsole.error(msg);
-        GWT.log(msg);
-    }
-
-    @Deprecated
-    public static void displayError(String msg, Throwable e) {
-        displayError(msg);
-        displayError(e);
-
-    }
-
+public interface GeneratedSerializer {
+    public void writeSerializerInstantiator(TreeLogger logger, SourceWriter w)
+            throws UnableToCompleteException;
 }

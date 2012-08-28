@@ -78,59 +78,6 @@ public class TestTextFieldValueChange extends
     }
 
     /**
-     * If read through is on and value has been modified, but not committed, the
-     * value should not propagate similar to
-     * {@link #testValueChangeEventPropagationWithReadThrough()}
-     * 
-     * TODO make test field type agnostic (eg. combobox)
-     */
-    public void testValueChangePropagationWithReadThroughWithModifiedValue() {
-        final String initialValue = "initial";
-        ObjectProperty<String> property = new ObjectProperty<String>(
-                initialValue);
-        getField().setPropertyDataSource(property);
-
-        // write buffering on, read buffering off
-        getField().setWriteThrough(false);
-        getField().setReadThrough(true);
-
-        // Expect no value changes calls to listener
-        EasyMock.replay(getListener());
-
-        // first set the value (note, write through false -> not forwarded to
-        // property)
-        setValue(getField());
-
-        Assert.assertTrue(getField().isModified());
-
-        // Add listener and set the value -> should end up in listener once
-        getField().addListener(getListener());
-
-        // modify property value, should not fire value change in field as the
-        // field has uncommitted value (aka isModified() == true)
-        property.setValue("Foo");
-
-        // Ensure listener was called once
-        EasyMock.verify(getListener());
-
-        // get value should not fire value change again
-        Object value = getField().getValue();
-        // Ensure listener still has been called only once
-        EasyMock.verify(getListener());
-
-        // field value should be different from the original value and current
-        // proeprty value
-        boolean isValueEqualToInitial = value.equals(initialValue);
-        Assert.assertFalse(isValueEqualToInitial);
-        boolean isValueEqualToPropertyValue = value.equals(property.getValue());
-        Assert.assertFalse(isValueEqualToPropertyValue);
-
-        // Ensure listener has not been called
-        EasyMock.verify(getListener());
-
-    }
-
-    /**
      * Value change events from property should not propagate if read through is
      * false. Execpt when the property is being set.
      * 

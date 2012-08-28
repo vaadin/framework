@@ -17,10 +17,7 @@
 package com.vaadin.terminal.gwt.client.communication;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONString;
 import com.vaadin.shared.communication.ClientRpc;
@@ -29,6 +26,9 @@ import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.ConnectorMap;
 import com.vaadin.terminal.gwt.client.ServerConnector;
 import com.vaadin.terminal.gwt.client.VConsole;
+import com.vaadin.terminal.gwt.client.metadata.Method;
+import com.vaadin.terminal.gwt.client.metadata.NoDataException;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 
 /**
  * Client side RPC manager that can invoke methods based on RPC calls received
@@ -41,19 +41,6 @@ import com.vaadin.terminal.gwt.client.VConsole;
  */
 public class RpcManager {
 
-    private final Map<String, RpcMethod> methodMap = new HashMap<String, RpcMethod>();
-
-    public RpcManager() {
-        GeneratedRpcMethodProvider provider = GWT
-                .create(GeneratedRpcMethodProvider.class);
-        Collection<RpcMethod> methods = provider.getGeneratedRpcMethods();
-        for (RpcMethod rpcMethod : methods) {
-            methodMap.put(
-                    rpcMethod.getInterfaceName() + "."
-                            + rpcMethod.getMethodName(), rpcMethod);
-        }
-    }
-
     /**
      * Perform server to client RPC invocation.
      * 
@@ -62,24 +49,25 @@ public class RpcManager {
      */
     public void applyInvocation(MethodInvocation invocation,
             ServerConnector connector) {
-        String signature = getSignature(invocation);
+        Method method = getMethod(invocation);
 
-        RpcMethod rpcMethod = getRpcMethod(signature);
         Collection<ClientRpc> implementations = connector
                 .getRpcImplementations(invocation.getInterfaceName());
-        for (ClientRpc clientRpc : implementations) {
-            rpcMethod.applyInvocation(clientRpc, invocation.getParameters());
+        try {
+            for (ClientRpc clientRpc : implementations) {
+                method.invoke(clientRpc, invocation.getParameters());
+            }
+        } catch (NoDataException e) {
+            throw new IllegalStateException("There is no information about "
+                    + method.getSignature()
+                    + ". Did you remember to compile the right widgetset?", e);
         }
     }
 
-    private RpcMethod getRpcMethod(String signature) {
-        RpcMethod rpcMethod = methodMap.get(signature);
-        if (rpcMethod == null) {
-            throw new IllegalStateException("There is no information about "
-                    + signature
-                    + ". Did you remember to compile the right widgetset?");
-        }
-        return rpcMethod;
+    private Method getMethod(MethodInvocation invocation) {
+        Type type = new Type(invocation.getInterfaceName(), null);
+        Method method = type.getMethod(invocation.getMethodName());
+        return method;
     }
 
     private static String getSignature(MethodInvocation invocation) {
@@ -87,7 +75,15 @@ public class RpcManager {
     }
 
     public Type[] getParameterTypes(MethodInvocation invocation) {
-        return getRpcMethod(getSignature(invocation)).getParameterTypes();
+        Method method = getMethod(invocation);
+        try {
+            Type[] parameterTypes = method.getParameterTypes();
+            return parameterTypes;
+        } catch (NoDataException e) {
+            throw new IllegalStateException("There is no information about "
+                    + method.getSignature()
+                    + ". Did you remember to compile the right widgetset?", e);
+        }
     }
 
     public void parseAndApplyInvocation(JSONArray rpcCall,

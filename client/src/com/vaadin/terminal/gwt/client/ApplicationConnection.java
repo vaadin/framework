@@ -65,10 +65,10 @@ import com.vaadin.terminal.gwt.client.communication.HasJavaScriptConnectorHelper
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.client.communication.RpcManager;
-import com.vaadin.terminal.gwt.client.communication.SerializerMap;
 import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.communication.Type;
 import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
+import com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader;
+import com.vaadin.terminal.gwt.client.metadata.Type;
 import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 import com.vaadin.terminal.gwt.client.ui.VContextMenu;
 import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
@@ -104,8 +104,6 @@ public class ApplicationConnection {
     public static final char VAR_BURST_SEPARATOR = '\u001d';
 
     public static final char VAR_ESCAPE_CHARACTER = '\u001b';
-
-    private static SerializerMap serializerMap;
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -207,11 +205,13 @@ public class ApplicationConnection {
     }
 
     public ApplicationConnection() {
+        // Assuming Root data is eagerly loaded
+        ConnectorBundleLoader.get().loadBundle(
+                ConnectorBundleLoader.EAGER_BUNDLE_NAME, null);
         rootConnector = GWT.create(RootConnector.class);
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
-        serializerMap = GWT.create(SerializerMap.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -394,32 +394,6 @@ public class ApplicationConnection {
         }
     }
     }-*/;
-
-    /**
-     * Get the active Console for writing debug messages. May return an actual
-     * logging console, or the NullConsole if debugging is not turned on.
-     * 
-     * @deprecated Developers should use {@link VConsole} since 6.4.5
-     * 
-     * @return the active Console
-     */
-    @Deprecated
-    public static Console getConsole() {
-        return VConsole.getImplementation();
-    }
-
-    /**
-     * Checks if client side is in debug mode. Practically this is invoked by
-     * adding ?debug parameter to URI.
-     * 
-     * @deprecated use ApplicationConfiguration isDebugMode instead.
-     * 
-     * @return true if client side is currently been debugged
-     */
-    @Deprecated
-    public static boolean isDebugMode() {
-        return ApplicationConfiguration.isDebugMode();
-    }
 
     /**
      * Gets the application base URI. Using this other than as the download
@@ -2468,7 +2442,8 @@ public class ApplicationConnection {
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
-     * @deprecated Use {@link ComponentState#hasEventListener(String)} instead
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
      */
     @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,
@@ -2521,11 +2496,13 @@ public class ApplicationConnection {
         return connectorMap;
     }
 
+    /**
+     * @deprecated No longer needed in Vaadin 7
+     */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
-        System.out.println("unregisterPaintable (unnecessarily) called for "
+        VConsole.log("unregisterPaintable (unnecessarily) called for "
                 + Util.getConnectorString(p));
-        // connectorMap.unregisterConnector(p);
     }
 
     /**
@@ -2564,6 +2541,10 @@ public class ApplicationConnection {
         return false;
     }
 
+    /**
+     * @deprecated as of Vaadin 7. Use
+     *             {@link ComponentState#hasEventListener(String)} instead
+     */
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
         return hasEventListeners(getConnectorMap().getConnector(widget),
@@ -2572,9 +2553,5 @@ public class ApplicationConnection {
 
     LayoutManager getLayoutManager() {
         return layoutManager;
-    }
-
-    public SerializerMap getSerializerMap() {
-        return serializerMap;
     }
 }

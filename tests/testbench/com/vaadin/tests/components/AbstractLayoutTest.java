@@ -2,11 +2,12 @@ package com.vaadin.tests.components;
 
 import java.util.LinkedHashMap;
 
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout.AlignmentHandler;
-import com.vaadin.ui.Layout.MarginInfo;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
 
 public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
@@ -17,7 +18,7 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
 
         @Override
         public void execute(T c, MarginInfo value, Object data) {
-            c.setMargin(value);
+            ((MarginHandler) c).setMargin(value);
 
         }
     };
@@ -42,7 +43,9 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout> extends
     @Override
     protected void createActions() {
         super.createActions();
-        createMarginsSelect(CATEGORY_LAYOUT_FEATURES);
+        if (MarginHandler.class.isAssignableFrom(getTestClass())) {
+            createMarginsSelect(CATEGORY_LAYOUT_FEATURES);
+        }
         if (SpacingHandler.class.isAssignableFrom(getTestClass())) {
             createSpacingSelect(CATEGORY_LAYOUT_FEATURES);
         }

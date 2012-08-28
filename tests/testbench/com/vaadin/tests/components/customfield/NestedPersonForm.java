@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -13,6 +14,7 @@ import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout.MarginHandler;
 
 /**
  * Example of nested forms
@@ -29,7 +31,7 @@ public class NestedPersonForm extends Form {
 
         beanItem = new BeanItem<Person>(person);
         setCaption("Update person details");
-        setWriteThrough(false);
+        setBuffered(true);
         setFormFieldFactory(new PersonFieldFactory());
         // set the data source and the visible fields
         // Note that if the nested form is the first or last field in the parent
@@ -37,7 +39,8 @@ public class NestedPersonForm extends Form {
         setItemDataSource(beanItem, Arrays.asList("firstName", "lastName",
                 "address", "email", "phoneNumber"));
         getFooter().addComponent(getButtonsLayout());
-        getFooter().setMargin(false, false, true, true);
+        ((MarginHandler) getFooter()).setMargin(new MarginInfo(false, false,
+                true, true));
     }
 
     /**

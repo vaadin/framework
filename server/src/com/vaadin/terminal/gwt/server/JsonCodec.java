@@ -21,9 +21,10 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
@@ -54,6 +55,107 @@ import com.vaadin.ui.ConnectorTracker;
  * @since 7.0
  */
 public class JsonCodec implements Serializable {
+
+    public static interface BeanProperty {
+        public Object getValue(Object bean) throws Exception;
+
+        public void setValue(Object bean, Object value) throws Exception;
+
+        public String getName();
+
+        public Type getType();
+    }
+
+    private static class FieldProperty implements BeanProperty {
+        private final Field field;
+
+        public FieldProperty(Field field) {
+            this.field = field;
+        }
+
+        @Override
+        public Object getValue(Object bean) throws Exception {
+            return field.get(bean);
+        }
+
+        @Override
+        public void setValue(Object bean, Object value) throws Exception {
+            field.set(bean, value);
+        }
+
+        @Override
+        public String getName() {
+            return field.getName();
+        }
+
+        @Override
+        public Type getType() {
+            return field.getGenericType();
+        }
+
+        public static Collection<FieldProperty> find(Class<?> type)
+                throws IntrospectionException {
+            Collection<FieldProperty> properties = new ArrayList<FieldProperty>();
+
+            Field[] fields = type.getFields();
+            for (Field field : fields) {
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    properties.add(new FieldProperty(field));
+                }
+            }
+
+            return properties;
+        }
+
+    }
+
+    private static class MethodProperty implements BeanProperty {
+        private final PropertyDescriptor pd;
+
+        public MethodProperty(PropertyDescriptor pd) {
+            this.pd = pd;
+        }
+
+        @Override
+        public Object getValue(Object bean) throws Exception {
+            Method readMethod = pd.getReadMethod();
+            return readMethod.invoke(bean);
+        }
+
+        @Override
+        public void setValue(Object bean, Object value) throws Exception {
+            pd.getWriteMethod().invoke(bean, value);
+        }
+
+        @Override
+        public String getName() {
+            String fieldName = pd.getWriteMethod().getName().substring(3);
+            fieldName = Character.toLowerCase(fieldName.charAt(0))
+                    + fieldName.substring(1);
+            return fieldName;
+        }
+
+        public static Collection<MethodProperty> find(Class<?> type)
+                throws IntrospectionException {
+            Collection<MethodProperty> properties = new ArrayList<MethodProperty>();
+
+            for (PropertyDescriptor pd : Introspector.getBeanInfo(type)
+                    .getPropertyDescriptors()) {
+                if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
+                    continue;
+                }
+
+                properties.add(new MethodProperty(pd));
+            }
+            return properties;
+        }
+
+        @Override
+        public Type getType() {
+            return pd.getReadMethod().getGenericReturnType();
+        }
+
+    }
 
     private static Map<Class<?>, String> typeToTransportType = new HashMap<Class<?>, String>();
 
@@ -468,27 +570,6 @@ public class JsonCodec implements Serializable {
         return set;
     }
 
-    /**
-     * Returns the name that should be used as field name in the JSON. We strip
-     * "set" from the setter, keeping the result - this is easy to do on both
-     * server and client, avoiding some issues with cASE. E.g setZIndex()
-     * becomes "zIndex". Also ensures that both getter and setter are present,
-     * returning null otherwise.
-     * 
-     * @param pd
-     * @return the name to be used or null if both getter and setter are not
-     *         found.
-     */
-    static String getTransportFieldName(PropertyDescriptor pd) {
-        if (pd.getReadMethod() == null || pd.getWriteMethod() == null) {
-            return null;
-        }
-        String fieldName = pd.getWriteMethod().getName().substring(3);
-        fieldName = Character.toLowerCase(fieldName.charAt(0))
-                + fieldName.substring(1);
-        return fieldName;
-    }
-
     private static Object decodeObject(Type targetType,
             JSONObject serializedObject, ConnectorTracker connectorTracker)
             throws JSONException {
@@ -497,31 +578,19 @@ public class JsonCodec implements Serializable {
 
         try {
             Object decodedObject = targetClass.newInstance();
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(targetClass)
-                    .getPropertyDescriptors()) {
+            for (BeanProperty property : getProperties(targetClass)) {
 
-                String fieldName = getTransportFieldName(pd);
-                if (fieldName == null) {
-                    continue;
-                }
+                String fieldName = property.getName();
                 Object encodedFieldValue = serializedObject.get(fieldName);
-                Type fieldType = pd.getReadMethod().getGenericReturnType();
+                Type fieldType = property.getType();
                 Object decodedFieldValue = decodeInternalOrCustomType(
                         fieldType, encodedFieldValue, connectorTracker);
 
-                pd.getWriteMethod().invoke(decodedObject, decodedFieldValue);
+                property.setValue(decodedObject, decodedFieldValue);
             }
 
             return decodedObject;
-        } catch (IllegalArgumentException e) {
-            throw new JSONException(e);
-        } catch (IllegalAccessException e) {
-            throw new JSONException(e);
-        } catch (InvocationTargetException e) {
-            throw new JSONException(e);
-        } catch (InstantiationException e) {
-            throw new JSONException(e);
-        } catch (IntrospectionException e) {
+        } catch (Exception e) {
             throw new JSONException(e);
         }
     }
@@ -602,28 +671,36 @@ public class JsonCodec implements Serializable {
         return JSONObject.NULL;
     }
 
+    public static Collection<BeanProperty> getProperties(Class<?> type)
+            throws IntrospectionException {
+        Collection<BeanProperty> properties = new ArrayList<BeanProperty>();
+
+        properties.addAll(MethodProperty.find(type));
+        properties.addAll(FieldProperty.find(type));
+
+        return properties;
+    }
+
     private static Object encodeObject(Object value, JSONObject diffState,
             ConnectorTracker connectorTracker) throws JSONException {
         JSONObject jsonMap = new JSONObject();
 
         try {
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(
-                    value.getClass()).getPropertyDescriptors()) {
-                String fieldName = getTransportFieldName(pd);
-                if (fieldName == null) {
-                    continue;
-                }
-                Method getterMethod = pd.getReadMethod();
+            for (BeanProperty property : getProperties(value.getClass())) {
+                String fieldName = property.getName();
                 // We can't use PropertyDescriptor.getPropertyType() as it does
                 // not support generics
-                Type fieldType = getterMethod.getGenericReturnType();
-                Object fieldValue = getterMethod.invoke(value, (Object[]) null);
+                Type fieldType = property.getType();
+                Object fieldValue = property.getValue(value);
                 boolean equals = false;
                 Object diffStateValue = null;
-                if (diffState != null) {
+                if (diffState != null && diffState.has(fieldName)) {
                     diffStateValue = diffState.get(fieldName);
                     Object referenceFieldValue = decodeInternalOrCustomType(
                             fieldType, diffStateValue, connectorTracker);
+                    if (JSONObject.NULL.equals(diffStateValue)) {
+                        diffStateValue = null;
+                    }
                     equals = equals(fieldValue, referenceFieldValue);
                 }
                 if (!equals) {

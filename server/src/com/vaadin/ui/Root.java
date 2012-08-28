@@ -34,6 +34,7 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.root.RootConstants;
 import com.vaadin.shared.ui.root.RootServerRpc;
 import com.vaadin.shared.ui.root.RootState;
@@ -283,13 +284,12 @@ public abstract class Root extends AbstractComponentContainer implements
          * @param height
          *            the height of the window in pixels
          * @param border
-         *            the border style of the window. See {@link #BORDER_NONE
-         *            Window.BORDER_* constants}
+         *            the border style of the window.
          * @deprecated As of 7.0, use getPage().open instead
          */
         @Deprecated
         public void open(Resource resource, String windowName, int width,
-                int height, int border) {
+                int height, BorderStyle border) {
             getPage().open(resource, windowName, width, height, border);
         }
 
@@ -498,7 +498,7 @@ public abstract class Root extends AbstractComponentContainer implements
     }
 
     @Override
-    public RootState getState() {
+    protected RootState getState() {
         return (RootState) super.getState();
     }
 
@@ -723,7 +723,7 @@ public abstract class Root extends AbstractComponentContainer implements
     private void attachWindow(Window w) {
         windows.add(w);
         w.setParent(this);
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -746,7 +746,7 @@ public abstract class Root extends AbstractComponentContainer implements
         }
         window.setParent(null);
         window.fireClose();
-        requestRepaint();
+        markAsDirty();
 
         return true;
     }
@@ -788,7 +788,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public void setFocusedComponent(Focusable focusable) {
         pendingFocus = focusable;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -808,7 +808,7 @@ public abstract class Root extends AbstractComponentContainer implements
                     "The component where to scroll must belong to this root.");
         }
         scrollIntoView = component;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -860,8 +860,6 @@ public abstract class Root extends AbstractComponentContainer implements
         if (content != null) {
             super.addComponent(content);
         }
-
-        requestRepaint();
     }
 
     /**
@@ -1015,7 +1013,7 @@ public abstract class Root extends AbstractComponentContainer implements
      */
     public void setResizeLazy(boolean resizeLazy) {
         this.resizeLazy = resizeLazy;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -1126,7 +1124,7 @@ public abstract class Root extends AbstractComponentContainer implements
      *             Notification.show does not allow HTML.
      */
     @Deprecated
-    public void showNotification(String caption, int type) {
+    public void showNotification(String caption, Notification.Type type) {
         Notification notification = new Notification(caption, type);
         notification.setHtmlContentAllowed(true);// Backwards compatibility
         getPage().showNotification(notification);
@@ -1181,7 +1179,8 @@ public abstract class Root extends AbstractComponentContainer implements
      *             be aware that HTML by default not allowed.
      */
     @Deprecated
-    public void showNotification(String caption, String description, int type) {
+    public void showNotification(String caption, String description,
+            Notification.Type type) {
         Notification notification = new Notification(caption, description, type);
         notification.setHtmlContentAllowed(true);// Backwards compatibility
         getPage().showNotification(notification);
@@ -1212,8 +1211,8 @@ public abstract class Root extends AbstractComponentContainer implements
      * @deprecated As of 7.0, use new Notification(...).show(Page).
      */
     @Deprecated
-    public void showNotification(String caption, String description, int type,
-            boolean htmlContentAllowed) {
+    public void showNotification(String caption, String description,
+            Notification.Type type, boolean htmlContentAllowed) {
         getPage()
                 .showNotification(
                         new Notification(caption, description, type,

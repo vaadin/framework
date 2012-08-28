@@ -40,7 +40,7 @@ public class KeepAllItemsVisible extends TestBase implements ExpandListener,
             @Override
             public void valueChange(ValueChangeEvent event) {
                 recalculatePageLength(tt);
-                tt.requestRepaint();
+                tt.markAsDirty();
             }
         });
         addComponent(tt);

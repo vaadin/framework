@@ -99,6 +99,9 @@ public class LoginForm extends CustomComponent {
                 throws IOException {
             String requestPathInfo = request.getRequestPathInfo();
             if ("/loginHandler".equals(requestPathInfo)) {
+                // Ensure Root.getCurrent() works in listeners
+                Root.setCurrent(getRoot());
+
                 response.setCacheTime(-1);
                 response.setContentType("text/html; charset=utf-8");
                 response.getWriter()

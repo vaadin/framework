@@ -58,8 +58,6 @@ public class Flot extends AbstractJavaScriptComponent {
         }
 
         getState().getSeries().add(pointList);
-
-        requestRepaint();
     }
 
     public void highlight(int seriesIndex, int dataIndex) {

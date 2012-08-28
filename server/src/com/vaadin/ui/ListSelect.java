@@ -62,7 +62,7 @@ public class ListSelect extends AbstractSelect {
         }
         if (this.columns != columns) {
             this.columns = columns;
-            requestRepaint();
+            markAsDirty();
         }
     }
 
@@ -88,7 +88,7 @@ public class ListSelect extends AbstractSelect {
         }
         if (this.rows != rows) {
             this.rows = rows;
-            requestRepaint();
+            markAsDirty();
         }
     }
 

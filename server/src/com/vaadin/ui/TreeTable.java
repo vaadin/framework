@@ -463,7 +463,7 @@ public class TreeTable extends Table implements Hierarchical {
             // been processed
             clearFocusedRowPending = true;
         }
-        requestRepaint();
+        markAsDirty();
     }
 
     @Override
@@ -561,7 +561,7 @@ public class TreeTable extends Table implements Hierarchical {
         }
 
         if (containerSupportsPartialUpdates && !forceFullRefresh) {
-            requestRepaint();
+            markAsDirty();
         } else {
             // For containers that do not send item set change events, always do
             // full repaint instead of partial row update.
@@ -826,7 +826,7 @@ public class TreeTable extends Table implements Hierarchical {
      */
     public void setAnimationsEnabled(boolean animationsEnabled) {
         this.animationsEnabled = animationsEnabled;
-        requestRepaint();
+        markAsDirty();
     }
 
     private static final Logger getLogger() {

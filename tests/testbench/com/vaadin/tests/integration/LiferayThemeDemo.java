@@ -8,6 +8,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Page;
@@ -103,7 +104,6 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
         mainLayout.addComponent(getTopMenu());
 
         CssLayout margin = new CssLayout();
-        margin.setMargin(false, true, true, true);
         margin.setSizeFull();
         tabs = new TabSheet();
         tabs.setSizeFull();
@@ -239,7 +239,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
-        hl.setMargin(true, false, false, false);
+        hl.setMargin(new MarginInfo(true, false, false, false));
         l.addComponent(hl);
 
         AbstractSelect cb = new ComboBox();
@@ -270,7 +270,7 @@ public class LiferayThemeDemo extends Application.LegacyApplication {
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
-        hl.setMargin(true, false, false, false);
+        hl.setMargin(new MarginInfo(true, false, false, false));
         l.addComponent(hl);
 
         DateField df = new DateField();

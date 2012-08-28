@@ -131,7 +131,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: seconds.
      * 
-     * @deprecated Use {@link Resolution#SECOND}
+     * @deprecated As of 7.0, use {@link Resolution#SECOND}
      */
     @Deprecated
     public static final Resolution RESOLUTION_SEC = Resolution.SECOND;
@@ -139,7 +139,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: minutes.
      * 
-     * @deprecated Use {@link Resolution#MINUTE}
+     * @deprecated As of 7.0, use {@link Resolution#MINUTE}
      */
     @Deprecated
     public static final Resolution RESOLUTION_MIN = Resolution.MINUTE;
@@ -147,7 +147,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: hours.
      * 
-     * @deprecated Use {@link Resolution#HOUR}
+     * @deprecated As of 7.0, use {@link Resolution#HOUR}
      */
     @Deprecated
     public static final Resolution RESOLUTION_HOUR = Resolution.HOUR;
@@ -155,7 +155,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: days.
      * 
-     * @deprecated Use {@link Resolution#DAY}
+     * @deprecated As of 7.0, use {@link Resolution#DAY}
      */
     @Deprecated
     public static final Resolution RESOLUTION_DAY = Resolution.DAY;
@@ -163,7 +163,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: months.
      * 
-     * @deprecated Use {@link Resolution#MONTH}
+     * @deprecated As of 7.0, use {@link Resolution#MONTH}
      */
     @Deprecated
     public static final Resolution RESOLUTION_MONTH = Resolution.MONTH;
@@ -171,7 +171,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * Resolution identifier: years.
      * 
-     * @deprecated Use {@link Resolution#YEAR}
+     * @deprecated As of 7.0, use {@link Resolution#YEAR}
      */
     @Deprecated
     public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;
@@ -429,7 +429,7 @@ public class DateField extends AbstractField<Date> implements
                      * if handleUnparsableDateString throws an exception. In
                      * this case the invalid text remains in the DateField.
                      */
-                    requestRepaint();
+                    markAsDirty();
                 } catch (Converter.ConversionException e) {
 
                     /*
@@ -471,7 +471,7 @@ public class DateField extends AbstractField<Date> implements
                      * change and form depends on this implementation detail.
                      */
                     notifyFormOfValidityChange();
-                    requestRepaint();
+                    markAsDirty();
                 }
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
@@ -562,7 +562,7 @@ public class DateField extends AbstractField<Date> implements
              * this.
              */
             notifyFormOfValidityChange();
-            requestRepaint();
+            markAsDirty();
             return;
         }
 
@@ -588,7 +588,7 @@ public class DateField extends AbstractField<Date> implements
                          * thing as form does in its value change listener that
                          * it registers to all fields.
                          */
-                        f.requestRepaint();
+                        f.markAsDirty();
                         formFound = true;
                         break;
                     }
@@ -639,7 +639,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setResolution(Resolution resolution) {
         this.resolution = resolution;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -699,7 +699,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -725,7 +725,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setLenient(boolean lenient) {
         this.lenient = lenient;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -781,7 +781,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setShowISOWeekNumbers(boolean showWeekNumbers) {
         showISOWeekNumbers = showWeekNumbers;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**
@@ -850,7 +850,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setTimeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
-        requestRepaint();
+        markAsDirty();
     }
 
     /**

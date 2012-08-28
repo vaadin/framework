@@ -58,7 +58,7 @@ public class DateFieldRangeValidation extends TestBase {
 
         @Override
         public void valueChange(ValueChangeEvent event) {
-            actualDateField.requestRepaint();
+            actualDateField.markAsDirty();
         }
     };
 
@@ -125,8 +125,7 @@ public class DateFieldRangeValidation extends TestBase {
         PopupDateField df = new PopupDateField();
         df.setLocale(new Locale("en", "US"));
         df.setResolution(Resolution.DAY);
-        df.setWriteThrough(true);
-        df.setReadThrough(true);
+        df.setBuffered(false);
         df.setImmediate(true);
         return df;
     }

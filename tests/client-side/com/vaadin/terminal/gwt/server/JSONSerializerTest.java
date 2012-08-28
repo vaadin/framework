@@ -1,7 +1,7 @@
 package com.vaadin.terminal.gwt.server;
 
 /*
-  * Copyright 2011 Vaadin Ltd.
+ * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,6 @@ package com.vaadin.terminal.gwt.server;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,6 +25,7 @@ import junit.framework.TestCase;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
 import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.terminal.gwt.server.JsonCodec.BeanProperty;
 
 /**
  * Tests for {@link JsonCodec}, {@link JsonEncoder}, {@link JsonDecoder}
@@ -118,15 +116,9 @@ public class JSONSerializerTest extends TestCase {
     }
 
     private boolean equalsBean(Object o1, Object o2) throws Exception {
-        BeanInfo beanInfo = Introspector.getBeanInfo(o1.getClass());
-        for (PropertyDescriptor pd : beanInfo.getPropertyDescriptors()) {
-            String fieldName = JsonCodec.getTransportFieldName(pd);
-            if (fieldName == null) {
-                continue;
-            }
-
-            Object c1 = pd.getReadMethod().invoke(o1);
-            Object c2 = pd.getReadMethod().invoke(o2);
+        for (BeanProperty property : JsonCodec.getProperties(o1.getClass())) {
+            Object c1 = property.getValue(o1);
+            Object c2 = property.getValue(o2);
             if (!equals(c1, c2)) {
                 return false;
             }

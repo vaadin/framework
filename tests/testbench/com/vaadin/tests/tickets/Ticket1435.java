@@ -10,6 +10,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Root.LegacyWindow;
 import com.vaadin.ui.Table;
@@ -159,7 +160,7 @@ public class Ticket1435 extends Application.LegacyApplication {
         private void initContainer() {
             container.setStyleName("custompanel");
             container.setSizeFull();
-            ((Layout) container.getContent()).setMargin(false);
+            ((MarginHandler) container.getContent()).setMargin(false);
             container.getContent().setSizeFull();
             root.addComponent(container);
             root.setExpandRatio(container, 1);
