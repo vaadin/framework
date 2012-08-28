@@ -510,8 +510,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * Gets the UI the component is attached to.
      * 
      * <p>
-     * If the component is not attached to a UI through a component
-     * containment hierarchy, <code>null</code> is returned.
+     * If the component is not attached to a UI through a component containment
+     * hierarchy, <code>null</code> is returned.
      * </p>
      * 
      * @return the UI of the component or <code>null</code> if it is not
@@ -574,8 +574,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * {@link #setParent(Component)}.
      * </p>
      * <p>
-     * This method must call {@link UI#componentAttached(Component)} to let
-     * the UI know that a new Component has been attached.
+     * This method must call {@link UI#componentAttached(Component)} to let the
+     * UI know that a new Component has been attached.
      * </p>
      * 
      * 
@@ -630,14 +630,14 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @param id
      *            An alphanumeric id
      */
-    public void setDebugId(String id);
+    public void setId(String id);
 
     /**
      * Get's currently set debug identifier
      * 
-     * @return current debug id, null if not set
+     * @return current id, null if not set
      */
-    public String getDebugId();
+    public String getId();
 
     /* Component event framework */
 

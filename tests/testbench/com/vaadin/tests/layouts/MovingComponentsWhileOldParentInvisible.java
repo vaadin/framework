@@ -33,7 +33,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
                 pageLength = 0;
             }
         };
-        componentContainerSelect.setDebugId("componentContainerSelect");
+        componentContainerSelect.setId("componentContainerSelect");
         componentContainerSelect.setWidth("300px");
         componentContainerSelect.setImmediate(true);
         componentContainerSelect.setNullSelectionAllowed(false);

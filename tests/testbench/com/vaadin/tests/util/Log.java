@@ -15,11 +15,11 @@ public class Log extends VerticalLayout {
     public Log(int nr) {
         for (int i = 0; i < nr; i++) {
             Label l = createEventLabel();
-            l.setDebugId("Log_row_" + i);
+            l.setId("Log_row_" + i);
             eventLabels.add(l);
             addComponent(l);
         }
-        setDebugId("Log");
+        setId("Log");
         setCaption("Events:");
     }
 

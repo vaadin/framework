@@ -33,7 +33,7 @@ public class TableClickAndDragOnIconAndComponents extends TestBase {
         table.setSelectable(true);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
         table.setItemIconPropertyId("icon");
-        table.setDebugId("testable-table");
+        table.setId("testable-table");
         addComponent(table);
         for (int i = 0; i < 5; i++) {
             addItemAfter(i + "foo", null);

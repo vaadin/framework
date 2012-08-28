@@ -23,7 +23,7 @@ public class ItemClickEvents extends TestBase {
 
     @Override
     public void setup() {
-        log.setDebugId("log");
+        log.setId("log");
 
         HorizontalLayout ol = createHorizontalLayout(tree);
         Button b = new Button("icon", new Button.ClickListener() {
@@ -61,7 +61,7 @@ public class ItemClickEvents extends TestBase {
                 logEvent(event, "tree");
             }
         });
-        tree.setDebugId("tree");
+        tree.setId("tree");
 
         HorizontalLayout ol2 = createHorizontalLayout(table);
         table.setWidth("150px");
@@ -80,7 +80,7 @@ public class ItemClickEvents extends TestBase {
                 logEvent(event, "table");
             }
         });
-        table.setDebugId("table");
+        table.setId("table");
 
         addComponent(log);
         addComponent(new Button("Clear log", new Button.ClickListener() {

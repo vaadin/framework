@@ -45,9 +45,9 @@ public class JSONSerializerTest extends TestCase {
         AbstractSplitPanelState s = new AbstractSplitPanelState();
         AbstractSplitPanelState s2 = new AbstractSplitPanelState();
         s.setCaption("State 1");
-        s.setDebugId("foo");
+        s.setId("foo");
         s2.setCaption("State 2");
-        s2.setDebugId("bar");
+        s2.setId("bar");
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 

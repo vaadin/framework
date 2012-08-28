@@ -53,7 +53,7 @@ public class CommitInvalid extends TestBase {
         dateField = new DateField("Year", dateProperty);
         dateField.setLocale(new Locale("fi", "FI"));
         dateField.setResolution(DateField.RESOLUTION_DAY);
-        dateField.setDebugId("_DF");
+        dateField.setId("_DF");
         form.addField("date", dateField);
 
         /*
@@ -63,14 +63,14 @@ public class CommitInvalid extends TestBase {
          */
         integerProperty = new ObjectProperty<Integer>(42);
         integerField = new TextField("Another Field", integerProperty);
-        integerField.setDebugId("_IF");
+        integerField.setId("_IF");
         form.addField("text", integerField);
 
         /*
          * Action buttons.
          */
         Button validate = new Button("Validate");
-        validate.setDebugId("_validate");
+        validate.setId("_validate");
         validate.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -87,7 +87,7 @@ public class CommitInvalid extends TestBase {
         form.getFooter().addComponent(validate);
 
         Button commit = new Button("Commit");
-        commit.setDebugId("_commit");
+        commit.setId("_commit");
         commit.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

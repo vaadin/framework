@@ -91,7 +91,7 @@ public class PropertyValueChange extends TestBase {
         t1.addGeneratedColumn("integer x 3", multiplier);
         t1.setTableFieldFactory(ff);
         t1.setEditable(true);
-        t1.setDebugId("editortable");
+        t1.setId("editortable");
 
         Table t2 = new Table(
                 "A clone of table1, but disabled. Properties are in components.");
@@ -104,7 +104,7 @@ public class PropertyValueChange extends TestBase {
         t2.setContainerDataSource(container);
         t2.addGeneratedColumn("integer x 3", multiplier);
         t2.setPageLength(0);
-        t2.setDebugId("disabled table");
+        t2.setId("disabled table");
 
         Table reader = new Table("Reader table");
         reader.setDescription("This table should be redrawn on container changes as container data is "
@@ -112,7 +112,7 @@ public class PropertyValueChange extends TestBase {
         reader.setContainerDataSource(container);
         reader.addGeneratedColumn("integer x 3", multiplier);
         reader.setPageLength(0);
-        reader.setDebugId("reader table");
+        reader.setId("reader table");
 
         getLayout().addComponent(t1);
         getLayout().addComponent(t2);

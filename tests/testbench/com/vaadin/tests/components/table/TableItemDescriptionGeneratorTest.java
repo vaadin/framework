@@ -18,7 +18,7 @@ public class TableItemDescriptionGeneratorTest extends TestBase {
     @Override
     protected void setup() {
         final Table table = new Table();
-        table.setDebugId("table");
+        table.setId("table");
         table.setContainerDataSource(createContainer());
         addComponent(table);
 

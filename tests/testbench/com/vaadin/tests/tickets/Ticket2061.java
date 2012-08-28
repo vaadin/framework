@@ -49,7 +49,7 @@ public class Ticket2061 extends Application.LegacyApplication {
         private VerticalLayout layout = new VerticalLayout();
 
         public MyTable(int columnNumber, String id) {
-            setDebugId(id);
+            setId(id);
             setCompositionRoot(layout);
             setSizeFull();
             columns = initializeColumns(columnNumber);
@@ -108,7 +108,7 @@ public class Ticket2061 extends Application.LegacyApplication {
             this.setWidth("100%");
             this.setHeight("100%");
             for (int i = 0; i < components.length; i++) {
-                this.addTab(components[i], components[i].getDebugId(), null);
+                this.addTab(components[i], components[i].getId(), null);
             }
 
         }
@@ -119,9 +119,9 @@ public class Ticket2061 extends Application.LegacyApplication {
         public MyAccordion(Component[] components, String id) {
             this.setWidth("100%");
             this.setHeight("100%");
-            setDebugId(id);
+            setId(id);
             for (int i = 0; i < components.length; i++) {
-                this.addTab(components[i], components[i].getDebugId(), null);
+                this.addTab(components[i], components[i].getId(), null);
             }
         }
     }

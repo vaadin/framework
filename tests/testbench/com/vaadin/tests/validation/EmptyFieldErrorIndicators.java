@@ -33,12 +33,12 @@ public class EmptyFieldErrorIndicators extends TestBase {
 
         ComponentContainer part1 = createPart(
                 "Empty required fields validation", true, false);
-        part1.setDebugId("emptyFieldPart");
+        part1.setId("emptyFieldPart");
         hl.addComponent(part1);
 
         ComponentContainer part2 = createPart(
                 "Empty required fields with failing validator", true, true);
-        part1.setDebugId("validatedFieldPart");
+        part1.setId("validatedFieldPart");
         hl.addComponent(part2);
 
         Panel panel = new Panel();

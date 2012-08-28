@@ -111,14 +111,40 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     /* Get/Set component properties */
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component#setId(java.lang.String)
+     */
     @Override
-    public void setDebugId(String id) {
-        getState().setDebugId(id);
+    public void setId(String id) {
+        getState().setId(id);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component#getId()
+     */
     @Override
+    public String getId() {
+        return getState().getId();
+    }
+
+    /**
+     * @deprecated as of 7.0. Use {@link #setId(String)}
+     */
+    @Deprecated
+    public void setDebugId(String id) {
+        setId(id);
+    }
+
+    /**
+     * @deprecated as of 7.0. Use {@link #getId()}
+     */
+    @Deprecated
     public String getDebugId() {
-        return getState().getDebugId();
+        return getId();
     }
 
     /*
