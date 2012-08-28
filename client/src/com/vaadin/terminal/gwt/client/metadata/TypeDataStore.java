@@ -223,4 +223,8 @@ public class TypeDataStore {
         }
         return (JSONSerializer<?>) factoryCreator.invoke(null);
     }
+
+    public static boolean hasProperties(Type type) {
+        return get().properties.containsKey(type);
+    }
 }

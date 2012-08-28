@@ -94,4 +94,8 @@ public class Type {
         return TypeDataStore.findSerializer(this);
     }
 
+    public boolean hasProperties() {
+        return TypeDataStore.hasProperties(this);
+    }
+
 }
