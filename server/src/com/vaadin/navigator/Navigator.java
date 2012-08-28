@@ -1,7 +1,7 @@
 package com.vaadin.navigator;
 
 /*
- * Copyright 2011 Vaadin Ltd.
+  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -67,7 +67,7 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public void enter(String fragmentParameters) {
+        public void navigateTo(String fragmentParameters) {
             // nothing to do
         }
     }
@@ -113,7 +113,7 @@ public class Navigator implements Serializable {
 
         @Override
         public void fragmentChanged(FragmentChangedEvent event) {
-            navigator.navigateTo(getFragment());
+            UriFragmentManager.this.navigator.navigateTo(getFragment());
         }
     }
 
@@ -477,7 +477,7 @@ public class Navigator implements Serializable {
             }
         }
 
-        view.enter(fragmentParameters);
+        view.navigateTo(fragmentParameters);
         currentView = view;
 
         if (display != null) {
@@ -564,7 +564,7 @@ public class Navigator implements Serializable {
         }
 
         removeView(viewName);
-        addProvider(new StaticViewProvider(viewName, view));
+        registerProvider(new StaticViewProvider(viewName, view));
     }
 
     /**
@@ -590,7 +590,7 @@ public class Navigator implements Serializable {
         }
 
         removeView(viewName);
-        addProvider(new ClassBasedViewProvider(viewName, viewClass));
+        registerProvider(new ClassBasedViewProvider(viewName, viewClass));
     }
 
     /**
@@ -629,7 +629,7 @@ public class Navigator implements Serializable {
      * @param provider
      *            provider to register
      */
-    public void addProvider(ViewProvider provider) {
+    public void registerProvider(ViewProvider provider) {
         providers.add(provider);
     }
 
@@ -639,7 +639,7 @@ public class Navigator implements Serializable {
      * @param provider
      *            provider to unregister
      */
-    public void removeProvider(ViewProvider provider) {
+    public void unregisterProvider(ViewProvider provider) {
         providers.remove(provider);
     }
 
