@@ -838,10 +838,13 @@ public class JsonCodec implements Serializable {
         JSONObject jsonMap = new JSONObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
-            Connector key = (Connector) entry.getKey();
-            EncodeResult encodedValue = encode(entry.getValue(), null,
-                    valueType, connectorTracker);
-            jsonMap.put(key.getConnectorId(), encodedValue.getEncodedValue());
+            ClientConnector key = (ClientConnector) entry.getKey();
+            if (AbstractCommunicationManager.isVisible(key)) {
+                EncodeResult encodedValue = encode(entry.getValue(), null,
+                        valueType, connectorTracker);
+                jsonMap.put(key.getConnectorId(),
+                        encodedValue.getEncodedValue());
+            }
         }
 
         return jsonMap;
