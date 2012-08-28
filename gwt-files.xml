@@ -28,11 +28,11 @@
     <property name="gwt.codeserver.jar.files" location="${gwt.unpack.dir}/gwt-codeserver.jar" />
 
     <target name="unpack.gwt">
-        <mkdir dir="${gwt.user.jar.files}" />
-        <mkdir dir="${gwt.dev.jar.files}" />
-        <mkdir dir="${gwt.elemental.jar.files}" />
-        <mkdir dir="${gwt.codeserver.jar.files}" />
-
+        <mkdir dir="${gwt.user.jar.files}"></mkdir>
+        <mkdir dir="${gwt.dev.jar.files}"></mkdir>
+        <mkdir dir="${gwt.elemental.jar.files}"></mkdir>
+        <mkdir dir="${gwt.codeserver.jar.files}"></mkdir>
+        
         <unzip dest="${gwt.user.jar.files}" src="${gwt.user.jar}" />
         <unzip dest="${gwt.dev.jar.files}" src="${gwt.dev.jar}" />
         <unzip dest="${gwt.elemental.jar.files}" src="${gwt.elemental.jar}" />
@@ -44,8 +44,8 @@
             (for now) -->
         <fileset dir="${gwt.dev.jar.files}">
             <exclude name="META-INF/**" />
-            <exclude name="/license*" />
-            <exclude name="/LICENSE*" />
+            <exclude name="license*" />
+            <exclude name="LICENSE*" />
 
             <!-- Used by client and server apparently... -->
             <exclude name="com/google/gwt/thirdparty/guava/**" />
