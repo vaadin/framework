@@ -29,18 +29,17 @@
     </replace-with>
 
     <generate-with
-        class="com.vaadin.widgetsetutils.AcceptCriteriaFactoryGenerator">
+        class="com.vaadin.server.widgetsetutils.AcceptCriteriaFactoryGenerator">
         <when-type-is class="com.vaadin.client.ui.dd.VAcceptCriterionFactory" />
     </generate-with>
 
     <generate-with
-        class="
-            com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory ">
+        class="com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory">
         <when-type-assignable
             class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
 
     <!-- Use the new cross site linker to get a nocache.js without document.write -->
-    <add-linker name="xsiframe " />
+    <add-linker name="xsiframe" />
 
 </module>
