@@ -33,7 +33,7 @@ import com.vaadin.server.widgetsetutils.WidgetSetBuilder;
  * 
  * A typical invocation would use e.g. the following arguments
  * 
- * "-out WebContent/VAADIN/widgetsets com.vaadin.terminal.gwt.DefaultWidgetSet"
+ * "-out WebContent/VAADIN/widgetsets com.vaadin.DefaultWidgetSet"
  * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
  * 

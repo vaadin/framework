@@ -81,7 +81,7 @@ public interface Constants {
     static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
 
     // Name of the default widget set, used if not specified in web.xml
-    static final String DEFAULT_WIDGETSET = "com.vaadin.terminal.gwt.DefaultWidgetSet";
+    static final String DEFAULT_WIDGETSET = "com.vaadin.DefaultWidgetSet";
 
     // Widget set parameter name
     static final String PARAMETER_WIDGETSET = "widgetset";

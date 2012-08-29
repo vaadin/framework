@@ -13,7 +13,7 @@
 
     <inherits name="com.google.gwt.json.JSON" />
 
-    <inherits name="com.vaadin.terminal.gwt.VaadinBrowserSpecificOverrides" />
+    <inherits name="com.vaadin.VaadinBrowserSpecificOverrides" />
 
     <source path="client" />
     <source path="shared" />

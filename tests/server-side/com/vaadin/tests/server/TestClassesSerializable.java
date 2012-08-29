@@ -31,8 +31,8 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
-            "com\\.vaadin\\.terminal\\.gwt\\.client\\..*", //
-            "com\\.vaadin\\.terminal\\.gwt\\.widgetsetutils\\..*", //
+            "com\\.vaadin\\.client\\..*", //
+            "com\\.vaadin\\.server\\.widgetsetutils\\..*", //
             "com\\.vaadin\\.tests\\..*", // exclude automated tests
             "com\\.vaadin\\.tools\\..*", //
             "com\\.vaadin\\.ui\\.themes\\..*", //
@@ -40,15 +40,15 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.event\\.FieldEvents", //
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.AbstractApplicationPortlet", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.ApplicationPortlet2", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.Constants", //
+            "com\\.vaadin\\.server\\.AbstractApplicationPortlet", //
+            "com\\.vaadin\\.server\\.ApplicationPortlet2", //
+            "com\\.vaadin\\.server\\.Constants", //
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.AbstractCommunicationManager.*", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.CommunicationManager.*", //
-            "com\\.vaadin\\.terminal\\.gwt\\.server\\.PortletCommunicationManager.*", //
+            "com\\.vaadin\\.server\\.AbstractCommunicationManager.*", //
+            "com\\.vaadin\\.server\\.CommunicationManager.*", //
+            "com\\.vaadin\\.server\\.PortletCommunicationManager.*", //
     };
 
     /**
