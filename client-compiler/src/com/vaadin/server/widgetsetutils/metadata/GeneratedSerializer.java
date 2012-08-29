@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils.metadata;
+package com.vaadin.server.widgetsetutils.metadata;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;

@@ -143,7 +143,7 @@ See configure target to adjust this buildfile.
         <!-- Create the directory if it does not already exist. -->
         <mkdir dir="${src-location}/${widgetset-path}"/>
         
-        <java classname="com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder"
+        <java classname="com.vaadin.server.widgetsetutils.WidgetSetBuilder"
               failonerror="yes" fork="yes" maxmemory="256m">
             <arg value="${widgetset}"/>
             <jvmarg value="-Xss1024k"/>

@@ -14,14 +14,14 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils.metadata;
+package com.vaadin.server.widgetsetutils.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory;
+import com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory;
 
 public class CustomSerializer implements GeneratedSerializer {
 

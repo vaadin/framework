@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils.metadata;
+package com.vaadin.server.widgetsetutils.metadata;
 
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
@@ -23,7 +23,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
-import com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory;
+import com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory;
 
 public class ArraySerializer extends JsonSerializer {
 

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.widgetsetutils;
+package com.vaadin.server.widgetsetutils;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
  * <pre>
  * <code>
  * &lt;generate-with
- *           class="com.vaadin.terminal.gwt.widgetsetutils.MyWidgetMapGenerator"&gt;
+ *           class="com.vaadin.server.widgetsetutils.MyWidgetMapGenerator"&gt;
  *          &lt;when-type-is class="com.vaadin.client.WidgetMap" /&gt;
  * &lt;/generate-with&gt;
  * 

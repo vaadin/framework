@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
+import com.vaadin.server.widgetsetutils.WidgetSetBuilder;
 
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.

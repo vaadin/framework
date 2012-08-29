@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.terminal.gwt.widgetsetutils;
+package com.vaadin.server.widgetsetutils;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;

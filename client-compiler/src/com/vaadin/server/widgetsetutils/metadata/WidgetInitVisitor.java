@@ -2,7 +2,7 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils.metadata;
+package com.vaadin.server.widgetsetutils.metadata;
 
 import java.util.Collection;
 

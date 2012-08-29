@@ -2,7 +2,7 @@
 @VaadinApache2LicenseForJavaFiles@
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils;
+package com.vaadin.server.widgetsetutils;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -37,21 +37,21 @@ import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataBundle;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
+import com.vaadin.server.widgetsetutils.metadata.ConnectorBundle;
+import com.vaadin.server.widgetsetutils.metadata.ConnectorInitVisitor;
+import com.vaadin.server.widgetsetutils.metadata.GeneratedSerializer;
+import com.vaadin.server.widgetsetutils.metadata.Property;
+import com.vaadin.server.widgetsetutils.metadata.ServerRpcVisitor;
+import com.vaadin.server.widgetsetutils.metadata.StateInitVisitor;
+import com.vaadin.server.widgetsetutils.metadata.TypeVisitor;
+import com.vaadin.server.widgetsetutils.metadata.WidgetInitVisitor;
 import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.ClientRpcVisitor;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorBundle;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.ConnectorInitVisitor;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.GeneratedSerializer;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.Property;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.ServerRpcVisitor;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.StateInitVisitor;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.TypeVisitor;
-import com.vaadin.terminal.gwt.widgetsetutils.metadata.WidgetInitVisitor;
 
 public class ConnectorBundleLoaderFactory extends Generator {
 

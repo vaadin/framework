@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.terminal.gwt.widgetsetutils.metadata;
+package com.vaadin.server.widgetsetutils.metadata;
 
 import java.util.Set;
 
@@ -23,21 +23,24 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 
-public class ClientRpcVisitor extends TypeVisitor {
+public class ServerRpcVisitor extends TypeVisitor {
     @Override
-    public void visitClientRpc(TreeLogger logger, JClassType type,
+    public void visitServerRpc(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) {
-        Set<? extends JClassType> hierarchy = type
-                .getFlattenedSupertypeHierarchy();
-        for (JClassType subType : hierarchy) {
-            JMethod[] methods = subType.getMethods();
-            for (JMethod method : methods) {
-                bundle.setNeedsInvoker(type, method);
-                bundle.setNeedsParamTypes(type, method);
+        bundle.setNeedsProxySupport(type);
 
-                JType[] parameterTypes = method.getParameterTypes();
-                for (JType paramType : parameterTypes) {
-                    bundle.setNeedsSerialize(paramType);
+        Set<? extends JClassType> superTypes = type
+                .getFlattenedSupertypeHierarchy();
+        for (JClassType subType : superTypes) {
+            if (subType.isInterface() != null) {
+                JMethod[] methods = subType.getMethods();
+                for (JMethod method : methods) {
+                    bundle.setNeedsDelayedInfo(type, method);
+
+                    JType[] parameterTypes = method.getParameterTypes();
+                    for (JType paramType : parameterTypes) {
+                        bundle.setNeedsSerialize(paramType);
+                    }
                 }
             }
         }

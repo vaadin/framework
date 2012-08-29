@@ -35,7 +35,7 @@
 
     <generate-with
         class="
-            com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory ">
+            com.vaadin.server.widgetsetutils.ConnectorBundleLoaderFactory ">
         <when-type-assignable
             class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
