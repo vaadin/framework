@@ -18,6 +18,10 @@
         <!-- Liferay Portal Service -->
         <dependency org="com.liferay.portal" name="portal-service"
             rev="6.0.2" />
+        <!--Servlet API version 2.5 -->
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" />
+
         <!--Portlet API version 2.0 (JSR-286) -->
         <dependency org="javax.portlet" name="portlet-api"
             rev="2.0" />
@@ -26,8 +30,8 @@
             rev="1.2.1" />
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build,ide->master,sources" />
-	<!-- Jsoup for BootstrapHandler -->
-	<dependency org="org.jsoup" name="jsoup" rev="1.6.3" />
+        <!-- Jsoup for BootstrapHandler -->
+        <dependency org="org.jsoup" name="jsoup" rev="1.6.3" />
 
         <!-- TestBench tests -->
         <dependency org="commons-codec" name="commons-codec"
