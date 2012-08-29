@@ -33,6 +33,10 @@ import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 
 /**
  * Component for embedding external objects.
+ * <p>
+ * As of Vaadin 7.0, the {@link Image}, {@link Flash}, and
+ * {@link EmbeddedBrowser} components should be used instead of
+ * <code>Embedded</code> whenever appropriate.
  * 
  * @author Vaadin Ltd.
  * @since 3.0
@@ -47,12 +51,18 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
 
     /**
      * Image types.
+     * 
+     * @deprecated As of 7.0, use the {@link Image} component instead.
      */
+    @Deprecated
     public static final int TYPE_IMAGE = 1;
 
     /**
      * Browser ("iframe") type.
+     * 
+     * @deprecated As of 7.0, use the {@link EmbeddedBrowser} component instead.
      */
+    @Deprecated
     public static final int TYPE_BROWSER = 2;
 
     /**
@@ -452,9 +462,9 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      * <p>
      * This can be one of the following:
      * <ul>
-     * <li>TYPE_OBJECT <i>(This is the default)</i>
-     * <li>TYPE_IMAGE
-     * <li>TYPE_BROWSER
+     * <li>{@link #TYPE_OBJECT} <i>(This is the default)</i>
+     * <li>{@link #TYPE_IMAGE} <i>(Deprecated)</i>
+     * <li>{@link #TYPE_BROWSER} <i>(Deprecated)</i>
      * </ul>
      * </p>
      * 
