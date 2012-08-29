@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.AbstractJavaScriptExtension;
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.ui.UI;
 
 @JavaScript("analytics_connector.js")

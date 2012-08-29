@@ -28,8 +28,6 @@ import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebBrowser;
 
 /**
  * A {@link WrappedRequest} with path and parameters from one request and

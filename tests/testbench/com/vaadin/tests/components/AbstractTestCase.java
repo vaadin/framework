@@ -1,9 +1,9 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.Application;
+import com.vaadin.server.AbstractWebApplicationContext;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebBrowser;
 
 public abstract class AbstractTestCase extends Application.LegacyApplication {
 

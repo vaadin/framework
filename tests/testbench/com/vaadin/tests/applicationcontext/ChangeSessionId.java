@@ -1,6 +1,6 @@
 package com.vaadin.tests.applicationcontext;
 
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.server.WebApplicationContext;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;

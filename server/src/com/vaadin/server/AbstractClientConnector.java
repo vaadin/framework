@@ -36,12 +36,6 @@ import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
-import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.terminal.gwt.server.ClientMethodInvocation;
-import com.vaadin.terminal.gwt.server.RpcManager;
-import com.vaadin.terminal.gwt.server.RpcTarget;
-import com.vaadin.terminal.gwt.server.ServerRpcManager;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UI;
 

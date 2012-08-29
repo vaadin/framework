@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
  * <code>SystemError</code> is an error message for a problem caused by error in

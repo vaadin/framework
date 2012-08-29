@@ -25,7 +25,7 @@ import com.vaadin.shared.Connector;
 /**
  * Annotation defining the server side connector that this ClientSideConnector
  * should connect to. The value must always by a class extending
- * {@link com.vaadin.terminal.gwt.server.ClientConnector}.
+ * {@link com.vaadin.server.ClientConnector}.
  * <p>
  * With this annotation client side Vaadin connector is marked to have a server
  * side counterpart. The value of the annotation is the class of server side

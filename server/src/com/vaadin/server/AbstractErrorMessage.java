@@ -23,7 +23,6 @@ import java.util.List;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Validator;
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 
 /**
  * Base class for component error messages.

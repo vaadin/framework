@@ -31,7 +31,7 @@ import java.io.Serializable;
  * wanting to communicate with server side should implement
  * {@link com.vaadin.client.ServerConnector} and server side
  * classes should implement
- * {@link com.vaadin.terminal.gwt.server.ClientConnector}.
+ * {@link com.vaadin.server.ClientConnector}.
  * </p>
  * 
  * @author Vaadin Ltd

@@ -19,12 +19,12 @@ package com.vaadin.tests.vaadincontext;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.terminal.gwt.server.BootstrapFragmentResponse;
-import com.vaadin.terminal.gwt.server.BootstrapListener;
-import com.vaadin.terminal.gwt.server.BootstrapPageResponse;
-import com.vaadin.terminal.gwt.server.BootstrapResponse;
-import com.vaadin.terminal.gwt.server.AddonContextEvent;
-import com.vaadin.terminal.gwt.server.AddonContextListener;
+import com.vaadin.server.AddonContextEvent;
+import com.vaadin.server.AddonContextListener;
+import com.vaadin.server.BootstrapFragmentResponse;
+import com.vaadin.server.BootstrapListener;
+import com.vaadin.server.BootstrapPageResponse;
+import com.vaadin.server.BootstrapResponse;
 import com.vaadin.ui.UI;
 
 public class TestAddonContextListener implements AddonContextListener {

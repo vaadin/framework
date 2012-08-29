@@ -17,8 +17,8 @@
 package com.vaadin.ui;
 
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.ui.video.VideoState;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * The Video component translates into an HTML5 &lt;video&gt; element and as

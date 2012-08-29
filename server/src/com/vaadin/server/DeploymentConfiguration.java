@@ -24,8 +24,6 @@ import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.terminal.gwt.server.AddonContext;
-import com.vaadin.terminal.gwt.server.AddonContextListener;
 
 /**
  * Provide deployment specific settings that are required outside terminal

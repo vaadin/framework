@@ -31,10 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
+import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.terminal.gwt.server.WrappedHttpServletRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 

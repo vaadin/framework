@@ -34,6 +34,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -49,7 +50,6 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.tools.ReflectTools;
 
 /**

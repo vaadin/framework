@@ -179,7 +179,7 @@ public abstract class AbstractHierarchicalContainerTest extends
                 new boolean[] { true });
 
         validateHierarchicalContainer(container,
-                "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
+                "com.vaadin.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
                 "com.vaadin.server.ApplicationResource", "blah", true,
                 expectedSize, 2, true);

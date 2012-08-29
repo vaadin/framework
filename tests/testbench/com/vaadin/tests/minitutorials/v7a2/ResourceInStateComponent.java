@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.server.Resource;
-import com.vaadin.terminal.gwt.server.ResourceReference;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a2.ResourceInStateState;
 import com.vaadin.ui.AbstractComponent;
 

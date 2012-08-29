@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
+import com.vaadin.server.HttpServletRequestListener;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;

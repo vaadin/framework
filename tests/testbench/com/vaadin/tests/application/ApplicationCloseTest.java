@@ -1,8 +1,8 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
+import com.vaadin.server.WebApplicationContext;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

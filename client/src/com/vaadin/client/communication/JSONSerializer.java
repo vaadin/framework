@@ -41,7 +41,7 @@ public interface JSONSerializer<T> {
      * Creates and deserializes an object received from the server. Must be
      * compatible with {@link #serialize(Object, ConnectorMap)} and also with
      * the server side JsonCodec.encode(Object,
-     * com.vaadin.terminal.gwt.server.PaintableIdMapper) .
+     * com.vaadin.server.PaintableIdMapper) .
      * 
      * @param jsonValue
      *            JSON map from property name to property value
@@ -54,7 +54,7 @@ public interface JSONSerializer<T> {
      * Serialize the given object into JSON. Must be compatible with
      * {@link #deserialize(JSONObject, ConnectorMap)} and also with the server
      * side JsonCodec.decode(com.vaadin.external.json.JSONArray,
-     * com.vaadin.terminal.gwt.server.PaintableIdMapper)
+     * com.vaadin.server.PaintableIdMapper)
      * 
      * @param value
      *            The object to serialize

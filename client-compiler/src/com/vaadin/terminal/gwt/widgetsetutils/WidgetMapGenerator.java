@@ -38,10 +38,10 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.UI.UIConnector;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * WidgetMapGenerator's are GWT generator to build WidgetMapImpl dynamically

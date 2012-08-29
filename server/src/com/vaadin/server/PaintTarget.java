@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.vaadin.server.StreamVariable.StreamingStartEvent;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.ui.Component;
 
 /**

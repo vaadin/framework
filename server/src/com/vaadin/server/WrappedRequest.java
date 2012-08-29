@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
-import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.UI;
 
 /**

@@ -28,8 +28,6 @@ import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Notification;

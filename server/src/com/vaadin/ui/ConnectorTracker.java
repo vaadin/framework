@@ -26,8 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.server.AbstractCommunicationManager;
+import com.vaadin.server.ClientConnector;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a

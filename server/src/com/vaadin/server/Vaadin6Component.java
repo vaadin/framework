@@ -59,7 +59,7 @@ public interface Vaadin6Component extends VariableOwner, Component,
      * {@link #paintContent(PaintTarget)} to be called before sending changes to
      * the client.
      * 
-     * @see com.vaadin.terminal.gwt.server.ClientConnector#markAsDirty()
+     * @see com.vaadin.server.ClientConnector#markAsDirty()
      */
     @Override
     public void markAsDirty();

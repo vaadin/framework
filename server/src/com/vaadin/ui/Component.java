@@ -23,11 +23,11 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VariableOwner;
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented

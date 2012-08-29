@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
+import com.vaadin.server.ComponentSizeValidator;
 
 /**
  * Extension to {@link AbstractComponent} that defines the default

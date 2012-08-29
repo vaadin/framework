@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * Abstract base class for the HTML5 media components.

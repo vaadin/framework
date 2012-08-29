@@ -1,7 +1,7 @@
 package com.vaadin.tests;
 
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebBrowser;
+import com.vaadin.server.WebApplicationContext;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 

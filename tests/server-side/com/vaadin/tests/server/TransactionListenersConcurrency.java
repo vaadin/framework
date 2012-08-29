@@ -19,10 +19,10 @@ import junit.framework.TestCase;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.server.AbstractWebApplicationContext;
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.WebApplicationContext;
 import com.vaadin.service.ApplicationContext.TransactionListener;
-import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
 
 import org.easymock.EasyMock;
 

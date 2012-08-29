@@ -5,8 +5,8 @@
 package com.vaadin.ui;
 
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * Abstract base for embedding components.

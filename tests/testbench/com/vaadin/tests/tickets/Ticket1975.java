@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.gwt.server.WebApplicationContext;
+import com.vaadin.server.WebApplicationContext;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

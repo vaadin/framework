@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.SimpleMultiPartInputStream;
+import com.vaadin.server.AbstractCommunicationManager.SimpleMultiPartInputStream;
 
 public class TestSimpleMultiPartInputStream extends TestCase {
 

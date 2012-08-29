@@ -86,7 +86,7 @@ import com.vaadin.shared.ui.ui.UIConstants;
 /**
  * This is the client side communication "engine", managing client-server
  * communication with its server side counterpart
- * com.vaadin.terminal.gwt.server.AbstractCommunicationManager.
+ * com.vaadin.server.AbstractCommunicationManager.
  * 
  * Client-side connectors receive updates from the corresponding server-side
  * connector (typically component) as state updates or RPC calls. The connector

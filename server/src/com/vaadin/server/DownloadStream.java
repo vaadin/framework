@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.terminal.gwt.server.Constants;
 
 /**
  * Downloadable stream.

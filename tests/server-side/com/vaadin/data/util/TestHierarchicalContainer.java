@@ -211,7 +211,7 @@ public class TestHierarchicalContainer extends
         // com.vaadin.client.ui.VTabsheet
         // com.vaadin.client.ui.VTabsheetBase
         // com.vaadin.client.ui.VTabsheetPanel
-        // com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent
+        // com.vaadin.server.ChangeVariablesErrorEvent
         // com.vaadin.server.Paintable
         // com.vaadin.server.Scrollable
         // com.vaadin.server.Sizeable

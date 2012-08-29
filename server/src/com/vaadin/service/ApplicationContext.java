@@ -22,8 +22,8 @@ import java.net.URL;
 import java.util.Collection;
 
 import com.vaadin.Application;
+import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.ApplicationResource;
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**
  * <code>ApplicationContext</code> provides information about the running

@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import com.vaadin.server.NoInputStreamException;
+import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Vaadin6Component;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
-import com.vaadin.terminal.gwt.server.NoInputStreamException;
-import com.vaadin.terminal.gwt.server.NoOutputStreamException;
 
 /**
  * Component for uploading files from client to server.

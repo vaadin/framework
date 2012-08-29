@@ -33,13 +33,13 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.server.Terminal;
 import com.vaadin.shared.ComponentState;
-import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 import com.vaadin.tools.ReflectTools;
 
 /**

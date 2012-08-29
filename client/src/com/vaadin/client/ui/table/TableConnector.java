@@ -53,9 +53,8 @@ public class TableConnector extends AbstractComponentContainerConnector
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.terminal
-     * .gwt.client.UIDL, com.vaadin.client.ApplicationConnection)
+     * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.client.UIDL,
+     * com.vaadin.client.ApplicationConnection)
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

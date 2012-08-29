@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
  * An extension is an entity that is attached to a Component or another
