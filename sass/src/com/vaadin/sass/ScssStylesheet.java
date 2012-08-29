@@ -19,13 +19,17 @@ package com.vaadin.sass;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.InputSource;
 
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
+import com.vaadin.sass.resolver.ScssStylesheetResolver;
+import com.vaadin.sass.resolver.VaadinResolver;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.visitor.BlockVisitor;
 import com.vaadin.sass.visitor.ExtendVisitor;
@@ -60,15 +64,49 @@ public class ScssStylesheet extends Node {
      * @throws CSSException
      * @throws IOException
      */
-    public static ScssStylesheet get(File file) throws CSSException,
+    public static ScssStylesheet get(String identifier) throws CSSException,
             IOException {
-        Parser parser = new Parser();
-        SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
+        File file = new File(identifier);
         file = file.getCanonicalFile();
-        handler.getStyleSheet().setFileName(file.getAbsoluteFile().getParent());
+
+        SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
+        ScssStylesheet stylesheet = handler.getStyleSheet();
+
+        InputSource source = stylesheet.resolveStylesheet(identifier);
+        if (source == null) {
+            return null;
+        }
+
+        Parser parser = new Parser();
         parser.setDocumentHandler(handler);
-        parser.parseStyleSheet(file.getAbsolutePath());
-        return handler.getStyleSheet();
+        parser.parseStyleSheet(source);
+
+        return stylesheet;
+    }
+
+    private static ScssStylesheetResolver[] resolvers = null;
+
+    public static void setStylesheetResolvers(
+            ScssStylesheetResolver... styleSheetResolvers) {
+        resolvers = Arrays.copyOf(styleSheetResolvers,
+                styleSheetResolvers.length);
+    }
+
+    public InputSource resolveStylesheet(String identifier) {
+        if (resolvers == null) {
+            setStylesheetResolvers(new VaadinResolver());
+        }
+
+        for (ScssStylesheetResolver resolver : resolvers) {
+            InputSource source = resolver.resolve(identifier);
+            if (source != null) {
+                File f = new File(source.getURI());
+                setFileName(f.getParent());
+                return source;
+            }
+        }
+
+        return null;
     }
 
     /**

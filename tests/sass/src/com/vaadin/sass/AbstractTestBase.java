@@ -36,7 +36,7 @@ public abstract class AbstractTestBase {
     public ScssStylesheet getStyleSheet(String filename)
             throws URISyntaxException, CSSException, IOException {
         File file = getFile(filename);
-        stylesheet = ScssStylesheet.get(file);
+        stylesheet = ScssStylesheet.get(file.getAbsolutePath());
         return stylesheet;
     }
 
