@@ -38,11 +38,11 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
 
         FormLayout formLayout = new FormLayout();
         final TextField userField = new TextField("Username");
-        userField.setDebugId("user");
+        userField.setId("user");
         final PasswordField passwordField = new PasswordField("Password");
-        passwordField.setDebugId("pwd");
+        passwordField.setId("pwd");
         Button login = new Button("login");
-        login.setDebugId("loginButton");
+        login.setId("loginButton");
         login.setClickShortcut(KeyCode.ENTER);
         formLayout.addComponent(userField);
         formLayout.addComponent(passwordField);

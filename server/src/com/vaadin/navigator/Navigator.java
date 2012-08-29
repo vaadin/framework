@@ -1,7 +1,7 @@
 package com.vaadin.navigator;
 
 /*
-  * Copyright 2011 Vaadin Ltd.
+ * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -564,7 +564,7 @@ public class Navigator implements Serializable {
         }
 
         removeView(viewName);
-        registerProvider(new StaticViewProvider(viewName, view));
+        addProvider(new StaticViewProvider(viewName, view));
     }
 
     /**
@@ -590,7 +590,7 @@ public class Navigator implements Serializable {
         }
 
         removeView(viewName);
-        registerProvider(new ClassBasedViewProvider(viewName, viewClass));
+        addProvider(new ClassBasedViewProvider(viewName, viewClass));
     }
 
     /**
@@ -629,7 +629,7 @@ public class Navigator implements Serializable {
      * @param provider
      *            provider to register
      */
-    public void registerProvider(ViewProvider provider) {
+    public void addProvider(ViewProvider provider) {
         providers.add(provider);
     }
 
@@ -639,7 +639,7 @@ public class Navigator implements Serializable {
      * @param provider
      *            provider to unregister
      */
-    public void unregisterProvider(ViewProvider provider) {
+    public void removeProvider(ViewProvider provider) {
         providers.remove(provider);
     }
 

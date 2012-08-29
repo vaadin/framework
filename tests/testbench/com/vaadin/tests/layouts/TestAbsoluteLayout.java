@@ -153,7 +153,7 @@ public class TestAbsoluteLayout extends TestBase {
                         String caption = next.getClass().getSimpleName();
 
                         caption += "; cap: " + next.getCaption() + "; debugid"
-                                + getDebugId();
+                                + getId();
 
                         if (next instanceof Property) {
                             caption += " value:"

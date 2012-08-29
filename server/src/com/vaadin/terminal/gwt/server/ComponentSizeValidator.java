@@ -372,9 +372,9 @@ public class ComponentSizeValidator implements Serializable {
             err.append("\"");
         }
 
-        if (component.getDebugId() != null) {
-            err.append(" debugId: ");
-            err.append(component.getDebugId());
+        if (component.getId() != null) {
+            err.append(" id: ");
+            err.append(component.getId());
         }
 
         if (createLoc != null) {

@@ -207,7 +207,6 @@ public class ApplicationConfiguration implements EntryPoint {
     private boolean standalone;
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
-    private boolean useDebugIdInDom = true;
     private int heartbeatInterval;
 
     private HashMap<Integer, String> unknownComponents;
@@ -327,9 +326,6 @@ public class ApplicationConfiguration implements EntryPoint {
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
 
-        // null -> true
-        useDebugIdInDom = jsoConfiguration.getConfigBoolean("useDebugIdInDom") != Boolean.FALSE;
-
         // null -> false
         standalone = jsoConfiguration.getConfigBoolean("standalone") == Boolean.TRUE;
 
@@ -399,10 +395,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public String getApplicationVersion() {
         return getJsoConfiguration(id).getApplicationVersion();
-    }
-
-    public boolean useDebugIdInDOM() {
-        return useDebugIdInDom;
     }
 
     public Class<? extends ServerConnector> getConnectorClassByEncodedTag(

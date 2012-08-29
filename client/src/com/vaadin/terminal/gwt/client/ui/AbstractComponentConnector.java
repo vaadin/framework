@@ -124,8 +124,8 @@ implements ComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
-        if (getState().getDebugId() != null) {
-            getWidget().getElement().setId(getState().getDebugId());
+        if (getState().getId() != null) {
+            getWidget().getElement().setId(getState().getId());
         } else {
             getWidget().getElement().removeAttribute("id");
 

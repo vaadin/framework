@@ -294,7 +294,7 @@ public class Slider extends AbstractField<Double> {
             // Support setting all types of Numbers
             newFieldValue = ((Number) newFieldValue).doubleValue();
         }
-        setValue(newFieldValue);
+        super.setValue(newFieldValue);
         // The cast is safe if the above call returned without throwing
         getState().setValue((Double) newFieldValue);
     }

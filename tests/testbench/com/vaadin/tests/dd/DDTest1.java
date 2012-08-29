@@ -92,7 +92,7 @@ public class DDTest1 extends TestBase {
 
         pane2.setAcceptCriterion(crit);
 
-        pane2.setDebugId("pane2");
+        pane2.setId("pane2");
         pane2.setSizeFull();
 
         DragDropPane pane3 = new DragDropPane();
@@ -104,7 +104,7 @@ public class DDTest1 extends TestBase {
 
         final HierarchicalContainer idx = new HierarchicalContainer();
         t.setContainerDataSource(idx);
-        t.setDebugId("perseys");
+        t.setId("perseys");
         t.addItem("Foo");
         t.addItem("Bar");
         t.addItem("Bar1");

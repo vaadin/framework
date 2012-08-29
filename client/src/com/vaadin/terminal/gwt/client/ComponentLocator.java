@@ -459,7 +459,7 @@ public class ComponentLocator {
                 ServerConnector connector = ConnectorMap.get(client)
                         .getConnector(id);
                 if (connector == null) {
-                    // Lookup by debugId
+                    // Lookup by component id
                     // TODO Optimize this
                     connector = findConnectorById(client.getRootConnector(),
                             id.substring(5));
@@ -615,7 +615,7 @@ public class ComponentLocator {
     private ServerConnector findConnectorById(ServerConnector root, String id) {
         SharedState state = root.getState();
         if (state instanceof ComponentState
-                && id.equals(((ComponentState) state).getDebugId())) {
+                && id.equals(((ComponentState) state).getId())) {
             return root;
         }
         for (ServerConnector child : root.getChildren()) {

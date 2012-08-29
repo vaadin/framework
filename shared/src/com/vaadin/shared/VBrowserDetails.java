@@ -460,7 +460,8 @@ public class VBrowserDetails implements Serializable {
         if (isIE() && getBrowserMajorVersion() < 8) {
             return true;
         }
-        if (isSafari() && getBrowserMajorVersion() < 5) {
+        // Webkit 533 in Safari 4.1+, Android 2.2+, iOS 4+
+        if (isSafari() && getBrowserEngineVersion() < 533) {
             return true;
         }
         if (isFirefox() && getBrowserMajorVersion() < 4) {
