@@ -1331,18 +1331,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private void legacyPaint(PaintTarget paintTarget,
             ArrayList<ClientConnector> dirtyVisibleConnectors)
             throws PaintException {
-        List<Vaadin6Component> legacyComponents = new ArrayList<Vaadin6Component>();
+        List<LegacyComponent> legacyComponents = new ArrayList<LegacyComponent>();
         for (Connector connector : dirtyVisibleConnectors) {
             // All Components that want to use paintContent must implement
-            // Vaadin6Component
-            if (connector instanceof Vaadin6Component) {
-                legacyComponents.add((Vaadin6Component) connector);
+            // LegacyComponent
+            if (connector instanceof LegacyComponent) {
+                legacyComponents.add((LegacyComponent) connector);
             }
         }
         sortByHierarchy((List) legacyComponents);
-        for (Vaadin6Component c : legacyComponents) {
+        for (LegacyComponent c : legacyComponents) {
             getLogger().fine(
-                    "Painting Vaadin6Component " + c.getClass().getName() + "@"
+                    "Painting LegacyComponent " + c.getClass().getName() + "@"
                             + Integer.toHexString(c.hashCode()));
             paintTarget.startTag("change");
             final String pid = c.getConnectorId();

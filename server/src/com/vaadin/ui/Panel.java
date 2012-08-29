@@ -28,7 +28,7 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Scrollable;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
@@ -45,7 +45,7 @@ import com.vaadin.ui.Component.Focusable;
 public class Panel extends AbstractComponentContainer implements Scrollable,
         ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable,
-        Vaadin6Component {
+        LegacyComponent {
 
     /**
      * Content of the panel.
@@ -195,7 +195,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.server.Vaadin6Component#paintContent(com.vaadin.server
+     * @see com.vaadin.server.LegacyComponent#paintContent(com.vaadin.server
      * .PaintTarget)
      */
     @Override

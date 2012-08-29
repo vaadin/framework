@@ -22,7 +22,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 
 /**
  * <code>ProgressIndicator</code> is component that shows user state of a
@@ -38,7 +38,7 @@ import com.vaadin.server.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class ProgressIndicator extends AbstractField<Number> implements
-        Property.Viewer, Property.ValueChangeListener, Vaadin6Component {
+        Property.Viewer, Property.ValueChangeListener, LegacyComponent {
 
     /**
      * Content mode, where the label contains only plain text. The getValue()
@@ -260,7 +260,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
 
     }
 

@@ -25,7 +25,7 @@ import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
@@ -42,7 +42,7 @@ import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Embedded extends AbstractComponent implements Vaadin6Component {
+public class Embedded extends AbstractComponent implements LegacyComponent {
 
     /**
      * General object type.
@@ -545,7 +545,7 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 
 }

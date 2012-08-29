@@ -43,7 +43,7 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
@@ -68,7 +68,7 @@ import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 public abstract class AbstractSelect extends AbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
-        Container.ItemSetChangeListener, Vaadin6Component {
+        Container.ItemSetChangeListener, LegacyComponent {
 
     public enum ItemCaptionMode {
         /**

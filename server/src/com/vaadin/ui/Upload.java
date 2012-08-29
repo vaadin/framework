@@ -28,7 +28,7 @@ import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 
 /**
@@ -71,7 +71,7 @@ import com.vaadin.server.StreamVariable.StreamingProgressEvent;
  */
 @SuppressWarnings("serial")
 public class Upload extends AbstractComponent implements Component.Focusable,
-        Vaadin6Component {
+        LegacyComponent {
 
     /**
      * Should the field be focused on next repaint?

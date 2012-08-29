@@ -33,7 +33,7 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
@@ -65,7 +65,7 @@ import com.vaadin.shared.ui.window.WindowState;
  */
 @SuppressWarnings("serial")
 public class Window extends Panel implements FocusNotifier, BlurNotifier,
-        Vaadin6Component {
+        LegacyComponent {
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 

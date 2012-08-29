@@ -21,7 +21,7 @@ import java.util.Map;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.BorderStyle;
 
 /**
@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.BorderStyle;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Link extends AbstractComponent implements Vaadin6Component {
+public class Link extends AbstractComponent implements LegacyComponent {
 
     /* Target window border type constant: No window border */
     @Deprecated
@@ -246,6 +246,6 @@ public class Link extends AbstractComponent implements Vaadin6Component {
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 }

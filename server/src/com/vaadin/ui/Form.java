@@ -42,7 +42,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.UserError;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.form.FormState;
 
 /**
@@ -79,7 +79,7 @@ import com.vaadin.shared.ui.form.FormState;
 @Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,
         Buffered, Item, Validatable, Action.Notifier, HasComponents,
-        Vaadin6Component {
+        LegacyComponent {
 
     private Object propertyValue;
 

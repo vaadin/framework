@@ -27,7 +27,7 @@ import java.util.Set;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 
 /**
@@ -58,7 +58,7 @@ import com.vaadin.shared.ui.customlayout.CustomLayoutState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CustomLayout extends AbstractLayout implements Vaadin6Component {
+public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     private static final int BUFFER_SIZE = 10000;
 

@@ -38,7 +38,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 
 /**
@@ -61,7 +61,7 @@ import com.vaadin.shared.ui.datefield.DateFieldConstants;
  */
 @SuppressWarnings("serial")
 public class DateField extends AbstractField<Date> implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Vaadin6Component {
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, LegacyComponent {
 
     /**
      * Resolutions for DateFields

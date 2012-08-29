@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Vaadin Ltd.
  * @since 3.0
  * @deprecated in 7.0. Only provided to ease porting of Vaadin 6 components. Do
- *             not implement this directly, implement {@link Vaadin6Component}.
+ *             not implement this directly, implement {@link LegacyComponent}.
  */
 @Deprecated
 public interface VariableOwner extends Serializable {

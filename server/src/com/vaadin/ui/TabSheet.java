@@ -36,7 +36,7 @@ import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 import com.vaadin.ui.Component.Focusable;
@@ -71,7 +71,7 @@ import com.vaadin.ui.themes.Runo;
  * @since 3.0
  */
 public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusNotifier, BlurNotifier, Vaadin6Component {
+        FocusNotifier, BlurNotifier, LegacyComponent {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,

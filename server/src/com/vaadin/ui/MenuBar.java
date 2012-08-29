@@ -25,7 +25,7 @@ import java.util.Stack;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 /**
@@ -36,7 +36,7 @@ import com.vaadin.shared.ui.menubar.MenuBarConstants;
  * </p>
  */
 @SuppressWarnings("serial")
-public class MenuBar extends AbstractComponent implements Vaadin6Component {
+public class MenuBar extends AbstractComponent implements LegacyComponent {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;

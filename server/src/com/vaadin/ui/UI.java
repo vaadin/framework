@@ -39,7 +39,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
@@ -90,7 +90,7 @@ import com.vaadin.tools.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractComponentContainer implements
-        Action.Container, Action.Notifier, Vaadin6Component {
+        Action.Container, Action.Notifier, LegacyComponent {
 
     /**
      * Helper class to emulate the main window from Vaadin 6 using UIs. This

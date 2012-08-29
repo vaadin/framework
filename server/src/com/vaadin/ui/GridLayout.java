@@ -30,7 +30,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -65,7 +65,7 @@ import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
-        LayoutClickNotifier, Vaadin6Component {
+        LayoutClickNotifier, LegacyComponent {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -447,7 +447,7 @@ public class GridLayout extends AbstractLayout implements
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 
     /**

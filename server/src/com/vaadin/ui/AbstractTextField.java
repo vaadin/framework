@@ -29,12 +29,12 @@ import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
-        BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {
+        BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
 
     /**
      * Null representation.

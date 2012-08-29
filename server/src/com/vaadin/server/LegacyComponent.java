@@ -29,7 +29,7 @@ import com.vaadin.ui.Component;
  * @since 7.0.0
  * 
  */
-public interface Vaadin6Component extends VariableOwner, Component,
+public interface LegacyComponent extends VariableOwner, Component,
         EventListener {
 
     /**
@@ -55,7 +55,7 @@ public interface Vaadin6Component extends VariableOwner, Component,
     /**
      * (non-Javadoc) {@inheritDoc}
      * <p>
-     * For a Vaadin6Component, markAsDirty will also cause
+     * For a LegacyComponent, markAsDirty will also cause
      * {@link #paintContent(PaintTarget)} to be called before sending changes to
      * the client.
      * 

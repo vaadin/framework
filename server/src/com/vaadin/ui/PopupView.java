@@ -23,7 +23,7 @@ import java.util.Map;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.LegacyComponent;
 
 /**
  * 
@@ -36,7 +36,7 @@ import com.vaadin.server.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class PopupView extends AbstractComponentContainer implements
-        Vaadin6Component {
+        LegacyComponent {
 
     private Content content;
     private boolean hideOnMouseOut;

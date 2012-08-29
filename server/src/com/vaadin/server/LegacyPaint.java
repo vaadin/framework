@@ -61,8 +61,8 @@ public class LegacyPaint implements Serializable {
             target.addAttribute("cached", true);
         } else {
             // Paint the contents of the component
-            if (component instanceof Vaadin6Component) {
-                ((Vaadin6Component) component).paintContent(target);
+            if (component instanceof LegacyComponent) {
+                ((LegacyComponent) component).paintContent(target);
             }
 
         }
