@@ -16,6 +16,7 @@
 .main {
 	@include rounded-borders(1px);
 	@include font-settings;
+	@include main-details(14px);
 }
 
 .footer {
@@ -41,4 +42,14 @@
 	}
 	@include font-settings;
 }
+
+@mixin main-details($size){
+	.details {
+		font: {
+			size : $size;
+			weight: bold;
+		}
+	}
+}
+
 @include layout;

@@ -20,8 +20,10 @@ import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.parser.SelectorListImpl;
 import com.vaadin.sass.selector.SelectorUtil;
+import com.vaadin.sass.util.Clonable;
+import com.vaadin.sass.util.DeepCopy;
 
-public class BlockNode extends Node {
+public class BlockNode extends Node implements Clonable {
 
     private static final long serialVersionUID = 5742962631468325048L;
 
@@ -62,12 +64,21 @@ public class BlockNode extends Node {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        SelectorListImpl clonedSelectorList = new SelectorListImpl();
+    public Object clone() throws CloneNotSupportedException {
+
+        SelectorListImpl clonedSelectorList = null;
+
+        if (selectorList != null) {
+            clonedSelectorList = new SelectorListImpl();
         for (int i = 0; i < selectorList.getLength(); i++) {
             clonedSelectorList.addSelector(selectorList.item(i));
         }
-        return null;
-        // BlockNode clone = new BlockNode()
     }
+        final BlockNode clone = new BlockNode(clonedSelectorList);
+        for (Node child : getChildren()) {
+            clone.getChildren().add((Node) DeepCopy.copy(child));
+        }
+        return clone;
+    }
+
 }

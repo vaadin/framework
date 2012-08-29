@@ -69,7 +69,7 @@ public class Mixins extends AbstractTestBase {
         Assert.assertEquals(4, mixinDefNode1.getChildren().size());
 
         BlockNode mainBlockNode = (BlockNode) root.getChildren().get(2);
-        Assert.assertEquals(2, mainBlockNode.getChildren().size());
+        Assert.assertEquals(3, mainBlockNode.getChildren().size());
         MixinNode mixinNode0MainBlock = (MixinNode) mainBlockNode.getChildren()
                 .get(0);
         Assert.assertEquals("rounded-borders", mixinNode0MainBlock.getName());
@@ -80,6 +80,11 @@ public class Mixins extends AbstractTestBase {
         MixinNode mixinNOde1MainBlock = (MixinNode) mainBlockNode.getChildren()
                 .get(1);
         Assert.assertEquals("font-settings", mixinNOde1MainBlock.getName());
+        Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
+
+        MixinNode mixinNOde2MainBlock = (MixinNode) mainBlockNode.getChildren()
+                .get(2);
+        Assert.assertEquals("main-details", mixinNOde2MainBlock.getName());
         Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
 
         MixinNode mixinNode1MainBlock = (MixinNode) mainBlockNode.getChildren()
@@ -102,9 +107,6 @@ public class Mixins extends AbstractTestBase {
         Assert.assertTrue(root.getChildren().get(4) instanceof MixinDefNode);
         Assert.assertTrue(root.getChildren().get(4).getChildren().get(3) instanceof MediaNode);
         Assert.assertTrue(root.getChildren().get(4).getChildren().get(4) instanceof MixinNode);
-
-        MixinNode topLevelMixin = (MixinNode) root.getChildren().get(5);
-        Assert.assertEquals("layout", topLevelMixin.getName());
 
     }
 

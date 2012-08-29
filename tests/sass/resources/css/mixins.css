@@ -8,6 +8,11 @@
 	font-weight: bold;
 }
 
+.main .details {
+	font-size: 14px;
+	font-weight: bold;
+}
+
 .footer {
 	border: 2px solid black;
 	-webkit-border-radius: 10px;

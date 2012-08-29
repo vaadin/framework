@@ -664,6 +664,11 @@
 		</javac>
     </target>
     
+	<target name="compile-sass-parser">
+	<javacc target="${parserDir}/Parser.jj" javacchome="${JavaCChome}">
+	</javacc>
+	</target>
+	
     <target name="compile-sass" depends="init, preprocess-src">
     	<!-- TODO also perform javacc compilation of the parser -->
         <mkdir dir="${result-classes-sass}" />
@@ -1382,6 +1387,7 @@
               <property name="deps.initialized"  value="${deps.initialized}"/>
         </ant>
     </target>
+	
 </project>
 
 <!-- These are for emacs. -->
