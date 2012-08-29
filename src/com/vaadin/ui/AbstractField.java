@@ -301,47 +301,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * we use the default documentation from the implemented interface.
      */
     public void discard() throws Buffered.SourceException {
-        if (dataSource != null) {
-
-            // Gets the correct value from datasource
-            Object newValue;
-            try {
-
-                // Discards buffer by overwriting from datasource
-                newValue = String.class == getType() ? dataSource.toString()
-                        : dataSource.getValue();
-
-                // If successful, remove set the buffering state to be ok
-                if (currentBufferedSourceException != null) {
-                    currentBufferedSourceException = null;
-                    requestRepaint();
-                }
-            } catch (final Throwable e) {
-
-                // Sets the buffering state
-                currentBufferedSourceException = new Buffered.SourceException(
-                        this, e);
-                requestRepaint();
-
-                // Throws the source exception
-                throw currentBufferedSourceException;
-            }
-
-            final boolean wasModified = isModified();
-            modified = false;
-
-            // If the new value differs from the previous one
-            if ((newValue == null && value != null)
-                    || (newValue != null && !newValue.equals(value))) {
-                setInternalValue(newValue);
-                fireValueChange(false);
-            }
-
-            // If the value did not change, but the modification status did
-            else if (wasModified) {
-                requestRepaint();
-            }
-        }
+        updateValueFromDataSource();
     }
 
     /*
@@ -1140,8 +1100,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (!isListeningToPropertyEvents) {
             addPropertyListeners();
             if (!isModified() && isReadThrough()) {
-                // Update value from data source
-                discard();
+                // The property value may have changed while the field was
+                // detached and not listening
+                updateValueFromDataSource();
             }
         }
     }
@@ -1353,6 +1314,50 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         @Override
         public void handleAction(Object sender, Object target) {
             focusable.focus();
+        }
+    }
+
+    private void updateValueFromDataSource() {
+        if (dataSource != null) {
+
+            // Gets the correct value from datasource
+            Object newValue;
+            try {
+
+                // Discards buffer by overwriting from datasource
+                newValue = String.class == getType() ? dataSource.toString()
+                        : dataSource.getValue();
+
+                // If successful, remove set the buffering state to be ok
+                if (currentBufferedSourceException != null) {
+                    currentBufferedSourceException = null;
+                    requestRepaint();
+                }
+            } catch (final Throwable e) {
+
+                // Sets the buffering state
+                currentBufferedSourceException = new Buffered.SourceException(
+                        this, e);
+                requestRepaint();
+
+                // Throws the source exception
+                throw currentBufferedSourceException;
+            }
+
+            final boolean wasModified = isModified();
+            modified = false;
+
+            // If the new value differs from the previous one
+            if ((newValue == null && value != null)
+                    || (newValue != null && !newValue.equals(value))) {
+                setInternalValue(newValue);
+                fireValueChange(false);
+            }
+
+            // If the value did not change, but the modification status did
+            else if (wasModified) {
+                requestRepaint();
+            }
         }
     }
 
