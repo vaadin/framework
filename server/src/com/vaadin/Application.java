@@ -51,19 +51,19 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.CombinedRequest;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.Terminal;
+import com.vaadin.server.UIProvider;
+import com.vaadin.server.VariableOwner;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.terminal.AbstractErrorMessage;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.CombinedRequest;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.UIProvider;
-import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedRequest.BrowserDetails;
-import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
 import com.vaadin.terminal.gwt.server.BootstrapFragmentResponse;
 import com.vaadin.terminal.gwt.server.BootstrapListener;
@@ -123,7 +123,7 @@ import com.vaadin.ui.Window;
  * found out, the window itself is queried for a preferred theme. If the window
  * does not prefer a specific theme, the application containing the window is
  * queried. If neither the application prefers a theme, the default theme for
- * the {@link com.vaadin.terminal.Terminal terminal} is used. The terminal
+ * the {@link com.vaadin.server.Terminal terminal} is used. The terminal
  * always defines a default theme.
  * </p>
  * 
@@ -1075,7 +1075,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @param event
      *            the change event.
-     * @see com.vaadin.terminal.Terminal.ErrorListener#terminalError(com.vaadin.terminal.Terminal.ErrorEvent)
+     * @see com.vaadin.server.Terminal.ErrorListener#terminalError(com.vaadin.server.Terminal.ErrorEvent)
      */
 
     @Override

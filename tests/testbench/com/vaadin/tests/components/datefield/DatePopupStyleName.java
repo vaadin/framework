@@ -2,7 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
 
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.DateField;
 

@@ -2,9 +2,6 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 
-import com.vaadin.data.util.ContainerHierarchicalWrapper;
-import com.vaadin.data.util.IndexedContainer;
-
 public class TestContainerHierarchicalWrapper extends
         AbstractHierarchicalContainerTest {
 
@@ -34,7 +31,7 @@ public class TestContainerHierarchicalWrapper extends
         int expectedSize = sampleData.length + packages - 1;
 
         validateContainer(container, "com", "com.vaadin.util.SerializerHelper",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
+                "com.vaadin.server.ApplicationResource", "blah", true,
                 expectedSize);
 
         // rootItemIds

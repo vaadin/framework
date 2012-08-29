@@ -3,7 +3,7 @@
  */
 package com.vaadin.tests;
 
-import com.vaadin.terminal.Page;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;

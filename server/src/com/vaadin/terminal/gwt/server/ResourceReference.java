@@ -16,11 +16,11 @@
 package com.vaadin.terminal.gwt.server;
 
 import com.vaadin.Application;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.communication.URLReference;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
 
 public class ResourceReference extends URLReference {
 

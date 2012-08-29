@@ -5,9 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Layout.SpacingHandler;

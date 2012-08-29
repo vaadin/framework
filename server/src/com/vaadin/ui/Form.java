@@ -36,14 +36,14 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.Action.ShortcutNotifier;
 import com.vaadin.event.ActionManager;
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.CompositeErrorMessage;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.UserError;
+import com.vaadin.server.Vaadin6Component;
 import com.vaadin.shared.ui.form.FormState;
-import com.vaadin.terminal.AbstractErrorMessage;
-import com.vaadin.terminal.CompositeErrorMessage;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.UserError;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * Form component provides easy way of creating and managing sets fields.

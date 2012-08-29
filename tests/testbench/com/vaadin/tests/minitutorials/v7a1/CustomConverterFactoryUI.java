@@ -1,6 +1,6 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
 

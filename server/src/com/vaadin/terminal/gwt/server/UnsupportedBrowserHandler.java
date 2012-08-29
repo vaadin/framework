@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 
 /**
  * A {@link RequestHandler} that presents an informative page if the browser in

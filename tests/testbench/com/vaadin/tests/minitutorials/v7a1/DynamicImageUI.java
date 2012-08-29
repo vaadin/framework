@@ -8,10 +8,10 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Embedded;
 

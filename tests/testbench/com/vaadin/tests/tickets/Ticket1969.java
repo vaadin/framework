@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

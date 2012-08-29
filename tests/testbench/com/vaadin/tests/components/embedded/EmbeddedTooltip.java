@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.embedded;
 
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Embedded;
 

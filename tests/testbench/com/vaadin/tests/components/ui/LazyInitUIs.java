@@ -2,10 +2,10 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.EagerInit;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedRequest.BrowserDetails;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;

@@ -19,9 +19,9 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's

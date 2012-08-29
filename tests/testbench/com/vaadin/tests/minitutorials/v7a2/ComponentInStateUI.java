@@ -1,7 +1,7 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 

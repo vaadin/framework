@@ -20,7 +20,7 @@ import java.util.EventObject;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
 /**

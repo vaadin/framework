@@ -15,7 +15,7 @@
  */
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.terminal.StreamVariable.StreamingErrorEvent;
+import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 
 @SuppressWarnings("serial")
 final class StreamingErrorEventImpl extends AbstractStreamingEvent implements

@@ -22,10 +22,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Link;

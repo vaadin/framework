@@ -24,7 +24,7 @@ import java.util.ServiceLoader;
 
 import com.vaadin.Application;
 import com.vaadin.event.EventRouter;
-import com.vaadin.terminal.DeploymentConfiguration;
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.tools.ReflectTools;
 
 /**

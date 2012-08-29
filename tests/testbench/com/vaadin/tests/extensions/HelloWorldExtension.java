@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.extensions;
 
-import com.vaadin.terminal.AbstractExtension;
+import com.vaadin.server.AbstractExtension;
 import com.vaadin.tests.widgetset.client.helloworldfeature.GreetAgainRpc;
 import com.vaadin.tests.widgetset.client.helloworldfeature.HelloWorldRpc;
 import com.vaadin.tests.widgetset.client.helloworldfeature.HelloWorldState;

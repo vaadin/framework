@@ -1,6 +1,6 @@
 package com.vaadin.tests.server.component.upload;
 
-import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
+import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;

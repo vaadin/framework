@@ -34,9 +34,9 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
+import com.vaadin.server.ApplicationResource;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.terminal.ApplicationResource;
 
 /**
  * Base class for web application contexts (including portlet contexts) that

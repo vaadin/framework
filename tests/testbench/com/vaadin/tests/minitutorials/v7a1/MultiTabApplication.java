@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;

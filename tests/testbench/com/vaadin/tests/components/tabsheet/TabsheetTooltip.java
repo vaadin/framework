@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.tabsheet;
 
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;

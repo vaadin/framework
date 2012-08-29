@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;

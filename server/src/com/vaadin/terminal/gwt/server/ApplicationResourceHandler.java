@@ -23,11 +23,11 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.DownloadStream;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 
 public class ApplicationResourceHandler implements RequestHandler {
     private static final Pattern APP_RESOURCE_PATTERN = Pattern

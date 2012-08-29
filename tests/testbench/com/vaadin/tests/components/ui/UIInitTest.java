@@ -4,7 +4,7 @@
 
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 

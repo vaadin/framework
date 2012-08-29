@@ -19,8 +19,8 @@ package com.vaadin.tests;
 import java.util.Date;
 import java.util.Map;
 
+import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;

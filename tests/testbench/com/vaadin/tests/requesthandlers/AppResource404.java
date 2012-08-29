@@ -1,6 +1,6 @@
 package com.vaadin.tests.requesthandlers;
 
-import com.vaadin.terminal.ExternalResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.ui.Button;

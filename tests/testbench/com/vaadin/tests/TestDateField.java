@@ -18,9 +18,9 @@ package com.vaadin.tests;
 
 import java.util.Locale;
 
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.ClassResource;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;

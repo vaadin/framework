@@ -53,7 +53,7 @@ public class ShortCutListenerModification extends TestBase implements
     }
 
     @Override
-    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
         super.terminalError(event);
         getMainWindow().showNotification("Failed!",
                 Notification.TYPE_ERROR_MESSAGE);

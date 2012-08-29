@@ -15,8 +15,8 @@
  */
 package com.vaadin.ui;
 
+import com.vaadin.server.JavaScriptCallbackHelper;
 import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.terminal.JavaScriptCallbackHelper;
 
 /**
  * Base class for Components with all client-side logic implemented using

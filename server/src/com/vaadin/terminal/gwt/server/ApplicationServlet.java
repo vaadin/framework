@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.DefaultUIProvider;
+import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.terminal.gwt.server.ServletPortletHelper.ApplicationClassException;
 
 /**

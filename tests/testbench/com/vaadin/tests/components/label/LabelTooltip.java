@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.label;
 
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;

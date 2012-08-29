@@ -40,14 +40,14 @@ import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
 import com.vaadin.ui.UI;
 
 public abstract class BootstrapHandler implements RequestHandler {

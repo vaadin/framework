@@ -3,7 +3,7 @@ package com.vaadin.tests.minitutorials.v7a2;
 import java.util.Random;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

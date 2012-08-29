@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.vaadincontext;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 
 public class BootstrapModifyUI extends AbstractTestUI {

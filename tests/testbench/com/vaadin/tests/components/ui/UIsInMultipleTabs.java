@@ -2,8 +2,8 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.AbstractUIProvider;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;

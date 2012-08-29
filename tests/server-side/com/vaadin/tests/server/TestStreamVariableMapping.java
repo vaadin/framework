@@ -5,8 +5,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.StreamVariable;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.terminal.gwt.server.CommunicationManager;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;

@@ -3,7 +3,7 @@ package com.vaadin.tests.components.table;
 import java.util.Arrays;
 
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.terminal.Sizeable;
+import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

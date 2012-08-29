@@ -21,7 +21,7 @@ import java.util.List;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 
 /**
  * A representation of a bootstrap fragment being generated. The bootstrap

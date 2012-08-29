@@ -5,7 +5,7 @@ import java.util.Date;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent.ComponentErrorEvent;
 import com.vaadin.ui.AbstractComponent.ComponentErrorHandler;
 import com.vaadin.ui.ComboBox;

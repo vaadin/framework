@@ -8,7 +8,7 @@ import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.UI;
 

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.components.media;
 
-import com.vaadin.terminal.ExternalResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Audio;
 import com.vaadin.ui.Button;

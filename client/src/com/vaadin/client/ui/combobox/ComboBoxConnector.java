@@ -36,8 +36,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.terminal
+     * @see com.vaadin.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.client.ApplicationConnection)
      */
     @Override

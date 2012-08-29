@@ -27,9 +27,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;

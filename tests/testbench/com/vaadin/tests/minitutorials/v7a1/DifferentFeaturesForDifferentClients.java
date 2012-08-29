@@ -18,8 +18,8 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;

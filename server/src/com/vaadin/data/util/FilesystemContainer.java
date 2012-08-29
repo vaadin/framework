@@ -33,8 +33,8 @@ import java.util.List;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.server.Resource;
 import com.vaadin.service.FileTypeResolver;
-import com.vaadin.terminal.Resource;
 
 /**
  * A hierarchical container wrapper for a filesystem.

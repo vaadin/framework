@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ApplicationResource;
+import com.vaadin.server.ApplicationResource;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
 
 /**

@@ -96,7 +96,7 @@ public class NativeWindowing extends Application.LegacyApplication {
                     public void buttonClick(ClickEvent event) {
                         try {
                             main.open(
-                                    new com.vaadin.terminal.ExternalResource(
+                                    new com.vaadin.server.ExternalResource(
                                             new URL(
                                                     getURL(),
                                                     "mainwin-"

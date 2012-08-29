@@ -19,8 +19,8 @@ package com.vaadin.tests.util;
 import java.io.File;
 
 import com.vaadin.Application;
+import com.vaadin.server.SystemError;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;

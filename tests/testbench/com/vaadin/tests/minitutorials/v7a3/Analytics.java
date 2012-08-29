@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.terminal.AbstractJavaScriptExtension;
+import com.vaadin.server.AbstractJavaScriptExtension;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 import com.vaadin.ui.UI;
 

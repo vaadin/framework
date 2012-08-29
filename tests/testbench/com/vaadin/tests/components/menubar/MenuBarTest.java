@@ -3,8 +3,8 @@ package com.vaadin.tests.components.menubar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;

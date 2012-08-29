@@ -28,7 +28,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.Sizeable.Unit;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.Component;

@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;

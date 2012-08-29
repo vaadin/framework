@@ -2,7 +2,7 @@ package com.vaadin.tests.components.combobox;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 import com.vaadin.tests.components.select.SelectTest;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Select;

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.Page;
-import com.vaadin.terminal.Page.FragmentChangedEvent;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.FragmentChangedEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;

@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.server.Terminal;
 import com.vaadin.service.ApplicationContext.TransactionListener;
-import com.vaadin.terminal.Terminal;
 
 /**
  * {@link Application} that implements this interface gets notified of request

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.loginform;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;

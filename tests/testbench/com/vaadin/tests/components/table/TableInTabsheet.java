@@ -2,8 +2,8 @@ package com.vaadin.tests.components.table;
 
 import java.net.MalformedURLException;
 
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.HorizontalLayout;

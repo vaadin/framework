@@ -3,7 +3,7 @@ package com.vaadin.tests.server;
 import junit.framework.TestCase;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.server.ClassResource;
 import com.vaadin.ui.Embedded;
 
 public class TestMimeTypes extends TestCase {

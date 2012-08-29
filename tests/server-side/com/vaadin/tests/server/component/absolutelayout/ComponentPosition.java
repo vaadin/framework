@@ -2,8 +2,8 @@ package com.vaadin.tests.server.component.absolutelayout;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.Sizeable.Unit;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 

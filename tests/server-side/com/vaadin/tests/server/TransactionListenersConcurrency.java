@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.service.ApplicationContext.TransactionListener;
-import com.vaadin.terminal.DeploymentConfiguration;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebApplicationContext;
 

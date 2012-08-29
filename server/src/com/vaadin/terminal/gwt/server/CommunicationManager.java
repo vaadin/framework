@@ -23,8 +23,8 @@ import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
 /**

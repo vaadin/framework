@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.data.Container.Hierarchical;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Alignment;

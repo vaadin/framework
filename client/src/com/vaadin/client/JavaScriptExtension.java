@@ -18,9 +18,9 @@ package com.vaadin.client;
 
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.server.AbstractJavaScriptExtension;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.AbstractJavaScriptExtension;
 
 @Connect(AbstractJavaScriptExtension.class)
 public final class JavaScriptExtension extends AbstractExtensionConnector

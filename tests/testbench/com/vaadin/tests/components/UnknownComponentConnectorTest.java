@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.components;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.AbstractComponent;
 
 public class UnknownComponentConnectorTest extends AbstractTestUI {

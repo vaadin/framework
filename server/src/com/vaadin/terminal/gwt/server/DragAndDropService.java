@@ -33,12 +33,12 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
+import com.vaadin.server.Extension;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.VariableOwner;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
-import com.vaadin.terminal.Extension;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.VariableOwner;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 

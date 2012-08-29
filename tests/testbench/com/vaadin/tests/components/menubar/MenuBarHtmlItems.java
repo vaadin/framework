@@ -3,8 +3,8 @@ package com.vaadin.tests.components.menubar;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;

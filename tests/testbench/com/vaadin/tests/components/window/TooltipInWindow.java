@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.components.window;
 
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;

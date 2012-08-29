@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
-import com.vaadin.terminal.StreamResource;
+import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;

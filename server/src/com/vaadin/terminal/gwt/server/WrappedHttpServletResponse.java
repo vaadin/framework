@@ -19,8 +19,8 @@ package com.vaadin.terminal.gwt.server;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.WrappedResponse;
 
 /**
  * Wrapper for {@link HttpServletResponse}.

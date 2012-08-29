@@ -14,8 +14,8 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.AbstractComponent;
@@ -715,7 +715,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     @Override
-    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
         String logMsg = "Exception occured, "
                 + event.getThrowable().getClass().getName();
 

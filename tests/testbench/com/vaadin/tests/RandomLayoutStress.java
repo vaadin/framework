@@ -18,7 +18,7 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
-import com.vaadin.terminal.ExternalResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;

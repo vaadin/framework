@@ -16,8 +16,8 @@
 
 package com.vaadin;
 
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedRequest.BrowserDetails;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedRequest.BrowserDetails;
 
 /**
  * Exception that is thrown to indicate that creating or initializing the UI

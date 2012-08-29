@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.KeyMapper;
+import com.vaadin.server.KeyMapper;
 
 public class TestKeyMapper extends TestCase {
 

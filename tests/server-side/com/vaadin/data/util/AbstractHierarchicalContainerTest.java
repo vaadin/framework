@@ -149,7 +149,7 @@ public abstract class AbstractHierarchicalContainerTest extends
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "org.vaadin.test.LastClass",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
+                "com.vaadin.server.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
     }
@@ -172,7 +172,7 @@ public abstract class AbstractHierarchicalContainerTest extends
         int expectedSize = sampleData.length + packages;
         validateHierarchicalContainer(container, "com",
                 "org.vaadin.test.LastClass",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
+                "com.vaadin.server.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
         sortable.sort(new Object[] { REVERSE_FULLY_QUALIFIED_NAME },
@@ -181,7 +181,7 @@ public abstract class AbstractHierarchicalContainerTest extends
         validateHierarchicalContainer(container,
                 "com.vaadin.terminal.gwt.server.ApplicationPortlet2",
                 "com.vaadin.data.util.ObjectProperty",
-                "com.vaadin.terminal.ApplicationResource", "blah", true,
+                "com.vaadin.server.ApplicationResource", "blah", true,
                 expectedSize, 2, true);
 
     }

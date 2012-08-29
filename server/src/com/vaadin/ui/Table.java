@@ -52,13 +52,13 @@ import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.LegacyPaint;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.table.TableConstants;
-import com.vaadin.terminal.KeyMapper;
-import com.vaadin.terminal.LegacyPaint;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
 
 /**
  * <p>
@@ -4759,7 +4759,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * 
          * @see
          * com.vaadin.event.dd.acceptcriteria.AcceptCriterion#paintResponse(
-         * com.vaadin.terminal.PaintTarget)
+         * com.vaadin.server.PaintTarget)
          */
 
         @Override

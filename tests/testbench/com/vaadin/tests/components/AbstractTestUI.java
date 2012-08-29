@@ -1,9 +1,9 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.Application;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.terminal.gwt.server.AbstractWebApplicationContext;
 import com.vaadin.terminal.gwt.server.WebBrowser;
 import com.vaadin.ui.Component;

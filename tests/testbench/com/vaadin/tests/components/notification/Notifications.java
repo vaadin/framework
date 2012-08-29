@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.notification;
 
-import com.vaadin.terminal.Page;
+import com.vaadin.server.Page;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

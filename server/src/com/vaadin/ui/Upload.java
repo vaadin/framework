@@ -24,10 +24,10 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.StreamVariable.StreamingProgressEvent;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Vaadin6Component;
+import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 import com.vaadin.terminal.gwt.server.NoInputStreamException;
 import com.vaadin.terminal.gwt.server.NoOutputStreamException;
 
@@ -936,11 +936,11 @@ public class Upload extends AbstractComponent implements Component.Focusable,
      * Handle to terminal via Upload monitors and controls the upload during it
      * is being streamed.
      */
-    private com.vaadin.terminal.StreamVariable streamVariable;
+    private com.vaadin.server.StreamVariable streamVariable;
 
-    protected com.vaadin.terminal.StreamVariable getStreamVariable() {
+    protected com.vaadin.server.StreamVariable getStreamVariable() {
         if (streamVariable == null) {
-            streamVariable = new com.vaadin.terminal.StreamVariable() {
+            streamVariable = new com.vaadin.server.StreamVariable() {
                 private StreamingStartEvent lastStartedEvent;
 
                 @Override

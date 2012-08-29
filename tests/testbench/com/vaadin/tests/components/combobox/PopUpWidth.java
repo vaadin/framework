@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.data.Item;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 

@@ -22,7 +22,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.DeploymentConfiguration;
+import com.vaadin.server.DeploymentConfiguration;
 
 public abstract class AbstractDeploymentConfiguration implements
         DeploymentConfiguration {

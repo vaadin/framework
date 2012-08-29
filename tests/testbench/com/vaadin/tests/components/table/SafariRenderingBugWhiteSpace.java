@@ -2,7 +2,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.terminal.Sizeable;
+import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;

@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.extensions;
 
-import com.vaadin.terminal.AbstractClientConnector;
-import com.vaadin.terminal.AbstractExtension;
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.AbstractExtension;
 
 public class BasicExtension extends AbstractExtension {
     @Override

@@ -20,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.CombinedRequest;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.CombinedRequest;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.WrappedRequest;
 
 /**
  * Wrapper for {@link HttpServletRequest}.

@@ -1,9 +1,9 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.ClassResource;
+import com.vaadin.server.DownloadStream;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;

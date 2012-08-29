@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.server.SystemError;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.SystemError;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

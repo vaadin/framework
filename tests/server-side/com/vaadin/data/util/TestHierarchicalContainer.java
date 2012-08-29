@@ -2,7 +2,6 @@ package com.vaadin.data.util;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
-import com.vaadin.data.util.HierarchicalContainer;
 
 public class TestHierarchicalContainer extends
         AbstractHierarchicalContainerTest {
@@ -58,12 +57,10 @@ public class TestHierarchicalContainer extends
         container.addContainerFilter(FULLY_QUALIFIED_NAME, "ab", false, false);
         Object p1 = container.getParent("com.vaadin.ui.TabSheet");
         assertEquals("com.vaadin.ui", p1);
-        p1 = container
-                .getParent("com.vaadin.client.ui.VPopupCalendar");
+        p1 = container.getParent("com.vaadin.client.ui.VPopupCalendar");
         assertNull(p1);
         container.removeAllContainerFilters();
-        p1 = container
-                .getParent("com.vaadin.client.ui.VPopupCalendar");
+        p1 = container.getParent("com.vaadin.client.ui.VPopupCalendar");
         assertEquals("com.vaadin.client.ui", p1);
 
     }
@@ -110,9 +107,8 @@ public class TestHierarchicalContainer extends
         int expectedRoots = 1;
 
         validateHierarchicalContainer(container, "com",
-                "com.vaadin.ui.TabSheet",
-                "com.vaadin.client.Focusable", "blah", true,
-                expectedSize, expectedRoots, true);
+                "com.vaadin.ui.TabSheet", "com.vaadin.client.Focusable",
+                "blah", true, expectedSize, expectedRoots, true);
 
         // only include .gwt.client classes
         container.removeAllContainerFilters();
@@ -127,8 +123,8 @@ public class TestHierarchicalContainer extends
 
         validateHierarchicalContainer(container, "com",
                 "com.vaadin.client.WidgetSet",
-                "com.vaadin.client.ui.VSplitPanelVertical",
-                "blah", true, expectedSize, expectedRoots, true);
+                "com.vaadin.client.ui.VSplitPanelVertical", "blah", true,
+                expectedSize, expectedRoots, true);
 
         // Additionally remove all without 'm' in the simple name.
         container.addContainerFilter(SIMPLE_NAME, "m", false, false);
@@ -136,12 +132,10 @@ public class TestHierarchicalContainer extends
         expectedSize = 7 + 18;
         expectedRoots = 1;
 
-        validateHierarchicalContainer(
-                container,
-                "com",
+        validateHierarchicalContainer(container, "com",
                 "com.vaadin.client.ui.VUriFragmentUtility",
-                "com.vaadin.client.ui.layout.ChildComponentContainer",
-                "blah", true, expectedSize, expectedRoots, true);
+                "com.vaadin.client.ui.layout.ChildComponentContainer", "blah",
+                true, expectedSize, expectedRoots, true);
 
     }
 
@@ -218,10 +212,10 @@ public class TestHierarchicalContainer extends
         // com.vaadin.client.ui.VTabsheetBase
         // com.vaadin.client.ui.VTabsheetPanel
         // com.vaadin.terminal.gwt.server.ChangeVariablesErrorEvent
-        // com.vaadin.terminal.Paintable
-        // com.vaadin.terminal.Scrollable
-        // com.vaadin.terminal.Sizeable
-        // com.vaadin.terminal.VariableOwner
+        // com.vaadin.server.Paintable
+        // com.vaadin.server.Scrollable
+        // com.vaadin.server.Sizeable
+        // com.vaadin.server.VariableOwner
         // com.vaadin.ui.Label
         // com.vaadin.ui.Table
         // com.vaadin.ui.TableFieldFactory
@@ -232,9 +226,8 @@ public class TestHierarchicalContainer extends
 
         validateHierarchicalContainer(container,
                 "com.vaadin.data.BufferedValidatable",
-                "com.vaadin.ui.TabSheet",
-                "com.vaadin.client.ui.VTabsheetBase", "blah",
-                true, expectedSize, expectedRoots, false);
+                "com.vaadin.ui.TabSheet", "com.vaadin.client.ui.VTabsheetBase",
+                "blah", true, expectedSize, expectedRoots, false);
 
         // only include .gwt.client classes
         container.removeAllContainerFilters();
@@ -261,11 +254,10 @@ public class TestHierarchicalContainer extends
         expectedSize = 13;
         expectedRoots = expectedSize;
 
-        validateHierarchicalContainer(container,
-                "com.vaadin.client.Paintable",
+        validateHierarchicalContainer(container, "com.vaadin.client.Paintable",
                 "com.vaadin.client.ui.VTabsheetPanel",
-                "com.vaadin.client.ui.VPopupCalendar", "blah",
-                true, expectedSize, expectedRoots, false);
+                "com.vaadin.client.ui.VPopupCalendar", "blah", true,
+                expectedSize, expectedRoots, false);
 
     }
 }

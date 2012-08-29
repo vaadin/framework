@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Component;
 
 /**

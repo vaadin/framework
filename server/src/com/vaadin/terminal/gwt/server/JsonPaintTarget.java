@@ -27,11 +27,11 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.VariableOwner;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
+import com.vaadin.server.StreamVariable;
+import com.vaadin.server.VariableOwner;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
@@ -589,7 +589,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      * 
-     * @see com.vaadin.terminal.PaintTarget#addXMLSection(String, String,
+     * @see com.vaadin.server.PaintTarget#addXMLSection(String, String,
      *      String)
      */
 

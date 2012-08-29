@@ -25,14 +25,14 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Scrollable;
+import com.vaadin.server.Vaadin6Component;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Scrollable;
-import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.ui.Component.Focusable;
 
 /**
@@ -195,8 +195,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.terminal.Vaadin6Component#paintContent(com.vaadin.terminal
+     * @see com.vaadin.server.Vaadin6Component#paintContent(com.vaadin.server
      * .PaintTarget)
      */
     @Override
@@ -250,7 +249,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Called when one or more variables handled by the implementing class are
      * changed.
      * 
-     * @see com.vaadin.terminal.VariableOwner#changeVariables(Object, Map)
+     * @see com.vaadin.server.VariableOwner#changeVariables(Object, Map)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -289,7 +288,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     * @see com.vaadin.server.Scrollable#setScrollable(boolean)
      */
     @Override
     public int getScrollLeft() {
@@ -299,7 +298,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Scrollable#setScrollable(boolean)
+     * @see com.vaadin.server.Scrollable#setScrollable(boolean)
      */
     @Override
     public int getScrollTop() {
@@ -309,7 +308,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Scrollable#setScrollLeft(int)
+     * @see com.vaadin.server.Scrollable#setScrollLeft(int)
      */
     @Override
     public void setScrollLeft(int scrollLeft) {
@@ -323,7 +322,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Scrollable#setScrollTop(int)
+     * @see com.vaadin.server.Scrollable#setScrollTop(int)
      */
     @Override
     public void setScrollTop(int scrollTop) {

@@ -24,10 +24,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Vaadin6Component;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.terminal.gwt.server.JsonPaintTarget;
 
 /**

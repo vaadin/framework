@@ -3,7 +3,7 @@ package com.vaadin.tests.components.optiongroup;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.OptionGroup;
 

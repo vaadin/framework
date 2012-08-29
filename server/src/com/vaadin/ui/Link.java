@@ -18,11 +18,11 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
+import com.vaadin.server.Vaadin6Component;
 import com.vaadin.shared.ui.BorderStyle;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * Link is used to create external or internal URL links.

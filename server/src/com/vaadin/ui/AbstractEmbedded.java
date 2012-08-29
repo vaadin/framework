@@ -4,8 +4,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**

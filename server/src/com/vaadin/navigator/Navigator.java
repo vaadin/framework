@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.terminal.Page;
-import com.vaadin.terminal.Page.FragmentChangedEvent;
-import com.vaadin.terminal.Page.FragmentChangedListener;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.FragmentChangedEvent;
+import com.vaadin.server.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;

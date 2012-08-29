@@ -21,8 +21,8 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 
 /**
  * A representation of a bootstrap page being generated. The bootstrap page

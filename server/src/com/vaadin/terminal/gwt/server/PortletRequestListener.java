@@ -22,8 +22,8 @@ import javax.portlet.PortletResponse;
 import javax.servlet.Filter;
 
 import com.vaadin.Application;
+import com.vaadin.server.Terminal;
 import com.vaadin.service.ApplicationContext.TransactionListener;
-import com.vaadin.terminal.Terminal;
 
 /**
  * An {@link Application} that implements this interface gets notified of

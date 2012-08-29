@@ -2,10 +2,10 @@ package com.vaadin.tests.application;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.DownloadStream;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.tests.util.Log;
@@ -28,7 +28,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
         }
 
         @Override
-        public void paintContent(com.vaadin.terminal.PaintTarget target)
+        public void paintContent(com.vaadin.server.PaintTarget target)
                 throws PaintException {
             if (!paintReported) {
                 reportCurrentStatus("root paint");

@@ -19,10 +19,10 @@ package com.vaadin.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.server.Resource;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
-import com.vaadin.terminal.Resource;
 import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**

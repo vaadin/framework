@@ -2,7 +2,7 @@ package com.vaadin.tests.components.tabsheet;
 
 import java.util.LinkedHashMap;
 
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 import com.vaadin.tests.components.AbstractComponentContainerTest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;

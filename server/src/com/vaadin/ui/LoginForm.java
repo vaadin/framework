@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.DownloadStream;
+import com.vaadin.server.RequestHandler;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.DownloadStream;
-import com.vaadin.terminal.RequestHandler;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
 
 /**
  * LoginForm is a Vaadin component to handle common problem among Ajax

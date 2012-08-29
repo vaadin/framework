@@ -155,7 +155,7 @@ public class ComponentState extends SharedState {
     /**
      * Returns true if the component is in immediate mode.
      * 
-     * @see com.vaadin.terminal.VariableOwner#isImmediate()
+     * @see com.vaadin.server.VariableOwner#isImmediate()
      * 
      * @return true if the component is in immediate mode
      */
@@ -166,7 +166,7 @@ public class ComponentState extends SharedState {
     /**
      * Sets or resets the immediate mode for a component.
      * 
-     * @see com.vaadin.terminal.VariableOwner#setImmediate()
+     * @see com.vaadin.server.VariableOwner#setImmediate()
      * 
      * @param immediate
      *            new mode for the component

@@ -15,7 +15,7 @@
  */
 package com.vaadin.terminal.gwt.server;
 
-import com.vaadin.terminal.StreamVariable.StreamingEvent;
+import com.vaadin.server.StreamVariable.StreamingEvent;
 
 /**
  * Abstract base class for StreamingEvent implementations.

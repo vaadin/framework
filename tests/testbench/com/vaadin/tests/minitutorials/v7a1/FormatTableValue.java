@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.util.converter.StringToNumberConverter;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
 

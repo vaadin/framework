@@ -20,8 +20,8 @@ package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 
 /**
  * A Criterion that checks whether {@link Transferable} contains given data

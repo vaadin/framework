@@ -38,7 +38,7 @@ public class TerminalErrorNotification extends TestBase {
     }
 
     @Override
-    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
         event.getThrowable().printStackTrace();
 
         UI mainWindow = getMainWindow();

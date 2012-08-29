@@ -4,8 +4,8 @@ import com.google.apphosting.api.DeadlineExceededException;
 import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.terminal.ClassResource;
-import com.vaadin.terminal.DownloadStream;
+import com.vaadin.server.ClassResource;
+import com.vaadin.server.DownloadStream;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
@@ -29,7 +29,7 @@ public class GAESyncTest extends Application.LegacyApplication {
     }
 
     @Override
-    public void terminalError(com.vaadin.terminal.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
         Throwable t = event.getThrowable();
         // Was this caused by a GAE timeout?
         while (t != null) {

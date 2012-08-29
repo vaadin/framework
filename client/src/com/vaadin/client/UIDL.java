@@ -22,7 +22,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 

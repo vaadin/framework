@@ -1,7 +1,7 @@
 package com.vaadin.tests.integration;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.ClassResource;
+import com.vaadin.server.ClassResource;
 
 public class FlagSeResource extends ClassResource {
 

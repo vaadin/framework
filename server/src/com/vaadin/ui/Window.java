@@ -31,12 +31,12 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Vaadin6Component;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -127,7 +127,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.Panel#paintContent(com.vaadin.terminal.PaintTarget)
+     * @see com.vaadin.ui.Panel#paintContent(com.vaadin.server.PaintTarget)
      */
 
     @Override

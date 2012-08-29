@@ -6,11 +6,11 @@ package com.vaadin.ui;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.image.ImageServerRpc;
 import com.vaadin.shared.ui.image.ImageState;
-import com.vaadin.terminal.Resource;
 
 /**
  * Component for embedding images.

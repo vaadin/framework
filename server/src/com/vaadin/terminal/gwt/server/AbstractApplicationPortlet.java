@@ -57,10 +57,10 @@ import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.WrappedRequest;
-import com.vaadin.terminal.WrappedResponse;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.Terminal;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.terminal.gwt.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.UI;
 

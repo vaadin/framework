@@ -23,10 +23,10 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.VariableOwner;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Resource;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.VariableOwner;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -463,7 +463,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * <p>
      * The image is loaded by the browser from a resource, typically a
-     * {@link com.vaadin.terminal.ThemeResource}.
+     * {@link com.vaadin.server.ThemeResource}.
      * </p>
      * 
      * <pre>

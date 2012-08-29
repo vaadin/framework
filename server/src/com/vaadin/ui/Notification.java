@@ -18,9 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
+import com.vaadin.server.Page;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.Position;
-import com.vaadin.terminal.Page;
-import com.vaadin.terminal.Resource;
 
 /**
  * A notification message, used to display temporary messages to the user - for

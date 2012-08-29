@@ -2,9 +2,9 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.Page.BrowserWindowResizeEvent;
-import com.vaadin.terminal.Page.BrowserWindowResizeListener;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.tests.util.LoremIpsum;

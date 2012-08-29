@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.splitpanel;
 
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.Sizeable.Unit;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.tests.components.AbstractComponentContainerTest;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;

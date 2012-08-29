@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;

@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.caption;
 
-import com.vaadin.terminal.UserError;
+import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.TextField;
 

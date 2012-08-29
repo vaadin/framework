@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.terminal.LegacyPaint;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.server.LegacyPaint;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Vaadin6Component;
 
 /**
  * 
@@ -309,7 +309,7 @@ public class PopupView extends AbstractComponentContainer implements
     /**
      * Paint (serialize) the component for the client.
      * 
-     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget)
+     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.server.PaintTarget)
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {

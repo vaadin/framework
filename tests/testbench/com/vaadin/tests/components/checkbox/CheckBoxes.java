@@ -2,8 +2,8 @@ package com.vaadin.tests.components.checkbox;
 
 import java.util.Date;
 
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.ThemeResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.CheckBox;
 

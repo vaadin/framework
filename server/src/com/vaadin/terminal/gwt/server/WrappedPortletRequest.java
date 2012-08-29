@@ -26,10 +26,10 @@ import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
 import com.vaadin.Application;
+import com.vaadin.server.CombinedRequest;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.terminal.CombinedRequest;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.WrappedRequest;
 
 /**
  * Wrapper for {@link PortletRequest} and its subclasses.

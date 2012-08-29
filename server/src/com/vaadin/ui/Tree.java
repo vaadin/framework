@@ -49,13 +49,13 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
-import com.vaadin.terminal.KeyMapper;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -1449,7 +1449,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * 
          * @see
          * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
-         * com.vaadin.terminal.PaintTarget)
+         * com.vaadin.server.PaintTarget)
          */
         @Override
         public void paintResponse(PaintTarget target) throws PaintException {

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.widgetset.server;
 
-import com.vaadin.terminal.AbstractExtension;
+import com.vaadin.server.AbstractExtension;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
 

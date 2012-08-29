@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.treetable;
 
-import com.vaadin.terminal.ExternalResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI.LegacyWindow;

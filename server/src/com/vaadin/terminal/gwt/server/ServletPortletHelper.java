@@ -3,9 +3,9 @@ package com.vaadin.terminal.gwt.server;
 import java.io.Serializable;
 
 import com.vaadin.Application;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.terminal.DeploymentConfiguration;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.UI;
 
 /*

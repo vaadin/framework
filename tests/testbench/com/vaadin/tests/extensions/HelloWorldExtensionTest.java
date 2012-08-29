@@ -16,7 +16,7 @@
 package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

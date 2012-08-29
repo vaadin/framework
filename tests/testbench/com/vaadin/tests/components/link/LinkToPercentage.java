@@ -3,9 +3,9 @@ package com.vaadin.tests.components.link;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.vaadin.terminal.ApplicationResource;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.terminal.StreamResource.StreamSource;
+import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Link;
 

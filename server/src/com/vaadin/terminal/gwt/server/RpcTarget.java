@@ -18,7 +18,7 @@ package com.vaadin.terminal.gwt.server;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.VariableOwner;
+import com.vaadin.server.VariableOwner;
 
 /**
  * Marker interface for server side classes that can receive RPC calls.

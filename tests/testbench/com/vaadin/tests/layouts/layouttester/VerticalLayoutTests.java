@@ -1,11 +1,11 @@
 package com.vaadin.tests.layouts.layouttester;
 
 import com.vaadin.Application;
+import com.vaadin.server.Resource;
+import com.vaadin.server.SystemError;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.SystemError;
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Alignment;
