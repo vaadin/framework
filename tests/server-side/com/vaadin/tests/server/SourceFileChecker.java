@@ -188,7 +188,7 @@ public class SourceFileChecker extends TestCase {
 
     class GwtEntryChecker extends FileContentsValidator {
         // Matches e.g.
-        // @com.vaadin.terminal.gwt.client.HistoryImplIEVaadin::escapeHtml(
+        // @com.vaadin.client.HistoryImplIEVaadin::escapeHtml(
         private final Matcher matcher = Pattern.compile("@[\\w.]+::\\w+\\(")
                 .matcher("");
 

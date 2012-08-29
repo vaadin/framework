@@ -42,7 +42,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * client when the following response is sent. A connector is dirty when an
  * operation has been performed on it on the server and as a result of this
  * operation new information needs to be sent to its
- * {@link com.vaadin.terminal.gwt.client.ServerConnector}.
+ * {@link com.vaadin.client.ServerConnector}.
  * </p>
  * 
  * @author Vaadin Ltd

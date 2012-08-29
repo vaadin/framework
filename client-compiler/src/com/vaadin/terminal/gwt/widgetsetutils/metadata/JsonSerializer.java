@@ -21,8 +21,8 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.communication.JSONSerializer;
 
 public abstract class JsonSerializer implements GeneratedSerializer {
 

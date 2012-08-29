@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 
 /**
  * An annotation type used to point the server side counterpart for client side
- * a {@link com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion} class.
+ * a {@link com.vaadin.client.ui.dd.VAcceptCriterion} class.
  * <p>
  * Annotations are used at GWT compilation phase, so remember to rebuild your
  * widgetset if you do changes for {@link AcceptCriterion} mappings.

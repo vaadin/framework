@@ -194,7 +194,7 @@ public interface PaintTarget extends Serializable {
      * <p>
      * The urls in UIDL message may use Vaadin specific protocol. Before
      * actually using the urls on the client side, they should be passed via
-     * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}.
+     * {@link com.vaadin.client.ApplicationConnection#translateVaadinUri(String)}.
      * <p>
      * Note that in current terminal implementation StreamVariables are cleaned
      * from the terminal only when:

@@ -105,7 +105,7 @@ import com.vaadin.ui.Window;
  * This is a common base class for the server-side implementations of the
  * communication system between the client code (compiled with GWT into
  * JavaScript) and the server side components. Its client side counterpart is
- * {@link com.vaadin.terminal.gwt.client.ApplicationConnection}.
+ * {@link com.vaadin.client.ApplicationConnection}.
  * <p>
  * TODO Document better!
  */

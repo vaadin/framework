@@ -77,7 +77,7 @@ import com.vaadin.ui.JavaScriptFunction;
  * functions is described bellow.</li>
  * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
  * that can be used in the browser. This is just way of accessing
- * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}
+ * {@link com.vaadin.client.ApplicationConnection#translateVaadinUri(String)}
  * </li>
  * </ul>
  * The connector wrapper also supports these special functions:

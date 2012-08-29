@@ -22,9 +22,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import com.vaadin.client.communication.JsonDecoder;
+import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
-import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
-import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.server.JsonCodec.BeanProperty;
 
 /**

@@ -131,7 +131,7 @@ public class AbstractFieldState extends ComponentState implements TabIndexState 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.gwt.client.ComponentState#getTabIndex()
+     * @see com.vaadin.client.ComponentState#getTabIndex()
      */
     @Override
     public int getTabIndex() {
@@ -141,7 +141,7 @@ public class AbstractFieldState extends ComponentState implements TabIndexState 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.gwt.client.ui.TabIndexState#setTabIndex(int)
+     * @see com.vaadin.client.ui.TabIndexState#setTabIndex(int)
      */
     @Override
     public void setTabIndex(int tabIndex) {

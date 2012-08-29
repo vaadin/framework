@@ -27,9 +27,9 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.client.ui.dd.VAcceptCriterion;
+import com.vaadin.client.ui.dd.VAcceptCriterionFactory;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterion;
-import com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory;
 
 /**
  * GWT generator to build {@link VAcceptCriterionFactory} implementation
@@ -87,7 +87,7 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         ClassSourceFileComposerFactory composer = null;
         composer = new ClassSourceFileComposerFactory(packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
-        composer.setSuperclass("com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory");
+        composer.setSuperclass("com.vaadin.client.ui.dd.VAcceptCriterionFactory");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 

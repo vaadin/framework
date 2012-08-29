@@ -36,7 +36,7 @@ import com.vaadin.shared.Connector;
  * arrays of these.
  * 
  * On the client side the connector should override
- * {@link com.vaadin.terminal.gwt.client.ui.AbstractConnector#getState()} to
+ * {@link com.vaadin.client.ui.AbstractConnector#getState()} to
  * return the correct state type. This automatically causes a correct state
  * object to be created.
  * 

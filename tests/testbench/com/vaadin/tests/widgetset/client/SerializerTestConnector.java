@@ -26,12 +26,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.vaadin.client.communication.RpcProxy;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.terminal.gwt.client.communication.RpcProxy;
-import com.vaadin.terminal.gwt.client.communication.StateChangeEvent;
-import com.vaadin.terminal.gwt.client.extensions.AbstractExtensionConnector;
 import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 
 @Connect(SerializerTestExtension.class)

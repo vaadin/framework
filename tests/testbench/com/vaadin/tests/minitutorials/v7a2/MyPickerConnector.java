@@ -17,10 +17,10 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.google.gwt.user.client.Element;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.SimpleManagedLayout;
-import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeEvent;
-import com.vaadin.terminal.gwt.client.ui.layout.ElementResizeListener;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 
 /**
  * Mini tutorial code for

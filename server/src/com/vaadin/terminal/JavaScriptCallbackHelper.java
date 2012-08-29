@@ -36,7 +36,7 @@ import com.vaadin.ui.JavaScriptFunction;
  * Internal helper class used to implement functionality common to
  * {@link AbstractJavaScriptComponent} and {@link AbstractJavaScriptExtension}.
  * Corresponding support in client-side code is in
- * {@link com.vaadin.terminal.gwt.client.JavaScriptConnectorHelper}.
+ * {@link com.vaadin.client.JavaScriptConnectorHelper}.
  * <p>
  * You should most likely no use this class directly.
  * 

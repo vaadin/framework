@@ -11,8 +11,8 @@ import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.annotations.DelegateToWidget;
-import com.vaadin.terminal.gwt.client.ui.AbstractComponentConnector;
 
 public class WidgetInitVisitor extends TypeVisitor {
 

@@ -35,12 +35,12 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.vaadin.client.ServerConnector;
+import com.vaadin.client.ui.UnknownComponentConnector;
+import com.vaadin.client.ui.UI.UIConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.UI.UIConnector;
 import com.vaadin.terminal.gwt.server.ClientConnector;
 
 /**
@@ -70,7 +70,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * <code>
  * &lt;generate-with
  *           class="com.vaadin.terminal.gwt.widgetsetutils.MyWidgetMapGenerator"&gt;
- *          &lt;when-type-is class="com.vaadin.terminal.gwt.client.WidgetMap" /&gt;
+ *          &lt;when-type-is class="com.vaadin.client.WidgetMap" /&gt;
  * &lt;/generate-with&gt;
  * 
  * </code>
@@ -139,7 +139,7 @@ public class WidgetMapGenerator extends Generator {
         composer.addImport("com.google.gwt.core.client.GWT");
         composer.addImport("java.util.HashMap");
         composer.addImport("com.google.gwt.core.client.RunAsyncCallback");
-        composer.setSuperclass("com.vaadin.terminal.gwt.client.WidgetMap");
+        composer.setSuperclass("com.vaadin.client.WidgetMap");
         SourceWriter sourceWriter = composer.createSourceWriter(context,
                 printWriter);
 

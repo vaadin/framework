@@ -1,43 +1,46 @@
+
 <module>
-	<!-- This GWT module inherits all Vaadin client side functionality modules. 
-		This is the module you want to inherit in your client side project to be 
-		able to use com.vaadin.* classes. -->
+    <!-- This GWT module inherits all Vaadin client side functionality modules. 
+        This is the module you want to inherit in your client side project to be 
+        able to use com.vaadin.* classes. -->
 
-	<!-- Hint for WidgetSetBuilder not to automatically update the file -->
-	<!-- WS Compiler: manually edited -->
+    <!-- Hint for WidgetSetBuilder not to automatically update the file -->
+    <!-- WS Compiler: manually edited -->
 
-	<inherits name="com.google.gwt.user.User" />
+    <inherits name="com.google.gwt.user.User" />
 
-	<inherits name="com.google.gwt.http.HTTP" />
+    <inherits name="com.google.gwt.http.HTTP" />
 
-	<inherits name="com.google.gwt.json.JSON" />
+    <inherits name="com.google.gwt.json.JSON" />
 
-	<inherits name="com.vaadin.terminal.gwt.VaadinBrowserSpecificOverrides" />
+    <inherits name="com.vaadin.terminal.gwt.VaadinBrowserSpecificOverrides" />
 
-	<source path="terminal/gwt/client" />
-	<source path="shared" />
+    <source path="client" />
+    <source path="shared" />
 
-	<!-- Use own Scheduler implementation to be able to track if commands are 
-		running -->
-	<replace-with class="com.vaadin.terminal.gwt.client.VSchedulerImpl">
-		<when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
-	</replace-with>
+    <!-- Use own Scheduler implementation to be able to track if commands 
+        are running -->
+    <replace-with class="com.vaadin.client.VSchedulerImpl">
+        <when-type-is class="com.google.gwt.core.client.impl.SchedulerImpl" />
+    </replace-with>
 
-	<replace-with class="com.vaadin.terminal.gwt.client.VDebugConsole">
-		<when-type-is class="com.vaadin.terminal.gwt.client.Console" />
-	</replace-with>
+    <replace-with class="com.vaadin.client.VDebugConsole">
+        <when-type-is class="com.vaadin.client.Console" />
+    </replace-with>
 
-	<generate-with
-		class="com.vaadin.terminal.gwt.widgetsetutils.AcceptCriteriaFactoryGenerator">
-		<when-type-is
-			class="com.vaadin.terminal.gwt.client.ui.dd.VAcceptCriterionFactory" />
-	</generate-with>
+    <generate-with
+        class="com.vaadin.widgetsetutils.AcceptCriteriaFactoryGenerator">
+        <when-type-is class="com.vaadin.client.ui.dd.VAcceptCriterionFactory" />
+    </generate-with>
 
-	<generate-with class="com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory">
-		<when-type-assignable class="com.vaadin.terminal.gwt.client.metadata.ConnectorBundleLoader" />
-	</generate-with>
+    <generate-with
+        class="
+            com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory ">
+        <when-type-assignable
+            class="com.vaadin.client.metadata.ConnectorBundleLoader" />
+    </generate-with>
 
-	<!-- Use the new cross site linker to get a nocache.js without document.write -->
-	<add-linker name="xsiframe" />
+    <!-- Use the new cross site linker to get a nocache.js without document.write -->
+    <add-linker name="xsiframe " />
 
 </module>

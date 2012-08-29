@@ -21,8 +21,8 @@ import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.vaadin.terminal.gwt.client.communication.JsonDecoder;
-import com.vaadin.terminal.gwt.client.communication.JsonEncoder;
+import com.vaadin.client.communication.JsonDecoder;
+import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.terminal.gwt.widgetsetutils.ConnectorBundleLoaderFactory;
 
 public class ArraySerializer extends JsonSerializer {

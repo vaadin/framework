@@ -11,8 +11,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragAndDropManager;
-import com.vaadin.terminal.gwt.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.dd.VDragAndDropManager;
+import com.vaadin.client.ui.dd.VTransferable;
 
 /**
  * Example code to implement Component that has something to drag.

@@ -27,14 +27,14 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.json.client.JSONValue;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ServerConnector;
+import com.vaadin.client.communication.JSONSerializer;
+import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ServerConnector;
-import com.vaadin.terminal.gwt.client.communication.JSONSerializer;
-import com.vaadin.terminal.gwt.client.ui.UnknownComponentConnector;
 
 public class ConnectorBundle {
     private static final String FAIL_IF_NOT_SERIALIZABLE = "vFailIfNotSerializable";
@@ -90,7 +90,7 @@ public class ConnectorBundle {
         JClassType serializerInterface = oracle.findType(JSONSerializer.class
                 .getName());
         JType[] deserializeParamTypes = new JType[] {
-                oracle.findType(com.vaadin.terminal.gwt.client.metadata.Type.class
+                oracle.findType(com.vaadin.client.metadata.Type.class
                         .getName()),
                 oracle.findType(JSONValue.class.getName()),
                 oracle.findType(ApplicationConnection.class.getName()) };

@@ -335,7 +335,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
+     * @see com.vaadin.client.Connector#isConnectorEnabled()
      */
     @Override
     public boolean isConnectorEnabled() {

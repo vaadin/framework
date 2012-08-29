@@ -35,7 +35,7 @@ import com.vaadin.terminal.JavaScriptCallbackHelper;
  * <code>com_example_MyComponent</code> has not been defined.
  * <p>
  * JavaScript components have a very simple GWT widget (
- * {@link com.vaadin.terminal.gwt.client.ui.JavaScriptWidget} ) just consisting
+ * {@link com.vaadin.client.ui.JavaScriptWidget} ) just consisting
  * of a <code>div</code> element to which the JavaScript code should initialize
  * its own user interface.
  * <p>
@@ -80,7 +80,7 @@ import com.vaadin.terminal.JavaScriptCallbackHelper;
  * functions is described bellow.</li>
  * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
  * that can be used in the browser. This is just way of accessing
- * {@link com.vaadin.terminal.gwt.client.ApplicationConnection#translateVaadinUri(String)}
+ * {@link com.vaadin.client.ApplicationConnection#translateVaadinUri(String)}
  * </li>
  * </ul>
  * The connector wrapper also supports these special functions:

@@ -15,8 +15,8 @@
  */
 package com.vaadin.terminal.gwt.widgetsetutils;
 
+import com.vaadin.client.ServerConnector;
 import com.vaadin.shared.ui.Connect.LoadStyle;
-import com.vaadin.terminal.gwt.client.ServerConnector;
 
 /**
  * WidgetMap generator that builds a widgetset that packs all included widgets

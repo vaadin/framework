@@ -1,11 +1,11 @@
 package com.vaadin.tests.dd;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.ComponentConnector;
-import com.vaadin.terminal.gwt.client.ui.dd.VDragEvent;
-import com.vaadin.terminal.gwt.client.ui.dd.VDropHandler;
-import com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ui.dd.VDragEvent;
+import com.vaadin.client.ui.dd.VDropHandler;
+import com.vaadin.client.ui.dd.VHasDropHandler;
 
 public class VMyDropTarget extends Composite implements VHasDropHandler,
         VDropHandler {

@@ -286,7 +286,7 @@
                 <exclude name="VAADIN/themes/liferay/**/*" />
                 <exclude name="VAADIN/themes/reindeer/**/*" />
                 <exclude name="VAADIN/themes/runo/**/*" />
-                <exclude name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+                <exclude name="VAADIN/widgetsets/com.vaadin.DefaultWidgetSet/**/*" />
                 -->
 
                 <!-- Not needed for testing -->
@@ -765,7 +765,7 @@
     <target name="compile-widgetset-default">
         <antcall target="compile-widgetset">
             <reference refid="compile.classpath.widgetset" />
-            <param name="widgetset" value="com.vaadin.terminal.gwt.DefaultWidgetSet"/>
+            <param name="widgetset" value="com.vaadin.DefaultWidgetSet"/>
         </antcall>
     </target>
     
@@ -858,7 +858,7 @@
             <metainf dir="${output-dir}/META-INF"/>
             <manifest>
                 <attribute name="Vaadin-Package-Version" value="1" />
-                <attribute name="Vaadin-Widgetsets" value="com.vaadin.terminal.gwt.DefaultWidgetSet" />
+                <attribute name="Vaadin-Widgetsets" value="com.vaadin.DefaultWidgetSet" />
                 <attribute name="Implementation-Vendor" value="Vaadin Ltd" />
                 <attribute name="Implementation-URL" value="http://vaadin.com" />
                 <attribute name="Implementation-Version" value="${version.full}" />
@@ -881,7 +881,7 @@
         	<fileset dir="${result-classes-gwt}"/>
             <fileset dir="${output-dir}/WebContent">
                 <patternset>
-                    <include name="VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/**/*" />
+                    <include name="VAADIN/widgetsets/com.vaadin.DefaultWidgetSet/**/*" />
                     <include name="VAADIN/themes/base/**/*" />
                     <include name="VAADIN/themes/chameleon/**/*" />
                     <include name="VAADIN/themes/liferay/**/*" />
@@ -897,7 +897,7 @@
             </fileset>
         	
         	<!-- Precompiled widgetset (.gwtar file) not included to limit JAR size -->
-            <!-- <fileset dir="${result-precompiled-widgetsets}" includes="com/vaadin/terminal.gwt.DefaultWidgetSet.gwtar" /> -->
+            <!-- <fileset dir="${result-precompiled-widgetsets}" includes="com/vaadin/DefaultWidgetSet.gwtar" /> -->
 
             <!-- TODO GWT related license files etc. should be in subdirectories -->
         	
