@@ -13,15 +13,19 @@
     <publications>
         <artifact></artifact>
     </publications>
-    <dependencies>
-        <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build"></dependency>
+    <dependencies defaultconf="build" defaultconfmapping="build,ide->master">
+        <!-- API DEPENDENCIES -->
 
-        <!-- gwt-dev dependencies -->
-        <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" />
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+
+        <!-- gwt-user dependencies -->
+        <dependency org="org.w3c.css" name="sac" rev="1.3"
+            conf="build" />
 
     </dependencies>
 

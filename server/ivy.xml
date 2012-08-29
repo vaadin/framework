@@ -8,6 +8,7 @@
 
     <configurations>
         <conf name="build" />
+        <conf name="build-provided" />
         <conf name="ide" />
         <conf name="tests" />
     </configurations>
@@ -15,23 +16,37 @@
         <artifact></artifact>
     </publications>
     <dependencies>
+        <!-- API DEPENDENCIES -->
+
         <!-- Liferay Portal Service -->
         <dependency org="com.liferay.portal" name="portal-service"
-            rev="6.0.2" />
+            rev="6.0.2" conf="build-provided,ide -> master" />
         <!--Servlet API version 2.5 -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" />
+            rev="2.5" conf="build-provided,ide -> master" />
 
         <!--Portlet API version 2.0 (JSR-286) -->
         <dependency org="javax.portlet" name="portlet-api"
-            rev="2.0" />
+            rev="2.0" conf="build-provided,ide -> master" />
+
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.2.1" />
+            rev="1.2.1" conf="build-provided,ide -> master" />
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build,ide->master,sources" />
+            rev="1.0.0.GA" conf="build-provided,ide -> master" />
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+            rev="${vaadin.version}" conf="build"></dependency>
+
         <!-- Jsoup for BootstrapHandler -->
-        <dependency org="org.jsoup" name="jsoup" rev="1.6.3" />
+        <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
+            conf="build,ide -> master" />
+
+        <!-- TESTING DEPENDENCIES -->
 
         <!-- TestBench tests -->
         <dependency org="commons-codec" name="commons-codec"
@@ -45,15 +60,10 @@
         <dependency org="junit" name="junit" rev="4.5"
             conf="tests,ide -> master" />
         <dependency org="org.easymock" name="easymock" rev="3.0"
-            conf="tests,ide-> master, runtime(*)" />
+            conf="tests,ide-> master" />
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
-            conf="tests,ide -> master, runtime(*)" />
+            conf="tests,ide -> master" />
 
-        <!-- Project modules -->
-        <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-buildhelpers"
-            rev="${vaadin.version}" conf="build"></dependency>
     </dependencies>
 
 </ivy-module>

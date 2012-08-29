@@ -21,9 +21,9 @@
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
 		<property name="pom.xml" location="${result.dir}/pom.xml" />
-		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="compile, runtime">
-			<mapping conf="compile" scope="compile" />
-			<mapping conf="runtime" scope="runtime" />
+		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="build, build-provided">
+			<mapping conf="build" scope="compile" />
+			<mapping conf="build-provided" scope="provided" />
 		</ivy:makepom>
 	</target>
 
@@ -134,8 +134,8 @@
 	</target>
 
 	<target name="dependencies" description="Resolves dependencies needed by this module">
-		<ivy:resolve resolveid="common" conf="build" />
-		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build" />
+		<ivy:resolve resolveid="common" conf="build, build-provided" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
 	</target>
 
 	<target name="clean">

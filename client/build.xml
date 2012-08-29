@@ -13,7 +13,11 @@
 	<property name="result.dir" value="result" />
 
 	<path id="classpath.compile.custom">
-		<fileset file="${gwt.user.jar}"/>
+		<!-- Could possibly compile GWT files also here to verify that
+		a) the same dependencies are used and
+		b) all dependencies have been declared
+		-->
+		<fileset file="${gwt.user.jar}" />
 	</path>
 
 	<target name="jar">
