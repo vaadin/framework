@@ -435,7 +435,7 @@ public class Navigator implements Serializable {
             }
         }
         if (viewWithLongestName != null) {
-            String parameters = null;
+            String parameters = "";
             if (viewAndParameters.length() > longestViewName.length() + 1) {
                 parameters = viewAndParameters.substring(longestViewName
                         .length() + 1);
@@ -469,7 +469,7 @@ public class Navigator implements Serializable {
 
         if (null != viewName && getFragmentManager() != null) {
             String currentFragment = viewName;
-            if (fragmentParameters != null) {
+            if (!fragmentParameters.equals("")) {
                 currentFragment += "/" + fragmentParameters;
             }
             if (!currentFragment.equals(getFragmentManager().getFragment())) {

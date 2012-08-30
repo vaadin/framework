@@ -38,11 +38,9 @@ public interface View extends Serializable {
      * is any additional id to data what should be shown in the view, it is also
      * optionally passed as parameter.
      * 
-     * TODO fragmentParameters null if no parameters or empty string?
-     * 
      * @param fragmentParameters
-     *            parameters to the view or null if none given. This is the
-     *            string that appears e.g. in URI after "viewname/"
+     *            parameters to the view or empty string if none given. This is
+     *            the string that appears e.g. in URI after "viewname/"
      */
     public void navigateTo(String fragmentParameters);
 }
