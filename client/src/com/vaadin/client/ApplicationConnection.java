@@ -36,6 +36,11 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -231,6 +236,87 @@ public class ApplicationConnection {
 
     /** The max timeout the rendering phase may be suspended */
     private static final int MAX_SUSPENDED_TIMEOUT = 5000;
+
+    /** Event bus for communication events */
+    private EventBus eventBus = GWT.create(SimpleEventBus.class);
+
+    /**
+     * The communication handler methods are called at certain points during
+     * communication with the server. This allows for making add-ons that keep
+     * track of different aspects of the communication.
+     */
+    public interface CommunicationHandler extends EventHandler {
+        void onRequestStarted(RequestStartedEvent e);
+
+        void onRequestEnded(RequestEndedEvent e);
+
+        void onResponseReceived(ResponseReceivedEvent e);
+    }
+
+    public static class RequestStartedEvent extends
+            GwtEvent<CommunicationHandler> {
+        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(CommunicationHandler handler) {
+            handler.onRequestStarted(this);
+        }
+    }
+
+    public static class RequestEndedEvent extends
+            GwtEvent<CommunicationHandler> {
+        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(CommunicationHandler handler) {
+            handler.onRequestEnded(this);
+        }
+    }
+
+    public static class ResponseReceivedEvent extends
+            GwtEvent<CommunicationHandler> {
+        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(CommunicationHandler handler) {
+            handler.onResponseReceived(this);
+        }
+    }
+
+    /**
+     * Allows custom handling of communication errors.
+     */
+    public interface CommunicationErrorDelegate {
+        /**
+         * Called when a communication error has occurred. Returning
+         * <code>true</code> from this method suppresses error handling.
+         * 
+         * @param details
+         *            A string describing the error.
+         * @param statusCode
+         *            The HTTP status code (e.g. 404, etc).
+         * @return true if the error reporting should be suppressed, false to
+         *         perform normal error reporting.
+         */
+        public boolean onError(String details, int statusCode);
+    }
+
+    private CommunicationErrorDelegate communicationErrorDelegate = null;
 
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
@@ -562,7 +648,14 @@ public class ApplicationConnection {
             RequestCallback requestCallback = new RequestCallback() {
                 @Override
                 public void onError(Request request, Throwable exception) {
-                    showCommunicationError(exception.getMessage(), -1);
+                    handleCommunicationError(exception.getMessage(), -1);
+                }
+
+                private void handleCommunicationError(String details,
+                        int statusCode) {
+                    if (!handleErrorInDelegate(details, statusCode)) {
+                        showCommunicationError(details, statusCode);
+                    }
                     endRequest();
                 }
 
@@ -577,10 +670,9 @@ public class ApplicationConnection {
 
                     switch (statusCode) {
                     case 0:
-                        showCommunicationError(
+                        handleCommunicationError(
                                 "Invalid status code 0 (server down?)",
                                 statusCode);
-                        endRequest();
                         return;
 
                     case 401:
@@ -623,9 +715,8 @@ public class ApplicationConnection {
                     } else if ((statusCode / 100) == 5) {
                         // Something's wrong on the server, there's nothing the
                         // client can do except maybe try again.
-                        showCommunicationError("Server error. Error code: "
+                        handleCommunicationError("Server error. Error code: "
                                 + statusCode, statusCode);
-                        endRequest();
                         return;
                     }
 
@@ -677,7 +768,7 @@ public class ApplicationConnection {
 
     /**
      * Handles received UIDL JSON text, parsing it, and passing it on to the
-     * appropriate handlers, while logging timiing information.
+     * appropriate handlers, while logging timing information.
      * 
      * @param jsonText
      * @param statusCode
@@ -875,6 +966,7 @@ public class ApplicationConnection {
             // First one kicks in at 300ms
         }
         loadTimer.schedule(300);
+        eventBus.fireEvent(new RequestStartedEvent());
     }
 
     protected void endRequest() {
@@ -907,6 +999,7 @@ public class ApplicationConnection {
                 }
             }
         });
+        eventBus.fireEvent(new RequestEndedEvent());
     }
 
     /**
@@ -1060,6 +1153,8 @@ public class ApplicationConnection {
         }
 
         VConsole.log("Handling message from server");
+        eventBus.fireEvent(new ResponseReceivedEvent());
+
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -2853,4 +2948,34 @@ public class ApplicationConnection {
         pendingUIDLMessages.clear();
     }
 
+    private boolean handleErrorInDelegate(String details, int statusCode) {
+        if (communicationErrorDelegate == null) {
+            return false;
+        }
+        return communicationErrorDelegate.onError(details, statusCode);
+    }
+
+    /**
+     * Sets the delegate that is called whenever a communication error occurrs.
+     * 
+     * @param delegate
+     *            the delegate.
+     */
+    public void setCommunicationErrorDelegate(
+            CommunicationErrorDelegate delegate) {
+        communicationErrorDelegate = delegate;
+    }
+
+    public void setApplicationRunning(boolean running) {
+        applicationRunning = running;
+    }
+
+    public boolean isApplicationRunning() {
+        return applicationRunning;
+    }
+
+    public <H extends EventHandler> HandlerRegistration addHandler(
+            GwtEvent.Type<H> type, H handler) {
+        return eventBus.addHandler(type, handler);
+    }
 }
