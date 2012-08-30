@@ -22,14 +22,11 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.vaadin.client.communication.JsonDecoder;
-import com.vaadin.client.communication.JsonEncoder;
-import com.vaadin.server.JsonCodec;
 import com.vaadin.server.JsonCodec.BeanProperty;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 
 /**
- * Tests for {@link JsonCodec}, {@link JsonEncoder}, {@link JsonDecoder}
+ * Tests for {@link JsonCodec}
  * 
  * @author Vaadin Ltd
  * @since 7.0
@@ -80,12 +77,6 @@ public class JSONSerializerTest extends TestCase {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);
         assertTrue("Server decoded", equals(original, serverSideDecoded));
-
-        // Object clientSideDecoded = JsonDecoder.decodeValue(
-        // (com.google.gwt.json.client.JSONArray) JSONParser
-        // .parseStrict(encoded.toString()), null, null, null);
-        // assertTrue("Client decoded",
-        // equals(original, clientSideDecoded));
 
     }
 
