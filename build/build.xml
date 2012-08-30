@@ -458,7 +458,7 @@
         </copy>
         <copy todir="${result-src-sass-junit}">
             <filterset refid="version-and-license"/>
-            <fileset dir="tests/sass/src">
+            <fileset dir="sass/tests/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
@@ -508,10 +508,10 @@
             </fileset>
         </copy>
         <copy todir="${result-src-sass-junit}">
-            <fileset dir="tests/sass/src">
+            <fileset dir="sass/tests/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
-            <fileset dir="tests/sass/resources">
+            <fileset dir="sass/tests/resources">
             	<!-- test resources (files to compile and compare etc.) -->
             </fileset>
         </copy>
