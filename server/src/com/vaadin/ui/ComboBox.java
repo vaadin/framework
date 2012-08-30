@@ -18,12 +18,10 @@ package com.vaadin.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -156,16 +154,6 @@ public class ComboBox extends AbstractSelect implements
             target.addAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT, true);
         }
 
-        if (isMultiSelect()) {
-            // background compatibility hack. This object shouldn't be used for
-            // multiselect lists anymore (ListSelect instead). This fallbacks to
-            // a simpler paint method in super class.
-            super.paintContent(target);
-            // Fix for #4553
-            target.addAttribute("type", "legacy-multi");
-            return;
-        }
-
         // clear caption change listeners
         getCaptionChangeListener().clear();
 
@@ -193,13 +181,8 @@ public class ComboBox extends AbstractSelect implements
         }
 
         // Constructs selected keys array
-        String[] selectedKeys;
-        if (isMultiSelect()) {
-            selectedKeys = new String[((Set<?>) getValue()).size()];
-        } else {
-            selectedKeys = new String[(getValue() == null
-                    && getNullSelectionItemId() == null ? 0 : 1)];
-        }
+        String[] selectedKeys = new String[(getValue() == null
+                && getNullSelectionItemId() == null ? 0 : 1)];
 
         target.addAttribute("pagelength", pageLength);
 
@@ -383,8 +366,7 @@ public class ComboBox extends AbstractSelect implements
         // to page with the selected item after filtering if accepted by
         // filter
         Object selection = getValue();
-        if (isScrollToSelectedItem() && !optionRequest && !isMultiSelect()
-                && selection != null) {
+        if (isScrollToSelectedItem() && !optionRequest && selection != null) {
             // ensure proper page
             indexToEnsureInView = indexed.indexOfId(selection);
         }
@@ -475,8 +457,7 @@ public class ComboBox extends AbstractSelect implements
             // to page with the selected item after filtering if accepted by
             // filter
             Object selection = getValue();
-            if (isScrollToSelectedItem() && !optionRequest && !isMultiSelect()
-                    && selection != null) {
+            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
                 // ensure proper page
                 indexToEnsureInView = options.indexOf(selection);
             }
@@ -650,52 +631,21 @@ public class ComboBox extends AbstractSelect implements
         if (variables.containsKey("selected")) {
             final String[] ka = (String[]) variables.get("selected");
 
-            if (isMultiSelect()) {
-                // Multiselect mode
+            // Single select mode
+            if (ka.length == 0) {
 
-                // TODO Optimize by adding repaintNotNeeded whan applicaple
-
-                // Converts the key-array to id-set
-                final LinkedList<Object> s = new LinkedList<Object>();
-                for (int i = 0; i < ka.length; i++) {
-                    final Object id = itemIdMapper.get(ka[i]);
-                    if (id != null && containsId(id)) {
-                        s.add(id);
-                    }
-                }
-
-                // Limits the deselection to the set of visible items
-                // (non-visible items can not be deselected)
+                // Allows deselection only if the deselected item is visible
+                final Object current = getValue();
                 final Collection<?> visible = getVisibleItemIds();
-                if (visible != null) {
-                    @SuppressWarnings("unchecked")
-                    Set<Object> newsel = (Set<Object>) getValue();
-                    if (newsel == null) {
-                        newsel = new HashSet<Object>();
-                    } else {
-                        newsel = new HashSet<Object>(newsel);
-                    }
-                    newsel.removeAll(visible);
-                    newsel.addAll(s);
-                    setValue(newsel, true);
+                if (visible != null && visible.contains(current)) {
+                    setValue(null, true);
                 }
             } else {
-                // Single select mode
-                if (ka.length == 0) {
-
-                    // Allows deselection only if the deselected item is visible
-                    final Object current = getValue();
-                    final Collection<?> visible = getVisibleItemIds();
-                    if (visible != null && visible.contains(current)) {
-                        setValue(null, true);
-                    }
+                final Object id = itemIdMapper.get(ka[0]);
+                if (id != null && id.equals(getNullSelectionItemId())) {
+                    setValue(null, true);
                 } else {
-                    final Object id = itemIdMapper.get(ka[0]);
-                    if (id != null && id.equals(getNullSelectionItemId())) {
-                        setValue(null, true);
-                    } else {
-                        setValue(id, true);
-                    }
+                    setValue(id, true);
                 }
             }
         }
@@ -802,6 +752,8 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
+     * ComboBox does not support multi select mode.
+     * 
      * @deprecated use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
      * @see com.vaadin.ui.AbstractSelect#setMultiSelect(boolean)
@@ -817,15 +769,19 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
+     * ComboBox does not support multi select mode.
+     * 
      * @deprecated use {@link ListSelect}, {@link OptionGroup} or
      *             {@link TwinColSelect} instead
      * 
      * @see com.vaadin.ui.AbstractSelect#isMultiSelect()
+     * 
+     * @return false
      */
     @Deprecated
     @Override
     public boolean isMultiSelect() {
-        return super.isMultiSelect();
+        return false;
     }
 
     /**
