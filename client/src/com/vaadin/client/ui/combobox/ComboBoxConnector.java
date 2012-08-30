@@ -27,9 +27,9 @@ import com.vaadin.client.ui.combobox.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
-import com.vaadin.ui.Select;
+import com.vaadin.ui.ComboBox;
 
-@Connect(Select.class)
+@Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractFieldConnector implements
         Paintable, SimpleManagedLayout {
 

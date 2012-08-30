@@ -8,7 +8,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Select;
 
 public class Comboboxes extends ComponentTestCase<ComboBox> {
 
@@ -83,7 +82,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         }
     }
 
-    private void populate(Select s, int nr) {
+    private void populate(ComboBox s, int nr) {
         String text = " an item ";
 
         String caption = "";
@@ -99,7 +98,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
 
     }
 
-    private void addItem(Select s, String string) {
+    private void addItem(ComboBox s, String string) {
         Object id = s.addItem();
         s.getItem(id).getItemProperty(CAPTION).setValue(string);
 

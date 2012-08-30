@@ -6,7 +6,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Select;
 
 @SuppressWarnings("serial")
 public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
@@ -26,7 +25,7 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
         // formLayout.setWidth("100%");
         formLayout.setWidth("1000px");
 
-        Select countryField = new ComboBox();
+        ComboBox countryField = new ComboBox();
         countryField.addItem("Finland");
         countryField.addItem("Sweden");
         countryField.addItem("Canada");
@@ -35,7 +34,7 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
         countryField.setWidth("100%");
         formLayout.addComponent(countryField);
 
-        Select statusField = new ComboBox();
+        ComboBox statusField = new ComboBox();
         statusField.addItem("Available");
         statusField.addItem("On vacation");
         statusField.addItem("Busy");

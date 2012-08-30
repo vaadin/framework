@@ -3,29 +3,28 @@ package com.vaadin.tests.components.combobox;
 import java.util.LinkedHashMap;
 
 import com.vaadin.server.Resource;
-import com.vaadin.tests.components.select.SelectTest;
+import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Select;
 
-public class ComboBoxes2 extends SelectTest<ComboBox> {
+public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
 
-    private Command<ComboBox, String> inputPromptCommand = new Command<ComboBox, String>() {
+    private Command<T, String> inputPromptCommand = new Command<T, String>() {
         @Override
-        public void execute(ComboBox c, String value, Object data) {
+        public void execute(T c, String value, Object data) {
             c.setInputPrompt(value);
         }
     };
-    private Command<ComboBox, Integer> filteringModeCommand = new Command<ComboBox, Integer>() {
+    private Command<T, Integer> filteringModeCommand = new Command<T, Integer>() {
 
         @Override
-        public void execute(ComboBox c, Integer value, Object data) {
+        public void execute(T c, Integer value, Object data) {
             c.setFilteringMode(value);
         }
     };
 
     @Override
-    protected Class<ComboBox> getTestClass() {
-        return ComboBox.class;
+    protected Class<T> getTestClass() {
+        return (Class<T>) ComboBox.class;
     }
 
     @Override
@@ -40,9 +39,9 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
 
     private void createTextInputAlowedAction(String category) {
         createBooleanAction("Text input allowed", category, true,
-                new Command<ComboBox, Boolean>() {
+                new Command<T, Boolean>() {
                     @Override
-                    public void execute(ComboBox c, Boolean value, Object data) {
+                    public void execute(T c, Boolean value, Object data) {
                         c.setTextInputAllowed(value.booleanValue());
                     }
                 });
@@ -50,9 +49,9 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
 
     private void createNewItemsAllowedAction(String category) {
         createBooleanAction("New items allowed", category, false,
-                new Command<ComboBox, Boolean>() {
+                new Command<T, Boolean>() {
                     @Override
-                    public void execute(ComboBox c, Boolean value, Object data) {
+                    public void execute(T c, Boolean value, Object data) {
                         c.setNewItemsAllowed(value.booleanValue());
                     }
                 });
@@ -60,9 +59,9 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
 
     private void createFilteringModeAction(String category) {
         LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Off", Select.FILTERINGMODE_OFF);
-        options.put("Contains", Select.FILTERINGMODE_CONTAINS);
-        options.put("Starts with", Select.FILTERINGMODE_STARTSWITH);
+        options.put("Off", ComboBox.FILTERINGMODE_OFF);
+        options.put("Contains", ComboBox.FILTERINGMODE_CONTAINS);
+        options.put("Starts with", ComboBox.FILTERINGMODE_STARTSWITH);
 
         createSelectAction("Filtering mode", category, options, "Contains",
                 filteringModeCommand);
@@ -82,10 +81,10 @@ public class ComboBoxes2 extends SelectTest<ComboBox> {
     private void createItemIconSelect(String category) {
 
         createSelectAction("Icon", category, createIconOptions(false), "-",
-                new Command<ComboBox, Resource>() {
+                new Command<T, Resource>() {
 
                     @Override
-                    public void execute(ComboBox c, Resource value, Object data) {
+                    public void execute(T c, Resource value, Object data) {
                         for (Object id : c.getItemIds()) {
                             if (value == null) {
                                 c.setItemIcon(id, null);
