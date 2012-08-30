@@ -91,7 +91,7 @@ class MyDynamicResource implements RequestHandler {
                 downloadStream.setParameter("Content-Disposition",
                         "attachment; filename=\"downloadedPNG.png\"");
             }
-            downloadStream.writeTo(response);
+            downloadStream.writeResponse(request, response);
             return true;
         } catch (IOException e) {
             return false;

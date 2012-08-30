@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-
 /**
  * Downloadable stream.
  * 
@@ -231,14 +230,18 @@ public class DownloadStream implements Serializable {
      * redirect (302 Moved temporarily) is sent instead of the contents of this
      * stream.
      * 
+     * @param request
+     *            the request for which the response should be written
      * @param response
      *            the wrapped response to write this download stream to
+     * 
      * @throws IOException
      *             passed through from the wrapped response
      * 
      * @since 7.0
      */
-    public void writeTo(WrappedResponse response) throws IOException {
+    public void writeResponse(WrappedRequest request, WrappedResponse response)
+            throws IOException {
         if (getParameter("Location") != null) {
             response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
             response.setHeader("Location", getParameter("Location"));

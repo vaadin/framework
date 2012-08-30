@@ -572,7 +572,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         ConnectorResource resource = (ConnectorResource) getResource(key);
         if (resource != null) {
             DownloadStream stream = resource.getStream();
-            stream.writeTo(response);
+            stream.writeResponse(request, response);
             return true;
         } else {
             return false;

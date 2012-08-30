@@ -97,7 +97,7 @@ public abstract class AbstractMedia extends AbstractComponent {
             URLReference reference = sources.get(sourceIndex);
             ConnectorResource resource = (ConnectorResource) ResourceReference
                     .getResource(reference);
-            resource.getStream().writeTo(response);
+            resource.getStream().writeResponse(request, response);
             return true;
         } else {
             return super.handleConnectorRequest(request, response, path);

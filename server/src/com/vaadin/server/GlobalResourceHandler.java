@@ -116,7 +116,7 @@ public class GlobalResourceHandler implements RequestHandler {
                     + " didn't produce any stream.");
         }
 
-        stream.writeTo(response);
+        stream.writeResponse(request, response);
         return true;
     }
 
