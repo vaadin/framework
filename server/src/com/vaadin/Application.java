@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -430,11 +429,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private DeploymentConfiguration configuration;
 
     /**
-     * The current user or <code>null</code> if no user has logged in.
-     */
-    private Object user;
-
-    /**
      * The application's URL.
      */
     private URL applicationUrl;
@@ -448,11 +442,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Default locale of the application.
      */
     private Locale locale;
-
-    /**
-     * List of listeners listening user changes.
-     */
-    private LinkedList<UserChangeListener> userChangeListeners = null;
 
     /**
      * URL where the user is redirected to on application close, or null if
@@ -499,59 +488,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private List<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
     private GlobalResourceHandler globalResourceHandler;
-
-    /**
-     * Gets the user of the application.
-     * 
-     * <p>
-     * Vaadin doesn't define of use user object in any way - it only provides
-     * this getter and setter methods for convenience. The user is any object
-     * that has been stored to the application with {@link #setUser(Object)}.
-     * </p>
-     * 
-     * @return the User of the application.
-     */
-    public Object getUser() {
-        return user;
-    }
-
-    /**
-     * <p>
-     * Sets the user of the application instance. An application instance may
-     * have a user associated to it. This can be set in login procedure or
-     * application initialization.
-     * </p>
-     * <p>
-     * A component performing the user login procedure can assign the user
-     * property of the application and make the user object available to other
-     * components of the application.
-     * </p>
-     * <p>
-     * Vaadin doesn't define of use user object in any way - it only provides
-     * getter and setter methods for convenience. The user reference stored to
-     * the application can be read with {@link #getUser()}.
-     * </p>
-     * 
-     * @param user
-     *            the new user.
-     */
-    public void setUser(Object user) {
-        final Object prevUser = this.user;
-        if (user == prevUser || (user != null && user.equals(prevUser))) {
-            return;
-        }
-
-        this.user = user;
-        if (userChangeListeners != null) {
-            final Object[] listeners = userChangeListeners.toArray();
-            final UserChangeEvent event = new UserChangeEvent(this, user,
-                    prevUser);
-            for (int i = 0; i < listeners.length; i++) {
-                ((UserChangeListener) listeners[i])
-                        .applicationUserChanged(event);
-            }
-        }
-    }
 
     /**
      * Gets the URL of the application.
@@ -712,142 +648,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
-    }
-
-    /**
-     * <p>
-     * An event that characterizes a change in the current selection.
-     * </p>
-     * Application user change event sent when the setUser is called to change
-     * the current user of the application.
-     * 
-     * @since 3.0
-     */
-    public class UserChangeEvent extends java.util.EventObject {
-
-        /**
-         * New user of the application.
-         */
-        private final Object newUser;
-
-        /**
-         * Previous user of the application.
-         */
-        private final Object prevUser;
-
-        /**
-         * Constructor for user change event.
-         * 
-         * @param source
-         *            the application source.
-         * @param newUser
-         *            the new User.
-         * @param prevUser
-         *            the previous User.
-         */
-        public UserChangeEvent(Application source, Object newUser,
-                Object prevUser) {
-            super(source);
-            this.newUser = newUser;
-            this.prevUser = prevUser;
-        }
-
-        /**
-         * Gets the new user of the application.
-         * 
-         * @return the new User.
-         */
-        public Object getNewUser() {
-            return newUser;
-        }
-
-        /**
-         * Gets the previous user of the application.
-         * 
-         * @return the previous Vaadin user, if user has not changed ever on
-         *         application it returns <code>null</code>
-         */
-        public Object getPreviousUser() {
-            return prevUser;
-        }
-
-        /**
-         * Gets the application where the user change occurred.
-         * 
-         * @return the Application.
-         */
-        public Application getApplication() {
-            return (Application) getSource();
-        }
-    }
-
-    /**
-     * The <code>UserChangeListener</code> interface for listening application
-     * user changes.
-     * 
-     * @since 3.0
-     */
-    public interface UserChangeListener extends EventListener, Serializable {
-
-        /**
-         * The <code>applicationUserChanged</code> method Invoked when the
-         * application user has changed.
-         * 
-         * @param event
-         *            the change event.
-         */
-        public void applicationUserChanged(Application.UserChangeEvent event);
-    }
-
-    /**
-     * Adds the user change listener.
-     * 
-     * This allows one to get notification each time {@link #setUser(Object)} is
-     * called.
-     * 
-     * @param listener
-     *            the user change listener to add.
-     */
-    public void addUserChangeListener(UserChangeListener listener) {
-        if (userChangeListeners == null) {
-            userChangeListeners = new LinkedList<UserChangeListener>();
-        }
-        userChangeListeners.add(listener);
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #addUserChangeListener(UserChangeListener)}
-     **/
-    @Deprecated
-    public void addListener(UserChangeListener listener) {
-        addUserChangeListener(listener);
-    }
-
-    /**
-     * Removes the user change listener.
-     * 
-     * @param listener
-     *            the user change listener to remove.
-     */
-
-    public void removeUserChangeListener(UserChangeListener listener) {
-        if (userChangeListeners == null) {
-            return;
-        }
-        userChangeListeners.remove(listener);
-        if (userChangeListeners.isEmpty()) {
-            userChangeListeners = null;
-        }
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #removeUserChangeListener(UserChangeListener)}
-     **/
-    @Deprecated
-    public void removeListener(UserChangeListener listener) {
-        removeUserChangeListener(listener);
     }
 
     /**
