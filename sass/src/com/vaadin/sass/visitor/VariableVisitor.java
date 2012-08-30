@@ -40,13 +40,20 @@ public class VariableVisitor implements Visitor {
     private void traverse(Node node, Map<String, LexicalUnitImpl> variables) {
         if (node instanceof RuleNode) {
             LexicalUnit value = ((RuleNode) node).getValue();
-            updateValue(value, variables);
+            while (updateValue(value, variables)) {
+                ;
+            }
         } else {
             Set<Node> toBeDeleted = new HashSet<Node>();
             for (Node child : node.getChildren()) {
                 if (child instanceof VariableNode) {
-                    variables.put(((VariableNode) child).getName(),
-                            (LexicalUnitImpl) ((VariableNode) child).getExpr());
+                    VariableNode varChild = (VariableNode) child;
+                    if (!varChild.isGuarded() || varChild.isGuarded()
+                            && variables.get(varChild.getName()) == null) {
+                        variables.put(((VariableNode) child).getName(),
+                                (LexicalUnitImpl) ((VariableNode) child)
+                                        .getExpr());
+                    }
                     toBeDeleted.add(child);
                 } else {
                     traverse(child, new HashMap<String, LexicalUnitImpl>(
@@ -59,17 +66,22 @@ public class VariableVisitor implements Visitor {
         }
     }
 
-    private void updateValue(LexicalUnit value,
+    private boolean updateValue(LexicalUnit value,
             Map<String, LexicalUnitImpl> variables) {
+        boolean onceMore = false;
         if (value == null) {
-            return;
+            return false;
         }
         if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
-            LexicalUnitImpl variableValue = variables.get(
-                    value.getStringValue()).clone();
+            LexicalUnitImpl variableValue = variables.get(value
+                    .getStringValue());
             if (variableValue != null) {
-                LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
-                lexVal.replaceValue(variableValue);
+                LexicalUnitImpl variableValueCloned = variableValue.clone();
+                if (variableValueCloned != null) {
+                    LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
+                    lexVal.replaceValue(variableValueCloned);
+                    onceMore = true;
+                }
             }
         } else if (value.getLexicalUnitType() == SCSSLexicalUnit.SAC_FUNCTION) {
             LexicalUnit params = value.getParameters();
@@ -77,5 +89,6 @@ public class VariableVisitor implements Visitor {
         }
         LexicalUnit next = value.getNextLexicalUnit();
         updateValue(next, variables);
+        return onceMore;
     }
 }
