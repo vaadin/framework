@@ -119,8 +119,7 @@ public class NavigatorTest extends TestCase {
             if (!stringEquals(reference.getViewName(), event.getViewName())) {
                 return false;
             }
-            if (!stringEquals(reference.getFragmentParameters(),
-                    event.getFragmentParameters())) {
+            if (!stringEquals(reference.getParameters(), event.getParameters())) {
                 return false;
             }
             return true;
@@ -171,7 +170,8 @@ public class NavigatorTest extends TestCase {
 
     public void testBasicNavigation() {
         IMocksControl control = EasyMock.createControl();
-        NavigationStateManager manager = control.createMock(NavigationStateManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -213,7 +213,8 @@ public class NavigatorTest extends TestCase {
 
     public void testMainView() {
         IMocksControl control = EasyMock.createControl();
-        NavigationStateManager manager = control.createMock(NavigationStateManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -255,7 +256,8 @@ public class NavigatorTest extends TestCase {
 
     public void testListeners() {
         IMocksControl control = EasyMock.createControl();
-        NavigationStateManager manager = control.createMock(NavigationStateManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -304,7 +306,8 @@ public class NavigatorTest extends TestCase {
 
     public void testBlockNavigation() {
         IMocksControl control = EasyMock.createControl();
-        NavigationStateManager manager = control.createMock(NavigationStateManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);

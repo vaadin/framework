@@ -38,9 +38,9 @@ public interface View extends Serializable {
      * is any additional id to data what should be shown in the view, it is also
      * optionally passed as parameter.
      * 
-     * @param fragmentParameters
+     * @param parameters
      *            parameters to the view or empty string if none given. This is
      *            the string that appears e.g. in URI after "viewname/"
      */
-    public void navigateTo(String fragmentParameters);
+    public void navigateTo(String parameters);
 }
