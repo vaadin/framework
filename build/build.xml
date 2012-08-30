@@ -260,7 +260,7 @@
            	<!-- VaadinClasses and data classes are used by TestBench tests also -->
             <fileset dir="${result-classes-junit}" />
             <!-- test resources -->
-            <fileset dir="tests/testbench">
+            <fileset dir="uitest/src">
                 <include name="${vaadin-package}/tests/**/*" />
                 <!-- Pre-processed versions of these copied above -->
                 <exclude name="**/*.java" />
@@ -270,7 +270,7 @@
             </fileset>
 
         	<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
-            <fileset dir="tests/testbench">
+            <fileset dir="uitest/src">
         		<include name="${vaadin-package}/launcher/jetty-webdefault.xml" />
         		<include name="${vaadin-package}/launcher/keystore" />
             </fileset>
@@ -347,7 +347,7 @@
         Source directories in the project are
          * src (Vaadin core)
          * sass/src (SASS compiler)
-         * tests/testbench (TestBench test cases)
+         * uitest/src (TestBench test cases)
          * server/tests/src (Server-side JUnit test cases)
          * client/tests/src (Client-side JUnit test cases)
 
@@ -443,7 +443,7 @@
 
         <copy todir="${result-src-testbench}">
             <filterset refid="version-and-license"/>
-            <fileset dir="tests/testbench">
+            <fileset dir="uitest/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
@@ -495,7 +495,7 @@
             </fileset>
         </copy>
         <copy todir="${result-src-testbench}">
-            <fileset dir="tests/testbench">
+            <fileset dir="uitest/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
@@ -1337,7 +1337,7 @@
         <property name="package.filename" value="${result-path}/${test-war-filename}"/>
 
         <!-- Run the separate test script. -->
-        <ant antfile="tests/test.xml" target="test-package" inheritall="false" inheritrefs="true">
+        <ant antfile="uitest/test.xml" target="test-package" inheritall="false" inheritrefs="true">
             <!-- This is provided so that the test script can copy the -->
             <!-- "tests" classes after unpacking the package.          -->
             <property name="output-dir" value="${output-dir}"/>
@@ -1373,7 +1373,7 @@
         <property name="tests.war" location="${result-path}/${test-war-filename}" />
         
         <!-- Run the separate test script. -->
-        <ant antfile="tests/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="true">
+        <ant antfile="uitest/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="true">
               <!-- This is provided so that the test script can copy the -->
               <!-- "tests" classes after unpacking the package.          -->
               <property name="output-dir" value="${output-dir}"/>

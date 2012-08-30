@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
     
-    <info organisation="com.vaadin" module="tests"/>
+    <info organisation="com.vaadin" module="vaadin-uitests"/>
     <configurations>
    		<conf name="jetty" visibility="private" />
    		<conf name="emma" visibility="private" />
