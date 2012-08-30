@@ -455,11 +455,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private LinkedList<UserChangeListener> userChangeListeners = null;
 
     /**
-     * Application resource mapping: key <-> resource.
-     */
-    private long lastResourceKeyNumber = 0;
-
-    /**
      * URL where the user is redirected to on application close, or null if
      * application is just closed without redirection.
      */
