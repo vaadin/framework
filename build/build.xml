@@ -349,7 +349,7 @@
          * sass/src (SASS compiler)
          * tests/testbench (TestBench test cases)
          * tests/server-side (Server-side JUnit test cases)
-         * tests/client-side (Client-side JUnit test cases)
+         * client/tests/src (Client-side JUnit test cases)
 
         These are copied to 
          * ${result-path}/src/core
@@ -452,7 +452,7 @@
             <fileset dir="tests/server-side">
                 <patternset refid="preprocessable-files" />
             </fileset>
-            <fileset dir="tests/client-side">
+            <fileset dir="client/tests/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
         </copy>
@@ -503,7 +503,7 @@
             <fileset dir="tests/server-side">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
-            <fileset dir="tests/client-side">
+            <fileset dir="client/tests/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
         </copy>
@@ -1296,7 +1296,7 @@
 
             <batchtest fork="yes">
                 <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java,**/VaadinClasses.java" />
-                <fileset dir="tests/client-side" includes="**/*.java" excludes="**/Abstract*.java" />
+                <fileset dir="client/tests/src" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
     </target>
