@@ -8,6 +8,7 @@
 
     <configurations>
         <conf name="build" />
+        <conf name="build-provided" />
         <conf name="ide" />
     </configurations>
     <publications>
