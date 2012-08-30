@@ -79,7 +79,7 @@ public class Navigator implements Serializable {
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      */
-    public static class UriFragmentManager implements FragmentManager,
+    public static class UriFragmentManager implements NavigationStateManager,
             FragmentChangedListener {
         private final Page page;
         private final Navigator navigator;
@@ -102,18 +102,18 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public String getFragment() {
+        public String getState() {
             return page.getFragment();
         }
 
         @Override
-        public void setFragment(String fragment) {
+        public void setState(String fragment) {
             page.setFragment(fragment, false);
         }
 
         @Override
         public void fragmentChanged(FragmentChangedEvent event) {
-            UriFragmentManager.this.navigator.navigateTo(getFragment());
+            UriFragmentManager.this.navigator.navigateTo(getState());
         }
     }
 
@@ -318,7 +318,7 @@ public class Navigator implements Serializable {
         }
     }
 
-    private final FragmentManager fragmentManager;
+    private final NavigationStateManager fragmentManager;
     private final ViewDisplay display;
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
@@ -393,7 +393,7 @@ public class Navigator implements Serializable {
      * @param display
      *            where to display the views
      */
-    public Navigator(FragmentManager fragmentManager, ViewDisplay display) {
+    public Navigator(NavigationStateManager fragmentManager, ViewDisplay display) {
         this.display = display;
         this.fragmentManager = fragmentManager;
     }
@@ -472,8 +472,8 @@ public class Navigator implements Serializable {
             if (!fragmentParameters.equals("")) {
                 currentFragment += "/" + fragmentParameters;
             }
-            if (!currentFragment.equals(getFragmentManager().getFragment())) {
-                getFragmentManager().setFragment(currentFragment);
+            if (!currentFragment.equals(getFragmentManager().getState())) {
+                getFragmentManager().setState(currentFragment);
             }
         }
 
@@ -517,7 +517,7 @@ public class Navigator implements Serializable {
      * 
      * @return fragment manager in use
      */
-    protected FragmentManager getFragmentManager() {
+    protected NavigationStateManager getFragmentManager() {
         return fragmentManager;
     }
 

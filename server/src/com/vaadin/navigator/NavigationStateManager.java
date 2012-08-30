@@ -19,32 +19,34 @@ package com.vaadin.navigator;
 import java.io.Serializable;
 
 /**
- * Fragment manager that handles interaction between Navigator and URI fragments
- * or other similar view identification and bookmarking system.
- * 
- * Alternative implementations can be created for HTML5 pushState, for portlet
- * URL navigation and other similar systems.
- * 
+ * An interface for handling interaction between Navigator and the browser
+ * location URI or other similar view identification and bookmarking system. The
+ * state is limited to a single string because in the usual cases it forms a
+ * part of a URI.
+ * <p>
+ * Different implementations can be created for hashbang URIs, HTML5 pushState,
+ * portlet URL navigation and other similar systems.
+ * <p>
  * This interface is mostly for internal use by {@link Navigator}.
  * 
  * @author Vaadin Ltd
  * @since 7.0
  */
-public interface FragmentManager extends Serializable {
+public interface NavigationStateManager extends Serializable {
     /**
-     * Return the current fragment (location string) including view name and any
-     * optional parameters.
+     * Returns the current navigation state including view name and any optional
+     * parameters.
      * 
      * @return current view and parameter string, not null
      */
-    public String getFragment();
+    public String getState();
 
     /**
-     * Set the current fragment (location string) in the application URL or
-     * similar location, including view name and any optional parameters.
+     * Set the current navigation state in the location URI or similar location,
+     * including view name and any optional parameters.
      * 
      * @param fragment
      *            new view and parameter string, not null
      */
-    public void setFragment(String fragment);
+    public void setState(String state);
 }

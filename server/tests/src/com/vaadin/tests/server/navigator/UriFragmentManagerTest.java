@@ -39,9 +39,9 @@ public class UriFragmentManagerTest extends TestCase {
         EasyMock.replay(page);
 
         // test manager using the mock
-        assertEquals("Incorrect fragment value", "", manager.getFragment());
-        manager.setFragment("test");
-        assertEquals("Incorrect fragment value", "test", manager.getFragment());
+        assertEquals("Incorrect fragment value", "", manager.getState());
+        manager.setState("test");
+        assertEquals("Incorrect fragment value", "test", manager.getState());
     }
 
     public void testListener() {
