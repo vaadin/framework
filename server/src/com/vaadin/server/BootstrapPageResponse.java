@@ -50,8 +50,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            the application for which the bootstrap page should be
      *            generated
      * @param uiId
-     *            the generated id of the UI that will be displayed on the
-     *            page
+     *            the generated id of the UI that will be displayed on the page
      * @param document
      *            the DOM document making up the HTML page
      * @param headers

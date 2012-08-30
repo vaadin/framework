@@ -38,26 +38,26 @@ public class DeepCopy {
 
         Object obj = null;
         if (!(orig instanceof Clonable)) {
-        try {
-            // Write the object out to a byte array
-            FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(fbos);
-            out.writeObject(orig);
-            out.flush();
-            out.close();
+            try {
+                // Write the object out to a byte array
+                FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
+                ObjectOutputStream out = new ObjectOutputStream(fbos);
+                out.writeObject(orig);
+                out.flush();
+                out.close();
 
-            // Retrieve an input stream from the byte array and read
-            // a copy of the object back in.
+                // Retrieve an input stream from the byte array and read
+                // a copy of the object back in.
                 ObjectInputStream in = new ObjectInputStream(
                         fbos.getInputStream());
-            obj = in.readObject();
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-        }
-        return obj;
+                obj = in.readObject();
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException cnfe) {
+                cnfe.printStackTrace();
+            }
+            return obj;
         } else {
             try {
                 obj = ((Clonable) orig).clone();

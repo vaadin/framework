@@ -61,8 +61,8 @@ import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.UI;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
-public class UIConnector extends AbstractComponentContainerConnector
-        implements Paintable, MayScrollChildren {
+public class UIConnector extends AbstractComponentContainerConnector implements
+        Paintable, MayScrollChildren {
 
     private UIServerRpc rpc = RpcProxy.create(UIServerRpc.class, this);
 
@@ -276,8 +276,8 @@ public class UIConnector extends AbstractComponentContainerConnector
 
             // Include current fragment in the next request
             client.updateVariable(getWidget().id,
-                    UIConstants.FRAGMENT_VARIABLE,
-                    getWidget().currentFragment, false);
+                    UIConstants.FRAGMENT_VARIABLE, getWidget().currentFragment,
+                    false);
         }
 
         if (firstPaint) {

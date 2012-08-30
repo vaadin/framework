@@ -46,9 +46,9 @@ import com.vaadin.client.ui.datefield.VCalendarPanel.SubmitListener;
  * selector.
  * 
  * <b>Note:</b> To change the keyboard assignments used in the popup dialog you
- * should extend <code>com.vaadin.client.ui.VCalendarPanel</code>
- * and then pass set it by calling the
- * <code>setCalendarPanel(VCalendarPanel panel)</code> method.
+ * should extend <code>com.vaadin.client.ui.VCalendarPanel</code> and then pass
+ * set it by calling the <code>setCalendarPanel(VCalendarPanel panel)</code>
+ * method.
  * 
  */
 public class VPopupCalendar extends VTextualDate implements Field,
@@ -329,8 +329,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ui.VDateField#onBrowserEvent(com.google
+     * @see com.vaadin.client.ui.VDateField#onBrowserEvent(com.google
      * .gwt.user.client.Event)
      */
     @Override

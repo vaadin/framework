@@ -79,8 +79,8 @@ import com.vaadin.shared.ui.tree.TreeConstants;
  * 
  */
 public class VTree extends FocusElementPanel implements VHasDropHandler,
-FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-SubPartAware, ActionOwner {
+        FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
+        SubPartAware, ActionOwner {
 
     public static final String CLASSNAME = "v-tree";
 
@@ -137,12 +137,12 @@ SubPartAware, ActionOwner {
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
 
-        @Override
-        public void execute() {
-            Util.notifyParentOfSizeChange(VTree.this, true);
-        }
+                @Override
+                public void execute() {
+                    Util.notifyParentOfSizeChange(VTree.this, true);
+                }
 
-    });
+            });
 
     public VTree() {
         super();
@@ -668,7 +668,7 @@ SubPartAware, ActionOwner {
                     && client.hasEventListeners(VTree.this,
                             TreeConstants.ITEM_CLICK_EVENT_ID)
 
-                            && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
+                    && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
             if (type == Event.ONCLICK) {
@@ -700,7 +700,7 @@ SubPartAware, ActionOwner {
                             .getEventTarget().cast())) {
                         if (dragMode > 0
                                 && (type == Event.ONTOUCHSTART || event
-                                .getButton() == NativeEvent.BUTTON_LEFT)) {
+                                        .getButton() == NativeEvent.BUTTON_LEFT)) {
                             mouseDownEvent = event; // save event for possible
                             // dd operation
                             if (type == Event.ONMOUSEDOWN) {
@@ -1721,7 +1721,7 @@ SubPartAware, ActionOwner {
                 selectNode(
                         focusedNode,
                         (!isMultiselect || multiSelectMode == MULTISELECT_MODE_SIMPLE)
-                        && selectable);
+                                && selectable);
             } else {
                 deselectNode(focusedNode);
             }
@@ -1967,8 +1967,7 @@ SubPartAware, ActionOwner {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ui.SubPartAware#getSubPartElement(java
+     * @see com.vaadin.client.ui.SubPartAware#getSubPartElement(java
      * .lang.String)
      */
     @Override
@@ -2021,8 +2020,7 @@ SubPartAware, ActionOwner {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ui.SubPartAware#getSubPartName(com.google
+     * @see com.vaadin.client.ui.SubPartAware#getSubPartName(com.google
      * .gwt.user.client.Element)
      */
     @Override

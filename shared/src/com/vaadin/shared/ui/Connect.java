@@ -46,9 +46,8 @@ public @interface Connect {
      * Depending on the used WidgetMap generator, these optional hints may be
      * used to define how the client side components are loaded by the browser.
      * The default is to eagerly load all widgets
-     * {@link com.vaadin.server.widgetsetutils.EagerWidgetMapGenerator},
-     * but if the
-     * {@link com.vaadin.server.widgetsetutils.WidgetMapGenerator} is used
+     * {@link com.vaadin.server.widgetsetutils.EagerWidgetMapGenerator}, but if
+     * the {@link com.vaadin.server.widgetsetutils.WidgetMapGenerator} is used
      * by the widgetset, these load style hints are respected.
      * <p>
      * Lazy loading of a widget implementation means the client side component
@@ -69,15 +68,14 @@ public @interface Connect {
      * the best of both worlds.
      * <p>
      * Fine tunings to widget loading can also be made by overriding
-     * {@link com.vaadin.server.widgetsetutils.WidgetMapGenerator} in the
-     * GWT module. Tunings might be helpful if the end users have slow
-     * connections and especially if they have high latency in their network.
-     * The
-     * {@link com.vaadin.server.widgetsetutils.CustomWidgetMapGenerator}
-     * is an abstract generator implementation for easy customization. Vaadin
-     * package also includes
-     * {@link com.vaadin.server.widgetsetutils.LazyWidgetMapGenerator}
-     * that makes as many widgets lazily loaded as possible.
+     * {@link com.vaadin.server.widgetsetutils.WidgetMapGenerator} in the GWT
+     * module. Tunings might be helpful if the end users have slow connections
+     * and especially if they have high latency in their network. The
+     * {@link com.vaadin.server.widgetsetutils.CustomWidgetMapGenerator} is an
+     * abstract generator implementation for easy customization. Vaadin package
+     * also includes
+     * {@link com.vaadin.server.widgetsetutils.LazyWidgetMapGenerator} that
+     * makes as many widgets lazily loaded as possible.
      * 
      * @since 6.4
      * 

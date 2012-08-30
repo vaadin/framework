@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-
 /**
  * An extension is an entity that is attached to a Component or another
  * Extension and independently communicates between client and server.

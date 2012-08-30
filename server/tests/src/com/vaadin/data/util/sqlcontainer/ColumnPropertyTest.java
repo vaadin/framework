@@ -58,8 +58,8 @@ public class ColumnPropertyTest {
 
     @Test(expected = ReadOnlyException.class)
     public void setValue_readOnlyNullable_shouldFail() {
-        ColumnProperty cp = new ColumnProperty("NAME", true, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", true, true, true, false,
+                "Ville", String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
         new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
         EasyMock.replay(container);
@@ -111,8 +111,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void isReadOnly_readOnlyNullable_returnsTrue() {
-        ColumnProperty cp = new ColumnProperty("NAME", true, true, true,
-                false, "Ville", String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", true, true, true, false,
+                "Ville", String.class);
         Assert.assertTrue(cp.isReadOnly());
     }
 
@@ -173,8 +173,8 @@ public class ColumnPropertyTest {
 
     @Test
     public void setValue_resetTonullOnNullable_shouldWork() {
-        ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
-                null, String.class);
+        ColumnProperty cp = new ColumnProperty("NAME", false, true, true,
+                false, null, String.class);
         SQLContainer container = EasyMock.createMock(SQLContainer.class);
         new RowItem(container, new RowId(new Object[] { 1 }), Arrays.asList(cp));
         cp.setValue("asdf");

@@ -29,7 +29,6 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 
-
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
  * 

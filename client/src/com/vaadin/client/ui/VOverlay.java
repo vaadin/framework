@@ -469,17 +469,17 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
             // We'll fix the height of all the middle elements
             DOM.getChild(shadow, 3)
-            .getStyle()
-            .setPropertyPx("height",
-                    DOM.getChild(shadow, 3).getOffsetHeight());
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 3).getOffsetHeight());
             DOM.getChild(shadow, 4)
-            .getStyle()
-            .setPropertyPx("height",
-                    DOM.getChild(shadow, 4).getOffsetHeight());
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 4).getOffsetHeight());
             DOM.getChild(shadow, 5)
-            .getStyle()
-            .setPropertyPx("height",
-                    DOM.getChild(shadow, 5).getOffsetHeight());
+                    .getStyle()
+                    .setPropertyPx("height",
+                            DOM.getChild(shadow, 5).getOffsetHeight());
         }
 
         // Attach to dom if not there already
@@ -489,7 +489,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
         if (needsShimElement() && !isShimElementAttached()) {
             RootPanel.get().getElement()
-            .insertBefore(getShimElement(), getElement());
+                    .insertBefore(getShimElement(), getElement());
         }
 
     }

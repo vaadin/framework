@@ -70,10 +70,10 @@ public class BlockNode extends Node implements Clonable {
 
         if (selectorList != null) {
             clonedSelectorList = new SelectorListImpl();
-        for (int i = 0; i < selectorList.getLength(); i++) {
-            clonedSelectorList.addSelector(selectorList.item(i));
+            for (int i = 0; i < selectorList.getLength(); i++) {
+                clonedSelectorList.addSelector(selectorList.item(i));
+            }
         }
-    }
         final BlockNode clone = new BlockNode(clonedSelectorList);
         for (Node child : getChildren()) {
             clone.getChildren().add((Node) DeepCopy.copy(child));

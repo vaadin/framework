@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-
 /**
  * A resource that is served through the Connector that is using the resource.
  * 

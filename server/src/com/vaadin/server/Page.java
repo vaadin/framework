@@ -417,8 +417,8 @@ public class Page implements Serializable {
 
     /**
      * Adds a new {@link BrowserWindowResizeListener} to this uI. The listener
-     * will be notified whenever the browser window within which this uI
-     * resides is resized.
+     * will be notified whenever the browser window within which this uI resides
+     * is resized.
      * 
      * @param resizeListener
      *            the listener to add
@@ -442,8 +442,8 @@ public class Page implements Serializable {
     }
 
     /**
-     * Removes a {@link BrowserWindowResizeListener} from this UI. The
-     * listener will no longer be notified when the browser window is resized.
+     * Removes a {@link BrowserWindowResizeListener} from this UI. The listener
+     * will no longer be notified when the browser window is resized.
      * 
      * @param resizeListener
      *            the listener to remove
@@ -474,8 +474,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * Gets the last known width of the browser window in which this uI
-     * resides.
+     * Gets the last known width of the browser window in which this uI resides.
      * 
      * @return the browser window width in pixels
      */
@@ -552,8 +551,8 @@ public class Page implements Serializable {
     }
 
     /**
-     * Opens the given resource in this uI. The contents of this UI is
-     * replaced by the {@code Resource}.
+     * Opens the given resource in this uI. The contents of this UI is replaced
+     * by the {@code Resource}.
      * 
      * @param resource
      *            the resource to show in this uI

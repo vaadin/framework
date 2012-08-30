@@ -386,8 +386,7 @@ public class VNotification extends VOverlay {
         boolean onlyPlainText = notification
                 .hasAttribute(UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
         String html = "";
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
+        if (notification.hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
             final String parsedUri = client
                     .translateVaadinUri(notification
                             .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON));

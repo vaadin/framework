@@ -132,7 +132,6 @@ public class VTextArea extends VTextField {
         }
     }
 
-
     @Override
     public int getCursorPos() {
         // This is needed so that TextBoxImplIE6 is used to return the correct

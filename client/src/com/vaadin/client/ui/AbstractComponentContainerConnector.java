@@ -44,8 +44,7 @@ public abstract class AbstractComponentContainerConnector extends
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ComponentContainerConnector#getChildren()
+     * @see com.vaadin.client.ComponentContainerConnector#getChildren()
      */
     @Override
     public List<ComponentConnector> getChildComponents() {
@@ -59,8 +58,7 @@ public abstract class AbstractComponentContainerConnector extends
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ComponentContainerConnector#setChildren
+     * @see com.vaadin.client.ComponentContainerConnector#setChildren
      * (java.util.Collection)
      */
     @Override

@@ -74,6 +74,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
     public void sendWrappedGenerics(
             Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics);
 
-    public void sendEnum(ContentMode contentMode, ContentMode[] array, List<ContentMode> list);
+    public void sendEnum(ContentMode contentMode, ContentMode[] array,
+            List<ContentMode> list);
 
 }

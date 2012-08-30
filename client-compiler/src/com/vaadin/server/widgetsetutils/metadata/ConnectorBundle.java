@@ -90,8 +90,7 @@ public class ConnectorBundle {
         JClassType serializerInterface = oracle.findType(JSONSerializer.class
                 .getName());
         JType[] deserializeParamTypes = new JType[] {
-                oracle.findType(com.vaadin.client.metadata.Type.class
-                        .getName()),
+                oracle.findType(com.vaadin.client.metadata.Type.class.getName()),
                 oracle.findType(JSONValue.class.getName()),
                 oracle.findType(ApplicationConnection.class.getName()) };
         String deserializeMethodName = "deserialize";

@@ -589,8 +589,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      * 
-     * @see com.vaadin.server.PaintTarget#addXMLSection(String, String,
-     *      String)
+     * @see com.vaadin.server.PaintTarget#addXMLSection(String, String, String)
      */
 
     @Override

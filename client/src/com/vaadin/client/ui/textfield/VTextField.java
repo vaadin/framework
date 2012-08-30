@@ -44,7 +44,7 @@ import com.vaadin.shared.ui.textfield.TextFieldConstants;
  * 
  */
 public class VTextField extends TextBoxBase implements Field, ChangeHandler,
-FocusHandler, BlurHandler, KeyDownHandler {
+        FocusHandler, BlurHandler, KeyDownHandler {
 
     /**
      * The input node CSS classname.
@@ -114,7 +114,7 @@ FocusHandler, BlurHandler, KeyDownHandler {
 
         if (listenTextChangeEvents
                 && (event.getTypeInt() & TEXTCHANGE_EVENTS) == event
-                .getTypeInt()) {
+                        .getTypeInt()) {
             deferTextChangeEvent();
         }
 

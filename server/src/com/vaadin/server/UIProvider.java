@@ -24,6 +24,6 @@ public interface UIProvider {
     public Class<? extends UI> getUIClass(Application application,
             WrappedRequest request) throws UIRequiresMoreInformationException;
 
-    public UI instantiateUI(Application application,
-            Class<? extends UI> type, WrappedRequest request);
+    public UI instantiateUI(Application application, Class<? extends UI> type,
+            WrappedRequest request);
 }

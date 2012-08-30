@@ -38,9 +38,9 @@ import com.vaadin.shared.Connector;
  * arrays of these.
  * 
  * On the client side the connector should override
- * {@link com.vaadin.client.ui.AbstractConnector#getState()} to
- * return the correct state type. This automatically causes a correct state
- * object to be created.
+ * {@link com.vaadin.client.ui.AbstractConnector#getState()} to return the
+ * correct state type. This automatically causes a correct state object to be
+ * created.
  * 
  * Subclasses of a {@link Connector} using shared state should also provide a
  * subclass of the shared state class of the parent class to extend the state. A

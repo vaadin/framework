@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-
 /**
  * Marker interface for server side classes that can receive RPC calls.
  * 

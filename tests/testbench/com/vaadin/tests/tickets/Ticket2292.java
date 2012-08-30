@@ -87,7 +87,8 @@ public class Ticket2292 extends com.vaadin.Application.LegacyApplication
             // Return a stream from the buffer.
             ByteArrayInputStream istream = new ByteArrayInputStream(
                     imagebuffer.toByteArray());
-            new DownloadStream(istream, null, null).writeResponse(request, response);
+            new DownloadStream(istream, null, null).writeResponse(request,
+                    response);
             return true;
         } catch (IOException e) {
             return false;

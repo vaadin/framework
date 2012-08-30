@@ -18,10 +18,10 @@ public class ImageAltText extends TestBase {
 
         Button changeAltTexts = new Button("Change alt text",
                 new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                image.setAlternateText("New alt text!");
-            }
-        });
+                    public void buttonClick(ClickEvent event) {
+                        image.setAlternateText("New alt text!");
+                    }
+                });
         addComponent(changeAltTexts);
     }
 

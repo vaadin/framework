@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-
 /**
  * <code>SystemError</code> is an error message for a problem caused by error in
  * system, not the user application code. The system error can contain technical

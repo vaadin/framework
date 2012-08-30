@@ -22,7 +22,6 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-
 public abstract class AbstractDeploymentConfiguration implements
         DeploymentConfiguration {
 

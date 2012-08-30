@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-
 /**
  * Wrapper for {@link HttpServletResponse}.
  * 

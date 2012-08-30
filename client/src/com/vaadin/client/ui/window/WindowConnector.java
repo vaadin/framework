@@ -46,8 +46,8 @@ import com.vaadin.shared.ui.window.WindowState;
 
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractComponentContainerConnector
-implements Paintable, BeforeShortcutActionListener,
-SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
+        implements Paintable, BeforeShortcutActionListener,
+        SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
         @Override
