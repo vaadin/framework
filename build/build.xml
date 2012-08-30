@@ -348,7 +348,7 @@
          * src (Vaadin core)
          * sass/src (SASS compiler)
          * tests/testbench (TestBench test cases)
-         * tests/server-side (Server-side JUnit test cases)
+         * server/tests/src (Server-side JUnit test cases)
          * client/tests/src (Client-side JUnit test cases)
 
         These are copied to 
@@ -449,7 +449,7 @@
         </copy>
         <copy todir="${result-src-junit}">
             <filterset refid="version-and-license"/>
-            <fileset dir="tests/server-side">
+            <fileset dir="server/tests/src">
                 <patternset refid="preprocessable-files" />
             </fileset>
             <fileset dir="client/tests/src">
@@ -500,7 +500,7 @@
             </fileset>
         </copy>
         <copy todir="${result-src-junit}">
-            <fileset dir="tests/server-side">
+            <fileset dir="server/tests/src">
                 <patternset refid="non-preprocessable-files" />
             </fileset>
             <fileset dir="client/tests/src">
@@ -1295,7 +1295,7 @@
             </classpath>
 
             <batchtest fork="yes">
-                <fileset dir="tests/server-side" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java,**/VaadinClasses.java" />
+                <fileset dir="server/tests/src" includes="**/*.java" excludes="**/Abstract*.java,com/vaadin/tests/data/bean/*.java,com/vaadin/tests/util/*.java,**/VaadinClasses.java" />
                 <fileset dir="client/tests/src" includes="**/*.java" excludes="**/Abstract*.java" />
             </batchtest>
         </junit>
