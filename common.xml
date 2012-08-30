@@ -81,7 +81,7 @@
 		<property name="src" location="{$result.dir}/../src" />
 
 		<union id="jar.files">
-			<fileset dir="${classes}" excludes="${classes.exclude}" />
+			<fileset dir="${tests.classes}" excludes="${tests.classes.exclude}" />
 			<fileset dir="${src}" excludes="${jar.exclude}" />
 			<fileset refid="common.files.for.all.jars" />
 			<fileset file="${pom.xml}" />
@@ -133,9 +133,57 @@
 		</javac>
 	</target>
 
+	<target name="tests.run" depends="tests.compile">
+		<fail unless="module.name" message="No module name given" />
+
+		<property name="result.dir" location="result" />
+		<property name="classes" location="${result.dir}/classes" />
+		<property name="tests.classes" location="${result.dir}/tests/classes" />
+
+		<junit printsummary="withOutAndErr">
+			<formatter usefile="false" type="plain" />
+
+			<classpath location="${tests.classes}" />
+			<classpath location="${classes}" />
+			<classpath refid="classpath.compile.custom" />
+			<classpath refid="classpath.tests.dependencies" />
+
+			<batchtest fork="yes">
+				<fileset dir="${tests.classes}">
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="tests.compile" description="Compiles tests" depends="compile, dependencies.tests">
+		<fail unless="module.name" message="No module name given" />
+		<property name="result.dir" location="result" />
+		<property name="base.dir" location="${result.dir}/.." />
+		<property name="tests.src" location="${base.dir}/tests/src" />
+		<property name="tests.resources" location="${base.dir}/tests/resources" />
+		<property name="tests.classes" location="${result.dir}/tests/classes" />
+		<property name="classes" location="${result.dir}/classes" />
+
+		<mkdir dir="${tests.classes}" />
+
+		<javac srcdir="${tests.src}" destdir="${tests.classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+			<classpath refid="classpath.tests.dependencies" />
+			<classpath location="${classes}" />
+			<classpath refid="classpath.tests.custom" />
+		</javac>
+		<copy todir="${tests.classes}">
+			<fileset dir="${tests.resources}" />
+		</copy>
+	</target>
+
 	<target name="dependencies" description="Resolves dependencies needed by this module">
 		<ivy:resolve resolveid="common" conf="build, build-provided" />
 		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+	</target>
+
+	<target name="dependencies.tests" description="Resolves dependencies needed by tests">
+		<ivy:resolve resolveid="common" conf="tests" />
+		<ivy:cachepath pathid="classpath.tests.dependencies" conf="tests" />
 	</target>
 
 	<target name="clean">
