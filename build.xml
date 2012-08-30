@@ -27,6 +27,10 @@
 	<target name="clean" depends="buildorder">
 		<subant buildpathref="build-path" target="clean">
 		</subant>
+		<delete dir="result" />
+		<!-- Clean IVY cache (~/.ivy2) so no old artifacts are fetched from there -->
+		<ivy:cleancache />
+
 	</target>
 
 </project>
