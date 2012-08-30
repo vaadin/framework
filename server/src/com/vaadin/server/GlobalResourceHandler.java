@@ -123,8 +123,8 @@ public class GlobalResourceHandler implements RequestHandler {
     /**
      * Registers a resource to be served with a global URL.
      * <p>
-     * A {@link ConnectorResource} registered for a {@link Vaadin6Component}
-     * will be set to be served with a global URL. Other resource types will be
+     * A {@link ConnectorResource} registered for a {@link LegacyComponent} will
+     * be set to be served with a global URL. Other resource types will be
      * ignored and thus not served by this handler.
      * 
      * @param resource
