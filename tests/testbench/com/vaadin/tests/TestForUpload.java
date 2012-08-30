@@ -160,7 +160,7 @@ public class TestForUpload extends CustomComponent implements
 
                     status.addComponent(new Link("Download "
                             + buffer.getFileName(), new StreamResource(buffer,
-                            buffer.getFileName(), getApplication())));
+                            buffer.getFileName())));
 
                     status.setVisible(true);
                 }

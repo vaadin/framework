@@ -30,7 +30,6 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +52,6 @@ import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.server.ApplicationResource;
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
 import com.vaadin.server.BootstrapPageResponse;
@@ -62,14 +60,15 @@ import com.vaadin.server.ChangeVariablesErrorEvent;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.CombinedRequest;
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.server.WebApplicationContext;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.tools.ReflectTools;
@@ -123,8 +122,8 @@ import com.vaadin.ui.Window;
  * found out, the window itself is queried for a preferred theme. If the window
  * does not prefer a specific theme, the application containing the window is
  * queried. If neither the application prefers a theme, the default theme for
- * the {@link com.vaadin.server.Terminal terminal} is used. The terminal
- * always defines a default theme.
+ * the {@link com.vaadin.server.Terminal terminal} is used. The terminal always
+ * defines a default theme.
  * </p>
  * 
  * @author Vaadin Ltd.
@@ -458,10 +457,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     /**
      * Application resource mapping: key <-> resource.
      */
-    private final Hashtable<ApplicationResource, String> resourceKeyMap = new Hashtable<ApplicationResource, String>();
-
-    private final Hashtable<String, ApplicationResource> keyResourceMap = new Hashtable<String, ApplicationResource>();
-
     private long lastResourceKeyNumber = 0;
 
     /**
@@ -507,6 +502,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private Set<Integer> initedUIs = new HashSet<Integer>();
 
     private List<UIProvider> uiProviders = new LinkedList<UIProvider>();
+
+    private GlobalResourceHandler globalResourceHandler;
 
     /**
      * Gets the user of the application.
@@ -691,71 +688,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public String getProperty(String name) {
         return getProperties().getProperty(name);
-    }
-
-    /**
-     * Adds new resource to the application. The resource can be accessed by the
-     * user of the application.
-     * 
-     * @param resource
-     *            the resource to add.
-     */
-    public void addResource(ApplicationResource resource) {
-
-        // Check if the resource is already mapped
-        if (resourceKeyMap.containsKey(resource)) {
-            return;
-        }
-
-        // Generate key
-        final String key = String.valueOf(++lastResourceKeyNumber);
-
-        // Add the resource to mappings
-        resourceKeyMap.put(resource, key);
-        keyResourceMap.put(key, resource);
-    }
-
-    /**
-     * Removes the resource from the application.
-     * 
-     * @param resource
-     *            the resource to remove.
-     */
-    public void removeResource(ApplicationResource resource) {
-        final Object key = resourceKeyMap.get(resource);
-        if (key != null) {
-            resourceKeyMap.remove(resource);
-            keyResourceMap.remove(key);
-        }
-    }
-
-    /**
-     * Gets the relative uri of the resource. This method is intended to be
-     * called only be the terminal implementation.
-     * 
-     * This method can only be called from within the processing of a UIDL
-     * request, not from a background thread.
-     * 
-     * @param resource
-     *            the resource to get relative location.
-     * @return the relative uri of the resource or null if called in a
-     *         background thread
-     * 
-     * @deprecated this method is intended to be used by the terminal only. It
-     *             may be removed or moved in the future.
-     */
-    @Deprecated
-    public String getRelativeLocation(ApplicationResource resource) {
-
-        // Gets the key
-        final String key = resourceKeyMap.get(resource);
-
-        // If the resource is not registered, return null
-        if (key == null) {
-            return null;
-        }
-
-        return context.generateApplicationResourceURL(resource, key);
     }
 
     /**
@@ -2066,20 +1998,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Find an application resource with a given key.
-     * 
-     * @param key
-     *            The key of the resource
-     * @return The application resource corresponding to the provided key, or
-     *         <code>null</code> if no resource is registered for the key
-     * 
-     * @since 7.0
-     */
-    public ApplicationResource getResource(String key) {
-        return keyResourceMap.get(key);
-    }
-
-    /**
      * Thread local for keeping track of currently used application instance
      * 
      * @since 7.0
@@ -2509,5 +2427,31 @@ public class Application implements Terminal.ErrorListener, Serializable {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Gets this application's global resource handler that takes care of
+     * serving connector resources that are not served by any single connector
+     * because e.g. because they are served with strong caching or because of
+     * legacy reasons.
+     * 
+     * @param createOnDemand
+     *            <code>true</code> if a resource handler should be initialized
+     *            if there is no handler associated with this application.
+     *            </code>false</code> if </code>null</code> should be returned
+     *            if there is no registered handler.
+     * @return this application's global resource handler, or <code>null</code>
+     *         if there is no handler and the createOnDemand parameter is
+     *         <code>false</code>.
+     * 
+     * @since 7.0.0
+     */
+    public GlobalResourceHandler getGlobalResourceHandler(boolean createOnDemand) {
+        if (globalResourceHandler == null && createOnDemand) {
+            globalResourceHandler = new GlobalResourceHandler();
+            addRequestHandler(globalResourceHandler);
+        }
+
+        return globalResourceHandler;
     }
 }

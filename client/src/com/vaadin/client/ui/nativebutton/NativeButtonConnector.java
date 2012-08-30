@@ -91,14 +91,14 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
             getWidget().errorIndicatorElement = null;
         }
 
-        if (getState().getIcon() != null) {
+        if (getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(getConnection());
                 getWidget().getElement().insertBefore(
                         getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(getState().getIcon().getURL());
+            getWidget().icon.setUri(getIcon());
         } else {
             if (getWidget().icon != null) {
                 getWidget().getElement().removeChild(

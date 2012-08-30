@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.GlobalResourceHandler;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
@@ -141,9 +142,20 @@ public class ConnectorTracker implements Serializable {
         getLogger().fine(
                 "Unregistered " + connector.getClass().getSimpleName() + " ("
                         + connectorId + ")");
+
+        removeFromGlobalResourceHandler(connector);
         connectorIdToConnector.remove(connectorId);
         uninitializedConnectors.remove(connector);
         diffStates.remove(connector);
+    }
+
+    private void removeFromGlobalResourceHandler(ClientConnector connector) {
+        GlobalResourceHandler globalResourceHandler = uI.getApplication()
+                .getGlobalResourceHandler(false);
+        // Nothing to do if there is no handler
+        if (globalResourceHandler != null) {
+            globalResourceHandler.unregisterConnector(connector);
+        }
     }
 
     /**
@@ -224,6 +236,8 @@ public class ConnectorTracker implements Serializable {
                                 "cleanConnectorMap unregistered connector "
                                         + getConnectorAndParentInfo(connector)
                                         + "). This should have been done when the connector was detached.");
+
+                removeFromGlobalResourceHandler(connector);
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();

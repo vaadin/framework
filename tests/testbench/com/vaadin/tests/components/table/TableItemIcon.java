@@ -27,11 +27,9 @@ public class TableItemIcon extends TestBase {
         getLayout().addComponent(table);
 
         Item item = table.addItem("FI");
-        item.getItemProperty("icon").setValue(
-                new ClassResource("fi.gif", TableItemIcon.this));
+        item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
         item = table.addItem("SE");
-        item.getItemProperty("icon").setValue(
-                new ClassResource("se.gif", TableItemIcon.this));
+        item.getItemProperty("icon").setValue(new ClassResource("se.gif"));
 
     }
 

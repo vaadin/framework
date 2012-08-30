@@ -15,6 +15,7 @@
  */
 package com.vaadin.server;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
@@ -337,5 +338,11 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public JSONObject encodeState() throws JSONException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public boolean handleConnectorRequest(WrappedRequest request,
+            WrappedResponse response, String path) throws IOException {
+        return false;
     }
 }

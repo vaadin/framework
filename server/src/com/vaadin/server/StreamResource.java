@@ -19,7 +19,6 @@ package com.vaadin.server;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import com.vaadin.Application;
 import com.vaadin.service.FileTypeResolver;
 
 /**
@@ -32,7 +31,7 @@ import com.vaadin.service.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class StreamResource implements ApplicationResource {
+public class StreamResource implements ConnectorResource {
 
     /**
      * Source stream the downloaded content is fetched from.
@@ -50,11 +49,6 @@ public class StreamResource implements ApplicationResource {
     private String filename;
 
     /**
-     * Application.
-     */
-    private final Application application;
-
-    /**
      * Default buffer size for this stream resource.
      */
     private int bufferSize = 0;
@@ -62,7 +56,7 @@ public class StreamResource implements ApplicationResource {
     /**
      * Default cache time for this stream resource.
      */
-    private long cacheTime = DEFAULT_CACHETIME;
+    private long cacheTime = DownloadStream.DEFAULT_CACHETIME;
 
     /**
      * Creates a new stream resource for downloading from stream.
@@ -74,16 +68,9 @@ public class StreamResource implements ApplicationResource {
      * @param application
      *            the Application object.
      */
-    public StreamResource(StreamSource streamSource, String filename,
-            Application application) {
-
-        this.application = application;
+    public StreamResource(StreamSource streamSource, String filename) {
         setFilename(filename);
         setStreamSource(streamSource);
-
-        // Register to application
-        application.addResource(this);
-
     }
 
     /**
@@ -149,17 +136,6 @@ public class StreamResource implements ApplicationResource {
         this.filename = filename;
     }
 
-    /**
-     * @see com.vaadin.server.ApplicationResource#getApplication()
-     */
-    @Override
-    public Application getApplication() {
-        return application;
-    }
-
-    /**
-     * @see com.vaadin.server.ApplicationResource#getStream()
-     */
     @Override
     public DownloadStream getStream() {
         final StreamSource ss = getStreamSource();
@@ -187,8 +163,16 @@ public class StreamResource implements ApplicationResource {
         public InputStream getStream();
     }
 
-    /* documented in superclass */
-    @Override
+    /**
+     * Gets the size of the download buffer used for this resource.
+     * 
+     * <p>
+     * If the buffer size is 0, the buffer size is decided by the terminal
+     * adapter. The default value is 0.
+     * </p>
+     * 
+     * @return the size of the buffer in bytes.
+     */
     public int getBufferSize() {
         return bufferSize;
     }
@@ -203,8 +187,14 @@ public class StreamResource implements ApplicationResource {
         this.bufferSize = bufferSize;
     }
 
-    /* documented in superclass */
-    @Override
+    /**
+     * Gets the length of cache expiration time. This gives the adapter the
+     * possibility cache streams sent to the client. The caching may be made in
+     * adapter or at the client if the client supports caching. Default is
+     * <code>DownloadStream.DEFAULT_CACHETIME</code>.
+     * 
+     * @return Cache time in milliseconds.
+     */
     public long getCacheTime() {
         return cacheTime;
     }
@@ -225,6 +215,31 @@ public class StreamResource implements ApplicationResource {
      */
     public void setCacheTime(long cacheTime) {
         this.cacheTime = cacheTime;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj instanceof StreamResource) {
+            StreamResource that = (StreamResource) obj;
+            return getStreamSource().equals(that.getStreamSource())
+                    && getMIMEType().equals(that.getMIMEType())
+                    && String.valueOf(getFilename()).equals(
+                            String.valueOf(that.getFilename()))
+                    && getBufferSize() == that.getBufferSize()
+                    && getCacheTime() == that.getCacheTime();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (getStreamSource().hashCode() + 37
+                * getMIMEType().hashCode() + 37 ^ 2
+                * String.valueOf(getFilename()).hashCode() + 37 ^ 3
+                * getBufferSize() + 37 ^ 4 * getCacheTime());
     }
 
 }

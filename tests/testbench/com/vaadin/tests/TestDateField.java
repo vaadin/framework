@@ -77,8 +77,7 @@ public class TestDateField extends CustomComponent {
 
     @Override
     public void attach() {
-        final ClassResource res = new ClassResource("m.gif",
-                super.getApplication());
+        final ClassResource res = new ClassResource("m.gif");
         df.setIcon(res);
         super.attach();
     }

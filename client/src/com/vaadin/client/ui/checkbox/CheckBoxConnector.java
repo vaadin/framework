@@ -96,7 +96,7 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
             getWidget().setEnabled(false);
         }
 
-        if (getState().getIcon() != null) {
+        if (getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(getConnection());
                 DOM.insertChild(getWidget().getElement(),
@@ -104,7 +104,7 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                 getWidget().icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
                 getWidget().icon.sinkEvents(Event.ONCLICK);
             }
-            getWidget().icon.setUri(getState().getIcon().getURL());
+            getWidget().icon.setUri(getIcon());
         } else if (getWidget().icon != null) {
             // detach icon
             DOM.removeChild(getWidget().getElement(),

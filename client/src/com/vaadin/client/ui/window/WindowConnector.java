@@ -115,8 +115,8 @@ SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
             String iconURL = null;
-            if (getState().getIcon() != null) {
-                iconURL = getState().getIcon().getURL();
+            if (getIcon() != null) {
+                iconURL = getIcon();
             }
             getWidget().setCaption(getState().getCaption(), iconURL);
         }

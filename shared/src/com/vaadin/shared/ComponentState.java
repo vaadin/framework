@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.shared.communication.URLReference;
 
 /**
  * Default shared state implementation for UI components.
@@ -40,7 +39,6 @@ public class ComponentState extends SharedState {
     // string!
     private String caption = null;
     private boolean visible = true;
-    private URLReference icon = null;
     private List<String> styles = null;
     private String id = null;
     /**
@@ -263,14 +261,6 @@ public class ComponentState extends SharedState {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
-    }
-
-    public URLReference getIcon() {
-        return icon;
-    }
-
-    public void setIcon(URLReference icon) {
-        this.icon = icon;
     }
 
     /**

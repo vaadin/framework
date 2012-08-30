@@ -18,12 +18,9 @@ package com.vaadin.service;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Collection;
 
 import com.vaadin.Application;
-import com.vaadin.server.AbstractCommunicationManager;
-import com.vaadin.server.ApplicationResource;
 
 /**
  * <code>ApplicationContext</code> provides information about the running
@@ -84,59 +81,6 @@ public interface ApplicationContext extends Serializable {
      * invalidated. A negative time indicates the context should never timeout.
      */
     public int getMaxInactiveInterval();
-
-    /**
-     * Generate a URL that can be used as the relative location of e.g. an
-     * {@link ApplicationResource}.
-     * 
-     * This method should only be called from the processing of a UIDL request,
-     * not from a background thread. The return value is null if used outside a
-     * suitable request.
-     * 
-     * @deprecated this method is intended for terminal implementation only and
-     *             is subject to change/removal from the interface (to
-     *             {@link AbstractCommunicationManager})
-     * 
-     * @param resource
-     * @param urlKey
-     *            a key for the resource that can later be extracted from a URL
-     *            with {@link #getURLKey(URL, String)}
-     */
-    @Deprecated
-    public String generateApplicationResourceURL(ApplicationResource resource,
-            String urlKey);
-
-    /**
-     * Tests if a URL is for an application resource (APP/...).
-     * 
-     * @deprecated this method is intended for terminal implementation only and
-     *             is subject to change/removal from the interface (to
-     *             {@link AbstractCommunicationManager})
-     * 
-     * @param context
-     * @param relativeUri
-     * @return
-     */
-    @Deprecated
-    public boolean isApplicationResourceURL(URL context, String relativeUri);
-
-    /**
-     * Gets the identifier (key) from an application resource URL. This key is
-     * the one that was given to
-     * {@link #generateApplicationResourceURL(ApplicationResource, String)} when
-     * creating the URL.
-     * 
-     * @deprecated this method is intended for terminal implementation only and
-     *             is subject to change/removal from the interface (to
-     *             {@link AbstractCommunicationManager})
-     * 
-     * 
-     * @param context
-     * @param relativeUri
-     * @return
-     */
-    @Deprecated
-    public String getURLKey(URL context, String relativeUri);
 
     /**
      * Interface for listening to transaction events. Implement this interface

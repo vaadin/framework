@@ -15,6 +15,7 @@
  */
 package com.vaadin.server;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -367,8 +368,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
     /**
      * Finds a UI ancestor of this connector. <code>null</code> is returned if
-     * no UI ancestor is found (typically because the connector is not
-     * attached to a proper hierarchy).
+     * no UI ancestor is found (typically because the connector is not attached
+     * to a proper hierarchy).
      * 
      * @return the UI ancestor of this connector, or <code>null</code> if none
      *         is found.
@@ -560,5 +561,60 @@ public abstract class AbstractClientConnector implements ClientConnector {
     @Override
     public void beforeClientResponse(boolean initial) {
         // Do nothing by default
+    }
+
+    @Override
+    public boolean handleConnectorRequest(WrappedRequest request,
+            WrappedResponse response, String path) throws IOException {
+        String[] parts = path.split("/", 2);
+        String key = parts[0];
+
+        ConnectorResource resource = (ConnectorResource) getResource(key);
+        if (resource != null) {
+            DownloadStream stream = resource.getStream();
+            stream.writeTo(response);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Gets a resource defined using {@link #setResource(String, Resource)} with
+     * the corresponding key.
+     * 
+     * @param key
+     *            the string identifier of the resource
+     * @return a resource, or <code>null</code> if there's no resource
+     *         associated with the given key
+     * 
+     * @see #setResource(String, Resource)
+     */
+    protected Resource getResource(String key) {
+        return ResourceReference.getResource(getState().resources.get(key));
+    }
+
+    /**
+     * Registers a resource with this connector using the given key. This will
+     * make the URL for retrieving the resource available to the client-side
+     * connector using
+     * {@link com.vaadin.terminal.gwt.client.ui.AbstractConnector#getResourceUrl(String)}
+     * with the same key.
+     * 
+     * @param key
+     *            the string key to associate the resource with
+     * @param resource
+     *            the resource to set, or <code>null</code> to clear a previous
+     *            association.
+     */
+    protected void setResource(String key, Resource resource) {
+        ResourceReference resourceReference = ResourceReference.create(
+                resource, this, key);
+
+        if (resourceReference == null) {
+            getState().resources.remove(key);
+        } else {
+            getState().resources.put(key, resourceReference);
+        }
     }
 }

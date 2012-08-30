@@ -39,6 +39,7 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UI.UIConnector;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.TabIndexState;
@@ -248,9 +249,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ComponentConnector#delegateCaptionHandling
-     * ()
+     * @see com.vaadin.client.ComponentConnector#delegateCaptionHandling ()
      */
     @Override
     public boolean delegateCaptionHandling() {
@@ -421,13 +420,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.ComponentConnector#getTooltipInfo(com.
+     * @see com.vaadin.client.ComponentConnector#getTooltipInfo(com.
      * google.gwt.dom.client.Element)
      */
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().getDescription(), getState()
                 .getErrorMessage());
+    }
+
+    /**
+     * Gets the icon set for this component.
+     * 
+     * @return the URL of the icon, or <code>null</code> if no icon has been
+     *         defined.
+     */
+    protected String getIcon() {
+        return getResourceUrl(ComponentConstants.ICON_RESOURCE);
     }
 }

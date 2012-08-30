@@ -140,8 +140,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
         getWidget().client = client;
         getWidget().id = uidl.getId();
 
-        if (getState().getIcon() != null) {
-            getWidget().setIconUri(getState().getIcon().getURL(), client);
+        if (getIcon() != null) {
+            getWidget().setIconUri(getIcon(), client);
         } else {
             getWidget().setIconUri(null, client);
         }

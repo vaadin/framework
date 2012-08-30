@@ -35,17 +35,18 @@ public class EmbeddedBrowserIsVisible extends TestBase {
         browser.setAlternateText("Browser alternative text");
         final TextSource textSource = new TextSource("initial");
         final StreamResource textResource = new StreamResource(textSource,
-                "initial.txt", this);
+                "initial.txt");
         textResource.setMIMEType("text/plain");
         browser.setSource(textResource);
         addComponent(browser);
 
         page1.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 TextSource helloSource = new TextSource("Hello World");
                 StreamResource helloResource = new StreamResource(helloSource,
-                        "helloworld.txt", EmbeddedBrowserIsVisible.this);
+                        "helloworld.txt");
                 helloResource.setMIMEType("text/plain");
                 browser.setSource(helloResource);
             }
@@ -53,10 +54,11 @@ public class EmbeddedBrowserIsVisible extends TestBase {
 
         page2.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 TextSource helloSource = new TextSource("Lorem Ipsum");
                 StreamResource helloResource = new StreamResource(helloSource,
-                        "loremipsum.txt", EmbeddedBrowserIsVisible.this);
+                        "loremipsum.txt");
                 helloResource.setMIMEType("text/plain");
                 browser.setSource(helloResource);
             }
@@ -64,6 +66,7 @@ public class EmbeddedBrowserIsVisible extends TestBase {
 
         page3.addListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 browser.setSource(null);
             }
@@ -87,6 +90,7 @@ public class EmbeddedBrowserIsVisible extends TestBase {
             this.text = text;
         }
 
+        @Override
         public InputStream getStream() {
 
             StringBuilder sb = new StringBuilder();

@@ -2,6 +2,7 @@ package com.vaadin.client.ui.embeddedbrowser;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.embeddedbrowser.EmbeddedBrowserState;
 
@@ -30,8 +31,7 @@ public class EmbeddedBrowserConnector extends AbstractComponentConnector {
 
         getWidget().setAlternateText(getState().getAlternateText());
         getWidget().setSource(
-                getState().getSource() != null ? getState().getSource()
-                        .getURL() : null);
+                getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
         getWidget().setName(getConnectorId());
     }
 

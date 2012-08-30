@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 
 public class VCaption extends HTML {
@@ -119,7 +120,8 @@ public class VCaption extends HTML {
         }
         setStyleName(style);
 
-        boolean hasIcon = owner.getState().getIcon() != null;
+        boolean hasIcon = owner.getState().resources
+                .containsKey(ComponentConstants.ICON_RESOURCE);
         boolean showRequired = false;
         boolean showError = owner.getState().getErrorMessage() != null;
         if (owner.getState() instanceof AbstractFieldState) {
@@ -143,7 +145,8 @@ public class VCaption extends HTML {
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(owner.getState().getIcon().getURL());
+            icon.setUri(owner.getState().resources.get(
+                    ComponentConstants.ICON_RESOURCE).getURL());
 
         } else if (icon != null) {
             // Remove existing
@@ -392,7 +395,7 @@ public class VCaption extends HTML {
         if (state.getCaption() != null) {
             return true;
         }
-        if (state.getIcon() != null) {
+        if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
             return true;
         }
         if (state.getErrorMessage() != null) {

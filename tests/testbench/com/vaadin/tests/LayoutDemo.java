@@ -25,8 +25,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -121,7 +121,7 @@ public class LayoutDemo extends com.vaadin.Application.LegacyApplication {
 
     private Component getExamplePicture(String caption) {
         // loads image from package com.vaadin.demo
-        final ClassResource cr = new ClassResource("m-bullet-blue.gif", this);
+        final ClassResource cr = new ClassResource("m-bullet-blue.gif");
         final Embedded em = new Embedded("Embedded " + caption, cr);
         em.setWidth("170px");
         return em;

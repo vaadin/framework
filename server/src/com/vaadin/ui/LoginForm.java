@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.WrappedRequest;
@@ -58,23 +58,7 @@ public class LoginForm extends CustomComponent {
 
     private Embedded iframe = new Embedded();
 
-    private ApplicationResource loginPage = new ApplicationResource() {
-
-        @Override
-        public Application getApplication() {
-            return LoginForm.this.getApplication();
-        }
-
-        @Override
-        public int getBufferSize() {
-            return getLoginHTML().length;
-        }
-
-        @Override
-        public long getCacheTime() {
-            return -1;
-        }
-
+    private ConnectorResource loginPage = new ConnectorResource() {
         @Override
         public String getFilename() {
             return "login";
@@ -82,8 +66,13 @@ public class LoginForm extends CustomComponent {
 
         @Override
         public DownloadStream getStream() {
-            return new DownloadStream(new ByteArrayInputStream(getLoginHTML()),
-                    getMIMEType(), getFilename());
+            byte[] loginHTML = getLoginHTML();
+            DownloadStream downloadStream = new DownloadStream(
+                    new ByteArrayInputStream(loginHTML), getMIMEType(),
+                    getFilename());
+            downloadStream.setBufferSize(loginHTML.length);
+            downloadStream.setCacheTime(-1);
+            return downloadStream;
         }
 
         @Override
@@ -197,14 +186,12 @@ public class LoginForm extends CustomComponent {
     @Override
     public void attach() {
         super.attach();
-        getApplication().addResource(loginPage);
         getApplication().addRequestHandler(requestHandler);
         iframe.setSource(loginPage);
     }
 
     @Override
     public void detach() {
-        getApplication().removeResource(loginPage);
         getApplication().removeRequestHandler(requestHandler);
 
         super.detach();

@@ -36,6 +36,7 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.communication.URLReference;
 
 /**
  * An abstract implementation of Connector.
@@ -342,6 +343,31 @@ public abstract class AbstractConnector implements ServerConnector,
             // Update children as they might be affected by the enabled state of
             // their parent
             c.updateEnabledState(c.isEnabled());
+        }
+    }
+
+    /**
+     * Gets the URL for a resource that has been added by the server-side
+     * connector using
+     * {@link com.vaadin.terminal.AbstractClientConnector#setResource(String, com.vaadin.terminal.Resource)}
+     * with the same key. <code>null</code> is returned if no corresponding
+     * resource is found.
+     * <p>
+     * To get an event when a resource changes, you can use
+     * {@link #addStateChangeHandler(String, StateChangeHandler)} with
+     * <code>resources.[key]</code> as the property name.
+     * 
+     * @param key
+     *            a string identifying the resource.
+     * @return the resource URL as a string, or <code>null</code> if no
+     *         corresponding resource is found.
+     */
+    public String getResourceUrl(String key) {
+        URLReference urlReference = getState().resources.get(key);
+        if (urlReference == null) {
+            return null;
+        } else {
+            return urlReference.getURL();
         }
     }
 }

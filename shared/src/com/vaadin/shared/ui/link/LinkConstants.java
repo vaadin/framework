@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.video;
 
-import com.vaadin.shared.ui.AbstractMediaState;
+package com.vaadin.shared.ui.link;
 
-public class VideoState extends AbstractMediaState {
+import com.vaadin.shared.ComponentState;
 
+public class LinkConstants  {
+    public static String HREF_RESOURCE = "href";
 }

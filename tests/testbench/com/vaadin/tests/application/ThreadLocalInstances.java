@@ -2,7 +2,6 @@ package com.vaadin.tests.application;
 
 import com.vaadin.Application;
 import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.server.ApplicationResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.WrappedRequest;
@@ -47,7 +46,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
         }
     };
 
-    private final ApplicationResource resource = new FlagSeResource(this) {
+    private final FlagSeResource resource = new FlagSeResource() {
         @Override
         public DownloadStream getStream() {
             reportCurrentStatus("resource handler");

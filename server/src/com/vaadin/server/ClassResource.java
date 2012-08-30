@@ -20,6 +20,8 @@ import java.io.Serializable;
 
 import com.vaadin.Application;
 import com.vaadin.service.FileTypeResolver;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * <code>ClassResource</code> is a named resource accessed with the class
@@ -33,7 +35,7 @@ import com.vaadin.service.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ClassResource implements ApplicationResource, Serializable {
+public class ClassResource implements ConnectorResource, Serializable {
 
     /**
      * Default buffer size for this stream resource.
@@ -43,10 +45,10 @@ public class ClassResource implements ApplicationResource, Serializable {
     /**
      * Default cache time for this stream resource.
      */
-    private long cacheTime = DEFAULT_CACHETIME;
+    private long cacheTime = DownloadStream.DEFAULT_CACHETIME;
 
     /**
-     * Associated class used for indetifying the source of the resource.
+     * Associated class used for identifying the source of the resource.
      */
     private final Class<?> associatedClass;
 
@@ -56,21 +58,15 @@ public class ClassResource implements ApplicationResource, Serializable {
     private final String resourceName;
 
     /**
-     * Application used for serving the class.
-     */
-    private final Application application;
-
-    /**
      * Creates a new application resource instance. The resource id is relative
-     * to the location of the application class.
+     * to the location of the UI of the component using this resource (or the
+     * Application if using LegacyWindow).
      * 
      * @param resourceName
      *            the Unique identifier of the resource within the application.
-     * @param application
-     *            the application this resource will be added to.
      */
-    public ClassResource(String resourceName, Application application) {
-        this(application.getClass(), resourceName, application);
+    public ClassResource(String resourceName) {
+        this(null, resourceName);
     }
 
     /**
@@ -80,18 +76,13 @@ public class ClassResource implements ApplicationResource, Serializable {
      *            the class of the which the resource is associated.
      * @param resourceName
      *            the Unique identifier of the resource within the application.
-     * @param application
-     *            the application this resource will be added to.
      */
-    public ClassResource(Class<?> associatedClass, String resourceName,
-            Application application) {
+    public ClassResource(Class<?> associatedClass, String resourceName) {
         this.associatedClass = associatedClass;
         this.resourceName = resourceName;
-        this.application = application;
-        if (resourceName == null || associatedClass == null) {
+        if (resourceName == null) {
             throw new NullPointerException();
         }
-        application.addResource(this);
     }
 
     /**
@@ -104,50 +95,43 @@ public class ClassResource implements ApplicationResource, Serializable {
         return FileTypeResolver.getMIMEType(resourceName);
     }
 
-    /**
-     * Gets the application of this resource.
-     * 
-     * @see com.vaadin.server.ApplicationResource#getApplication()
-     */
-    @Override
-    public Application getApplication() {
-        return application;
-    }
-
-    /**
-     * Gets the virtual filename for this resource.
-     * 
-     * @return the file name associated to this resource.
-     * @see com.vaadin.server.ApplicationResource#getFilename()
-     */
     @Override
     public String getFilename() {
-        int index = 0;
-        int next = 0;
-        while ((next = resourceName.indexOf('/', index)) > 0
-                && next + 1 < resourceName.length()) {
-            index = next + 1;
-        }
-        return resourceName.substring(index);
+        String[] parts = resourceName.split("/");
+        return parts[parts.length - 1];
     }
 
-    /**
-     * Gets resource as stream.
-     * 
-     * @see com.vaadin.server.ApplicationResource#getStream()
-     */
     @Override
     public DownloadStream getStream() {
-        final DownloadStream ds = new DownloadStream(
-                associatedClass.getResourceAsStream(resourceName),
-                getMIMEType(), getFilename());
+        final DownloadStream ds = new DownloadStream(getAssociatedClass()
+                .getResourceAsStream(resourceName), getMIMEType(),
+                getFilename());
         ds.setBufferSize(getBufferSize());
-        ds.setCacheTime(cacheTime);
+        ds.setCacheTime(getCacheTime());
         return ds;
     }
 
-    /* documented in superclass */
-    @Override
+    protected Class<?> getAssociatedClass() {
+        if (associatedClass == null) {
+            Class<? extends UI> associatedClass = UI.getCurrent().getClass();
+            if (associatedClass == LegacyWindow.class) {
+                return Application.getCurrent().getClass();
+            }
+            return associatedClass;
+        }
+        return associatedClass;
+    }
+
+    /**
+     * Gets the size of the download buffer used for this resource.
+     * 
+     * <p>
+     * If the buffer size is 0, the buffer size is decided by the terminal
+     * adapter. The default value is 0.
+     * </p>
+     * 
+     * @return the size of the buffer in bytes.
+     */
     public int getBufferSize() {
         return bufferSize;
     }
@@ -157,13 +141,24 @@ public class ClassResource implements ApplicationResource, Serializable {
      * 
      * @param bufferSize
      *            the size of the buffer in bytes.
+     * 
+     * @see #getBufferSize()
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
 
-    /* documented in superclass */
-    @Override
+    /**
+     * Gets the length of cache expiration time.
+     * 
+     * <p>
+     * This gives the adapter the possibility cache streams sent to the client.
+     * The caching may be made in adapter or at the client if the client
+     * supports caching. Default is {@link DownloadStream#DEFAULT_CACHETIME}.
+     * </p>
+     * 
+     * @return Cache time in milliseconds
+     */
     public long getCacheTime() {
         return cacheTime;
     }
@@ -174,7 +169,7 @@ public class ClassResource implements ApplicationResource, Serializable {
      * <p>
      * This gives the adapter the possibility cache streams sent to the client.
      * The caching may be made in adapter or at the client if the client
-     * supports caching. Zero or negavive value disbales the caching of this
+     * supports caching. Zero or negative value disables the caching of this
      * stream.
      * </p>
      * 

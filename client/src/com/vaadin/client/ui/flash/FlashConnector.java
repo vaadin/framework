@@ -2,6 +2,7 @@ package com.vaadin.client.ui.flash;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.flash.FlashState;
 
@@ -29,8 +30,7 @@ public class FlashConnector extends AbstractComponentConnector {
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setSource(
-                getState().getSource() != null ? getState().getSource()
-                        .getURL() : null);
+                getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
         getWidget().setArchive(getState().getArchive());
         getWidget().setClassId(getState().getClassId());
         getWidget().setCodebase(getState().getCodebase());

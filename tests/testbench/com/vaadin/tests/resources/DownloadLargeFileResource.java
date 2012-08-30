@@ -51,7 +51,7 @@ public class DownloadLargeFileResource extends TestBase {
                 os.write(b);
             }
             os.close();
-            hugeFileResource = new FileResource(hugeFile, this);
+            hugeFileResource = new FileResource(hugeFile);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -12,8 +12,8 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class GAESyncTest extends Application.LegacyApplication {
 
@@ -116,7 +116,7 @@ public class GAESyncTest extends Application.LegacyApplication {
         }
 
         private void addImage() {
-            ClassResource res = new ClassResource("img1.png", app) {
+            ClassResource res = new ClassResource("img1.png") {
 
                 private static final long serialVersionUID = 1L;
 

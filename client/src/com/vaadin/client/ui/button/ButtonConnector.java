@@ -83,17 +83,17 @@ public class ButtonConnector extends AbstractComponentConnector implements
             }
         });
 
-        addStateChangeHandler("icon", new StateChangeHandler() {
+        addStateChangeHandler("resources.icon", new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                if (getState().getIcon() != null) {
+                if (getIcon() != null) {
                     if (getWidget().icon == null) {
                         getWidget().icon = new Icon(getConnection());
                         getWidget().wrapper.insertBefore(
                                 getWidget().icon.getElement(),
                                 getWidget().captionElement);
                     }
-                    getWidget().icon.setUri(getState().getIcon().getURL());
+                    getWidget().icon.setUri(getIcon());
                 } else {
                     if (getWidget().icon != null) {
                         getWidget().wrapper.removeChild(getWidget().icon

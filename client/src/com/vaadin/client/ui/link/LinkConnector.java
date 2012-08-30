@@ -20,15 +20,33 @@ import com.google.gwt.user.client.DOM;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.link.LinkConstants;
 import com.vaadin.ui.Link;
 
 @Connect(Link.class)
 public class LinkConnector extends AbstractComponentConnector implements
         Paintable {
+
+    @Override
+    protected void init() {
+        super.init();
+        addStateChangeHandler("resources." + LinkConstants.HREF_RESOURCE,
+                new StateChangeHandler() {
+                    @Override
+                    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                        getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
+                        getWidget().anchor
+                                .setAttribute("href", getWidget().src);
+
+                    }
+                });
+    }
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -49,11 +67,6 @@ public class LinkConnector extends AbstractComponentConnector implements
         if (uidl.hasAttribute("name")) {
             getWidget().target = uidl.getStringAttribute("name");
             getWidget().anchor.setAttribute("target", getWidget().target);
-        }
-        if (uidl.hasAttribute("src")) {
-            getWidget().src = client.translateVaadinUri(uidl
-                    .getStringAttribute("src"));
-            getWidget().anchor.setAttribute("href", getWidget().src);
         }
 
         if (uidl.hasAttribute("border")) {
@@ -88,13 +101,13 @@ public class LinkConnector extends AbstractComponentConnector implements
                     "none");
         }
 
-        if (getState().getIcon() != null) {
+        if (getIcon() != null) {
             if (getWidget().icon == null) {
                 getWidget().icon = new Icon(client);
                 getWidget().anchor.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
-            getWidget().icon.setUri(getState().getIcon().getURL());
+            getWidget().icon.setUri(getIcon());
         }
 
     }

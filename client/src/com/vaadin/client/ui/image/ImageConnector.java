@@ -8,6 +8,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.image.ImageServerRpc;
 import com.vaadin.shared.ui.image.ImageState;
@@ -48,8 +49,7 @@ public class ImageConnector extends AbstractComponentConnector {
         clickEventHandler.handleEventHandlerRegistration();
 
         getWidget().setUrl(
-                getState().getSource() != null ? getState().getSource()
-                        .getURL() : null);
+                getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
         getWidget().setAltText(getState().getAlternateText());
     }
 

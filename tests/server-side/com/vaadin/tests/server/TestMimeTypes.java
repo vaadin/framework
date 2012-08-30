@@ -17,10 +17,10 @@ public class TestMimeTypes extends TestCase {
 
             }
         };
-        Embedded e = new Embedded("A pdf", new ClassResource("file.pddf", app));
+        Embedded e = new Embedded("A pdf", new ClassResource("file.pddf"));
         assertEquals("Invalid mimetype", "application/octet-stream",
                 e.getMimeType());
-        e = new Embedded("A pdf", new ClassResource("file.pdf", app));
+        e = new Embedded("A pdf", new ClassResource("file.pdf"));
         assertEquals("Invalid mimetype", "application/pdf", e.getMimeType());
     }
 }

@@ -3,7 +3,7 @@ package com.vaadin.tests.components.link;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.vaadin.server.ApplicationResource;
+import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.tests.components.TestBase;
@@ -14,7 +14,7 @@ public class LinkToPercentage extends TestBase {
     @Override
     protected void setup() {
         String filename = "110% Vaadin";
-        ApplicationResource resource = new StreamResource(new StreamSource() {
+        Resource resource = new StreamResource(new StreamSource() {
             @Override
             public InputStream getStream() {
                 return new InputStream() {
@@ -31,8 +31,7 @@ public class LinkToPercentage extends TestBase {
                     }
                 };
             }
-        }, filename, this);
-        addResource(resource);
+        }, filename);
 
         Link link = new Link("The link", resource);
 

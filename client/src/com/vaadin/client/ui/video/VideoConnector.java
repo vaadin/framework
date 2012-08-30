@@ -17,8 +17,8 @@ package com.vaadin.client.ui.video;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.MediaBaseConnector;
-import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.video.VideoConstants;
 import com.vaadin.shared.ui.video.VideoState;
 import com.vaadin.ui.Video;
 
@@ -33,12 +33,7 @@ public class VideoConnector extends MediaBaseConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        URLReference poster = getState().getPoster();
-        if (poster != null) {
-            getWidget().setPoster(poster.getURL());
-        } else {
-            getWidget().setPoster(null);
-        }
+        getWidget().setPoster(getResourceUrl(VideoConstants.POSTER_RESOURCE));
     }
 
     @Override

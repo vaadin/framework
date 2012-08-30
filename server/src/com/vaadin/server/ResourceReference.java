@@ -15,15 +15,25 @@
  */
 package com.vaadin.server;
 
-import com.vaadin.Application;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.URLReference;
 
 public class ResourceReference extends URLReference {
 
-    private Resource resource;
+    private final Resource resource;
+    private final ClientConnector connector;
+    private final String key;
 
-    public ResourceReference(Resource resource) {
+    public ResourceReference(Resource resource, ClientConnector connector,
+            String key) {
         this.resource = resource;
+        this.connector = connector;
+        this.key = key;
     }
 
     public Resource getResource() {
@@ -34,16 +44,49 @@ public class ResourceReference extends URLReference {
     public String getURL() {
         if (resource instanceof ExternalResource) {
             return ((ExternalResource) resource).getURL();
-        } else if (resource instanceof ApplicationResource) {
-            final ApplicationResource r = (ApplicationResource) resource;
-            final Application a = r.getApplication();
-            if (a == null) {
-                throw new RuntimeException(
-                        "An ApplicationResource ("
-                                + r.getClass().getName()
-                                + " must be attached to an application when it is sent to the client.");
+        } else if (resource instanceof DynamicConnectorResource) {
+            DynamicConnectorResource dcr = (DynamicConnectorResource) resource;
+
+            String filename = dcr.getPath();
+            StringBuilder builder = new StringBuilder(getConnectorResourceBase(
+                    filename, dcr.getConnector()));
+
+            Set<Entry<String, String>> entrySet = dcr.getParameters()
+                    .entrySet();
+            boolean first = true;
+            for (Entry<String, String> entry : entrySet) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (first) {
+                    builder.append('?');
+                    first = false;
+                } else {
+                    builder.append('&');
+                }
+                // TODO URL encode!!!
+                builder.append(key).append('=').append(value);
             }
-            final String uri = a.getRelativeLocation(r);
+            return builder.toString();
+        } else if (resource instanceof ConnectorResource) {
+            ConnectorResource connectorResource = (ConnectorResource) resource;
+
+            GlobalResourceHandler globalResourceHandler = connector.getUI()
+                    .getApplication().getGlobalResourceHandler(false);
+            if (globalResourceHandler != null) {
+                String uri = globalResourceHandler.getUri(connector,
+                        connectorResource);
+                if (uri != null && !uri.isEmpty()) {
+                    return uri;
+                }
+            }
+
+            // app://APP/connector/[uiid]/[cid]/[key]/[filename]
+            String prefix = key;
+            String filename = connectorResource.getFilename();
+            if (filename != null && !filename.isEmpty()) {
+                prefix += '/' + filename;
+            }
+            String uri = getConnectorResourceBase(prefix, connector);
             return uri;
         } else if (resource instanceof ThemeResource) {
             final String uri = "theme://"
@@ -57,11 +100,40 @@ public class ResourceReference extends URLReference {
 
     }
 
-    public static ResourceReference create(Resource resource) {
+    private static String getConnectorResourceBase(String filename,
+            ClientConnector connector) {
+        String uri = ApplicationConstants.APP_PROTOCOL_PREFIX
+                + ApplicationConstants.APP_REQUEST_PATH
+                + ConnectorResource.CONNECTOR_REQUEST_PATH
+                + connector.getUI().getUIId() + '/'
+                + connector.getConnectorId() + '/' + encodeFileName(filename);
+        return uri;
+    }
+
+    public static String encodeFileName(String filename) {
+        // #7738 At least Tomcat and JBoss refuses requests containing
+        // encoded slashes or backslashes in URLs. Application resource URLs
+        // should really be passed in another way than as part of the path
+        // in the future.
+        return urlEncode(filename).replace("%2F", "/").replace("%5C", "\\");
+    }
+
+    static String urlEncode(String filename) {
+        try {
+            return URLEncoder.encode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(
+                    "UTF-8 charset not available (\"this should never happen\")",
+                    e);
+        }
+    }
+
+    public static ResourceReference create(Resource resource,
+            ClientConnector connector, String key) {
         if (resource == null) {
             return null;
         } else {
-            return new ResourceReference(resource);
+            return new ResourceReference(resource, connector, key);
         }
     }
 

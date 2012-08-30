@@ -13,10 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.vaadin.shared.ui.video;
 
-import com.vaadin.shared.ui.AbstractMediaState;
-
-public class VideoState extends AbstractMediaState {
-
+public class VideoConstants {
+    public static final String POSTER_RESOURCE = "poster";
 }

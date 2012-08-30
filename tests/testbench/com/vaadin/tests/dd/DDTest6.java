@@ -229,7 +229,7 @@ public class DDTest6 extends TestBase {
                     return null;
                 }
             };
-            return new StreamResource(streamSource, getName(), DDTest6.get());
+            return new StreamResource(streamSource, getName());
         }
     }
 

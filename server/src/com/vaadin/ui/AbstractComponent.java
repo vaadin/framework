@@ -37,8 +37,8 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
 import com.vaadin.server.Terminal;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.tools.ReflectTools;
 
@@ -297,7 +297,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public Resource getIcon() {
-        return ResourceReference.getResource(getState().getIcon());
+        return getResource(ComponentConstants.ICON_RESOURCE);
     }
 
     /**
@@ -309,7 +309,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setIcon(Resource icon) {
-        getState().setIcon(ResourceReference.create(icon));
+        setResource(ComponentConstants.ICON_RESOURCE, icon);
     }
 
     /*

@@ -15,6 +15,7 @@
  */
 package com.vaadin.server;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -211,4 +212,30 @@ public interface ClientConnector extends Connector, RpcTarget {
      *             if the state can not be encoded
      */
     public JSONObject encodeState() throws JSONException;
+
+    /**
+     * Handle a request directed to this connector. This can be used by
+     * connectors to dynamically generate a response and it is also used
+     * internally when serving {@link ConnectorResource}s.
+     * <p>
+     * Requests to <code>/APP/connector/[ui id]/[connector id]/</code> are
+     * routed to this method with the remaining part of the requested path
+     * available in the path parameter.
+     * <p>
+     * {@link DynamicConnectorResource} can be used to easily make an
+     * appropriate URL available to the client-side code.
+     * 
+     * @param request
+     *            the request that should be handled
+     * @param response
+     *            the response object to which the response should be written
+     * @param path
+     *            the requested relative path
+     * @return <code>true</code> if the request has been handled,
+     *         <code>false</code> if no response has been written.
+     * @throws IOException
+     *             if there is a problem generating a response.
+     */
+    public boolean handleConnectorRequest(WrappedRequest request,
+            WrappedResponse response, String path) throws IOException;
 }

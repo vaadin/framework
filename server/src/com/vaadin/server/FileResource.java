@@ -34,7 +34,7 @@ import com.vaadin.service.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class FileResource implements ApplicationResource {
+public class FileResource implements ConnectorResource {
 
     /**
      * Default buffer size for this stream resource.
@@ -47,11 +47,6 @@ public class FileResource implements ApplicationResource {
     private File sourceFile;
 
     /**
-     * Application.
-     */
-    private final Application application;
-
-    /**
      * Default cache time for this stream resource.
      */
     private long cacheTime = DownloadStream.DEFAULT_CACHETIME;
@@ -59,18 +54,14 @@ public class FileResource implements ApplicationResource {
     /**
      * Creates a new file resource for providing given file for client
      * terminals.
+     * 
+     * @param sourceFile
+     *            the file that should be served.
      */
-    public FileResource(File sourceFile, Application application) {
-        this.application = application;
+    public FileResource(File sourceFile) {
         setSourceFile(sourceFile);
-        application.addResource(this);
     }
 
-    /**
-     * Gets the resource as stream.
-     * 
-     * @see com.vaadin.server.ApplicationResource#getStream()
-     */
     @Override
     public DownloadStream getStream() {
         try {
@@ -83,14 +74,15 @@ public class FileResource implements ApplicationResource {
             return ds;
         } catch (final FileNotFoundException e) {
             // Log the exception using the application error handler
-            getApplication().getErrorHandler().terminalError(new ErrorEvent() {
+            Application.getCurrent().getErrorHandler()
+                    .terminalError(new ErrorEvent() {
 
-                @Override
-                public Throwable getThrowable() {
-                    return e;
-                }
+                        @Override
+                        public Throwable getThrowable() {
+                            return e;
+                        }
 
-            });
+                    });
 
             return null;
         }
@@ -111,29 +103,15 @@ public class FileResource implements ApplicationResource {
      * @param sourceFile
      *            the source file to set.
      */
-    public void setSourceFile(File sourceFile) {
+    private void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
     }
 
-    /**
-     * @see com.vaadin.server.ApplicationResource#getApplication()
-     */
-    @Override
-    public Application getApplication() {
-        return application;
-    }
-
-    /**
-     * @see com.vaadin.server.ApplicationResource#getFilename()
-     */
     @Override
     public String getFilename() {
         return sourceFile.getName();
     }
 
-    /**
-     * @see com.vaadin.server.Resource#getMIMEType()
-     */
     @Override
     public String getMIMEType() {
         return FileTypeResolver.getMIMEType(sourceFile);
@@ -147,7 +125,6 @@ public class FileResource implements ApplicationResource {
      * 
      * @return Cache time in milliseconds.
      */
-    @Override
     public long getCacheTime() {
         return cacheTime;
     }
@@ -165,8 +142,16 @@ public class FileResource implements ApplicationResource {
         this.cacheTime = cacheTime;
     }
 
-    /* documented in superclass */
-    @Override
+    /**
+     * Gets the size of the download buffer used for this resource.
+     * 
+     * <p>
+     * If the buffer size is 0, the buffer size is decided by the terminal
+     * adapter. The default value is 0.
+     * </p>
+     * 
+     * @return the size of the buffer in bytes.
+     */
     public int getBufferSize() {
         return bufferSize;
     }

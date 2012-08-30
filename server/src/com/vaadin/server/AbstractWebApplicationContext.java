@@ -18,9 +18,6 @@ package com.vaadin.server;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +32,6 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext;
-import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Base class for web application contexts (including portlet contexts) that
@@ -184,66 +180,6 @@ public abstract class AbstractWebApplicationContext implements
     protected void removeApplication(Application application) {
         applications.remove(application);
         applicationToAjaxAppMgrMap.remove(application);
-    }
-
-    @Override
-    public String generateApplicationResourceURL(ApplicationResource resource,
-            String mapKey) {
-
-        final String filename = resource.getFilename();
-        if (filename == null) {
-            return ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.APP_REQUEST_PATH + mapKey + "/";
-        } else {
-            // #7738 At least Tomcat and JBoss refuses requests containing
-            // encoded slashes or backslashes in URLs. Application resource URLs
-            // should really be passed in another way than as part of the path
-            // in the future.
-            String encodedFileName = urlEncode(filename).replace("%2F", "/")
-                    .replace("%5C", "\\");
-            return ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.APP_REQUEST_PATH + mapKey + "/"
-                    + encodedFileName;
-        }
-
-    }
-
-    static String urlEncode(String filename) {
-        try {
-            return URLEncoder.encode(filename, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(
-                    "UTF-8 charset not available (\"this should never happen\")",
-                    e);
-        }
-    }
-
-    @Override
-    public boolean isApplicationResourceURL(URL context, String relativeUri) {
-        // If the relative uri is null, we are ready
-        if (relativeUri == null) {
-            return false;
-        }
-
-        // Resolves the prefix
-        String prefix = relativeUri;
-        final int index = relativeUri.indexOf('/');
-        if (index >= 0) {
-            prefix = relativeUri.substring(0, index);
-        }
-
-        // Handles the resource requests
-        return (prefix.equals("APP"));
-    }
-
-    @Override
-    public String getURLKey(URL context, String relativeUri) {
-        final int index = relativeUri.indexOf('/');
-        final int next = relativeUri.indexOf('/', index + 1);
-        if (next < 0) {
-            return null;
-        }
-        return relativeUri.substring(index + 1, next);
     }
 
     /**

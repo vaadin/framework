@@ -92,10 +92,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final VerticalLayout tab2 = new VerticalLayout();
         test(tab2);
         populateLayout(tab2);
-        tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
-                getApplication()));
-        tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif",
-                getApplication()));
+        tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif"));
+        tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif"));
 
         final VerticalLayout expandLayout = new VerticalLayout();
         test(expandLayout);
@@ -186,7 +184,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
      * @param c
      */
     void test(AbstractComponent c) {
-        final ClassResource res = new ClassResource("m.gif", getApplication());
+        final ClassResource res = new ClassResource("m.gif");
         final ErrorMessage errorMsg = new UserError("User error " + c);
 
         if ((c.getCaption() == null) || (c.getCaption().length() <= 0)) {

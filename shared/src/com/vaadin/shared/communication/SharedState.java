@@ -17,6 +17,8 @@
 package com.vaadin.shared.communication;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.Connector;
 
@@ -47,6 +49,15 @@ import com.vaadin.shared.Connector;
  * @since 7.0
  */
 public class SharedState implements Serializable {
+
+    /**
+     * The automatically managed resources used by the connector.
+     * 
+     * @see com.vaadin.terminal.AbstractClientConnector#setResource(String,
+     *      com.vaadin.terminal.Resource)
+     * @see com.vaadin.terminal.gwt.client.ui.AbstractConnector#getResourceUrl(String)
+     */
+    public Map<String, URLReference> resources = new HashMap<String, URLReference>();
 
     private boolean enabled = true;
 

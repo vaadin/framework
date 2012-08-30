@@ -36,6 +36,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.MarginInfo;
 
@@ -253,13 +254,14 @@ public class VFormLayout extends SimplePanel {
 
             boolean isEmpty = true;
 
-            if (state.getIcon() != null) {
+            if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
                 if (icon == null) {
                     icon = new Icon(owner.getConnection());
 
                     DOM.insertChild(getElement(), icon.getElement(), 0);
                 }
-                icon.setUri(state.getIcon().getURL());
+                icon.setUri(state.resources.get(
+                        ComponentConstants.ICON_RESOURCE).getURL());
                 isEmpty = false;
             } else {
                 if (icon != null) {

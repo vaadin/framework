@@ -17,7 +17,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
+import com.vaadin.shared.ui.video.VideoConstants;
 import com.vaadin.shared.ui.video.VideoState;
 
 /**
@@ -79,14 +79,14 @@ public class Video extends AbstractMedia {
      * @param poster
      */
     public void setPoster(Resource poster) {
-        getState().setPoster(ResourceReference.create(poster));
+        setResource(VideoConstants.POSTER_RESOURCE, poster);
     }
 
     /**
      * @return The poster image.
      */
     public Resource getPoster() {
-        return ResourceReference.getResource(getState().getPoster());
+        return getResource(VideoConstants.POSTER_RESOURCE);
     }
 
 }

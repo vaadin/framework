@@ -18,11 +18,12 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.BorderStyle;
+import com.vaadin.shared.ui.link.LinkConstants;
 
 /**
  * Link is used to create external or internal URL links.
@@ -44,8 +45,6 @@ public class Link extends AbstractComponent implements LegacyComponent {
     /* Target window border type constant: Default window border */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_DEFAULT = BorderStyle.DEFAULT;
-
-    private Resource resource = null;
 
     private String targetName;
 
@@ -70,7 +69,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      */
     public Link(String caption, Resource resource) {
         setCaption(caption);
-        this.resource = resource;
+        setResource(resource);
     }
 
     /**
@@ -94,7 +93,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
     public Link(String caption, Resource resource, String targetName,
             int width, int height, BorderStyle border) {
         setCaption(caption);
-        this.resource = resource;
+        setResource(resource);
         setTargetName(targetName);
         setTargetWidth(width);
         setTargetHeight(height);
@@ -111,10 +110,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        if (resource != null) {
-            target.addAttribute("src", resource);
-        } else {
+        if (getResource() == null) {
             return;
         }
 
@@ -230,7 +226,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      * @return the Resource.
      */
     public Resource getResource() {
-        return resource;
+        return getResource(LinkConstants.HREF_RESOURCE);
     }
 
     /**
@@ -240,8 +236,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      *            the resource to set.
      */
     public void setResource(Resource resource) {
-        this.resource = resource;
-        markAsDirty();
+        setResource(LinkConstants.HREF_RESOURCE, resource);
     }
 
     @Override

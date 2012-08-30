@@ -19,7 +19,6 @@ package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 import com.google.gwt.user.client.ui.Image;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.minitutorials.v7a2.ResourceInStateComponent;
 
@@ -28,10 +27,10 @@ public class ResourceInStateConnector extends AbstractComponentConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
+        String icon = getResourceUrl(ResourceInStateState.MY_ICON_RESOURCE);
 
-        URLReference icon = getState().getMyIcon();
         if (icon != null) {
-            getWidget().setUrl(icon.getURL());
+            getWidget().setUrl(icon);
         } else {
             getWidget().setUrl("");
         }

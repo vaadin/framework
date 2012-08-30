@@ -189,7 +189,7 @@ public class TestForStyledUpload extends Application.LegacyApplication
                     + " bytes.", ContentMode.XHTML));
 
             status.addComponent(new Link("Download " + buffer.getFileName(),
-                    new StreamResource(buffer, buffer.getFileName(), this)));
+                    new StreamResource(buffer, buffer.getFileName())));
 
             status.setVisible(true);
         }

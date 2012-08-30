@@ -38,7 +38,7 @@ public class EmbeddedImageRefresh extends TestBase {
         // Attach it to a resource.
         final MyImageSource imageSource = new MyImageSource();
         final StreamResource imageResource = new StreamResource(imageSource,
-                "testimage.png", this);
+                "testimage.png");
         imageResource.setCacheTime(0);
         embedded.setSource(imageResource);
 

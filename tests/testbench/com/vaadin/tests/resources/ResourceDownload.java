@@ -74,7 +74,7 @@ public class ResourceDownload extends TestBase {
                     return null;
                 }
             }
-        }, filename + ".xls", this);
+        }, filename + ".xls");
         streamResource.setCacheTime(5000); // no cache (<=0) does not work with
         // IE8
         streamResource.setMIMEType("application/x-msexcel");

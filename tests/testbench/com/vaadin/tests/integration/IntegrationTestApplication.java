@@ -7,8 +7,8 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class IntegrationTestApplication extends Application.LegacyApplication {
 
@@ -28,11 +28,10 @@ public class IntegrationTestApplication extends Application.LegacyApplication {
         window.addComponent(table);
 
         Item item = table.addItem("FI");
-        item.getItemProperty("icon")
-                .setValue(new ClassResource("fi.gif", this));
+        item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
         item.getItemProperty("country").setValue("Finland");
         item = table.addItem("SE");
-        item.getItemProperty("icon").setValue(new FlagSeResource(this));
+        item.getItemProperty("icon").setValue(new FlagSeResource());
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new Label();

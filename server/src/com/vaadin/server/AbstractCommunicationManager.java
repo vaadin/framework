@@ -103,9 +103,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static final String DASHDASH = "--";
 
-    private static final RequestHandler APP_RESOURCE_HANDLER = new ApplicationResourceHandler();
-
     private static final RequestHandler UNSUPPORTED_BROWSER_HANDLER = new UnsupportedBrowserHandler();
+
+    private static final RequestHandler CONNECTOR_RESOURCE_HANDLER = new ConnectorResourceHandler();
 
     /**
      * TODO Document me!
@@ -178,8 +178,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public AbstractCommunicationManager(Application application) {
         this.application = application;
         application.addRequestHandler(getBootstrapHandler());
-        application.addRequestHandler(APP_RESOURCE_HANDLER);
         application.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
+        application.addRequestHandler(CONNECTOR_RESOURCE_HANDLER);
         requireLocale(application.getLocale().toString());
     }
 

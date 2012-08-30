@@ -12,8 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1737 extends Application.LegacyApplication {
 
-    Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif",
-            this) {
+    Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif") {
         @Override
         public DownloadStream getStream() {
             try {

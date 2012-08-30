@@ -22,7 +22,8 @@ import java.util.List;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
-import com.vaadin.server.ClassResource;
+import com.vaadin.server.DynamicConnectorResource;
+import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.communication.ClientRpc;
@@ -107,9 +108,8 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                     .setMessages(
                             Arrays.asList("First state message",
                                     "Second state message"));
-            ClassResource resource = new ClassResource("test",
-                    BasicJavaScriptComponent.this.getApplication());
-            getState().setUrl(new ResourceReference(resource));
+            Resource resource = new DynamicConnectorResource(this, "test");
+            getState().setUrl(new ResourceReference(resource, null, null));
         }
 
         @Override

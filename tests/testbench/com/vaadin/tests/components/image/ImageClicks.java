@@ -30,10 +30,11 @@ public class ImageClicks extends TestBase {
         Image image = new Image();
         final MyImageSource imageSource = new MyImageSource();
         final StreamResource imageResource = new StreamResource(imageSource,
-                "testimage.png", this);
+                "testimage.png");
         image.setSource(imageResource);
         image.addListener(new ClickListener() {
 
+            @Override
             public void click(ClickEvent event) {
                 ++clickCounter;
                 label.setValue(labelText());
@@ -70,6 +71,7 @@ public class ImageClicks extends TestBase {
             return (int) Math.round(pos * resolution / (cells * 1.0));
         }
 
+        @Override
         public InputStream getStream() {
             // Create an image and draw some background on it.
             BufferedImage image = new BufferedImage(300, 300,

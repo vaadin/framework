@@ -28,9 +28,9 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 
@@ -57,11 +57,11 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         Embedded appResourceTest = new Embedded(
                 "Test of ApplicationResources with full path",
-                new FlagSeResource(this));
+                new FlagSeResource());
         main.addComponent(appResourceTest);
         Embedded specialNameResourceTest = new Embedded(
                 "Test ApplicationResources with special names",
-                new SpecialNameResource(this));
+                new SpecialNameResource());
         specialNameResourceTest.addStyleName("hugeBorder");
         main.addComponent(specialNameResourceTest);
 

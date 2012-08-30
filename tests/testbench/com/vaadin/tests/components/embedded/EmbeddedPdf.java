@@ -25,7 +25,7 @@ public class EmbeddedPdf extends TestBase {
         player.setType(Embedded.TYPE_BROWSER);
         player.setWidth("400px");
         player.setHeight("300px");
-        player.setSource(new ClassResource(getClass(), "test.pdf", this));
+        player.setSource(new ClassResource(getClass(), "test.pdf"));
         addComponent(player);
 
         addComponent(new Button("Remove pdf", new Button.ClickListener() {

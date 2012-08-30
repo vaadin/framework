@@ -17,7 +17,6 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a2.ResourceInStateState;
 import com.vaadin.ui.AbstractComponent;
 
@@ -28,10 +27,10 @@ public class ResourceInStateComponent extends AbstractComponent {
     }
 
     public void setMyIcon(Resource icon) {
-        getState().setMyIcon(new ResourceReference(icon));
+        setResource(ResourceInStateState.MY_ICON_RESOURCE, icon);
     }
 
     public Resource getMyIcon() {
-        return ResourceReference.getResource(getState().getMyIcon());
+        return getResource(ResourceInStateState.MY_ICON_RESOURCE);
     }
 }

@@ -25,8 +25,7 @@ public class NonExistingFileResource extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 FileResource res = new FileResource(new File(getContext()
-                        .getBaseDirectory() + "/" + filename),
-                        NonExistingFileResource.this);
+                        .getBaseDirectory() + "/" + filename));
                 getMainWindow().open(res);
 
             }
