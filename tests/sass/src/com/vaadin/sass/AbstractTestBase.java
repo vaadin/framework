@@ -16,7 +16,6 @@
 
 package com.vaadin.sass;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.net.URISyntaxException;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.css.sac.CSSException;
 
 public abstract class AbstractTestBase {
@@ -61,23 +61,7 @@ public abstract class AbstractTestBase {
      *             when file reading fails
      */
     public String getFileContent(File file) throws IOException {
-        StringBuilder content = new StringBuilder();
-
-        FileReader fileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line = null;
-        // Handle the first line separately to get the right amount of line
-        // separators in the loop
-        if ((line = bufferedReader.readLine()) != null) {
-            content.append(line);
-        }
-        // Handle the rest of the lines
-        while ((line = bufferedReader.readLine()) != null) {
-            content.append(System.getProperty("line.separator"));
-            content.append(line);
-        }
-        bufferedReader.close();
-        return content.toString();
+        return IOUtils.toString(new FileReader(file));
     }
 
     public void testParser(String file) throws CSSException, IOException,
