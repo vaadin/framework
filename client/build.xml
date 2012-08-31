@@ -19,6 +19,7 @@
 		-->
 		<fileset file="${gwt.user.jar}" />
 	</path>
+	<path id="classpath.tests.custom" />
 
 	<target name="jar">
 		<antcall target="common.jar">
@@ -33,4 +34,9 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
+
+	<target name="tests">
+		<antcall target="common.tests.run" />
+	</target>
+
 </project>

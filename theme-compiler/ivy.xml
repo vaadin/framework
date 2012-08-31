@@ -27,9 +27,9 @@
         <dependency org="com.vaadin" name="vaadin-buildhelpers"
             rev="${vaadin.version}" conf="build"></dependency>
         <dependency org="junit" name="junit" rev="4.5"
-            conf="tests -> master" />
+            conf="tests -> default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" conf="tests,ide->master" />
+            rev="0.9.5" conf="tests,ide->default" />
     </dependencies>
 
 </ivy-module>

@@ -81,7 +81,7 @@
 		<property name="src" location="{$result.dir}/../src" />
 
 		<union id="jar.files">
-			<fileset dir="${tests.classes}" excludes="${tests.classes.exclude}" />
+			<fileset dir="${classes}" excludes="${classes.exclude}" />
 			<fileset dir="${src}" excludes="${jar.exclude}" />
 			<fileset refid="common.files.for.all.jars" />
 			<fileset file="${pom.xml}" />
@@ -138,7 +138,9 @@
 
 		<property name="result.dir" location="result" />
 		<property name="classes" location="${result.dir}/classes" />
+		<property name="tests.src" location="${result.dir}/../tests/src" />
 		<property name="tests.classes" location="${result.dir}/tests/classes" />
+
 
 		<junit printsummary="withOutAndErr">
 			<formatter usefile="false" type="plain" />
@@ -149,7 +151,11 @@
 			<classpath refid="classpath.tests.dependencies" />
 
 			<batchtest fork="yes">
-				<fileset dir="${tests.classes}">
+				<fileset dir="${tests.src}">
+					<exclude name="**/Abstract*" />
+					<exclude name="com/vaadin/tests/data/bean/*" />
+					<exclude name="com/vaadin/tests/util/*" />
+					<exclude name="**/VaadinClasses.java" />
 				</fileset>
 			</batchtest>
 		</junit>
@@ -171,7 +177,9 @@
 			<classpath location="${classes}" />
 			<classpath refid="classpath.tests.custom" />
 		</javac>
-		<copy todir="${tests.classes}">
+
+		<!-- Copy resources -->
+		<copy todir="${tests.classes}" failonerror="false">
 			<fileset dir="${tests.resources}" />
 		</copy>
 	</target>

@@ -10,7 +10,6 @@
          ================================= -->
 	<!--<target name="all" description="Compiles all parts of the project" depends="buildhelpers,theme-compiler,shared,server,client">-->
 	<target name="all" description="Compiles all parts of the project" depends="buildorder">
-
 		<subant buildpathref="build-path">
 		</subant>
 	</target>
@@ -31,6 +30,11 @@
 		<!-- Clean IVY cache (~/.ivy2) so no old artifacts are fetched from there -->
 		<ivy:cleancache />
 
+	</target>
+
+	<target name="tests" depends="buildorder">
+		<subant buildpathref="build-path" target="tests">
+		</subant>
 	</target>
 
 </project>

@@ -1,16 +1,56 @@
-<ivy-module version="2.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
-    
-    <info organisation="com.vaadin" module="vaadin-uitests"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+    <info organisation="com.vaadin" module="vaadin-uitest"
+        revision="${vaadin.version}" />
+
     <configurations>
-   		<conf name="jetty" visibility="private" />
-   		<conf name="emma" visibility="private" />
-   		<conf name="server" visibility="private" />
-	</configurations>
-    <publications />        
-	<dependencies>
-   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.7" conf="server,jetty->default(*)" />
-        <dependency org="emma" name="emma" rev="2.0.5312-patched" conf="server,emma -> default(*)"/>		
-	</dependencies>
+        <conf name="build" />
+        <conf name="build-provided" />
+        <conf name="ide" />
+    </configurations>
+    <publications>
+        <artifact type="war" />
+    </publications>
+    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
+        <!-- API DEPENDENCIES -->
+        <dependency org="javax.portlet" name="portlet-api"
+            rev="2.0" conf="build-provided,ide -> default" />
+
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build-provided,ide -> default" />
+        <!--Servlet API version 2.5 -->
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" conf="build-provided,ide -> default" />
+        <!-- Google App Engine -->
+        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
+            rev="1.2.1" conf="build-provided,ide -> default" />
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-client"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+<!--          <dependency org="com.vaadin" name="vaadin-client-compiled"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-theme-compiled"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+-->
+        <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.11"
+            conf="build,ide->default" />
+        <dependency org="org.mortbay.jetty" name="jetty-util"
+            rev="6.1.11" conf="build,ide->default" />
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="build,ide -> default" />
+
+        <dependency org="commons-codec" name="commons-codec"
+            rev="1.5" conf="build,ide->default" />
+        <dependency org="commons-io" name="commons-io" rev="1.4"
+            conf="build,ide->default" />
+
+    </dependencies>
+
 </ivy-module>

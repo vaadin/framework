@@ -6,7 +6,7 @@
 	</description>
 	<include file="../build.xml" as="vaadin" />
 	<include file="../common.xml" as="common" />
-	
+
 	<property name="module.name" value="vaadin-buildhelpers" />
 	<property name="result.dir" location="result" />
 	<path id="classpath.compile.custom" />
@@ -23,5 +23,10 @@
 
 	<target name="clean">
 		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
 	</target>
 </project>

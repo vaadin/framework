@@ -10,6 +10,7 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" />
+        <conf name="tests" />
     </configurations>
     <publications>
         <artifact></artifact>

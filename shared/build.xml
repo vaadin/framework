@@ -24,8 +24,14 @@
 	<target name="publish-local" depends="jar">
 		<antcall target="common.publish-local" />
 	</target>
+		
 	<target name="clean">
-		<antcall target="common.clean">
-		</antcall>
+		<antcall target="common.clean"/>
 	</target>
+	
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No tests for ${module.name}!</echo>
+	</target>
+
 </project>

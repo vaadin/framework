@@ -10,23 +10,26 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" />
+        <conf name="tests" />
     </configurations>
     <publications>
         <artifact></artifact>
     </publications>
-    <dependencies defaultconf="build" defaultconfmapping="build,ide->master">
+    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build,tests->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build->build"></dependency>
 
         <!-- gwt-user dependencies -->
         <dependency org="org.w3c.css" name="sac" rev="1.3" />
 
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="tests->default" />
     </dependencies>
 
 </ivy-module>

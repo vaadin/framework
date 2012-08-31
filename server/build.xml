@@ -12,10 +12,18 @@
 	<property name="module.name" value="vaadin-server" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom" />
+	<path id="classpath.tests.custom" />
+
+	<union id="jar.includes">
+		<union refid="server.gwt.includes" />
+		<fileset dir="${vaadin.basedir}">
+			<include name="WebContent/VAADIN/vaadinBootstrap.js" />
+		</fileset>
+	</union>
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes" refid="server.gwt.includes" />
+			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
 
@@ -26,4 +34,10 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
+
+	<target name="tests">
+		<antcall target="common.tests.run"/>
+	</target>
+
+
 </project>

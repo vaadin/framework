@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.filter.Or;
-import com.vaadin.data.util.sqlcontainer.AllTests;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 import com.vaadin.data.util.sqlcontainer.DataGenerator;
 import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
@@ -34,8 +34,9 @@ public class SQLGeneratorsTest {
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                    AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+            connectionPool = new SimpleJDBCConnectionPool(
+                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -102,13 +103,13 @@ public class SQLGeneratorsTest {
          * No need to run this for Oracle/MSSQL generators since the
          * DefaultSQLGenerator method would be called anyway.
          */
-        if (AllTests.sqlGen instanceof MSSQLGenerator
-                || AllTests.sqlGen instanceof OracleGenerator) {
+        if (SQLTestsConstants.sqlGen instanceof MSSQLGenerator
+                || SQLTestsConstants.sqlGen instanceof OracleGenerator) {
             return;
         }
-        SQLGenerator sg = AllTests.sqlGen;
+        SQLGenerator sg = SQLTestsConstants.sqlGen;
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
 
         StatementHelper sh = sg.generateDeleteQuery(
@@ -128,8 +129,8 @@ public class SQLGeneratorsTest {
          * No need to run this for Oracle/MSSQL generators since the
          * DefaultSQLGenerator method would be called anyway.
          */
-        if (AllTests.sqlGen instanceof MSSQLGenerator
-                || AllTests.sqlGen instanceof OracleGenerator) {
+        if (SQLTestsConstants.sqlGen instanceof MSSQLGenerator
+                || SQLTestsConstants.sqlGen instanceof OracleGenerator) {
             return;
         }
         SQLGenerator sg = new DefaultSQLGenerator();
@@ -154,8 +155,8 @@ public class SQLGeneratorsTest {
          * No need to run this for Oracle/MSSQL generators since the
          * DefaultSQLGenerator method would be called anyway.
          */
-        if (AllTests.sqlGen instanceof MSSQLGenerator
-                || AllTests.sqlGen instanceof OracleGenerator) {
+        if (SQLTestsConstants.sqlGen instanceof MSSQLGenerator
+                || SQLTestsConstants.sqlGen instanceof OracleGenerator) {
             return;
         }
         SQLGenerator sg = new DefaultSQLGenerator();

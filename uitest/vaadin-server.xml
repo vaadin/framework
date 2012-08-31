@@ -31,7 +31,7 @@
     	<property name="webroot" value="${testing.testarea}/${package.name}/WebContent"></property>
     	
     	<ivy:resolve file="ivy.xml"/>
-    	<ivy:cachepath pathid="server" conf="server" />
+    	<ivy:cachepath pathid="server" conf="build" />
         <java classname="com.vaadin.launcher.DemoLauncher" fork="yes" dir="${testing.testarea}/${package.name}" resultproperty="server.start.result">
             <arg value="--nogui=1" />
             <classpath>
