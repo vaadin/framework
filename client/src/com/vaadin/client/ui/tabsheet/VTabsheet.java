@@ -58,6 +58,7 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.label.VLabel;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 
@@ -739,7 +740,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     void handleStyleNames(UIDL uidl, ComponentState state) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
-        if (state.styles != null && !state.styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(state)) {
             final List<String> styles = state.styles;
             if (!currentStyle.equals(styles.toString())) {
                 currentStyle = styles.toString();

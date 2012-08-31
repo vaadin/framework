@@ -23,6 +23,7 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.PostLayoutListener;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.PopupView;
 
@@ -69,7 +70,7 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
             // showPopupOnTop(popup, hostReference);
             getWidget().preparePopup(getWidget().popup);
             getWidget().popup.updateFromUIDL(popupUIDL, client);
-            if (getState().styles != null && !getState().styles.isEmpty()) {
+            if (ComponentStateUtil.hasStyles(getState())) {
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidget().popup
                         .getStylePrimaryName();

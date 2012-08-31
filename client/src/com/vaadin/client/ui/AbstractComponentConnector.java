@@ -42,6 +42,7 @@ import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
@@ -282,7 +283,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
-        if (state.styles != null && !state.styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(state)) {
             // add new style names
             List<String> newStyles = new ArrayList<String>();
             newStyles.addAll(state.styles);

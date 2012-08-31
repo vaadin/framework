@@ -37,6 +37,7 @@ import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler;
 import com.vaadin.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
@@ -129,7 +130,7 @@ public abstract class AbstractSplitPanelConnector extends
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        if (getState().styles != null && !getState().styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(getState())) {
             getWidget().componentStyleNames = getState().styles;
         } else {
             getWidget().componentStyleNames = new LinkedList<String>();

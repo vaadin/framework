@@ -143,7 +143,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                 // this is the top-level style that also propagates to items -
                 // any item specific styles are set above in
                 // currentItem.updateFromUIDL(item, client)
-                if (getState().styles != null && !getState().styles.isEmpty()) {
+                if (ComponentStateUtil.hasStyles(getState())) {
                     for (String style : getState().styles) {
                         currentMenu.addStyleDependentName(style);
                     }

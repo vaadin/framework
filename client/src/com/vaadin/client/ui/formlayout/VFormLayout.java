@@ -38,6 +38,7 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -66,7 +67,7 @@ public class VFormLayout extends SimplePanel {
      */
     private String[] getStylesFromState(ComponentState state, boolean enabled) {
         List<String> styles = new ArrayList<String>();
-        if (state.styles != null && !state.styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(state)) {
             for (String name : state.styles) {
                 styles.add(name);
             }

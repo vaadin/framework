@@ -52,6 +52,7 @@ import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.notification.VNotification;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
@@ -119,7 +120,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         // this also implicitly removes old styles
         String styles = "";
         styles += getWidget().getStylePrimaryName() + " ";
-        if (getState().styles != null && !getState().styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(getState())) {
             for (String style : getState().styles) {
                 styles += style + " ";
             }

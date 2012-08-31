@@ -25,6 +25,7 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.ComponentStateUtil;
 
 public class VCaption extends HTML {
 
@@ -110,8 +111,7 @@ public class VCaption extends HTML {
         placedAfterComponent = true;
 
         String style = CLASSNAME;
-        if (owner.getState().styles != null
-                && !owner.getState().styles.isEmpty()) {
+        if (ComponentStateUtil.hasStyles(owner.getState())) {
             for (String customStyle : owner.getState().styles) {
                 style += " " + CLASSNAME + "-" + customStyle;
             }
@@ -192,7 +192,8 @@ public class VCaption extends HTML {
             captionText = null;
         }
 
-        if (owner.getState().description != null && captionText != null) {
+        if (ComponentStateUtil.hasDescription(owner.getState())
+                && captionText != null) {
             addStyleDependentName("hasdescription");
         } else {
             removeStyleDependentName("hasdescription");

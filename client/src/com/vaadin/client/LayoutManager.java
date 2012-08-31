@@ -1077,7 +1077,8 @@ public class LayoutManager {
             int assignedHeight) {
         assert component.isRelativeHeight();
 
-        float percentSize = parsePercent(component.getState().height);
+        float percentSize = parsePercent(component.getState().height == null ? ""
+                : component.getState().height);
         int effectiveHeight = Math.round(assignedHeight * (percentSize / 100));
 
         reportOuterHeight(component, effectiveHeight);

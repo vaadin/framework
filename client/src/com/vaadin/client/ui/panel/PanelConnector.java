@@ -33,6 +33,7 @@ import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
@@ -116,7 +117,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
             String captionClass = captionBaseClass;
             String contentClass = contentBaseClass;
             String decoClass = decoBaseClass;
-            if (getState().styles != null && !getState().styles.isEmpty()) {
+            if (ComponentStateUtil.hasStyles(getState())) {
                 for (String style : getState().styles) {
                     captionClass += " " + captionBaseClass + "-" + style;
                     contentClass += " " + contentBaseClass + "-" + style;

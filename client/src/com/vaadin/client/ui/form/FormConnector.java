@@ -29,6 +29,7 @@ import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.MayScrollChildren;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.form.FormState;
 import com.vaadin.ui.Form;
@@ -112,7 +113,7 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().errorMessage.setVisible(false);
         }
 
-        if (getState().description != null) {
+        if (ComponentStateUtil.hasDescription(getState())) {
             getWidget().desc.setInnerHTML(getState().description);
             if (getWidget().desc.getParentElement() == null) {
                 getWidget().fieldSet.insertAfter(getWidget().desc,

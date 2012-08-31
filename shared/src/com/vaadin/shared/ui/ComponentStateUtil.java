@@ -18,6 +18,14 @@ public final class ComponentStateUtil {
         return state.height == null || "".equals(state.height);
     }
 
+    public static final boolean hasDescription(ComponentState state) {
+        return state.description != null && !"".equals(state.description);
+    }
+
+    public static final boolean hasStyles(ComponentState state) {
+        return state.styles != null && !state.styles.isEmpty();
+    }
+
     /**
      * Removes an event listener id.
      * 
