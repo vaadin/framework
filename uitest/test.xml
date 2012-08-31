@@ -49,9 +49,8 @@
 
 	<!-- fileset containing all TestBench tests to run -->
 	<fileset dir=".." id="html-test-files">
-		<include name="tests/**/**.html" />
-		<include name="src/com/vaadin/tests/**/**.html" />
-		<exclude name="tests/integration-testscripts/**" />
+		<include name="uitest/**/**.html" />
+		<exclude name="uitest/integration-testscripts/**" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
