@@ -126,7 +126,8 @@ public class AbsoluteLayoutConnector extends
 
         for (ComponentConnector child : getChildComponents()) {
             getWrapper(child).setPosition(
-                    getState().connectorToCssPosition.get(child));
+                    getState().connectorToCssPosition.get(child
+                            .getConnectorId()));
         }
     };
 
