@@ -12,14 +12,22 @@
 	<property name="module.name" value="vaadin-client-compiler" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom">
-		<fileset file="${gwt.dev.jar}"/>
+		<fileset file="${gwt.dev.jar}" />
 	</path>
 
-	<target name="jar">
-		<antcall target="common.jar">
-			<reference refid="client-compiler.gwt.includes" torefid="extra.jar.includes" />
-		</antcall>
+	<union id="compiler.includes">
+		<union refid="client-compiler.gwt.includes" />
+		<fileset dir="${result.dir}">
+			<include name="com/google/gwt/dev/About.properties" />
+		</fileset>
+	</union>
 
+	<target name="jar">
+		<echo file="${result.dir}/com/google/gwt/dev/About.properties">gwt.version=${vaadin.version}</echo>
+
+		<antcall target="common.jar">
+			<reference refid="compiler.includes" torefid="extra.jar.includes" />
+		</antcall>
 	</target>
 
 	<target name="publish-local" depends="jar">
@@ -29,7 +37,7 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
-	
+
 	<target name="tests">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>

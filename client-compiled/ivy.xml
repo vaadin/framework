@@ -3,24 +3,24 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
-    <info organisation="com.vaadin" module="vaadin-client-compiler"
+    <info organisation="com.vaadin" module="vaadin-client-compiled"
         revision="${vaadin.version}" />
 
     <configurations>
         <conf name="build" />
-        <conf name="build-provided" />
-        <conf name="ide" />
     </configurations>
     <publications>
-        <artifact></artifact>
+        <artifact type="jar"></artifact>
     </publications>
-    <dependencies>
-        <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}"></dependency>
+    <dependencies defaultconfmapping="*->build">
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}"></dependency>
+            rev="${vaadin.version}" />
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}"></dependency>
+            rev="${vaadin.version}" />
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" />
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build-> default,sources" />
     </dependencies>
 
 </ivy-module>

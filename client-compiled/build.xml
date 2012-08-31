@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Compiled (JS+HTML) version of client side 
+	</description>
+
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+	<include file="../gwt-files.xml" as="gwtfiles" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-client-compiled" />
+	<property name="result.dir" value="result" />
+
+	<target name="default-widgetset">
+		<antcall target="compile-module">
+			<param name="module" value="com.vaadin.DefaultWidgetSet" />
+		</antcall>
+	</target>
+
+
+	<target name="compile-module">
+		<fail unless="module" message="You must give the module to compile in the 'module' parameter" />
+		<property name="result.dir" location="result" />
+		<property name="style" value="OBF" />
+		<property name="localWorkers" value="2" />
+		<property name="extraParams" value="" />
+		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
+
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.compile.widgetset" conf="build" />
+
+		<echo>Compiling ${module} to ${module.output.dir}</echo>
+		<mkdir dir="${module.output.dir}" />
+
+		<!-- Disabled to reduce JAR size: precompile the widgetset to a .gwtar file -->
+		<!--
+	        <java classname="com.google.gwt.dev.CompileModule" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+	            <arg value="-out" />
+	            <arg value="${result-precompiled-widgetsets}" />
+	            <arg value="-strict" />
+	            <arg value="${widgetset}" />
+
+	            <jvmarg value="-Xss8M"/>
+	            <jvmarg value="-XX:MaxPermSize=256M"/>  
+	            <jvmarg value="-Djava.awt.headless=true"/>
+	        </java>
+	        -->
+
+		<!-- compile the widgetset -->
+		<java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-war" />
+			<arg value="${module.output.dir}" />
+			<arg value="-style" />
+			<arg value="${style}" />
+			<arg value="-localWorkers" />
+			<arg value="${localWorkers}" />
+			<arg value="-strict" />
+			<arg line="${extraParams}" />
+			<arg value="${module}" />
+
+			<sysproperty key="vFailIfNotSerializable" value="true" />
+
+			<jvmarg value="-Xss8M" />
+			<jvmarg value="-XX:MaxPermSize=256M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+		</java>
+
+		<!--<antcall target="remove-gwt-tmp" />-->
+
+		<echo>Compiled ${module}</echo>
+	</target>
+
+
+	<target name="jar" depends="default-widgetset">
+		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
+
+		<jar file="${result.jar}" compress="true">
+			<fileset dir="${module.output.dir}">
+			</fileset>
+			<fileset refid="common.files.for.all.jars" />
+		</jar>
+	</target>
+
+	<target name="publish-local" depends="jar">
+		<antcall target="common.publish-local" />
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No tests for ${module.name}!</echo>
+	</target>
+
+</project>

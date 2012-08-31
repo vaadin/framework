@@ -33,7 +33,7 @@
 		<fail unless="module.name" message="No module.name parameter given" />
 		<fail unless="src" message="No src directory parameter given" />
 
-		<property name="sources.jar" location="${result.dir}/${module.name}-${vaadin.version}-sources.jar" />
+		<property name="sources.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}-sources.jar" />
 
 		<jar file="${sources.jar}" compress="true">
 			<fileset dir="${src}">
@@ -49,9 +49,9 @@
 	<target name="javadoc.jar" depends="dependencies">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<fail unless="module.name" message="No module.name parameter given" />
-		<fail unless="src" message="No src directory parameter given" />
+		<property name="src" location="{$result.dir}/../src" />
 		<property name="javadoc.dir" value="${result.dir}/javadoc" />
-		<property name="javadoc.jar" location="${result.dir}/${module.name}-${vaadin.version}-javadoc.jar" />
+		<property name="javadoc.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}-javadoc.jar" />
 
 		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${module.name}">
 			<packageset dir="${src}" excludes="${classes.exclude}" />
@@ -203,7 +203,7 @@
 		<fail unless="result.dir" message="No result.dir parameter given" />
 
 		<ivy:resolve />
-		<ivy:publish resolver="build-temp" overwrite="true">
+		<ivy:publish resolver="build-temp" overwrite="true" forcedeliver="true">
 			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 

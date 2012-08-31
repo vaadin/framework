@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin" basedir="." default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin" basedir="." default="package" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<include file="common.xml" as="common" />
 
 	<path id="vaadin.buildhelpers.classpath" location="${vaadin.basedir}/buildhelpers/result/classes" />
@@ -9,8 +9,8 @@
           target: all              
          ================================= -->
 	<!--<target name="all" description="Compiles all parts of the project" depends="buildhelpers,theme-compiler,shared,server,client">-->
-	<target name="all" description="Compiles all parts of the project" depends="buildorder">
-		<subant buildpathref="build-path">
+	<target name="package" description="Compiles and packages all modules in the project" depends="buildorder">
+		<subant buildpathref="build-path" target="publish-local">
 		</subant>
 	</target>
 
