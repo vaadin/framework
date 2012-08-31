@@ -54,6 +54,8 @@ public class DevelopmentServerLauncher {
     public static void main(String[] args) {
         System.setProperty("java.awt.headless", "true");
 
+        assertAssertionsEnabled();
+
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
 
@@ -85,6 +87,18 @@ public class DevelopmentServerLauncher {
             }
         } catch (Exception e) {
             // NOP exception already on console by jetty
+        }
+    }
+
+    private static void assertAssertionsEnabled() {
+        try {
+            assert false;
+
+            throw new RuntimeException("You should run "
+                    + DevelopmentServerLauncher.class.getSimpleName()
+                    + " with assertions enabled. Add -ea as a VM argument.");
+        } catch (AssertionError e) {
+            // All is fine
         }
     }
 

@@ -41,6 +41,7 @@
             </classpath>
             <jvmarg value="-Demma.coverage.out.file=${testing.testarea}/${package.name}/war.ec"/>
             <jvmarg value="-Djava.awt.headless=true"/>
+        	<jvmarg value="-ea" />
         </java>
     </target>
     
