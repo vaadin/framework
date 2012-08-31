@@ -18,6 +18,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
@@ -484,14 +485,59 @@ public interface Container extends Serializable {
         public int indexOfId(Object itemId);
 
         /**
-         * Gets the ID of an Item by an index number.
+         * Get the item id for the item at the position given by
+         * <code>index</code>. <br>
+         * <br>
+         * <b>Throws:</b> {@link IndexOutOfBoundsException} if
+         * <code>index</code> is outside the range of the container. (i.e.
+         * <code>index &lt; 0 || container.size()-1 &lt; index</code>)
          * 
          * @param index
-         *            Index of the requested id in (the filtered and sorted view
-         *            of) the Container
-         * @return ID of the Item in the given index
+         *            the index of the requested item id
+         * @return the item id of the item at the given index
          */
         public Object getIdByIndex(int index);
+
+        /**
+         * Get <code>numberOfItems</code> consecutive item ids from the
+         * container, starting with the item id at <code>startIndex</code>. <br>
+         * <br>
+         * 
+         * Implementations should return the exact number of item ids given by
+         * <code>numberOfItems</code>. The returned list must hence contain all
+         * of the item ids from the range: <br>
+         * <br>
+         * <code>startIndex</code> to
+         * <code>startIndex + (numberOfItems-1)</code>. <br>
+         * <br>
+         * 
+         * The returned list must contain all of the requested item ids or throw
+         * a {@link RangeOutOfContainerBoundsException} to indicate that the
+         * container does not contain all the requested item ids.<br>
+         * <br>
+         * For quick migration to new API see:
+         * {@link ContainerHelpers#getItemIdsUsingGetIdByIndex(int, int, Indexed)}
+         * . <br>
+         * <br>
+         * <b>Throws:</b> {@link IllegalArgumentException} if
+         * <code>numberOfItems</code> is < 0 <br>
+         * <b>Throws:</b> {@link RangeOutOfContainerBoundsException} if all of
+         * the requested item ids cannot be fetched <br>
+         * <b>Throws:</b> {@link IndexOutOfBoundsException} if
+         * <code>startIndex</code> is outside the range of the container. (i.e.
+         * <code>startIndex &lt; 0 || container.size()-1 &lt; startIndex</code>)
+         * 
+         * @param startIndex
+         *            the index for the first item which id to include
+         * @param numberOfItems
+         *            the number of consecutive item ids to get from the given
+         *            start index, must be >= 0
+         * @return List containing all of the requested item ids or empty list
+         *         if <code>numberOfItems</code> == 0; not null
+         * 
+         * @since 7.0
+         */
+        public List<?> getItemIds(int startIndex, int numberOfItems);
 
         /**
          * Adds a new item at given index (in the filtered view).

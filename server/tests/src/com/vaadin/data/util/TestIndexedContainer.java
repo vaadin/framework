@@ -1,7 +1,9 @@
 package com.vaadin.data.util;
 
+import java.util.List;
+
 import com.vaadin.data.Item;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.RangeOutOfContainerBoundsException;
 
 public class TestIndexedContainer extends AbstractInMemoryContainerTest {
 
@@ -266,6 +268,124 @@ public class TestIndexedContainer extends AbstractInMemoryContainerTest {
         // no visible items
         container.removeAllItems();
         counter.assertNone();
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeIndexOutOfBounds() {
+        IndexedContainer ic = new IndexedContainer();
+        try {
+            ic.getItemIds(-1, 10);
+            fail("Container returned items starting from index -1, something very wrong here!");
+        } catch (IndexOutOfBoundsException e) {
+            // This is expected...
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw unspecified exception when fetching a range of items and the range started from -1");
+        }
+
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeIndexOutOfBounds2() {
+        IndexedContainer ic = new IndexedContainer();
+        ic.addItem(new Object());
+        try {
+            ic.getItemIds(2, 1);
+            fail("Container returned items starting from index -1, something very wrong here!");
+        } catch (IndexOutOfBoundsException e) {
+            // This is expected...
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw unspecified exception when fetching a out of bounds range of items");
+        }
+
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeZeroRange() {
+        IndexedContainer ic = new IndexedContainer();
+        ic.addItem(new Object());
+        try {
+            List<Object> itemIds = ic.getItemIds(1, 0);
+
+            assertTrue(
+                    "Container returned actual values when asking for 0 items...",
+                    itemIds.isEmpty());
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw unspecified exception when fetching 0 items...");
+        }
+
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeNegativeRange() {
+        IndexedContainer ic = new IndexedContainer();
+        ic.addItem(new Object());
+        try {
+            List<Object> itemIds = ic.getItemIds(1, -1);
+
+            assertTrue(
+                    "Container returned actual values when asking for -1 items...",
+                    itemIds.isEmpty());
+        } catch (IllegalArgumentException e) {
+            // this is expected
+
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw unspecified exception when fetching -1 items...");
+        }
+
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
+        IndexedContainer ic = new IndexedContainer();
+        ic.addItem(new Object());
+        try {
+            ic.getItemIds(0, 10);
+            fail("Container returned items when the range was >> container size");
+        } catch (RangeOutOfContainerBoundsException e) {
+            // This is expected...
+            assertTrue(e.isAdditionalParametersSet());
+            assertEquals(0, e.getStartIndex());
+            assertEquals(10, e.getNumberOfIds());
+            assertEquals(1, e.getContainerCurrentSize());
+
+        } catch (IndexOutOfBoundsException e) {
+            fail("Container threw wrong exception when the range exceeded container size... ");
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw unspecified exception when fetching a range of items and the range started from -1");
+        }
+    }
+
+    // Ticket 8028
+    public void testGetItemIdsRangeBaseCase() {
+        IndexedContainer ic = new IndexedContainer();
+        String object1 = new String("Obj1");
+        String object2 = new String("Obj2");
+        String object3 = new String("Obj3");
+        String object4 = new String("Obj4");
+        String object5 = new String("Obj5");
+
+        ic.addItem(object1);
+        ic.addItem(object2);
+        ic.addItem(object3);
+        ic.addItem(object4);
+        ic.addItem(object5);
+
+        try {
+            List<Object> itemIds = ic.getItemIds(1, 2);
+
+            assertTrue(itemIds.contains(object2));
+            assertTrue(itemIds.contains(object3));
+            assertEquals(2, itemIds.size());
+
+        } catch (Exception e) {
+            // Should not happen!
+            fail("Container threw  exception when fetching a range of items ");
+        }
     }
 
 }

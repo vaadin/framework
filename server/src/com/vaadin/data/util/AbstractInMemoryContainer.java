@@ -26,6 +26,7 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Item;
+import com.vaadin.data.RangeOutOfContainerBoundsException;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
@@ -248,6 +249,45 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     @Override
     public ITEMIDTYPE getIdByIndex(int index) {
         return getVisibleItemIds().get(index);
+    }
+
+    @Override
+    public List<ITEMIDTYPE> getItemIds(int startIndex, int numberOfIds) {
+        if (startIndex < 0) {
+            throw new IndexOutOfBoundsException(
+                    "Start index cannot be negative! startIndex=" + startIndex);
+        }
+
+        if (startIndex > getVisibleItemIds().size()) {
+            throw new IndexOutOfBoundsException(
+                    "Start index exceeds container size! startIndex="
+                            + startIndex + " containerLastItemIndex="
+                            + (getVisibleItemIds().size() - 1));
+        }
+
+        if (numberOfIds < 1) {
+            if (numberOfIds == 0) {
+                return Collections.emptyList();
+            }
+
+            throw new IllegalArgumentException(
+                    "Cannot get negative amount of items! numberOfItems="
+                            + numberOfIds);
+        }
+
+        int endIndex = startIndex + numberOfIds;
+
+        if (endIndex > getVisibleItemIds().size()) {
+            throw new RangeOutOfContainerBoundsException(
+                    "Cannot get all requested item ids from container. "
+                            + "Container size might have changed, recalculate numberOfIds "
+                            + "based on the actual container size!",
+                    startIndex, numberOfIds, getVisibleItemIds().size());
+        }
+
+        return Collections.unmodifiableList(getVisibleItemIds().subList(
+                startIndex, endIndex));
+
     }
 
     @Override
