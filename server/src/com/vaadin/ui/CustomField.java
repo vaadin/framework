@@ -221,25 +221,62 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     }
 
     @Override
-    public void addListener(ComponentAttachListener listener) {
+    public void addComponentAttachListener(ComponentAttachListener listener) {
         addListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
+     **/
+    @Deprecated
+    public void addListener(ComponentAttachListener listener) {
+        addComponentAttachListener(listener);
+    }
+
     @Override
-    public void removeListener(ComponentAttachListener listener) {
+    public void removeComponentAttachListener(ComponentAttachListener listener) {
         removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
                 COMPONENT_ATTACHED_METHOD);
     }
 
-    @Override
-    public void addListener(ComponentDetachListener listener) {
-        // content never detached
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
+     **/
+    @Deprecated
+    public void removeListener(ComponentAttachListener listener) {
+        removeComponentAttachListener(listener);
     }
 
     @Override
-    public void removeListener(ComponentDetachListener listener) {
+    public void addComponentDetachListener(ComponentDetachListener listener) {
         // content never detached
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
+     **/
+    @Deprecated
+    public void addListener(ComponentDetachListener listener) {
+        addComponentDetachListener(listener);
+
+    }
+
+    @Override
+    public void removeComponentDetachListener(ComponentDetachListener listener) {
+        // content never detached
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
+     **/
+    @Deprecated
+    public void removeListener(ComponentDetachListener listener) {
+        removeComponentDetachListener(listener);
     }
 
     @Override

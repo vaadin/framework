@@ -16,14 +16,21 @@
 
 package com.vaadin.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.vaadin.server.ConnectorResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.WrappedResponse;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * Abstract base class for the HTML5 media components.
@@ -64,9 +71,41 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void addSource(Resource source) {
         if (source != null) {
-            getState().getSources().add(new ResourceReference(source));
+            List<URLReference> sources = getState().getSources();
+            sources.add(new ResourceReference(source, this, Integer
+                    .toString(sources.size())));
             getState().getSourceTypes().add(source.getMIMEType());
         }
+    }
+
+    @Override
+    public boolean handleConnectorRequest(WrappedRequest request,
+            WrappedResponse response, String path) throws IOException {
+        Matcher matcher = Pattern.compile("(\\d+)(/.*)?").matcher(path);
+        if (matcher.matches()) {
+            List<URLReference> sources = getState().getSources();
+
+            int sourceIndex = Integer.parseInt(matcher.group(1));
+
+            if (sourceIndex < 0 || sourceIndex >= sources.size()) {
+                getLogger().warning(
+                        "Requested source index " + sourceIndex
+                                + " is out of bounds");
+                return false;
+            }
+
+            URLReference reference = sources.get(sourceIndex);
+            ConnectorResource resource = (ConnectorResource) ResourceReference
+                    .getResource(reference);
+            resource.getStream().writeResponse(request, response);
+            return true;
+        } else {
+            return super.handleConnectorRequest(request, response, path);
+        }
+    }
+
+    private Logger getLogger() {
+        return Logger.getLogger(AbstractMedia.class.getName());
     }
 
     /**

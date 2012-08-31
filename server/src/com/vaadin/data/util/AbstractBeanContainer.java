@@ -741,14 +741,35 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         return new PropertyBasedBeanIdResolver(propertyId);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by {@link #addPropertySetChangeListener}
+     **/
+    @Deprecated
     @Override
     public void addListener(Container.PropertySetChangeListener listener) {
-        super.addListener(listener);
+        addPropertySetChangeListener(listener);
     }
 
     @Override
+    public void addPropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
+        super.addPropertySetChangeListener(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
-        super.removeListener(listener);
+        removePropertySetChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
+        super.removePropertySetChangeListener(listener);
     }
 
     @Override

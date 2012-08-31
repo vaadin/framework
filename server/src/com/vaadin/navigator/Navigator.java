@@ -22,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.terminal.Page;
-import com.vaadin.terminal.Page.FragmentChangedEvent;
-import com.vaadin.terminal.Page.FragmentChangedListener;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.FragmentChangedEvent;
+import com.vaadin.server.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -435,7 +435,7 @@ public class Navigator implements Serializable {
             }
         }
         if (viewWithLongestName != null) {
-            String parameters = null;
+            String parameters = "";
             if (viewAndParameters.length() > longestViewName.length() + 1) {
                 parameters = viewAndParameters.substring(longestViewName
                         .length() + 1);
@@ -469,7 +469,7 @@ public class Navigator implements Serializable {
 
         if (null != viewName && getFragmentManager() != null) {
             String currentFragment = viewName;
-            if (fragmentParameters != null) {
+            if (!fragmentParameters.equals("")) {
                 currentFragment += "/" + fragmentParameters;
             }
             if (!currentFragment.equals(getFragmentManager().getFragment())) {
@@ -651,8 +651,17 @@ public class Navigator implements Serializable {
      * @param listener
      *            Listener to invoke after view changes.
      */
-    public void addListener(ViewChangeListener listener) {
+    public void addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addViewChangeListener(ViewChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(ViewChangeListener listener) {
+        addViewChangeListener(listener);
     }
 
     /**
@@ -661,8 +670,17 @@ public class Navigator implements Serializable {
      * @param listener
      *            Listener to remove.
      */
-    public void removeListener(ViewChangeListener listener) {
+    public void removeViewChangeListener(ViewChangeListener listener) {
         listeners.remove(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeViewChangeListener(ViewChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(ViewChangeListener listener) {
+        removeViewChangeListener(listener);
     }
 
 }

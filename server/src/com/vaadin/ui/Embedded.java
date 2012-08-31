@@ -22,23 +22,27 @@ import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * Component for embedding external objects.
+ * <p>
+ * As of Vaadin 7.0, the {@link Image}, {@link Flash}, and
+ * {@link EmbeddedBrowser} components should be used instead of
+ * <code>Embedded</code> whenever appropriate.
  * 
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Embedded extends AbstractComponent implements Vaadin6Component {
+public class Embedded extends AbstractComponent implements LegacyComponent {
 
     /**
      * General object type.
@@ -47,12 +51,18 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
 
     /**
      * Image types.
+     * 
+     * @deprecated As of 7.0, use the {@link Image} component instead.
      */
+    @Deprecated
     public static final int TYPE_IMAGE = 1;
 
     /**
      * Browser ("iframe") type.
+     * 
+     * @deprecated As of 7.0, use the {@link EmbeddedBrowser} component instead.
      */
+    @Deprecated
     public static final int TYPE_BROWSER = 2;
 
     /**
@@ -452,9 +462,9 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      * <p>
      * This can be one of the following:
      * <ul>
-     * <li>TYPE_OBJECT <i>(This is the default)</i>
-     * <li>TYPE_IMAGE
-     * <li>TYPE_BROWSER
+     * <li>{@link #TYPE_OBJECT} <i>(This is the default)</i>
+     * <li>{@link #TYPE_IMAGE} <i>(Deprecated)</i>
+     * <li>{@link #TYPE_BROWSER} <i>(Deprecated)</i>
      * </ul>
      * </p>
      * 
@@ -516,9 +526,18 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      * @param listener
      *            The listener to add
      */
-    public void addListener(ClickListener listener) {
+    public void addClickListener(ClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class, listener,
                 ClickListener.clickMethod);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ClickListener listener) {
+        addClickListener(listener);
     }
 
     /**
@@ -528,14 +547,23 @@ public class Embedded extends AbstractComponent implements Vaadin6Component {
      * @param listener
      *            The listener to remove
      */
-    public void removeListener(ClickListener listener) {
+    public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeClickListener(ClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ClickListener listener) {
+        removeClickListener(listener);
+    }
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 
 }

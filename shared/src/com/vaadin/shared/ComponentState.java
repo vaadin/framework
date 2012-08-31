@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.shared.communication.URLReference;
 
 /**
  * Default shared state implementation for UI components.
@@ -40,7 +39,6 @@ public class ComponentState extends SharedState {
     // string!
     private String caption = null;
     private boolean visible = true;
-    private URLReference icon = null;
     private List<String> styles = null;
     private String id = null;
     /**
@@ -175,7 +173,7 @@ public class ComponentState extends SharedState {
     /**
      * Returns true if the component is in immediate mode.
      * 
-     * @see com.vaadin.terminal.VariableOwner#isImmediate()
+     * @see com.vaadin.server.VariableOwner#isImmediate()
      * 
      * @return true if the component is in immediate mode
      */
@@ -186,7 +184,7 @@ public class ComponentState extends SharedState {
     /**
      * Sets or resets the immediate mode for a component.
      * 
-     * @see com.vaadin.terminal.VariableOwner#setImmediate()
+     * @see com.vaadin.server.VariableOwner#setImmediate()
      * 
      * @param immediate
      *            new mode for the component
@@ -283,14 +281,6 @@ public class ComponentState extends SharedState {
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
-    }
-
-    public URLReference getIcon() {
-        return icon;
-    }
-
-    public void setIcon(URLReference icon) {
-        this.icon = icon;
     }
 
     /**

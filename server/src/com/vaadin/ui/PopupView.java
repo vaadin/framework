@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.terminal.LegacyPaint;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.server.LegacyPaint;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 
 /**
  * 
@@ -36,7 +36,7 @@ import com.vaadin.terminal.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class PopupView extends AbstractComponentContainer implements
-        Vaadin6Component {
+        LegacyComponent {
 
     private Content content;
     private boolean hideOnMouseOut;
@@ -309,7 +309,7 @@ public class PopupView extends AbstractComponentContainer implements
     /**
      * Paint (serialize) the component for the client.
      * 
-     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.terminal.PaintTarget)
+     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.server.PaintTarget)
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
@@ -377,9 +377,18 @@ public class PopupView extends AbstractComponentContainer implements
      * @see #removeListener(PopupVisibilityListener)
      * 
      */
-    public void addListener(PopupVisibilityListener listener) {
+    public void addPopupVisibilityListener(PopupVisibilityListener listener) {
         addListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPopupVisibilityListener(PopupVisibilityListener)}
+     **/
+    @Deprecated
+    public void addListener(PopupVisibilityListener listener) {
+        addPopupVisibilityListener(listener);
     }
 
     /**
@@ -391,9 +400,18 @@ public class PopupView extends AbstractComponentContainer implements
      * @see PopupVisibilityListener
      * @see #addListener(PopupVisibilityListener)
      */
-    public void removeListener(PopupVisibilityListener listener) {
+    public void removePopupVisibilityListener(PopupVisibilityListener listener) {
         removeListener(PopupVisibilityEvent.class, listener,
                 POPUP_VISIBILITY_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePopupVisibilityListener(PopupVisibilityListener)}
+     **/
+    @Deprecated
+    public void removeListener(PopupVisibilityListener listener) {
+        removePopupVisibilityListener(listener);
     }
 
     /**

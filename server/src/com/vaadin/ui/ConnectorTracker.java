@@ -25,9 +25,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.AbstractClientConnector;
-import com.vaadin.terminal.gwt.server.AbstractCommunicationManager;
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.AbstractCommunicationManager;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.GlobalResourceHandler;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
@@ -42,7 +43,7 @@ import com.vaadin.terminal.gwt.server.ClientConnector;
  * client when the following response is sent. A connector is dirty when an
  * operation has been performed on it on the server and as a result of this
  * operation new information needs to be sent to its
- * {@link com.vaadin.terminal.gwt.client.ServerConnector}.
+ * {@link com.vaadin.client.ServerConnector}.
  * </p>
  * 
  * @author Vaadin Ltd
@@ -141,9 +142,20 @@ public class ConnectorTracker implements Serializable {
         getLogger().fine(
                 "Unregistered " + connector.getClass().getSimpleName() + " ("
                         + connectorId + ")");
+
+        removeFromGlobalResourceHandler(connector);
         connectorIdToConnector.remove(connectorId);
         uninitializedConnectors.remove(connector);
         diffStates.remove(connector);
+    }
+
+    private void removeFromGlobalResourceHandler(ClientConnector connector) {
+        GlobalResourceHandler globalResourceHandler = uI.getApplication()
+                .getGlobalResourceHandler(false);
+        // Nothing to do if there is no handler
+        if (globalResourceHandler != null) {
+            globalResourceHandler.unregisterConnector(connector);
+        }
     }
 
     /**
@@ -224,6 +236,8 @@ public class ConnectorTracker implements Serializable {
                                 "cleanConnectorMap unregistered connector "
                                         + getConnectorAndParentInfo(connector)
                                         + "). This should have been done when the connector was detached.");
+
+                removeFromGlobalResourceHandler(connector);
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();

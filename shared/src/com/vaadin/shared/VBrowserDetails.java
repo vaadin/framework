@@ -20,9 +20,8 @@ import java.io.Serializable;
 /**
  * Class that parses the user agent string from the browser and provides
  * information about the browser. Used internally by
- * {@link com.vaadin.terminal.gwt.client.BrowserInfo} and
- * {@link com.vaadin.terminal.gwt.server.WebBrowser}. Should not be used
- * directly.
+ * {@link com.vaadin.client.BrowserInfo} and
+ * {@link com.vaadin.server.WebBrowser}. Should not be used directly.
  * 
  * @author Vaadin Ltd.
  * @since 6.3

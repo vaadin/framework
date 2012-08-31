@@ -357,7 +357,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         dimension = another.getDimension();
         sdimension = another.getSdimension();
         s = another.getStringValue();
-        fname = getFunctionName();
+        fname = another.getFunctionName();
         params = another.getParameters();
         prev = another.getPreviousLexicalUnit();
         LexicalUnit finalNextInAnother = another;

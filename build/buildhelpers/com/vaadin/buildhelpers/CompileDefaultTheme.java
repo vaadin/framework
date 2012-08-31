@@ -83,8 +83,7 @@ public class CompileDefaultTheme {
         String stylesCssName = stylesCssDir + "styles.css";
 
         // Process as SASS file
-        File inputFile = new File(stylesCssDir + "styles.scss");
-        ScssStylesheet scss = ScssStylesheet.get(inputFile);
+        ScssStylesheet scss = ScssStylesheet.get(stylesCssDir + "styles.scss");
         scss.compile();
 
         BufferedWriter out = new BufferedWriter(new FileWriter(stylesCssName));

@@ -4,9 +4,8 @@
 
 package com.vaadin.ui;
 
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 
 /**
  * Abstract base for embedding components.
@@ -32,12 +31,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
      *            the source to set.
      */
     public void setSource(Resource source) {
-        if (source == null) {
-            getState().setSource(null);
-        } else {
-            getState().setSource(new ResourceReference(source));
-        }
-        requestRepaint();
+        setResource(AbstractEmbeddedState.SOURCE_RESOURCE, source);
     }
 
     /**
@@ -46,12 +40,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
      * @return the source
      */
     public Resource getSource() {
-        ResourceReference ref = ((ResourceReference) getState().getSource());
-        if (ref == null) {
-            return null;
-        } else {
-            return ref.getResource();
-        }
+        return getResource(AbstractEmbeddedState.SOURCE_RESOURCE);
     }
 
     /**

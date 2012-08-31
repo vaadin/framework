@@ -49,13 +49,13 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
-import com.vaadin.terminal.KeyMapper;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -906,8 +906,17 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(ExpandListener listener) {
+    public void addExpandListener(ExpandListener listener) {
         addListener(ExpandEvent.class, listener, ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addExpandListener(ExpandListener)}
+     **/
+    @Deprecated
+    public void addListener(ExpandListener listener) {
+        addExpandListener(listener);
     }
 
     /**
@@ -916,9 +925,18 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(ExpandListener listener) {
+    public void removeExpandListener(ExpandListener listener) {
         removeListener(ExpandEvent.class, listener,
                 ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeExpandListener(ExpandListener)}
+     **/
+    @Deprecated
+    public void removeListener(ExpandListener listener) {
+        removeExpandListener(listener);
     }
 
     /**
@@ -991,9 +1009,18 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(CollapseListener listener) {
+    public void addCollapseListener(CollapseListener listener) {
         addListener(CollapseEvent.class, listener,
                 CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addCollapseListener(CollapseListener)}
+     **/
+    @Deprecated
+    public void addListener(CollapseListener listener) {
+        addCollapseListener(listener);
     }
 
     /**
@@ -1002,9 +1029,18 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(CollapseListener listener) {
+    public void removeCollapseListener(CollapseListener listener) {
         removeListener(CollapseEvent.class, listener,
                 CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeCollapseListener(CollapseListener)}
+     **/
+    @Deprecated
+    public void removeListener(CollapseListener listener) {
+        removeCollapseListener(listener);
     }
 
     /**
@@ -1162,15 +1198,33 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     private DropHandler dropHandler;
 
     @Override
-    public void addListener(ItemClickListener listener) {
+    public void addItemClickListener(ItemClickListener listener) {
         addListener(TreeConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener, ItemClickEvent.ITEM_CLICK_METHOD);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addItemClickListener(ItemClickListener)}
+     **/
+    @Deprecated
+    public void addListener(ItemClickListener listener) {
+        addItemClickListener(listener);
+    }
+
     @Override
-    public void removeListener(ItemClickListener listener) {
+    public void removeItemClickListener(ItemClickListener listener) {
         removeListener(TreeConstants.ITEM_CLICK_EVENT_ID, ItemClickEvent.class,
                 listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeItemClickListener(ItemClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(ItemClickListener listener) {
+        removeItemClickListener(listener);
     }
 
     /**
@@ -1449,7 +1503,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * 
          * @see
          * com.vaadin.event.dd.acceptCriteria.AcceptCriterion#paintResponse(
-         * com.vaadin.terminal.PaintTarget)
+         * com.vaadin.server.PaintTarget)
          */
         @Override
         public void paintResponse(PaintTarget target) throws PaintException {

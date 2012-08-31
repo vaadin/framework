@@ -23,11 +23,11 @@ import java.util.Locale;
 
 import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.VariableOwner;
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Resource;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.VariableOwner;
 
 /**
  * {@code Component} is the top-level interface that is and must be implemented
@@ -136,8 +136,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setStyleName(String style);
 
     /**
-     * Adds a style name to component. The style name will be rendered as a HTML
-     * class name, which can be used in a CSS definition.
+     * Adds one or more style names to this component. Multiple styles can be
+     * specified as a space-separated list of style names. The style name will
+     * be rendered as a HTML class name, which can be used in a CSS definition.
      * 
      * <pre>
      * Label label = new Label(&quot;This text has style&quot;);
@@ -462,7 +463,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * <p>
      * The image is loaded by the browser from a resource, typically a
-     * {@link com.vaadin.terminal.ThemeResource}.
+     * {@link com.vaadin.server.ThemeResource}.
      * </p>
      * 
      * <pre>

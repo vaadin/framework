@@ -27,14 +27,14 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 
 public abstract class AbstractTextField extends AbstractField<String> implements
-        BlurNotifier, FocusNotifier, TextChangeNotifier, Vaadin6Component {
+        BlurNotifier, FocusNotifier, TextChangeNotifier, LegacyComponent {
 
     /**
      * Null representation.
@@ -512,15 +512,33 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    public void addListener(TextChangeListener listener) {
+    public void addTextChangeListener(TextChangeListener listener) {
         addListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
                 listener, TextChangeListener.EVENT_METHOD);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addTextChangeListener(TextChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(TextChangeListener listener) {
+        addTextChangeListener(listener);
+    }
+
     @Override
-    public void removeListener(TextChangeListener listener) {
+    public void removeTextChangeListener(TextChangeListener listener) {
         removeListener(TextChangeListener.EVENT_ID, TextChangeEvent.class,
                 listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeTextChangeListener(TextChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(TextChangeListener listener) {
+        removeTextChangeListener(listener);
     }
 
     /**
@@ -661,25 +679,60 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Override
-    public void addListener(FocusListener listener) {
+    public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Override
-    public void removeListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void addListener(FocusListener listener) {
+        addFocusListener(listener);
     }
 
     @Override
-    public void addListener(BlurListener listener) {
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void removeListener(FocusListener listener) {
+        removeFocusListener(listener);
+    }
+
+    @Override
+    public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void addListener(BlurListener listener) {
+        addBlurListener(listener);
+    }
+
     @Override
-    public void removeListener(BlurListener listener) {
+    public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void removeListener(BlurListener listener) {
+        removeBlurListener(listener);
     }
 
 }

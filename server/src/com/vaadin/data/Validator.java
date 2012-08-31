@@ -18,7 +18,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+import com.vaadin.server.AbstractApplicationServlet;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is

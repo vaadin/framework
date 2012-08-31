@@ -94,6 +94,13 @@ public interface ComponentContainer extends HasComponents {
      * @param listener
      *            the listener to add.
      */
+    public void addComponentAttachListener(ComponentAttachListener listener);
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addComponentAttachListener(ComponentAttachListener)}
+     **/
+    @Deprecated
     public void addListener(ComponentAttachListener listener);
 
     /**
@@ -102,16 +109,37 @@ public interface ComponentContainer extends HasComponents {
      * @param listener
      *            the listener to removed.
      */
+    public void removeComponentAttachListener(ComponentAttachListener listener);
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeComponentAttachListener(ComponentAttachListener)}
+     **/
+    @Deprecated
     public void removeListener(ComponentAttachListener listener);
 
     /**
      * Listens the component detach events.
      */
+    public void addComponentDetachListener(ComponentDetachListener listener);
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addComponentDetachListener(ComponentDetachListener)}
+     **/
+    @Deprecated
     public void addListener(ComponentDetachListener listener);
 
     /**
      * Stops the listening component detach events.
      */
+    public void removeComponentDetachListener(ComponentDetachListener listener);
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeComponentDetachListener(ComponentDetachListener)}
+     **/
+    @Deprecated
     public void removeListener(ComponentDetachListener listener);
 
     /**

@@ -22,12 +22,12 @@ import java.util.Iterator;
 
 import com.vaadin.event.ComponentEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.server.Sizeable;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -501,14 +501,32 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
     }
 
-    public void addListener(SplitterClickListener listener) {
+    public void addSplitterClickListener(SplitterClickListener listener) {
         addListener(EventId.CLICK_EVENT_IDENTIFIER, SplitterClickEvent.class,
                 listener, SplitterClickListener.clickMethod);
     }
 
-    public void removeListener(SplitterClickListener listener) {
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addSplitterClickListener(SplitterClickListener)}
+     **/
+    @Deprecated
+    public void addListener(SplitterClickListener listener) {
+        addSplitterClickListener(listener);
+    }
+
+    public void removeSplitterClickListener(SplitterClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER,
                 SplitterClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeSplitterClickListener(SplitterClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(SplitterClickListener listener) {
+        removeSplitterClickListener(listener);
     }
 
     @Override

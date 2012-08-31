@@ -32,10 +32,10 @@ import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.HierarchicalContainerOrderedWrapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.treetable.TreeTableConstants;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
 import com.vaadin.ui.Tree.ExpandEvent;
@@ -752,8 +752,17 @@ public class TreeTable extends Table implements Hierarchical {
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(ExpandListener listener) {
+    public void addExpandListener(ExpandListener listener) {
         addListener(ExpandEvent.class, listener, ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addExpandListener(ExpandListener)}
+     **/
+    @Deprecated
+    public void addListener(ExpandListener listener) {
+        addExpandListener(listener);
     }
 
     /**
@@ -762,9 +771,18 @@ public class TreeTable extends Table implements Hierarchical {
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(ExpandListener listener) {
+    public void removeExpandListener(ExpandListener listener) {
         removeListener(ExpandEvent.class, listener,
                 ExpandListener.EXPAND_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeExpandListener(ExpandListener)}
+     **/
+    @Deprecated
+    public void removeListener(ExpandListener listener) {
+        removeExpandListener(listener);
     }
 
     /**
@@ -783,9 +801,18 @@ public class TreeTable extends Table implements Hierarchical {
      * @param listener
      *            the Listener to be added.
      */
-    public void addListener(CollapseListener listener) {
+    public void addCollapseListener(CollapseListener listener) {
         addListener(CollapseEvent.class, listener,
                 CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addCollapseListener(CollapseListener)}
+     **/
+    @Deprecated
+    public void addListener(CollapseListener listener) {
+        addCollapseListener(listener);
     }
 
     /**
@@ -794,9 +821,18 @@ public class TreeTable extends Table implements Hierarchical {
      * @param listener
      *            the Listener to be removed.
      */
-    public void removeListener(CollapseListener listener) {
+    public void removeCollapseListener(CollapseListener listener) {
         removeListener(CollapseEvent.class, listener,
                 CollapseListener.COLLAPSE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeCollapseListener(CollapseListener)}
+     **/
+    @Deprecated
+    public void removeListener(CollapseListener listener) {
+        removeCollapseListener(listener);
     }
 
     /**

@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
-import com.vaadin.terminal.AbstractJavaScriptExtension;
+import com.vaadin.server.AbstractJavaScriptExtension;
 
 /**
  * Defines a method that is called by a client-side JavaScript function. When

@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.vaadin.terminal.gwt.server.ClientConnector;
+import com.vaadin.server.ClientConnector;
 
 /**
  * If this annotation is present on a {@link ClientConnector} class, the

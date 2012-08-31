@@ -37,10 +37,10 @@ import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.CompositeErrorMessage;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.AbstractFieldState;
-import com.vaadin.terminal.AbstractErrorMessage;
-import com.vaadin.terminal.CompositeErrorMessage;
-import com.vaadin.terminal.ErrorMessage;
 
 /**
  * <p>
@@ -1047,9 +1047,18 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * here, we use the default documentation from the implemented interface.
      */
     @Override
-    public void addListener(Property.ValueChangeListener listener) {
+    public void addValueChangeListener(Property.ValueChangeListener listener) {
         addListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Property.ValueChangeListener listener) {
+        addValueChangeListener(listener);
     }
 
     /*
@@ -1058,9 +1067,18 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * interface.
      */
     @Override
-    public void removeListener(Property.ValueChangeListener listener) {
+    public void removeValueChangeListener(Property.ValueChangeListener listener) {
         removeListener(AbstractField.ValueChangeEvent.class, listener,
                 VALUE_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Property.ValueChangeListener listener) {
+        removeValueChangeListener(listener);
     }
 
     /**
@@ -1139,9 +1157,19 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * implemented interface.
      */
     @Override
-    public void addListener(Property.ReadOnlyStatusChangeListener listener) {
+    public void addReadOnlyStatusChangeListener(
+            Property.ReadOnlyStatusChangeListener listener) {
         addListener(Property.ReadOnlyStatusChangeEvent.class, listener,
                 READ_ONLY_STATUS_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Property.ReadOnlyStatusChangeListener listener) {
+        addReadOnlyStatusChangeListener(listener);
     }
 
     /*
@@ -1150,9 +1178,19 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * implemented interface.
      */
     @Override
-    public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
+    public void removeReadOnlyStatusChangeListener(
+            Property.ReadOnlyStatusChangeListener listener) {
         removeListener(Property.ReadOnlyStatusChangeEvent.class, listener,
                 READ_ONLY_STATUS_CHANGE_METHOD);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
+        removeReadOnlyStatusChangeListener(listener);
     }
 
     /**

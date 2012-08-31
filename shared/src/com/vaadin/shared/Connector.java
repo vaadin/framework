@@ -29,9 +29,8 @@ import java.io.Serializable;
  * <p>
  * No classes should implement this interface directly, client side classes
  * wanting to communicate with server side should implement
- * {@link com.vaadin.terminal.gwt.client.ServerConnector} and server side
- * classes should implement
- * {@link com.vaadin.terminal.gwt.server.ClientConnector}.
+ * {@link com.vaadin.client.ServerConnector} and server side classes should
+ * implement {@link com.vaadin.server.ClientConnector}.
  * </p>
  * 
  * @author Vaadin Ltd

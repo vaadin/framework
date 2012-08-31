@@ -20,8 +20,8 @@ package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 
 /**
  * Criterion for checking if drop target details contains the specific property

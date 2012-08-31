@@ -704,7 +704,7 @@ public class TableQuery implements QueryDelegate,
      * Adds RowIdChangeListener to this query
      */
     @Override
-    public void addListener(RowIdChangeListener listener) {
+    public void addRowIdChangeListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners == null) {
             rowIdChangeListeners = new LinkedList<QueryDelegate.RowIdChangeListener>();
         }
@@ -712,13 +712,31 @@ public class TableQuery implements QueryDelegate,
     }
 
     /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addRowIdChangeListener(com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(RowIdChangeListener listener) {
+        addRowIdChangeListener(listener);
+    }
+
+    /**
      * Removes the given RowIdChangeListener from this query
      */
     @Override
-    public void removeListener(RowIdChangeListener listener) {
+    public void removeRowIdChangeListener(RowIdChangeListener listener) {
         if (rowIdChangeListeners != null) {
             rowIdChangeListeners.remove(listener);
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeRowIdChangeListener(com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(RowIdChangeListener listener) {
+        removeRowIdChangeListener(listener);
     }
 
     private static final Logger getLogger() {

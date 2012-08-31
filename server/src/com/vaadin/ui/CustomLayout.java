@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.vaadin.server.JsonPaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
-import com.vaadin.terminal.gwt.server.JsonPaintTarget;
 
 /**
  * <p>
@@ -58,7 +58,7 @@ import com.vaadin.terminal.gwt.server.JsonPaintTarget;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CustomLayout extends AbstractLayout implements Vaadin6Component {
+public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     private static final int BUFFER_SIZE = 10000;
 

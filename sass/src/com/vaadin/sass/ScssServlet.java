@@ -40,7 +40,7 @@ public class ScssServlet extends HttpServlet {
                 String scssPath = cssPath.replace(".css", ".scss");
                 File scssFile = new File(scssPath);
                 if (scssFile.exists()) {
-                    ScssStylesheet scss = ScssStylesheet.get(new File(cssPath));
+                    ScssStylesheet scss = ScssStylesheet.get(cssPath);
                     try {
                         scss.compile();
                     } catch (Exception e) {

@@ -19,9 +19,9 @@ package com.vaadin.ui;
 import java.util.Map;
 
 import com.vaadin.data.Property;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 
 /**
  * A simple RichTextArea to edit HTML format text.
@@ -31,7 +31,7 @@ import com.vaadin.terminal.Vaadin6Component;
  * into length of field.
  */
 public class RichTextArea extends AbstractField<String> implements
-        Vaadin6Component {
+        LegacyComponent {
 
     /**
      * Null representation.

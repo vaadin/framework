@@ -1,0 +1,13 @@
+<module>
+	<!-- This GWT module defines the Vaadin DefaultWidgetSet. This is the module 
+		you want to extend when creating an extended widget set, or when creating 
+		a specialized widget set with a subset of the components. -->
+
+	<!-- Hint for WidgetSetBuilder not to automatically update the file -->
+	<!-- WS Compiler: manually edited -->
+
+	<inherits name="com.vaadin.Vaadin" />
+
+	<entry-point class="com.vaadin.client.ApplicationConfiguration" />
+
+</module>

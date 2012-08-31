@@ -36,10 +36,10 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * <p>
@@ -61,7 +61,7 @@ import com.vaadin.terminal.Vaadin6Component;
  */
 @SuppressWarnings("serial")
 public class DateField extends AbstractField<Date> implements
-        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, Vaadin6Component {
+        FieldEvents.BlurNotifier, FieldEvents.FocusNotifier, LegacyComponent {
 
     /**
      * Resolutions for DateFields
@@ -741,25 +741,60 @@ public class DateField extends AbstractField<Date> implements
     }
 
     @Override
-    public void addListener(FocusListener listener) {
+    public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
     }
 
-    @Override
-    public void removeListener(FocusListener listener) {
-        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void addListener(FocusListener listener) {
+        addFocusListener(listener);
     }
 
     @Override
-    public void addListener(BlurListener listener) {
+    public void removeFocusListener(FocusListener listener) {
+        removeListener(FocusEvent.EVENT_ID, FocusEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeFocusListener(FocusListener)}
+     **/
+    @Deprecated
+    public void removeListener(FocusListener listener) {
+        removeFocusListener(listener);
+    }
+
+    @Override
+    public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void addListener(BlurListener listener) {
+        addBlurListener(listener);
+    }
+
     @Override
-    public void removeListener(BlurListener listener) {
+    public void removeBlurListener(BlurListener listener) {
         removeListener(BlurEvent.EVENT_ID, BlurEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeBlurListener(BlurListener)}
+     **/
+    @Deprecated
+    public void removeListener(BlurListener listener) {
+        removeBlurListener(listener);
     }
 
     /**

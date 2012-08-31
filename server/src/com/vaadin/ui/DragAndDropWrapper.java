@@ -29,18 +29,18 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.StreamVariable;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.StreamVariable;
-import com.vaadin.terminal.Vaadin6Component;
 
 @SuppressWarnings("serial")
 public class DragAndDropWrapper extends CustomComponent implements DropTarget,
-        DragSource, Vaadin6Component {
+        DragSource, LegacyComponent {
 
     public class WrapperTransferable extends TransferableImpl {
 
@@ -212,7 +212,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 
     @Override

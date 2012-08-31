@@ -18,11 +18,12 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
+import com.vaadin.server.LegacyComponent;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.BorderStyle;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Vaadin6Component;
+import com.vaadin.shared.ui.link.LinkConstants;
 
 /**
  * Link is used to create external or internal URL links.
@@ -31,7 +32,7 @@ import com.vaadin.terminal.Vaadin6Component;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Link extends AbstractComponent implements Vaadin6Component {
+public class Link extends AbstractComponent implements LegacyComponent {
 
     /* Target window border type constant: No window border */
     @Deprecated
@@ -44,8 +45,6 @@ public class Link extends AbstractComponent implements Vaadin6Component {
     /* Target window border type constant: Default window border */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_DEFAULT = BorderStyle.DEFAULT;
-
-    private Resource resource = null;
 
     private String targetName;
 
@@ -70,7 +69,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     public Link(String caption, Resource resource) {
         setCaption(caption);
-        this.resource = resource;
+        setResource(resource);
     }
 
     /**
@@ -94,7 +93,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
     public Link(String caption, Resource resource, String targetName,
             int width, int height, BorderStyle border) {
         setCaption(caption);
-        this.resource = resource;
+        setResource(resource);
         setTargetName(targetName);
         setTargetWidth(width);
         setTargetHeight(height);
@@ -111,10 +110,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        if (resource != null) {
-            target.addAttribute("src", resource);
-        } else {
+        if (getResource() == null) {
             return;
         }
 
@@ -230,7 +226,7 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      * @return the Resource.
      */
     public Resource getResource() {
-        return resource;
+        return getResource(LinkConstants.HREF_RESOURCE);
     }
 
     /**
@@ -240,12 +236,11 @@ public class Link extends AbstractComponent implements Vaadin6Component {
      *            the resource to set.
      */
     public void setResource(Resource resource) {
-        this.resource = resource;
-        markAsDirty();
+        setResource(LinkConstants.HREF_RESOURCE, resource);
     }
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 }

@@ -27,16 +27,16 @@ import java.util.Map.Entry;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.server.LegacyPaint;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.gridlayout.GridLayoutServerRpc;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState;
-import com.vaadin.terminal.LegacyPaint;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Vaadin6Component;
 
 /**
  * A layout where the components are laid out on a grid using cell coordinates.
@@ -65,7 +65,7 @@ import com.vaadin.terminal.Vaadin6Component;
 @SuppressWarnings("serial")
 public class GridLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler, Layout.MarginHandler,
-        LayoutClickNotifier, Vaadin6Component {
+        LayoutClickNotifier, LegacyComponent {
 
     private GridLayoutServerRpc rpc = new GridLayoutServerRpc() {
 
@@ -447,7 +447,7 @@ public class GridLayout extends AbstractLayout implements
 
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once Vaadin6Component is no longer implemented
+        // TODO Remove once LegacyComponent is no longer implemented
     }
 
     /**
@@ -1354,16 +1354,36 @@ public class GridLayout extends AbstractLayout implements
     }
 
     @Override
-    public void addListener(LayoutClickListener listener) {
+    public void addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addLayoutClickListener(LayoutClickListener)}
+     **/
     @Override
-    public void removeListener(LayoutClickListener listener) {
+    @Deprecated
+    public void addListener(LayoutClickListener listener) {
+        addLayoutClickListener(listener);
+    }
+
+    @Override
+    public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeLayoutClickListener(LayoutClickListener)}
+     **/
+    @Override
+    @Deprecated
+    public void removeListener(LayoutClickListener listener) {
+        removeLayoutClickListener(listener);
     }
 
     /*

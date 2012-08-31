@@ -35,8 +35,10 @@ public class SassCompiler {
             input = args[0];
             output = args[1];
         }
-        File inputFile = new File(input);
-        ScssStylesheet scss = ScssStylesheet.get(inputFile);
+
+        // ScssStylesheet.setStylesheetResolvers(new VaadinResolver());
+
+        ScssStylesheet scss = ScssStylesheet.get(input);
         scss.compile();
         if (output == null) {
             System.out.println(scss.toString());

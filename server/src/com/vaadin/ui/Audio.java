@@ -16,7 +16,7 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 
 /**
  * The Audio component translates into an HTML5 &lt;audio&gt; element and as

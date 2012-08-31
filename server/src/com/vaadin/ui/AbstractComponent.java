@@ -32,14 +32,14 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.Resource;
+import com.vaadin.server.Terminal;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
-import com.vaadin.terminal.AbstractClientConnector;
-import com.vaadin.terminal.ErrorMessage;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Terminal;
-import com.vaadin.terminal.gwt.server.ClientConnector;
-import com.vaadin.terminal.gwt.server.ComponentSizeValidator;
-import com.vaadin.terminal.gwt.server.ResourceReference;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -297,7 +297,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public Resource getIcon() {
-        return ResourceReference.getResource(getState().getIcon());
+        return getResource(ComponentConstants.ICON_RESOURCE);
     }
 
     /**
@@ -309,7 +309,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setIcon(Resource icon) {
-        getState().setIcon(ResourceReference.create(icon));
+        setResource(ComponentConstants.ICON_RESOURCE, icon);
     }
 
     /*
@@ -335,7 +335,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.gwt.client.Connector#isConnectorEnabled()
+     * @see com.vaadin.client.Connector#isConnectorEnabled()
      */
     @Override
     public boolean isConnectorEnabled() {
@@ -1072,7 +1072,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#getHeight()
+     * @see com.vaadin.Sizeable#getHeight()
      */
     @Override
     public float getHeight() {
@@ -1082,7 +1082,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#getHeightUnits()
+     * @see com.vaadin.server.Sizeable#getHeightUnits()
      */
     @Override
     public Unit getHeightUnits() {
@@ -1092,7 +1092,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#getWidth()
+     * @see com.vaadin.server.Sizeable#getWidth()
      */
     @Override
     public float getWidth() {
@@ -1102,7 +1102,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#getWidthUnits()
+     * @see com.vaadin.server.Sizeable#getWidthUnits()
      */
     @Override
     public Unit getWidthUnits() {
@@ -1112,7 +1112,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setHeight(float, Unit)
+     * @see com.vaadin.server.Sizeable#setHeight(float, Unit)
      */
     @Override
     public void setHeight(float height, Unit unit) {
@@ -1128,7 +1128,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setSizeFull()
+     * @see com.vaadin.server.Sizeable#setSizeFull()
      */
     @Override
     public void setSizeFull() {
@@ -1139,7 +1139,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setSizeUndefined()
+     * @see com.vaadin.server.Sizeable#setSizeUndefined()
      */
     @Override
     public void setSizeUndefined() {
@@ -1150,7 +1150,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setWidth(float, Unit)
+     * @see com.vaadin.server.Sizeable#setWidth(float, Unit)
      */
     @Override
     public void setWidth(float width, Unit unit) {
@@ -1166,7 +1166,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setWidth(java.lang.String)
+     * @see com.vaadin.server.Sizeable#setWidth(java.lang.String)
      */
     @Override
     public void setWidth(String width) {
@@ -1181,7 +1181,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.terminal.Sizeable#setHeight(java.lang.String)
+     * @see com.vaadin.server.Sizeable#setHeight(java.lang.String)
      */
     @Override
     public void setHeight(String height) {

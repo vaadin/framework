@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
+import com.vaadin.server.widgetsetutils.WidgetSetBuilder;
 
 /**
  * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
@@ -33,7 +33,7 @@ import com.vaadin.terminal.gwt.widgetsetutils.WidgetSetBuilder;
  * 
  * A typical invocation would use e.g. the following arguments
  * 
- * "-out WebContent/VAADIN/widgetsets com.vaadin.terminal.gwt.DefaultWidgetSet"
+ * "-out WebContent/VAADIN/widgetsets com.vaadin.DefaultWidgetSet"
  * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
  * 

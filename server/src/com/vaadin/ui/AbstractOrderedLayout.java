@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -29,7 +30,6 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState.ChildComponentData;
-import com.vaadin.terminal.Sizeable;
 
 @SuppressWarnings("serial")
 public abstract class AbstractOrderedLayout extends AbstractLayout implements
@@ -339,16 +339,34 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     @Override
-    public void addListener(LayoutClickListener listener) {
+    public void addLayoutClickListener(LayoutClickListener listener) {
         addListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener,
                 LayoutClickListener.clickMethod);
     }
 
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addLayoutClickListener(LayoutClickListener)}
+     **/
+    @Deprecated
+    public void addListener(LayoutClickListener listener) {
+        addLayoutClickListener(listener);
+    }
+
     @Override
-    public void removeListener(LayoutClickListener listener) {
+    public void removeLayoutClickListener(LayoutClickListener listener) {
         removeListener(EventId.LAYOUT_CLICK_EVENT_IDENTIFIER,
                 LayoutClickEvent.class, listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeLayoutClickListener(LayoutClickListener)}
+     **/
+    @Deprecated
+    public void removeListener(LayoutClickListener listener) {
+        removeLayoutClickListener(listener);
     }
 
     /**

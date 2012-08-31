@@ -16,7 +16,7 @@
 package com.vaadin.event;
 
 import com.vaadin.event.Action.Listener;
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 
 public abstract class ShortcutListener extends ShortcutAction implements
         Listener {

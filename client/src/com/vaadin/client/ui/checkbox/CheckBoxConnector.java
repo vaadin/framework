@@ -1,0 +1,158 @@
+/*
+ * Copyright 2011 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package com.vaadin.client.ui.checkbox;
+
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.vaadin.client.EventHelper;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.VTooltip;
+import com.vaadin.client.communication.RpcProxy;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.Icon;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
+import com.vaadin.shared.ui.checkbox.CheckBoxState;
+import com.vaadin.ui.CheckBox;
+
+@Connect(CheckBox.class)
+public class CheckBoxConnector extends AbstractFieldConnector implements
+        FocusHandler, BlurHandler, ClickHandler {
+
+    private HandlerRegistration focusHandlerRegistration;
+    private HandlerRegistration blurHandlerRegistration;
+
+    private CheckBoxServerRpc rpc = RpcProxy.create(CheckBoxServerRpc.class,
+            this);
+    private FocusAndBlurServerRpc focusBlurRpc = RpcProxy.create(
+            FocusAndBlurServerRpc.class, this);
+
+    @Override
+    public boolean delegateCaptionHandling() {
+        return false;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        getWidget().addClickHandler(this);
+        getWidget().client = getConnection();
+        getWidget().id = getConnectorId();
+
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        focusHandlerRegistration = EventHelper.updateFocusHandler(this,
+                focusHandlerRegistration);
+        blurHandlerRegistration = EventHelper.updateBlurHandler(this,
+                blurHandlerRegistration);
+
+        if (null != getState().getErrorMessage()) {
+            if (getWidget().errorIndicatorElement == null) {
+                getWidget().errorIndicatorElement = DOM.createSpan();
+                getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
+                DOM.setElementProperty(getWidget().errorIndicatorElement,
+                        "className", "v-errorindicator");
+                DOM.appendChild(getWidget().getElement(),
+                        getWidget().errorIndicatorElement);
+                DOM.sinkEvents(getWidget().errorIndicatorElement,
+                        VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
+            } else {
+                DOM.setStyleAttribute(getWidget().errorIndicatorElement,
+                        "display", "");
+            }
+        } else if (getWidget().errorIndicatorElement != null) {
+            DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
+                    "none");
+        }
+
+        if (isReadOnly()) {
+            getWidget().setEnabled(false);
+        }
+
+        if (getIcon() != null) {
+            if (getWidget().icon == null) {
+                getWidget().icon = new Icon(getConnection());
+                DOM.insertChild(getWidget().getElement(),
+                        getWidget().icon.getElement(), 1);
+                getWidget().icon.sinkEvents(VTooltip.TOOLTIP_EVENTS);
+                getWidget().icon.sinkEvents(Event.ONCLICK);
+            }
+            getWidget().icon.setUri(getIcon());
+        } else if (getWidget().icon != null) {
+            // detach icon
+            DOM.removeChild(getWidget().getElement(),
+                    getWidget().icon.getElement());
+            getWidget().icon = null;
+        }
+
+        // Set text
+        getWidget().setText(getState().getCaption());
+        getWidget().setValue(getState().isChecked());
+        getWidget().immediate = getState().isImmediate();
+    }
+
+    @Override
+    public CheckBoxState getState() {
+        return (CheckBoxState) super.getState();
+    }
+
+    @Override
+    public VCheckBox getWidget() {
+        return (VCheckBox) super.getWidget();
+    }
+
+    @Override
+    public void onFocus(FocusEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurRpc.focus();
+    }
+
+    @Override
+    public void onBlur(BlurEvent event) {
+        // EventHelper.updateFocusHandler ensures that this is called only when
+        // there is a listener on server side
+        focusBlurRpc.blur();
+    }
+
+    @Override
+    public void onClick(ClickEvent event) {
+        if (!isEnabled()) {
+            return;
+        }
+
+        // Add mouse details
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent(), getWidget()
+                        .getElement());
+        rpc.setChecked(getWidget().getValue(), details);
+
+    }
+}

@@ -20,10 +20,10 @@ import java.util.Map;
 
 import com.vaadin.event.Action.Container;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.terminal.KeyMapper;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.VariableOwner;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.VariableOwner;
 import com.vaadin.ui.Component;
 
 /**

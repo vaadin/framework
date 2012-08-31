@@ -1,11 +1,11 @@
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.server.Sizeable;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.slider.SliderOrientation;
-import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;

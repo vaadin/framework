@@ -19,8 +19,8 @@ package com.vaadin.ui;
 import java.util.Collection;
 
 import com.vaadin.data.Container;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 
 /**
  * This is a simple list select without, for instance, support for new items,

@@ -39,12 +39,12 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
+import com.vaadin.server.KeyMapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Resource;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.terminal.KeyMapper;
-import com.vaadin.terminal.PaintException;
-import com.vaadin.terminal.PaintTarget;
-import com.vaadin.terminal.Resource;
-import com.vaadin.terminal.Vaadin6Component;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
@@ -68,7 +68,7 @@ import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 public abstract class AbstractSelect extends AbstractField<Object> implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
         Container.PropertySetChangeNotifier, Container.ItemSetChangeNotifier,
-        Container.ItemSetChangeListener, Vaadin6Component {
+        Container.ItemSetChangeListener, LegacyComponent {
 
     public enum ItemCaptionMode {
         /**
@@ -1480,11 +1480,21 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#addListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
     @Override
-    public void addListener(Container.PropertySetChangeListener listener) {
+    public void addPropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
             propertySetEventListeners = new LinkedHashSet<Container.PropertySetChangeListener>();
         }
         propertySetEventListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Container.PropertySetChangeListener listener) {
+        addPropertySetChangeListener(listener);
     }
 
     /**
@@ -1493,7 +1503,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#removeListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
     @Override
-    public void removeListener(Container.PropertySetChangeListener listener) {
+    public void removePropertySetChangeListener(
+            Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners != null) {
             propertySetEventListeners.remove(listener);
             if (propertySetEventListeners.isEmpty()) {
@@ -1503,16 +1514,35 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Container.PropertySetChangeListener listener) {
+        removePropertySetChangeListener(listener);
+    }
+
+    /**
      * Adds an Item set change listener for the object.
      * 
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#addListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     @Override
-    public void addListener(Container.ItemSetChangeListener listener) {
+    public void addItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners == null) {
             itemSetEventListeners = new LinkedHashSet<Container.ItemSetChangeListener>();
         }
         itemSetEventListeners.add(listener);
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void addListener(Container.ItemSetChangeListener listener) {
+        addItemSetChangeListener(listener);
     }
 
     /**
@@ -1521,13 +1551,23 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#removeListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     @Override
-    public void removeListener(Container.ItemSetChangeListener listener) {
+    public void removeItemSetChangeListener(
+            Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners != null) {
             itemSetEventListeners.remove(listener);
             if (itemSetEventListeners.isEmpty()) {
                 itemSetEventListeners = null;
             }
         }
+    }
+
+    /**
+     * @deprecated Since 7.0, replaced by
+     *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
+     **/
+    @Deprecated
+    public void removeListener(Container.ItemSetChangeListener listener) {
+        removeItemSetChangeListener(listener);
     }
 
     @Override

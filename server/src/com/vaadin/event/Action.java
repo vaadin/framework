@@ -18,7 +18,7 @@ package com.vaadin.event;
 
 import java.io.Serializable;
 
-import com.vaadin.terminal.Resource;
+import com.vaadin.server.Resource;
 
 /**
  * Implements the action framework. This class contains subinterfaces for action

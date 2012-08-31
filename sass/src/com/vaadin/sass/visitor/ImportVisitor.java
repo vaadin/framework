@@ -17,6 +17,7 @@
 package com.vaadin.sass.visitor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -38,16 +39,27 @@ public class ImportVisitor implements Visitor {
             if (child instanceof ImportNode) {
                 ImportNode importNode = (ImportNode) child;
                 if (!importNode.isPureCssImport()) {
-                    StringBuilder filePathBuilder = new StringBuilder(
-                            node.getFileName());
-                    filePathBuilder.append(File.separatorChar).append(
-                            importNode.getUri());
-                    if (!filePathBuilder.toString().endsWith(".scss")) {
-                        filePathBuilder.append(".scss");
-                    }
+
                     try {
-                        ScssStylesheet imported = ScssStylesheet.get(new File(
-                                filePathBuilder.toString()));
+
+                        StringBuilder filePathBuilder = new StringBuilder(
+                                node.getFileName());
+                        filePathBuilder.append(File.separatorChar).append(
+                                importNode.getUri());
+                        if (!filePathBuilder.toString().endsWith(".scss")) {
+                            filePathBuilder.append(".scss");
+                        }
+
+                        ScssStylesheet imported = ScssStylesheet
+                                .get(filePathBuilder.toString());
+                        if (imported == null) {
+                            imported = ScssStylesheet.get(importNode.getUri());
+                        }
+                        if (imported == null) {
+                            throw new FileNotFoundException(importNode.getUri()
+                                    + " (parent: " + node.getFileName() + ")");
+                        }
+
                         traverse(imported);
                         String prefix = getUrlPrefix(importNode.getUri());
                         if (prefix != null) {

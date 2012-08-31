@@ -1016,6 +1016,14 @@ public interface Container extends Serializable {
          * @param listener
          *            listener to be added
          */
+        public void addItemSetChangeListener(
+                Container.ItemSetChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addItemSetChangeListener(ItemSetChangeListener)}
+         **/
+        @Deprecated
         public void addListener(Container.ItemSetChangeListener listener);
 
         /**
@@ -1024,6 +1032,14 @@ public interface Container extends Serializable {
          * @param listener
          *            listener to be removed
          */
+        public void removeItemSetChangeListener(
+                Container.ItemSetChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removeItemSetChangeListener(ItemSetChangeListener)}
+         **/
+        @Deprecated
         public void removeListener(Container.ItemSetChangeListener listener);
     }
 
@@ -1102,6 +1118,14 @@ public interface Container extends Serializable {
          * @param listener
          *            The new Listener to be registered
          */
+        public void addPropertySetChangeListener(
+                Container.PropertySetChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #addPropertySetChangeListener(PropertySetChangeListener)}
+         **/
+        @Deprecated
         public void addListener(Container.PropertySetChangeListener listener);
 
         /**
@@ -1110,6 +1134,14 @@ public interface Container extends Serializable {
          * @param listener
          *            Listener to be removed
          */
+        public void removePropertySetChangeListener(
+                Container.PropertySetChangeListener listener);
+
+        /**
+         * @deprecated Since 7.0, replaced by
+         *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
+         **/
+        @Deprecated
         public void removeListener(Container.PropertySetChangeListener listener);
     }
 }
