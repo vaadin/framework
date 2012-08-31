@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-buildhelpers" basedir="." default="publish">
+<project name="vaadin-buildhelpers" basedir="." default="publish-local">
 	<description>
 		Compiles build helpers used when building other modules.
 	</description>
@@ -17,7 +17,9 @@
 		</antcall>
 	</target>
 
-	<target name="publish" depends="jar">
+	<target name="publish-local" depends="jar">
+		<antcall target="common.sources.jar" />
+		<antcall target="common.javadoc.jar" />
 		<antcall target="common.publish-local" />
 	</target>
 
