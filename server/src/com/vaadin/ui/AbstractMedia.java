@@ -56,8 +56,8 @@ public abstract class AbstractMedia extends AbstractComponent {
     }
 
     private void clearSources() {
-        getState().getSources().clear();
-        getState().getSourceTypes().clear();
+        getState().sources.clear();
+        getState().sourceTypes.clear();
     }
 
     /**
@@ -71,10 +71,10 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public void addSource(Resource source) {
         if (source != null) {
-            List<URLReference> sources = getState().getSources();
+            List<URLReference> sources = getState().sources;
             sources.add(new ResourceReference(source, this, Integer
                     .toString(sources.size())));
-            getState().getSourceTypes().add(source.getMIMEType());
+            getState().sourceTypes.add(source.getMIMEType());
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractMedia extends AbstractComponent {
             WrappedResponse response, String path) throws IOException {
         Matcher matcher = Pattern.compile("(\\d+)(/.*)?").matcher(path);
         if (matcher.matches()) {
-            List<URLReference> sources = getState().getSources();
+            List<URLReference> sources = getState().sources;
 
             int sourceIndex = Integer.parseInt(matcher.group(1));
 
@@ -128,7 +128,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public List<Resource> getSources() {
         ArrayList<Resource> sources = new ArrayList<Resource>();
-        for (URLReference ref : getState().getSources()) {
+        for (URLReference ref : getState().sources) {
             sources.add(((ResourceReference) ref).getResource());
         }
         return sources;
@@ -140,14 +140,14 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @param showControls
      */
     public void setShowControls(boolean showControls) {
-        getState().setShowControls(showControls);
+        getState().showControls = showControls;
     }
 
     /**
      * @return true if the browser is to show native media controls.
      */
     public boolean isShowControls() {
-        return getState().isShowControls();
+        return getState().showControls;
     }
 
     /**
@@ -162,7 +162,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @param altText
      */
     public void setAltText(String altText) {
-        getState().setAltText(altText);
+        getState().altText = altText;
     }
 
     /**
@@ -170,7 +170,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      *         HTML5.
      */
     public String getAltText() {
-        return getState().getAltText();
+        return getState().altText;
     }
 
     /**
@@ -180,7 +180,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @param htmlContentAllowed
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().setHtmlContentAllowed(htmlContentAllowed);
+        getState().htmlContentAllowed = htmlContentAllowed;
     }
 
     /**
@@ -188,7 +188,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      *         be rendered as HTML.
      */
     public boolean isHtmlContentAllowed() {
-        return getState().isHtmlContentAllowed();
+        return getState().htmlContentAllowed;
     }
 
     /**
@@ -198,14 +198,14 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @param autoplay
      */
     public void setAutoplay(boolean autoplay) {
-        getState().setAutoplay(autoplay);
+        getState().autoplay = autoplay;
     }
 
     /**
      * @return true if the media is set to automatically start playback.
      */
     public boolean isAutoplay() {
-        return getState().isAutoplay();
+        return getState().autoplay;
     }
 
     /**
@@ -214,14 +214,14 @@ public abstract class AbstractMedia extends AbstractComponent {
      * @param muted
      */
     public void setMuted(boolean muted) {
-        getState().setMuted(muted);
+        getState().muted = muted;
     }
 
     /**
      * @return true if the audio is muted.
      */
     public boolean isMuted() {
-        return getState().isMuted();
+        return getState().muted;
     }
 
     /**

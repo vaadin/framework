@@ -49,12 +49,12 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        for (int i = 0; i < getState().getSources().size(); i++) {
-            URLReference source = getState().getSources().get(i);
-            String sourceType = getState().getSourceTypes().get(i);
+        for (int i = 0; i < getState().sources.size(); i++) {
+            URLReference source = getState().sources.get(i);
+            String sourceType = getState().sourceTypes.get(i);
             getWidget().addSource(source.getURL(), sourceType);
         }
-        setAltText(getState().getAltText());
+        setAltText(getState().altText);
     }
 
     @Override
@@ -66,7 +66,7 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
         if (altText == null || "".equals(altText)) {
             altText = getDefaultAltHtml();
-        } else if (!getState().isHtmlContentAllowed()) {
+        } else if (!getState().htmlContentAllowed) {
             altText = Util.escapeHTML(altText);
         }
         getWidget().setAltText(altText);
