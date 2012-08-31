@@ -67,7 +67,7 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public void navigateTo(String parameters) {
+        public void enter(ViewChangeEvent event) {
             // nothing to do
         }
     }
@@ -483,7 +483,7 @@ public class Navigator implements Serializable {
             }
         }
 
-        view.navigateTo(parameters);
+        view.enter(event);
         currentView = view;
 
         if (display != null) {

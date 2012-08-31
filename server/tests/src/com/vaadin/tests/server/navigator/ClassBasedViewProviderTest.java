@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import com.vaadin.navigator.Navigator.ClassBasedViewProvider;
 import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Label;
 
 public class ClassBasedViewProviderTest extends TestCase {
@@ -28,8 +29,8 @@ public class ClassBasedViewProviderTest extends TestCase {
         public String parameters = null;
 
         @Override
-        public void navigateTo(String parameters) {
-            this.parameters = parameters;
+        public void enter(ViewChangeEvent event) {
+            parameters = event.getParameters();
         }
 
     }
