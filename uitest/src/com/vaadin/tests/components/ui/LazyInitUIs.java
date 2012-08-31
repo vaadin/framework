@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.Application;
-import com.vaadin.annotations.EagerInit;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedRequest;
@@ -13,7 +12,7 @@ import com.vaadin.ui.UI;
 
 public class LazyInitUIs extends AbstractTestApplication {
 
-    @EagerInit
+    // @EagerInit
     private static class EagerInitUI extends UI {
         @Override
         public void init(WrappedRequest request) {

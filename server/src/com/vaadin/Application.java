@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.annotations.EagerInit;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -2286,11 +2285,5 @@ public class Application implements Terminal.ErrorListener, Serializable {
         } else {
             return titleAnnotation.value();
         }
-    }
-
-    public boolean isEagerInit(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        EagerInit eagerInit = getAnnotationFor(uiClass, EagerInit.class);
-        return eagerInit != null;
     }
 }

@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.annotations.EagerInit;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -76,12 +75,6 @@ import com.vaadin.tools.ReflectTools;
  * non-component functionality. The component hierarchy is initialized by
  * passing a {@link ComponentContainer} with the main layout of the view to
  * {@link #setContent(ComponentContainer)}.
- * </p>
- * <p>
- * If a {@link EagerInit} annotation is present on a class extending
- * <code>UI</code>, the framework will use a faster initialization method which
- * will not ensure that {@link BrowserDetails} are present in the
- * {@link WrappedRequest} passed to the init method.
  * </p>
  * 
  * @see #init(WrappedRequest)
@@ -961,11 +954,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * state of the UI is not properly set up when the constructor is invoked.
      * <p>
      * The {@link WrappedRequest} can be used to get information about the
-     * request that caused this UI to be created. By default, the
-     * {@link BrowserDetails} will be available in the request. If the browser
-     * details are not required, loading the application in the browser can take
-     * some shortcuts giving a faster initial rendering. This can be indicated
-     * by adding the {@link EagerInit} annotation to the UI class.
+     * request that caused this UI to be created. {@link BrowserDetails} will be
+     * available in the request.
      * </p>
      * 
      * @param request

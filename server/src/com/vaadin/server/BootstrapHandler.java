@@ -406,13 +406,6 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        if (application.isEagerInit(context.getRequest(), context.getUIClass())) {
-            throw new RuntimeException(
-                    "Eager UI init is currently not supported");
-            // write the initial UIDL into the config
-            // appConfig.put("uidl",
-            // getInitialUIDL(context.getRequest(), context.getUI()));
-        }
         appConfig.put("initialPath", context.getRequest().getRequestPathInfo());
 
         Map<String, String[]> parameterMap = context.getRequest()
