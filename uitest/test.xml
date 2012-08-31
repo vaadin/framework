@@ -50,7 +50,7 @@
 	<!-- fileset containing all TestBench tests to run -->
 	<fileset dir=".." id="html-test-files">
 		<include name="tests/**/**.html" />
-		<include name="testbench/com/vaadin/tests/**/**.html" />
+		<include name="src/com/vaadin/tests/**/**.html" />
 		<exclude name="tests/integration-testscripts/**" />
 	</fileset>
 
