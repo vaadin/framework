@@ -17,10 +17,9 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -35,21 +34,32 @@ import com.vaadin.ui.UI;
 public class DifferentFeaturesForDifferentClients extends Application {
 
     @Override
-    protected UI getUI(WrappedRequest request)
-            throws UIRequiresMoreInformationException {
-        BrowserDetails browserDetails = request.getBrowserDetails();
-        // This is a limitation of 7.0.0.alpha1 that there is no better way to
-        // check if WebBrowser has been fully initialized
-        if (browserDetails.getUriFragment() == null) {
-            throw new UIRequiresMoreInformationException();
-        }
+    public void init() {
+        super.init();
+        addUIProvider(new UIProvider() {
+            @Override
+            public Class<? extends UI> getUIClass(Application application,
+                    WrappedRequest request) {
+                // could also use browser version etc.
+                if (request.getHeader("user-agent").contains("mobile")) {
+                    return TouchRoot.class;
+                } else {
+                    return DefaultRoot.class;
+                }
+            }
 
-        // could also use screen size, browser version etc.
-        if (browserDetails.getWebBrowser().isTouchDevice()) {
-            return new TouchRoot();
-        } else {
-            return new DefaultRoot();
-        }
+            // Must override as default implementation isn't allowed to
+            // instantiate our non-public classes
+            @Override
+            public UI instantiateUI(Application application,
+                    Class<? extends UI> type, WrappedRequest request) {
+                try {
+                    return type.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }
 

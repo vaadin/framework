@@ -85,7 +85,7 @@ import com.vaadin.tools.ReflectTools;
  * </p>
  * 
  * @see #init(WrappedRequest)
- * @see Application#getUI(WrappedRequest)
+ * @see Application#createUI(WrappedRequest)
  * 
  * @since 7.0
  */
@@ -98,7 +98,6 @@ public abstract class UI extends AbstractComponentContainer implements
      * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
      */
     @Deprecated
-    @EagerInit
     public static class LegacyWindow extends UI {
         private String name;
 
@@ -710,28 +709,6 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Sets the id of this UI within its application. The UI id is used to route
-     * requests to the right UI.
-     * <p>
-     * This method is mainly intended for internal use by the framework.
-     * </p>
-     * 
-     * @param uiId
-     *            the id of this UI
-     * 
-     * @throws IllegalStateException
-     *             if the UI id has already been set
-     * 
-     * @see #getUIId()
-     */
-    public void setUIId(int uiId) {
-        if (this.uiId != -1) {
-            throw new IllegalStateException("UI id has already been defined");
-        }
-        this.uiId = uiId;
-    }
-
-    /**
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
@@ -748,8 +725,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Adds a window as a subwindow inside this UI. To open a new browser window
      * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link Application#getUI(WrappedRequest)} returns an appropriate UI for
-     * the request.
+     * {@link Application#createUI(WrappedRequest)} returns an appropriate UI
+     * for the request.
      * 
      * @param window
      * @throws IllegalArgumentException
@@ -830,6 +807,8 @@ public abstract class UI extends AbstractComponentContainer implements
     private Focusable pendingFocus;
 
     private boolean resizeLazy = false;
+
+    private String theme;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -959,8 +938,16 @@ public abstract class UI extends AbstractComponentContainer implements
      * 
      * @param request
      *            the initialization request
+     * @param uiId
+     *            the id of the new ui
      */
-    public void doInit(WrappedRequest request) {
+    public void doInit(WrappedRequest request, int uiId) {
+        if (this.uiId != -1) {
+            throw new IllegalStateException("UI id has already been defined");
+        }
+        this.uiId = uiId;
+        theme = getApplication().getThemeForUI(request, getClass());
+
         getPage().init(request);
 
         // Call the init overridden by the application developer
@@ -1351,5 +1338,14 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public void setLastUidlRequestTime(long lastUidlRequest) {
         this.lastUidlRequest = lastUidlRequest;
+    }
+
+    /**
+     * Gets the theme that was used when the UI was initialized.
+     * 
+     * @return the theme name
+     */
+    public String getTheme() {
+        return theme;
     }
 }

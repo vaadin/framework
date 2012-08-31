@@ -21,6 +21,7 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 
 import com.vaadin.Application;
+import com.vaadin.ui.UI;
 
 /**
  * A representation of a bootstrap page being generated. The bootstrap page
@@ -39,7 +40,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * Crate a new bootstrap page response.
      * 
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, Application, Integer)
+     *      WrappedRequest, Application, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
@@ -49,17 +50,18 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param uiId
-     *            the generated id of the UI that will be displayed on the page
+     * @param uiClass
+     *            the class of the UI that will be displayed on the page
      * @param document
      *            the DOM document making up the HTML page
      * @param headers
      *            a map into which header data can be added
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application, Integer uiId,
-            Document document, Map<String, Object> headers) {
-        super(handler, request, application, uiId);
+            WrappedRequest request, Application application,
+            Class<? extends UI> uiClass, Document document,
+            Map<String, Object> headers) {
+        super(handler, request, application, uiClass);
         this.headers = headers;
         this.document = document;
     }

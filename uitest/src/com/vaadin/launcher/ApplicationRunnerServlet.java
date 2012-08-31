@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedHttpServletRequest;
@@ -116,8 +115,7 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
 
                     @Override
                     public Class<? extends UI> getUIClass(
-                            Application application, WrappedRequest request)
-                            throws UIRequiresMoreInformationException {
+                            Application application, WrappedRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });

@@ -60,13 +60,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
-import com.vaadin.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.RpcManager.RpcInvocationException;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;
@@ -1512,7 +1510,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private String getTheme(UI uI) {
-        String themeName = uI.getApplication().getThemeForUI(uI);
+        String themeName = uI.getTheme();
         String requestThemeName = getRequestTheme();
 
         if (requestThemeName != null) {
@@ -2410,36 +2408,22 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response, Application application)
             throws IOException {
 
-        // if we do not yet have a currentUI, it should be initialized
-        // shortly, and we should send the initial UIDL
-        boolean sendUIDL = UI.getCurrent() == null;
+        assert UI.getCurrent() == null;
 
         try {
             CombinedRequest combinedRequest = new CombinedRequest(request);
 
-            UI uI = application.getUIForRequest(combinedRequest);
             response.setContentType("application/json; charset=UTF-8");
 
-            // Use the same logic as for determined UIs
-            BootstrapHandler bootstrapHandler = getBootstrapHandler();
-            BootstrapContext context = bootstrapHandler.createContext(
-                    combinedRequest, response, application, uI.getUIId());
-
-            String widgetset = context.getWidgetsetName();
-            String theme = context.getThemeName();
-            String themeUri = bootstrapHandler.getThemeUri(context, theme);
-
-            // TODO These are not required if it was only the init of the UI
-            // that was delayed
-            JSONObject params = new JSONObject();
-            params.put("widgetset", widgetset);
-            params.put("themeUri", themeUri);
-            // UI id might have changed based on e.g. window.name
-            params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
-            if (sendUIDL) {
-                String initialUIDL = getInitialUIDL(combinedRequest, uI);
-                params.put("uidl", initialUIDL);
+            UI uI = application.getUIForRequest(combinedRequest);
+            if (uI == null) {
+                uI = application.createUI(combinedRequest);
             }
+
+            JSONObject params = new JSONObject();
+            params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
+            String initialUIDL = getInitialUIDL(combinedRequest, uI);
+            params.put("uidl", initialUIDL);
 
             // NOTE! GateIn requires, for some weird reason, getOutputStream
             // to be used instead of getWriter() (it seems to interpret
@@ -2452,10 +2436,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // NOTE GateIn requires the buffers to be flushed to work
             outWriter.flush();
             out.flush();
-        } catch (UIRequiresMoreInformationException e) {
-            // Requiring more information at this point is not allowed
-            // TODO handle in a better way
-            throw new RuntimeException(e);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

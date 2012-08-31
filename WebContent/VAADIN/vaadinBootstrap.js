@@ -153,15 +153,11 @@
 			
 			var bootstrapApp = function(mayDefer) {
 				var themeUri = getConfig('themeUri');
-				if (themeUri) {
-					loadTheme(themeUri);
-				}
+				loadTheme(themeUri);
 				
 				var widgetsetBase = getConfig('widgetsetBase');
 				var widgetset = getConfig('widgetset');
-				if (widgetset && widgetsetBase) {
-					loadWidgetset(widgetsetBase, widgetset);
-				}
+				loadWidgetset(widgetsetBase, widgetset);
 				
 				if (getConfig('uidl') === undefined) {
 					if (mayDefer) {

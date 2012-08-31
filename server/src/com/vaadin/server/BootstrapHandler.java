@@ -37,12 +37,10 @@ import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
 public abstract class BootstrapHandler implements RequestHandler {
@@ -74,30 +72,20 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getApplication();
         }
 
-        public Integer getUIId() {
-            return bootstrapResponse.getUIId();
-        }
-
-        public UI getUI() {
-            return bootstrapResponse.getUI();
+        public Class<? extends UI> getUIClass() {
+            return bootstrapResponse.getUiClass();
         }
 
         public String getWidgetsetName() {
             if (widgetsetName == null) {
-                UI uI = getUI();
-                if (uI != null) {
-                    widgetsetName = getWidgetsetForUI(this);
-                }
+                widgetsetName = getWidgetsetForUI(this);
             }
             return widgetsetName;
         }
 
         public String getThemeName() {
             if (themeName == null) {
-                UI uI = getUI();
-                if (uI != null) {
-                    themeName = findAndEscapeThemeName(this);
-                }
+                themeName = findAndEscapeThemeName(this);
             }
             return themeName;
         }
@@ -120,23 +108,11 @@ public abstract class BootstrapHandler implements RequestHandler {
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 
-        // TODO Should all urls be handled here?
-        Integer uiId = null;
         try {
-            UI uI = application.getUIForRequest(request);
-            if (uI == null) {
-                writeError(response, new Throwable("No UI found"));
-                return true;
-            }
+            Class<? extends UI> uiClass = application.getUIClass(request);
 
-            uiId = Integer.valueOf(uI.getUIId());
-        } catch (UIRequiresMoreInformationException e) {
-            // Just keep going without uiId
-        }
-
-        try {
             BootstrapContext context = createContext(request, response,
-                    application, uiId);
+                    application, uiClass);
             setupMainDiv(context);
 
             BootstrapFragmentResponse fragmentResponse = context
@@ -166,8 +142,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getApplication(), context.getUIId(),
-                    document, headers);
+                    this, request, context.getApplication(),
+                    context.getUIClass(), document, headers);
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -242,10 +218,11 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        UI uI = context.getUI();
-        String title = ((uI == null || uI.getCaption() == null) ? "" : uI
-                .getCaption());
-        head.appendElement("title").appendText(title);
+        String title = context.getApplication().getPageTitleForUI(
+                context.getRequest(), context.getUIClass());
+        if (title != null) {
+            head.appendElement("title").appendText(title);
+        }
 
         head.appendElement("style").attr("type", "text/css")
                 .appendText("html, body {height:100%;margin:0;}");
@@ -267,11 +244,12 @@ public abstract class BootstrapHandler implements RequestHandler {
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
-    public BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application, Integer uiId) {
+    private BootstrapContext createContext(WrappedRequest request,
+            WrappedResponse response, Application application,
+            Class<? extends UI> uiClass) {
         BootstrapContext context = new BootstrapContext(response,
-                new BootstrapFragmentResponse(this, request, application, uiId,
-                        new ArrayList<Node>()));
+                new BootstrapFragmentResponse(this, request, application,
+                        uiClass, new ArrayList<Node>()));
         return context;
     }
 
@@ -290,10 +268,10 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected abstract String getApplicationId(BootstrapContext context);
 
     public String getWidgetsetForUI(BootstrapContext context) {
-        UI uI = context.getUI();
         WrappedRequest request = context.getRequest();
 
-        String widgetset = uI.getApplication().getWidgetsetForUI(uI);
+        String widgetset = context.getApplication().getWidgetsetForUI(
+                context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getDeploymentConfiguration()
                     .getConfiguredWidgetset(request);
@@ -413,13 +391,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
         Application application = context.getApplication();
-        Integer uiId = context.getUIId();
 
         JSONObject appConfig = new JSONObject();
-
-        if (uiId != null) {
-            appConfig.put(UIConstants.UI_ID_PARAMETER, uiId);
-        }
 
         if (context.getThemeName() != null) {
             appConfig.put("themeUri",
@@ -433,18 +406,18 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        if (uiId == null || application.isUIInitPending(uiId.intValue())) {
-            appConfig.put("initialPath", context.getRequest()
-                    .getRequestPathInfo());
-
-            Map<String, String[]> parameterMap = context.getRequest()
-                    .getParameterMap();
-            appConfig.put("initialParams", parameterMap);
-        } else {
+        if (application.isEagerInit(context.getRequest(), context.getUIClass())) {
+            throw new RuntimeException(
+                    "Eager UI init is currently not supported");
             // write the initial UIDL into the config
-            appConfig.put("uidl",
-                    getInitialUIDL(context.getRequest(), context.getUI()));
+            // appConfig.put("uidl",
+            // getInitialUIDL(context.getRequest(), context.getUI()));
         }
+        appConfig.put("initialPath", context.getRequest().getRequestPathInfo());
+
+        Map<String, String[]> parameterMap = context.getRequest()
+                .getParameterMap();
+        appConfig.put("initialParams", parameterMap);
 
         return appConfig;
     }
@@ -532,7 +505,8 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication().getThemeForUI(context.getUI());
+        return context.getApplication().getThemeForUI(context.getRequest(),
+                context.getUIClass());
     }
 
     /**
@@ -561,21 +535,4 @@ public abstract class BootstrapHandler implements RequestHandler {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 e.getLocalizedMessage());
     }
-
-    /**
-     * Gets the initial UIDL message to send to the client.
-     * 
-     * @param request
-     *            the originating request
-     * @param ui
-     *            the UI for which the UIDL should be generated
-     * @return a string with the initial UIDL message
-     * @throws PaintException
-     *             if an exception occurs while painting the components
-     * @throws JSONException
-     *             if an exception occurs while formatting the output
-     */
-    protected abstract String getInitialUIDL(WrappedRequest request, UI ui)
-            throws PaintException, JSONException;
-
 }

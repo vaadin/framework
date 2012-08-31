@@ -14,15 +14,25 @@
  * the License.
  */
 
-package com.vaadin.server;
+package com.vaadin.annotations;
 
-import com.vaadin.Application;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.vaadin.ui.UI;
 
-public interface UIProvider {
-    public Class<? extends UI> getUIClass(Application application,
-            WrappedRequest request);
-
-    public UI instantiateUI(Application application, Class<? extends UI> type,
-            WrappedRequest request);
+/**
+ * Defines the HTML page title for a {@link UI}.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Title {
+    /**
+     * Gets the HTML title that should be used if the UI is used on it's own.
+     * 
+     * @return a page title string
+     */
+    public String value();
 }

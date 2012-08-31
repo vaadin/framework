@@ -21,6 +21,7 @@ import java.util.List;
 import org.jsoup.nodes.Node;
 
 import com.vaadin.Application;
+import com.vaadin.ui.UI;
 
 /**
  * A representation of a bootstrap fragment being generated. The bootstrap
@@ -37,7 +38,7 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * Crate a new bootstrap fragment response.
      * 
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, Application, Integer)
+     *      WrappedRequest, Application, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
@@ -47,16 +48,16 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param uiId
-     *            the generated id of the UI that will be displayed on the page
+     * @param uiClass
+     *            the class of the UI that will be displayed on the page
      * @param fragmentNodes
      *            a mutable list containing the DOM nodes that will make up the
      *            application HTML
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application, Integer uiId,
-            List<Node> fragmentNodes) {
-        super(handler, request, application, uiId);
+            WrappedRequest request, Application application,
+            Class<? extends UI> uiClass, List<Node> fragmentNodes) {
+        super(handler, request, application, uiClass);
         this.fragmentNodes = fragmentNodes;
     }
 

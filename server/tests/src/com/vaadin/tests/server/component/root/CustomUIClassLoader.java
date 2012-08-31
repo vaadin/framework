@@ -10,7 +10,6 @@ import org.easymock.EasyMock;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.WrappedRequest;
@@ -56,8 +55,11 @@ public class CustomUIClassLoader extends TestCase {
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
-        UI uI = application.getUIForRequest(createRequestMock(null));
-        assertTrue(uI instanceof MyUI);
+        DefaultUIProvider uiProvider = new DefaultUIProvider();
+        Class<? extends UI> uiClass = uiProvider.getUIClass(application,
+                createRequestMock(null));
+
+        assertEquals(MyUI.class, uiClass);
     }
 
     private static DeploymentConfiguration createConfigurationMock() {
@@ -101,9 +103,11 @@ public class CustomUIClassLoader extends TestCase {
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
-        UI uI = application
-                .getUIForRequest(createRequestMock(loggingClassLoader));
-        assertTrue(uI instanceof MyUI);
+        DefaultUIProvider uiProvider = new DefaultUIProvider();
+        Class<? extends UI> uiClass = uiProvider.getUIClass(application,
+                createRequestMock(loggingClassLoader));
+
+        assertEquals(MyUI.class, uiClass);
         assertEquals(1, loggingClassLoader.requestedClasses.size());
         assertEquals(MyUI.class.getName(),
                 loggingClassLoader.requestedClasses.get(0));
@@ -112,10 +116,6 @@ public class CustomUIClassLoader extends TestCase {
 
     private Application createStubApplication() {
         return new Application() {
-            {
-                addUIProvider(new DefaultUIProvider());
-            }
-
             @Override
             public String getProperty(String name) {
                 if (name.equals(UI_PARAMETER)) {
@@ -123,14 +123,6 @@ public class CustomUIClassLoader extends TestCase {
                 } else {
                     return super.getProperty(name);
                 }
-            }
-
-            @Override
-            public UI getUIForRequest(WrappedRequest request)
-                    throws UIRequiresMoreInformationException {
-                // Always create a new root for testing (can't directly use
-                // getRoot as it's protected)
-                return getUI(request);
             }
         };
     }

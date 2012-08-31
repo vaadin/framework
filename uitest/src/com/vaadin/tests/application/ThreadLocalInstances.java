@@ -1,9 +1,9 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.tests.integration.FlagSeResource;
@@ -73,12 +73,19 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     @Override
     public void init() {
         reportCurrentStatus("app init");
-    }
+        addUIProvider(new UIProvider() {
+            @Override
+            public UI instantiateUI(Application application,
+                    Class<? extends UI> type, WrappedRequest request) {
+                return mainWindow;
+            }
 
-    @Override
-    protected UI getUI(WrappedRequest request)
-            throws UIRequiresMoreInformationException {
-        return mainWindow;
+            @Override
+            public Class<? extends UI> getUIClass(Application application,
+                    WrappedRequest request) {
+                return mainWindow.getClass();
+            }
+        });
     }
 
     @Override
