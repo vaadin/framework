@@ -123,31 +123,31 @@ public abstract class AbstractSplitPanelConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         getWidget().setEnabled(isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        if (getState().hasStyles()) {
-            getWidget().componentStyleNames = getState().getStyles();
+        if (getState().styles != null && !getState().styles.isEmpty()) {
+            getWidget().componentStyleNames = getState().styles;
         } else {
             getWidget().componentStyleNames = new LinkedList<String>();
         }
 
         // Splitter updates
-        SplitterState splitterState = getState().getSplitterState();
+        SplitterState splitterState = getState().splitterState;
 
         getWidget().setStylenames();
 
-        getWidget().minimumPosition = splitterState.getMinPosition()
-                + splitterState.getMinPositionUnit();
+        getWidget().minimumPosition = splitterState.minPosition
+                + splitterState.minPositionUnit;
 
-        getWidget().maximumPosition = splitterState.getMaxPosition()
-                + splitterState.getMaxPositionUnit();
+        getWidget().maximumPosition = splitterState.maxPosition
+                + splitterState.maxPositionUnit;
 
-        getWidget().position = splitterState.getPosition()
-                + splitterState.getPositionUnit();
+        getWidget().position = splitterState.position
+                + splitterState.positionUnit;
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
@@ -198,11 +198,11 @@ public abstract class AbstractSplitPanelConnector extends
     }
 
     private ComponentConnector getFirstChild() {
-        return (ComponentConnector) getState().getFirstChild();
+        return (ComponentConnector) getState().firstChild;
     }
 
     private ComponentConnector getSecondChild() {
-        return (ComponentConnector) getState().getSecondChild();
+        return (ComponentConnector) getState().secondChild;
     }
 
     @Override

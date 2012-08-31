@@ -23,29 +23,13 @@ public class TextAreaState extends AbstractTextFieldState {
     /**
      * Number of visible rows in the text area. The default is 5.
      */
-    private int rows = 5;
+    @DelegateToWidget
+    public int rows = 5;
 
     /**
      * Tells if word-wrapping should be used in the text area.
      */
-    private boolean wordwrap = true;
-
-    public int getRows() {
-        return rows;
-    }
-
     @DelegateToWidget
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public boolean isWordwrap() {
-        return wordwrap;
-    }
-
-    @DelegateToWidget
-    public void setWordwrap(boolean wordwrap) {
-        this.wordwrap = wordwrap;
-    }
+    public boolean wordwrap = true;
 
 }

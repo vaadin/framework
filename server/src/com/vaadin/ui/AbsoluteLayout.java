@@ -182,7 +182,7 @@ public class AbsoluteLayout extends AbstractLayout implements
             connectorToPosition.put(c.getConnectorId(), getPosition(c)
                     .getCSSString());
         }
-        getState().setConnectorToCssPosition(connectorToPosition);
+        getState().connectorToCssPosition = connectorToPosition;
 
     }
 
@@ -639,6 +639,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(LayoutClickListener listener) {
         addLayoutClickListener(listener);
@@ -654,6 +655,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(LayoutClickListener listener) {
         removeLayoutClickListener(listener);

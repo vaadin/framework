@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,23 +19,6 @@ import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Connector;
 
 public class FormState extends AbstractFieldState {
-    private Connector layout;
-    private Connector footer;
-
-    public Connector getLayout() {
-        return layout;
-    }
-
-    public void setLayout(Connector layout) {
-        this.layout = layout;
-    }
-
-    public Connector getFooter() {
-        return footer;
-    }
-
-    public void setFooter(Connector footer) {
-        this.footer = footer;
-    }
-
+    public Connector layout;
+    public Connector footer;
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -110,8 +110,9 @@ public class VCaption extends HTML {
         placedAfterComponent = true;
 
         String style = CLASSNAME;
-        if (owner.getState().hasStyles()) {
-            for (String customStyle : owner.getState().getStyles()) {
+        if (owner.getState().styles != null
+                && !owner.getState().styles.isEmpty()) {
+            for (String customStyle : owner.getState().styles) {
                 style += " " + CLASSNAME + "-" + customStyle;
             }
         }
@@ -123,11 +124,11 @@ public class VCaption extends HTML {
         boolean hasIcon = owner.getState().resources
                 .containsKey(ComponentConstants.ICON_RESOURCE);
         boolean showRequired = false;
-        boolean showError = owner.getState().getErrorMessage() != null;
+        boolean showError = owner.getState().errorMessage != null;
         if (owner.getState() instanceof AbstractFieldState) {
             AbstractFieldState abstractFieldState = (AbstractFieldState) owner
                     .getState();
-            showError = showError && !abstractFieldState.isHideErrors();
+            showError = showError && !abstractFieldState.hideErrors;
         }
         if (owner instanceof AbstractFieldConnector) {
             showRequired = ((AbstractFieldConnector) owner).isRequired();
@@ -154,7 +155,7 @@ public class VCaption extends HTML {
             icon = null;
         }
 
-        if (owner.getState().getCaption() != null) {
+        if (owner.getState().caption != null) {
             // A caption text should be shown if the attribute is set
             // If the caption is null the ATTRIBUTE_CAPTION should not be set to
             // avoid ending up here.
@@ -168,7 +169,7 @@ public class VCaption extends HTML {
             }
 
             // Update caption text
-            String c = owner.getState().getCaption();
+            String c = owner.getState().caption;
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
             if (c == null || c.trim().equals("")) {
@@ -191,7 +192,7 @@ public class VCaption extends HTML {
             captionText = null;
         }
 
-        if (owner.getState().hasDescription() && captionText != null) {
+        if (owner.getState().description != null && captionText != null) {
             addStyleDependentName("hasdescription");
         } else {
             removeStyleDependentName("hasdescription");
@@ -392,13 +393,13 @@ public class VCaption extends HTML {
     }
 
     public static boolean isNeeded(ComponentState state) {
-        if (state.getCaption() != null) {
+        if (state.caption != null) {
             return true;
         }
         if (state.resources.containsKey(ComponentConstants.ICON_RESOURCE)) {
             return true;
         }
-        if (state.getErrorMessage() != null) {
+        if (state.errorMessage != null) {
             return true;
         }
 

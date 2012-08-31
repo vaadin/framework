@@ -71,7 +71,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().filteringmode = uidl.getIntAttribute("filteringmode");
         }
 
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
 

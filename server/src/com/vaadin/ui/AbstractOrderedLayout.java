@@ -143,11 +143,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     private void componentRemoved(Component c) {
-        getState().getChildData().remove(c);
+        getState().childData.remove(c);
     }
 
     private void componentAdded(Component c) {
-        getState().getChildData().put(c, new ChildComponentData());
+        getState().childData.put(c, new ChildComponentData());
     }
 
     /**
@@ -232,11 +232,11 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
-        ChildComponentData childData = getState().getChildData().get(
+        ChildComponentData childData = getState().childData.get(
                 childComponent);
         if (childData != null) {
             // Alignments are bit masks
-            childData.setAlignmentBitmask(alignment.getBitMask());
+            childData.alignmentBitmask = alignment.getBitMask();
         } else {
             throw new IllegalArgumentException(
                     "Component must be added to layout before using setComponentAlignment()");
@@ -252,14 +252,14 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public Alignment getComponentAlignment(Component childComponent) {
-        ChildComponentData childData = getState().getChildData().get(
+        ChildComponentData childData = getState().childData.get(
                 childComponent);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");
         }
 
-        return new Alignment(childData.getAlignmentBitmask());
+        return new Alignment(childData.alignmentBitmask);
     }
 
     /*
@@ -269,7 +269,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void setSpacing(boolean spacing) {
-        getState().setSpacing(spacing);
+        getState().spacing = spacing;
     }
 
     /*
@@ -279,7 +279,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public boolean isSpacing() {
-        return getState().isSpacing();
+        return getState().spacing;
     }
 
     /**
@@ -312,13 +312,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @param ratio
      */
     public void setExpandRatio(Component component, float ratio) {
-        ChildComponentData childData = getState().getChildData().get(component);
+        ChildComponentData childData = getState().childData.get(component);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");
         }
 
-        childData.setExpandRatio(ratio);
+        childData.expandRatio = ratio;
     }
 
     /**
@@ -329,13 +329,13 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @return expand ratio of given component, 0.0f by default.
      */
     public float getExpandRatio(Component component) {
-        ChildComponentData childData = getState().getChildData().get(component);
+        ChildComponentData childData = getState().childData.get(component);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");
         }
 
-        return childData.getExpandRatio();
+        return childData.expandRatio;
     }
 
     @Override
@@ -349,6 +349,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(LayoutClickListener listener) {
         addLayoutClickListener(listener);
@@ -364,6 +365,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(LayoutClickListener listener) {
         removeLayoutClickListener(listener);
@@ -405,7 +407,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public MarginInfo getMargin() {
-        return new MarginInfo(getState().getMarginsBitmask());
+        return new MarginInfo(getState().marginsBitmask);
     }
 
     /*
@@ -415,6 +417,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public void setMargin(MarginInfo marginInfo) {
-        getState().setMarginsBitmask(marginInfo.getBitMask());
+        getState().marginsBitmask = marginInfo.getBitMask();
     }
 }

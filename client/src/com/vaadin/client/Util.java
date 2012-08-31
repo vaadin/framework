@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -44,6 +44,7 @@ import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.ui.ComponentStateUtil;
 
 public class Util {
 
@@ -168,6 +169,9 @@ public class Util {
      * @return An escaped version of <literal>attribute</literal>.
      */
     public static String escapeAttribute(String attribute) {
+        if (attribute == null) {
+            return "";
+        }
         attribute = attribute.replace("\"", "&quot;");
         attribute = attribute.replace("'", "&#39;");
         attribute = attribute.replace(">", "&gt;");
@@ -517,17 +521,19 @@ public class Util {
      * @return
      */
     public static FloatSize parseRelativeSize(ComponentState state) {
-        if (state.isUndefinedHeight() && state.isUndefinedWidth()) {
+        if (ComponentStateUtil.isUndefinedHeight(state)
+                && ComponentStateUtil.isUndefinedWidth(state)) {
             return null;
         }
 
-        float relativeWidth = Util.parseRelativeSize(state.getWidth());
-        float relativeHeight = Util.parseRelativeSize(state.getHeight());
+        float relativeWidth = Util.parseRelativeSize(state.width);
+        float relativeHeight = Util.parseRelativeSize(state.height);
 
         FloatSize relativeSize = new FloatSize(relativeWidth, relativeHeight);
         return relativeSize;
 
     }
+
 
     @Deprecated
     public static boolean isCached(UIDL uidl) {

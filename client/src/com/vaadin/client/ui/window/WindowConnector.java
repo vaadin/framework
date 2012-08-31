@@ -36,8 +36,8 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
+import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
@@ -97,7 +97,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
                 + "_window_close");
 
         if (isRealUpdate(uidl)) {
-            if (getState().isModal() != getWidget().vaadinModality) {
+            if (getState().modal != getWidget().vaadinModality) {
                 getWidget().setVaadinModality(!getWidget().vaadinModality);
             }
             if (!getWidget().isAttached()) {
@@ -105,12 +105,12 @@ public class WindowConnector extends AbstractComponentContainerConnector
                 // possible centering
                 getWidget().show();
             }
-            if (getState().isResizable() != getWidget().resizable) {
-                getWidget().setResizable(getState().isResizable());
+            if (getState().resizable != getWidget().resizable) {
+                getWidget().setResizable(getState().resizable);
             }
-            getWidget().resizeLazy = getState().isResizeLazy();
+            getWidget().resizeLazy = getState().resizeLazy;
 
-            getWidget().setDraggable(getState().isDraggable());
+            getWidget().setDraggable(getState().draggable);
 
             // Caption must be set before required header size is measured. If
             // the caption attribute is missing the caption should be cleared.
@@ -118,7 +118,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
             if (getIcon() != null) {
                 iconURL = getIcon();
             }
-            getWidget().setCaption(getState().getCaption(), iconURL);
+            getWidget().setCaption(getState().caption, iconURL);
         }
 
         getWidget().visibilityChangesDisabled = true;
@@ -129,13 +129,13 @@ public class WindowConnector extends AbstractComponentContainerConnector
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         getWidget().setClosable(!isReadOnly());
 
         // Initialize the position form UIDL
-        int positionx = getState().getPositionX();
-        int positiony = getState().getPositionY();
+        int positionx = getState().positionX;
+        int positiony = getState().positionY;
         if (positionx >= 0 || positiony >= 0) {
             if (positionx < 0) {
                 positionx = 0;
@@ -162,16 +162,16 @@ public class WindowConnector extends AbstractComponentContainerConnector
         }
 
         // setting scrollposition must happen after children is rendered
-        getWidget().contentPanel.setScrollPosition(getState().getScrollTop());
-        getWidget().contentPanel.setHorizontalScrollPosition(getState()
-                .getScrollLeft());
+        getWidget().contentPanel.setScrollPosition(getState().scrollTop);
+        getWidget().contentPanel
+                .setHorizontalScrollPosition(getState().scrollLeft);
 
         // Center this window on screen if requested
         // This had to be here because we might not know the content size before
         // everything is painted into the window
 
         // centered is this is unset on move/resize
-        getWidget().centered = getState().isCentered();
+        getWidget().centered = getState().centered;
         getWidget().setVisible(true);
 
         // ensure window is not larger than browser window

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,11 +27,11 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
 
     @Override
     public boolean isReadOnly() {
-        return super.isReadOnly() || getState().isPropertyReadOnly();
+        return super.isReadOnly() || getState().propertyReadOnly;
     }
 
     public boolean isModified() {
-        return getState().isModified();
+        return getState().modified;
     }
 
     /**
@@ -43,7 +43,7 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector 
      * @return true if required indicator should be shown
      */
     public boolean isRequired() {
-        return getState().isRequired() && !isReadOnly();
+        return getState().required && !isReadOnly();
     }
 
     @Override

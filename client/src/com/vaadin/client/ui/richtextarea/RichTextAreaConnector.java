@@ -51,7 +51,7 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
         }
 
         getWidget().setReadOnly(isReadOnly());
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
                 .getIntAttribute("maxLength") : -1;
         if (newMaxLength >= 0) {

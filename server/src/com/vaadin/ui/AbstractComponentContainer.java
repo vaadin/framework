@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -115,6 +115,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @deprecated Since 7.0, replaced by
      *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ComponentAttachListener listener) {
         addComponentAttachListener(listener);
@@ -131,6 +132,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @deprecated Since 7.0, replaced by
      *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ComponentDetachListener listener) {
         addComponentDetachListener(listener);
@@ -147,6 +149,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ComponentAttachListener listener) {
         removeComponentAttachListener(listener);
@@ -163,6 +166,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ComponentDetachListener listener) {
         removeComponentDetachListener(listener);
@@ -240,7 +244,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     @Override
     public void setVisible(boolean visible) {
-        if (getState().isVisible() == visible) {
+        if (getState().visible == visible) {
             return;
         }
 

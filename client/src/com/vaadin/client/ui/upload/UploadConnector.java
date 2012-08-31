@@ -41,7 +41,7 @@ public class UploadConnector extends AbstractComponentConnector implements
             getWidget().submit();
             return;
         }
-        getWidget().setImmediate(getState().isImmediate());
+        getWidget().setImmediate(getState().immediate);
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
         getWidget().nextUploadId = uidl.getIntAttribute("nextid");

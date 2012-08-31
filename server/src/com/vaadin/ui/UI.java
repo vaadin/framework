@@ -35,14 +35,14 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.AbstractApplicationServlet;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
-import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -385,7 +385,7 @@ public abstract class UI extends AbstractComponentContainer implements
         @Override
         public void setCaption(String caption) {
             // Override to provide backwards compatibility
-            getState().setCaption(caption);
+            getState().caption = caption;
             getPage().setTitle(caption);
         }
 
@@ -879,7 +879,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public ComponentContainer getContent() {
-        return (ComponentContainer) getState().getContent();
+        return (ComponentContainer) getState().content;
     }
 
     /**
@@ -911,10 +911,10 @@ public abstract class UI extends AbstractComponentContainer implements
             content = createDefaultLayout();
         }
 
-        if (getState().getContent() != null) {
-            super.removeComponent((Component) getState().getContent());
+        if (getState().content != null) {
+            super.removeComponent((Component) getState().content);
         }
-        getState().setContent(content);
+        getState().content = content;
         if (content != null) {
             super.addComponent(content);
         }

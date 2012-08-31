@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -95,7 +95,7 @@ public class TextArea extends AbstractTextField {
         if (rows < 0) {
             rows = 0;
         }
-        getState().setRows(rows);
+        getState().rows = rows;
     }
 
     /**
@@ -104,7 +104,7 @@ public class TextArea extends AbstractTextField {
      * @return number of explicitly set rows.
      */
     public int getRows() {
-        return getState().getRows();
+        return getState().rows;
     }
 
     /**
@@ -115,7 +115,7 @@ public class TextArea extends AbstractTextField {
      *            word-wrap mode.
      */
     public void setWordwrap(boolean wordwrap) {
-        getState().setWordwrap(wordwrap);
+        getState().wordwrap = wordwrap;
     }
 
     /**
@@ -125,7 +125,7 @@ public class TextArea extends AbstractTextField {
      *         <code>false</code> if not.
      */
     public boolean isWordwrap() {
-        return getState().isWordwrap();
+        return getState().wordwrap;
     }
 
 }

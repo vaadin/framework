@@ -51,9 +51,9 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
         getWidget().setReadOnly(isReadOnly());
 
-        getWidget().setInputPrompt(getState().getInputPrompt());
-        getWidget().setMaxLength(getState().getMaxLength());
-        getWidget().setImmediate(getState().isImmediate());
+        getWidget().setInputPrompt(getState().inputPrompt);
+        getWidget().setMaxLength(getState().maxLength);
+        getWidget().setImmediate(getState().immediate);
 
         getWidget().listenTextChangeEvents = hasEventListener("ie");
         if (getWidget().listenTextChangeEvents) {
@@ -74,9 +74,9 @@ public class TextFieldConnector extends AbstractFieldConnector implements
             getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
             getWidget().attachCutEventListener(getWidget().getElement());
         }
-        getWidget().setColumns(getState().getColumns());
+        getWidget().setColumns(getState().columns);
 
-        final String text = getState().getText();
+        final String text = getState().text;
 
         /*
          * We skip the text content update if field has been repainted, but text

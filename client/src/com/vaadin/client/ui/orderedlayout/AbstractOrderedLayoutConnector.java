@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -124,18 +124,16 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             VLayoutSlot slot = layout.getSlotForChild(child.getWidget());
 
-            AlignmentInfo alignment = new AlignmentInfo(getState()
-                    .getChildData().get(child).getAlignmentBitmask());
+            AlignmentInfo alignment = new AlignmentInfo(
+                    getState().childData.get(child).alignmentBitmask);
             slot.setAlignment(alignment);
 
-            double expandRatio = getState().getChildData().get(child)
-                    .getExpandRatio();
+            double expandRatio = getState().childData.get(child).expandRatio;
             slot.setExpandRatio(expandRatio);
         }
 
-        layout.updateMarginStyleNames(new MarginInfo(getState()
-                .getMarginsBitmask()));
-        layout.updateSpacingStyleName(getState().isSpacing());
+        layout.updateMarginStyleNames(new MarginInfo(getState().marginsBitmask));
+        layout.updateSpacingStyleName(getState().spacing);
 
         getLayoutManager().setNeedsLayout(this);
     }
@@ -254,9 +252,9 @@ public abstract class AbstractOrderedLayoutConnector extends
 
     private String getDefinedSize(boolean isVertical) {
         if (isVertical) {
-            return getState().getHeight();
+            return getState().height == null ? "" : getState().height;
         } else {
-            return getState().getWidth();
+            return getState().width == null ? "" : getState().width;
         }
     }
 

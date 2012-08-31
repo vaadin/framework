@@ -69,12 +69,12 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
             // showPopupOnTop(popup, hostReference);
             getWidget().preparePopup(getWidget().popup);
             getWidget().popup.updateFromUIDL(popupUIDL, client);
-            if (getState().hasStyles()) {
+            if (getState().styles != null && !getState().styles.isEmpty()) {
                 final StringBuffer styleBuf = new StringBuffer();
                 final String primaryName = getWidget().popup
                         .getStylePrimaryName();
                 styleBuf.append(primaryName);
-                for (String style : getState().getStyles()) {
+                for (String style : getState().styles) {
                     styleBuf.append(" ");
                     styleBuf.append(primaryName);
                     styleBuf.append("-");

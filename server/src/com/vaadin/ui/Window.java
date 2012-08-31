@@ -31,9 +31,9 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
@@ -242,7 +242,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public int getPositionX() {
-        return getState().getPositionX();
+        return getState().positionX;
     }
 
     /**
@@ -255,8 +255,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public void setPositionX(int positionX) {
-        getState().setPositionX(positionX);
-        getState().setCentered(false);
+        getState().positionX = positionX;
+        getState().centered = false;
     }
 
     /**
@@ -269,7 +269,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public int getPositionY() {
-        return getState().getPositionY();
+        return getState().positionY;
     }
 
     /**
@@ -283,8 +283,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @since 4.0.0
      */
     public void setPositionY(int positionY) {
-        getState().setPositionY(positionY);
-        getState().setCentered(false);
+        getState().positionY = positionY;
+        getState().centered = false;
     }
 
     private static final Method WINDOW_CLOSE_METHOD;
@@ -540,7 +540,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            true if modality is to be turned on
      */
     public void setModal(boolean modal) {
-        getState().setModal(modal);
+        getState().modal = modal;
         center();
     }
 
@@ -548,7 +548,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return true if this window is modal.
      */
     public boolean isModal() {
-        return getState().isModal();
+        return getState().modal;
     }
 
     /**
@@ -558,7 +558,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            true if resizability is to be turned on
      */
     public void setResizable(boolean resizable) {
-        getState().setResizable(resizable);
+        getState().resizable = resizable;
     }
 
     /**
@@ -566,7 +566,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @return true if window is resizable by the end-user, otherwise false.
      */
     public boolean isResizable() {
-        return getState().isResizable();
+        return getState().resizable;
     }
 
     /**
@@ -575,7 +575,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *         sizes are recalculated immediately.
      */
     public boolean isResizeLazy() {
-        return getState().isResizeLazy();
+        return getState().resizeLazy;
     }
 
     /**
@@ -591,7 +591,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            calculate immediately.
      */
     public void setResizeLazy(boolean resizeLazy) {
-        getState().setResizeLazy(resizeLazy);
+        getState().resizeLazy = resizeLazy;
     }
 
     /**
@@ -604,7 +604,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
-        getState().setCentered(true);
+        getState().centered = true;
     }
 
     /**
@@ -655,7 +655,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            true if the sub window can be dragged by the user
      */
     public boolean isDraggable() {
-        return getState().isDraggable();
+        return getState().draggable;
     }
 
     /**
@@ -668,7 +668,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      *            true if the sub window can be dragged by the user
      */
     public void setDraggable(boolean draggable) {
-        getState().setDraggable(draggable);
+        getState().draggable = draggable;
     }
 
     /*
@@ -793,6 +793,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -807,6 +808,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -829,6 +831,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -843,6 +846,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);

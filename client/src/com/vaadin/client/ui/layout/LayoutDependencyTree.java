@@ -311,8 +311,8 @@ public class LayoutDependencyTree {
             }
             ComponentState state = connector.getState();
             s += " sizing: "
-                    + getSizeDefinition(direction == VERTICAL ? state
-                            .getHeight() : state.getWidth()) + "\n";
+                    + getSizeDefinition(direction == VERTICAL ? state.height
+                            : state.width) + "\n";
 
             if (needsLayout) {
                 s += "Needs layout\n";

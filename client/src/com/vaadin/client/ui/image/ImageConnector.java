@@ -50,7 +50,7 @@ public class ImageConnector extends AbstractComponentConnector {
 
         getWidget().setUrl(
                 getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
-        getWidget().setAltText(getState().getAlternateText());
+        getWidget().setAltText(getState().alternateText);
     }
 
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(

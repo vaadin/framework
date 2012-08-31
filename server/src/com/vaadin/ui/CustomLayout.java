@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.server.JsonPaintTarget;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 
 /**
@@ -142,7 +142,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
             removeComponent(old);
         }
         slots.put(location, c);
-        getState().getChildLocations().put(c, location);
+        getState().childLocations.put(c, location);
         c.setParent(this);
         fireComponentAttachEvent(c);
     }
@@ -173,7 +173,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
             return;
         }
         slots.values().remove(c);
-        getState().getChildLocations().remove(c);
+        getState().childLocations.remove(c);
         super.removeComponent(c);
     }
 
@@ -247,19 +247,19 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         } else {
             slots.put(newLocation, oldComponent);
             slots.put(oldLocation, newComponent);
-            getState().getChildLocations().put(newComponent, oldLocation);
-            getState().getChildLocations().put(oldComponent, newLocation);
+            getState().childLocations.put(newComponent, oldLocation);
+            getState().childLocations.put(oldComponent, newLocation);
         }
     }
 
     /** Get the name of the template */
     public String getTemplateName() {
-        return getState().getTemplateName();
+        return getState().templateName;
     }
 
     /** Get the contents of the template */
     public String getTemplateContents() {
-        return getState().getTemplateContents();
+        return getState().templateContents;
     }
 
     /**
@@ -272,8 +272,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * @param templateName
      */
     public void setTemplateName(String templateName) {
-        getState().setTemplateName(templateName);
-        getState().setTemplateContents(null);
+        getState().templateName = templateName;
+        getState().templateContents = null;
     }
 
     /**
@@ -282,8 +282,8 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * @param templateContents
      */
     public void setTemplateContents(String templateContents) {
-        getState().setTemplateContents(templateContents);
-        getState().setTemplateName(null);
+        getState().templateContents = templateContents;
+        getState().templateName = null;
     }
 
     @Override
@@ -295,7 +295,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     public void paintContent(PaintTarget target) throws PaintException {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
-        String templateName = getState().getTemplateName();
+        String templateName = getState().templateName;
         if (templateName != null && templateName.length() != 0) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();

@@ -105,7 +105,7 @@ public class TableConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().paintableId = uidl.getStringAttribute("id");
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         int previousTotalRows = getWidget().totalRows;
         getWidget().updateTotalRows(uidl);
@@ -334,7 +334,7 @@ public class TableConnector extends AbstractComponentContainerConnector
 
     @Override
     public boolean isReadOnly() {
-        return super.isReadOnly() || getState().isPropertyReadOnly();
+        return super.isReadOnly() || getState().propertyReadOnly;
     }
 
     @Override

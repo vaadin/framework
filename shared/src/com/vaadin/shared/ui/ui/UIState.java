@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,14 +19,5 @@ import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 
 public class UIState extends ComponentState {
-    private Connector content;
-
-    public Connector getContent() {
-        return content;
-    }
-
-    public void setContent(Connector content) {
-        this.content = content;
-    }
-
+    public Connector content;
 }

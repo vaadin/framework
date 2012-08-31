@@ -81,8 +81,8 @@ public class FormConnector extends AbstractComponentContainerConnector
         }
 
         boolean legendEmpty = true;
-        if (getState().getCaption() != null) {
-            getWidget().caption.setInnerText(getState().getCaption());
+        if (getState().caption != null) {
+            getWidget().caption.setInnerText(getState().caption);
             legendEmpty = false;
         } else {
             getWidget().caption.setInnerText("");
@@ -105,16 +105,15 @@ public class FormConnector extends AbstractComponentContainerConnector
             getWidget().removeStyleDependentName("nocaption");
         }
 
-        if (null != getState().getErrorMessage()) {
-            getWidget().errorMessage
-                    .updateMessage(getState().getErrorMessage());
+        if (null != getState().errorMessage) {
+            getWidget().errorMessage.updateMessage(getState().errorMessage);
             getWidget().errorMessage.setVisible(true);
         } else {
             getWidget().errorMessage.setVisible(false);
         }
 
-        if (getState().hasDescription()) {
-            getWidget().desc.setInnerHTML(getState().getDescription());
+        if (getState().description != null) {
+            getWidget().desc.setInnerHTML(getState().description);
             if (getWidget().desc.getParentElement() == null) {
                 getWidget().fieldSet.insertAfter(getWidget().desc,
                         getWidget().legend);
@@ -128,10 +127,9 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         // first render footer so it will be easier to handle relative height of
         // main layout
-        if (getState().getFooter() != null) {
+        if (getState().footer != null) {
             // render footer
-            ComponentConnector newFooter = (ComponentConnector) getState()
-                    .getFooter();
+            ComponentConnector newFooter = (ComponentConnector) getState().footer;
             Widget newFooterWidget = newFooter.getWidget();
             if (getWidget().footer == null) {
                 getLayoutManager().addElementResizeListener(
@@ -158,8 +156,7 @@ public class FormConnector extends AbstractComponentContainerConnector
             }
         }
 
-        ComponentConnector newLayout = (ComponentConnector) getState()
-                .getLayout();
+        ComponentConnector newLayout = (ComponentConnector) getState().layout;
         Widget newLayoutWidget = newLayout.getWidget();
         if (getWidget().lo == null) {
             // Layout not rendered before
@@ -208,7 +205,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     @Override
     public boolean isReadOnly() {
-        return super.isReadOnly() || getState().isPropertyReadOnly();
+        return super.isReadOnly() || getState().propertyReadOnly;
     }
 
     @Override

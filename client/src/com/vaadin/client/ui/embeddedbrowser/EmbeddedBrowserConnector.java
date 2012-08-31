@@ -29,7 +29,7 @@ public class EmbeddedBrowserConnector extends AbstractComponentConnector {
 
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setAlternateText(getState().getAlternateText());
+        getWidget().setAlternateText(getState().alternateText);
         getWidget().setSource(
                 getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
         getWidget().setName(getConnectorId());
