@@ -108,12 +108,17 @@ public class Navigator implements Serializable {
 
         @Override
         public String getState() {
-            return page.getFragment();
+            String fragment = page.getFragment();
+            if (fragment.startsWith("!")) {
+                return page.getFragment().substring(1);
+            } else {
+                return "";
+            }
         }
 
         @Override
         public void setState(String state) {
-            page.setFragment(state, false);
+            page.setFragment("!" + state, false);
         }
 
         @Override
@@ -475,7 +480,7 @@ public class Navigator implements Serializable {
 
         if (null != viewName && getStateManager() != null) {
             String navigationState = viewName;
-            if (!parameters.equals("")) {
+            if (!parameters.isEmpty()) {
                 navigationState += "/" + parameters;
             }
             if (!navigationState.equals(getStateManager().getState())) {
