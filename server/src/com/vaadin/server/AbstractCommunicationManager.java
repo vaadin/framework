@@ -832,7 +832,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     .isClientSideInitialized(connector);
             connector.beforeClientResponse(!initialized);
         }
-        uiConnectorTracker.markAllConnectorsClean();
 
         outWriter.print("\"changes\":[");
 
@@ -942,6 +941,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         outWriter.append(hierarchyInfo.toString());
         outWriter.print(", "); // close hierarchy
+
+        uiConnectorTracker.markAllConnectorsClean();
 
         // send server to client RPC calls for components in the UI, in call
         // order
@@ -1232,6 +1233,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         for (ClientConnector connector : dirtyVisibleConnectors) {
             uiConnectorTracker.markClientSideInitialized(connector);
         }
+
+        assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
 
         writePerformanceData(outWriter);
     }
