@@ -22,7 +22,6 @@ import javax.portlet.PortletResponse;
 import javax.servlet.Filter;
 
 import com.vaadin.Application;
-import com.vaadin.service.ApplicationContext.TransactionListener;
 
 /**
  * An {@link Application} that implements this interface gets notified of
@@ -41,7 +40,7 @@ import com.vaadin.service.ApplicationContext.TransactionListener;
  * </ul>
  * <p>
  * Alternatives for implementing similar features are are Servlet {@link Filter}
- * s and {@link TransactionListener}s in Vaadin.
+ * s and {@link ApplicationContext.TransactionListener}s in Vaadin.
  * 
  * @since 6.2
  * @see HttpServletRequestListener

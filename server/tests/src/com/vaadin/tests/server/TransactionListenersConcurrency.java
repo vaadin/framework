@@ -17,14 +17,13 @@ import javax.servlet.http.HttpSession;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMock;
+
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.server.AbstractWebApplicationContext;
+import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.WebApplicationContext;
-import com.vaadin.service.ApplicationContext.TransactionListener;
-
-import org.easymock.EasyMock;
 
 public class TransactionListenersConcurrency extends TestCase {
 
@@ -90,9 +89,9 @@ public class TransactionListenersConcurrency extends TestCase {
                         // Call the transaction listener using reflection as
                         // startTransaction is protected.
 
-                        Method m = AbstractWebApplicationContext.class
-                                .getDeclaredMethod("startTransaction",
-                                        Application.class, Object.class);
+                        Method m = ApplicationContext.class.getDeclaredMethod(
+                                "startTransaction", Application.class,
+                                Object.class);
                         m.setAccessible(true);
                         m.invoke(context, app, null);
                     } catch (Exception e) {
@@ -167,7 +166,8 @@ public class TransactionListenersConcurrency extends TestCase {
      * transactionStart and transactionEnd.
      * 
      */
-    public static class DelayTransactionListener implements TransactionListener {
+    public static class DelayTransactionListener implements
+            ApplicationContext.TransactionListener {
 
         private int delay;
 

@@ -47,7 +47,6 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.service.ApplicationContext;
 
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in

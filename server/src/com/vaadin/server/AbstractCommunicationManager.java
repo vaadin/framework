@@ -1323,8 +1323,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * response.
      */
     private void writePerformanceData(final PrintWriter outWriter) {
-        AbstractWebApplicationContext ctx = (AbstractWebApplicationContext) application
-                .getContext();
+        ApplicationContext ctx = application.getContext();
         outWriter.write(String.format(", \"timings\":[%d, %d]",
                 ctx.getTotalSessionTime(), ctx.getLastRequestTime()));
     }

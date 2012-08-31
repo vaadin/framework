@@ -23,8 +23,6 @@ import java.util.Properties;
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
-import com.vaadin.service.ApplicationContext;
-
 /**
  * Provide deployment specific settings that are required outside terminal
  * specific code.

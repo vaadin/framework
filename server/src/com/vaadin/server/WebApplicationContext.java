@@ -37,7 +37,7 @@ import com.vaadin.Application;
  * @since 3.1
  */
 @SuppressWarnings("serial")
-public class WebApplicationContext extends AbstractWebApplicationContext {
+public class WebApplicationContext extends ApplicationContext {
 
     protected transient HttpSession session;
     private transient boolean reinitializingSession = false;
@@ -119,7 +119,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
     /**
      * Gets the application context base directory.
      * 
-     * @see com.vaadin.service.ApplicationContext#getBaseDirectory()
+     * @see com.vaadin.server.ApplicationContext#getBaseDirectory()
      */
     @Override
     public File getBaseDirectory() {

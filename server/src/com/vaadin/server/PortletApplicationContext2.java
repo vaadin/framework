@@ -56,7 +56,7 @@ import com.vaadin.ui.UI;
  * @author peholmst
  */
 @SuppressWarnings("serial")
-public class PortletApplicationContext2 extends AbstractWebApplicationContext {
+public class PortletApplicationContext2 extends ApplicationContext {
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 

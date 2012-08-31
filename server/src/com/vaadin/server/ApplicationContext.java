@@ -15,6 +15,7 @@
  */
 package com.vaadin.server;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -31,17 +32,65 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
-import com.vaadin.service.ApplicationContext;
 
 /**
+ * <code>ApplicationContext</code> provides information about the running
+ * context of the application. Each context is shared by all applications that
+ * are open for one user. In a web-environment this corresponds to a
+ * HttpSession.
+ * <p>
  * Base class for web application contexts (including portlet contexts) that
  * handles the common tasks.
+ * 
+ * @author Vaadin Ltd.
+ * @since 3.1
  */
-public abstract class AbstractWebApplicationContext implements
-        ApplicationContext, HttpSessionBindingListener, Serializable {
+public abstract class ApplicationContext implements HttpSessionBindingListener,
+        Serializable {
 
-    protected Collection<TransactionListener> listeners = Collections
-            .synchronizedList(new LinkedList<TransactionListener>());
+    /**
+     * Interface for listening to transaction events. Implement this interface
+     * to listen to all transactions between the client and the application.
+     * 
+     */
+    public static interface TransactionListener extends Serializable {
+
+        /**
+         * Invoked at the beginning of every transaction.
+         * 
+         * The transaction is linked to the context, not the application so if
+         * you have multiple applications running in the same context you need
+         * to check that the request is associated with the application you are
+         * interested in. This can be done looking at the application parameter.
+         * 
+         * @param application
+         *            the Application object.
+         * @param transactionData
+         *            the Data identifying the transaction.
+         */
+        public void transactionStart(Application application,
+                Object transactionData);
+
+        /**
+         * Invoked at the end of every transaction.
+         * 
+         * The transaction is linked to the context, not the application so if
+         * you have multiple applications running in the same context you need
+         * to check that the request is associated with the application you are
+         * interested in. This can be done looking at the application parameter.
+         * 
+         * @param applcation
+         *            the Application object.
+         * @param transactionData
+         *            the Data identifying the transaction.
+         */
+        public void transactionEnd(Application application,
+                Object transactionData);
+
+    }
+
+    protected Collection<ApplicationContext.TransactionListener> listeners = Collections
+            .synchronizedList(new LinkedList<ApplicationContext.TransactionListener>());
 
     protected final HashSet<Application> applications = new HashSet<Application>();
 
@@ -53,15 +102,31 @@ public abstract class AbstractWebApplicationContext implements
 
     private long lastRequestTime = -1;
 
-    @Override
-    public void addTransactionListener(TransactionListener listener) {
+    /**
+     * Adds a transaction listener to this context. The transaction listener is
+     * called before and after each each request related to this session except
+     * when serving static resources.
+     * 
+     * The transaction listener must not be null.
+     * 
+     * @see com.vaadin.service.ApplicationContext#addTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
+     */
+    public void addTransactionListener(
+            ApplicationContext.TransactionListener listener) {
         if (listener != null) {
             listeners.add(listener);
         }
     }
 
-    @Override
-    public void removeTransactionListener(TransactionListener listener) {
+    /**
+     * Removes a transaction listener from this context.
+     * 
+     * @param listener
+     *            the listener to be removed.
+     * @see ApplicationContext.TransactionListener
+     */
+    public void removeTransactionListener(
+            ApplicationContext.TransactionListener listener) {
         listeners.remove(listener);
     }
 
@@ -74,11 +139,12 @@ public abstract class AbstractWebApplicationContext implements
      *            the HTTP or portlet request that triggered the transaction.
      */
     protected void startTransaction(Application application, Object request) {
-        ArrayList<TransactionListener> currentListeners;
+        ArrayList<ApplicationContext.TransactionListener> currentListeners;
         synchronized (listeners) {
-            currentListeners = new ArrayList<TransactionListener>(listeners);
+            currentListeners = new ArrayList<ApplicationContext.TransactionListener>(
+                    listeners);
         }
-        for (TransactionListener listener : currentListeners) {
+        for (ApplicationContext.TransactionListener listener : currentListeners) {
             listener.transactionStart(application, request);
         }
     }
@@ -94,12 +160,13 @@ public abstract class AbstractWebApplicationContext implements
     protected void endTransaction(Application application, Object request) {
         LinkedList<Exception> exceptions = null;
 
-        ArrayList<TransactionListener> currentListeners;
+        ArrayList<ApplicationContext.TransactionListener> currentListeners;
         synchronized (listeners) {
-            currentListeners = new ArrayList<TransactionListener>(listeners);
+            currentListeners = new ArrayList<ApplicationContext.TransactionListener>(
+                    listeners);
         }
 
-        for (TransactionListener listener : currentListeners) {
+        for (ApplicationContext.TransactionListener listener : currentListeners) {
             try {
                 listener.transactionEnd(application, request);
             } catch (final RuntimeException t) {
@@ -172,7 +239,13 @@ public abstract class AbstractWebApplicationContext implements
         return browser;
     }
 
-    @Override
+    /**
+     * Returns a collection of all the applications in this context.
+     * 
+     * Each application context contains all active applications for one user.
+     * 
+     * @return A collection containing all the applications in this context.
+     */
     public Collection<Application> getApplications() {
         return Collections.unmodifiableCollection(applications);
     }
@@ -209,7 +282,27 @@ public abstract class AbstractWebApplicationContext implements
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(AbstractWebApplicationContext.class.getName());
+        return Logger.getLogger(ApplicationContext.class.getName());
     }
+
+    /**
+     * Returns application context base directory.
+     * 
+     * Typically an application is deployed in a such way that is has an
+     * application directory. For web applications this directory is the root
+     * directory of the web applications. In some cases applications might not
+     * have an application directory (for example web applications running
+     * inside a war).
+     * 
+     * @return The application base directory or null if the application has no
+     *         base directory.
+     */
+    public abstract File getBaseDirectory();
+
+    /**
+     * Returns the time between requests, in seconds, before this context is
+     * invalidated. A negative time indicates the context should never timeout.
+     */
+    public abstract int getMaxInactiveInterval();
 
 }

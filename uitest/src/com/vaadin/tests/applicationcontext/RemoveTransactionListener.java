@@ -1,8 +1,8 @@
 package com.vaadin.tests.applicationcontext;
 
 import com.vaadin.Application;
-import com.vaadin.service.ApplicationContext;
-import com.vaadin.service.ApplicationContext.TransactionListener;
+import com.vaadin.server.ApplicationContext;
+import com.vaadin.server.ApplicationContext.TransactionListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 
