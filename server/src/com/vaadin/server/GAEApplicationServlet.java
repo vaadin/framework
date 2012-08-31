@@ -322,7 +322,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 ois = new ObjectInputStream(bais);
                 ApplicationContext applicationContext = (ApplicationContext) ois
                         .readObject();
-                session.setAttribute(WebApplicationContext.class.getName(),
+                session.setAttribute(ServletApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
                 getLogger().log(
@@ -360,7 +360,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
     private void cleanSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.removeAttribute(WebApplicationContext.class.getName());
+            session.removeAttribute(ServletApplicationContext.class.getName());
         }
     }
 

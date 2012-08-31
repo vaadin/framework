@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import com.vaadin.Application;
-import com.vaadin.server.WebApplicationContext;
+import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -33,7 +33,7 @@ public class Ticket1975 extends Application.LegacyApplication {
         try {
             cl1 = new CustomLayout(new ByteArrayInputStream(s.getBytes()));
             layout.addComponent(cl1);
-            WebApplicationContext wc = ((WebApplicationContext) getContext());
+            ServletApplicationContext wc = ((ServletApplicationContext) getContext());
 
             layout.addComponent(new Button("Disable/Enable",
                     new ClickListener() {

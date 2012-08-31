@@ -23,7 +23,7 @@ import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.DeploymentConfiguration;
-import com.vaadin.server.WebApplicationContext;
+import com.vaadin.server.ServletApplicationContext;
 
 public class TransactionListenersConcurrency extends TestCase {
 
@@ -39,7 +39,7 @@ public class TransactionListenersConcurrency extends TestCase {
         final List<Throwable> exceptions = new ArrayList<Throwable>();
 
         HttpSession session = createSession();
-        final WebApplicationContext context = WebApplicationContext
+        final ServletApplicationContext context = ServletApplicationContext
                 .getApplicationContext(session);
         List<Thread> threads = new ArrayList<Thread>();
 
@@ -151,10 +151,10 @@ public class TransactionListenersConcurrency extends TestCase {
     private static HttpSession createSession() {
         HttpSession session = createMock(HttpSession.class);
         EasyMock.expect(
-                session.getAttribute(WebApplicationContext.class.getName()))
+                session.getAttribute(ServletApplicationContext.class.getName()))
                 .andReturn(null).anyTimes();
         session.setAttribute(
-                EasyMock.eq(WebApplicationContext.class.getName()),
+                EasyMock.eq(ServletApplicationContext.class.getName()),
                 EasyMock.anyObject());
 
         EasyMock.replay(session);

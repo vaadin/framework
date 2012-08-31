@@ -112,7 +112,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     @Override
     protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
-        WebApplicationContext context = (WebApplicationContext) uI
+        ServletApplicationContext context = (ServletApplicationContext) uI
                 .getApplication().getContext();
         ServletContext servletContext = context.getHttpSession()
                 .getServletContext();

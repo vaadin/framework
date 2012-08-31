@@ -275,7 +275,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * Get or create a WebApplicationContext and an ApplicationManager
              * for the session
              */
-            WebApplicationContext webApplicationContext = getApplicationContext(request
+            ServletApplicationContext webApplicationContext = getApplicationContext(request
                     .getSession());
             CommunicationManager applicationManager = webApplicationContext
                     .getApplicationManager(application, this);
@@ -363,7 +363,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Notifies transaction end
             try {
                 if (transactionStarted) {
-                    ((WebApplicationContext) application.getContext())
+                    ((ServletApplicationContext) application.getContext())
                             .endTransaction(application, request);
 
                 }
@@ -694,7 +694,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throws ServletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
 
-        final WebApplicationContext context = getApplicationContext(request
+        final ServletApplicationContext context = getApplicationContext(request
                 .getSession());
         context.addApplication(newApplication);
 
@@ -856,7 +856,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws MalformedURLException
      */
     private void startApplication(HttpServletRequest request,
-            Application application, WebApplicationContext webApplicationContext)
+            Application application, ServletApplicationContext webApplicationContext)
             throws ServletException, MalformedURLException {
 
         if (!application.isRunning()) {
@@ -1385,7 +1385,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throw new SessionExpiredException();
         }
 
-        WebApplicationContext context = getApplicationContext(session);
+        ServletApplicationContext context = getApplicationContext(session);
 
         // Gets application list for the session.
         final Collection<Application> applications = context.getApplications();
@@ -1491,7 +1491,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         application.close();
         if (session != null) {
-            WebApplicationContext context = getApplicationContext(session);
+            ServletApplicationContext context = getApplicationContext(session);
             context.removeApplication(application);
         }
     }
@@ -1506,13 +1506,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the HTTP session.
      * @return the application context for HttpSession.
      */
-    protected WebApplicationContext getApplicationContext(HttpSession session) {
+    protected ServletApplicationContext getApplicationContext(HttpSession session) {
         /*
          * TODO the ApplicationContext.getApplicationContext() should be removed
          * and logic moved here. Now overriding context type is possible, but
          * the whole creation logic should be here. MT 1101
          */
-        return WebApplicationContext.getApplicationContext(session);
+        return ServletApplicationContext.getApplicationContext(session);
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {
@@ -1535,11 +1535,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * mananger implementation.
      * 
      * @deprecated Instead of overriding this method, override
-     *             {@link WebApplicationContext} implementation via
+     *             {@link ServletApplicationContext} implementation via
      *             {@link AbstractApplicationServlet#getApplicationContext(HttpSession)}
      *             method and in that customized implementation return your
      *             CommunicationManager in
-     *             {@link WebApplicationContext#getApplicationManager(Application, AbstractApplicationServlet)}
+     *             {@link ServletApplicationContext#getApplicationManager(Application, AbstractApplicationServlet)}
      *             method.
      * 
      * @param application

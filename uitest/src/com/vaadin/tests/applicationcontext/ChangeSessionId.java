@@ -1,6 +1,6 @@
 package com.vaadin.tests.applicationcontext;
 
-import com.vaadin.server.WebApplicationContext;
+import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -32,7 +32,7 @@ public class ChangeSessionId extends AbstractTestCase {
         loginButton.addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                WebApplicationContext context = ((WebApplicationContext) getContext());
+                ServletApplicationContext context = ((ServletApplicationContext) getContext());
 
                 String oldSessionId = context.getHttpSession().getId();
                 context.reinitializeSession();
@@ -55,7 +55,7 @@ public class ChangeSessionId extends AbstractTestCase {
     }
 
     protected String getSessionId() {
-        return ((WebApplicationContext) getContext()).getHttpSession().getId();
+        return ((ServletApplicationContext) getContext()).getHttpSession().getId();
     }
 
     @Override
