@@ -312,7 +312,7 @@ public class NavigatorTest extends TestCase {
 
         // test navigator
         navigator.addProvider(provider);
-        navigator.addListener(listener);
+        navigator.addViewChangeListener(listener);
 
         navigator.navigateTo("test1");
         navigator.navigateTo("test2");
@@ -385,8 +385,8 @@ public class NavigatorTest extends TestCase {
 
         // test navigator
         navigator.addProvider(provider);
-        navigator.addListener(listener1);
-        navigator.addListener(listener2);
+        navigator.addViewChangeListener(listener1);
+        navigator.addViewChangeListener(listener2);
 
         navigator.navigateTo("test1");
         navigator.navigateTo("test1/test");
