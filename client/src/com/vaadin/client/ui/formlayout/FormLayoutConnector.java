@@ -46,9 +46,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
         VFormLayoutTable formLayoutTable = getWidget().table;
 
-        formLayoutTable.setMargins(new MarginInfo(getState()
-                .getMarginsBitmask()));
-        formLayoutTable.setSpacing(getState().isSpacing());
+        formLayoutTable.setMargins(new MarginInfo(getState().marginsBitmask));
+        formLayoutTable.setSpacing(getState().spacing);
 
     }
 
@@ -99,12 +98,11 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
         // FIXME This incorrectly depends on AbstractFieldConnector
         if (component instanceof AbstractFieldConnector) {
-            hideErrors = ((AbstractFieldConnector) component).getState()
-                    .isHideErrors();
+            hideErrors = ((AbstractFieldConnector) component).getState().hideErrors;
         }
 
-        getWidget().table.updateError(component.getWidget(), component
-                .getState().getErrorMessage(), hideErrors);
+        getWidget().table.updateError(component.getWidget(),
+                component.getState().errorMessage, hideErrors);
     }
 
     @Override

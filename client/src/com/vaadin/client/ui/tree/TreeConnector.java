@@ -57,7 +57,7 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         getWidget().paintableId = uidl.getId();
 
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         getWidget().disabled = !isEnabled();
         getWidget().readonly = isReadOnly();
@@ -257,7 +257,7 @@ public class TreeConnector extends AbstractComponentConnector implements
 
     @Override
     public boolean isReadOnly() {
-        return super.isReadOnly() || getState().isPropertyReadOnly();
+        return super.isReadOnly() || getState().propertyReadOnly;
     }
 
     @Override

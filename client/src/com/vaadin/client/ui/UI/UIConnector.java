@@ -91,7 +91,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
             public void onResize(ResizeEvent event) {
                 rpc.resize(event.getHeight(), event.getWidth(),
                         Window.getClientWidth(), Window.getClientHeight());
-                if (getState().isImmediate()) {
+                if (getState().immediate) {
                     getConnection().sendPendingVariableChanges();
                 }
             }
@@ -106,7 +106,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         boolean firstPaint = getWidget().connection == null;
         getWidget().connection = client;
 
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
         getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         String newTheme = uidl.getStringAttribute("theme");
         if (getWidget().theme != null && !newTheme.equals(getWidget().theme)) {
@@ -119,8 +119,8 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         // this also implicitly removes old styles
         String styles = "";
         styles += getWidget().getStylePrimaryName() + " ";
-        if (getState().hasStyles()) {
-            for (String style : getState().getStyles()) {
+        if (getState().styles != null && !getState().styles.isEmpty()) {
+            for (String style : getState().styles) {
                 styles += style + " ";
             }
         }
@@ -338,7 +338,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
     }
 
     protected ComponentConnector getContent() {
-        return (ComponentConnector) getState().getContent();
+        return (ComponentConnector) getState().content;
     }
 
     protected void onChildSizeChange() {

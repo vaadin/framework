@@ -61,21 +61,21 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().disableOnClick = getState().isDisableOnClick();
+        getWidget().disableOnClick = getState().disableOnClick;
         focusHandlerRegistration = EventHelper.updateFocusHandler(this,
                 focusHandlerRegistration);
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
 
         // Set text
-        if (getState().isHtmlContentAllowed()) {
-            getWidget().setHTML(getState().getCaption());
+        if (getState().htmlContentAllowed) {
+            getWidget().setHTML(getState().caption);
         } else {
-            getWidget().setText(getState().getCaption());
+            getWidget().setText(getState().caption);
         }
 
         // handle error
-        if (null != getState().getErrorMessage()) {
+        if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement

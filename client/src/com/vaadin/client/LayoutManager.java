@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -1077,7 +1077,7 @@ public class LayoutManager {
             int assignedHeight) {
         assert component.isRelativeHeight();
 
-        float percentSize = parsePercent(component.getState().getHeight());
+        float percentSize = parsePercent(component.getState().height);
         int effectiveHeight = Math.round(assignedHeight * (percentSize / 100));
 
         reportOuterHeight(component, effectiveHeight);
@@ -1100,7 +1100,8 @@ public class LayoutManager {
             int assignedWidth) {
         assert component.isRelativeWidth();
 
-        float percentSize = parsePercent(component.getState().getWidth());
+        float percentSize = parsePercent(component.getState().width == null ? ""
+                : component.getState().width);
         int effectiveWidth = Math.round(assignedWidth * (percentSize / 100));
 
         reportOuterWidth(component, effectiveWidth);

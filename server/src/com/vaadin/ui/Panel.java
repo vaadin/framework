@@ -25,10 +25,10 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Scrollable;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
@@ -83,7 +83,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         registerRpc(rpc);
         setContent(content);
         setWidth(100, Unit.PERCENTAGE);
-        getState().setTabIndex(-1);
+        getState().tabIndex = -1;
     }
 
     /**
@@ -269,11 +269,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         final Integer newScrollY = (Integer) variables.get("scrollTop");
         if (newScrollX != null && newScrollX.intValue() != getScrollLeft()) {
             // set internally, not to fire request repaint
-            getState().setScrollLeft(newScrollX.intValue());
+            getState().scrollLeft = newScrollX.intValue();
         }
         if (newScrollY != null && newScrollY.intValue() != getScrollTop()) {
             // set internally, not to fire request repaint
-            getState().setScrollTop(newScrollY.intValue());
+            getState().scrollTop = newScrollY.intValue();
         }
 
         // Actions
@@ -292,7 +292,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public int getScrollLeft() {
-        return getState().getScrollLeft();
+        return getState().scrollLeft;
     }
 
     /*
@@ -302,7 +302,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public int getScrollTop() {
-        return getState().getScrollTop();
+        return getState().scrollTop;
     }
 
     /*
@@ -316,7 +316,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
         }
-        getState().setScrollLeft(scrollLeft);
+        getState().scrollLeft = scrollLeft;
     }
 
     /*
@@ -330,7 +330,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
         }
-        getState().setScrollTop(scrollTop);
+        getState().scrollTop = scrollTop;
     }
 
     /* Documented in superclass */
@@ -471,7 +471,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public int getTabIndex() {
-        return getState().getTabIndex();
+        return getState().tabIndex;
     }
 
     /**
@@ -479,7 +479,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      */
     @Override
     public void setTabIndex(int tabIndex) {
-        getState().setTabIndex(tabIndex);
+        getState().tabIndex = tabIndex;
     }
 
     /**

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,10 +25,10 @@ import com.vaadin.shared.ui.slider.SliderState;
  * 
  * Example code: <code>
  * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
- * 		
+ * 
  * 		Label volumeIndicator = new Label();
  * 		Slider slider;
- * 		
+ * 
  * 		public MyPlayer() {
  * 			VerticalLayout vl = new VerticalLayout();
  * 			setCompositionRoot(vl);
@@ -68,11 +68,11 @@ public class Slider extends AbstractField<Double> {
             } catch (final ValueOutOfBoundsException e) {
                 // Convert to nearest bound
                 double out = e.getValue().doubleValue();
-                if (out < getState().getMinValue()) {
-                    out = getState().getMinValue();
+                if (out < getState().minValue) {
+                    out = getState().minValue;
                 }
-                if (out > getState().getMaxValue()) {
-                    out = getState().getMaxValue();
+                if (out > getState().maxValue) {
+                    out = getState().maxValue;
                 }
                 Slider.super.setValue(new Double(out), false);
             }
@@ -88,7 +88,7 @@ public class Slider extends AbstractField<Double> {
     public Slider() {
         super();
         registerRpc(rpc);
-        super.setValue(new Double(getState().getMinValue()));
+        super.setValue(new Double(getState().minValue));
     }
 
     /**
@@ -164,7 +164,7 @@ public class Slider extends AbstractField<Double> {
      * @return the largest value the slider can have
      */
     public double getMax() {
-        return getState().getMaxValue();
+        return getState().maxValue;
     }
 
     /**
@@ -175,7 +175,7 @@ public class Slider extends AbstractField<Double> {
      *            The new maximum slider value
      */
     public void setMax(double max) {
-        getState().setMaxValue(max);
+        getState().maxValue = max;
         if (getValue() > max) {
             setValue(max);
         }
@@ -187,7 +187,7 @@ public class Slider extends AbstractField<Double> {
      * @return the smallest value the slider can have
      */
     public double getMin() {
-        return getState().getMinValue();
+        return getState().minValue;
     }
 
     /**
@@ -198,7 +198,7 @@ public class Slider extends AbstractField<Double> {
      *            The new minimum slider value
      */
     public void setMin(double min) {
-        getState().setMinValue(min);
+        getState().minValue = min;
         if (getValue() < min) {
             setValue(min);
         }
@@ -211,7 +211,7 @@ public class Slider extends AbstractField<Double> {
      *         {@link SliderOrientation#VERTICAL}
      */
     public SliderOrientation getOrientation() {
-        return getState().getOrientation();
+        return getState().orientation;
     }
 
     /**
@@ -223,7 +223,7 @@ public class Slider extends AbstractField<Double> {
      *            {@link SliderOrientation#VERTICAL}
      */
     public void setOrientation(SliderOrientation orientation) {
-        getState().setOrientation(orientation);
+        getState().orientation = orientation;
     }
 
     /**
@@ -233,7 +233,7 @@ public class Slider extends AbstractField<Double> {
      * @return resolution
      */
     public int getResolution() {
-        return getState().getResolution();
+        return getState().resolution;
     }
 
     /**
@@ -250,7 +250,7 @@ public class Slider extends AbstractField<Double> {
             throw new IllegalArgumentException(
                     "Cannot set a negative resolution to Slider");
         }
-        getState().setResolution(resolution);
+        getState().resolution = resolution;
     }
 
     /**
@@ -284,7 +284,7 @@ public class Slider extends AbstractField<Double> {
             }
         }
 
-        getState().setValue(newValue);
+        getState().value = newValue;
         super.setValue(newValue, repaintIsNotNeeded);
     }
 
@@ -296,7 +296,7 @@ public class Slider extends AbstractField<Double> {
         }
         super.setValue(newFieldValue);
         // The cast is safe if the above call returned without throwing
-        getState().setValue((Double) newFieldValue);
+        getState().value = (Double) newFieldValue;
     }
 
     /**

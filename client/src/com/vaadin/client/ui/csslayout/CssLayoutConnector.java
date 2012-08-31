@@ -75,10 +75,10 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         super.onStateChanged(stateChangeEvent);
 
         for (ComponentConnector child : getChildComponents()) {
-            if (!getState().getChildCss().containsKey(child)) {
+            if (!getState().childCss.containsKey(child)) {
                 continue;
             }
-            String css = getState().getChildCss().get(child);
+            String css = getState().childCss.get(child);
             Style style = child.getWidget().getElement().getStyle();
             // should we remove styles also? How can we know what we have added
             // as it is added directly to the child component?

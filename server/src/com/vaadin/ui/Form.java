@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,10 +39,10 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.UserError;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.form.FormState;
 
 /**
@@ -776,7 +776,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return the Layout of the form.
      */
     public Layout getLayout() {
-        return (Layout) getState().getLayout();
+        return (Layout) getState().layout;
     }
 
     /**
@@ -819,7 +819,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
         // Replace the previous layout
         layout.setParent(this);
-        getState().setLayout(layout);
+        getState().layout = layout;
     }
 
     /**
@@ -1214,7 +1214,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @return layout rendered below normal form contents.
      */
     public Layout getFooter() {
-        return (Layout) getState().getFooter();
+        return (Layout) getState().footer;
     }
 
     /**
@@ -1233,7 +1233,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             footer = new HorizontalLayout();
         }
 
-        getState().setFooter(footer);
+        getState().footer = footer;
         footer.setParent(this);
     }
 

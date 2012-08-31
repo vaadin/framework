@@ -65,7 +65,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
         addStateChangeHandler("errorMessage", new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                if (null != getState().getErrorMessage()) {
+                if (null != getState().errorMessage) {
                     if (getWidget().errorIndicatorElement == null) {
                         getWidget().errorIndicatorElement = DOM.createSpan();
                         getWidget().errorIndicatorElement
@@ -117,14 +117,14 @@ public class ButtonConnector extends AbstractComponentConnector implements
         if (changedProperties.contains("caption")
                 || changedProperties.contains("htmlContentAllowed")) {
             // Set text
-            if (getState().isHtmlContentAllowed()) {
-                getWidget().setHtml(getState().getCaption());
+            if (getState().htmlContentAllowed) {
+                getWidget().setHtml(getState().caption);
             } else {
-                getWidget().setText(getState().getCaption());
+                getWidget().setText(getState().caption);
             }
         }
 
-        getWidget().clickShortcut = getState().getClickShortcutKeyCode();
+        getWidget().clickShortcut = getState().clickShortcutKeyCode;
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
 
     @Override
     public void onClick(ClickEvent event) {
-        if (getState().isDisableOnClick()) {
+        if (getState().disableOnClick) {
             getWidget().setEnabled(false);
             rpc.disableOnClick();
         }

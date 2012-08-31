@@ -31,13 +31,13 @@ public class FlashConnector extends AbstractComponentConnector {
 
         getWidget().setSource(
                 getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
-        getWidget().setArchive(getState().getArchive());
-        getWidget().setClassId(getState().getClassId());
-        getWidget().setCodebase(getState().getCodebase());
-        getWidget().setCodetype(getState().getCodetype());
-        getWidget().setStandby(getState().getStandby());
-        getWidget().setAlternateText(getState().getAlternateText());
-        getWidget().setEmbedParams(getState().getEmbedParams());
+        getWidget().setArchive(getState().archive);
+        getWidget().setClassId(getState().classId);
+        getWidget().setCodebase(getState().codebase);
+        getWidget().setCodetype(getState().codetype);
+        getWidget().setStandby(getState().standby);
+        getWidget().setAlternateText(getState().alternateText);
+        getWidget().setEmbedParams(getState().embedParams);
 
         getWidget().rebuildIfNeeded();
     }

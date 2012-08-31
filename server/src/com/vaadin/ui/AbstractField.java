@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -355,11 +355,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public boolean isModified() {
-        return getState().isModified();
+        return getState().modified;
     }
 
     private void setModified(boolean modified) {
-        getState().setModified(modified);
+        getState().modified = modified;
     }
 
     /**
@@ -632,8 +632,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Sets the new data source
         dataSource = newDataSource;
-        getState().setPropertyReadOnly(
-                dataSource == null ? false : dataSource.isReadOnly());
+        getState().propertyReadOnly = dataSource == null ? false : dataSource
+                .isReadOnly();
 
         // Check if the current converter is compatible.
         if (newDataSource != null
@@ -1056,6 +1056,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
         addValueChangeListener(listener);
@@ -1076,6 +1077,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
         removeValueChangeListener(listener);
@@ -1117,7 +1119,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
-        getState().setPropertyReadOnly(event.getProperty().isReadOnly());
+        getState().propertyReadOnly = event.getProperty().isReadOnly();
     }
 
     /**
@@ -1167,6 +1169,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         addReadOnlyStatusChangeListener(listener);
@@ -1188,6 +1191,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         removeReadOnlyStatusChangeListener(listener);
@@ -1258,7 +1262,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public int getTabIndex() {
-        return getState().getTabIndex();
+        return getState().tabIndex;
     }
 
     /*
@@ -1268,7 +1272,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void setTabIndex(int tabIndex) {
-        getState().setTabIndex(tabIndex);
+        getState().tabIndex = tabIndex;
     }
 
     /**
@@ -1350,7 +1354,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public boolean isRequired() {
-        return getState().isRequired();
+        return getState().required;
     }
 
     /**
@@ -1370,7 +1374,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void setRequired(boolean required) {
-        getState().setRequired(required);
+        getState().required = required;
     }
 
     /**
@@ -1569,7 +1573,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         super.beforeClientResponse(initial);
 
         // Hide the error indicator if needed
-        getState().setHideErrors(shouldHideErrors());
+        getState().hideErrors = shouldHideErrors();
     }
 
     /**

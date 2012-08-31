@@ -59,15 +59,15 @@ public class SliderConnector extends AbstractFieldConnector implements
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setId(getConnectorId());
-        getWidget().setImmediate(getState().isImmediate());
+        getWidget().setImmediate(getState().immediate);
         getWidget().setDisabled(!isEnabled());
         getWidget().setReadOnly(isReadOnly());
-        getWidget().setOrientation(getState().getOrientation());
-        getWidget().setMinValue(getState().getMinValue());
-        getWidget().setMaxValue(getState().getMaxValue());
-        getWidget().setResolution(getState().getResolution());
-        getWidget().setValue(getState().getValue(), false);
-        getWidget().setFeedbackValue(getState().getValue());
+        getWidget().setOrientation(getState().orientation);
+        getWidget().setMinValue(getState().minValue);
+        getWidget().setMaxValue(getState().maxValue);
+        getWidget().setResolution(getState().resolution);
+        getWidget().setValue(getState().value, false);
+        getWidget().setFeedbackValue(getState().value);
 
         getWidget().buildBase();
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -116,7 +116,7 @@ public class CheckBox extends AbstractField<Boolean> {
         if (newValue == null) {
             newValue = false;
         }
-        getState().setChecked(newValue);
+        getState().checked = newValue;
     }
 
     public void addBlurListener(BlurListener listener) {

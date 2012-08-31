@@ -739,8 +739,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     void handleStyleNames(UIDL uidl, ComponentState state) {
         // Add proper stylenames for all elements (easier to prevent unwanted
         // style inheritance)
-        if (state.hasStyles()) {
-            final List<String> styles = state.getStyles();
+        if (state.styles != null && !state.styles.isEmpty()) {
+            final List<String> styles = state.styles;
             if (!currentStyle.equals(styles.toString())) {
                 currentStyle = styles.toString();
                 final String tabsBaseClass = TABS_CLASSNAME;
@@ -1009,8 +1009,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (!isDynamicWidth()) {
             ComponentConnector paintable = ConnectorMap.get(client)
                     .getConnector(this);
-            DOM.setStyleAttribute(tabs, "width", paintable.getState()
-                    .getWidth());
+            DOM.setStyleAttribute(tabs, "width", paintable.getState().width);
         }
 
         // Make sure scrollerIndex is valid

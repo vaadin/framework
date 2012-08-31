@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,9 +27,9 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.FieldEvents.TextChangeNotifier;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 import com.vaadin.shared.ui.textfield.TextFieldConstants;
 
@@ -104,7 +104,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         if (value == null) {
             value = getNullRepresentation();
         }
-        getState().setText(value);
+        getState().text = value;
     }
 
     @Override
@@ -312,7 +312,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the maxLength
      */
     public int getMaxLength() {
-        return getState().getMaxLength();
+        return getState().maxLength;
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      *            the maxLength to set
      */
     public void setMaxLength(int maxLength) {
-        getState().setMaxLength(maxLength);
+        getState().maxLength = maxLength;
     }
 
     /**
@@ -334,7 +334,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the number of columns in the editor.
      */
     public int getColumns() {
-        return getState().getColumns();
+        return getState().columns;
     }
 
     /**
@@ -349,7 +349,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         if (columns < 0) {
             columns = 0;
         }
-        getState().setColumns(columns);
+        getState().columns = columns;
     }
 
     /**
@@ -359,7 +359,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @return the current input prompt, or null if not enabled
      */
     public String getInputPrompt() {
-        return getState().getInputPrompt();
+        return getState().inputPrompt;
     }
 
     /**
@@ -369,7 +369,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @param inputPrompt
      */
     public void setInputPrompt(String inputPrompt) {
-        getState().setInputPrompt(inputPrompt);
+        getState().inputPrompt = inputPrompt;
     }
 
     /* ** Text Change Events ** */
@@ -521,6 +521,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addTextChangeListener(TextChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(TextChangeListener listener) {
         addTextChangeListener(listener);
@@ -536,6 +537,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeTextChangeListener(TextChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(TextChangeListener listener) {
         removeTextChangeListener(listener);
@@ -688,6 +690,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -702,6 +705,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -716,6 +720,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -730,6 +735,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,41 +18,8 @@ package com.vaadin.shared.ui.gridlayout;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class GridLayoutState extends AbstractLayoutState {
-    private boolean spacing = false;
-    private int rows = 0;
-    private int columns = 0;
-    private int marginsBitmask = 0;
-
-    public boolean isSpacing() {
-        return spacing;
-    }
-
-    public void setSpacing(boolean spacing) {
-        this.spacing = spacing;
-    }
-
-    public int getMarginsBitmask() {
-        return marginsBitmask;
-    }
-
-    public void setMarginsBitmask(int marginsBitmask) {
-        this.marginsBitmask = marginsBitmask;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
-    public void setColumns(int cols) {
-        columns = cols;
-    }
-
+    public boolean spacing = false;
+    public int rows = 0;
+    public int columns = 0;
+    public int marginsBitmask = 0;
 }

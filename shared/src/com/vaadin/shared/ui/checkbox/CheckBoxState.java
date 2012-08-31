@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,14 +18,6 @@ package com.vaadin.shared.ui.checkbox;
 import com.vaadin.shared.AbstractFieldState;
 
 public class CheckBoxState extends AbstractFieldState {
-    private boolean checked = false;
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
+    public boolean checked = false;
 
 }
