@@ -33,7 +33,7 @@ import java.util.StringTokenizer;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.DataBoundTransferable;
@@ -140,6 +140,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Creates a new empty tree.
      */
     public Tree() {
+        this(null);
     }
 
     /**
@@ -148,7 +149,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param caption
      */
     public Tree(String caption) {
-        setCaption(caption);
+        this(caption, new HierarchicalContainer());
     }
 
     /**
@@ -158,8 +159,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @param dataSource
      */
     public Tree(String caption, Container dataSource) {
-        setCaption(caption);
-        setContainerDataSource(dataSource);
+        super(caption, dataSource);
     }
 
     /* Expanding and collapsing */
@@ -827,10 +827,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     @Override
     public void setContainerDataSource(Container newDataSource) {
         if (newDataSource == null) {
-            // Note: using wrapped IndexedContainer to match constructor (super
-            // creates an IndexedContainer, which is then wrapped).
-            newDataSource = new ContainerHierarchicalWrapper(
-                    new IndexedContainer());
+            newDataSource = new HierarchicalContainer();
         }
 
         // Assure that the data source is ordered by making unordered
