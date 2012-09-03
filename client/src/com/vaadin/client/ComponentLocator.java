@@ -23,6 +23,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.UI.VUI;
@@ -516,7 +517,8 @@ public class ComponentLocator {
                  * (which would originally have found the widget inside the
                  * ChildComponentContainer)
                  */
-                if ((w instanceof VMeasuringOrderedLayout || w instanceof VGridLayout)
+                if ((w instanceof VMeasuringOrderedLayout
+                        || w instanceof VBoxLayout || w instanceof VGridLayout)
                         && "ChildComponentContainer".equals(widgetClassName)
                         && i + 1 < parts.length) {
 
@@ -585,7 +587,13 @@ public class ComponentLocator {
                 while (iterator.hasNext()) {
 
                     Widget child = iterator.next();
+
                     String simpleName2 = Util.getSimpleName(child);
+
+                    if (simpleName2.equals("VBoxLayout$Slot")) {
+                        child = ((SimplePanel) child).getWidget();
+                        simpleName2 = Util.getSimpleName(child);
+                    }
 
                     if (widgetClassName.equals(simpleName2)) {
                         if (widgetPosition == 0) {
