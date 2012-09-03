@@ -23,6 +23,6 @@ public interface UIProvider {
     public Class<? extends UI> getUIClass(Application application,
             WrappedRequest request);
 
-    public UI instantiateUI(Application application, Class<? extends UI> type,
+    public UI createInstance(Application application, Class<? extends UI> type,
             WrappedRequest request);
 }

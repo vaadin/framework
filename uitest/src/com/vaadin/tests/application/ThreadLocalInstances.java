@@ -75,7 +75,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
         reportCurrentStatus("app init");
         addUIProvider(new UIProvider() {
             @Override
-            public UI instantiateUI(Application application,
+            public UI createInstance(Application application,
                     Class<? extends UI> type, WrappedRequest request) {
                 return mainWindow;
             }
