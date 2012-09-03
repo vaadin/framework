@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.ContainerHelpers;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.filter.Compare.Equal;
@@ -656,9 +657,11 @@ public class SQLContainer implements Container, Container.Filterable,
 
     @Override
     public Object getIdByIndex(int index) {
-        if (index < 0 || index > size() - 1) {
-            return null;
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index is negative! index="
+                    + index);
         }
+
         if (index < size) {
             if (itemIndexes.keySet().contains(index)) {
                 return itemIndexes.get(index);
@@ -670,6 +673,13 @@ public class SQLContainer implements Container, Container.Filterable,
             int offset = index - size;
             return addedItems.get(offset).getId();
         }
+    }
+
+    @Override
+    public List<Object> getItemIds(int startIndex, int numberOfIds) {
+        // TODO create a better implementation
+        return (List<Object>) ContainerHelpers.getItemIdsUsingGetIdByIndex(
+                startIndex, numberOfIds, this);
     }
 
     /**********************************************/

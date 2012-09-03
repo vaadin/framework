@@ -13,14 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.absolutelayout;
 
-import java.util.HashMap;
-import java.util.Map;
+package com.vaadin.tests.server;
 
-import com.vaadin.shared.ui.AbstractLayoutState;
+import junit.framework.TestCase;
 
-public class AbsoluteLayoutState extends AbstractLayoutState {
-    // Maps each component to a position
-    public Map<String, String> connectorToCssPosition = new HashMap<String, String>();
+public class TestAssertionsEnabled extends TestCase {
+    public void testAssertionsEnabled() {
+        boolean assertFailed = false;
+        try {
+            assert false;
+        } catch (AssertionError e) {
+            assertFailed = true;
+        } finally {
+            assertTrue("Unit tests should be run with assertions enabled",
+                    assertFailed);
+        }
+    }
 }

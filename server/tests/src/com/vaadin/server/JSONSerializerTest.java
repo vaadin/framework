@@ -42,10 +42,10 @@ public class JSONSerializerTest extends TestCase {
         stringToStateMap = new HashMap<String, AbstractSplitPanelState>();
         AbstractSplitPanelState s = new AbstractSplitPanelState();
         AbstractSplitPanelState s2 = new AbstractSplitPanelState();
-        s.setCaption("State 1");
-        s.setId("foo");
-        s2.setCaption("State 2");
-        s2.setId("bar");
+        s.caption = "State 1";
+        s.id = "foo";
+        s2.caption = "State 2";
+        s2.id = "bar";
         stringToStateMap.put("string - state 1", s);
         stringToStateMap.put("String - state 2", s2);
 
@@ -61,8 +61,8 @@ public class JSONSerializerTest extends TestCase {
         stateToStringMap = new HashMap<AbstractSplitPanelState, String>();
         AbstractSplitPanelState s = new AbstractSplitPanelState();
         AbstractSplitPanelState s2 = new AbstractSplitPanelState();
-        s.setCaption("State 1");
-        s2.setCaption("State 2");
+        s.caption = "State 1";
+        s2.caption = "State 2";
         stateToStringMap.put(s, "string - state 1");
         stateToStringMap.put(s2, "String - state 2");
 

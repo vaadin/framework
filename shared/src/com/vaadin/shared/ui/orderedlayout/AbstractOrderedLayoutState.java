@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,56 +23,16 @@ import com.vaadin.shared.ui.AbstractLayoutState;
 import com.vaadin.shared.ui.AlignmentInfo;
 
 public class AbstractOrderedLayoutState extends AbstractLayoutState {
-    private boolean spacing = false;
+    public boolean spacing = false;
 
-    private HashMap<Connector, ChildComponentData> childData = new HashMap<Connector, ChildComponentData>();
+    public HashMap<Connector, ChildComponentData> childData = new HashMap<Connector, ChildComponentData>();
 
-    private int marginsBitmask = 0;
+    public int marginsBitmask = 0;
 
     public static class ChildComponentData implements Serializable {
-        private int alignmentBitmask = AlignmentInfo.TOP_LEFT.getBitMask();
-        private float expandRatio = 0.0f;
 
-        public int getAlignmentBitmask() {
-            return alignmentBitmask;
-        }
+        public int alignmentBitmask = AlignmentInfo.TOP_LEFT.getBitMask();
 
-        public void setAlignmentBitmask(int alignmentBitmask) {
-            this.alignmentBitmask = alignmentBitmask;
-        }
-
-        public float getExpandRatio() {
-            return expandRatio;
-        }
-
-        public void setExpandRatio(float expandRatio) {
-            this.expandRatio = expandRatio;
-        }
-
+        public float expandRatio = 0.0f;
     }
-
-    public HashMap<Connector, ChildComponentData> getChildData() {
-        return childData;
-    }
-
-    public void setChildData(HashMap<Connector, ChildComponentData> childData) {
-        this.childData = childData;
-    }
-
-    public boolean isSpacing() {
-        return spacing;
-    }
-
-    public void setSpacing(boolean spacing) {
-        this.spacing = spacing;
-    }
-
-    public int getMarginsBitmask() {
-        return marginsBitmask;
-    }
-
-    public void setMarginsBitmask(int marginsBitmask) {
-        this.marginsBitmask = marginsBitmask;
-    }
-
 }

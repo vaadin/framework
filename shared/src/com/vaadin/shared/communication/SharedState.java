@@ -59,29 +59,5 @@ public class SharedState implements Serializable {
      */
     public Map<String, URLReference> resources = new HashMap<String, URLReference>();
 
-    private boolean enabled = true;
-
-    /**
-     * Returns true if the component is enabled.
-     * 
-     * @see com.vaadin.ui.Component#isEnabled()
-     * 
-     * @return true if the component is enabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Enables or disables the component.
-     * 
-     * @see com.vaadin.ui.Component#setEnabled(boolean)
-     * 
-     * @param enabled
-     *            new mode for the component
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
+    public boolean enabled = true;
 }

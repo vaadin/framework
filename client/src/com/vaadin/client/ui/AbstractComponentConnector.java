@@ -42,6 +42,7 @@ import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.ui.themes.BaseTheme;
 
@@ -125,8 +126,8 @@ implements ComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
-        if (getState().getId() != null) {
-            getWidget().getElement().setId(getState().getId());
+        if (getState().id != null) {
+            getWidget().getElement().setId(getState().id);
         } else {
             getWidget().getElement().removeAttribute("id");
 
@@ -139,8 +140,8 @@ implements ComponentConnector {
          */
         if (getState() instanceof TabIndexState
                 && getWidget() instanceof Focusable) {
-            ((Focusable) getWidget()).setTabIndex(((TabIndexState) getState())
-                    .getTabIndex());
+            ((Focusable) getWidget())
+                    .setTabIndex(((TabIndexState) getState()).tabIndex);
         }
 
         super.onStateChanged(stateChangeEvent);
@@ -193,8 +194,8 @@ implements ComponentConnector {
     }
 
     private void updateComponentSize() {
-        String newWidth = getState().getWidth();
-        String newHeight = getState().getHeight();
+        String newWidth = getState().width == null ? "" : getState().width;
+        String newHeight = getState().height == null ? "" : getState().height;
 
         // Parent should be updated if either dimension changed between relative
         // and non-relative
@@ -229,22 +230,22 @@ implements ComponentConnector {
 
     @Override
     public boolean isRelativeHeight() {
-        return getState().getHeight().endsWith("%");
+        return getState().height != null && getState().height.endsWith("%");
     }
 
     @Override
     public boolean isRelativeWidth() {
-        return getState().getWidth().endsWith("%");
+        return getState().width != null && getState().width.endsWith("%");
     }
 
     @Override
     public boolean isUndefinedHeight() {
-        return getState().getHeight().length() == 0;
+        return getState().height == null || getState().height.length() == 0;
     }
 
     @Override
     public boolean isUndefinedWidth() {
-        return getState().getWidth().length() == 0;
+        return getState().width == null && getState().width.length() == 0;
     }
 
     /*
@@ -279,14 +280,14 @@ implements ComponentConnector {
         // add / remove error style name
         setWidgetStyleNameWithPrefix(primaryStyleName,
                 ApplicationConnection.ERROR_CLASSNAME_EXT,
-                null != state.getErrorMessage());
+                null != state.errorMessage);
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
-        if (state.hasStyles()) {
+        if (ComponentStateUtil.hasStyles(state)) {
             // add new style names
             List<String> newStyles = new ArrayList<String>();
-            newStyles.addAll(state.getStyles());
+            newStyles.addAll(state.styles);
             newStyles.removeAll(styleNames);
             for (String newStyle : newStyles) {
                 setWidgetStyleName(newStyle, true);
@@ -294,14 +295,14 @@ implements ComponentConnector {
                         true);
             }
             // remove nonexistent style names
-            styleNames.removeAll(state.getStyles());
+            styleNames.removeAll(state.styles);
             for (String oldStyle : styleNames) {
                 setWidgetStyleName(oldStyle, false);
                 setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
                         false);
             }
             styleNames.clear();
-            styleNames.addAll(state.getStyles());
+            styleNames.addAll(state.styles);
         } else {
             // remove all old style names
             for (String oldStyle : styleNames) {
@@ -374,7 +375,7 @@ implements ComponentConnector {
     @Override
     @Deprecated
     public boolean isReadOnly() {
-        return getState().isReadOnly();
+        return getState().readOnly;
     }
 
     @Override
@@ -393,7 +394,7 @@ implements ComponentConnector {
      */
     @Override
     public boolean hasEventListener(String eventIdentifier) {
-        Set<String> reg = getState().getRegisteredEventListeners();
+        Set<String> reg = getState().registeredEventListeners;
         return (reg != null && reg.contains(eventIdentifier));
     }
 
@@ -426,8 +427,7 @@ implements ComponentConnector {
      */
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
-        return new TooltipInfo(getState().getDescription(), getState()
-                .getErrorMessage());
+        return new TooltipInfo(getState().description, getState().errorMessage);
     }
 
     /**

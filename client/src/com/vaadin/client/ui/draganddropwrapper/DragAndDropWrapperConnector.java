@@ -73,7 +73,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                     .getMapAttribute(DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
 
             // Used to prevent wrapper from stealing tooltips when not defined
-            getWidget().hasTooltip = getState().hasDescription();
+            getWidget().hasTooltip = getState().description != null;
         }
     }
 

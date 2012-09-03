@@ -29,6 +29,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
@@ -69,7 +70,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
         UIDL options = uidl.getChildUIDL(0);
 
-        if (null != getState() && !getState().isUndefinedWidth()) {
+        if (null != getState()
+                && !ComponentStateUtil.isUndefinedWidth(getState())) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
 
@@ -141,8 +143,8 @@ public class MenuBarConnector extends AbstractComponentConnector implements
                 // this is the top-level style that also propagates to items -
                 // any item specific styles are set above in
                 // currentItem.updateFromUIDL(item, client)
-                if (getState().hasStyles()) {
-                    for (String style : getState().getStyles()) {
+                if (ComponentStateUtil.hasStyles(getState())) {
+                    for (String style : getState().styles) {
                         currentMenu.addStyleDependentName(style);
                     }
                 }

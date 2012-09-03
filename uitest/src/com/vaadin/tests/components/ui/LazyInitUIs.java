@@ -1,10 +1,9 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.UIRequiresMoreInformationException;
-import com.vaadin.annotations.EagerInit;
+import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.ui.Label;
@@ -13,7 +12,7 @@ import com.vaadin.ui.UI;
 
 public class LazyInitUIs extends AbstractTestApplication {
 
-    @EagerInit
+    // @EagerInit
     private static class EagerInitUI extends UI {
         @Override
         public void init(WrappedRequest request) {
@@ -22,23 +21,33 @@ public class LazyInitUIs extends AbstractTestApplication {
     }
 
     @Override
-    public UI getUI(WrappedRequest request)
-            throws UIRequiresMoreInformationException {
+    public void init() {
+        addUIProvider(new UIProvider() {
+
+            @Override
+            public UI instantiateUI(Application application,
+                    Class<? extends UI> type, WrappedRequest request) {
+                return getUI(request);
+            }
+
+            @Override
+            public Class<? extends UI> getUIClass(Application application,
+                    WrappedRequest request) {
+                return getUI(request).getClass();
+            }
+        });
+    }
+
+    private UI getUI(WrappedRequest request) {
         if (request.getParameter("lazyCreate") != null) {
             // UI created on second request
-            BrowserDetails browserDetails = request.getBrowserDetails();
-            if (browserDetails == null
-                    || browserDetails.getUriFragment() == null) {
-                throw new UIRequiresMoreInformationException();
-            } else {
-                UI uI = new UI() {
-                    @Override
-                    protected void init(WrappedRequest request) {
-                        addComponent(getRequestInfo("LazyCreateUI", request));
-                    }
-                };
-                return uI;
-            }
+            UI uI = new UI() {
+                @Override
+                protected void init(WrappedRequest request) {
+                    addComponent(getRequestInfo("LazyCreateUI", request));
+                }
+            };
+            return uI;
         } else if (request.getParameter("eagerInit") != null) {
             // UI inited on first request
             return new EagerInitUI();

@@ -18,6 +18,7 @@ package com.vaadin.navigator;
 
 import java.io.Serializable;
 
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Component;
 
 /**
@@ -34,13 +35,15 @@ public interface View extends Serializable {
     /**
      * This view is navigated to.
      * 
-     * This method is always called before the view is shown on screen. If there
-     * is any additional id to data what should be shown in the view, it is also
-     * optionally passed as parameter.
+     * This method is always called before the view is shown on screen.
+     * {@link ViewChangeEvent#getParameters() event.getParameters()} may contain
+     * extra parameters relevant to the view.
      * 
-     * @param fragmentParameters
-     *            parameters to the view or empty string if none given. This is
-     *            the string that appears e.g. in URI after "viewname/"
+     * @param event
+     *            ViewChangeEvent representing the view change that is
+     *            occurring. {@link ViewChangeEvent#getNewView()
+     *            event.getNewView()} returns <code>this</code>.
+     * 
      */
-    public void navigateTo(String fragmentParameters);
+    public void enter(ViewChangeEvent event);
 }

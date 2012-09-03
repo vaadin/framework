@@ -100,8 +100,8 @@ public class VEmbedded extends HTML {
 
         ComponentConnector paintable = ConnectorMap.get(client).getConnector(
                 this);
-        String height = paintable.getState().getHeight();
-        String width = paintable.getState().getWidth();
+        String height = paintable.getState().height;
+        String width = paintable.getState().width;
 
         // Add width and height
         html.append("width=\"" + Util.escapeAttribute(width) + "\" ");

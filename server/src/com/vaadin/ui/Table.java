@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -1066,6 +1067,23 @@ public class Table extends AbstractSelect implements Action.Container,
         return currentPageFirstItemId;
     }
 
+    /**
+     * Returns the item ID for the item represented by the index given. Assumes
+     * that the current container implements {@link Container.Indexed}.
+     * 
+     * See {@link Container.Indexed#getIdByIndex(int)} for more information
+     * about the exceptions that can be thrown.
+     * 
+     * @param index
+     *            the index for which the item ID should be fetched
+     * @return the item ID for the given index
+     * 
+     * @throws ClassCastException
+     *             if container does not implement {@link Container.Indexed}
+     * @throws IndexOutOfBoundsException
+     *             thrown by {@link Container.Indexed#getIdByIndex(int)} if the
+     *             index is invalid
+     */
     protected Object getIdByIndex(int index) {
         return ((Container.Indexed) items).getIdByIndex(index);
     }
@@ -1929,17 +1947,6 @@ public class Table extends AbstractSelect implements Action.Container,
             return cells;
         }
 
-        // Gets the first item id
-        Object id;
-        if (items instanceof Container.Indexed) {
-            id = getIdByIndex(firstIndex);
-        } else {
-            id = firstItemId();
-            for (int i = 0; i < firstIndex; i++) {
-                id = nextItemId(id);
-            }
-        }
-
         final RowHeaderMode headmode = getRowHeaderMode();
         final boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++) {
@@ -1956,120 +1963,41 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Creates the page contents
         int filledRows = 0;
-        for (int i = 0; i < rows && id != null; i++) {
-            cells[CELL_ITEMID][i] = id;
-            cells[CELL_KEY][i] = itemIdMapper.key(id);
-            if (headmode != ROW_HEADER_MODE_HIDDEN) {
-                switch (headmode) {
-                case INDEX:
-                    cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
-                    break;
-                default:
-                    cells[CELL_HEADER][i] = getItemCaption(id);
-                }
-                cells[CELL_ICON][i] = getItemIcon(id);
+        if (items instanceof Container.Indexed) {
+            // more efficient implementation for containers supporting access by
+            // index
+
+            Container.Indexed indexed = ((Container.Indexed) items);
+            List<?> itemIds = indexed.getItemIds(firstIndex, rows);
+            for (int i = 0; i < rows && i < itemIds.size(); i++) {
+                Object id = itemIds.get(i);
+                // Start by parsing the values, id should already be set
+                parseItemIdToCells(cells, id, i, firstIndex, headmode, cols,
+                        colids, firstIndexNotInCache, iscomponent,
+                        oldListenedProperties);
+
+                filledRows++;
             }
+        } else {
+            // slow back-up implementation for cases where the container does
+            // not support access by index
 
-            GeneratedRow generatedRow = rowGenerator != null ? rowGenerator
-                    .generateRow(this, id) : null;
-            cells[CELL_GENERATED_ROW][i] = generatedRow;
-
-            for (int j = 0; j < cols; j++) {
-                if (isColumnCollapsed(colids[j])) {
-                    continue;
-                }
-                Property<?> p = null;
-                Object value = "";
-                boolean isGeneratedRow = generatedRow != null;
-                boolean isGeneratedColumn = columnGenerators
-                        .containsKey(colids[j]);
-                boolean isGenerated = isGeneratedRow || isGeneratedColumn;
-
-                if (!isGenerated) {
-                    p = getContainerProperty(id, colids[j]);
-                }
-
-                if (isGeneratedRow) {
-                    if (generatedRow.isSpanColumns() && j > 0) {
-                        value = null;
-                    } else if (generatedRow.isSpanColumns() && j == 0
-                            && generatedRow.getValue() instanceof Component) {
-                        value = generatedRow.getValue();
-                    } else if (generatedRow.getText().length > j) {
-                        value = generatedRow.getText()[j];
-                    }
-                } else {
-                    // check in current pageBuffer already has row
-                    int index = firstIndex + i;
-                    if (p != null || isGenerated) {
-                        int indexInOldBuffer = index - pageBufferFirstIndex;
-                        if (index < firstIndexNotInCache
-                                && index >= pageBufferFirstIndex
-                                && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null
-                                && id.equals(pageBuffer[CELL_ITEMID][indexInOldBuffer])) {
-                            // we already have data in our cache,
-                            // recycle it instead of fetching it via
-                            // getValue/getPropertyValue
-                            value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
-                            if (!isGeneratedColumn && iscomponent[j]
-                                    || !(value instanceof Component)) {
-                                listenProperty(p, oldListenedProperties);
-                            }
-                        } else {
-                            if (isGeneratedColumn) {
-                                ColumnGenerator cg = columnGenerators
-                                        .get(colids[j]);
-                                value = cg.generateCell(this, id, colids[j]);
-                                if (value != null
-                                        && !(value instanceof Component)
-                                        && !(value instanceof String)) {
-                                    // Avoid errors if a generator returns
-                                    // something
-                                    // other than a Component or a String
-                                    value = value.toString();
-                                }
-                            } else if (iscomponent[j]) {
-                                value = p.getValue();
-                                listenProperty(p, oldListenedProperties);
-                            } else if (p != null) {
-                                value = getPropertyValue(id, colids[j], p);
-                                /*
-                                 * If returned value is Component (via
-                                 * fieldfactory or overridden getPropertyValue)
-                                 * we excpect it to listen property value
-                                 * changes. Otherwise if property emits value
-                                 * change events, table will start to listen
-                                 * them and refresh content when needed.
-                                 */
-                                if (!(value instanceof Component)) {
-                                    listenProperty(p, oldListenedProperties);
-                                }
-                            } else {
-                                value = getPropertyValue(id, colids[j], null);
-                            }
-                        }
-                    }
-                }
-
-                if (value instanceof Component) {
-                    registerComponent((Component) value);
-                }
-                cells[CELL_FIRSTCOL + j][i] = value;
-            }
-
-            // Gets the next item id
-            if (items instanceof Container.Indexed) {
-                int index = firstIndex + i + 1;
-                if (index < size()) {
-                    id = getIdByIndex(index);
-                } else {
-                    id = null;
-                }
-            } else {
+            // Gets the first item id
+            Object id = firstItemId();
+            for (int i = 0; i < firstIndex; i++) {
                 id = nextItemId(id);
             }
+            for (int i = 0; i < rows && id != null; i++) {
+                // Start by parsing the values, id should already be set
+                parseItemIdToCells(cells, id, i, firstIndex, headmode, cols,
+                        colids, firstIndexNotInCache, iscomponent,
+                        oldListenedProperties);
 
-            filledRows++;
+                // Gets the next item id for non indexed container
+                id = nextItemId(id);
+
+                filledRows++;
+            }
         }
 
         // Assures that all the rows of the cell-buffer are valid
@@ -2087,6 +2015,117 @@ public class Table extends AbstractSelect implements Action.Container,
                 oldVisibleComponents);
 
         return cells;
+    }
+
+    /**
+     * Update a cache array for a row, register any relevant listeners etc.
+     * 
+     * This is an internal method extracted from
+     * {@link #getVisibleCellsNoCache(int, int, boolean)} and should be removed
+     * when the Table is rewritten.
+     */
+    private void parseItemIdToCells(Object[][] cells, Object id, int i,
+            int firstIndex, RowHeaderMode headmode, int cols, Object[] colids,
+            int firstIndexNotInCache, boolean[] iscomponent,
+            HashSet<Property<?>> oldListenedProperties) {
+
+        cells[CELL_ITEMID][i] = id;
+        cells[CELL_KEY][i] = itemIdMapper.key(id);
+        if (headmode != ROW_HEADER_MODE_HIDDEN) {
+            switch (headmode) {
+            case INDEX:
+                cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
+                break;
+            default:
+                cells[CELL_HEADER][i] = getItemCaption(id);
+            }
+            cells[CELL_ICON][i] = getItemIcon(id);
+        }
+
+        GeneratedRow generatedRow = rowGenerator != null ? rowGenerator
+                .generateRow(this, id) : null;
+        cells[CELL_GENERATED_ROW][i] = generatedRow;
+
+        for (int j = 0; j < cols; j++) {
+            if (isColumnCollapsed(colids[j])) {
+                continue;
+            }
+            Property<?> p = null;
+            Object value = "";
+            boolean isGeneratedRow = generatedRow != null;
+            boolean isGeneratedColumn = columnGenerators.containsKey(colids[j]);
+            boolean isGenerated = isGeneratedRow || isGeneratedColumn;
+
+            if (!isGenerated) {
+                p = getContainerProperty(id, colids[j]);
+            }
+
+            if (isGeneratedRow) {
+                if (generatedRow.isSpanColumns() && j > 0) {
+                    value = null;
+                } else if (generatedRow.isSpanColumns() && j == 0
+                        && generatedRow.getValue() instanceof Component) {
+                    value = generatedRow.getValue();
+                } else if (generatedRow.getText().length > j) {
+                    value = generatedRow.getText()[j];
+                }
+            } else {
+                // check in current pageBuffer already has row
+                int index = firstIndex + i;
+                if (p != null || isGenerated) {
+                    int indexInOldBuffer = index - pageBufferFirstIndex;
+                    if (index < firstIndexNotInCache
+                            && index >= pageBufferFirstIndex
+                            && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null
+                            && id.equals(pageBuffer[CELL_ITEMID][indexInOldBuffer])) {
+                        // we already have data in our cache,
+                        // recycle it instead of fetching it via
+                        // getValue/getPropertyValue
+                        value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
+                        if (!isGeneratedColumn && iscomponent[j]
+                                || !(value instanceof Component)) {
+                            listenProperty(p, oldListenedProperties);
+                        }
+                    } else {
+                        if (isGeneratedColumn) {
+                            ColumnGenerator cg = columnGenerators
+                                    .get(colids[j]);
+                            value = cg.generateCell(this, id, colids[j]);
+                            if (value != null && !(value instanceof Component)
+                                    && !(value instanceof String)) {
+                                // Avoid errors if a generator returns
+                                // something
+                                // other than a Component or a String
+                                value = value.toString();
+                            }
+                        } else if (iscomponent[j]) {
+                            value = p.getValue();
+                            listenProperty(p, oldListenedProperties);
+                        } else if (p != null) {
+                            value = getPropertyValue(id, colids[j], p);
+                            /*
+                             * If returned value is Component (via fieldfactory
+                             * or overridden getPropertyValue) we expect it to
+                             * listen property value changes. Otherwise if
+                             * property emits value change events, table will
+                             * start to listen them and refresh content when
+                             * needed.
+                             */
+                            if (!(value instanceof Component)) {
+                                listenProperty(p, oldListenedProperties);
+                            }
+                        } else {
+                            value = getPropertyValue(id, colids[j], null);
+                        }
+                    }
+                }
+            }
+
+            if (value instanceof Component) {
+                registerComponent((Component) value);
+            }
+            cells[CELL_FIRSTCOL + j][i] = value;
+        }
     }
 
     protected void registerComponent(Component component) {

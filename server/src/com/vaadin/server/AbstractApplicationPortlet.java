@@ -56,7 +56,6 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.Application.SystemMessages;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.UI;
 
@@ -501,12 +500,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                             // Both action requests and render requests are ok
                             // without a UI as they render the initial HTML
                             // and then do a second request
-                            try {
-                                uI = application
-                                        .getUIForRequest(wrappedRequest);
-                            } catch (UIRequiresMoreInformationException e) {
-                                // Ignore problem and continue without UI
-                            }
+                            uI = application.getUIForRequest(wrappedRequest);
                             break;
                         case BROWSER_DETAILS:
                             // Should not try to find a UI here as the
@@ -902,7 +896,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throws PortletException {
         try {
             final Application application = getApplicationClass().newInstance();
-            application.setUiPreserved(true);
             return application;
         } catch (final IllegalAccessException e) {
             throw new PortletException("getNewApplication failed", e);

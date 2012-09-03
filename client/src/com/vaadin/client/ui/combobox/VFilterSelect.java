@@ -72,6 +72,7 @@ import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.ComponentStateUtil;
 
 /**
  * Client side implementation of the Select component.
@@ -580,8 +581,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void updateStyleNames(UIDL uidl, ComponentState componentState) {
             setStyleName(CLASSNAME + "-suggestpopup");
-            if (componentState.hasStyles()) {
-                for (String style : componentState.getStyles()) {
+            if (ComponentStateUtil.hasStyles(componentState)) {
+                for (String style : componentState.styles) {
                     if (!"".equals(style)) {
                         addStyleDependentName(style);
                     }

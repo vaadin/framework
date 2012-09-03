@@ -333,7 +333,7 @@ StateChangeHandler {
 
     @Override
     public boolean isEnabled() {
-        if (!getState().isEnabled()) {
+        if (!getState().enabled) {
             return false;
         }
 

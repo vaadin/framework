@@ -17,12 +17,11 @@
 package com.vaadin.server;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
 public interface UIProvider {
     public Class<? extends UI> getUIClass(Application application,
-            WrappedRequest request) throws UIRequiresMoreInformationException;
+            WrappedRequest request);
 
     public UI instantiateUI(Application application, Class<? extends UI> type,
             WrappedRequest request);

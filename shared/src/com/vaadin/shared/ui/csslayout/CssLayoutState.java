@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,14 +22,5 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class CssLayoutState extends AbstractLayoutState {
-    private Map<Connector, String> childCss = new HashMap<Connector, String>();
-
-    public Map<Connector, String> getChildCss() {
-        return childCss;
-    }
-
-    public void setChildCss(Map<Connector, String> childCss) {
-        this.childCss = childCss;
-    }
-
+    public Map<Connector, String> childCss = new HashMap<Connector, String>();
 }

@@ -19,7 +19,6 @@ package com.vaadin.server;
 import java.util.EventObject;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
 /**
@@ -32,7 +31,7 @@ import com.vaadin.ui.UI;
 public abstract class BootstrapResponse extends EventObject {
     private final WrappedRequest request;
     private final Application application;
-    private final Integer uiId;
+    private final Class<? extends UI> uiClass;
 
     /**
      * Creates a new bootstrap event.
@@ -45,15 +44,15 @@ public abstract class BootstrapResponse extends EventObject {
      * @param application
      *            the application for which the bootstrap page should be
      *            generated
-     * @param uiId
-     *            the generated id of the UI that will be displayed on the page
+     * @param uiClass
+     *            the class of the UI that will be displayed on the page
      */
     public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
-            Application application, Integer uiId) {
+            Application application, Class<? extends UI> uiClass) {
         super(handler);
         this.request = request;
         this.application = application;
-        this.uiId = uiId;
+        this.uiClass = uiClass;
     }
 
     /**
@@ -89,32 +88,13 @@ public abstract class BootstrapResponse extends EventObject {
     }
 
     /**
-     * Gets the UI id that has been generated for this response. Please note
-     * that if {@link Application#isUiPreserved()} is enabled, a previously
-     * created UI with a different id might eventually end up being used.
+     * Gets the class of the UI that will be displayed on the generated
+     * bootstrap page.
      * 
-     * @return the UI id
+     * @return the class of the UI
      */
-    public Integer getUIId() {
-        return uiId;
+    public Class<? extends UI> getUiClass() {
+        return uiClass;
     }
 
-    /**
-     * Gets the UI for which this page is being rendered, if available. Some
-     * features of the framework will postpone the UI selection until after the
-     * bootstrap page has been rendered and required information from the
-     * browser has been sent back. This method will return <code>null</code> if
-     * no UI instance is yet available.
-     * 
-     * @see Application#isUiPreserved()
-     * @see Application#getUI(WrappedRequest)
-     * @see UIRequiresMoreInformationException
-     * 
-     * @return The UI that will be displayed in the page being generated, or
-     *         <code>null</code> if all required information is not yet
-     *         available.
-     */
-    public UI getUI() {
-        return UI.getCurrent();
-    }
 }

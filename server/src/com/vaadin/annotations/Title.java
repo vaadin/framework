@@ -13,14 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.absolutelayout;
 
-import java.util.HashMap;
-import java.util.Map;
+package com.vaadin.annotations;
 
-import com.vaadin.shared.ui.AbstractLayoutState;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class AbsoluteLayoutState extends AbstractLayoutState {
-    // Maps each component to a position
-    public Map<String, String> connectorToCssPosition = new HashMap<String, String>();
+import com.vaadin.ui.UI;
+
+/**
+ * Defines the HTML page title for a {@link UI}.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Title {
+    /**
+     * Gets the HTML title that should be used if the UI is used on it's own.
+     * 
+     * @return a page title string
+     */
+    public String value();
 }

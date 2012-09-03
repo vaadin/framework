@@ -73,7 +73,7 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
 
-        if (null != getState().getErrorMessage()) {
+        if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
@@ -113,9 +113,9 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         }
 
         // Set text
-        getWidget().setText(getState().getCaption());
-        getWidget().setValue(getState().isChecked());
-        getWidget().immediate = getState().isImmediate();
+        getWidget().setText(getState().caption);
+        getWidget().setValue(getState().checked);
+        getWidget().immediate = getState().immediate;
     }
 
     @Override

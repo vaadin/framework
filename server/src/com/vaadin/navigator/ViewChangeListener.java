@@ -37,7 +37,7 @@ public interface ViewChangeListener extends Serializable {
         private final View oldView;
         private final View newView;
         private final String viewName;
-        private final String fragmentParameters;
+        private final String parameters;
 
         /**
          * Create a new view change event.
@@ -46,12 +46,12 @@ public interface ViewChangeListener extends Serializable {
          *            Navigator that triggered the event, not null
          */
         public ViewChangeEvent(Navigator navigator, View oldView, View newView,
-                String viewName, String fragmentParameters) {
+                String viewName, String parameters) {
             super(navigator);
             this.oldView = oldView;
             this.newView = newView;
             this.viewName = viewName;
-            this.fragmentParameters = fragmentParameters;
+            this.parameters = parameters;
         }
 
         /**
@@ -93,11 +93,11 @@ public interface ViewChangeListener extends Serializable {
         /**
          * Returns the parameters for the view being activated.
          * 
-         * @return fragment parameters (potentially bookmarkable) for the new
+         * @return navigation parameters (potentially bookmarkable) for the new
          *         view
          */
-        public String getFragmentParameters() {
-            return fragmentParameters;
+        public String getParameters() {
+            return parameters;
         }
     }
 

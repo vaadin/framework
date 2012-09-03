@@ -28,21 +28,20 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.Application;
-import com.vaadin.annotations.EagerInit;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.AbstractApplicationServlet;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.BrowserWindowResizeEvent;
+import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
-import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -77,15 +76,9 @@ import com.vaadin.tools.ReflectTools;
  * passing a {@link ComponentContainer} with the main layout of the view to
  * {@link #setContent(ComponentContainer)}.
  * </p>
- * <p>
- * If a {@link EagerInit} annotation is present on a class extending
- * <code>UI</code>, the framework will use a faster initialization method which
- * will not ensure that {@link BrowserDetails} are present in the
- * {@link WrappedRequest} passed to the init method.
- * </p>
  * 
  * @see #init(WrappedRequest)
- * @see Application#getUI(WrappedRequest)
+ * @see Application#createUI(WrappedRequest)
  * 
  * @since 7.0
  */
@@ -98,7 +91,6 @@ public abstract class UI extends AbstractComponentContainer implements
      * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
      */
     @Deprecated
-    @EagerInit
     public static class LegacyWindow extends UI {
         private String name;
 
@@ -385,7 +377,7 @@ public abstract class UI extends AbstractComponentContainer implements
         @Override
         public void setCaption(String caption) {
             // Override to provide backwards compatibility
-            getState().setCaption(caption);
+            getState().caption = caption;
             getPage().setTitle(caption);
         }
 
@@ -710,28 +702,6 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Sets the id of this UI within its application. The UI id is used to route
-     * requests to the right UI.
-     * <p>
-     * This method is mainly intended for internal use by the framework.
-     * </p>
-     * 
-     * @param uiId
-     *            the id of this UI
-     * 
-     * @throws IllegalStateException
-     *             if the UI id has already been set
-     * 
-     * @see #getUIId()
-     */
-    public void setUIId(int uiId) {
-        if (this.uiId != -1) {
-            throw new IllegalStateException("UI id has already been defined");
-        }
-        this.uiId = uiId;
-    }
-
-    /**
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
@@ -748,8 +718,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Adds a window as a subwindow inside this UI. To open a new browser window
      * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link Application#getUI(WrappedRequest)} returns an appropriate UI for
-     * the request.
+     * {@link Application#createUI(WrappedRequest)} returns an appropriate UI
+     * for the request.
      * 
      * @param window
      * @throws IllegalArgumentException
@@ -831,6 +801,8 @@ public abstract class UI extends AbstractComponentContainer implements
 
     private boolean resizeLazy = false;
 
+    private String theme;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -879,7 +851,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see #createDefaultLayout()
      */
     public ComponentContainer getContent() {
-        return (ComponentContainer) getState().getContent();
+        return (ComponentContainer) getState().content;
     }
 
     /**
@@ -911,10 +883,10 @@ public abstract class UI extends AbstractComponentContainer implements
             content = createDefaultLayout();
         }
 
-        if (getState().getContent() != null) {
-            super.removeComponent((Component) getState().getContent());
+        if (getState().content != null) {
+            super.removeComponent((Component) getState().content);
         }
-        getState().setContent(content);
+        getState().content = content;
         if (content != null) {
             super.addComponent(content);
         }
@@ -959,8 +931,16 @@ public abstract class UI extends AbstractComponentContainer implements
      * 
      * @param request
      *            the initialization request
+     * @param uiId
+     *            the id of the new ui
      */
-    public void doInit(WrappedRequest request) {
+    public void doInit(WrappedRequest request, int uiId) {
+        if (this.uiId != -1) {
+            throw new IllegalStateException("UI id has already been defined");
+        }
+        this.uiId = uiId;
+        theme = getApplication().getThemeForUI(request, getClass());
+
         getPage().init(request);
 
         // Call the init overridden by the application developer
@@ -974,11 +954,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * state of the UI is not properly set up when the constructor is invoked.
      * <p>
      * The {@link WrappedRequest} can be used to get information about the
-     * request that caused this UI to be created. By default, the
-     * {@link BrowserDetails} will be available in the request. If the browser
-     * details are not required, loading the application in the browser can take
-     * some shortcuts giving a faster initial rendering. This can be indicated
-     * by adding the {@link EagerInit} annotation to the UI class.
+     * request that caused this UI to be created. {@link BrowserDetails} will be
+     * available in the request.
      * </p>
      * 
      * @param request
@@ -1351,5 +1328,14 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public void setLastUidlRequestTime(long lastUidlRequest) {
         this.lastUidlRequest = lastUidlRequest;
+    }
+
+    /**
+     * Gets the theme that was used when the UI was initialized.
+     * 
+     * @return the theme name
+     */
+    public String getTheme() {
+        return theme;
     }
 }

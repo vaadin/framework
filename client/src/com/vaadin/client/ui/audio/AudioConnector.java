@@ -35,7 +35,7 @@ public class AudioConnector extends MediaBaseConnector {
         Style style = getWidget().getElement().getStyle();
 
         // Make sure that the controls are not clipped if visible.
-        if (getState().isShowControls()
+        if (getState().showControls
                 && (style.getHeight() == null || "".equals(style.getHeight()))) {
             if (BrowserInfo.get().isChrome()) {
                 style.setHeight(32, Unit.PX);

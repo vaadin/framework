@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
@@ -26,8 +25,7 @@ public class UIsInMultipleTabs extends AbstractTestApplication {
         addUIProvider(new AbstractUIProvider() {
             @Override
             public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request)
-                    throws UIRequiresMoreInformationException {
+                    WrappedRequest request) {
                 return TabUI.class;
             }
         });

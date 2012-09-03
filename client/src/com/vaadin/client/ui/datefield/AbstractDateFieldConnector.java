@@ -37,7 +37,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         // Save details
         getWidget().client = client;
         getWidget().paintableId = uidl.getId();
-        getWidget().immediate = getState().isImmediate();
+        getWidget().immediate = getState().immediate;
 
         getWidget().readonly = isReadOnly();
         getWidget().enabled = isEnabled();

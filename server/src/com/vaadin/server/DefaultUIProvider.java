@@ -17,14 +17,13 @@
 package com.vaadin.server;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
 import com.vaadin.ui.UI;
 
 public class DefaultUIProvider extends AbstractUIProvider {
 
     @Override
     public Class<? extends UI> getUIClass(Application application,
-            WrappedRequest request) throws UIRequiresMoreInformationException {
+            WrappedRequest request) {
         Object uiClassNameObj = application
                 .getProperty(Application.UI_PARAMETER);
 

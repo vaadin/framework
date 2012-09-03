@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui;
 
+import com.vaadin.shared.ComponentState;
+
 /**
  * Interface implemented by state classes that support tab indexes.
  * 
@@ -22,19 +24,11 @@ package com.vaadin.shared.ui;
  * @since 7.0.0
  * 
  */
-public interface TabIndexState {
-    /**
-     * Gets the <i>tabulator index</i> of the field.
-     * 
-     * @return the tab index for the Field
-     */
-    public int getTabIndex();
+public class TabIndexState extends ComponentState {
 
     /**
-     * Sets the <i>tabulator index</i> of the field.
-     * 
-     * @param tabIndex
-     *            the tab index to set
+     * The <i>tabulator index</i> of the field.
      */
-    public void setTabIndex(int tabIndex);
+    public int tabIndex = 0;
+
 }

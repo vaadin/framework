@@ -40,12 +40,11 @@ import com.vaadin.event.dd.acceptcriteria.ClientSideCriterion;
 import com.vaadin.event.dd.acceptcriteria.ContainsDataFlavor;
 import com.vaadin.event.dd.acceptcriteria.TargetDetailIs;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 
 /**
  * <p>
@@ -109,43 +108,44 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#ID} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ID = ItemCaptionMode.ID;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#ITEM} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ITEM = ItemCaptionMode.ITEM;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#INDEX} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_INDEX = ItemCaptionMode.INDEX;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#EXPLICIT_DEFAULTS_ID}
+     *             instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID = ItemCaptionMode.EXPLICIT_DEFAULTS_ID;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#EXPLICIT} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT = ItemCaptionMode.EXPLICIT;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#ICON_ONLY} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ICON_ONLY = ItemCaptionMode.ICON_ONLY;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode.ID} instead
+     * @deprecated from 7.0, use {@link ItemCaptionMode#PROPERTY} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_PROPERTY = ItemCaptionMode.PROPERTY;

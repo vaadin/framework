@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,7 +48,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        Set<String> newNames = getState().getNames();
+        Set<String> newNames = getState().names;
 
         // Current names now only contains orphan callbacks
         currentNames.removeAll(newNames);

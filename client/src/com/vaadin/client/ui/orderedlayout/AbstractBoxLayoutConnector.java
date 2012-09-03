@@ -108,23 +108,23 @@ public abstract class AbstractBoxLayoutConnector extends
         Slot slot = getWidget().getSlot(child);
 
 
-        String caption = child.getState().getCaption();
+        String caption = child.getState().caption;
         URLReference iconUrl = child.getState().resources
                 .get(ComponentConstants.ICON_RESOURCE);
         String iconUrlString = iconUrl != null ? iconUrl.toString() : null;
-                List<String> styles = child.getState().getStyles();
-                String error = child.getState().getErrorMessage();
+        List<String> styles = child.getState().styles;
+        String error = child.getState().errorMessage;
                 boolean showError = error != null;
                 if (child.getState() instanceof AbstractFieldState) {
                     AbstractFieldState abstractFieldState = (AbstractFieldState) child
                             .getState();
-                    showError = showError && !abstractFieldState.isHideErrors();
+            showError = showError && !abstractFieldState.hideErrors;
                 }
                 boolean required = false;
                 if (child instanceof AbstractFieldConnector) {
                     required = ((AbstractFieldConnector) child).isRequired();
                 }
-                boolean enabled = child.getState().isEnabled();
+        boolean enabled = child.getState().enabled;
 
         slot.setCaption(caption, iconUrlString, styles, error, showError,
                 required,
@@ -213,8 +213,8 @@ public abstract class AbstractBoxLayoutConnector extends
         super.onStateChanged(stateChangeEvent);
 
         clickEventHandler.handleEventHandlerRegistration();
-        getWidget().setMargin(new MarginInfo(getState().getMarginsBitmask()));
-        getWidget().setSpacing(getState().isSpacing());
+        getWidget().setMargin(new MarginInfo(getState().marginsBitmask));
+        getWidget().setSpacing(getState().spacing);
 
         hasExpandRatio.clear();
         hasVerticalAlignment.clear();
@@ -224,8 +224,7 @@ public abstract class AbstractBoxLayoutConnector extends
         boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
         for (ComponentConnector child : getChildComponents()) {
-            double expandRatio = getState().getChildData().get(child)
-                    .getExpandRatio();
+            double expandRatio = getState().childData.get(child).expandRatio;
             if (expandRatio > 0) {
                 equalExpandRatio = false;
                 break;
@@ -235,12 +234,12 @@ public abstract class AbstractBoxLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             Slot slot = getWidget().getSlot(child);
 
-            AlignmentInfo alignment = new AlignmentInfo(getState()
-                    .getChildData().get(child).getAlignmentBitmask());
+            AlignmentInfo alignment = new AlignmentInfo(
+                    getState().childData.get(child).alignmentBitmask);
             slot.setAlignment(alignment);
 
-            double expandRatio = getState().getChildData().get(child)
-                    .getExpandRatio();
+            double expandRatio = getState().childData.get(child).expandRatio;
+
             if (equalExpandRatio) {
                 expandRatio = 1;
             } else if (expandRatio == 0) {

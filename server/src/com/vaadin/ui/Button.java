@@ -367,6 +367,7 @@ public class Button extends AbstractComponent implements
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -381,6 +382,7 @@ public class Button extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
@@ -396,6 +398,7 @@ public class Button extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -410,6 +413,7 @@ public class Button extends AbstractComponent implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -438,7 +442,7 @@ public class Button extends AbstractComponent implements
         }
         clickShortcut = new ClickShortcut(this, keyCode, modifiers);
         addShortcutListener(clickShortcut);
-        getState().setClickShortcutKeyCode(clickShortcut.getKeyCode());
+        getState().clickShortcutKeyCode = clickShortcut.getKeyCode();
     }
 
     /**
@@ -449,7 +453,7 @@ public class Button extends AbstractComponent implements
         if (clickShortcut != null) {
             removeShortcutListener(clickShortcut);
             clickShortcut = null;
-            getState().setClickShortcutKeyCode(0);
+            getState().clickShortcutKeyCode = 0;
         }
     }
 
@@ -517,7 +521,7 @@ public class Button extends AbstractComponent implements
      * @return true if the button is disabled when clicked, false otherwise
      */
     public boolean isDisableOnClick() {
-        return getState().isDisableOnClick();
+        return getState().disableOnClick;
     }
 
     /**
@@ -533,7 +537,7 @@ public class Button extends AbstractComponent implements
      *            true to disable button when it is clicked, false otherwise
      */
     public void setDisableOnClick(boolean disableOnClick) {
-        getState().setDisableOnClick(disableOnClick);
+        getState().disableOnClick = disableOnClick;
     }
 
     /*
@@ -543,7 +547,7 @@ public class Button extends AbstractComponent implements
      */
     @Override
     public int getTabIndex() {
-        return getState().getTabIndex();
+        return getState().tabIndex;
     }
 
     /*
@@ -553,7 +557,7 @@ public class Button extends AbstractComponent implements
      */
     @Override
     public void setTabIndex(int tabIndex) {
-        getState().setTabIndex(tabIndex);
+        getState().tabIndex = tabIndex;
     }
 
     @Override
@@ -580,7 +584,7 @@ public class Button extends AbstractComponent implements
      *            <code>false</code> otherwise
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().setHtmlContentAllowed(htmlContentAllowed);
+        getState().htmlContentAllowed = htmlContentAllowed;
     }
 
     /**
@@ -590,7 +594,7 @@ public class Button extends AbstractComponent implements
      *         <code>false</code> otherwise
      */
     public boolean isHtmlContentAllowed() {
-        return getState().isHtmlContentAllowed();
+        return getState().htmlContentAllowed;
     }
 
 }

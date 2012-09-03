@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.loginform;
 
 import com.vaadin.Application;
+import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
@@ -12,11 +13,17 @@ import com.vaadin.ui.UI.LegacyWindow;
 public class LoginFormWithMultipleWindows extends Application {
 
     @Override
-    protected UI getUI(WrappedRequest request) {
-        return new LoginFormWindow();
+    public void init() {
+        addUIProvider(new AbstractUIProvider() {
+            @Override
+            public Class<? extends UI> getUIClass(Application application,
+                    WrappedRequest request) {
+                return LoginFormWindow.class;
+            }
+        });
     }
 
-    public class LoginFormWindow extends LegacyWindow {
+    public static class LoginFormWindow extends LegacyWindow {
         public LoginFormWindow() {
             super();
 

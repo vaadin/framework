@@ -358,39 +358,45 @@ public class ComboBox extends AbstractSelect implements
             filterable.addContainerFilter(filter);
         }
 
-        Indexed indexed = (Indexed) container;
+        // try-finally to ensure that the filter is removed from container even
+        // if a exception is thrown...
+        try {
+            Indexed indexed = (Indexed) container;
 
-        int indexToEnsureInView = -1;
+            int indexToEnsureInView = -1;
 
-        // if not an option request (item list when user changes page), go
-        // to page with the selected item after filtering if accepted by
-        // filter
-        Object selection = getValue();
-        if (isScrollToSelectedItem() && !optionRequest && selection != null) {
-            // ensure proper page
-            indexToEnsureInView = indexed.indexOfId(selection);
+            // if not an option request (item list when user changes page), go
+            // to page with the selected item after filtering if accepted by
+            // filter
+            Object selection = getValue();
+            if (isScrollToSelectedItem() && !optionRequest && selection != null) {
+                // ensure proper page
+                indexToEnsureInView = indexed.indexOfId(selection);
+            }
+
+            filteredSize = container.size();
+            currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
+                    indexToEnsureInView, filteredSize);
+            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
+                    filteredSize);
+            int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
+                    filteredSize, first);
+
+            // Compute the number of items to fetch from the indexes given or
+            // based on the filtered size of the container
+            int lastItemToFetch = Math.min(last, filteredSize - 1);
+            int nrOfItemsToFetch = (lastItemToFetch + 1) - first;
+
+            List<?> options = indexed.getItemIds(first, nrOfItemsToFetch);
+
+            return options;
+        } finally {
+            // to the outside, filtering should not be visible
+            if (filter != null) {
+                filterable.removeContainerFilter(filter);
+                filteringContainer = false;
+            }
         }
-
-        filteredSize = container.size();
-        currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
-                indexToEnsureInView, filteredSize);
-        int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
-                filteredSize);
-        int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
-                filteredSize, first);
-
-        List<Object> options = new ArrayList<Object>();
-        for (int i = first; i <= last && i < filteredSize; ++i) {
-            options.add(indexed.getIdByIndex(i));
-        }
-
-        // to the outside, filtering should not be visible
-        if (filter != null) {
-            filterable.removeContainerFilter(filter);
-            filteringContainer = false;
-        }
-
-        return options;
     }
 
     /**

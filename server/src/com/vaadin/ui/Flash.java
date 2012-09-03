@@ -33,10 +33,10 @@ public class Flash extends AbstractEmbedded {
      *            The base path
      */
     public void setCodebase(String codebase) {
-        if (codebase != getState().getCodebase()
+        if (codebase != getState().codebase
                 || (codebase != null && !codebase.equals(getState()
-                        .getCodebase()))) {
-            getState().setCodebase(codebase);
+.codebase))) {
+            getState().codebase = codebase;
             requestRepaint();
         }
     }
@@ -52,10 +52,10 @@ public class Flash extends AbstractEmbedded {
      *            the codetype to set.
      */
     public void setCodetype(String codetype) {
-        if (codetype != getState().getCodetype()
+        if (codetype != getState().codetype
                 || (codetype != null && !codetype.equals(getState()
-                        .getCodetype()))) {
-            getState().setCodetype(codetype);
+.codetype))) {
+            getState().codetype = codetype;
             requestRepaint();
         }
     }
@@ -73,17 +73,17 @@ public class Flash extends AbstractEmbedded {
      *            object
      */
     public void setArchive(String archive) {
-        if (archive != getState().getArchive()
-                || (archive != null && !archive.equals(getState().getArchive()))) {
-            getState().setArchive(archive);
+        if (archive != getState().archive
+                || (archive != null && !archive.equals(getState().archive))) {
+            getState().archive = archive;
             requestRepaint();
         }
     }
 
     public void setStandby(String standby) {
-        if (standby != getState().getStandby()
-                || (standby != null && !standby.equals(getState().getStandby()))) {
-            getState().setStandby(standby);
+        if (standby != getState().standby
+                || (standby != null && !standby.equals(getState().standby))) {
+            getState().standby = standby;
             requestRepaint();
         }
     }
@@ -100,10 +100,10 @@ public class Flash extends AbstractEmbedded {
      *            the value of the parameter.
      */
     public void setParameter(String name, String value) {
-        if (getState().getEmbedParams() == null) {
-            getState().setEmbedParams(new HashMap<String, String>());
+        if (getState().embedParams == null) {
+            getState().embedParams = new HashMap<String, String>();
         }
-        getState().getEmbedParams().put(name, value);
+        getState().embedParams.put(name, value);
         requestRepaint();
     }
 
@@ -115,8 +115,8 @@ public class Flash extends AbstractEmbedded {
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return getState().getEmbedParams() != null ? getState()
-                .getEmbedParams().get(name) : null;
+        return getState().embedParams != null ? getState().embedParams
+                .get(name) : null;
     }
 
     /**
@@ -126,10 +126,10 @@ public class Flash extends AbstractEmbedded {
      *            the name of the parameter to remove.
      */
     public void removeParameter(String name) {
-        if (getState().getEmbedParams() == null) {
+        if (getState().embedParams == null) {
             return;
         }
-        getState().getEmbedParams().remove(name);
+        getState().embedParams.remove(name);
         requestRepaint();
     }
 

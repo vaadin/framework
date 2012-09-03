@@ -22,7 +22,6 @@ import java.net.URL;
 import javax.servlet.ServletContext;
 
 import com.vaadin.Application;
-import com.vaadin.external.json.JSONException;
 import com.vaadin.ui.UI;
 
 /**
@@ -106,12 +105,6 @@ public class CommunicationManager extends AbstractCommunicationManager {
                     themeName = super.getThemeName(context);
                 }
                 return themeName;
-            }
-
-            @Override
-            protected String getInitialUIDL(WrappedRequest request, UI uI)
-                    throws PaintException, JSONException {
-                return CommunicationManager.this.getInitialUIDL(request, uI);
             }
         };
     }

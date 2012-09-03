@@ -101,8 +101,8 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
 
                 // Set attributes
                 Style style = el.getStyle();
-                style.setProperty("width", getState().getWidth());
-                style.setProperty("height", getState().getHeight());
+                style.setProperty("width", getState().width);
+                style.setProperty("height", getState().height);
 
                 DOM.setElementProperty(el, "src",
                         getWidget().getSrc(uidl, client));

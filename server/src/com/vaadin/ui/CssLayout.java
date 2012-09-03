@@ -199,12 +199,12 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
-        getState().getChildCss().clear();
+        getState().childCss.clear();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component child = ci.next();
             String componentCssString = getCss(child);
             if (componentCssString != null) {
-                getState().getChildCss().put(child, componentCssString);
+                getState().childCss.put(child, componentCssString);
             }
 
         }
@@ -291,6 +291,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      * @deprecated Since 7.0, replaced by
      *             {@link #addLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(LayoutClickListener listener) {
         addLayoutClickListener(listener);
@@ -306,6 +307,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      * @deprecated Since 7.0, replaced by
      *             {@link #removeLayoutClickListener(LayoutClickListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(LayoutClickListener listener) {
         removeLayoutClickListener(listener);

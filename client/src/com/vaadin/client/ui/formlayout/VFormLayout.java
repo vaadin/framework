@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,6 +38,7 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -66,8 +67,8 @@ public class VFormLayout extends SimplePanel {
      */
     private String[] getStylesFromState(ComponentState state, boolean enabled) {
         List<String> styles = new ArrayList<String>();
-        if (state.hasStyles()) {
-            for (String name : state.getStyles()) {
+        if (ComponentStateUtil.hasStyles(state)) {
+            for (String name : state.styles) {
                 styles.add(name);
             }
         }
@@ -271,13 +272,13 @@ public class VFormLayout extends SimplePanel {
 
             }
 
-            if (state.getCaption() != null) {
+            if (state.caption != null) {
                 if (captionText == null) {
                     captionText = DOM.createSpan();
                     DOM.insertChild(getElement(), captionText, icon == null ? 0
                             : 1);
                 }
-                String c = state.getCaption();
+                String c = state.caption;
                 if (c == null) {
                     c = "";
                 } else {
@@ -288,7 +289,7 @@ public class VFormLayout extends SimplePanel {
                 // TODO should span also be removed
             }
 
-            if (state.hasDescription() && captionText != null) {
+            if (state.description != null && captionText != null) {
                 addStyleDependentName("hasdescription");
             } else {
                 removeStyleDependentName("hasdescription");

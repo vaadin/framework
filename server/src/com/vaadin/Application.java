@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,14 +35,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.annotations.EagerInit;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
@@ -211,15 +209,16 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * This implementation simulates the way of finding a window for a
          * request by extracting a window name from the requested path and
          * passes that name to {@link #getWindow(String)}.
-         * 
+         * <p>
          * {@inheritDoc}
-         * 
-         * @see #getWindow(String)
-         * @see Application#getUI(WrappedRequest)
          */
-
         @Override
-        public UI.LegacyWindow getUI(WrappedRequest request) {
+        protected <T extends UI> T createUIInstance(WrappedRequest request,
+                Class<T> uiClass) {
+            return uiClass.cast(getUIInstance(request));
+        }
+
+        private UI getUIInstance(WrappedRequest request) {
             String pathInfo = request.getRequestPathInfo();
             String name = null;
             if (pathInfo != null && pathInfo.length() > 0) {
@@ -234,6 +233,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 return window;
             }
             return mainWindow;
+        }
+
+        /**
+         * This implementation simulates the way of finding a window for a
+         * request by extracting a window name from the requested path and
+         * passes that name to {@link #getWindow(String)}.
+         * 
+         * <p>
+         * {@inheritDoc}
+         */
+        @Override
+        public Class<? extends UI> getUIClass(WrappedRequest request) {
+            return getUIInstance(request).getClass();
         }
 
         /**
@@ -270,9 +282,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * <p>
          * {@inheritDoc}
          */
-
         @Override
-        public String getThemeForUI(UI uI) {
+        public String getThemeForUI(WrappedRequest request,
+                Class<? extends UI> uiClass) {
             return theme;
         }
 
@@ -430,11 +442,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private DeploymentConfiguration configuration;
 
     /**
-     * The current user or <code>null</code> if no user has logged in.
-     */
-    private Object user;
-
-    /**
      * The application's URL.
      */
     private URL applicationUrl;
@@ -448,16 +455,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Default locale of the application.
      */
     private Locale locale;
-
-    /**
-     * List of listeners listening user changes.
-     */
-    private LinkedList<UserChangeListener> userChangeListeners = null;
-
-    /**
-     * Application resource mapping: key <-> resource.
-     */
-    private long lastResourceKeyNumber = 0;
 
     /**
      * URL where the user is redirected to on application close, or null if
@@ -492,71 +489,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     private final EventRouter eventRouter = new EventRouter();
 
-    /**
-     * Keeps track of which uIs have been inited.
-     * <p>
-     * TODO Investigate whether this might be derived from the different states
-     * in getUIForRrequest.
-     * </p>
-     */
-    private Set<Integer> initedUIs = new HashSet<Integer>();
-
     private List<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
     private GlobalResourceHandler globalResourceHandler;
-
-    /**
-     * Gets the user of the application.
-     * 
-     * <p>
-     * Vaadin doesn't define of use user object in any way - it only provides
-     * this getter and setter methods for convenience. The user is any object
-     * that has been stored to the application with {@link #setUser(Object)}.
-     * </p>
-     * 
-     * @return the User of the application.
-     */
-    public Object getUser() {
-        return user;
-    }
-
-    /**
-     * <p>
-     * Sets the user of the application instance. An application instance may
-     * have a user associated to it. This can be set in login procedure or
-     * application initialization.
-     * </p>
-     * <p>
-     * A component performing the user login procedure can assign the user
-     * property of the application and make the user object available to other
-     * components of the application.
-     * </p>
-     * <p>
-     * Vaadin doesn't define of use user object in any way - it only provides
-     * getter and setter methods for convenience. The user reference stored to
-     * the application can be read with {@link #getUser()}.
-     * </p>
-     * 
-     * @param user
-     *            the new user.
-     */
-    public void setUser(Object user) {
-        final Object prevUser = this.user;
-        if (user == prevUser || (user != null && user.equals(prevUser))) {
-            return;
-        }
-
-        this.user = user;
-        if (userChangeListeners != null) {
-            final Object[] listeners = userChangeListeners.toArray();
-            final UserChangeEvent event = new UserChangeEvent(this, user,
-                    prevUser);
-            for (int i = 0; i < listeners.length; i++) {
-                ((UserChangeListener) listeners[i])
-                        .applicationUserChanged(event);
-            }
-        }
-    }
 
     /**
      * Gets the URL of the application.
@@ -717,142 +652,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
-    }
-
-    /**
-     * <p>
-     * An event that characterizes a change in the current selection.
-     * </p>
-     * Application user change event sent when the setUser is called to change
-     * the current user of the application.
-     * 
-     * @since 3.0
-     */
-    public class UserChangeEvent extends java.util.EventObject {
-
-        /**
-         * New user of the application.
-         */
-        private final Object newUser;
-
-        /**
-         * Previous user of the application.
-         */
-        private final Object prevUser;
-
-        /**
-         * Constructor for user change event.
-         * 
-         * @param source
-         *            the application source.
-         * @param newUser
-         *            the new User.
-         * @param prevUser
-         *            the previous User.
-         */
-        public UserChangeEvent(Application source, Object newUser,
-                Object prevUser) {
-            super(source);
-            this.newUser = newUser;
-            this.prevUser = prevUser;
-        }
-
-        /**
-         * Gets the new user of the application.
-         * 
-         * @return the new User.
-         */
-        public Object getNewUser() {
-            return newUser;
-        }
-
-        /**
-         * Gets the previous user of the application.
-         * 
-         * @return the previous Vaadin user, if user has not changed ever on
-         *         application it returns <code>null</code>
-         */
-        public Object getPreviousUser() {
-            return prevUser;
-        }
-
-        /**
-         * Gets the application where the user change occurred.
-         * 
-         * @return the Application.
-         */
-        public Application getApplication() {
-            return (Application) getSource();
-        }
-    }
-
-    /**
-     * The <code>UserChangeListener</code> interface for listening application
-     * user changes.
-     * 
-     * @since 3.0
-     */
-    public interface UserChangeListener extends EventListener, Serializable {
-
-        /**
-         * The <code>applicationUserChanged</code> method Invoked when the
-         * application user has changed.
-         * 
-         * @param event
-         *            the change event.
-         */
-        public void applicationUserChanged(Application.UserChangeEvent event);
-    }
-
-    /**
-     * Adds the user change listener.
-     * 
-     * This allows one to get notification each time {@link #setUser(Object)} is
-     * called.
-     * 
-     * @param listener
-     *            the user change listener to add.
-     */
-    public void addUserChangeListener(UserChangeListener listener) {
-        if (userChangeListeners == null) {
-            userChangeListeners = new LinkedList<UserChangeListener>();
-        }
-        userChangeListeners.add(listener);
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #addUserChangeListener(UserChangeListener)}
-     **/
-    @Deprecated
-    public void addListener(UserChangeListener listener) {
-        addUserChangeListener(listener);
-    }
-
-    /**
-     * Removes the user change listener.
-     * 
-     * @param listener
-     *            the user change listener to remove.
-     */
-
-    public void removeUserChangeListener(UserChangeListener listener) {
-        if (userChangeListeners == null) {
-            return;
-        }
-        userChangeListeners.remove(listener);
-        if (userChangeListeners.isEmpty()) {
-            userChangeListeners = null;
-        }
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #removeUserChangeListener(UserChangeListener)}
-     **/
-    @Deprecated
-    public void removeListener(UserChangeListener listener) {
-        removeUserChangeListener(listener);
     }
 
     /**
@@ -1782,11 +1581,57 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Gets a UI for a request for which no UI is already known. This method is
-     * called when the framework processes a request that does not originate
-     * from an existing UI instance. This typically happens when a host page is
-     * requested.
+     * Gets the UI class for a request for which no UI is already known. This
+     * method is called when the framework processes a request that does not
+     * originate from an existing UI instance. This typically happens when a
+     * host page is requested.
+     * <p>
+     * Subclasses of Application may override this method to provide custom
+     * logic for choosing what kind of UI to use.
+     * <p>
+     * The default implementation in {@link Application} uses the
+     * {@value #UI_PARAMETER} parameter from web.xml for finding the name of the
+     * UI class. If {@link DeploymentConfiguration#getClassLoader()} does not
+     * return <code>null</code>, the returned {@link ClassLoader} is used for
+     * loading the UI class. Otherwise the {@link ClassLoader} used to load this
+     * class is used.
      * 
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request for which a UI is needed
+     * @return a UI instance to use for the request
+     * 
+     * @see UI
+     * @see WrappedRequest#getBrowserDetails()
+     * 
+     * @since 7.0
+     */
+    public Class<? extends UI> getUIClass(WrappedRequest request) {
+        // Iterate in reverse order - check newest provider first
+        int providersSize = uiProviders.size();
+        if (providersSize == 0) {
+            throw new IllegalStateException("There are no UI providers");
+        }
+        for (int i = providersSize - 1; i >= 0; i--) {
+            UIProvider provider = uiProviders.get(i);
+
+            Class<? extends UI> uiClass = provider.getUIClass(this, request);
+
+            if (uiClass != null) {
+                return uiClass;
+            }
+        }
+
+        throw new RuntimeException(
+                "No UI provider returned an UI class for request");
+    }
+
+    /**
+     * Creates an UI instance for a request for which no UI is already known.
+     * This method is called when the framework processes a request that does
+     * not originate from an existing UI instance. This typically happens when a
+     * host page is requested.
      * <p>
      * Subclasses of Application may override this method to provide custom
      * logic for choosing how to create a suitable UI or for picking an already
@@ -1795,54 +1640,39 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * the states to go out of sync.
      * </p>
      * 
-     * <p>
-     * If {@link BrowserDetails} are required to create a UI, the implementation
-     * can throw a {@link UIRequiresMoreInformationException} exception. In this
-     * case, the framework will instruct the browser to send the additional
-     * details, whereupon this method is invoked again with the browser details
-     * present in the wrapped request. Throwing the exception if the browser
-     * details are already available is not supported.
-     * </p>
-     * 
-     * <p>
-     * The default implementation in {@link Application} creates a new instance
-     * of the UI class returned by {@link #getUIClassName(WrappedRequest)},
-     * which in turn uses the {@value #UI_PARAMETER} parameter from web.xml. If
-     * {@link DeploymentConfiguration#getClassLoader()} for the request returns
-     * a {@link ClassLoader}, it is used for loading the UI class. Otherwise the
-     * {@link ClassLoader} used to load this class is used.
-     * </p>
-     * 
      * @param request
-     *            the wrapped request for which a UI is needed
-     * @return a UI instance to use for the request
-     * @throws UIRequiresMoreInformationException
-     *             may be thrown by an implementation to indicate that
-     *             {@link BrowserDetails} are required to create a UI
-     * 
-     * @see #getUIClassName(WrappedRequest)
-     * @see UI
-     * @see UIRequiresMoreInformationException
-     * @see WrappedRequest#getBrowserDetails()
-     * 
-     * @since 7.0
+     * @param uiClass
+     * @return
      */
-    protected UI getUI(WrappedRequest request)
-            throws UIRequiresMoreInformationException {
+    protected <T extends UI> T createUIInstance(WrappedRequest request,
+            Class<T> uiClass) {
+        int providersSize = uiProviders.size();
+        if (providersSize == 0) {
+            throw new IllegalStateException("There are no UI providers");
+        }
 
-        // Iterate in reverse order - test check newest provider first
-        for (int i = uiProviders.size() - 1; i >= 0; i--) {
+        for (int i = providersSize - 1; i >= 0; i--) {
             UIProvider provider = uiProviders.get(i);
 
-            Class<? extends UI> uiClass = provider.getUIClass(this, request);
-
-            if (uiClass != null) {
-                return provider.instantiateUI(this, uiClass, request);
+            Class<? extends UI> providerClass = provider.getUIClass(this,
+                    request);
+            if (providerClass != null) {
+                if (providerClass != uiClass) {
+                    getLogger().warning(
+                            "Mismatching UI classes. Expected " + uiClass
+                                    + " but got " + providerClass + " from "
+                                    + provider);
+                    // Try with next provider if we didn't get the expected
+                    // class
+                    continue;
+                }
+                return uiClass.cast(provider.instantiateUI(this, uiClass,
+                        request));
             }
         }
 
         throw new RuntimeException(
-                "No UI providers available or providers are not able to find UI instance");
+                "No UI provider created an UI instance for request");
     }
 
     /**
@@ -1858,8 +1688,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * 
      * @since 7.0
      */
-    public String getThemeForUI(UI uI) {
-        Theme uiTheme = getAnnotationFor(uI.getClass(), Theme.class);
+    public String getThemeForUI(WrappedRequest request,
+            Class<? extends UI> uiClass) {
+        Theme uiTheme = getAnnotationFor(uiClass, Theme.class);
         if (uiTheme != null) {
             return uiTheme.value();
         } else {
@@ -1870,18 +1701,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
     /**
      * Finds the widgetset to use for a specific UI. If no specific widgetset is
      * required, <code>null</code> is returned.
+     * <p>
+     * The default implementation uses the @{@link Widgetset} annotation if it's
+     * defined for the UI class.
      * 
-     * TODO Tell what the default implementation does once it does something.
-     * 
-     * @param uI
-     *            the UI to get a widgetset for
+     * @param request
+     *            the wrapped request for which to get a widgetset
+     * @param uiClass
+     *            the UI class to get a widgetset for
      * @return the name of the widgetset, or <code>null</code> if the default
      *         widgetset should be used
      * 
      * @since 7.0
      */
-    public String getWidgetsetForUI(UI uI) {
-        Widgetset uiWidgetset = getAnnotationFor(uI.getClass(), Widgetset.class);
+    public String getWidgetsetForUI(WrappedRequest request,
+            Class<? extends UI> uiClass) {
+        Widgetset uiWidgetset = getAnnotationFor(uiClass, Widgetset.class);
         if (uiWidgetset != null) {
             return uiWidgetset.value();
         } else {
@@ -2023,8 +1858,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
 
-    private boolean uiPreserved = false;
-
     /**
      * Gets the currently used application. The current application is
      * automatically defined when processing requests to the server. In other
@@ -2099,17 +1932,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @param request
      *            the request for which a UI is desired
      * @return a UI belonging to the request
-     * @throws UIRequiresMoreInformationException
-     *             if no existing UI could be found and creating a new UI
-     *             requires additional information from the browser
      * 
-     * @see #getUI(WrappedRequest)
-     * @see UIRequiresMoreInformationException
+     * @see #createUI(WrappedRequest)
      * 
      * @since 7.0
      */
-    public UI getUIForRequest(WrappedRequest request)
-            throws UIRequiresMoreInformationException {
+    public UI getUIForRequest(WrappedRequest request) {
         UI uI = UI.getCurrent();
         if (uI != null) {
             return uI;
@@ -2122,69 +1950,75 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     && browserDetails.getUriFragment() != null;
 
             uI = uIs.get(uiId);
+            Class<? extends UI> uiClass = null;
 
-            if (uI == null && isUiPreserved()) {
+            if (uI == null && hasBrowserDetails
+                    && !retainOnRefreshUIs.isEmpty()) {
+                uiClass = getUIClass(request);
+
                 // Check for a known UI
-                if (!retainOnRefreshUIs.isEmpty()) {
 
-                    Integer retainedUIId;
-                    if (!hasBrowserDetails) {
-                        throw new UIRequiresMoreInformationException();
-                    } else {
-                        String windowName = browserDetails.getWindowName();
-                        retainedUIId = retainOnRefreshUIs.get(windowName);
-                    }
+                @SuppressWarnings("null")
+                String windowName = browserDetails.getWindowName();
+                Integer retainedUIId = retainOnRefreshUIs.get(windowName);
 
-                    if (retainedUIId != null) {
+                if (retainedUIId != null) {
+                    UI retainedUI = uIs.get(retainedUIId);
+                    // We've had the same UI instance in a window with this
+                    // name, but should we still use it?
+                    if (retainedUI.getClass() == uiClass) {
                         uiId = retainedUIId;
-                        uI = uIs.get(uiId);
+                        uI = retainedUI;
+                    } else {
+                        getLogger().info(
+                                "Not using retained UI in " + windowName
+                                        + " because retained UI was of type "
+                                        + retainedUIId.getClass() + " but "
+                                        + uiClass
+                                        + " is expected for the request.");
                     }
                 }
             }
 
-            if (uI == null) {
-                // Throws exception if UI can not yet be created
-                uI = getUI(request);
-
-                // Initialize some fields for a newly created UI
-                if (uI.getApplication() == null) {
-                    uI.setApplication(this);
-                }
-                if (uI.getUIId() < 0) {
-
-                    if (uiId == null) {
-                        // Get the next id if none defined
-                        uiId = Integer.valueOf(nextUIId++);
-                    }
-                    uI.setUIId(uiId.intValue());
-                    uIs.put(uiId, uI);
-                }
-            }
-
-            // Set thread local here so it is available in init
-            UI.setCurrent(uI);
-
-            if (!initedUIs.contains(uiId)) {
-                boolean initRequiresBrowserDetails = isUiPreserved()
-                        || !uI.getClass().isAnnotationPresent(EagerInit.class);
-                if (!initRequiresBrowserDetails || hasBrowserDetails) {
-                    uI.doInit(request);
-
-                    // Remember that this UI has been initialized
-                    initedUIs.add(uiId);
-
-                    // init() might turn on preserve so do this afterwards
-                    if (isUiPreserved()) {
-                        // Remember this UI
-                        String windowName = request.getBrowserDetails()
-                                .getWindowName();
-                        retainOnRefreshUIs.put(windowName, uiId);
-                    }
-                }
-            }
         } // end synchronized block
 
+        UI.setCurrent(uI);
+
         return uI;
+    }
+
+    public UI createUI(WrappedRequest request) {
+        Class<? extends UI> uiClass = getUIClass(request);
+
+        UI ui = createUIInstance(request, uiClass);
+
+        // Initialize some fields for a newly created UI
+        if (ui.getApplication() == null) {
+            ui.setApplication(this);
+        }
+        // Get the next id
+        Integer uiId = Integer.valueOf(nextUIId++);
+
+        uIs.put(uiId, ui);
+
+        // Set thread local here so it is available in init
+        UI.setCurrent(ui);
+
+        ui.doInit(request, uiId.intValue());
+
+        if (isUiPreserved(request, uiClass)) {
+            // Remember this UI
+            String windowName = request.getBrowserDetails().getWindowName();
+            if (windowName == null) {
+                getLogger().warning(
+                        "There is no window.name available for UI " + uiClass
+                                + " that should be preserved.");
+            } else {
+                retainOnRefreshUIs.put(windowName, uiId);
+            }
+        }
+
+        return ui;
     }
 
     /**
@@ -2208,53 +2042,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Sets whether the same UI state should be reused if the framework can
-     * detect that the application is opened in a browser window where it has
-     * previously been open. The framework attempts to discover this by checking
-     * the value of window.name in the browser.
-     * <p>
-     * NOTE that you should avoid turning this feature on/off on-the-fly when
-     * the UI is already shown, as it might not be retained as intended.
-     * </p>
-     * 
-     * @param uiPreserved
-     *            <code>true</code>if the same UI instance should be reused e.g.
-     *            when the browser window is refreshed.
-     */
-    public void setUiPreserved(boolean uiPreserved) {
-        this.uiPreserved = uiPreserved;
-        if (!uiPreserved) {
-            retainOnRefreshUIs.clear();
-        }
-    }
-
-    /**
      * Checks whether the same UI state should be reused if the framework can
      * detect that the application is opened in a browser window where it has
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
      * 
+     * @param request
+     * @param uiClass
+     * 
      * @return <code>true</code>if the same UI instance should be reused e.g.
      *         when the browser window is refreshed.
      */
-    public boolean isUiPreserved() {
-        return uiPreserved;
-    }
-
-    /**
-     * Checks whether there's a pending initialization for the UI with the given
-     * id.
-     * 
-     * @param uiId
-     *            UI id to check for
-     * @return <code>true</code> of the initialization is pending,
-     *         <code>false</code> if the UI id is not registered or if the UI
-     *         has already been initialized
-     * 
-     * @see #getUIForRequest(WrappedRequest)
-     */
-    public boolean isUIInitPending(int uiId) {
-        return !initedUIs.contains(Integer.valueOf(uiId));
+    public boolean isUiPreserved(WrappedRequest request,
+            Class<? extends UI> uiClass) {
+        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(uiClass,
+                PreserveOnRefresh.class);
+        return preserveOnRefresh != null;
     }
 
     /**
@@ -2472,5 +2275,15 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         return globalResourceHandler;
+    }
+
+    public String getPageTitleForUI(WrappedRequest request,
+            Class<? extends UI> uiClass) {
+        Title titleAnnotation = getAnnotationFor(uiClass, Title.class);
+        if (titleAnnotation == null) {
+            return null;
+        } else {
+            return titleAnnotation.value();
+        }
     }
 }

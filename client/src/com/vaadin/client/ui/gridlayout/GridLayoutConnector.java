@@ -106,8 +106,8 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             return;
         }
 
-        int cols = getState().getColumns();
-        int rows = getState().getRows();
+        int cols = getState().columns;
+        int rows = getState().rows;
 
         layout.columnWidths = new int[cols];
         layout.rowHeights = new int[rows];
@@ -164,9 +164,9 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         layout.rowExpandRatioArray = uidl.getIntArrayAttribute("rowExpand");
 
         layout.updateMarginStyleNames(new MarginInfo(getState()
-                .getMarginsBitmask()));
+.marginsBitmask));
 
-        layout.updateSpacingStyleName(getState().isSpacing());
+        layout.updateSpacingStyleName(getState().spacing);
 
         if (needCaptionUpdate) {
             needCaptionUpdate = false;

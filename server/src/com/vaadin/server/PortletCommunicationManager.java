@@ -138,13 +138,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getInitialUIDL(WrappedRequest request, UI uI)
-                    throws PaintException, JSONException {
-                return PortletCommunicationManager.this.getInitialUIDL(request,
-                        uI);
-            }
-
-            @Override
             protected JSONObject getApplicationParameters(
                     BootstrapContext context) throws JSONException,
                     PaintException {

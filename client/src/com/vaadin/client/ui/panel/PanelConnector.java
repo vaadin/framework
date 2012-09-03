@@ -33,6 +33,7 @@ import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
@@ -98,9 +99,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
                     + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = false;
-            if (getState().getCaption() != null
-                    && !"".equals(getState().getCaption())) {
-                getWidget().setCaption(getState().getCaption());
+            if (getState().caption != null && !"".equals(getState().caption)) {
+                getWidget().setCaption(getState().caption);
                 hasCaption = true;
             } else {
                 getWidget().setCaption("");
@@ -117,8 +117,8 @@ public class PanelConnector extends AbstractComponentContainerConnector
             String captionClass = captionBaseClass;
             String contentClass = contentBaseClass;
             String decoClass = decoBaseClass;
-            if (getState().hasStyles()) {
-                for (String style : getState().getStyles()) {
+            if (ComponentStateUtil.hasStyles(getState())) {
+                for (String style : getState().styles) {
                     captionClass += " " + captionBaseClass + "-" + style;
                     contentClass += " " + contentBaseClass + "-" + style;
                     decoClass += " " + decoBaseClass + "-" + style;
@@ -147,7 +147,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
         }
 
         getWidget().setErrorIndicatorVisible(
-                null != getState().getErrorMessage());
+null != getState().errorMessage);
 
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 0) {
@@ -164,20 +164,20 @@ public class PanelConnector extends AbstractComponentContainerConnector
             }
         }
 
-        if (getState().getScrollTop() != getWidget().scrollTop) {
+        if (getState().scrollTop != getWidget().scrollTop) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
-            uidlScrollTop = getState().getScrollTop();
+            uidlScrollTop = getState().scrollTop;
         }
 
-        if (getState().getScrollLeft() != getWidget().scrollLeft) {
+        if (getState().scrollLeft != getWidget().scrollLeft) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
-            uidlScrollLeft = getState().getScrollLeft();
+            uidlScrollLeft = getState().scrollLeft;
         }
 
         // And apply tab index
-        getWidget().contentNode.setTabIndex(getState().getTabIndex());
+        getWidget().contentNode.setTabIndex(getState().tabIndex);
     }
 
     @Override

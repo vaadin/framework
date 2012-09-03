@@ -1,7 +1,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.UIRequiresMoreInformationException;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
@@ -9,6 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 public class RefreshStatePreserve extends AbstractTestApplication {
+    @PreserveOnRefresh
     public static class RefreshStateUI extends UI {
         @Override
         public void init(WrappedRequest request) {
@@ -22,12 +23,10 @@ public class RefreshStatePreserve extends AbstractTestApplication {
     @Override
     public void init() {
         super.init();
-        setUiPreserved(true);
         addUIProvider(new AbstractUIProvider() {
             @Override
             public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request)
-                    throws UIRequiresMoreInformationException {
+                    WrappedRequest request) {
                 return RefreshStateUI.class;
             }
         });

@@ -85,10 +85,10 @@ public class LinkConnector extends AbstractComponentConnector implements
                 .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
-        getWidget().captionElement.setInnerText(getState().getCaption());
+        getWidget().captionElement.setInnerText(getState().caption);
 
         // handle error
-        if (null != getState().getErrorMessage()) {
+        if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(getWidget().errorIndicatorElement,

@@ -615,7 +615,7 @@ public class ComponentLocator {
     private ServerConnector findConnectorById(ServerConnector root, String id) {
         SharedState state = root.getState();
         if (state instanceof ComponentState
-                && id.equals(((ComponentState) state).getId())) {
+                && id.equals(((ComponentState) state).id)) {
             return root;
         }
         for (ServerConnector child : root.getChildren()) {

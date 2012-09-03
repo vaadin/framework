@@ -67,19 +67,24 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public void navigateTo(String fragmentParameters) {
+        public void enter(ViewChangeEvent event) {
             // nothing to do
         }
     }
 
     /**
-     * Fragment manager using URI fragments of a Page to track views and enable
-     * listening to view changes.
-     * 
+     * A {@link NavigationStateManager} using hashbang fragments in the Page
+     * location URI to track views and enable listening to view changes.
+     * <p>
+     * A hashbang URI is one where the optional fragment or "hash" part - the
+     * part following a # sign - is used to encode navigation state in a web
+     * application. The advantage of this is that the fragment can be
+     * dynamically manipulated by javascript without causing page reloads.
+     * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      */
-    public static class UriFragmentManager implements FragmentManager,
+    public static class UriFragmentManager implements NavigationStateManager,
             FragmentChangedListener {
         private final Page page;
         private final Navigator navigator;
@@ -102,18 +107,18 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public String getFragment() {
+        public String getState() {
             return page.getFragment();
         }
 
         @Override
-        public void setFragment(String fragment) {
-            page.setFragment(fragment, false);
+        public void setState(String state) {
+            page.setFragment(state, false);
         }
 
         @Override
         public void fragmentChanged(FragmentChangedEvent event) {
-            UriFragmentManager.this.navigator.navigateTo(getFragment());
+            UriFragmentManager.this.navigator.navigateTo(getState());
         }
     }
 
@@ -209,11 +214,11 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public String getViewName(String viewAndParameters) {
-            if (null == viewAndParameters) {
+        public String getViewName(String navigationState) {
+            if (null == navigationState) {
                 return null;
             }
-            if (viewAndParameters.startsWith(viewName)) {
+            if (navigationState.startsWith(viewName)) {
                 return viewName;
             }
             return null;
@@ -271,12 +276,12 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public String getViewName(String viewAndParameters) {
-            if (null == viewAndParameters) {
+        public String getViewName(String navigationState) {
+            if (null == navigationState) {
                 return null;
             }
-            if (viewAndParameters.equals(viewName)
-                    || viewAndParameters.startsWith(viewName + "/")) {
+            if (navigationState.equals(viewName)
+                    || navigationState.startsWith(viewName + "/")) {
                 return viewName;
             }
             return null;
@@ -318,7 +323,7 @@ public class Navigator implements Serializable {
         }
     }
 
-    private final FragmentManager fragmentManager;
+    private final NavigationStateManager stateManager;
     private final ViewDisplay display;
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
@@ -352,7 +357,7 @@ public class Navigator implements Serializable {
      */
     public Navigator(ComponentContainer container) {
         display = new ComponentContainerViewDisplay(container);
-        fragmentManager = new UriFragmentManager(Page.getCurrent(), this);
+        stateManager = new UriFragmentManager(Page.getCurrent(), this);
     }
 
     /**
@@ -374,36 +379,37 @@ public class Navigator implements Serializable {
      */
     public Navigator(Page page, ViewDisplay display) {
         this.display = display;
-        fragmentManager = new UriFragmentManager(page, this);
+        stateManager = new UriFragmentManager(page, this);
     }
 
     /**
      * Create a navigator.
      * 
-     * When a custom fragment manager is not needed, use the constructor
+     * When a custom navigation state manager is not needed, use the constructor
      * {@link #Navigator(Page, ViewDisplay)} which uses a URI fragment based
-     * fragment manager.
+     * state manager.
      * 
      * Note that navigation to the initial view must be performed explicitly by
      * the application after creating a Navigator using this constructor.
      * 
-     * @param fragmentManager
-     *            fragment manager keeping track of the active view and enabling
-     *            bookmarking and direct navigation
+     * @param stateManager
+     *            {@link NavigationStateManager} keeping track of the active
+     *            view and enabling bookmarking and direct navigation
      * @param display
-     *            where to display the views
+     *            {@ViewDisplay} used to display the views handled
+     *            by this navigator
      */
-    public Navigator(FragmentManager fragmentManager, ViewDisplay display) {
+    public Navigator(NavigationStateManager stateManager, ViewDisplay display) {
         this.display = display;
-        this.fragmentManager = fragmentManager;
+        this.stateManager = stateManager;
     }
 
     /**
      * Navigate to a view and initialize the view with given parameters.
      * 
      * The view string consists of a view name optionally followed by a slash
-     * and (fragment) parameters. ViewProviders are used to find and create the
-     * correct type of view.
+     * and a parameters part that is passed as-is to the view. ViewProviders are
+     * used to find and create the correct type of view.
      * 
      * If multiple providers return a matching view, the view with the longest
      * name is selected. This way, e.g. hierarchies of subviews can be
@@ -416,14 +422,14 @@ public class Navigator implements Serializable {
      * Registered {@link ViewChangeListener}s are called upon successful view
      * change.
      * 
-     * @param viewAndParameters
+     * @param navigationState
      *            view name and parameters
      */
-    public void navigateTo(String viewAndParameters) {
+    public void navigateTo(String navigationState) {
         String longestViewName = null;
         View viewWithLongestName = null;
         for (ViewProvider provider : providers) {
-            String viewName = provider.getViewName(viewAndParameters);
+            String viewName = provider.getViewName(navigationState);
             if (null != viewName
                     && (longestViewName == null || viewName.length() > longestViewName
                             .length())) {
@@ -436,9 +442,9 @@ public class Navigator implements Serializable {
         }
         if (viewWithLongestName != null) {
             String parameters = "";
-            if (viewAndParameters.length() > longestViewName.length() + 1) {
-                parameters = viewAndParameters.substring(longestViewName
-                        .length() + 1);
+            if (navigationState.length() > longestViewName.length() + 1) {
+                parameters = navigationState
+                        .substring(longestViewName.length() + 1);
             }
             navigateTo(viewWithLongestName, longestViewName, parameters);
         }
@@ -455,29 +461,29 @@ public class Navigator implements Serializable {
      * @param view
      *            view to activate
      * @param viewName
-     *            (optional) name of the view or null not to set the fragment
-     * @param fragmentParameters
-     *            parameters passed in the fragment for the view
+     *            (optional) name of the view or null not to change the
+     *            navigation state
+     * @param parameters
+     *            parameters passed in the navigation state to the view
      */
-    protected void navigateTo(View view, String viewName,
-            String fragmentParameters) {
+    protected void navigateTo(View view, String viewName, String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
-                viewName, fragmentParameters);
+                viewName, parameters);
         if (!isViewChangeAllowed(event)) {
             return;
         }
 
-        if (null != viewName && getFragmentManager() != null) {
-            String currentFragment = viewName;
-            if (!fragmentParameters.equals("")) {
-                currentFragment += "/" + fragmentParameters;
+        if (null != viewName && getStateManager() != null) {
+            String navigationState = viewName;
+            if (!parameters.equals("")) {
+                navigationState += "/" + parameters;
             }
-            if (!currentFragment.equals(getFragmentManager().getFragment())) {
-                getFragmentManager().setFragment(currentFragment);
+            if (!navigationState.equals(getStateManager().getState())) {
+                getStateManager().setState(navigationState);
             }
         }
 
-        view.navigateTo(fragmentParameters);
+        view.enter(event);
         currentView = view;
 
         if (display != null) {
@@ -512,17 +518,17 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Return the fragment manager that is used to get, listen to and manipulate
-     * the URI fragment or other source of navigation information.
+     * Returns the {@link NavigationStateManager} that is used to get, listen to
+     * and manipulate the navigation state used by this Navigator.
      * 
-     * @return fragment manager in use
+     * @return NavigationStateManager in use
      */
-    protected FragmentManager getFragmentManager() {
-        return fragmentManager;
+    protected NavigationStateManager getStateManager() {
+        return stateManager;
     }
 
     /**
-     * Returns the ViewDisplay used by the navigator. Unless another display is
+     * Return the ViewDisplay used by the navigator. Unless another display is
      * specified, a {@link SimpleViewDisplay} (which is a {@link Component}) is
      * used by default.
      * 

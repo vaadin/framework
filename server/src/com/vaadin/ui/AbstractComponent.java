@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,6 +40,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.Terminal;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.tools.ReflectTools;
 
 /**
@@ -118,7 +119,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setId(String id) {
-        getState().setId(id);
+        getState().id = id;
     }
 
     /*
@@ -128,7 +129,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public String getId() {
-        return getState().getId();
+        return getState().id;
     }
 
     /**
@@ -154,8 +155,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public String getStyleName() {
         String s = "";
-        if (getState().getStyles() != null) {
-            for (final Iterator<String> it = getState().getStyles().iterator(); it
+        if (ComponentStateUtil.hasStyles(getState())) {
+            for (final Iterator<String> it = getState().styles.iterator(); it
                     .hasNext();) {
                 s += it.next();
                 if (it.hasNext()) {
@@ -173,13 +174,13 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setStyleName(String style) {
         if (style == null || "".equals(style)) {
-            getState().setStyles(null);
+            getState().styles = null;
             return;
         }
-        if (getState().getStyles() == null) {
-            getState().setStyles(new ArrayList<String>());
+        if (getState().styles == null) {
+            getState().styles = new ArrayList<String>();
         }
-        List<String> styles = getState().getStyles();
+        List<String> styles = getState().styles;
         styles.clear();
         String[] styleParts = style.split(" +");
         for (String part : styleParts) {
@@ -202,10 +203,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return;
         }
 
-        if (getState().getStyles() == null) {
-            getState().setStyles(new ArrayList<String>());
+        if (getState().styles == null) {
+            getState().styles = new ArrayList<String>();
         }
-        List<String> styles = getState().getStyles();
+        List<String> styles = getState().styles;
         if (!styles.contains(style)) {
             styles.add(style);
         }
@@ -213,11 +214,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     @Override
     public void removeStyleName(String style) {
-        if (getState().getStyles() != null) {
+        if (ComponentStateUtil.hasStyles(getState())) {
             String[] styleParts = style.split(" +");
             for (String part : styleParts) {
                 if (part.length() > 0) {
-                    getState().getStyles().remove(part);
+                    getState().styles.remove(part);
                 }
             }
         }
@@ -229,7 +230,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public String getCaption() {
-        return getState().getCaption();
+        return getState().caption;
     }
 
     /**
@@ -242,7 +243,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setCaption(String caption) {
-        getState().setCaption(caption);
+        getState().caption = caption;
     }
 
     /*
@@ -319,7 +320,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isEnabled() {
-        return getState().isEnabled();
+        return getState().enabled;
     }
 
     /*
@@ -329,7 +330,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setEnabled(boolean enabled) {
-        getState().setEnabled(enabled);
+        getState().enabled = enabled;
     }
 
     /*
@@ -358,7 +359,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * interface.
      */
     public boolean isImmediate() {
-        return getState().isImmediate();
+        return getState().immediate;
     }
 
     /**
@@ -371,7 +372,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
-        getState().setImmediate(immediate);
+        getState().immediate = immediate;
     }
 
     /*
@@ -381,7 +382,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isVisible() {
-        return getState().isVisible();
+        return getState().visible;
     }
 
     /*
@@ -391,11 +392,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setVisible(boolean visible) {
-        if (getState().isVisible() == visible) {
+        if (getState().visible == visible) {
             return;
         }
 
-        getState().setVisible(visible);
+        getState().visible = visible;
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
@@ -461,7 +462,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return component's description <code>String</code>
      */
     public String getDescription() {
-        return getState().getDescription();
+        return getState().description;
     }
 
     /**
@@ -477,7 +478,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *            the new description string for the component.
      */
     public void setDescription(String description) {
-        getState().setDescription(description);
+        getState().description = description;
     }
 
     /*
@@ -570,7 +571,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isReadOnly() {
-        return getState().isReadOnly();
+        return getState().readOnly;
     }
 
     /*
@@ -579,7 +580,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setReadOnly(boolean readOnly) {
-        getState().setReadOnly(readOnly);
+        getState().readOnly = readOnly;
     }
 
     /*
@@ -700,24 +701,24 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (getHeight() >= 0
                 && (getHeightUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineHeight(this))) {
-            getState().setHeight("" + getCSSHeight());
+            getState().height = "" + getCSSHeight();
         } else {
-            getState().setHeight("");
+            getState().height = "";
         }
 
         if (getWidth() >= 0
                 && (getWidthUnits() != Unit.PERCENTAGE || ComponentSizeValidator
                         .parentCanDefineWidth(this))) {
-            getState().setWidth("" + getCSSWidth());
+            getState().width = "" + getCSSWidth();
         } else {
-            getState().setWidth("");
+            getState().width = "";
         }
 
         ErrorMessage error = getErrorMessage();
         if (null != error) {
-            getState().setErrorMessage(error.getFormattedHtmlMessage());
+            getState().errorMessage = error.getFormattedHtmlMessage();
         } else {
-            getState().setErrorMessage(null);
+            getState().errorMessage = null;
         }
     }
 
@@ -766,7 +767,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         eventRouter.addListener(eventType, target, method);
 
         if (needRepaint) {
-            getState().addRegisteredEventListener(eventIdentifier);
+            ComponentStateUtil.addRegisteredEventListener(getState(),
+                    eventIdentifier);
         }
     }
 
@@ -814,7 +816,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target);
             if (!eventRouter.hasListeners(eventType)) {
-                getState().removeRegisteredEventListener(eventIdentifier);
+                ComponentStateUtil.removeRegisteredEventListener(getState(),
+                        eventIdentifier);
             }
         }
     }

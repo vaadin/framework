@@ -16,9 +16,10 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for
@@ -28,6 +29,7 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
+@PreserveOnRefresh
 public class CreatingPreserveState extends UI {
     private static int windowCounter = 0;
 
@@ -36,7 +38,6 @@ public class CreatingPreserveState extends UI {
         TextField tf = new TextField("Window #" + (++windowCounter));
         tf.setImmediate(true);
         getContent().addComponent(tf);
-        getApplication().setUiPreserved(true);
     }
 
 }

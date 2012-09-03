@@ -21,9 +21,10 @@ import java.util.LinkedList;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.easymock.IArgumentMatcher;
 import org.easymock.IMocksControl;
 
-import com.vaadin.navigator.FragmentManager;
+import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -45,14 +46,14 @@ public class NavigatorTest extends TestCase {
         }
     }
 
-    public static class NullFragmentManager implements FragmentManager {
+    public static class NullFragmentManager implements NavigationStateManager {
         @Override
-        public String getFragment() {
+        public String getState() {
             return null;
         }
 
         @Override
-        public void setFragment(String fragment) {
+        public void setState(String fragment) {
             // do nothing
         }
     }
@@ -119,8 +120,7 @@ public class NavigatorTest extends TestCase {
             if (!stringEquals(reference.getViewName(), event.getViewName())) {
                 return false;
             }
-            if (!stringEquals(reference.getFragmentParameters(),
-                    event.getFragmentParameters())) {
+            if (!stringEquals(reference.getParameters(), event.getParameters())) {
                 return false;
             }
             return true;
@@ -169,9 +169,27 @@ public class NavigatorTest extends TestCase {
         }
     }
 
+    public static ViewChangeEvent eventParametersEqual(final String expected) {
+        EasyMock.reportMatcher(new IArgumentMatcher() {
+            @Override
+            public void appendTo(StringBuffer buffer) {
+                buffer.append("paramsIs(\"" + expected + "\")");
+            }
+
+            @Override
+            public boolean matches(Object actual) {
+                return actual instanceof ViewChangeEvent
+                        && expected.equals(((ViewChangeEvent) actual)
+                                .getParameters());
+            }
+        });
+        return null;
+    }
+
     public void testBasicNavigation() {
         IMocksControl control = EasyMock.createControl();
-        FragmentManager manager = control.createMock(FragmentManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -180,25 +198,25 @@ public class NavigatorTest extends TestCase {
         // prepare mocks: what to expect
         EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("");
-        view1.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("");
+        view1.enter(eventParametersEqual(""));
         display.showView(view1);
-        manager.setFragment("test1");
+        manager.setState("test1");
 
         EasyMock.expect(provider.getViewName("test2/")).andReturn("test2");
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
-        EasyMock.expect(manager.getFragment()).andReturn("view1");
-        view2.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("view1");
+        view2.enter(eventParametersEqual(""));
         display.showView(view2);
-        manager.setFragment("test2");
+        manager.setState("test2");
 
         EasyMock.expect(provider.getViewName("test1/params"))
                 .andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("view2");
-        view1.navigateTo("params");
+        EasyMock.expect(manager.getState()).andReturn("view2");
+        view1.enter(eventParametersEqual("params"));
         display.showView(view1);
-        manager.setFragment("test1/params");
+        manager.setState("test1/params");
 
         control.replay();
 
@@ -213,7 +231,8 @@ public class NavigatorTest extends TestCase {
 
     public void testMainView() {
         IMocksControl control = EasyMock.createControl();
-        FragmentManager manager = control.createMock(FragmentManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -222,25 +241,25 @@ public class NavigatorTest extends TestCase {
         // prepare mocks: what to expect
         EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
-        EasyMock.expect(manager.getFragment()).andReturn("view1");
-        view2.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("view1");
+        view2.enter(eventParametersEqual(""));
         display.showView(view2);
-        manager.setFragment("test2");
+        manager.setState("test2");
 
         EasyMock.expect(provider.getViewName("")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("");
-        view1.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("");
+        view1.enter(eventParametersEqual(""));
         display.showView(view1);
-        manager.setFragment("test1");
+        manager.setState("test1");
 
         EasyMock.expect(provider.getViewName("test1/params"))
                 .andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("view2");
-        view1.navigateTo("params");
+        EasyMock.expect(manager.getState()).andReturn("view2");
+        view1.enter(eventParametersEqual("params"));
         display.showView(view1);
-        manager.setFragment("test1/params");
+        manager.setState("test1/params");
 
         control.replay();
 
@@ -255,7 +274,8 @@ public class NavigatorTest extends TestCase {
 
     public void testListeners() {
         IMocksControl control = EasyMock.createControl();
-        FragmentManager manager = control.createMock(FragmentManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -271,10 +291,10 @@ public class NavigatorTest extends TestCase {
         ViewChangeEvent event1 = new ViewChangeEvent(navigator, null, view1,
                 "test1", "");
         listener.addExpectedIsViewChangeAllowed(event1, true);
-        EasyMock.expect(manager.getFragment()).andReturn("");
-        view1.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("");
+        view1.enter(eventParametersEqual(""));
         display.showView(view1);
-        manager.setFragment("test1");
+        manager.setState("test1");
         listener.addExpectedNavigatorViewChange(event1);
 
         EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
@@ -282,10 +302,10 @@ public class NavigatorTest extends TestCase {
         ViewChangeEvent event2 = new ViewChangeEvent(navigator, view1, view2,
                 "test2", "");
         listener.addExpectedIsViewChangeAllowed(event2, true);
-        EasyMock.expect(manager.getFragment()).andReturn("view1");
-        view2.navigateTo("");
+        EasyMock.expect(manager.getState()).andReturn("view1");
+        view2.enter(eventParametersEqual(""));
         display.showView(view2);
-        manager.setFragment("test2");
+        manager.setState("test2");
         listener.addExpectedNavigatorViewChange(event2);
 
         control.replay();
@@ -304,7 +324,8 @@ public class NavigatorTest extends TestCase {
 
     public void testBlockNavigation() {
         IMocksControl control = EasyMock.createControl();
-        FragmentManager manager = control.createMock(FragmentManager.class);
+        NavigationStateManager manager = control
+                .createMock(NavigationStateManager.class);
         ViewDisplay display = control.createMock(ViewDisplay.class);
         ViewProvider provider = control.createMock(ViewProvider.class);
         View view1 = control.createMock(View.class);
@@ -318,7 +339,7 @@ public class NavigatorTest extends TestCase {
         // first listener blocks first view change
         EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("");
+        EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event1 = new ViewChangeEvent(navigator, null, view1,
                 "test1", "");
         listener1.addExpectedIsViewChangeAllowed(event1, false);
@@ -326,7 +347,7 @@ public class NavigatorTest extends TestCase {
         // second listener blocks second view change
         EasyMock.expect(provider.getViewName("test1/test")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("");
+        EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event2 = new ViewChangeEvent(navigator, null, view1,
                 "test1", "test");
         listener1.addExpectedIsViewChangeAllowed(event2, true);
@@ -335,28 +356,28 @@ public class NavigatorTest extends TestCase {
         // both listeners allow view change
         EasyMock.expect(provider.getViewName("test1/bar")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getFragment()).andReturn("");
+        EasyMock.expect(manager.getState()).andReturn("");
         ViewChangeEvent event3 = new ViewChangeEvent(navigator, null, view1,
                 "test1", "bar");
         listener1.addExpectedIsViewChangeAllowed(event3, true);
         listener2.addExpectedIsViewChangeAllowed(event3, true);
-        view1.navigateTo("bar");
+        view1.enter(EasyMock.isA(ViewChangeEvent.class));
         display.showView(view1);
-        manager.setFragment("test1/bar");
+        manager.setState("test1/bar");
         listener1.addExpectedNavigatorViewChange(event3);
         listener2.addExpectedNavigatorViewChange(event3);
 
         // both listeners allow view change from non-null view
         EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
-        EasyMock.expect(manager.getFragment()).andReturn("view1");
+        EasyMock.expect(manager.getState()).andReturn("view1");
         ViewChangeEvent event4 = new ViewChangeEvent(navigator, view1, view2,
                 "test2", "");
         listener1.addExpectedIsViewChangeAllowed(event4, true);
         listener2.addExpectedIsViewChangeAllowed(event4, true);
-        view2.navigateTo("");
+        view2.enter(EasyMock.isA(ViewChangeEvent.class));
         display.showView(view2);
-        manager.setFragment("test2");
+        manager.setState("test2");
         listener1.addExpectedNavigatorViewChange(event4);
         listener2.addExpectedNavigatorViewChange(event4);
 

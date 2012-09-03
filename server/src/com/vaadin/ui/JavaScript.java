@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -93,7 +93,7 @@ public class JavaScript extends AbstractExtension {
      */
     public void addFunction(String name, JavaScriptFunction function) {
         functions.put(name, function);
-        getState().getNames().add(name);
+        getState().names.add(name);
     }
 
     /**
@@ -109,7 +109,7 @@ public class JavaScript extends AbstractExtension {
      */
     public void removeFunction(String name) {
         functions.remove(name);
-        getState().getNames().remove(name);
+        getState().names.remove(name);
     }
 
     /**

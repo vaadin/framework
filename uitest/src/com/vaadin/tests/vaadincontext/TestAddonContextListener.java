@@ -42,9 +42,8 @@ public class TestAddonContextListener implements AddonContextListener {
             }
 
             private boolean shouldModify(BootstrapResponse response) {
-                UI uI = response.getUI();
-                boolean shouldModify = uI != null
-                        && uI.getClass() == BootstrapModifyUI.class;
+                Class<? extends UI> uiClass = response.getUiClass();
+                boolean shouldModify = uiClass == BootstrapModifyUI.class;
                 return shouldModify;
             }
 

@@ -62,8 +62,8 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
             // later on.
             return;
         }
-        String templateName = getState().getTemplateName();
-        String templateContents = getState().getTemplateContents();
+        String templateName = getState().templateName;
+        String templateContents = getState().templateContents;
 
         if (templateName != null) {
             // Get the HTML-template from client. Overrides templateContents
@@ -92,7 +92,7 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
 
         // For all contained widgets
         for (ComponentConnector child : getChildComponents()) {
-            String location = getState().getChildLocations().get(child);
+            String location = getState().childLocations.get(child);
             try {
                 getWidget().setWidget(child.getWidget(), location);
             } catch (final IllegalArgumentException e) {

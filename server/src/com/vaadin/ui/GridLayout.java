@@ -27,10 +27,10 @@ import java.util.Map.Entry;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.LayoutEvents.LayoutClickNotifier;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -961,7 +961,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        getState().setColumns(columns);
+        getState().columns = columns;
     }
 
     /**
@@ -970,7 +970,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of columns in the grid.
      */
     public int getColumns() {
-        return getState().getColumns();
+        return getState().columns;
     }
 
     /**
@@ -1003,7 +1003,7 @@ public class GridLayout extends AbstractLayout implements
             }
         }
 
-        getState().setRows(rows);
+        getState().rows = rows;
     }
 
     /**
@@ -1012,7 +1012,7 @@ public class GridLayout extends AbstractLayout implements
      * @return the number of rows in the grid.
      */
     public int getRows() {
-        return getState().getRows();
+        return getState().rows;
     }
 
     /**
@@ -1127,7 +1127,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public void setSpacing(boolean spacing) {
-        getState().setSpacing(spacing);
+        getState().spacing = spacing;
     }
 
     /*
@@ -1137,7 +1137,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public boolean isSpacing() {
-        return getState().isSpacing();
+        return getState().spacing;
     }
 
     /**
@@ -1405,7 +1405,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public void setMargin(MarginInfo marginInfo) {
-        getState().setMarginsBitmask(marginInfo.getBitMask());
+        getState().marginsBitmask = marginInfo.getBitMask();
     }
 
     /*
@@ -1415,7 +1415,7 @@ public class GridLayout extends AbstractLayout implements
      */
     @Override
     public MarginInfo getMargin() {
-        return new MarginInfo(getState().getMarginsBitmask());
+        return new MarginInfo(getState().marginsBitmask);
     }
 
 }
