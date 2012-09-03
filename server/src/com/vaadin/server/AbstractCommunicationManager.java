@@ -27,8 +27,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,7 +57,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.Application.SystemMessages;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.external.json.JSONArray;
@@ -574,28 +571,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, application, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = null;
-                try {
-                    Method m = application.getClass().getMethod(
-                            "getSystemMessages", (Class[]) null);
-                    ci = (Application.SystemMessages) m.invoke(null,
-                            (Object[]) null);
-                } catch (Exception e2) {
-                    // FIXME: Handle exception
-                    // Not critical, but something is still wrong; print
-                    // stacktrace
-                    getLogger().log(Level.WARNING,
-                            "getSystemMessages() failed - continuing", e2);
-                }
-                if (ci != null) {
-                    String msg = ci.getOutOfSyncMessage();
-                    String cap = ci.getOutOfSyncCaption();
-                    if (msg != null || cap != null) {
-                        callback.criticalNotification(request, response, cap,
-                                msg, null, ci.getOutOfSyncURL());
-                        // will reload page after this
-                        return;
-                    }
+                SystemMessages ci = response.getDeploymentConfiguration()
+                        .getSystemMessages();
+                String msg = ci.getOutOfSyncMessage();
+                String cap = ci.getOutOfSyncCaption();
+                if (msg != null || cap != null) {
+                    callback.criticalNotification(request, response, cap, msg,
+                            null, ci.getOutOfSyncURL());
+                    // will reload page after this
+                    return;
                 }
                 // No message to show, let's just repaint all.
                 repaintAll = true;
@@ -1028,24 +1012,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
 
-        SystemMessages ci = null;
-        try {
-            Method m = application.getClass().getMethod("getSystemMessages",
-                    (Class[]) null);
-            ci = (Application.SystemMessages) m.invoke(null, (Object[]) null);
-        } catch (NoSuchMethodException e) {
-            getLogger().log(Level.WARNING,
-                    "getSystemMessages() failed - continuing", e);
-        } catch (IllegalArgumentException e) {
-            getLogger().log(Level.WARNING,
-                    "getSystemMessages() failed - continuing", e);
-        } catch (IllegalAccessException e) {
-            getLogger().log(Level.WARNING,
-                    "getSystemMessages() failed - continuing", e);
-        } catch (InvocationTargetException e) {
-            getLogger().log(Level.WARNING,
-                    "getSystemMessages() failed - continuing", e);
-        }
+        SystemMessages ci = request.getDeploymentConfiguration()
+                .getSystemMessages();
 
         // meta instruction for client to enable auto-forward to
         // sessionExpiredURL after timer expires.

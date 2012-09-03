@@ -420,10 +420,12 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         WrappedRequest request = context.getRequest();
         Application application = context.getApplication();
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
 
         // Get system messages
-        Application.SystemMessages systemMessages = AbstractApplicationServlet
-                .getSystemMessages(application.getClass());
+        SystemMessages systemMessages = deploymentConfiguration
+                .getSystemMessages();
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
@@ -445,8 +447,6 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("authErrMsg", authErrMsg);
         }
 
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
         String widgetsetBase = staticFileLocation + "/"

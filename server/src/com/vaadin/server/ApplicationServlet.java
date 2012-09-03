@@ -76,14 +76,10 @@ public class ApplicationServlet extends AbstractApplicationServlet {
             throw new ServletException("getNewApplication failed", e);
         } catch (final InstantiationException e) {
             throw new ServletException("getNewApplication failed", e);
-        } catch (ClassNotFoundException e) {
-            throw new ServletException("getNewApplication failed", e);
         }
     }
 
-    @Override
-    protected Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException {
+    protected Class<? extends Application> getApplicationClass() {
         return applicationClass;
     }
 }

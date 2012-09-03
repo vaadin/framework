@@ -463,12 +463,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private String logoutURL = null;
 
     /**
-     * The default SystemMessages (read-only). Change by overriding
-     * getSystemMessages() and returning CustomizedSystemMessages
-     */
-    private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
-
-    /**
      * Application wide error handler which is used by default if an error is
      * left unhandled.
      */
@@ -789,25 +783,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
-    }
-
-    /**
-     * Gets the SystemMessages for this application. SystemMessages are used to
-     * notify the user of various critical situations that can occur, such as
-     * session expiration, client/server out of sync, and internal server error.
-     * 
-     * You can customize the messages by "overriding" this method and returning
-     * {@link CustomizedSystemMessages}. To "override" this method, re-implement
-     * this method in your application (the class that extends
-     * {@link Application}). Even though overriding static methods is not
-     * possible in Java, Vaadin selects to call the static method from the
-     * subclass instead of the original {@link #getSystemMessages()} if such a
-     * method exists.
-     * 
-     * @return the SystemMessages for this application
-     */
-    public static SystemMessages getSystemMessages() {
-        return DEFAULT_SYSTEM_MESSAGES;
     }
 
     /**

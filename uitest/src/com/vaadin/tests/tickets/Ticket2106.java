@@ -3,6 +3,8 @@ package com.vaadin.tests.tickets;
 import java.util.Date;
 
 import com.vaadin.Application;
+import com.vaadin.server.CustomizedSystemMessages;
+import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -10,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2106 extends Application.LegacyApplication {
 
-    private static CustomizedSystemMessages msgs = new Application.CustomizedSystemMessages();
+    private static CustomizedSystemMessages msgs = new CustomizedSystemMessages();
     static {
         // We will forward the user to www.vaadin.com when the session expires
         msgs.setSessionExpiredURL("http://www.vaadin.com");
@@ -18,7 +20,7 @@ public class Ticket2106 extends Application.LegacyApplication {
         msgs.setSessionExpiredCaption(null);
     }
 
-    public static Application.SystemMessages getSystemMessages() {
+    public static SystemMessages getSystemMessages() {
         return msgs;
     }
 

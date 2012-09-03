@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
@@ -55,7 +54,6 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.Application.SystemMessages;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.UI;
 
@@ -320,6 +318,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             @Override
             public String getMimeType(String resourceName) {
                 return getPortletContext().getMimeType(resourceName);
+            }
+
+            @Override
+            public SystemMessages getSystemMessages() {
+                return AbstractApplicationPortlet.this.getSystemMessages();
             }
         };
 
@@ -912,29 +915,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return
      */
     protected SystemMessages getSystemMessages() {
-        try {
-            Class<? extends Application> appCls = getApplicationClass();
-            Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
-            return (Application.SystemMessages) m.invoke(null, (Object[]) null);
-        } catch (ClassNotFoundException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (SecurityException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (NoSuchMethodException e) {
-            // This is completely ok and should be silently ignored
-        } catch (IllegalArgumentException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (IllegalAccessException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (InvocationTargetException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        }
-        return Application.getSystemMessages();
+        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
     }
 
     private void handleServiceException(WrappedPortletRequest request,
@@ -945,7 +926,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());

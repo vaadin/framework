@@ -181,4 +181,11 @@ public interface DeploymentConfiguration extends Serializable {
      *         indefinitely.
      */
     public boolean isIdleUICleanupEnabled();
+
+    /**
+     * Gets the system messages object
+     * 
+     * @return the system messages object
+     */
+    public SystemMessages getSystemMessages();
 }

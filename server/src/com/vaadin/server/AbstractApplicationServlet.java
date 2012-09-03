@@ -22,8 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,7 +46,6 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.Application.SystemMessages;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
@@ -164,6 +161,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             @Override
             public String getMimeType(String resourceName) {
                 return getServletContext().getMimeType(resourceName);
+            }
+
+            @Override
+            public SystemMessages getSystemMessages() {
+                return AbstractApplicationServlet.this.getSystemMessages();
             }
         };
 
@@ -706,7 +708,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -769,7 +771,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         try {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -811,7 +813,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         try {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -1177,50 +1179,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Get system messages from the current application class
+     * Get system messages
      * 
      * @return
      */
     protected SystemMessages getSystemMessages() {
-        Class<? extends Application> appCls = null;
-        try {
-            appCls = getApplicationClass();
-        } catch (ClassNotFoundException e) {
-            // Previous comment claimed that this should never happen
-            throw new SystemMessageException(e);
-        }
-        return getSystemMessages(appCls);
+        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
     }
-
-    public static SystemMessages getSystemMessages(
-            Class<? extends Application> appCls) {
-        try {
-            if (appCls != null) {
-                Method m = appCls
-                        .getMethod("getSystemMessages", (Class[]) null);
-                return (Application.SystemMessages) m.invoke(null,
-                        (Object[]) null);
-            }
-        } catch (SecurityException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (NoSuchMethodException e) {
-            // This is completely ok and should be silently ignored
-        } catch (IllegalArgumentException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (IllegalAccessException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (InvocationTargetException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        }
-        return Application.getSystemMessages();
-    }
-
-    protected abstract Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException;
 
     /**
      * Return the URL from where static files, e.g. the widgetset and the theme,

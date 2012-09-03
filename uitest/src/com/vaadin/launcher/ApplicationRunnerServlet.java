@@ -209,20 +209,6 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
         return uris;
     }
 
-    @Override
-    protected Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException {
-        Class<?> classToRun = getClassToRun();
-        if (UI.class.isAssignableFrom(classToRun)) {
-            return Application.class;
-        } else if (Application.class.isAssignableFrom(classToRun)) {
-            return classToRun.asSubclass(Application.class);
-        } else {
-            throw new ClassCastException(classToRun.getCanonicalName()
-                    + " is not an Application nor a UI");
-        }
-    }
-
     private Class<?> getClassToRun() throws ClassNotFoundException {
         // TODO use getClassLoader() ?
 
