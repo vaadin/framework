@@ -1,28 +1,28 @@
-package com.vaadin.tests.tickets;
+package com.vaadin.tests.components.table;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 
 /**
  * Test for #8291 and #7666: NegativeArraySizeException when Table scrolled to
  * the end and its size reduced.
  */
-public class Ticket8291 extends Application {
+public class TableReduceContainerSize extends TestBase {
 
     @Override
-    public void init() {
-        setMainWindow(new Window("", new TestView()));
+    protected void setup() {
+        addComponent(new TestView());
     }
 
     private static class DecimateFilter implements Filter {
@@ -59,25 +59,41 @@ public class Ticket8291 extends Application {
             };
             table.setContainerDataSource(container);
             addComponent(table);
+            final Label label = new Label();
+            addComponent(label);
             Button button = new Button("Click");
             button.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    reduceData = !reduceData;
-                    table.refreshRowCache();
+                    try {
+                        reduceData = !reduceData;
+                        table.refreshRowCache();
+                        label.setValue("Index: "
+                                + table.getCurrentPageFirstItemIndex());
+                    } catch (Exception e) {
+                        label.setValue("Exception: "
+                                + e.getClass().getSimpleName());
+                    }
                 }
             });
             addComponent(button);
             Button button2 = new Button("Filter");
             button2.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    if (filter != null) {
-                        container.removeAllContainerFilters();
-                        filter = null;
-                    } else {
-                        filter = new DecimateFilter();
-                        container.addContainerFilter(filter);
+                    try {
+                        if (filter != null) {
+                            container.removeAllContainerFilters();
+                            filter = null;
+                        } else {
+                            filter = new DecimateFilter();
+                            container.addContainerFilter(filter);
+                        }
+                        table.refreshRowCache();
+                        label.setValue("Index: "
+                                + table.getCurrentPageFirstItemIndex());
+                    } catch (Exception e) {
+                        label.setValue("Exception: "
+                                + e.getClass().getSimpleName());
                     }
-                    table.refreshRowCache();
                 }
             });
             addComponent(button2);
@@ -116,6 +132,16 @@ public class Ticket8291 extends Application {
             return property3;
         }
 
+    }
+
+    @Override
+    protected String getDescription() {
+        return "Table throws NegativeArraySizeException if container size is reduced to less than current scroll position";
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 8291;
     }
 
 }
