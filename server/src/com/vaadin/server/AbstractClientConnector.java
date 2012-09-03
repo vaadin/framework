@@ -150,8 +150,9 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
 
         UI uI = getUI();
-        if (uI != null && !uI.getConnectorTracker().isDirty(this)) {
-            requestRepaint();
+        if (uI != null && !uI.getConnectorTracker().isWritingResponse()
+                && !uI.getConnectorTracker().isDirty(this)) {
+            markAsDirty();
         }
 
         return sharedState;

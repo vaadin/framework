@@ -56,6 +56,8 @@ public class ConnectorTracker implements Serializable {
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
+    private boolean writingResponse = false;
+
     private UI uI;
     private Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
 
@@ -274,14 +276,21 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Mark the connector as dirty.
+     * Mark the connector as dirty. This should not be done while the response
+     * is being written.
      * 
      * @see #getDirtyConnectors()
+     * @see #isWritingResponse()
      * 
      * @param connector
      *            The connector that should be marked clean.
      */
     public void markDirty(ClientConnector connector) {
+        if (isWritingResponse()) {
+            throw new IllegalStateException(
+                    "A connector should not be marked as dirty while a response is being written.");
+        }
+
         if (getLogger().isLoggable(Level.FINE)) {
             if (!dirtyConnectors.contains(connector)) {
                 getLogger().fine(
@@ -412,4 +421,40 @@ public class ConnectorTracker implements Serializable {
         return dirtyConnectors.contains(connector);
     }
 
+    /**
+     * Checks whether the response is currently being written. Connectors can
+     * not be marked as dirty when a response is being written.
+     * 
+     * @see #setWritingResponse(boolean)
+     * @see #markDirty(ClientConnector)
+     * 
+     * @return <code>true</code> if the response is currently being written,
+     *         <code>false</code> if outside the response writing phase.
+     */
+    public boolean isWritingResponse() {
+        return writingResponse;
+    }
+
+    /**
+     * Sets the current response write status. Connectors can not be marked as
+     * dirty when the response is written.
+     * 
+     * @param writingResponse
+     *            the new response status.
+     * 
+     * @see #markDirty(ClientConnector)
+     * @see #isWritingResponse()
+     * 
+     * @throws IllegalArgumentException
+     *             if the new response status is the same as the previous value.
+     *             This is done to help detecting problems caused by missed
+     *             invocations of this method.
+     */
+    public void setWritingResponse(boolean writingResponse) {
+        if (this.writingResponse == writingResponse) {
+            throw new IllegalArgumentException(
+                    "The old value is same as the new value");
+        }
+        this.writingResponse = writingResponse;
+    }
 }
