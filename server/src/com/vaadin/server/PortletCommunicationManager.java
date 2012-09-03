@@ -97,8 +97,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
                 ResourceURL portletResourceUrl = getRenderResponse(context)
                         .createResourceURL();
-                portletResourceUrl
-                        .setResourceID(AbstractApplicationPortlet.RESOURCE_URL_ID);
+                portletResourceUrl.setResourceID(VaadinPortlet.RESOURCE_URL_ID);
                 defaults.put(ApplicationConstants.PORTLET_RESOUCE_URL_BASE,
                         portletResourceUrl.toString());
 
@@ -113,10 +112,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     throws JSONException, IOException {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
-                String portalTheme = WrappedPortletRequest
-                        .cast(context.getRequest())
-                        .getPortalProperty(
-                                AbstractApplicationPortlet.PORTAL_PARAMETER_VAADIN_THEME);
+                String portalTheme = WrappedPortletRequest.cast(
+                        context.getRequest()).getPortalProperty(
+                        VaadinPortlet.PORTAL_PARAMETER_VAADIN_THEME);
                 if (portalTheme != null
                         && !portalTheme.equals(context.getThemeName())) {
                     String portalThemeUri = getThemeUri(context, portalTheme);
@@ -133,8 +131,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 DeploymentConfiguration deploymentConfiguration = context
                         .getRequest().getDeploymentConfiguration();
                 return deploymentConfiguration.getApplicationOrSystemProperty(
-                        AbstractApplicationPortlet.PORTLET_PARAMETER_STYLE,
-                        null);
+                        VaadinPortlet.PORTLET_PARAMETER_STYLE, null);
             }
 
             @Override
@@ -164,8 +161,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         PortletContext portletContext = context.getPortletSession()
                 .getPortletContext();
         return portletContext.getResourceAsStream("/"
-                + AbstractApplicationPortlet.THEME_DIRECTORY_PATH + themeName
-                + "/" + resource);
+                + VaadinPortlet.THEME_DIRECTORY_PATH + themeName + "/"
+                + resource);
     }
 
 }

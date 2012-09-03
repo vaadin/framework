@@ -101,7 +101,7 @@ public class WrappedPortletRequest implements WrappedRequest {
         if (request instanceof ResourceRequest) {
             ResourceRequest resourceRequest = (ResourceRequest) request;
             String resourceID = resourceRequest.getResourceID();
-            if (AbstractApplicationPortlet.RESOURCE_URL_ID.equals(resourceID)) {
+            if (VaadinPortlet.RESOURCE_URL_ID.equals(resourceID)) {
                 String resourcePath = resourceRequest
                         .getParameter(ApplicationConstants.V_RESOURCE_PATH);
                 return resourcePath;

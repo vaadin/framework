@@ -40,8 +40,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.event\\.FieldEvents", //
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
-            "com\\.vaadin\\.server\\.AbstractApplicationPortlet", //
-            "com\\.vaadin\\.server\\.ApplicationPortlet2", //
+            "com\\.vaadin\\.server\\.VaadinPortlet", //
             "com\\.vaadin\\.server\\.Constants", //
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and

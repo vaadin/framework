@@ -254,7 +254,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
     }
 
     /**
-     * This is for use by {@link AbstractApplicationPortlet} only.
+     * This is for use by {@link VaadinPortlet} only.
      * 
      * TODO cleaner implementation, now "semi-static"!
      * 

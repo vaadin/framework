@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.ui.UI;
 
 /**
@@ -65,8 +66,8 @@ import com.vaadin.ui.UI;
  * 
  * @author peholmst
  */
-public abstract class AbstractApplicationPortlet extends GenericPortlet
-        implements Constants {
+public class VaadinPortlet extends GenericPortlet implements
+        Constants {
 
     public static final String RESOURCE_URL_ID = "APP";
 
@@ -174,10 +175,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     public static class AbstractApplicationPortletWrapper implements Callback {
 
-        private final AbstractApplicationPortlet portlet;
+        private final VaadinPortlet portlet;
 
         public AbstractApplicationPortletWrapper(
-                AbstractApplicationPortlet portlet) {
+                VaadinPortlet portlet) {
             this.portlet = portlet;
         }
 
@@ -322,7 +323,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
             @Override
             public SystemMessages getSystemMessages() {
-                return AbstractApplicationPortlet.this.getSystemMessages();
+                return VaadinPortlet.this.getSystemMessages();
             }
         };
 
@@ -892,8 +893,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return null;
     }
 
-    protected abstract Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException;
+    protected Class<? extends Application> getApplicationClass()
+            throws ApplicationClassException {
+        return ServletPortletHelper
+                .getApplicationClass(getDeploymentConfiguration());
+    }
 
     protected Application getNewApplication(PortletRequest request)
             throws PortletException {
@@ -904,7 +908,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throw new PortletException("getNewApplication failed", e);
         } catch (final InstantiationException e) {
             throw new PortletException("getNewApplication failed", e);
-        } catch (final ClassNotFoundException e) {
+        } catch (final ApplicationClassException e) {
             throw new PortletException("getNewApplication failed", e);
         }
     }
@@ -1035,7 +1039,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractApplicationPortlet.class.getName());
+        return Logger.getLogger(VaadinPortlet.class.getName());
     }
 
 }
