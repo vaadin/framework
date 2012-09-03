@@ -18,8 +18,7 @@ public class FlashIsVisible extends TestBase {
 
     @Override
     protected String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "Flash plugin should load and be visible on all browsers";
     }
 
     @Override
