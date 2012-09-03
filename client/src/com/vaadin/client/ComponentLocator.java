@@ -16,8 +16,10 @@
 package com.vaadin.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -435,6 +437,13 @@ public class ComponentLocator {
         return null;
     }
 
+    private static final Map<String, String> replacementMap = new HashMap<String, String>();
+    static {
+        replacementMap.put("VVerticalLayout", "VBoxLayout");
+        replacementMap.put("VHorizontalLayout", "VBoxLayout");
+        replacementMap.put("ChildComponentContainer", "VBoxLayout$Slot");
+    }
+
     /**
      * Locates the widget based on a String locator.
      * 
@@ -485,6 +494,10 @@ public class ComponentLocator {
                 // VVerticalLayout and 0
                 String[] split = part.split("\\[", 2);
                 String widgetClassName = split[0];
+                if (replacementMap.containsKey(widgetClassName)) {
+                    widgetClassName = replacementMap.get(widgetClassName);
+                }
+
                 String indexString = split[1];
                 int widgetPosition = Integer.parseInt(indexString.substring(0,
                         indexString.length() - 1));
@@ -500,14 +513,6 @@ public class ComponentLocator {
                     // is always 0 which indicates the widget in the active tab
                     widgetPosition = 0;
                 }
-                if ("VVerticalLayout".equals(widgetClassName)
-                        || "VHorizontalLayout".equals(widgetClassName)) {
-                    widgetClassName = "VBoxLayout";
-                }
-                if (w instanceof VBoxLayout
-                        && "ChildComponentContainer".equals(widgetClassName)) {
-                    widgetClassName = "VBoxLayout$Slot";
-                }
 
                 /*
                  * The new grid and ordered layotus do not contain
@@ -519,8 +524,7 @@ public class ComponentLocator {
                  */
                 if ((w instanceof VMeasuringOrderedLayout
                         || w instanceof VBoxLayout || w instanceof VGridLayout)
-                        && ("ChildComponentContainer".equals(widgetClassName) || "VBoxLayout$Slot"
-                                .equals(widgetClassName))
+                        && "VBoxLayout$Slot".equals(widgetClassName)
                         && i + 1 < parts.length) {
 
                     HasWidgets layout = (HasWidgets) w;
@@ -528,13 +532,24 @@ public class ComponentLocator {
                     String nextPart = parts[i + 1];
                     String[] nextSplit = nextPart.split("\\[", 2);
                     String nextWidgetClassName = nextSplit[0];
+                    if (replacementMap.containsKey(nextWidgetClassName)) {
+                        nextWidgetClassName = replacementMap
+                                .get(nextWidgetClassName);
+                    }
 
                     // Find the n:th child and count the number of children with
                     // the same type before it
                     int nextIndex = 0;
                     for (Widget child : layout) {
-                        boolean matchingType = nextWidgetClassName.equals(Util
-                                .getSimpleName(child));
+                        String childName = Util.getSimpleName(child);
+
+                        if (childName.equals("VBoxLayout$Slot")) {
+                            child = ((SimplePanel) child).getWidget();
+                            childName = Util.getSimpleName(child);
+                        }
+
+                        boolean matchingType = nextWidgetClassName
+                                .equals(childName);
                         if (matchingType && widgetPosition == 0) {
                             // This is the n:th child that we looked for
                             break;
@@ -542,6 +557,7 @@ public class ComponentLocator {
                             // Error if we're past the desired position without
                             // a match
                             return null;
+                        } else if (matchingType) {
                         } else if (matchingType) {
                             // If this was another child of the expected type,
                             // increase the count for the next step
