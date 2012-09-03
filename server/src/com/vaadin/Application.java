@@ -239,6 +239,25 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * This implementation simulates the way of finding a window for a
          * request by extracting a window name from the requested path and
          * passes that name to {@link #getWindow(String)}.
+         * <p>
+         * {@inheritDoc}
+         */
+        @Override
+        public UI getUIForRequest(WrappedRequest request) {
+            UI uiInstance = getUIInstance(request);
+            if (uiInstance.getUIId() == -1) {
+                // Not initialized -> Let go through createUIInstance to make it
+                // initialized
+                return null;
+            } else {
+                return uiInstance;
+            }
+        }
+
+        /**
+         * This implementation simulates the way of finding a window for a
+         * request by extracting a window name from the requested path and
+         * passes that name to {@link #getWindow(String)}.
          * 
          * <p>
          * {@inheritDoc}
